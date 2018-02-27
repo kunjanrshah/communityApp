@@ -1,0 +1,36 @@
+{
+    "logs": [
+        {
+            "outputFile": "/home/kunjan/Documents/workspace/community-app/application/library/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-uk/values-uk.xml",
+            "map": [
+                {
+                    "source": "/home/kunjan/Documents/workspace/community-app/application/library/build/intermediates/packaged_res/debug/values-uk/values-uk.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,211,324,405,518,637,753,850,941,1035,1123",
+                        "endColumns": "105,112,80,112,118,115,96,90,93,87,100",
+                        "endOffsets": "206,319,400,513,632,748,845,936,1030,1118,1219"
+                    }
+                },
+                {
+                    "source": "/home/kunjan/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/16f06fa7e1ede5ddeb1f42613aaa64d3/res/values-uk/values-uk.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "13",
+                        "startColumns": "4",
+                        "startOffsets": "1224",
+                        "endColumns": "100",
+                        "endOffsets": "1320"
+                    }
+                }
+            ]
+        }
+    ]
+}

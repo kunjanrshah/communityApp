@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "900336668958",
+    "firebase_url": "https://vastipatrak-5e514.firebaseio.com",
+    "project_id": "vastipatrak-5e514",
+    "storage_bucket": "vastipatrak-5e514.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900336668958:android:0f010b4ec4bc6247",
+        "android_client_info": {
+          "package_name": "com.krs.vastipatrak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCz56UacSMTJKFApD0nR24GPtf1kZWHUSg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

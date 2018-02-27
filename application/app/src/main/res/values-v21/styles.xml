@@ -1,0 +1,18 @@
+<resources>
+
+    <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+
+        <item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb_holo</item>
+        <item name="android:fastScrollOverlayPosition">atThumb</item>
+        <item name="android:fastScrollTextColor">@color/colorPrimary</item>
+        <item name="android:fastScrollTrackDrawable">@drawable/fastscroll_thumb_pressed_holo</item>
+        <item name="android:fastScrollPreviewBackgroundRight">@drawable/bg_default_focused_holo_light</item>
+
+    </style>
+
+</resources>

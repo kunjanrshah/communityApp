@@ -1,0 +1,272 @@
+package com.krs.vastipatrak.fragments;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.text.InputType;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.krs.vastipatrak.app.AppController;
+import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.FilterActivity;
+
+import org.json.JSONObject;
+
+/**
+ * Created by kushal on 31/01/16.
+ */
+public class ChangePasswordFragment extends Fragment {
+
+
+    ProgressDialog pDialog;
+    SharedPreferences mSharedPreferences;
+    String TAG = "ChangePasswordFragment";
+    String tag_json_obj = "jobj_req";
+    EditText input_password, input_repeat;
+    FloatingActionButton fab;
+    boolean isShow = true, isShow1 = true;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.fragment_change_password, container, false);
+        Memory_Allocation(rootView);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("Change Password");
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!input_password.getText().toString().equalsIgnoreCase("") && !input_repeat.getText().toString().equalsIgnoreCase("")) {
+                    if (input_password.getText().toString().equalsIgnoreCase(input_repeat.getText().toString())) {
+                        if (Common.isOnline(getActivity())) {
+                            call_change_password_ws();
+                        } else {
+                            Toast.makeText(getActivity(), Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Password does not match !!", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+        });
+
+        input_password.setOnTouchListener(new EditText.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (input_password.getRight() - input_password.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        if (isShow) {
+                            input_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
+                            input_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+
+                            isShow = false;
+                        } else {
+                            input_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
+                            input_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+                            isShow = true;
+                        }
+                        input_password.setSelection(input_password.length());
+
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+        input_repeat.setOnTouchListener(new EditText.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (input_repeat.getRight() - input_repeat.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        if (isShow1) {
+                            input_repeat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
+                            input_repeat.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+
+                            isShow1 = false;
+                        } else {
+                            input_repeat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
+                            input_repeat.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+                            isShow1 = true;
+                        }
+                        input_repeat.setSelection(input_repeat.length());
+
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+        return rootView;
+    }
+
+    SearchView searchView;
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                Fragment fragment = new SearchFragment();
+                Bundle mBundle = new Bundle();
+                mBundle.putString(Common.Constant_Class.QUERY, query);
+                fragment.setArguments(mBundle);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container_body, fragment);
+                fragmentTransaction.commit();
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        MenuItem filterItem = menu.findItem(R.id.action_filter);
+        filterItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Intent mIntent = new Intent(getActivity(), FilterActivity.class);
+                startActivity(mIntent);
+                getActivity().overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+
+
+                return false;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    private void call_change_password_ws() {
+
+        if (Common.isOnline(getActivity())) {
+
+            showProgressDialog();
+            JSONObject mJsonObject = null;
+
+            try {
+                mJsonObject = new JSONObject();
+                mJsonObject.put(Common.Constant_Class.PASSWORD, input_password.getText());
+                mJsonObject.put(Common.Constant_Class.REPEAT_PASSWORD, input_repeat.getText());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            final String password_url = Common.Constant_Class.CHANGE_PASSWORD_URL + mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, password_url, mJsonObject, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.d(TAG, "profile_url: " + password_url);
+                    Log.d(TAG, "response: " + response.toString());
+                    hideProgressDialog();
+
+                    try {
+                        String success = response.getString(Common.Constant_Class.SUCCESS);
+                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                            Common.UpdateProfilePassword(input_password.getText().toString(), mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                            String message = response.getString(Common.Constant_Class.MESSAGE);
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+
+                    hideProgressDialog();
+                }
+            });
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+        }
+    }
+
+    private void Memory_Allocation(View rootView) {
+
+        input_password = (EditText) rootView.findViewById(R.id.input_password);
+        input_repeat = (EditText) rootView.findViewById(R.id.input_repeat);
+
+        input_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
+        input_repeat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
+
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+        pDialog = new ProgressDialog(getActivity());
+        pDialog.setMessage(Common.Constant_Class.LOADING);
+        pDialog.setCancelable(false);
+
+    }
+
+
+    private void showProgressDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (pDialog.isShowing())
+            pDialog.hide();
+    }
+
+}
