@@ -407,7 +407,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    private void alert(final String id, String message, final boolean isChecked) {
+/*    private void alert(final String id, String message, final boolean isChecked) {
         AlertDialog.Builder builder = new AlertDialog.Builder(_context, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(_context.getString(R.string.app_name));
 
@@ -425,7 +425,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 dialog.dismiss();
             }
         }).show();
-    }
+    }*/
 
     private void showProgressDialog() {
         if (pDialog != null && !pDialog.isShowing())
@@ -439,6 +439,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
     }
 
+/*
     private void callStatusChangeWS(String id, boolean isChecked) {
         if (Common.isOnline(_context)) {
             showProgressDialog();
@@ -450,10 +451,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 } else {
                     mJsonObject.put(Common.Constant_Class.STATUS, "0");
                 }
+                mJsonObject.put(Common.Constant_Class.IDList, id);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            String search_url = Common.Constant_Class.STATUS_URL + id;
+            String search_url = Common.Constant_Class.STATUS_URL;
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, search_url, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -487,6 +489,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
     }
+*/
 
     private void callProfileWS(String str_id) {
 

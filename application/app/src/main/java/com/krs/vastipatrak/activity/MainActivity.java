@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         };
 
         displayFirebaseRegId();
-
+        Common.getDeviceId(this);
     }
 
     // Fetches reg id from shared preferences

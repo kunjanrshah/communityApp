@@ -26,6 +26,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -52,6 +53,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import io.realm.RealmList;
 
@@ -774,14 +776,16 @@ public class SearchFragment extends Fragment {
             showProgressDialog();
             JSONObject mJsonObject = new JSONObject();
             try {
+
                 mJsonObject.put(Common.Constant_Class.IDList, android.text.TextUtils.join(",", lstSelectedIDs));
                 mJsonObject.put(Common.Constant_Class.STATUS, String.valueOf(mode));
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            String deActivate_url = Common.Constant_Class.STATUS_URL;
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, deActivate_url, mJsonObject, new Response.Listener<JSONObject>() {
+            String status_url = Common.Constant_Class.STATUS_URL;
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, status_url, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
@@ -807,7 +811,16 @@ public class SearchFragment extends Fragment {
 
                     hideProgressDialog();
                 }
-            });
+            })
+            {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    return params;
+                }
+            };
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
@@ -824,6 +837,7 @@ public class SearchFragment extends Fragment {
             JSONObject mJsonObject = new JSONObject();
             try {
                 mJsonObject.put(Common.Constant_Class.IDList, android.text.TextUtils.join(",", lstSelectedIDs));
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -853,7 +867,18 @@ public class SearchFragment extends Fragment {
 
                     hideProgressDialog();
                 }
-            });
+            })
+            {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    return params;
+                }
+            }
+
+                    ;
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
         } else {

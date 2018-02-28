@@ -2,51 +2,31 @@ package com.krs.vastipatrak.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.FilterActivity;
-import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.model.ListChildrenData;
-import com.krs.vastipatrak.model.ListProfileData;
+import com.krs.vastipatrak.service.SyncService;
 import com.krs.vastipatrak.utils.Common;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.nio.channels.FileChannel;
-
-import io.realm.RealmList;
 
 public class SettingFragment extends Fragment {
 
@@ -57,7 +37,7 @@ public class SettingFragment extends Fragment {
 
     String TAG = "SettingFragment";
     String tag_json_obj = "jobj_req";
-    RealmList<ListProfileData> mArrlstProfiledata = null;
+    //RealmList<ListProfileData> mArrlstProfiledata = null;
     ToggleButton tbtn_net, tbtn_sync;
     LinearLayout ll_progress;
     private SharedPreferences mSharedPreferences = null;
@@ -79,15 +59,15 @@ public class SettingFragment extends Fragment {
 
                 if (isChecked) {
 
-                    txt_offline.setText("offline");
+                    txt_offline.setText(Common.Constant_Class.OFFLINE);
                     mEditor.putBoolean(Common.Constant_Class.OFFLINE_SP, true);
                     mEditor.commit();
-                    SyncAlert();
+                    //   SyncAlert();
                     /*if (checkDataBase()) {
                         copyFile();
                     }*/
                 } else {
-                    txt_offline.setText("online");
+                    txt_offline.setText(Common.Constant_Class.ONLINE);
                     mEditor.putBoolean(Common.Constant_Class.OFFLINE_SP, false);
                     mEditor.commit();
                 }
@@ -99,7 +79,7 @@ public class SettingFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    SyncAlert();
+                    // SyncAlert();
                 }
             }
         });
@@ -107,7 +87,7 @@ public class SettingFragment extends Fragment {
 
         return rootView;
     }
-
+/*
     public boolean checkDataBase() {
         String PACKAGE_NAME = getActivity().getApplicationContext().getPackageName();
         String DB_PATH = "/data/data/" + PACKAGE_NAME + "/databases/";
@@ -222,6 +202,8 @@ public class SettingFragment extends Fragment {
                                 mListProfileData.setFirst_name(first_name.toLowerCase());
                                 String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
                                 mListProfileData.setLast_name(last_name.toLowerCase());
+
+
                                 String father_name = mJsondata.getString(Common.Constant_Class.FATHER_NAME);
                                 mListProfileData.setFather_name(father_name.toLowerCase());
                                 String mother_name = mJsondata.getString(Common.Constant_Class.MOTHER_NAME);
@@ -313,6 +295,7 @@ public class SettingFragment extends Fragment {
                                     mListProfileData.setmListChildrenData(arrayListChildren);
                                 }
                                 mArrlstProfiledata.add(mListProfileData);
+                                Log.d(TAG,"sync: id: "+mListProfileData.getProfile_id()+" name :"+mListProfileData.getFirst_name());
                             }
 
                             //  new SyncTask().execute();
@@ -321,8 +304,8 @@ public class SettingFragment extends Fragment {
                                 AppController.getInstance().realm.beginTransaction();
                                 AppController.getInstance().realm.copyToRealmOrUpdate(mArrlstProfiledata.get(i));
                                 AppController.getInstance().realm.commitTransaction();
-                             /*   progress_status = (i * 100) / mArrlstProfiledata.size();
-                                publishProgress(progress_status);*/
+                             *//*   progress_status = (i * 100) / mArrlstProfiledata.size();
+                                publishProgress(progress_status);*//*
                                 Log.v("inserted ", "Records : " + i);
                             }
                         }
@@ -344,7 +327,7 @@ public class SettingFragment extends Fragment {
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
         }
-    }
+    }*/
 
 
     private void MemoryAllocation(View rootView) {
@@ -355,7 +338,7 @@ public class SettingFragment extends Fragment {
         tbtn_net = (ToggleButton) rootView.findViewById(R.id.tbtn_net);
         tbtn_sync = (ToggleButton) rootView.findViewById(R.id.tbtn_sync);
         ll_progress = (LinearLayout) rootView.findViewById(R.id.ll_progress);
-
+        final Button btn_sync = rootView.findViewById(R.id.btn_sync);
 
         tbtn_sync.setChecked(false);
         tbtn_net.setText(null);
@@ -371,17 +354,31 @@ public class SettingFragment extends Fragment {
 
         if (mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false)) {
             tbtn_net.setChecked(true);
-            txt_offline.setText("offline");
+            txt_offline.setText(Common.Constant_Class.OFFLINE);
         } else {
             tbtn_net.setChecked(false);
-            txt_offline.setText("online");
+            txt_offline.setText(Common.Constant_Class.ONLINE);
         }
 
-        mArrlstProfiledata = new RealmList<>();
+        //   mArrlstProfiledata = new RealmList<>();
         pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage(Common.Constant_Class.LOADING);
         pDialog.setCancelable(false);
-
+        btn_sync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (btn_sync.getText().toString().equalsIgnoreCase("Start")) {
+                    Intent mIntent = new Intent(getActivity(), SyncService.class);
+                    getActivity().startService(mIntent);
+                    btn_sync.setText("Stop");
+                    //SyncAlert();
+                } else {
+                    btn_sync.setText("Start");
+                    Intent mIntent = new Intent(getActivity(), SyncService.class);
+                    getActivity().stopService(mIntent);
+                }
+            }
+        });
     }
 
     /*public class SyncTask extends AsyncTask<Void, Integer, Bitmap> {

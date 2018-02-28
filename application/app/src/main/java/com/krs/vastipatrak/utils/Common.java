@@ -841,10 +841,16 @@ public class Common {
         }
     }
 
+    public static void getDeviceId(Context mContext)
+    {
+        String m_androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+        Constant_Class.DEVICE_ID_VALUE=m_androidId;
+    }
+
     public static class Constant_Class {
 
 
-        public static final String ADMIN_1 = "4096";
+        public static final String ADMIN_1 = "4134";
         public static final String ADMIN_2 = "571";
 
 
@@ -852,15 +858,33 @@ public class Common {
         public static final String BUSINESS = "     BUSINESS  ";
         public static final String FAMILY = "     FAMILY  ";
 
+        public static final String API_KEY="api_key";
+        public static final String DEVICE_TYPE="device_type";
+        public static final String DEVICE_TOKEN="device_token";
+        public static final String DEVICE_ID="int_udid";
+        public static final String ACCESS_TOKEN="access_token";
 
-        public static final String FORGOT_PASSWORD_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/forgotpassword";
-        public static final String LOGIN_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/login";
-        public static final String SIGNUP_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/register";
+        public static final String API_KEY_VALUE="q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
+        public static final String DEVICE_TYPE_VALUE="Android";
+        public static final String DEVICE_TOKEN_VALUE="";
+        public static String DEVICE_ID_VALUE="";
+        public static final String ACCESS_TOKEN_VALUE="";
+
+        public static final String LOGIN_URL = "http://www.srbrothersinfotech.com/directory-dev/API/login";
+        public static final String SIGNUP_URL = "http://www.srbrothersinfotech.com/directory-dev/API/register";
+        public static final String FORGOT_PASSWORD_URL = "http://www.srbrothersinfotech.com/directory-dev/API/forgotpassword";
+        public static final String CHANGE_PASSWORD_URL = "http://www.srbrothersinfotech.com/directory-dev/API/changepassword";
+        public static final String DELETE_URL = "http://www.srbrothersinfotech.com/directory-dev/API/delete";
+        public static final String STATUS_URL = "http://www.srbrothersinfotech.com/directory-dev/API/StatusChange";
+        public static final String SYNC_URL = "http://www.srbrothersinfotech.com/directory-dev/API/sync";
+
         public static final String PROFILE_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/profile/id/";
         public static final String SEARCH_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/search";
-        public static final String CHANGE_PASSWORD_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/changepassword/id/";
-        public static final String STATUS_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/status";
-        public static final String DELETE_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/delete";
+        /*public static final String STATUS_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/status";*/
+        /*public static final String CHANGE_PASSWORD_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/changepassword/id/";
+          public static final String DELETE_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/delete";
+          public static final String FORGOT_PASSWORD_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/forgotpassword";
+        public static final String LOGIN_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/login";*/
 
         public static final String PREFERENCE_NAME = "Directory";
         public static final String PREF_NAME = "Vastipatrak";
@@ -975,6 +999,9 @@ public class Common {
         public static final String CHILDREN_ID = "children_id";
         public static final String OFFLINE_SP = "offline_sp";
         public static final String TBTN_SHARE_SP = "tbtn_share_sp";
+
+        public static final String ONLINE = "Online";
+        public static final String OFFLINE = "Offline";
 
         /*public static final String MY_LATITUDE = "my_latitude";
         public static final String MY_LONGITUDE = "my_longitude";*/

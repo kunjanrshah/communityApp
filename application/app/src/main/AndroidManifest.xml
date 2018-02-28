@@ -93,6 +93,7 @@
             android:screenOrientation="portrait"></activity>
 
         <service android:name=".service.MyLocationService" />
+        <service android:name=".service.SyncService" />
 
         <!-- Firebase Notifications -->
         <service android:name=".service.MyFirebaseMessagingService">

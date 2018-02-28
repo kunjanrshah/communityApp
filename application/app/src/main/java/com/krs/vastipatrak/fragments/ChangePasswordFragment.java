@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -34,6 +35,9 @@ import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.FilterActivity;
 
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by kushal on 31/01/16.
@@ -199,6 +203,8 @@ public class ChangePasswordFragment extends Fragment {
 
             try {
                 mJsonObject = new JSONObject();
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
                 mJsonObject.put(Common.Constant_Class.PASSWORD, input_password.getText());
                 mJsonObject.put(Common.Constant_Class.REPEAT_PASSWORD, input_repeat.getText());
 
@@ -207,7 +213,7 @@ public class ChangePasswordFragment extends Fragment {
             }
 
 
-            final String password_url = Common.Constant_Class.CHANGE_PASSWORD_URL + mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+            final String password_url = Common.Constant_Class.CHANGE_PASSWORD_URL;
 
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, password_url, mJsonObject, new Response.Listener<JSONObject>() {
 
@@ -236,7 +242,16 @@ public class ChangePasswordFragment extends Fragment {
 
                     hideProgressDialog();
                 }
-            });
+            })
+            {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    return params;
+                }
+            };
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
         }

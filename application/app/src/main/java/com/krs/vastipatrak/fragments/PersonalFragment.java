@@ -397,6 +397,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
         RoundedImageView image = (RoundedImageView) dialog.findViewById(R.id.img_dialog);
         Glide.with(getActivity()).load(url).thumbnail(0.5f).into(image);
+
         // new Common.ImageLoadTask(url, image).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         dialog.show();
     }
@@ -459,15 +460,15 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         img_mother = (RoundedImageView) rootView.findViewById(R.id.img_mother);
         tbtn_share = (ToggleButton) rootView.findViewById(R.id.tbtn_share);
 
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false)) {
+        /*if (mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false)) {
             img_profile.setVisibility(View.GONE);
             img_father.setVisibility(View.GONE);
             img_mother.setVisibility(View.GONE);
         } else {
             img_profile.setVisibility(View.VISIBLE);
-            img_profile.setVisibility(View.VISIBLE);
-            img_profile.setVisibility(View.VISIBLE);
-        }
+            img_father.setVisibility(View.VISIBLE);
+            img_mother.setVisibility(View.VISIBLE);
+        }*/
 
         rbtnM = (RadioButton) rootView.findViewById(R.id.rbtnM);
         rbtnM.setChecked(true);

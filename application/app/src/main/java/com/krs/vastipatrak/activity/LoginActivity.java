@@ -45,6 +45,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
@@ -53,7 +54,6 @@ import com.krs.vastipatrak.model.Data;
 import com.krs.vastipatrak.model.ForgotPasswordData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.model.LoginData;
-import com.krs.vastipatrak.model.UserProfile;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.RoundedImageView;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
@@ -62,28 +62,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 
 public class LoginActivity extends Activity {
 
 
-    private EditText inputEmail, inputPassword, inputName, inputConformPassword, inputForgotPassword, inputMobile, input_email_mobile, edt_father_name, edt_surname, edt_address, edt_native;
-    private TextInputLayout inputLayoutName, inputLayoutEmail, input_layout_email_mobile, inputLayoutPassword, inputLayoutConformPassword, InputLayoutForgotPassword, inputLayoutMobile, input_layout_father_name, input_layout_surname, input_layout_address, input_layout_native_place;
-    private SharedPreferences mSharedPreferences = null;
-    private SharedPreferences.Editor mEditor;
-    private PrefManager prefManager;
-    private boolean SignupToggle = true;
-    private Button btn_signup;
-    private TextView txt_forgot, txtSignup;
     private final String[] INIT_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS};
-
-
-    // These tags will be used to cancel the requests
-    private String tag_json_obj = "jobj_req";
-    private String TAG = MainActivity.class.getSimpleName();
+    private final int INIT_REQUEST = 1;
     JSONObject json = null;
     Dialog Forgot_dialog;
     String[] SubcastList = {"Dasha"};
@@ -94,9 +83,23 @@ public class LoginActivity extends Activity {
     boolean isShow = true, isShow1 = true;
     String screen = "";
     ProgressDialog pDialog;
-    private final int INIT_REQUEST = 1;
     TextView txtTour = null;
     Realm realm;
+    private EditText inputEmail, inputPassword, inputName, inputConformPassword, inputForgotPassword, inputMobile, input_email_mobile, edt_father_name, edt_surname, edt_address, edt_native;
+    private TextInputLayout inputLayoutName, inputLayoutEmail, input_layout_email_mobile, inputLayoutPassword, inputLayoutConformPassword, InputLayoutForgotPassword, inputLayoutMobile, input_layout_father_name, input_layout_surname, input_layout_address, input_layout_native_place;
+    private SharedPreferences mSharedPreferences = null;
+    private SharedPreferences.Editor mEditor;
+    private PrefManager prefManager;
+    private boolean SignupToggle = true;
+    private Button btn_signup;
+    private TextView txt_forgot, txtSignup;
+    // These tags will be used to cancel the requests
+    private String tag_json_obj = "jobj_req";
+    private String TAG = MainActivity.class.getSimpleName();
+
+    private static boolean isValidEmail(String email) {
+        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,17 +210,15 @@ public class LoginActivity extends Activity {
                 startActivity(mIntent);
             }
         });
-
+        Common.getDeviceId(this);
         super.onCreate(savedInstanceState);
     }
-
 
     @Override
     protected void onResume() {
         super.onResume();
 
     }
-
 
     private void clearAll() {
         inputEmail.setText("");
@@ -241,7 +242,7 @@ public class LoginActivity extends Activity {
         prefManager = new PrefManager(this);
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
-        realm =AppController.getInstance().realm;
+        realm = AppController.getInstance().realm;
         pDialog = new ProgressDialog(this);
         pDialog.setMessage(Common.Constant_Class.LOADING);
         pDialog.setCancelable(true);
@@ -362,7 +363,6 @@ public class LoginActivity extends Activity {
 
     }
 
-
     private void showProgressDialog() {
 
         if (pDialog == null) {
@@ -433,53 +433,6 @@ public class LoginActivity extends Activity {
             btn_signup.setText(getResources().getString(R.string.btn_sign_in));
             SignupToggle = true;
             input_email_mobile.requestFocus();
-        }
-    }
-
-    private class MyTextWatcher implements TextWatcher {
-
-        private View view;
-
-        private MyTextWatcher(View view) {
-            this.view = view;
-        }
-
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-
-        public void afterTextChanged(Editable editable) {
-            switch (view.getId()) {
-                case R.id.input_name:
-                    validateName();
-                    break;
-                case R.id.input_email:
-                    validateEmail();
-                    break;
-                case R.id.input_password:
-                    validatePassword();
-                    break;
-                case R.id.input_conform_password:
-                    validateConformPassword();
-                    break;
-                case R.id.input_forgot_password:
-                    validateForgotPassword();
-                    break;
-                case R.id.edt_father_name:
-                    validateFatherName();
-                    break;
-                case R.id.edt_surname:
-                    validateSurname();
-                    break;
-                case R.id.edt_address:
-                    validateAddress();
-                    break;
-                case R.id.edt_native:
-                    validateNative();
-                    break;
-            }
         }
     }
 
@@ -592,23 +545,18 @@ public class LoginActivity extends Activity {
         return true;
     }
 
-    private static boolean isValidEmail(String email) {
-        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
     private void requestFocus(View view) {
         if (view.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
 
-
     private void alert(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getString(R.string.app_name));
 
         builder.setMessage(message);
-        builder.setPositiveButton("Thank You !", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
 
@@ -652,16 +600,16 @@ public class LoginActivity extends Activity {
 
             String forgot_email = inputForgotPassword.getText().toString();
             if (!forgot_email.equalsIgnoreCase("")) {
-
-               /* try {
-                    json = new JSONObject();
+                JSONObject json = new JSONObject();
+                try {
                     json.put(Common.Constant_Class.EMAIL_ADDRESS, forgot_email);
                 } catch (Exception e) {
                     e.printStackTrace();
-                }*/
+                }
 
-                String url = Common.Constant_Class.FORGOT_PASSWORD_URL + "&" + Common.Constant_Class.EMAIL_ADDRESS + "=" + forgot_email;
-                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                String url = Common.Constant_Class.FORGOT_PASSWORD_URL;
+
+                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
@@ -675,7 +623,7 @@ public class LoginActivity extends Activity {
                             boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
 
-                            ForgotPasswordData mfpassData= new ForgotPasswordData();
+                            ForgotPasswordData mfpassData = new ForgotPasswordData();
                             mfpassData.setMessage(message);
                             mfpassData.setSuccess(success);
 
@@ -713,7 +661,16 @@ public class LoginActivity extends Activity {
                         }
 
                     }
-                });
+                })
+                {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                        params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                        return params;
+                    }
+                };
                 // Adding request to request queue
                 AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
@@ -748,7 +705,7 @@ public class LoginActivity extends Activity {
                         Log.d(TAG, response.toString());
 
                         try {
-                            LoginData mLogindata=new LoginData();
+                            LoginData mLogindata = new LoginData();
 
 
                             boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
@@ -761,7 +718,7 @@ public class LoginActivity extends Activity {
                                 String data = response.getString(Common.Constant_Class.DATA);
                                 JSONObject mjson_data = new JSONObject(data);
 
-                                Data mdata=new Data();
+                                Data mdata = new Data();
 
                                 String status = mjson_data.getString(Common.Constant_Class.STATUS);
                                 mdata.setStatus(status);
@@ -770,7 +727,7 @@ public class LoginActivity extends Activity {
                                     String profile_url = mjson_data.getString(Common.Constant_Class.PROFILE_PIC_URL);
                                     String first_name = mjson_data.getString(Common.Constant_Class.FIRST_NAME);
                                     String last_name = mjson_data.getString(Common.Constant_Class.LAST_NAME);
-
+                                    String access_token=mjson_data.getString(Common.Constant_Class.ACCESS_TOKEN);
                                     mdata.setId(user_id);
                                     mdata.setProfilePicUrl(profile_url);
                                     mdata.setFirstName(first_name);
@@ -782,11 +739,12 @@ public class LoginActivity extends Activity {
                                     mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, profile_url);
                                     mEditor.putString(Common.Constant_Class.FIRST_NAME, first_name);
                                     mEditor.putString(Common.Constant_Class.LAST_NAME, last_name);
+                                    mEditor.putString(Common.Constant_Class.ACCESS_TOKEN, access_token);
                                     mEditor.commit();
 
-                                    Bundle fb_bundle=new Bundle();
-                                    fb_bundle.putInt(FirebaseAnalytics.Param.ITEM_ID,Integer.parseInt(user_id));
-                                    fb_bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,first_name+" "+last_name);
+                                    Bundle fb_bundle = new Bundle();
+                                    fb_bundle.putInt(FirebaseAnalytics.Param.ITEM_ID, Integer.parseInt(user_id));
+                                    fb_bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, first_name + " " + last_name);
                                     AppController.getInstance().firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, fb_bundle);
 
 
@@ -837,7 +795,19 @@ public class LoginActivity extends Activity {
                         }
                         Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_LONG).show();
                     }
-                });
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                        params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                        params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+
+                        return params;
+                    }
+                };
+
+
                 jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
                 // Adding request to request queue
@@ -851,11 +821,11 @@ public class LoginActivity extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                ListProfileData mListProfileDatas=realm.where(ListProfileData.class).equalTo(Common.Constant_Class.EMAIL_ADDRESS,email)
+                ListProfileData mListProfileDatas = realm.where(ListProfileData.class).equalTo(Common.Constant_Class.EMAIL_ADDRESS, email)
                         .equalTo(Common.Constant_Class.PASSWORD, password).findFirst();
 
 
-                if (mListProfileDatas !=null) {
+                if (mListProfileDatas != null) {
                     String user_id = mListProfileDatas.getProfile_id();
                     mEditor.putString(Common.Constant_Class.EMAIL, email);
                     mEditor.putString(Common.Constant_Class.PASSWORD, password);
@@ -897,19 +867,22 @@ public class LoginActivity extends Activity {
                     try {
                         json = new JSONObject();
                         json.put(Common.Constant_Class.FIRST_NAME, name);
-                        json.put(Common.Constant_Class.FATHER_NAME, father_name);
-                        json.put(Common.Constant_Class.LAST_NAME, surname);
                         json.put(Common.Constant_Class.EMAIL_ADDRESS, email);
                         json.put(Common.Constant_Class.MOBILE, mobile);
                         json.put(Common.Constant_Class.PASSWORD, password);
                         json.put(Common.Constant_Class.REPEAT_PASSWORD, cpassword);
-                        json.put(Common.Constant_Class.NATIVE_PLACE, _native);
-                        json.put(Common.Constant_Class.ADDRESS, address);
                         json.put(Common.Constant_Class.SUB_CAST, subcast);
                         json.put(Common.Constant_Class.EKDO, ekdo);
-                        json.put(Common.Constant_Class.PROFILE_PIC, "profile.png");
-                        json.put(Common.Constant_Class.PROFILE_PIC_HASH, str_profile_hash);
 
+                        if (screen != null && screen.equalsIgnoreCase(Common.Constant_Class.SEARCH_FRAGMENT)) {
+                            json.put(Common.Constant_Class.STATUS, "1");
+                        } else {
+                            json.put(Common.Constant_Class.STATUS, "0");
+                        }
+                        if (!str_profile_hash.isEmpty()) {
+                            json.put(Common.Constant_Class.PROFILE_PIC, "profile.png");
+                            json.put(Common.Constant_Class.PROFILE_PIC_HASH, str_profile_hash);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -925,7 +898,6 @@ public class LoginActivity extends Activity {
                                 String message = response.getString(Common.Constant_Class.MESSAGE);
 
 
-
                                 if (success) {
 
                                     String user_id = response.getString(Common.Constant_Class.USER_ID);
@@ -934,7 +906,6 @@ public class LoginActivity extends Activity {
                                         String profile_url = response.getString(Common.Constant_Class.PROFILE_PIC_URL);
                                         String first_name = response.getString(Common.Constant_Class.FIRST_NAME);
                                         String last_name = response.getString(Common.Constant_Class.LAST_NAME);
-
 
 
                                         mEditor.putString(Common.Constant_Class.EMAIL, email);
@@ -969,13 +940,9 @@ public class LoginActivity extends Activity {
                                         realm.copyToRealm(mListProfileData);
                                         realm.commitTransaction();
 
-                                       // AppController.dbHelper.InsertProfileData(mListProfileData);
-                                        if (screen != null && screen.equalsIgnoreCase(Common.Constant_Class.SEARCH_FRAGMENT)) {
-                                            Toast.makeText(LoginActivity.this,name+" "+surname+" Profile created successfully",Toast.LENGTH_SHORT).show();
-                                            callStatusChangeWS(1, user_id);
-                                        } else {
-                                            alert(message);
-                                        }
+                                        alert(message);
+                                        // AppController.dbHelper.InsertProfileData(mListProfileData);
+
                                     }
                                 } else {
 
@@ -1017,7 +984,17 @@ public class LoginActivity extends Activity {
                             Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_LONG).show();
 
                         }
-                    });
+                    }) {
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<>();
+                            params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                            params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                            params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+
+                            return params;
+                        }
+                    };
                     // Adding request to request queue
                     AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
                 } else {
@@ -1031,7 +1008,7 @@ public class LoginActivity extends Activity {
         }
     }
 
-    private void callStatusChangeWS(final int mode, final String user_id) {
+    /*private void callStatusChangeWS(final int mode, final String user_id) {
         if (Common.isOnline(this)) {
             showProgressDialog();
             JSONObject mJsonObject = new JSONObject();
@@ -1088,7 +1065,7 @@ public class LoginActivity extends Activity {
         } else {
             Toast.makeText(this, Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 
     private void selectImage(final Activity mActivity) {
         final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
@@ -1135,6 +1112,53 @@ public class LoginActivity extends Activity {
                     str_profile_hash = Common.getBase64(this, bmp);
                 }
 
+            }
+        }
+    }
+
+    private class MyTextWatcher implements TextWatcher {
+
+        private View view;
+
+        private MyTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void afterTextChanged(Editable editable) {
+            switch (view.getId()) {
+                case R.id.input_name:
+                    validateName();
+                    break;
+                case R.id.input_email:
+                    validateEmail();
+                    break;
+                case R.id.input_password:
+                    validatePassword();
+                    break;
+                case R.id.input_conform_password:
+                    validateConformPassword();
+                    break;
+                case R.id.input_forgot_password:
+                    validateForgotPassword();
+                    break;
+                case R.id.edt_father_name:
+                    validateFatherName();
+                    break;
+                case R.id.edt_surname:
+                    validateSurname();
+                    break;
+                case R.id.edt_address:
+                    validateAddress();
+                    break;
+                case R.id.edt_native:
+                    validateNative();
+                    break;
             }
         }
     }
