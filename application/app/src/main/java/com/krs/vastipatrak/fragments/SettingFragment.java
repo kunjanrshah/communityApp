@@ -9,6 +9,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,8 +29,13 @@ import android.widget.ToggleButton;
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.FilterActivity;
+import com.krs.vastipatrak.adapter.CityAdapter;
+import com.krs.vastipatrak.model.City;
 import com.krs.vastipatrak.service.SyncService;
 import com.krs.vastipatrak.utils.Common;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SettingFragment extends Fragment {
 
@@ -43,6 +52,9 @@ public class SettingFragment extends Fragment {
     private SharedPreferences mSharedPreferences = null;
     private SharedPreferences.Editor mEditor = null;
     private TextView txt_offline, txt_sync, txt_sync_val;
+    private List<City> cityList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private CityAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,9 +96,29 @@ public class SettingFragment extends Fragment {
             }
         });
 
+        recyclerView = rootView.findViewById(R.id.recycler_view);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+
+        mAdapter = new CityAdapter(cityList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+
+        prepareCityData();
 
         return rootView;
     }
+
+    private void prepareCityData() {
+        City city = new City("Ahmedabad", true);
+        cityList.add(city);
+        city = new City("Surat", false);
+        cityList.add(city);
+        mAdapter.notifyDataSetChanged();
+    }
+
+
 /*
     public boolean checkDataBase() {
         String PACKAGE_NAME = getActivity().getApplicationContext().getPackageName();
@@ -332,12 +364,12 @@ public class SettingFragment extends Fragment {
 
     private void MemoryAllocation(View rootView) {
 
-        txt_offline = (TextView) rootView.findViewById(R.id.txt_offline);
-        txt_sync = (TextView) rootView.findViewById(R.id.txt_sync);
-        txt_sync_val = (TextView) rootView.findViewById(R.id.txt_sync_val);
-        tbtn_net = (ToggleButton) rootView.findViewById(R.id.tbtn_net);
-        tbtn_sync = (ToggleButton) rootView.findViewById(R.id.tbtn_sync);
-        ll_progress = (LinearLayout) rootView.findViewById(R.id.ll_progress);
+        txt_offline = rootView.findViewById(R.id.txt_offline);
+        txt_sync = rootView.findViewById(R.id.txt_sync);
+        txt_sync_val = rootView.findViewById(R.id.txt_sync_val);
+        tbtn_net = rootView.findViewById(R.id.tbtn_net);
+        tbtn_sync = rootView.findViewById(R.id.tbtn_sync);
+        ll_progress = rootView.findViewById(R.id.ll_progress);
         final Button btn_sync = rootView.findViewById(R.id.btn_sync);
 
         tbtn_sync.setChecked(false);
@@ -347,7 +379,7 @@ public class SettingFragment extends Fragment {
         tbtn_sync.setText(null);
         tbtn_sync.setTextOn(null);
         tbtn_sync.setTextOff(null);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
+        progressBar = rootView.findViewById(R.id.progress);
 
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();

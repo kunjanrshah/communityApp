@@ -34,7 +34,6 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.FilterActivity;
@@ -61,6 +60,9 @@ import io.realm.RealmList;
 public class SearchFragment extends Fragment {
 
 
+    private static final String[] CALL_PHONE_PERMS = {Manifest.permission.CALL_PHONE};
+    private static final int CALL_PHONE_REQUEST = 3;
+    private final int REQ_CODE_SPEECH_INPUT = 100;
     ExpandableListView lvCustomList;
     String TAG = "SearchFragment";
     String tag_json_obj = "jobj_req";
@@ -71,14 +73,16 @@ public class SearchFragment extends Fragment {
     ProgressDialog pDialog;
     ArrayList<String> lstSelectedIDs = null;
     ExpandableListAdapter mExpandableListAdapter = null;
-    private static final String[] CALL_PHONE_PERMS = {Manifest.permission.CALL_PHONE};
-    private static final int CALL_PHONE_REQUEST = 3;
-    private SharedPreferences mSharedPreferences = null;
    // WebView wv_home = null;
     TextView txtLable=null;
     //String webViewUrl = "http://www.androidexample.com/media/webview/details.html";
     String webViewUrl = "http://www.superbinstruments.com/WEB/photoes.php";
+    private SharedPreferences mSharedPreferences = null;
     private AdView mAdView;
+
+    public SearchFragment() {
+        // Required empty public constructor
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -89,10 +93,6 @@ public class SearchFragment extends Fragment {
                 }
                 break;
         }
-    }
-
-    public SearchFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -233,14 +233,13 @@ public class SearchFragment extends Fragment {
         }
     }
 
-
     private void Memory_Allocation(View root) {
 
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
-        lvCustomList = (ExpandableListView) root.findViewById(R.id.lvCustomList);
+        lvCustomList = root.findViewById(R.id.lvCustomList);
      //   wv_home = (WebView) root.findViewById(R.id.wv_home);
-        txtLable= (TextView) root.findViewById(R.id.txtLable);
-        TextView tv = (TextView) root.findViewById(R.id.TextView03);
+        txtLable = root.findViewById(R.id.txtLable);
+        TextView tv = root.findViewById(R.id.TextView03);
         tv.setSelected(true);
         pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage(Common.Constant_Class.LOADING);
@@ -250,11 +249,10 @@ public class SearchFragment extends Fragment {
         listDataHeader = new ArrayList<ListParentData>();
         listDataChild = new HashMap<ListParentData, List<ListChildData>>();
 
-        mAdView = (AdView) root.findViewById(R.id.adView);
+        mAdView = root.findViewById(R.id.adView);
 //        mAdView.setAdSize(AdSize.BANNER);
 //        mAdView.setAdUnitId(getString(R.string.banner1));
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -458,8 +456,6 @@ public class SearchFragment extends Fragment {
 
         return false;
     }
-
-    private final int REQ_CODE_SPEECH_INPUT = 100;
 
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -743,11 +739,11 @@ public class SearchFragment extends Fragment {
 
             JSONObject mJsonObject = new JSONObject();
             try {
-                mJsonObject.put(Common.Constant_Class.STATUS, "0");
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            String NonActives_url = Common.Constant_Class.SEARCH_URL;
+            String NonActives_url = Common.Constant_Class.INACTIVES_URL;
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, NonActives_url, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -763,7 +759,15 @@ public class SearchFragment extends Fragment {
 
                     hideProgressDialog();
                 }
-            });
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    return params;
+                }
+            };
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
         } else {

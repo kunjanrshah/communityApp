@@ -208,12 +208,7 @@ public class Common {
     public static boolean isOnline(Context mContext) {
         ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnected()) {
-
-            return true;
-        } else {
-            return false;
-        }
+        return netInfo != null && netInfo.isConnected();
     }
 
     public static String getBase64(Context context, Bitmap bitmap) {
@@ -675,15 +670,20 @@ public class Common {
 
     public static void ClearProfileTableData() {
 
+        realm.beginTransaction();
         realm.deleteAll();
+        realm.commitTransaction();
+
     }
 
     public static void UpdateProfilePassword(String password, String id) {
 
-        ListProfileData mListProfile = realm.where(ListProfileData.class).equalTo(Common.Constant_Class.PROFILE_ID, id).findFirst();
-        realm.beginTransaction();
+
+        ListProfileData mListProfile = AppController.getInstance().realm.where(ListProfileData.class).equalTo(Common.Constant_Class.PROFILE_ID, id).findFirst();
+
+        AppController.getInstance().realm.beginTransaction();
         mListProfile.setPassword(password);
-        realm.commitTransaction();
+        AppController.getInstance().realm.commitTransaction();
     }
 
     public static void UpdateProfileStatus(ArrayList<String> lstSelectedIDs, String status) {
@@ -867,32 +867,29 @@ public class Common {
         public static final String API_KEY_VALUE="q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
         public static final String DEVICE_TYPE_VALUE="Android";
         public static final String DEVICE_TOKEN_VALUE="";
-        public static String DEVICE_ID_VALUE="";
         public static final String ACCESS_TOKEN_VALUE="";
-
         public static final String LOGIN_URL = "http://www.srbrothersinfotech.com/directory-dev/API/login";
         public static final String SIGNUP_URL = "http://www.srbrothersinfotech.com/directory-dev/API/register";
-        public static final String FORGOT_PASSWORD_URL = "http://www.srbrothersinfotech.com/directory-dev/API/forgotpassword";
-        public static final String CHANGE_PASSWORD_URL = "http://www.srbrothersinfotech.com/directory-dev/API/changepassword";
+        public static final String FORGOT_PASSWORD_URL = "http://www.srbrothersinfotech.com/directory-dev/API/forgotPassword";
+        public static final String CHANGE_PASSWORD_URL = "http://www.srbrothersinfotech.com/directory-dev/API/changePassword";
         public static final String DELETE_URL = "http://www.srbrothersinfotech.com/directory-dev/API/delete";
         public static final String STATUS_URL = "http://www.srbrothersinfotech.com/directory-dev/API/StatusChange";
         public static final String SYNC_URL = "http://www.srbrothersinfotech.com/directory-dev/API/sync";
-
-        public static final String PROFILE_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/profile/id/";
+        public static final String INACTIVES_URL = "http://srbrothersinfotech.com/directory-dev/API/getInactiveUsers";
+        public static final String PROFILE_URL = "http://srbrothersinfotech.com/directory-dev/API/profile";
+        //public static final String PROFILE_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/profile/id/";
         public static final String SEARCH_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/search";
+        public static final String PREFERENCE_NAME = "Directory";
         /*public static final String STATUS_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/status";*/
         /*public static final String CHANGE_PASSWORD_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/changepassword/id/";
           public static final String DELETE_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/delete";
           public static final String FORGOT_PASSWORD_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/forgotpassword";
         public static final String LOGIN_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/login";*/
-
-        public static final String PREFERENCE_NAME = "Directory";
         public static final String PREF_NAME = "Vastipatrak";
         public static final String SCREEN = "screen";
         public static final String LOGIN_ACTIVITY = "LoginActivity";
         public static final String SEARCH_FRAGMENT = "search_fragment";
-
-        public static final String FIRST_TIME = "first_time";
+        public static final String IS_UPDATE = "is_update";
         public static final String USER_ID = "user_id";
         public static final String LOADING = "Loading...";
         public static final String NO_CONNECTION = "No internet connection!";
@@ -922,7 +919,6 @@ public class Common {
         public static final String ADDRESS = "address";
         public static final String SUB_CAST = "sub_cast";
         public static final String EKDO = "ekdo";
-
         public static final String OCCUPATION = "occupation";
         public static final String OFFICE_MOBILE = "office_mobile";
         public static final String WORK = "work";
@@ -944,7 +940,6 @@ public class Common {
         public static final String PHONE = "phone";
         public static final String GENDER = "gender";
         public static final String GOTRA = "gotra";
-
         public static final String TITLE_BLOOD_GROUP = "Blood Group";
         public static final String A_POSITIVE = "A +VE";
         public static final String A_NAGATIVE = "A -VE";
@@ -952,7 +947,6 @@ public class Common {
         public static final String B_NAGATIVE = "B -VE";
         public static final String O_POSITIVE = "O +VE";
         public static final String O_NAGATIVE = "O -VE";
-
         public static final String EDUCATION = "education";
         public static final String PROFILE_PIC = "profile_pic";
         public static final String PROFILE_PIC_HASH = "profile_pic_hash";
@@ -960,8 +954,6 @@ public class Common {
         public static final String IMG_MOTHER_HASH = "img_mother_hash";
         public static final String IMG_FATHER = "img_father";
         public static final String IMG_FATHER_HASH = "img_father_hash";
-
-
         public static final String SPOUSE_NAME = "spouse_name";
         public static final String MARRIAGE_DATE = "marriage_date";
         public static final String SPOUSE_FATHER_NAME = "spouse_father_name";
@@ -979,29 +971,24 @@ public class Common {
         public static final String CHILD_IMAGE_URL = "child_image_url";
         public static final String CHILD_IMAGE = "child_image";
         public static final String CHILD_IMAGE_HASH = "child_image_hash";
-
-
         public static final String MARITAL_STATUS = "marital_status";
         public static final String IMG_SPOUSE = "img_spouse";
         public static final String IMG_SPOUSE_HASH = "img_spouse_hash";
         public static final String IMG_SMOTHER = "img_smother";
         public static final String IMG_SMOTHER_HASH = "img_smother_hash";
-
         public static final String IMG_SFATHER = "img_sfather";
         public static final String IMG_SFATHER_HASH = "img_sfather_hash";
-
         public static final int DATABASE_VERSION = 1;
         public static final String DATABASE_NAME = "Vastipatrak.db";
         public static final String TABLE_PROFILE = "Profile";
         public static final String TABLE_CHILDREN = "Children";
-
         public static final String PROFILE_ID = "profile_id";
         public static final String CHILDREN_ID = "children_id";
         public static final String OFFLINE_SP = "offline_sp";
         public static final String TBTN_SHARE_SP = "tbtn_share_sp";
-
         public static final String ONLINE = "Online";
         public static final String OFFLINE = "Offline";
+        public static String DEVICE_ID_VALUE = "";
 
         /*public static final String MY_LATITUDE = "my_latitude";
         public static final String MY_LONGITUDE = "my_longitude";*/

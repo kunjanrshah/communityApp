@@ -1,10 +1,13 @@
 package com.krs.vastipatrak.service;
 
-import android.app.Service;
+import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -18,15 +21,31 @@ import com.krs.vastipatrak.utils.Common;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.realm.RealmList;
 
 /**
  * Created by kunjan on 28/2/18.
  */
 
-public class SyncService extends Service {
+public class SyncService extends IntentService {
 
     String TAG = "SyncService";
+
+    SharedPreferences mSharedPreferences;
+
+    public SyncService() {
+        super(SyncService.class.getName());
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -34,16 +53,8 @@ public class SyncService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e(TAG, "onStartCommand");
-        super.onStartCommand(intent, flags, startId);
+    protected void onHandleIntent(Intent intent) {
         callSyncWS();
-        return START_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     private void callSyncWS() {
@@ -54,15 +65,14 @@ public class SyncService extends Service {
 
             try {
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.STATUS, "1");
-                mJsonObject.put(Common.Constant_Class.FIRST_NAME, "kunjan");
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             final String sync_url = Common.Constant_Class.SYNC_URL;
-
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, sync_url, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
@@ -210,7 +220,15 @@ public class SyncService extends Service {
                 public void onErrorResponse(VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                 }
-            });
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    return params;
+                }
+            };
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         }

@@ -45,7 +45,6 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
@@ -61,7 +60,6 @@ import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -166,15 +164,18 @@ public class LoginActivity extends Activity {
                 Forgot_dialog.setContentView(R.layout.dialog_custom);
                 Forgot_dialog.setTitle(getResources().getString(R.string.forgot_password));
 
-                InputLayoutForgotPassword = (TextInputLayout) Forgot_dialog.findViewById(R.id.input_layout_forgot_password);
-                inputForgotPassword = (EditText) Forgot_dialog.findViewById(R.id.input_forgot_password);
+                InputLayoutForgotPassword = Forgot_dialog.findViewById(R.id.input_layout_forgot_password);
+                inputForgotPassword = Forgot_dialog.findViewById(R.id.input_forgot_password);
                 inputForgotPassword.addTextChangedListener(new MyTextWatcher(inputForgotPassword));
-                Button btn_send = (Button) Forgot_dialog.findViewById(R.id.btn_send);
+                Button btn_send = Forgot_dialog.findViewById(R.id.btn_send);
 
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ForgotPasswordWS();
+                        //String url = Common.Constant_Class.FORGOT_PASSWORD_URL + "?" + Common.Constant_Class.EMAIL_ADDRESS + "=" + "kunjanrshah@gmail.com";
+
+//                        new JsonTask().execute(url);
                     }
                 });
                 Forgot_dialog.show();
@@ -247,50 +248,50 @@ public class LoginActivity extends Activity {
         pDialog.setMessage(Common.Constant_Class.LOADING);
         pDialog.setCancelable(true);
 
-        txtTour = (TextView) findViewById(R.id.txtTour);
+        txtTour = findViewById(R.id.txtTour);
 
-        input_layout_father_name = (TextInputLayout) findViewById(R.id.input_layout_father_name);
-        edt_father_name = (EditText) findViewById(R.id.edt_father_name);
+        input_layout_father_name = findViewById(R.id.input_layout_father_name);
+        edt_father_name = findViewById(R.id.edt_father_name);
 
-        input_layout_surname = (TextInputLayout) findViewById(R.id.input_layout_surname);
-        edt_surname = (EditText) findViewById(R.id.edt_surname);
+        input_layout_surname = findViewById(R.id.input_layout_surname);
+        edt_surname = findViewById(R.id.edt_surname);
 
-        input_layout_address = (TextInputLayout) findViewById(R.id.input_layout_address);
-        edt_address = (EditText) findViewById(R.id.edt_address);
+        input_layout_address = findViewById(R.id.input_layout_address);
+        edt_address = findViewById(R.id.edt_address);
 
-        input_layout_native_place = (TextInputLayout) findViewById(R.id.input_layout_native_place);
-        edt_native = (EditText) findViewById(R.id.edt_native);
+        input_layout_native_place = findViewById(R.id.input_layout_native_place);
+        edt_native = findViewById(R.id.edt_native);
 
-        inputEmail = (EditText) findViewById(R.id.input_email);
-        inputLayoutEmail = (TextInputLayout) findViewById(R.id.input_layout_email);
+        inputEmail = findViewById(R.id.input_email);
+        inputLayoutEmail = findViewById(R.id.input_layout_email);
 
-        input_email_mobile = (EditText) findViewById(R.id.input_email_mobile);
-        input_layout_email_mobile = (TextInputLayout) findViewById(R.id.input_layout_email_mobile);
+        input_email_mobile = findViewById(R.id.input_email_mobile);
+        input_layout_email_mobile = findViewById(R.id.input_layout_email_mobile);
 
-        inputMobile = (EditText) findViewById(R.id.input_mobile);
-        inputLayoutMobile = (TextInputLayout) findViewById(R.id.input_layout_mobile);
+        inputMobile = findViewById(R.id.input_mobile);
+        inputLayoutMobile = findViewById(R.id.input_layout_mobile);
 
-        inputPassword = (EditText) findViewById(R.id.input_password);
+        inputPassword = findViewById(R.id.input_password);
 
         //  inputPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
 
 
-        inputLayoutPassword = (TextInputLayout) findViewById(R.id.input_layout_password);
-        inputConformPassword = (EditText) findViewById(R.id.input_conform_password);
+        inputLayoutPassword = findViewById(R.id.input_layout_password);
+        inputConformPassword = findViewById(R.id.input_conform_password);
 
         inputConformPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
 
-        inputLayoutConformPassword = (TextInputLayout) findViewById(R.id.input_layout_conform_password);
-        inputName = (EditText) findViewById(R.id.input_name);
-        inputLayoutName = (TextInputLayout) findViewById(R.id.input_layout_name);
+        inputLayoutConformPassword = findViewById(R.id.input_layout_conform_password);
+        inputName = findViewById(R.id.input_name);
+        inputLayoutName = findViewById(R.id.input_layout_name);
 
-        btn_signup = (Button) findViewById(R.id.btn_signup);
-        txt_forgot = (TextView) findViewById(R.id.txt_forgot);
-        txtSignup = (TextView) findViewById(R.id.txtSignup);
+        btn_signup = findViewById(R.id.btn_signup);
+        txt_forgot = findViewById(R.id.txt_forgot);
+        txtSignup = findViewById(R.id.txtSignup);
         //  fab = (FloatingActionButton) findViewById(R.id.fab);
-        img_profile = (RoundedImageView) findViewById(R.id.img_profile);
-        spinnerSubcast = (MaterialBetterSpinner) findViewById(R.id.spinnerSubcast);
-        spinnerEkdo = (MaterialBetterSpinner) findViewById(R.id.spinnerEkdo);
+        img_profile = findViewById(R.id.img_profile);
+        spinnerSubcast = findViewById(R.id.spinnerSubcast);
+        spinnerEkdo = findViewById(R.id.spinnerEkdo);
 
         ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, EkdoList);
         spinnerEkdo.setAdapter(arrayAdapter1);
@@ -300,7 +301,7 @@ public class LoginActivity extends Activity {
         spinnerSubcast.setAdapter(arrayAdapter2);
         spinnerSubcast.setText("Dasha");
 
-        TextView tv = (TextView) findViewById(R.id.TextView03);
+        TextView tv = findViewById(R.id.TextView03);
         tv.setSelected(true);
 
         inputPassword.setOnTouchListener(new EditText.OnTouchListener() {
@@ -595,21 +596,92 @@ public class LoginActivity extends Activity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
+
+    /*ProgressDialog pd;
+    private class JsonTask extends AsyncTask<String, String, String> {
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pd = new ProgressDialog(LoginActivity.this);
+            pd.setMessage("Please wait");
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        protected String doInBackground(String... params) {
+
+
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+
+            try {
+                URL url = new URL(params[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+
+
+                InputStream stream = connection.getInputStream();
+
+                reader = new BufferedReader(new InputStreamReader(stream));
+
+                StringBuffer buffer = new StringBuffer();
+                String line = "";
+
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line+"\n");
+                    Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
+
+                }
+
+                return buffer.toString();
+
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (pd.isShowing()){
+                pd.dismiss();
+            }
+            Toast.makeText(LoginActivity.this,""+result,Toast.LENGTH_SHORT).show();
+
+        }
+    }*/
+
+
     private void ForgotPasswordWS() {
         if (Common.isOnline(this)) {
 
             String forgot_email = inputForgotPassword.getText().toString();
             if (!forgot_email.equalsIgnoreCase("")) {
-                JSONObject json = new JSONObject();
+                /*JSONObject json = new JSONObject();
                 try {
                     json.put(Common.Constant_Class.EMAIL_ADDRESS, forgot_email);
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                }*/
 
-                String url = Common.Constant_Class.FORGOT_PASSWORD_URL;
-
-                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
+                String url = Common.Constant_Class.FORGOT_PASSWORD_URL + "?" + Common.Constant_Class.EMAIL_ADDRESS + "=" + forgot_email;
+                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {

@@ -20,12 +20,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.fragments.BusinessFragment;
@@ -42,7 +42,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -107,12 +109,12 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
     private void MemoryAllocation() {
         realm = AppController.getInstance().realm;
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mBundle = getIntent().getExtras();
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        viewPager = findViewById(R.id.viewpager);
+        tabLayout = findViewById(R.id.tabs);
     }
 
     private void ToolbarSetup() {
@@ -158,7 +160,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
 
 
                 return false;
@@ -312,7 +313,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mListChildrenData.setChild_edu("");
                     mListChildrenData.setChild_work("");*/
 
-                    callProfileWS(mListProfileData, child_container, lst_delID);
+                    setProfileJsonObject(mListProfileData, child_container, lst_delID);
                 } else {
                     Toast.makeText(MyProfileActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
                     valid = "";
@@ -325,7 +326,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         return true;
     }
 
-    private void callProfileWS(ListProfileData mListProfileData, LinearLayout child_container, ArrayList<Integer> lst_delID) {
+    private void setProfileJsonObject(ListProfileData mListProfileData, LinearLayout child_container, ArrayList<Integer> lst_delID) {
 
 
         JSONObject mJsonObject = null;
@@ -333,6 +334,9 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         // Personal Details
         try {
             mJsonObject = new JSONObject();
+
+            mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
+            mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
             mJsonObject.put(Common.Constant_Class.FIRST_NAME, mListProfileData.getFirst_name());
             mJsonObject.put(Common.Constant_Class.LAST_NAME, mListProfileData.getLast_name());
             mJsonObject.put(Common.Constant_Class.FATHER_NAME, mListProfileData.getFather_name());
@@ -350,16 +354,16 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             mJsonObject.put(Common.Constant_Class.NATIVE_PLACE, mListProfileData.getNative_place());
             mJsonObject.put(Common.Constant_Class.EDUCATION, mListProfileData.getEducation());
             if (!mListProfileData.getStr_profile_hash().equalsIgnoreCase("")) {
-                mJsonObject.put(Common.Constant_Class.PROFILE_PIC, "profile.png");
-                mJsonObject.put(Common.Constant_Class.PROFILE_PIC_HASH, mListProfileData.getStr_profile_hash());
+                mJsonObject.put(Common.Constant_Class.PROFILE_PIC, mListProfileData.getStr_profile_hash());
+                //mJsonObject.put(Common.Constant_Class.PROFILE_PIC_HASH, mListProfileData.getStr_profile_hash());
             }
             if (!mListProfileData.getStr_mother_hash().equalsIgnoreCase("")) {
-                mJsonObject.put(Common.Constant_Class.IMG_MOTHER, "mother.png");
-                mJsonObject.put(Common.Constant_Class.IMG_MOTHER_HASH, mListProfileData.getStr_mother_hash());
+                mJsonObject.put(Common.Constant_Class.IMG_MOTHER, mListProfileData.getStr_mother_hash());
+                //mJsonObject.put(Common.Constant_Class.IMG_MOTHER_HASH, mListProfileData.getStr_mother_hash());
             }
             if (!mListProfileData.getStr_father_hash().equalsIgnoreCase("")) {
-                mJsonObject.put(Common.Constant_Class.IMG_FATHER, "father.png");
-                mJsonObject.put(Common.Constant_Class.IMG_FATHER_HASH, mListProfileData.getStr_father_hash());
+                mJsonObject.put(Common.Constant_Class.IMG_FATHER, mListProfileData.getStr_father_hash());
+                //mJsonObject.put(Common.Constant_Class.IMG_FATHER_HASH, mListProfileData.getStr_father_hash());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -386,16 +390,16 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 mJsonObject.put(Common.Constant_Class.SPOUSE_MOTHER_NAME, mListProfileData.getSmother_name());
 
                 if (!mListProfileData.getStr_spouse_hash().equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.IMG_SPOUSE, "spouse.png");
-                    mJsonObject.put(Common.Constant_Class.IMG_SPOUSE_HASH, mListProfileData.getStr_spouse_hash());
+                    mJsonObject.put(Common.Constant_Class.IMG_SPOUSE, mListProfileData.getStr_spouse_hash());
+                    //mJsonObject.put(Common.Constant_Class.IMG_SPOUSE_HASH, mListProfileData.getStr_spouse_hash());
                 }
                 if (!mListProfileData.getStr_mspouse_hash().equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.IMG_SMOTHER, "smother.png");
-                    mJsonObject.put(Common.Constant_Class.IMG_SMOTHER_HASH, mListProfileData.getStr_mspouse_hash());
+                    mJsonObject.put(Common.Constant_Class.IMG_SMOTHER, mListProfileData.getStr_mspouse_hash());
+                    //mJsonObject.put(Common.Constant_Class.IMG_SMOTHER_HASH, mListProfileData.getStr_mspouse_hash());
                 }
                 if (!mListProfileData.getStr_fspouse_hash().equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.IMG_SFATHER, "sfather.png");
-                    mJsonObject.put(Common.Constant_Class.IMG_SFATHER_HASH, mListProfileData.getStr_fspouse_hash());
+                    mJsonObject.put(Common.Constant_Class.IMG_SFATHER, mListProfileData.getStr_fspouse_hash());
+                    //mJsonObject.put(Common.Constant_Class.IMG_SFATHER_HASH, mListProfileData.getStr_fspouse_hash());
                 }
 
                 int child_count = child_container.getChildCount();
@@ -424,8 +428,9 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_EDU, mViewholder.edtchild_edu.getText());
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_WORK, mViewholder.edtchild_work.getText());
                     if (!mViewholder.ImgHash.equalsIgnoreCase("")) {
-                        mJsonObject_Child.put(Common.Constant_Class.CHILD_IMAGE, "child" + i + ".png");
-                        mJsonObject_Child.put(Common.Constant_Class.CHILD_IMAGE_HASH, mViewholder.ImgHash);
+                        //mJsonObject_Child.put(Common.Constant_Class.CHILD_IMAGE, "child" + i + ".png");
+                        mJsonObject_Child.put(Common.Constant_Class.CHILD_IMAGE, mViewholder.ImgHash);
+                        //mJsonObject_Child.put(Common.Constant_Class.CHILD_IMAGE_HASH, mViewholder.ImgHash);
                     }
 
                     mJsonArray.put(mJsonObject_Child);
@@ -447,6 +452,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 e.printStackTrace();
             }
         }
+
         if (valid.equalsIgnoreCase("")) {
             call_profile_ws(mJsonObject);
         } else {
@@ -455,20 +461,27 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         }
     }
 
-    private void call_profile_ws(final JSONObject mJsonObject) {
+    private void call_profile_ws(JSONObject mJsonObject1) {
         if (Common.isOnline(this)) {
-
-            String id = "";
-            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-                id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
-            } else {
-                id = mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID_SP, "");
+            try {
+                if (mJsonObject1 == null) {
+                    String id = "";
+                    if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
+                        id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+                    } else {
+                        id = mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID_SP, "");
+                    }
+                    mJsonObject1 = new JSONObject();
+                    mJsonObject1.put(Common.Constant_Class.USER_ID, id);
+                    mJsonObject1.put(Common.Constant_Class.IS_UPDATE, "0");
+                }
+                mJsonObject1.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            final String profile_url = Common.Constant_Class.PROFILE_URL + id;
 
-            final String finalId = id;
-
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, profile_url, mJsonObject, new Response.Listener<JSONObject>() {
+            final JSONObject mJsonObject = mJsonObject1;
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject1, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(JSONObject response) {
@@ -485,7 +498,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                             mEditor.putString(Common.Constant_Class.LAST_NAME, mData.getString(Common.Constant_Class.LAST_NAME));
                             mEditor.commit();
 
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) && mJsonObject == null) {
+                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
                                 mBundle = new Bundle();
                                 mBundle.putString(Common.Constant_Class.DATA, data);
                                 setupViewPager(viewPager);
@@ -500,7 +513,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                                     new Common.ImageLoadTask(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, ""), FragmentDrawer.img_profile).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                 }*/
 
-                                mJsonObject.put(Common.Constant_Class.PROFILE_ID, finalId);
+
                                 Common.SaveProfile(mJsonObject);
                                 Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
                             }
@@ -529,7 +542,15 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 public void onErrorResponse(VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                 }
-            });
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    return params;
+                }
+            };
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
         } else {
