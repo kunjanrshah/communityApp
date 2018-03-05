@@ -12,8 +12,6 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.utils.LruBitmapCache;
-
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
@@ -23,22 +21,27 @@ public class AppController extends Application {
 
     public static final String TAG = AppController.class
             .getSimpleName();
-
+    public static DatabaseHandler dbHelper;
+    public static boolean isSplashLive = false;
+    public static boolean isAdmin=false;
+    private static AppController mInstance;
+    public Realm realm;
+    public boolean isUpdate = false;
+    public FirebaseAnalytics firebaseAnalytics;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
-    private static AppController mInstance;
-    public static DatabaseHandler dbHelper;
-    public Realm realm;
-    public static boolean isSplashLive = false;
-    public boolean isUpdate=false;
     private Activity mActivity;
-    public static boolean isAdmin=false;
-    public void setMainActivityContext(Activity mActivity) {
-        this.mActivity = mActivity;
+
+    public static synchronized AppController getInstance() {
+        return mInstance;
     }
-    public FirebaseAnalytics firebaseAnalytics;
+
     public Activity getMainActivityContext() {
         return mActivity;
+    }
+
+    public void setMainActivityContext(Activity mActivity) {
+        this.mActivity = mActivity;
     }
 
     @Override
@@ -83,10 +86,6 @@ public class AppController extends Application {
 
     }
 
-    public static synchronized AppController getInstance() {
-        return mInstance;
-    }
-
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -96,14 +95,14 @@ public class AppController extends Application {
     }
 
 
-    public ImageLoader getImageLoader() {
+  /*  public ImageLoader getImageLoader() {
         getRequestQueue();
         if (mImageLoader == null) {
             mImageLoader = new ImageLoader(this.mRequestQueue,
                     new LruBitmapCache());
         }
         return this.mImageLoader;
-    }
+    }*/
 
     public <T> void addToRequestQueue(Request<T> req, String tag) {
         // set the default tag if tag is empty

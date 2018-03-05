@@ -1,6 +1,7 @@
 package com.krs.vastipatrak.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -77,31 +80,14 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         ToolbarSetup();
 
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-            if (!mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false) && Common.isOnline(this)) {
-                call_profile_ws(null);
-            } else {
-                mListProfileData1 = Common.getDataFromParentTable(mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""), 3);
-                setupViewPager(viewPager);
-                tabLayout.setupWithViewPager(viewPager);
-            }
+            mListProfileData1 = Common.getDataFromParentTable(mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""), 3);
         } else {
-            if (mBundle != null) {
-                String screen = mBundle.getString(Common.Constant_Class.SCREEN);
+            mListProfileData1 = Common.getDataFromParentTable(mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""), 3);
 
-                if (!mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false) && Common.isOnline(this) && screen == null) {
-
-                } else {
-                    String id = mBundle.getString(Common.Constant_Class.DATA);
-                    mListProfileData1 = Common.getDataFromParentTable(id, 3);
-                    mBundle = null;
-                }
-
-                setupViewPager(viewPager);
-                tabLayout.setupWithViewPager(viewPager);
-            }
         }
+        setupViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
     }
-
 
     public RealmList<ListProfileData> getMyData() {
         return mListProfileData1;
@@ -189,7 +175,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             }
         });
         MenuItem saveItem = menu.findItem(R.id.action_save);
-        if ((mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || AppController.isAdmin) && !mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false)) {
+        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || AppController.isAdmin) {
             saveItem.setVisible(true);
         } else {
             saveItem.setVisible(false);
@@ -463,27 +449,20 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         }
     }
 
-    private void call_profile_ws(JSONObject mJsonObject1) {
+    private void call_profile_ws(JSONObject mJsonObject) {
         if (Common.isOnline(this)) {
             try {
-                if (mJsonObject1 == null) {
-                    String id = "";
-                    if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-                        id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
-                    } else {
-                        id = mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID_SP, "");
-                    }
-                    mJsonObject1 = new JSONObject();
-                    mJsonObject1.put(Common.Constant_Class.USER_ID, id);
-                    mJsonObject1.put(Common.Constant_Class.IS_UPDATE, "0");
+                if (mJsonObject == null) {
+                    mJsonObject = new JSONObject();
+                    mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                    mJsonObject.put(Common.Constant_Class.IS_UPDATE, "0");
                 }
-                mJsonObject1.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            final JSONObject mJsonObject = mJsonObject1;
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject1, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(JSONObject response) {
@@ -499,26 +478,29 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                             mEditor.putString(Common.Constant_Class.FIRST_NAME, mData.getString(Common.Constant_Class.FIRST_NAME));
                             mEditor.putString(Common.Constant_Class.LAST_NAME, mData.getString(Common.Constant_Class.LAST_NAME));
                             mEditor.commit();
-
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
+                            Common.SaveProfile(mData);
+                            //  mListProfileData1 = Common.getDataFromParentTable(mData.getString(Common.Constant_Class.ID), 3);
+                            // setupViewPager(viewPager);
+                            // tabLayout.setupWithViewPager(viewPager);
+                            //  if(message.contains("updated"))
+                            // {
+                            AppController.getInstance().isUpdate = true;
+                            alert(message);
+                            //  Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+                            // }
+                            /*if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
                                 mBundle = new Bundle();
                                 mBundle.putString(Common.Constant_Class.DATA, data);
                                 setupViewPager(viewPager);
                                 tabLayout.setupWithViewPager(viewPager);
                             } else {
-
 //                                mRefreshFragment.refreshFragmentDrawer();
-                                AppController.getInstance().isUpdate = true;
-                                /*String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
+                                *//*String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
                                 if (FragmentDrawer.txt_name != null) {
                                     FragmentDrawer.txt_name.setText(name);
                                     new Common.ImageLoadTask(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, ""), FragmentDrawer.img_profile).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                }*/
-
-
-                                Common.SaveProfile(mJsonObject);
-                                Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
-                            }
+                                }*//*
+                            }*/
                         } else {
                             try {
 
@@ -560,6 +542,21 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         }
     }
 
+
+    private void alert(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        builder.setTitle(getString(R.string.app_name));
+
+        builder.setMessage(message);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+
+            }
+        }).show();
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

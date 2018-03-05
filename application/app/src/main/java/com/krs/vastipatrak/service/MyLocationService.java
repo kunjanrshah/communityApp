@@ -1,6 +1,5 @@
 package com.krs.vastipatrak.service;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,66 +31,22 @@ import static com.krs.vastipatrak.utils.Common.Constant_Class.LOCATION_INTERVAL;
 public class MyLocationService extends Service {
 
     private static final String TAG = "MyLocationService";
-    private LocationManager mLocationManager = null;
     //private static final int LOCATION_INTERVAL = 1000 * 3 * 60;
     private static final float LOCATION_DISTANCE = 1f;
     SharedPreferences mSharedPreferences;
     SharedPreferences.Editor mEditor;
     Location mLastLocation;
     String tag_json_obj = "jobj_req";
-
-    private class LocationListener implements android.location.LocationListener {
-
-
-        public LocationListener(String provider) {
-            Log.e(TAG, "LocationListener " + provider);
-            mLastLocation = new Location(provider);
-        }
-
-        @Override
-        public void onLocationChanged(Location location) {
-            Log.e(TAG, "onLocationChanged: " + location);
-            mLastLocation.set(location);
-            /*mEditor.putString(Common.Constant_Class.MY_LATITUDE, String.valueOf(location.getLatitude()));
-            mEditor.putString(Common.Constant_Class.MY_LONGITUDE, String.valueOf(location.getLongitude()));
-            mEditor.commit();*/
-            userLocationUpdateWS();
-
-           /* new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-
-                }
-            }, 2000);*/
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            Log.e(TAG, "onProviderDisabled: " + provider);
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            Log.e(TAG, "onProviderEnabled: " + provider);
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.e(TAG, "onStatusChanged: " + provider);
-        }
-    }
-
     LocationListener[] mLocationListeners = new LocationListener[]{
             new LocationListener(LocationManager.GPS_PROVIDER),
             new LocationListener(LocationManager.NETWORK_PROVIDER)
     };
+    private LocationManager mLocationManager = null;
 
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
     }
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -138,6 +92,7 @@ public class MyLocationService extends Service {
                 }
             }
         }
+        userLocationUpdateWS("0");
     }
 
     private void initializeLocationManager() {
@@ -147,7 +102,7 @@ public class MyLocationService extends Service {
         }
     }
 
-    private void userLocationUpdateWS() {
+    private void userLocationUpdateWS(final String isUpdate) {
 
         if (Common.isOnline(MyLocationService.this)) {
             JSONObject mJsonObject = null;
@@ -157,7 +112,7 @@ public class MyLocationService extends Service {
                 mJsonObject.put(Common.Constant_Class.USER_LNG, mLastLocation.getLongitude());
                 mJsonObject.put(Common.Constant_Class.IS_LOCATION_ENABLE,mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE_SP,false) );
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
+                mJsonObject.put(Common.Constant_Class.IS_UPDATE, isUpdate);
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -170,8 +125,13 @@ public class MyLocationService extends Service {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            String data = response.getString(Common.Constant_Class.DATA);
-                            Toast.makeText(MyLocationService.this,  message, Toast.LENGTH_SHORT).show();
+                            if (isUpdate.equals("1")) {
+                                Toast.makeText(MyLocationService.this, "Vastipatrak is sharing your location!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MyLocationService.this, "Stop Sharing location successfully!", Toast.LENGTH_SHORT).show();
+                            }
+                            //String data = response.getString(Common.Constant_Class.DATA);
+
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -194,6 +154,48 @@ public class MyLocationService extends Service {
             };
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+        }
+    }
+
+    private class LocationListener implements android.location.LocationListener {
+
+
+        public LocationListener(String provider) {
+            Log.e(TAG, "LocationListener " + provider);
+            mLastLocation = new Location(provider);
+        }
+
+        @Override
+        public void onLocationChanged(Location location) {
+            Log.e(TAG, "onLocationChanged: " + location);
+            mLastLocation.set(location);
+            /*mEditor.putString(Common.Constant_Class.MY_LATITUDE, String.valueOf(location.getLatitude()));
+            mEditor.putString(Common.Constant_Class.MY_LONGITUDE, String.valueOf(location.getLongitude()));
+            mEditor.commit();*/
+            userLocationUpdateWS("1");
+
+           /* new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            }, 2000);*/
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            Log.e(TAG, "onProviderDisabled: " + provider);
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            Log.e(TAG, "onProviderEnabled: " + provider);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            Log.e(TAG, "onStatusChanged: " + provider);
         }
     }
 }

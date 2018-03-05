@@ -84,7 +84,8 @@
         <activity
             android:name=".activity.MyProfileActivity"
             android:label="@string/theme_app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
 
         <activity
             android:name=".activity.FilterActivity"

@@ -30,6 +30,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,16 +46,15 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.PrefManager;
-import com.krs.vastipatrak.model.Data;
 import com.krs.vastipatrak.model.ForgotPasswordData;
 import com.krs.vastipatrak.model.ListProfileData;
-import com.krs.vastipatrak.model.LoginData;
 import com.krs.vastipatrak.utils.Common;
-import com.krs.vastipatrak.utils.RoundedImageView;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.json.JSONArray;
@@ -75,7 +75,7 @@ public class LoginActivity extends Activity {
     Dialog Forgot_dialog;
     String[] SubcastList = {"Dasha"};
     String[] EkdoList = {"Modasa"};
-    RoundedImageView img_profile;
+    ImageView img_profile;
     String str_profile_hash = "";
     MaterialBetterSpinner spinnerSubcast, spinnerEkdo;
     boolean isShow = true, isShow1 = true;
@@ -777,35 +777,24 @@ public class LoginActivity extends Activity {
                         Log.d(TAG, response.toString());
 
                         try {
-                            LoginData mLogindata = new LoginData();
-
 
                             boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
-
-                            mLogindata.setSuccess(success);
-                            mLogindata.setMessage(message);
 
                             if (success) {
                                 String data = response.getString(Common.Constant_Class.DATA);
                                 JSONObject mjson_data = new JSONObject(data);
 
-                                Data mdata = new Data();
-
                                 String status = mjson_data.getString(Common.Constant_Class.STATUS);
-                                mdata.setStatus(status);
                                 if (status.equalsIgnoreCase("1")) {
+                                    Common.SaveProfile(mjson_data);
+
                                     String user_id = mjson_data.getString(Common.Constant_Class.ID);
                                     String profile_url = mjson_data.getString(Common.Constant_Class.PROFILE_PIC_URL);
                                     String first_name = mjson_data.getString(Common.Constant_Class.FIRST_NAME);
                                     String last_name = mjson_data.getString(Common.Constant_Class.LAST_NAME);
                                     String access_token=mjson_data.getString(Common.Constant_Class.ACCESS_TOKEN);
                                     String updated_time=mjson_data.getString(Common.Constant_Class.UPDATED_TIME);
-
-                                    mdata.setId(user_id);
-                                    mdata.setProfilePicUrl(profile_url);
-                                    mdata.setFirstName(first_name);
-                                    mdata.setLastName(last_name);
 
                                     mEditor.putString(Common.Constant_Class.EMAIL, email);
                                     mEditor.putString(Common.Constant_Class.PASSWORD, password);
@@ -834,12 +823,6 @@ public class LoginActivity extends Activity {
                                 } else {
                                     alert("Registration request is pending. Please contact to Admin !!");
                                 }
-                                mLogindata.setData(mdata);
-
-                                realm.beginTransaction();
-                                realm.copyToRealm(mLogindata);
-                                realm.commitTransaction();
-
                             } else {
                                 alert(message);
                             }
@@ -1183,7 +1166,8 @@ public class LoginActivity extends Activity {
 
             if (bmp != null) {
                 if (resultCode == RESULT_OK) {
-                    img_profile.setImageBitmap(bmp);
+                    Glide.with(this).load(bmp).thumbnail(0.5f).apply(RequestOptions.circleCropTransform()).into(img_profile);
+                    //img_profile.setImageBitmap(bmp);
                     str_profile_hash = Common.getBase64(this, bmp);
                 }
 

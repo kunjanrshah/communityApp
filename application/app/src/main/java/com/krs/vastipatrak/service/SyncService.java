@@ -2,13 +2,12 @@ package com.krs.vastipatrak.service;
 
 import android.app.IntentService;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.AlertDialog;
+import android.os.Message;
 import android.util.Log;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -17,7 +16,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListProfileData;
@@ -35,8 +33,7 @@ import java.util.Map;
 
 import io.realm.RealmList;
 
-import static com.krs.vastipatrak.fragments.SyncFragment.btn_sync;
-import static com.krs.vastipatrak.fragments.SyncFragment.tvUpdatedTime;
+import static com.krs.vastipatrak.fragments.SyncFragment.mHandler;
 
 /**
  * Created by kunjan on 28/2/18.
@@ -45,7 +42,6 @@ import static com.krs.vastipatrak.fragments.SyncFragment.tvUpdatedTime;
 public class SyncService extends IntentService {
 
     String TAG = "SyncService";
-
     SharedPreferences mSharedPreferences;
 
     public SyncService() {
@@ -86,15 +82,23 @@ public class SyncService extends IntentService {
                 e.printStackTrace();
             }
 
-            final String sync_url = Common.Constant_Class.SYNC_URL;
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, sync_url, mJsonObject, new Response.Listener<JSONObject>() {
+            Message msg = mHandler.obtainMessage();
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("sync_start", true);
+            msg.setData(bundle);
+            mHandler.sendMessage(msg);
+
+
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SYNC_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(JSONObject response) {
-                    Log.d(TAG, "sync_url: " + sync_url);
+
                     Log.d(TAG, "response: " + response.toString());
 
                     try {
+                        Message msg = mHandler.obtainMessage();
+                        Bundle bundle = new Bundle();
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
@@ -224,17 +228,16 @@ public class SyncService extends IntentService {
                                 Log.d(TAG, "sync: id: " + mListProfileData.getProfile_id() + " name :" + mListProfileData.getFirst_name());
                             }
 
-                            if (tvUpdatedTime != null) {
-                                Date c = Calendar.getInstance().getTime();
-                                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-                                String formattedDate = df.format(c);
-                                tvUpdatedTime.setText(formattedDate);
-                            }
+                            Date c = Calendar.getInstance().getTime();
+                            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+                            String formattedDate = df.format(c);
+                            bundle.putString("sync_time", formattedDate);
                         }
-                        if (btn_sync != null) {
-                            btn_sync.setText("Start");
-                        }
-                        Toast.makeText(SyncService.this, ""+message, Toast.LENGTH_LONG).show();
+                        bundle.putBoolean("sync_start", false);
+                        msg.setData(bundle);
+                        mHandler.sendMessage(msg);
+
+                        Toast.makeText(SyncService.this, "" + message, Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

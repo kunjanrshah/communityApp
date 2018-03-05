@@ -710,6 +710,10 @@ public class SearchFragment extends Fragment {
             lpd.setIs_location_enable(mListProfileDatas.get(i).isIs_location_enable());
             lpd.setUpdated_time(mListProfileDatas.get(i).getUpdated_time());
             lpd.setCity(mListProfileDatas.get(i).getCity());
+            lpd.setUser_lng(mListProfileDatas.get(i).getUser_lng());
+            lpd.setUser_lat(mListProfileDatas.get(i).getUser_lat());
+            lpd.setHome_lat(mListProfileDatas.get(i).getHome_lat());
+            lpd.setHome_lng(mListProfileDatas.get(i).getHome_lng());
 
             ListChildData lcd = new ListChildData();
             lcd.setID(mListProfileDatas.get(i).getProfile_id());

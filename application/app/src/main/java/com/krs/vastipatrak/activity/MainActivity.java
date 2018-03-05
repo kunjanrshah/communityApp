@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 {
 
     static final int REQUEST_CHECK_SETTINGS = 199;
-
+    private static final String TAG = MainActivity.class.getSimpleName();
     public static Location mLastLocation;
     public static GoogleApiClient mGoogleApiClient;
     public static String lat, lon;
@@ -86,11 +86,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     FragmentDrawer drawerFragment;
     boolean doubleBackToExitPressedOnce = false;
     GoogleApiClient googleApiClient;
-
-
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
-
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -102,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         }
     };
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
     private Toolbar mToolbar;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
@@ -116,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         prefManager = new PrefManager(this);
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -227,8 +223,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             locationRequest.setInterval(10000);
             locationRequest.setFastestInterval(10000 / 2);
 
+
             LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
             builder.setAlwaysShow(true);
+            builder.setNeedBle(true);
 
             PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(this.googleApiClient, builder.build());
             result.setResultCallback(new ResultCallback<LocationSettingsResult>() {

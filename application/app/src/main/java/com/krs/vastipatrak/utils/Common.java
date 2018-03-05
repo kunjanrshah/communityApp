@@ -23,7 +23,6 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
@@ -44,8 +43,6 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -192,7 +189,7 @@ public class Common {
 
     }
 
-    public static  boolean CheckGpsStatus(Context mcontext) {
+    public static boolean CheckGpsStatus(Context mcontext) {
         LocationManager locationManager;
         boolean GpsStatus;
 
@@ -204,16 +201,15 @@ public class Common {
 
     }
 
-    public static void showDirections(Activity mActivity,double latitude, double longitude, String address) {
+    public static void showDirections(Activity mActivity, double latitude, double longitude, String address) {
 
 
-        if(MainActivity.lat != null && MainActivity.lon != null)
-       {
-           String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon), "", latitude, longitude, address);
-           Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-           intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-           mActivity.startActivity(intent);
-       }
+        if (MainActivity.lat != null && MainActivity.lon != null) {
+            String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon), "", latitude, longitude, address);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+            mActivity.startActivity(intent);
+        }
     }
 
 
@@ -747,12 +743,19 @@ public class Common {
     public static void SaveProfile(JSONObject mJsonObject) {
         try {
             ListProfileData mListProfileData = new ListProfileData();
+            if (mJsonObject.has(Constant_Class.ID)) {
+                mListProfileData.setProfile_id(mJsonObject.getString(Constant_Class.ID));
+            }
             if (mJsonObject.has(Common.Constant_Class.FIRST_NAME)) {
                 mListProfileData.setFirst_name(mJsonObject.getString(Common.Constant_Class.FIRST_NAME));
             }
             if (mJsonObject.has(Common.Constant_Class.LAST_NAME)) {
                 mListProfileData.setLast_name(mJsonObject.getString(Common.Constant_Class.LAST_NAME));
             }
+            if (mJsonObject.has(Constant_Class.CITY)) {
+                mListProfileData.setCity(mJsonObject.getString(Constant_Class.CITY));
+            }
+
             if (mJsonObject.has(Common.Constant_Class.FATHER_NAME)) {
                 mListProfileData.setFather_name(mJsonObject.getString(Common.Constant_Class.FATHER_NAME));
             }
@@ -838,6 +841,33 @@ public class Common {
                 mListProfileData.setUser_lng(mJsonObject.getString(Common.Constant_Class.USER_LNG));
             }
 
+            if (mJsonObject.has(Constant_Class.PROFILE_PIC_URL)) {
+                mListProfileData.setProfile_pic_url(mJsonObject.getString(Constant_Class.PROFILE_PIC_URL));
+            }
+            if (mJsonObject.has(Constant_Class.IMG_FATHER_URL)) {
+                mListProfileData.setImg_father_url(mJsonObject.getString(Constant_Class.IMG_FATHER_URL));
+            }
+            if (mJsonObject.has(Constant_Class.IMG_MOTHER_URL)) {
+                mListProfileData.setImg_mother_url(mJsonObject.getString(Constant_Class.IMG_MOTHER_URL));
+            }
+            if (mJsonObject.has(Constant_Class.IMG_SPOUSE_URL)) {
+                mListProfileData.setImg_spouse_url(mJsonObject.getString(Constant_Class.IMG_SPOUSE_URL));
+            }
+            if (mJsonObject.has(Constant_Class.IMG_SFATHER_URL)) {
+                mListProfileData.setImg_sfather_url(mJsonObject.getString(Constant_Class.IMG_SFATHER_URL));
+            }
+            if (mJsonObject.has(Constant_Class.IMG_SMOTHER_URL)) {
+                mListProfileData.setImg_smother_url(mJsonObject.getString(Constant_Class.IMG_SMOTHER_URL));
+            }
+
+            if (mJsonObject.has(Constant_Class.UPDATED_TIME)) {
+                mListProfileData.setUpdated_time(mJsonObject.getString(Constant_Class.UPDATED_TIME));
+            }
+            if (mJsonObject.has(Constant_Class.SYNC_TIME)) {
+                mListProfileData.setSync_time(mJsonObject.getString(Constant_Class.SYNC_TIME));
+            }
+
+
             //   String strWhere = "" + Common.Constant_Class.PROFILE_ID + "=" + mJsonObject.getString(Common.Constant_Class.PROFILE_ID);
             //   db.update(Common.Constant_Class.TABLE_PROFILE, values, strWhere, null);
 
@@ -849,6 +879,13 @@ public class Common {
                 for (int i = 0; i < mJsonArray.length(); i++) {
                     JSONObject mJsonObj = mJsonArray.getJSONObject(i);
                     ListChildrenData mListChildrendata = new ListChildrenData();
+
+                    if (mJsonObj.has(Constant_Class.CHILD_ID)) {
+                        mListChildrendata.setChild_id(mJsonObj.getString(Common.Constant_Class.CHILD_ID));
+                    }
+                    if (mJsonObj.has(Constant_Class.CHILD_IMAGE_URL)) {
+                        mListChildrendata.setChild_img_url(mJsonObj.getString(Common.Constant_Class.CHILD_IMAGE_URL));
+                    }
 
                     if (mJsonObj.has(Common.Constant_Class.CHILD_NAME)) {
                         //values1.put(Common.Constant_Class.CHILD_NAME, mJsonObj.getString(Common.Constant_Class.CHILD_NAME));
@@ -866,8 +903,7 @@ public class Common {
                         //    values1.put(Common.Constant_Class.CHILD_WORK, mJsonObj.getString(Common.Constant_Class.CHILD_WORK));
                         mListChildrendata.setChild_work(mJsonObj.getString(Common.Constant_Class.CHILD_WORK));
                     }
-                    mListChildrendata.setChild_id(mJsonObj.getString(Common.Constant_Class.ID));
-                    mListChildrendata.setProfile_id(mJsonObject.getString(Constant_Class.USER_ID));
+                    mListChildrendata.setProfile_id(mJsonObject.getString(Constant_Class.ID));
                     mlistchilds.add(mListChildrendata);
                 }
                 mListProfileData.setmListChildrenData(mlistchilds);
@@ -882,10 +918,20 @@ public class Common {
         }
     }
 
-    public static void getDeviceId(Context mContext)
-    {
+    public static void getDeviceId(Context mContext) {
         String m_androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
-        Constant_Class.DEVICE_ID_VALUE=m_androidId;
+        Constant_Class.DEVICE_ID_VALUE = m_androidId;
+    }
+
+    public static String getUpdatedTime(String timestamp) {
+        try {
+            Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+            cal.setTimeInMillis(Integer.parseInt(timestamp) * 1000L);
+            String date = DateFormat.format("dd-MM-yyyy hh:mm:ss", cal).toString();
+            return date;
+        } catch (Exception e) {
+            return "0";
+        }
     }
 
     public static class Constant_Class {
@@ -899,15 +945,15 @@ public class Common {
         public static final String BUSINESS = "     BUSINESS  ";
         public static final String FAMILY = "     FAMILY  ";
 
-        public static final String API_KEY="api_key";
-        public static final String DEVICE_TYPE="device_type";
-        public static final String DEVICE_TOKEN="device_token";
-        public static final String DEVICE_ID="int_udid";
-        public static final String ACCESS_TOKEN="access_token";
+        public static final String API_KEY = "api_key";
+        public static final String DEVICE_TYPE = "device_type";
+        public static final String DEVICE_TOKEN = "device_token";
+        public static final String DEVICE_ID = "int_udid";
+        public static final String ACCESS_TOKEN = "access_token";
 
-        public static final String API_KEY_VALUE="q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
-        public static final String DEVICE_TYPE_VALUE="Android";
-        public static final String GET_CITIES_URL ="http://srbrothersinfotech.com/directory-dev/API/getCities";
+        public static final String API_KEY_VALUE = "q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
+        public static final String DEVICE_TYPE_VALUE = "Android";
+        public static final String GET_CITIES_URL = "http://srbrothersinfotech.com/directory-dev/API/getCities";
         public static final String LOGIN_URL = "http://www.srbrothersinfotech.com/directory-dev/API/login";
         public static final String SIGNUP_URL = "http://www.srbrothersinfotech.com/directory-dev/API/register";
         public static final String FORGOT_PASSWORD_URL = "http://www.srbrothersinfotech.com/directory-dev/API/forgotPassword";
@@ -952,7 +998,7 @@ public class Common {
         public static final String HOME_LNG = "home_lng";
         public static final String OFFICE_LAT = "office_lat";
         public static final String OFFICE_LNG = "office_lng";
-        public static final String PROFILE_ID_SP = "profile_id";
+        //public static final String PROFILE_ID_SP = "profile_id";
         public static final String UPDATED = "updated";
         public static final String MYPROFILE_SP = "myprofile";
         public static final String OFFICE_ADDRESS = "office_address";
@@ -1034,23 +1080,16 @@ public class Common {
         public static final String OFFLINE = "Offline";
         public static String DEVICE_ID_VALUE = "";
 
-        public static int sCorner = 15;
+        public static int sCorner = 35;
         public static int sMargin = 2;
         public static int sBorder = 10;
         public static String sColor = "#FFC0CB";
-        public static long LOCATION_INTERVAL=1000 * 1 *30;
+        public static long LOCATION_INTERVAL = 1000 * 1 * 30;
         /*public static final String MY_LATITUDE = "my_latitude";
         public static final String MY_LONGITUDE = "my_longitude";*/
     }
 
-    public static String getUpdatedTime(String timestamp)
-    {
-        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
-        cal.setTimeInMillis(Integer.parseInt(timestamp) * 1000L);
-        String date = DateFormat.format("dd-MM-yyyy hh:mm:ss", cal).toString();
-        return date;
-    }
-
+/*
     public static class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
 
         private String url;
@@ -1102,6 +1141,7 @@ public class Common {
             return imgbytes;
         }
     }
+*/
 
 
 }

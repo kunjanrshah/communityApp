@@ -20,7 +20,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -38,7 +37,6 @@ import com.krs.vastipatrak.model.ListParentData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.RoundedCornersTransformation;
-import com.krs.vastipatrak.utils.RoundedImageView;
 
 import org.json.JSONObject;
 
@@ -77,14 +75,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         popolaCheckMap(_listDataHeader.size());
     }
 
+
     private void openImageDialog(String name, String url) {
         Dialog dialog = new Dialog(_context);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setContentView(R.layout.image_dialog);
         dialog.setTitle(name);
 
-        RoundedImageView image = (RoundedImageView) dialog.findViewById(R.id.img_dialog);
-        Glide.with(_context).load(url).thumbnail(0.5f).into(image);
+        ImageView image = dialog.findViewById(R.id.img_dialog);
+        Glide.with(_context).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(image);
 
         //  new Common.ImageLoadTask(url,image).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         dialog.show();
@@ -123,17 +122,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.list_item, null);
             childViewHolder = new ChildViewHolder();
-            childViewHolder.txt_blood = (TextView) convertView.findViewById(R.id.txt_blood);
-            childViewHolder.txt_gender = (TextView) convertView.findViewById(R.id.txt_gender);
-            childViewHolder.txt_gotra = (TextView) convertView.findViewById(R.id.txt_gotra);
-            childViewHolder.txt_bdate = (TextView) convertView.findViewById(R.id.txt_bdate);
-            childViewHolder.txt_btime = (TextView) convertView.findViewById(R.id.txt_btime);
-            childViewHolder.txt_bplace = (TextView) convertView.findViewById(R.id.txt_bplace);
-            childViewHolder.txt_details = (TextView) convertView.findViewById(R.id.txt_details);
-            childViewHolder.txt_address = (TextView) convertView.findViewById(R.id.txt_address);
-            childViewHolder.txt_native = (TextView) convertView.findViewById(R.id.txt_native);
-            childViewHolder.txt_mobile = (TextView) convertView.findViewById(R.id.txt_mobile);
-            childViewHolder.txt_phone = (TextView) convertView.findViewById(R.id.txt_phone);
+            childViewHolder.txt_blood = convertView.findViewById(R.id.txt_blood);
+            childViewHolder.txt_gender = convertView.findViewById(R.id.txt_gender);
+            childViewHolder.txt_gotra = convertView.findViewById(R.id.txt_gotra);
+            childViewHolder.txt_bdate = convertView.findViewById(R.id.txt_bdate);
+            childViewHolder.txt_btime = convertView.findViewById(R.id.txt_btime);
+            childViewHolder.txt_bplace = convertView.findViewById(R.id.txt_bplace);
+            childViewHolder.txt_details = convertView.findViewById(R.id.txt_details);
+            childViewHolder.txt_address = convertView.findViewById(R.id.txt_address);
+            childViewHolder.txt_native = convertView.findViewById(R.id.txt_native);
+            childViewHolder.txt_mobile = convertView.findViewById(R.id.txt_mobile);
+            childViewHolder.txt_phone = convertView.findViewById(R.id.txt_phone);
             convertView.setTag(childViewHolder);
         } else {
             childViewHolder = (ChildViewHolder) convertView.getTag();
@@ -231,10 +230,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mEditor.putString(Common.Constant_Class.PROFILE_ID_SP, id);
+                mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.commit();
-                callProfileWS(id);
+                Intent mIntent = new Intent(_context, MyProfileActivity.class);
+                _context.startActivity(mIntent);
+                // mIntent.putExtra(Common.Constant_Class.DATA, str_id);
+                // callProfileWS(id);
             }
         });
 
@@ -271,29 +273,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = infalInflater.inflate(R.layout.list_group, null);
             groupViewHolder = new GroupViewHolder();
             groupViewHolder.ivIcon = convertView.findViewById(R.id.ivIcon);
-
-
-            if (mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false)) {
-                groupViewHolder.ivIcon.setVisibility(View.GONE);
-            } else {
-                groupViewHolder.ivIcon.setVisibility(View.VISIBLE);
-            }
-
-            groupViewHolder.tvName = (TextView) convertView.findViewById(R.id.tvName);
-            groupViewHolder.imgShare = (ImageView) convertView.findViewById(R.id.imgShare);
-            groupViewHolder.tvFatherName = (TextView) convertView.findViewById(R.id.tvFatherName);
-            groupViewHolder.tvMotherName = (TextView) convertView.findViewById(R.id.tvMotherName);
-            groupViewHolder.checkbox = (CheckBox) convertView.findViewById(R.id.cbx1);
+            groupViewHolder.tvName = convertView.findViewById(R.id.tvName);
+            groupViewHolder.imgShare = convertView.findViewById(R.id.imgShare);
+            groupViewHolder.tvFatherName = convertView.findViewById(R.id.tvFatherName);
+            groupViewHolder.tvMotherName = convertView.findViewById(R.id.tvMotherName);
+            groupViewHolder.checkbox = convertView.findViewById(R.id.cbx1);
             groupViewHolder.imgSync = convertView.findViewById(R.id.imgSync);
             groupViewHolder.tvNudge = convertView.findViewById(R.id.tvNudge);
             groupViewHolder.tvUpdatedTime = convertView.findViewById(R.id.tvUpdatedTime);
             groupViewHolder.txt_distance = convertView.findViewById(R.id.txt_distance);
             groupViewHolder.tvCity = convertView.findViewById(R.id.tvCity);
-
-            groupViewHolder.tbtn_pshare = (ToggleButton) convertView.findViewById(R.id.tbtn_pshare);
-            groupViewHolder.tbtn_pshare.setText(null);
-            groupViewHolder.tbtn_pshare.setTextOn(null);
-            groupViewHolder.tbtn_pshare.setTextOff(null);
+            groupViewHolder.img_home_loc = convertView.findViewById(R.id.img_home_loc);
+            groupViewHolder.img_user_loc = convertView.findViewById(R.id.img_user_loc);
 
 
             if (AppController.isAdmin) {
@@ -319,7 +310,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         // Rounded corners
         Glide.with(_context).load(imgURL)
                 .apply(RequestOptions.bitmapTransform(
-                        new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin,Common.Constant_Class.sColor,Common.Constant_Class.sBorder))).into(groupViewHolder.ivIcon);
+                        new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).into(groupViewHolder.ivIcon);
 
         //   new Common.ImageLoadTask(imgURL, groupViewHolder.ivIcon).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         groupViewHolder.tvCity.setText(Common.camelCase(city));
@@ -346,16 +337,28 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         final String user_lat = mListParentData.getUser_lat();
         final String user_lng = mListParentData.getUser_lng();
-        if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.isEmpty() && !user_lng.equalsIgnoreCase("null")) {
-            groupViewHolder.txt_distance.setText("approx. " + Common.getDistance((Activity) _context, Double.parseDouble(user_lat), Double.parseDouble(user_lng)) + " Km");
+        final String home_lat = mListParentData.getHome_lat();
+        final String home_lng = mListParentData.getHome_lng();
+
+        if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
+            groupViewHolder.txt_distance.setText("" + Common.getDistance((Activity) _context, Double.parseDouble(user_lat), Double.parseDouble(user_lng)) + " Km");
             groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
             if (mListParentData.isIs_location_enable()) {
-                groupViewHolder.txt_distance.setBackgroundColor(_context.getResources().getColor(R.color.pink));
+                groupViewHolder.txt_distance.setTextColor(_context.getResources().getColor(R.color.colorPrimary));
             } else {
-                groupViewHolder.txt_distance.setBackgroundColor(_context.getResources().getColor(R.color.navigationBarColor));
+                groupViewHolder.txt_distance.setTextColor(_context.getResources().getColor(R.color.navigationBarColor));
             }
+            groupViewHolder.img_user_loc.setVisibility(View.VISIBLE);
         } else {
+            groupViewHolder.img_user_loc.setVisibility(View.GONE);
             groupViewHolder.txt_distance.setVisibility(View.GONE);
+        }
+
+        if (home_lat != null && home_lng != null && !home_lat.isEmpty() && !home_lng.isEmpty() && !home_lat.equalsIgnoreCase("null") && !home_lng.equalsIgnoreCase("null")) {
+
+            groupViewHolder.img_home_loc.setVisibility(View.VISIBLE);
+        } else {
+            groupViewHolder.img_home_loc.setVisibility(View.GONE);
         }
 
         groupViewHolder.tvNudge.setOnClickListener(new View.OnClickListener() {
@@ -372,12 +375,24 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        groupViewHolder.txt_distance.setOnClickListener(new View.OnClickListener() {
+        groupViewHolder.img_user_loc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (MainActivity.lat != null && MainActivity.lon != null) {
                     Common.showDirections((Activity) _context, Double.parseDouble(user_lat), Double.parseDouble(user_lng), "");
+                    Toast.makeText(_context, "distance between you and " + Name, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        groupViewHolder.img_home_loc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (MainActivity.lat != null && MainActivity.lon != null) {
+                    Common.showDirections((Activity) _context, Double.parseDouble(home_lat), Double.parseDouble(home_lng), "");
+                    Toast.makeText(_context, "distance between your home and " + Name + " home", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -589,6 +604,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         ImageView ivIcon;
         ImageView imgShare;
         ImageView imgSync;
+        ImageView img_user_loc;
+        ImageView img_home_loc;
         TextView tvName;
         TextView tvFatherName;
         TextView tvMotherName;
@@ -596,7 +613,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView tvCity;
         TextView txt_distance;
         TextView tvUpdatedTime;
-        ToggleButton tbtn_pshare;
+        //ToggleButton tbtn_pshare;
         CheckBox checkbox;
         //SwitchCompat btn_active;
     }

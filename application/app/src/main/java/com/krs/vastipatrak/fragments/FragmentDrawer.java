@@ -3,7 +3,6 @@ package com.krs.vastipatrak.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -16,15 +15,16 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.utils.Common;
+import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.utils.RoundedImageView;
 import com.krs.vastipatrak.adapter.NavigationDrawerAdapter;
+import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.NavDrawerItem;
+import com.krs.vastipatrak.utils.Common;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,24 +33,19 @@ import java.util.List;
 public class FragmentDrawer extends Fragment {
 
     private static String TAG = FragmentDrawer.class.getSimpleName();
-
+    private static String[] titles = null;
     private RecyclerView recyclerView;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private NavigationDrawerAdapter adapter;
     private View containerView;
-    private RoundedImageView img_profile;
+    private ImageView img_profile;
     private TextView txt_name;
     private SharedPreferences mSharedPreferences;
-    private static String[] titles = null;
     private FragmentDrawerListener drawerListener;
 
     public FragmentDrawer() {
 
-    }
-
-    public void setDrawerListener(FragmentDrawerListener listener) {
-        this.drawerListener = listener;
     }
 
     public static List<NavDrawerItem> getData() {
@@ -64,6 +59,10 @@ public class FragmentDrawer extends Fragment {
             data.add(navItem);
         }
         return data;
+    }
+
+    public void setDrawerListener(FragmentDrawerListener listener) {
+        this.drawerListener = listener;
     }
 
     @Override
@@ -81,10 +80,10 @@ public class FragmentDrawer extends Fragment {
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
         // Inflating view layout
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
-        recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
-        img_profile = (RoundedImageView) layout.findViewById(R.id.img_profile);
-        txt_name = (TextView) layout.findViewById(R.id.txt_name);
-        Glide.with(getActivity()).load(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "")).thumbnail(0.5f).into(img_profile);
+        recyclerView = layout.findViewById(R.id.drawerList);
+        img_profile = layout.findViewById(R.id.img_profile);
+        txt_name = layout.findViewById(R.id.txt_name);
+        Glide.with(getActivity()).load(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
         //new Common.ImageLoadTask(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, ""), img_profile).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
         txt_name.setText(name);
@@ -150,10 +149,14 @@ public class FragmentDrawer extends Fragment {
 
     }
 
-    public static interface ClickListener {
-        public void onClick(View view, int position);
+    public interface ClickListener {
+        void onClick(View view, int position);
 
-        public void onLongClick(View view, int position);
+        void onLongClick(View view, int position);
+    }
+
+    public interface FragmentDrawerListener {
+        void onDrawerItemSelected(View view, int position);
     }
 
     static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
@@ -199,9 +202,5 @@ public class FragmentDrawer extends Fragment {
         }
 
 
-    }
-
-    public interface FragmentDrawerListener {
-        public void onDrawerItemSelected(View view, int position);
     }
 }

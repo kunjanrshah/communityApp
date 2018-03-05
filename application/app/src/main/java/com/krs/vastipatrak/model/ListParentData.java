@@ -13,9 +13,27 @@ public class ListParentData {
     String id;
     String user_lat;
     String user_lng;
+    String home_lat;
+    String home_lng;
     String city;
     boolean is_location_enable;
     String updated_time;
+
+    public String getHome_lat() {
+        return home_lat;
+    }
+
+    public void setHome_lat(String home_lat) {
+        this.home_lat = home_lat;
+    }
+
+    public String getHome_lng() {
+        return home_lng;
+    }
+
+    public void setHome_lng(String home_lng) {
+        this.home_lng = home_lng;
+    }
 
     public String getCity() {
         return city;
@@ -75,16 +93,16 @@ public class ListParentData {
         return str_father_name;
     }
 
+    public void setFatherName(String str_father_name) {
+        this.str_father_name = str_father_name;
+    }
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public void setFatherName(String str_father_name) {
-        this.str_father_name = str_father_name;
     }
 
     public String getMotherName() {

@@ -49,7 +49,6 @@
     <string name="sms_sent">SMS sent.</string>
     <string name="sms_failed">SMS faild, please try again.</string>
 
-    <string name="sync_msg">Do you want to download offline data for offline support ? It may take long time.</string>
     <string name="msg_forgot_password">"Your password has been sent to your registered email, do you want to SMS with registered mobile ?"</string>
     <string name="action_search">Search</string>
     <string name="action_save">Save</string>

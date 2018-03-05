@@ -45,7 +45,6 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.service.MyLocationService;
 import com.krs.vastipatrak.utils.Common;
-import com.krs.vastipatrak.utils.RoundedImageView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -71,7 +70,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     public static Spinner spinnerBlood;
     ToggleButton tbtn_share;
     RadioButton rbtnM, rbtnF;
-    RoundedImageView img_profile, img_father, img_mother;
+    ImageView img_profile, img_father, img_mother;
     TextView txt_home;
     String img_selection = "";
     String profile_url = "", father_url = "", mother_url = "";
@@ -82,7 +81,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     String TAG = "PersonalFragment";
     String name = "";
     String user_id = "";
-    double home_lat, home_lng,user_lat, user_lng;
+    double home_lat, home_lng, user_lat, user_lng;
 
 
     public PersonalFragment() {
@@ -380,14 +379,19 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         tbtn_share.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE_SP, true);
-                    mEditor.commit();
-                    getActivity().startService(new Intent(getActivity(), MyLocationService.class));
+                if (Common.isOnline(getActivity())) {
+                    if (isChecked) {
+                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE_SP, true);
+                        mEditor.commit();
+                        getActivity().startService(new Intent(getActivity(), MyLocationService.class));
+                    } else {
+                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE_SP, false);
+                        mEditor.commit();
+                        getActivity().stopService(new Intent(getActivity(), MyLocationService.class));
+                    }
                 } else {
-                    mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE_SP, false);
-                    mEditor.commit();
-                    getActivity().stopService(new Intent(getActivity(), MyLocationService.class));
+                    Toast.makeText(getActivity(), Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+                    tbtn_share.setChecked(!isChecked);
                 }
             }
         });
@@ -452,27 +456,27 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
-        edtFName = (EditText) rootView.findViewById(R.id.edtFName);
-        edtLName = (EditText) rootView.findViewById(R.id.edtLName);
-        edtFatherName = (EditText) rootView.findViewById(R.id.edtFatherName);
-        edtMotherName = (EditText) rootView.findViewById(R.id.edtMotherName);
-        edtbdate = (EditText) rootView.findViewById(R.id.edtbdate);
-        edtbTime = (EditText) rootView.findViewById(R.id.edtbTime);
-        edtEducation = (EditText) rootView.findViewById(R.id.edtEducation);
-        edtBPlace = (EditText) rootView.findViewById(R.id.edtBPlace);
-        edtNPlace = (EditText) rootView.findViewById(R.id.edtNPlace);
-        edtGotra = (EditText) rootView.findViewById(R.id.edtGotra);
-        edtMobile = (EditText) rootView.findViewById(R.id.edtMobile);
-        edt_Eaddress = (EditText) rootView.findViewById(R.id.edt_Eaddress);
-        edtCity = (EditText) rootView.findViewById(R.id.edt_City);
+        edtFName = rootView.findViewById(R.id.edtFName);
+        edtLName = rootView.findViewById(R.id.edtLName);
+        edtFatherName = rootView.findViewById(R.id.edtFatherName);
+        edtMotherName = rootView.findViewById(R.id.edtMotherName);
+        edtbdate = rootView.findViewById(R.id.edtbdate);
+        edtbTime = rootView.findViewById(R.id.edtbTime);
+        edtEducation = rootView.findViewById(R.id.edtEducation);
+        edtBPlace = rootView.findViewById(R.id.edtBPlace);
+        edtNPlace = rootView.findViewById(R.id.edtNPlace);
+        edtGotra = rootView.findViewById(R.id.edtGotra);
+        edtMobile = rootView.findViewById(R.id.edtMobile);
+        edt_Eaddress = rootView.findViewById(R.id.edt_Eaddress);
+        edtCity = rootView.findViewById(R.id.edt_City);
 
-        txt_home = (TextView) rootView.findViewById(R.id.txt_home);
-        edtAddress = (EditText) rootView.findViewById(R.id.edtAddress);
-        edt_phone = (EditText) rootView.findViewById(R.id.edt_phone);
-        img_profile = (RoundedImageView) rootView.findViewById(R.id.img_profile);
-        img_father = (RoundedImageView) rootView.findViewById(R.id.img_father);
-        img_mother = (RoundedImageView) rootView.findViewById(R.id.img_mother);
-        tbtn_share = (ToggleButton) rootView.findViewById(R.id.tbtn_share);
+        txt_home = rootView.findViewById(R.id.txt_home);
+        edtAddress = rootView.findViewById(R.id.edtAddress);
+        edt_phone = rootView.findViewById(R.id.edt_phone);
+        img_profile = rootView.findViewById(R.id.img_profile);
+        img_father = rootView.findViewById(R.id.img_father);
+        img_mother = rootView.findViewById(R.id.img_mother);
+        tbtn_share = rootView.findViewById(R.id.tbtn_share);
 
         /*if (mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false)) {
             img_profile.setVisibility(View.GONE);
@@ -484,11 +488,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             img_mother.setVisibility(View.VISIBLE);
         }*/
 
-        rbtnM = (RadioButton) rootView.findViewById(R.id.rbtnM);
+        rbtnM = rootView.findViewById(R.id.rbtnM);
         rbtnM.setChecked(true);
-        rbtnF = (RadioButton) rootView.findViewById(R.id.rbtnF);
+        rbtnF = rootView.findViewById(R.id.rbtnF);
 
-        spinnerBlood = (Spinner) rootView.findViewById(R.id.spinnerBlood);
+        spinnerBlood = rootView.findViewById(R.id.spinnerBlood);
         spinnerBlood.setOnItemSelectedListener(this);
 
 
@@ -522,7 +526,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edt_phone.setEnabled(true);
         edtbdate.setEnabled(true);
         edtbTime.setEnabled(true);
-
 
         rbtnM.setEnabled(true);
         rbtnF.setEnabled(true);
@@ -623,7 +626,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_NAGATIVE)) {
                 spinnerBlood.setSelection(6);
             }
-            if (mListProfileData.getGender().equalsIgnoreCase("1")) {
+            if (mListProfileData.getGender().equalsIgnoreCase("1") || mListProfileData.getGender().equalsIgnoreCase("")) {
                 rbtnF.setChecked(false);
                 rbtnM.setChecked(true);
 
@@ -687,6 +690,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 }*/
 
             } else {
+                if (!AppController.isAdmin) {
+                    DisableAll();
+                }
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(name + " Profile");
                 if (home_lat != 0 && home_lng != 0) {
                     int distance = (int) Common.getDistance(getActivity(), home_lat, home_lng);
@@ -705,9 +711,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             father_url = mListProfileData.getImg_father_url();
             mother_url = mListProfileData.getImg_mother_url();
 
-            Glide.with(getActivity()).load(profile_url).thumbnail(0.5f).into(img_profile);
-            Glide.with(getActivity()).load(father_url).thumbnail(0.5f).into(img_father);
-            Glide.with(getActivity()).load(mother_url).thumbnail(0.5f).into(img_mother);
+            Glide.with(getActivity()).load(profile_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+            Glide.with(getActivity()).load(father_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_father);
+            Glide.with(getActivity()).load(mother_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mother);
 
 
         } else {
@@ -884,21 +890,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             alert("Home location updated!");
-                            //String data = response.getString(Common.Constant_Class.DATA);
-                            //setOnlineData(data.toString());
-
-                            /*if (!message.contains(Common.Constant_Class.UPDATED)) {
-
-                            } else {
-                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                                JSONObject mData = new JSONObject(data);
-                                mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, mData.getString(Common.Constant_Class.PROFILE_PIC_URL));
-                                mEditor.putString(Common.Constant_Class.FIRST_NAME, mData.getString(Common.Constant_Class.FIRST_NAME));
-                                mEditor.putString(Common.Constant_Class.LAST_NAME, mData.getString(Common.Constant_Class.LAST_NAME));
-                                mEditor.commit();
-                            }*/
                         } else {
-                            alert("Error!");
+                            alert("Something went wrong!");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -973,17 +966,18 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
     private void setImageFromActivityResult(Bitmap bmp) {
         if (img_selection.equalsIgnoreCase("profile")) {
-
-            img_profile.setImageBitmap(bmp);
+            //  img_profile.setImageBitmap(bmp);
+            Glide.with(getActivity()).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
             str_profile_hash = Common.getBase64(getActivity(), bmp);
         } else if (img_selection.equalsIgnoreCase("father")) {
-            img_father.setImageBitmap(bmp);
+            // img_father.setImageBitmap(bmp);
+            Glide.with(getActivity()).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_father);
             str_father_hash = Common.getBase64(getActivity(), bmp);
 
         } else if (img_selection.equalsIgnoreCase("mother")) {
-            img_mother.setImageBitmap(bmp);
+            //img_mother.setImageBitmap(bmp);
+            Glide.with(getActivity()).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mother);
             str_mother_hash = Common.getBase64(getActivity(), bmp);
-
         }
     }
 

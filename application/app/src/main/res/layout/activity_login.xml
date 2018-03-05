@@ -59,7 +59,7 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp">
 
-                <com.krs.vastipatrak.utils.RoundedImageView
+                <ImageView
                     android:id="@+id/img_profile"
                     android:layout_width="90dip"
                     android:layout_height="90dip"
@@ -286,12 +286,12 @@
             android:layout_alignBottom="@+id/ll_home"
             android:layout_weight="0.90"
             android:ellipsize="marquee"
-            android:visibility="gone"
             android:marqueeRepeatLimit="marquee_forever"
             android:paddingBottom="-15dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:text="@string/marquee_text"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>

@@ -11,7 +11,7 @@
 
         android:orientation="horizontal">
 
-        <com.krs.vastipatrak.utils.RoundedImageView
+        <ImageView
             android:id="@+id/img_child"
             android:layout_width="@dimen/profile_image_width"
             android:layout_height="@dimen/profile_image_height"
