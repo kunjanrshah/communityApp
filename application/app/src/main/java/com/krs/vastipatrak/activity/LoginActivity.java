@@ -800,6 +800,8 @@ public class LoginActivity extends Activity {
                                     String first_name = mjson_data.getString(Common.Constant_Class.FIRST_NAME);
                                     String last_name = mjson_data.getString(Common.Constant_Class.LAST_NAME);
                                     String access_token=mjson_data.getString(Common.Constant_Class.ACCESS_TOKEN);
+                                    String updated_time=mjson_data.getString(Common.Constant_Class.UPDATED_TIME);
+
                                     mdata.setId(user_id);
                                     mdata.setProfilePicUrl(profile_url);
                                     mdata.setFirstName(first_name);
@@ -812,6 +814,7 @@ public class LoginActivity extends Activity {
                                     mEditor.putString(Common.Constant_Class.FIRST_NAME, first_name);
                                     mEditor.putString(Common.Constant_Class.LAST_NAME, last_name);
                                     mEditor.putString(Common.Constant_Class.ACCESS_TOKEN, access_token);
+                                    mEditor.putString(Common.Constant_Class.UPDATED_TIME, updated_time);
                                     mEditor.commit();
 
                                     Bundle fb_bundle = new Bundle();

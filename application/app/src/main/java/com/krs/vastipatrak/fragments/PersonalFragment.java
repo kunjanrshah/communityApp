@@ -23,18 +23,21 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
@@ -51,8 +54,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import io.realm.RealmList;
 
@@ -60,9 +65,9 @@ import io.realm.RealmList;
 public class PersonalFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
 
-    public static EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbdate = null, edtbTime = null;
+    public static EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbdate = null, edtbTime = null, edtCity = null;
     public static String str_profile_hash = "", str_father_hash = "", str_mother_hash = "";
-    public static String gender = "1";
+    public static String gender = "";
     public static Spinner spinnerBlood;
     ToggleButton tbtn_share;
     RadioButton rbtnM, rbtnF;
@@ -75,10 +80,10 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
     String tag_json_obj = "jobj_req";
     String TAG = "PersonalFragment";
-    boolean home_loc_flag = false;
     String name = "";
     String user_id = "";
-    double home_lat, home_lng, user_lat, user_lng;
+    double home_lat, home_lng,user_lat, user_lng;
+
 
     public PersonalFragment() {
 
@@ -103,27 +108,36 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         View rootView = inflater.inflate(R.layout.fragment_personal, container, false);
         MemoryAllocation(rootView);
 
-        Bundle args = getArguments();
+        try {
+            RealmList<ListProfileData> mListProfileData = ((MyProfileActivity) getActivity()).getMyData();
+            if (mListProfileData != null) {
+                setOfflineData(mListProfileData);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /*Bundle args = getArguments();
         if (args != null) {
             String data = "";
             try {
                 data = args.getString(Common.Constant_Class.DATA);
                 if (data != null && !data.equalsIgnoreCase("")) {
-                    setData(data);
+                    setOnlineData(data);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            try {
+            *//*try {
                 RealmList<ListProfileData> mListProfileData = ((MyProfileActivity) getActivity()).getMyData();
                 if (mListProfileData != null) {
-                    setData(mListProfileData);
+                    setOfflineData(mListProfileData);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-        }
+            }*//*
+        }*/
 
         rbtnM.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -295,7 +309,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 if (str_day.length() == 1) {
                                     str_day = "0" + str_day;
                                 }
-                                String date = str_day + "/" + str_month + "/" + year;
+                                // String date = str_day + "/" + str_month + "/" + year;
+                                String date = year + "-" + str_month + "-" + str_day;
                                 edtbdate.setText(date);
                             }
                         });
@@ -333,10 +348,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                     public void onClick(DialogInterface dialog, int which) {
 
                                         if (MainActivity.lat != null && MainActivity.lon != null) {
-                                            home_loc_flag = true;
-                                            home_lat = Double.valueOf(MainActivity.lat);
-                                            home_lng = Double.valueOf(MainActivity.lon);
-                                            callProfileWS();
+                                            homeLocationUpdateWS();
                                         } else {
                                             Toast.makeText(getActivity(), "You need to give permission to access location ! ", Toast.LENGTH_SHORT).show();
                                         }
@@ -351,8 +363,10 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                         .show();
 
                             } else {
-                                if (home_lat != 0 && home_lng != 0) {
-                                    showDirections(Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon), edtAddress.getText().toString());
+                                double lat = Double.valueOf(MainActivity.lat);
+                                double lng = Double.valueOf(MainActivity.lon);
+                                if (lat != 0 && lng != 0) {
+                                    showDirections(lat, lng, edtAddress.getText().toString());
                                 }
                             }
                         }
@@ -367,13 +381,13 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    getActivity().startService(new Intent(getActivity(), MyLocationService.class));
                     mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE_SP, true);
                     mEditor.commit();
+                    getActivity().startService(new Intent(getActivity(), MyLocationService.class));
                 } else {
-                    getActivity().stopService(new Intent(getActivity(), MyLocationService.class));
                     mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE_SP, false);
                     mEditor.commit();
+                    getActivity().stopService(new Intent(getActivity(), MyLocationService.class));
                 }
             }
         });
@@ -395,8 +409,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         dialog.setContentView(R.layout.image_dialog);
         dialog.setTitle(name);
 
-        RoundedImageView image = (RoundedImageView) dialog.findViewById(R.id.img_dialog);
-        Glide.with(getActivity()).load(url).thumbnail(0.5f).into(image);
+        ImageView image = dialog.findViewById(R.id.img_dialog);
+        Glide.with(getActivity()).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
 
         // new Common.ImageLoadTask(url, image).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         dialog.show();
@@ -425,13 +439,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         builder.show();
     }
 
-
     public void showDirections(double latitude, double longitude, String address) {
         String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", latitude, longitude, "", home_lat, home_lng, address);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         startActivity(intent);
-
     }
 
     private void MemoryAllocation(View rootView) {
@@ -452,6 +464,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtGotra = (EditText) rootView.findViewById(R.id.edtGotra);
         edtMobile = (EditText) rootView.findViewById(R.id.edtMobile);
         edt_Eaddress = (EditText) rootView.findViewById(R.id.edt_Eaddress);
+        edtCity = (EditText) rootView.findViewById(R.id.edt_City);
+
         txt_home = (TextView) rootView.findViewById(R.id.txt_home);
         edtAddress = (EditText) rootView.findViewById(R.id.edtAddress);
         edt_phone = (EditText) rootView.findViewById(R.id.edt_phone);
@@ -501,6 +515,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtBPlace.setEnabled(true);
         edtNPlace.setEnabled(true);
         edtGotra.setEnabled(true);
+        edtCity.setEnabled(true);
         edt_Eaddress.setEnabled(true);
         edtMobile.setEnabled(true);
         edtAddress.setEnabled(true);
@@ -550,6 +565,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtAddress.setCursorVisible(false);
 
         edt_phone.setKeyListener(null);
+
+
         edt_phone.setCursorVisible(false);
 
         edtbTime.setKeyListener(null);
@@ -558,6 +575,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtbdate.setKeyListener(null);
         edtbdate.setCursorVisible(false);
 
+        edtCity.setKeyListener(null);
+        edtCity.setCursorVisible(false);
 
         rbtnM.setKeyListener(null);
         rbtnF.setKeyListener(null);
@@ -565,7 +584,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         spinnerBlood.setEnabled(false);
     }
 
-    private void setData(RealmList<ListProfileData> mListProfileDatas) {
+    private void setOfflineData(RealmList<ListProfileData> mListProfileDatas) {
 
         if (mListProfileDatas.size() > 0) {
             ListProfileData mListProfileData = mListProfileDatas.get(0);
@@ -583,6 +602,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             edtbTime.setText(str_time);
             edtMobile.setText(mListProfileData.getMobile());
             edt_phone.setText(mListProfileData.getPhone());
+            edtCity.setText(mListProfileData.getCity());
             edtGotra.setText(mListProfileData.getGotra());
             edtNPlace.setText(mListProfileData.getNative_place());
             edtEducation.setText(mListProfileData.getEducation());
@@ -625,19 +645,69 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 home_lng = Double.parseDouble(mListProfileData.getHome_lng());
             }
 
-            EnableAll();
-
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("My Profile");
-
-
             if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
+
+                EnableAll();
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("My Profile");
+                mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, mListProfileData.getProfile_pic_url());
+                mEditor.putString(Common.Constant_Class.FIRST_NAME, mListProfileData.getFirst_name());
+                mEditor.putString(Common.Constant_Class.LAST_NAME, mListProfileData.getLast_name());
+                mEditor.commit();
+
+                tbtn_share.setVisibility(View.VISIBLE);
+                tbtn_share.setText(null);
+                tbtn_share.setTextOn(null);
+                tbtn_share.setTextOff(null);
+                boolean bool = mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE_SP, false);
+                tbtn_share.setChecked(bool);
+
+
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Name", edtFName.getText().toString());
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Father Name", edtFatherName.getText().toString());
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Mother Name", edtMotherName.getText().toString());
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Mobile", edtMobile.getText().toString());
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Email Address", edt_Eaddress.getText().toString());
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Home Address", edtAddress.getText().toString());
+
+
+
+                /*if (mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE_SP, false)) {
+                    txt_distance.setVisibility(View.VISIBLE);
+
+                    if (user_lat != 0 && user_lng != 0) {
+                        int distance = (int) Common.getDistance(getActivity(), user_lat, user_lng);
+                        if (distance == -1) {
+                            txt_distance.setText("Need to enable location");
+                        } else {
+                            txt_distance.setText("" + (distance / 1000) + " Km");
+                        }
+                    } else {
+                        txt_distance.setText("User has not set location");
+                    }
+                }*/
+
+            } else {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(name + " Profile");
+                if (home_lat != 0 && home_lng != 0) {
+                    int distance = (int) Common.getDistance(getActivity(), home_lat, home_lng);
+                    if (distance == -1) {
+                        txt_home.setText("Need to enable location");
+                    } else {
+                        txt_home.setText("" + (distance / 1000) + " Km");
+                    }
+                } else {
+                    txt_home.setText("User has not set location");
+                }
+                tbtn_share.setVisibility(View.GONE);
             }
+
+            profile_url = mListProfileData.getProfile_pic_url();
+            father_url = mListProfileData.getImg_father_url();
+            mother_url = mListProfileData.getImg_mother_url();
+
+            Glide.with(getActivity()).load(profile_url).thumbnail(0.5f).into(img_profile);
+            Glide.with(getActivity()).load(father_url).thumbnail(0.5f).into(img_father);
+            Glide.with(getActivity()).load(mother_url).thumbnail(0.5f).into(img_mother);
 
 
         } else {
@@ -645,7 +715,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
-    private void setData(String data) {
+/*
+    private void setOnlineData(String data) {
         try {
             JSONObject mData = new JSONObject(data);
             name = mData.getString(Common.Constant_Class.FIRST_NAME) + " " + mData.getString(Common.Constant_Class.LAST_NAME);
@@ -665,6 +736,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             edtMobile.setText(mData.getString(Common.Constant_Class.MOBILE));
             edt_phone.setText(mData.getString(Common.Constant_Class.PHONE));
             edtGotra.setText(mData.getString(Common.Constant_Class.GOTRA));
+            edtCity.setText(mData.getString(Common.Constant_Class.CITY));
             edtNPlace.setText(mData.getString(Common.Constant_Class.NATIVE_PLACE));
             edtEducation.setText(mData.getString(Common.Constant_Class.EDUCATION));
             edt_Eaddress.setText(mData.getString(Common.Constant_Class.EMAIL_ADDRESS));
@@ -691,24 +763,25 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             } else {
                 rbtnF.setChecked(true);
                 rbtnM.setChecked(false);
-
             }
 
-            if (!mData.getString(Common.Constant_Class.USER_LAT).toString().equalsIgnoreCase("null")) {
+            String _user_lat = mData.getString(Common.Constant_Class.USER_LAT).toString();
+            if (!_user_lat.isEmpty() && !_user_lat.equalsIgnoreCase("null")) {
                 user_lat = Double.parseDouble(mData.getString(Common.Constant_Class.USER_LAT));
             }
-
-            if (!mData.getString(Common.Constant_Class.USER_LNG).toString().equalsIgnoreCase("null")) {
+            String _user_lng = mData.getString(Common.Constant_Class.USER_LNG).toString();
+            if (!_user_lng.isEmpty() && !_user_lng.equalsIgnoreCase("null")) {
                 user_lng = Double.parseDouble(mData.getString(Common.Constant_Class.USER_LNG));
             }
 
-            if (!mData.getString(Common.Constant_Class.HOME_LAT).toString().equalsIgnoreCase("null")) {
 
+            String _home_lat = mData.getString(Common.Constant_Class.HOME_LAT).toString();
+            if (!_home_lat.isEmpty() && !_home_lat.equalsIgnoreCase("null")) {
                 home_lat = Double.parseDouble(mData.getString(Common.Constant_Class.HOME_LAT));
             }
 
-            if (!mData.getString(Common.Constant_Class.HOME_LNG).toString().equalsIgnoreCase("null")) {
-
+            String _home_lng = mData.getString(Common.Constant_Class.HOME_LNG).toString();
+            if (!_home_lng.isEmpty() && !_home_lng.equalsIgnoreCase("null")) {
                 home_lng = Double.parseDouble(mData.getString(Common.Constant_Class.HOME_LNG));
             }
 
@@ -748,7 +821,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 }
 
                 tbtn_share.setVisibility(View.GONE);
-/*                if (mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE_SP, false)) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE_SP, false)) {
                     txt_distance.setVisibility(View.VISIBLE);
 
                     if (user_lat != 0 && user_lng != 0) {
@@ -761,8 +834,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     } else {
                         txt_distance.setText("User has not set location");
                     }
-                }*/
-
+                }
 
             }
 
@@ -774,54 +846,49 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             Glide.with(getActivity()).load(father_url).thumbnail(0.5f).into(img_father);
             Glide.with(getActivity()).load(mother_url).thumbnail(0.5f).into(img_mother);
 
-            //    new Common.ImageLoadTask(profile_url, img_profile).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            //   new Common.ImageLoadTask(father_url, img_father).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            //   new Common.ImageLoadTask(mother_url, img_mother).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            //     new Common.ImageLoadTask(profile_url, img_profile).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            //     new Common.ImageLoadTask(father_url, img_father).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            //     new Common.ImageLoadTask(mother_url, img_mother).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
+*/
 
-    private void callProfileWS() {
+    private void homeLocationUpdateWS() {
         if (Common.isOnline(getActivity())) {
-
             JSONObject mJsonObject = null;
-            if (home_loc_flag) {
-                home_loc_flag = false;
-                try {
-                    mJsonObject = new JSONObject();
-                    if (home_lat != 0 && home_lng != 0) {
-                        mJsonObject.put(Common.Constant_Class.HOME_LAT, home_lat);
-                        mJsonObject.put(Common.Constant_Class.HOME_LNG, home_lng);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try {
+                double lat = Double.valueOf(MainActivity.lat);
+                double lng = Double.valueOf(MainActivity.lon);
+                mJsonObject = new JSONObject();
+                if (lat != 0 && lng != 0) {
+                    mJsonObject.put(Common.Constant_Class.HOME_LAT, lat);
+                    mJsonObject.put(Common.Constant_Class.HOME_LNG, lng);
+                    mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                    mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
+                    mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            String id = "";
-            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-                id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
-            } else {
-                id = mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID_SP, "");
-            }
-            final String profile_url = Common.Constant_Class.PROFILE_URL + id;
-
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, profile_url, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(JSONObject response) {
-
-
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
+
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            String data = response.getString(Common.Constant_Class.DATA);
-                            if (!message.contains(Common.Constant_Class.UPDATED)) {
-                                setData(data.toString());
+                            alert("Home location updated!");
+                            //String data = response.getString(Common.Constant_Class.DATA);
+                            //setOnlineData(data.toString());
+
+                            /*if (!message.contains(Common.Constant_Class.UPDATED)) {
+
                             } else {
                                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                                 JSONObject mData = new JSONObject(data);
@@ -829,7 +896,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 mEditor.putString(Common.Constant_Class.FIRST_NAME, mData.getString(Common.Constant_Class.FIRST_NAME));
                                 mEditor.putString(Common.Constant_Class.LAST_NAME, mData.getString(Common.Constant_Class.LAST_NAME));
                                 mEditor.commit();
-                            }
+                            }*/
+                        } else {
+                            alert("Error!");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -841,10 +910,29 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 public void onErrorResponse(VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                 }
-            });
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    return params;
+                }
+            };
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
         }
+    }
+
+    private void alert(String message) {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+        builder.setTitle(getString(R.string.app_name));
+        builder.setMessage(message);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
     }
 
     @Override

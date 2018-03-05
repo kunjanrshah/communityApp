@@ -13,6 +13,38 @@ public class ListParentData {
     String id;
     String user_lat;
     String user_lng;
+    String city;
+    boolean is_location_enable;
+    String updated_time;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+
+
+    public boolean isIs_location_enable() {
+        return is_location_enable;
+    }
+
+    public void setIs_location_enable(boolean is_location_enable) {
+        this.is_location_enable = is_location_enable;
+    }
+
+    public String getUpdated_time() {
+        return updated_time;
+    }
+
+    public void setUpdated_time(String updated_time) {
+        this.updated_time = updated_time;
+    }
+
+
+
 
     public String getUser_lat() {
         return user_lat;

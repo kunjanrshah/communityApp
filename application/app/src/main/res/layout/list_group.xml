@@ -1,102 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="3dp">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <com.krs.vastipatrak.utils.RoundedImageView
-            android:id="@+id/ivIcon"
-            android:layout_width="60dip"
-            android:layout_height="60dip"
-            android:src="@drawable/ic_launcher" />
-
-        <TextView
-            android:clickable="true"
-            android:id="@+id/txt_distance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="50 Km"
-            android:textColor="@color/colorPrimary" />
-
-        <ToggleButton
-            android:id="@+id/tbtn_pshare"
-            android:layout_width="40dp"
-            android:layout_height="25dp"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:focusable="false"
-            android:background="@drawable/toggle_selector" />
-
-
-    </LinearLayout>
-
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Name"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvFatherName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Father Name" />
-
-        <TextView
-            android:id="@+id/tvMotherName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Mother Name " />
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <CheckBox
-            android:id="@+id/cbx1"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:checked="false"
-            android:visibility="gone"
-            android:focusable="false" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imgShare"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/share_icon"
-            android:focusable="false" />
+            <ImageView
+                android:id="@+id/ivIcon"
+                android:layout_width="80dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_launcher" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:clickable="true"
+                    android:text="50 Km"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14dp" />
+
+                <ToggleButton
+                    android:id="@+id/tbtn_pshare"
+                    android:layout_width="40dp"
+                    android:layout_height="25dp"
+
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/toggle_selector"
+                    android:focusable="false"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvFatherName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Father Name"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/tvMotherName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mother Name "
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/tvCity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="City: "
+                android:textSize="14dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvNudge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Nudge"
+                    android:textSize="16dp" />
+
+                <ImageView
+                    android:id="@+id/imgSync"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/clock"
+                    android:focusable="false" />
+
+                <ImageView
+                    android:id="@+id/imgShare"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/share_icon"
+                    android:focusable="false" />
+
+                <CheckBox
+                    android:id="@+id/cbx1"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="20dp"
+                    android:checked="false"
+                    android:focusable="false"
+                    android:visibility="gone" />
 
 
+            </LinearLayout>
+        </LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="5dp"
+    android:layout_gravity="center"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    >
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:background="@drawable/ic_launcher"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:background="@drawable/house"
+        android:layout_height="wrap_content" />
 
+</LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvUpdatedTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Updated: "
+        android:textColor="@android:color/black"
+        android:textSize="12dp" />
+
 </LinearLayout>

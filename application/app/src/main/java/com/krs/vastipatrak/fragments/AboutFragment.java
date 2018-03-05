@@ -19,13 +19,10 @@ import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.FilterActivity;
 
-/**
- * Created by kushal on 31/01/16.
- */
-public class SponserByFragment extends Fragment {
+public class AboutFragment extends Fragment {
 
     SharedPreferences mSharedPreferences;
-    String TAG = "SponserByFragment";
+    String TAG = "AboutFragment";
     SearchView searchView;
 
     @Override
@@ -37,9 +34,9 @@ public class SponserByFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_sponser_by, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_about, container, false);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle(R.string.title_sponser_by);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle(R.string.title_about);
 
         return rootView;
     }

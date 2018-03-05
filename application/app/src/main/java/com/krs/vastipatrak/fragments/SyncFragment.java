@@ -1,5 +1,6 @@
 package com.krs.vastipatrak.fragments;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,27 +26,49 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.FilterActivity;
 import com.krs.vastipatrak.adapter.CityAdapter;
+import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.City;
 import com.krs.vastipatrak.service.SyncService;
 import com.krs.vastipatrak.utils.Common;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class SettingFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class SyncFragment extends Fragment {
 
     SearchView searchView;
 
     ProgressDialog pDialog;
     ProgressBar progressBar;
 
-    String TAG = "SettingFragment";
+    String TAG = "SyncFragment";
     String tag_json_obj = "jobj_req";
     //RealmList<ListProfileData> mArrlstProfiledata = null;
     ToggleButton tbtn_net, tbtn_sync;
@@ -52,6 +76,8 @@ public class SettingFragment extends Fragment {
     private SharedPreferences mSharedPreferences = null;
     private SharedPreferences.Editor mEditor = null;
     private TextView txt_offline, txt_sync, txt_sync_val;
+    public static TextView tvUpdatedTime;
+    public static Button btn_sync;
     private List<City> cityList = new ArrayList<>();
     private RecyclerView recyclerView;
     private CityAdapter mAdapter;
@@ -59,7 +85,7 @@ public class SettingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_sync, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.title_setting);
         setHasOptionsMenu(true);
 
@@ -111,11 +137,73 @@ public class SettingFragment extends Fragment {
     }
 
     private void prepareCityData() {
-        City city = new City("Ahmedabad", true);
-        cityList.add(city);
-        city = new City("Surat", false);
-        cityList.add(city);
-        mAdapter.notifyDataSetChanged();
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.GET_CITIES_URL, json, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, "response: " + response);
+
+                try {
+                    boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
+                    String message = response.getString(Common.Constant_Class.MESSAGE);
+                    if (success) {
+                        JSONArray mJsonArray = response.getJSONArray("data");
+                        for (int i = 0; i < mJsonArray.length(); i++) {
+                            City city = new City(mJsonArray.getString(i), false);
+                            cityList.add(city);
+                        }
+                        mAdapter.notifyDataSetChanged();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                String message = null;
+                if (error instanceof NetworkError) {
+                    message = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ServerError) {
+                    message = "The server could not be found. Please try again after some time!!";
+                } else if (error instanceof AuthFailureError) {
+                    message = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ParseError) {
+                    message = "Parsing error! Please try again after some time!!";
+                } else if (error instanceof NoConnectionError) {
+                    message = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof TimeoutError) {
+                    message = "Connection TimeOut! Please check your internet connection.";
+                }
+                Toast.makeText(getActivity(), "" + message, Toast.LENGTH_LONG).show();
+
+            }
+        }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+
+                return params;
+
+            }
+        };
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+
     }
 
 
@@ -370,7 +458,8 @@ public class SettingFragment extends Fragment {
         tbtn_net = rootView.findViewById(R.id.tbtn_net);
         tbtn_sync = rootView.findViewById(R.id.tbtn_sync);
         ll_progress = rootView.findViewById(R.id.ll_progress);
-        final Button btn_sync = rootView.findViewById(R.id.btn_sync);
+        tvUpdatedTime=rootView.findViewById(R.id.tvUpdatedTime1);
+        btn_sync = rootView.findViewById(R.id.btn_sync);
 
         tbtn_sync.setChecked(false);
         tbtn_net.setText(null);
@@ -383,6 +472,8 @@ public class SettingFragment extends Fragment {
 
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
+        String date=Common.getUpdatedTime(mSharedPreferences.getString(Common.Constant_Class.UPDATED_TIME,"0"));
+        tvUpdatedTime.setText(date);
 
         if (mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false)) {
             tbtn_net.setChecked(true);
@@ -396,13 +487,42 @@ public class SettingFragment extends Fragment {
         pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage(Common.Constant_Class.LOADING);
         pDialog.setCancelable(false);
+
         btn_sync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (btn_sync.getText().toString().equalsIgnoreCase("Start")) {
-                    Intent mIntent = new Intent(getActivity(), SyncService.class);
-                    getActivity().startService(mIntent);
-                    btn_sync.setText("Stop");
+                    final ArrayList<String> selectedList = mAdapter.getSelectedCities();
+                    final Dialog sync_dialog = new Dialog(getActivity());
+                    sync_dialog.setContentView(R.layout.custom_sync_dialog);
+                    sync_dialog.setTitle(getResources().getString(R.string.sync_data));
+
+                    TextView tvSyncCity = (TextView) sync_dialog.findViewById(R.id.tvSyncCity);
+                    final RadioGroup radioGroupId = sync_dialog.findViewById(R.id.radioGroupId);
+                    Button btnDownload = sync_dialog.findViewById(R.id.btnDownload);
+
+                    if (selectedList != null && selectedList.size() > 0) {
+                        tvSyncCity.setText("City: " + selectedList.toString().replace("[","").replace("]",""));
+                    } else {
+                        tvSyncCity.setText("City: Default All");
+                    }
+
+                    btnDownload.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            int selectedId=radioGroupId.getCheckedRadioButtonId();
+                            RadioButton radioSelButton=(RadioButton)sync_dialog.findViewById(selectedId);
+                            Intent mIntent = new Intent(getActivity(), SyncService.class);
+                            mIntent.putStringArrayListExtra("selectedCities", selectedList);
+
+                            mIntent.putExtra("",radioSelButton.getText());
+                            getActivity().startService(mIntent);
+                            btn_sync.setText("Stop");
+                            sync_dialog.cancel();
+                        }
+                    });
+
+                    sync_dialog.show();
                     //SyncAlert();
                 } else {
                     btn_sync.setText("Start");

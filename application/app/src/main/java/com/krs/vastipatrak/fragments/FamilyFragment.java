@@ -122,6 +122,7 @@ public class FamilyFragment extends Fragment implements Serializable {
                             @Override
                             public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
 
+                                monthOfYear = (++monthOfYear);
                                 String str_month = String.valueOf(monthOfYear);
                                 String str_day = String.valueOf(dayOfMonth);
                                 if (str_month.length() == 1) {
@@ -130,8 +131,8 @@ public class FamilyFragment extends Fragment implements Serializable {
                                 if (str_day.length() == 1) {
                                     str_day = "0" + str_day;
                                 }
-                                String date = str_day + "/" + str_month + "/" + year;
-
+                               // String date = str_day + "/" + str_month + "/" + year;
+                                String date = year + "-" + str_month + "-" + str_day;
                                 edt_mdate.setText(date);
                             }
                         });
@@ -496,6 +497,7 @@ public class FamilyFragment extends Fragment implements Serializable {
                             @Override
                             public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
 
+                                monthOfYear = (++monthOfYear);
                                 String str_month = String.valueOf(monthOfYear);
                                 String str_day = String.valueOf(dayOfMonth);
                                 if (str_month.length() == 1) {
@@ -504,7 +506,8 @@ public class FamilyFragment extends Fragment implements Serializable {
                                 if (str_day.length() == 1) {
                                     str_day = "0" + str_day;
                                 }
-                                String date = str_day + "/" + str_month + "/" + year;
+                               // String date = str_day + "/" + str_month + "/" + year;
+                                String date =  year + "-" +  str_month + "-" + str_day ;
                                 mViewholder.edtchild_bdate.setText(date);
                             }
                         });

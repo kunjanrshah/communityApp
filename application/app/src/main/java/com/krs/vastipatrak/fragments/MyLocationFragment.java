@@ -180,10 +180,6 @@ public class MyLocationFragment extends Fragment implements View.OnClickListener
                         })
                         .show().getWindow().setLayout(400, 300);
 
-
-
-
-
             } else {
                 curr_lat=lat;
                 curr_lng=lon;

@@ -1,7 +1,7 @@
 <resources>
     <string name="theme_app_name">VastiPatrak</string>
     <string name="app_name">VastiPatrak</string>
-
+    <string name="fb_app_id">1749295805152367</string>
     <string name="share_using">share using</string>
     <string name="hint_email">Email</string>
     <string name="hint_email_mobile">Email or Mobile</string>
@@ -9,6 +9,7 @@
     <string name="hint_password">Password</string>
     <string name="hint_conform_password">Conform Password</string>
     <string name="hint_address">Address</string>
+    <string name="hint_city">City</string>
     <string name="hint_native">Native Place</string>
     <string name="btn_sign_up">SIGN UP</string>
     <string name="btn_add_new">ADD NEW</string>
@@ -32,6 +33,7 @@
     <string name="err_msg_password">Enter the password</string>
     <string name="err_msg_conform_password">Wrong password</string>
     <string name="forgot_password"><u>Forgot Password</u></string>
+    <string name="sync_data"><u>Sync Data</u></string>
     <string name="err_msg_name">Enter your name</string>
     <string name="err_msg_father_name">Enter your father name</string>
     <string name="err_msg_surname">Enter your surname</string>
@@ -66,7 +68,7 @@
     <string name="nav_item_my_profile">My Profile</string>
     <string name="nav_item_filter">Filter</string>
     <string name="nav_item_change_password">Change Password</string>
-    <string name="nav_item_sponser_by">Sponser By</string>
+    <string name="nav_item_about">About</string>
     <string name="nav_item_sync">Sync</string>
     <string name="nav_item_intro">Tour Video</string>
     <string name="nav_item_logout">Logout</string>
@@ -76,7 +78,7 @@
         <item>@string/nav_item_home</item>
         <item>@string/nav_item_my_profile</item>
         <item>@string/nav_item_change_password</item>
-        <item>@string/nav_item_sponser_by</item>
+        <item>@string/nav_item_about</item>
         <item>@string/nav_item_sync</item>
         <item>@string/nav_item_intro</item>
         <item>@string/nav_item_logout</item>
@@ -91,7 +93,7 @@
     <string name="title_filter">Advance Search</string>
     <string name="title_login">Login</string>
     <string name="title_change_password">Change Password</string>
-    <string name="title_sponser_by">Sponser By</string>
+    <string name="title_about">About</string>
     <string name="title_setting">Sync</string>
     <string name="title_logout">Logout</string>
     <string name="spinner_blood">Select BloodGroup</string>

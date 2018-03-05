@@ -11,16 +11,25 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
@@ -35,9 +44,12 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -323,6 +335,28 @@ public class Common {
         return cursor.getInt(0);
     }
 
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
+                .getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final float roundPx = pixels;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
+
     public static byte[] getBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -346,6 +380,13 @@ public class Common {
         } catch (ActivityNotFoundException a) {
             Toast.makeText(mActivity, "Sorry! Your device doesn\\'t support speech input", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static String camelCase(String stringToConvert) {
+        if (stringToConvert == null || TextUtils.isEmpty(stringToConvert))
+            return "";
+        return Character.toUpperCase(stringToConvert.charAt(0)) +
+                stringToConvert.substring(1).toLowerCase();
     }
 
     public static RealmList<ListProfileData> getDataFromParentTable(String query, int search) {
@@ -866,8 +907,7 @@ public class Common {
 
         public static final String API_KEY_VALUE="q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
         public static final String DEVICE_TYPE_VALUE="Android";
-        public static final String DEVICE_TOKEN_VALUE="";
-        public static final String ACCESS_TOKEN_VALUE="";
+        public static final String GET_CITIES_URL ="http://srbrothersinfotech.com/directory-dev/API/getCities";
         public static final String LOGIN_URL = "http://www.srbrothersinfotech.com/directory-dev/API/login";
         public static final String SIGNUP_URL = "http://www.srbrothersinfotech.com/directory-dev/API/register";
         public static final String FORGOT_PASSWORD_URL = "http://www.srbrothersinfotech.com/directory-dev/API/forgotPassword";
@@ -940,6 +980,10 @@ public class Common {
         public static final String PHONE = "phone";
         public static final String GENDER = "gender";
         public static final String GOTRA = "gotra";
+        public static final String IS_LOCATION_ENABLE = "is_location_enable";
+        public static final String UPDATED_TIME = "updated_time";
+        public static final String SYNC_TIME = "sync_time";
+        public static final String CITY = "city";
         public static final String TITLE_BLOOD_GROUP = "Blood Group";
         public static final String A_POSITIVE = "A +VE";
         public static final String A_NAGATIVE = "A -VE";
@@ -990,11 +1034,23 @@ public class Common {
         public static final String OFFLINE = "Offline";
         public static String DEVICE_ID_VALUE = "";
 
+        public static int sCorner = 15;
+        public static int sMargin = 2;
+        public static int sBorder = 10;
+        public static String sColor = "#FFC0CB";
+        public static long LOCATION_INTERVAL=1000 * 1 *30;
         /*public static final String MY_LATITUDE = "my_latitude";
         public static final String MY_LONGITUDE = "my_longitude";*/
     }
 
-/*
+    public static String getUpdatedTime(String timestamp)
+    {
+        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+        cal.setTimeInMillis(Integer.parseInt(timestamp) * 1000L);
+        String date = DateFormat.format("dd-MM-yyyy hh:mm:ss", cal).toString();
+        return date;
+    }
+
     public static class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
 
         private String url;
@@ -1046,7 +1102,6 @@ public class Common {
             return imgbytes;
         }
     }
-*/
 
 
 }

@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:background="@android:color/darker_gray"
+        android:background="#ececec"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="10dp"
@@ -92,6 +92,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tvUpdatedTime1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right"

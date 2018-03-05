@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.model.City;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,6 +20,7 @@ import java.util.List;
 
 public class CityAdapter extends RecyclerView.Adapter<CityAdapter.MyViewHolder> {
 
+    public ArrayList<String> selectedList = new ArrayList<>();
     private List<City> cityList;
 
     public CityAdapter(List<City> cityList) {
@@ -34,9 +37,25 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(CityAdapter.MyViewHolder holder, int position) {
-        City city = cityList.get(position);
+        final City city = cityList.get(position);
         holder.name.setText(city.getName());
         holder.chkCity.setChecked(city.isSelected());
+        holder.chkCity.setTag(position);
+        holder.chkCity.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    selectedList.add(city.getName());
+                } else {
+                    selectedList.remove(city.getName());
+                }
+            }
+        });
+    }
+
+    public ArrayList<String> getSelectedCities()
+    {
+        return selectedList;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.krs.vastipatrak.service;
 
+import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -8,9 +9,11 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -21,13 +24,18 @@ import com.krs.vastipatrak.utils.Common;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.krs.vastipatrak.utils.Common.Constant_Class.LOCATION_INTERVAL;
+
 
 public class MyLocationService extends Service {
 
     private static final String TAG = "MyLocationService";
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 1000 * 2 * 1;
-    private static final float LOCATION_DISTANCE = 10f;
+    //private static final int LOCATION_INTERVAL = 1000 * 3 * 60;
+    private static final float LOCATION_DISTANCE = 1f;
     SharedPreferences mSharedPreferences;
     SharedPreferences.Editor mEditor;
     Location mLastLocation;
@@ -48,7 +56,7 @@ public class MyLocationService extends Service {
             /*mEditor.putString(Common.Constant_Class.MY_LATITUDE, String.valueOf(location.getLatitude()));
             mEditor.putString(Common.Constant_Class.MY_LONGITUDE, String.valueOf(location.getLongitude()));
             mEditor.commit();*/
-            callProfileWS();
+            userLocationUpdateWS();
 
            /* new Handler().postDelayed(new Runnable() {
                 @Override
@@ -85,10 +93,9 @@ public class MyLocationService extends Service {
         return null;
     }
 
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e(TAG, "onStartCommand");
-        super.onStartCommand(intent, flags, startId);
         return START_STICKY;
     }
 
@@ -140,35 +147,31 @@ public class MyLocationService extends Service {
         }
     }
 
-    private void callProfileWS() {
+    private void userLocationUpdateWS() {
 
         if (Common.isOnline(MyLocationService.this)) {
             JSONObject mJsonObject = null;
             try {
-
-
                 mJsonObject = new JSONObject();
                 mJsonObject.put(Common.Constant_Class.USER_LAT, mLastLocation.getLatitude());
                 mJsonObject.put(Common.Constant_Class.USER_LNG, mLastLocation.getLongitude());
-
+                mJsonObject.put(Common.Constant_Class.IS_LOCATION_ENABLE,mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE_SP,false) );
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-
-            final String profile_url = Common.Constant_Class.PROFILE_URL + mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, profile_url, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(JSONObject response) {
-
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             String data = response.getString(Common.Constant_Class.DATA);
                             Toast.makeText(MyLocationService.this,  message, Toast.LENGTH_SHORT).show();
-
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -180,11 +183,17 @@ public class MyLocationService extends Service {
                 public void onErrorResponse(VolleyError error) {
                     VolleyLog.d("TimeService", "Error: " + error.getMessage());
                 }
-            });
+            }){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    return params;
+                }
+            };
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
         }
     }
-
-
 }

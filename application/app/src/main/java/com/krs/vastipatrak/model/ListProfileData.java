@@ -16,6 +16,35 @@ public class ListProfileData extends RealmObject{
     private String profile_pic_url = "", img_spouse_url = "", img_father_url = "", img_mother_url = "", img_sfather_url = "", img_smother_url = "",status="",first_name="",last_name="",father_name="",mother_name="",email_address="",mobile="",phone="",blood_group="",gender="",gotra="",ekdo="",native_place="",birth_place="",birth_date="",birth_time="",education="",occupation="",
             work="",address="",office_address="",office_mobile="",office_lat="",office_lng="",home_lat="",home_lng="",user_lat="",user_lng="",spouse_name="",marriage_date="",spouse_father_name="",spouse_mother_name="";
 
+    private boolean is_location_enable;
+    private String updated_time;
+    private String sync_time;
+
+    public boolean isIs_location_enable() {
+        return is_location_enable;
+    }
+
+    public void setIs_location_enable(boolean is_location_enable) {
+        this.is_location_enable = is_location_enable;
+    }
+
+    public String getUpdated_time() {
+        return updated_time;
+    }
+
+    public void setUpdated_time(String updated_time) {
+        this.updated_time = updated_time;
+    }
+
+    public String getSync_time() {
+        return sync_time;
+    }
+
+    public void setSync_time(String sync_time) {
+        this.sync_time = sync_time;
+    }
+
+
 
     private String str_profile_hash;
     private String str_father_hash;
@@ -24,6 +53,16 @@ public class ListProfileData extends RealmObject{
     private String str_mspouse_hash;
     private String str_spouse_hash;
     private String password;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    private String city;
     private RealmList<ListChildrenData> mListChildrenData;
 
     public String getPassword() {

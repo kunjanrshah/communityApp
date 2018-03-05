@@ -2,10 +2,14 @@ package com.krs.vastipatrak.service;
 
 import android.app.IntentService;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -13,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListProfileData;
@@ -21,10 +26,17 @@ import com.krs.vastipatrak.utils.Common;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import io.realm.RealmList;
+
+import static com.krs.vastipatrak.fragments.SyncFragment.btn_sync;
+import static com.krs.vastipatrak.fragments.SyncFragment.tvUpdatedTime;
 
 /**
  * Created by kunjan on 28/2/18.
@@ -54,20 +66,22 @@ public class SyncService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        callSyncWS();
+        ArrayList<String> selectedCities = intent.getStringArrayListExtra("selectedCities");
+        callSyncWS(selectedCities);
     }
 
-    private void callSyncWS() {
+    private void callSyncWS(ArrayList<String> selectedCities) {
 
         if (Common.isOnline(this)) {
 
             JSONObject mJsonObject = null;
-
             try {
                 mJsonObject = new JSONObject();
+                if (selectedCities.size() > 0) {
+                    mJsonObject.put(Common.Constant_Class.CITY, android.text.TextUtils.join(",", selectedCities));
+                }
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -80,11 +94,9 @@ public class SyncService extends IntentService {
                     Log.d(TAG, "sync_url: " + sync_url);
                     Log.d(TAG, "response: " + response.toString());
 
-
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
-                        RealmList<ListProfileData> mArrlstProfiledata = null;
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
 
                             JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
@@ -102,6 +114,18 @@ public class SyncService extends IntentService {
                                 String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
                                 mListProfileData.setLast_name(last_name.toLowerCase());
 
+                                String city = mJsondata.getString(Common.Constant_Class.CITY);
+                                mListProfileData.setCity(city.toLowerCase());
+                                String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
+                                mListProfileData.setUpdated_time(updated_time.toLowerCase());
+                                String sync_time = mJsondata.getString(Common.Constant_Class.SYNC_TIME);
+                                mListProfileData.setSync_time(sync_time.toLowerCase());
+                                String is_loc_enable = mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE);
+                                if (is_loc_enable.equals("0")) {
+                                    mListProfileData.setIs_location_enable(false);
+                                } else {
+                                    mListProfileData.setIs_location_enable(true);
+                                }
 
                                 String father_name = mJsondata.getString(Common.Constant_Class.FATHER_NAME);
                                 mListProfileData.setFather_name(father_name.toLowerCase());
@@ -193,25 +217,26 @@ public class SyncService extends IntentService {
                                     }
                                     mListProfileData.setmListChildrenData(arrayListChildren);
                                 }
-                                mArrlstProfiledata.add(mListProfileData);
+                                AppController.getInstance().realm.beginTransaction();
+                                AppController.getInstance().realm.copyToRealmOrUpdate(mListProfileData);
+                                AppController.getInstance().realm.commitTransaction();
+
                                 Log.d(TAG, "sync: id: " + mListProfileData.getProfile_id() + " name :" + mListProfileData.getFirst_name());
                             }
 
-                            //  new SyncTask().execute();
-
-                            for (int i = 0; i < mArrlstProfiledata.size(); i++) {
-                                AppController.getInstance().realm.beginTransaction();
-                                AppController.getInstance().realm.copyToRealmOrUpdate(mArrlstProfiledata.get(i));
-                                AppController.getInstance().realm.commitTransaction();
-                             /*   progress_status = (i * 100) / mArrlstProfiledata.size();
-                                publishProgress(progress_status);*/
-                                Log.v("inserted ", "Records : " + i);
+                            if (tvUpdatedTime != null) {
+                                Date c = Calendar.getInstance().getTime();
+                                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+                                String formattedDate = df.format(c);
+                                tvUpdatedTime.setText(formattedDate);
                             }
                         }
-
+                        if (btn_sync != null) {
+                            btn_sync.setText("Start");
+                        }
+                        Toast.makeText(SyncService.this, ""+message, Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         e.printStackTrace();
-
                     }
                 }
             }, new Response.ErrorListener() {
@@ -233,5 +258,4 @@ public class SyncService extends IntentService {
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         }
     }
-
 }

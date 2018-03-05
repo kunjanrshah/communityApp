@@ -601,6 +601,9 @@ public class SearchFragment extends Fragment {
                     String father_name = mJsondata.getString(Common.Constant_Class.FATHER_NAME);
                     String mother_name = mJsondata.getString(Common.Constant_Class.MOTHER_NAME);
                     String status = mJsondata.getString(Common.Constant_Class.STATUS);
+                    String city = mJsondata.getString(Common.Constant_Class.CITY);
+                    String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
+                    boolean is_location_enable = mJsondata.getBoolean(Common.Constant_Class.IS_LOCATION_ENABLE);
 
                     if (status.equalsIgnoreCase("1") || stat == 0) {
                         ListParentData lpd = new ListParentData();
@@ -610,6 +613,9 @@ public class SearchFragment extends Fragment {
                         lpd.setProfilePicUrl(profile_pic_url);
                         lpd.setStatus(status);
                         lpd.setId(profile_id);
+                        lpd.setCity(city);
+                        lpd.setUpdated_time(updated_time);
+                        lpd.setIs_location_enable(is_location_enable);
 
                         String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
                         String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
@@ -701,6 +707,9 @@ public class SearchFragment extends Fragment {
             lpd.setProfilePicUrl(mListProfileDatas.get(i).getProfile_pic_url());
             lpd.setUser_lat(mListProfileDatas.get(i).getUser_lat());
             lpd.setUser_lng(mListProfileDatas.get(i).getUser_lng());
+            lpd.setIs_location_enable(mListProfileDatas.get(i).isIs_location_enable());
+            lpd.setUpdated_time(mListProfileDatas.get(i).getUpdated_time());
+            lpd.setCity(mListProfileDatas.get(i).getCity());
 
             ListChildData lcd = new ListChildData();
             lcd.setID(mListProfileDatas.get(i).getProfile_id());

@@ -22,18 +22,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
+import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListProfileData;
+import com.krs.vastipatrak.utils.Common;
 
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import io.realm.RealmList;
@@ -47,7 +45,7 @@ public class BusinessFragment extends Fragment implements Serializable {
     String TAG = "BusinessFragment";
     boolean office_loc_flag = false;
     TextView txt_office;
-    double office_lat, office_lng;
+    double office_lat=0, office_lng=0;
     String user_id = "";
 
     public BusinessFragment() {
@@ -72,7 +70,7 @@ public class BusinessFragment extends Fragment implements Serializable {
             try {
                 data = args.getString(Common.Constant_Class.DATA);
                 if (data != null && !data.equalsIgnoreCase("")) {
-                    SetData(data);
+                    SetOnlineData(data);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -81,7 +79,7 @@ public class BusinessFragment extends Fragment implements Serializable {
             try {
                 RealmList<ListProfileData> mListProfileData = ((MyProfileActivity) getActivity()).getMyData();
                 if (mListProfileData != null) {
-                    SetData(mListProfileData);
+                    SetOfflineData(mListProfileData);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -107,8 +105,6 @@ public class BusinessFragment extends Fragment implements Serializable {
                                 builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         if (MainActivity.lat != null && MainActivity.lon != null) {
-                                            office_lat = Double.parseDouble(MainActivity.lat);
-                                            office_lng = Double.parseDouble(MainActivity.lon);
                                             office_loc_flag = true;
                                             callProfileWS();
                                         }
@@ -124,6 +120,8 @@ public class BusinessFragment extends Fragment implements Serializable {
                             } else {
                                 if (MainActivity.lat != null && MainActivity.lon != null && office_lat != 0 && office_lng != 0) {
                                     showDirections(Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+                                } else {
+                                    Toast.makeText(getActivity(), "Something wrong went!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -159,9 +157,11 @@ public class BusinessFragment extends Fragment implements Serializable {
                 office_loc_flag = false;
                 try {
                     mJsonObject = new JSONObject();
-                    if (office_lat != 0 && office_lng != 0) {
-                        mJsonObject.put(Common.Constant_Class.OFFICE_LAT, office_lat);
-                        mJsonObject.put(Common.Constant_Class.OFFICE_LNG, office_lng);
+                    double lat = Double.parseDouble(MainActivity.lat);
+                    double lng = Double.parseDouble(MainActivity.lon);
+                    if (lat != 0 && lng != 0) {
+                        mJsonObject.put(Common.Constant_Class.OFFICE_LAT, lat);
+                        mJsonObject.put(Common.Constant_Class.OFFICE_LNG, lng);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -187,7 +187,7 @@ public class BusinessFragment extends Fragment implements Serializable {
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             String data = response.getString(Common.Constant_Class.DATA);
                             if (!message.contains(Common.Constant_Class.UPDATED)) {
-                                SetData(data.toString());
+                                SetOnlineData(data.toString());
                             } else {
                                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                             }
@@ -234,7 +234,7 @@ public class BusinessFragment extends Fragment implements Serializable {
 
     }
 
-    private void SetData(RealmList<ListProfileData> mListProfileDatas) {
+    private void SetOfflineData(RealmList<ListProfileData> mListProfileDatas) {
 
         if (mListProfileDatas.size() > 0) {
             ListProfileData mListProfileData = mListProfileDatas.get(0);
@@ -253,7 +253,7 @@ public class BusinessFragment extends Fragment implements Serializable {
         }
     }
 
-    private void SetData(String data) {
+    private void SetOnlineData(String data) {
         try {
             JSONObject mData = new JSONObject(data);
 

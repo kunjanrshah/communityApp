@@ -42,17 +42,16 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.app.PrefManager;
+import com.krs.vastipatrak.fragments.AboutFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.SearchFragment;
-import com.krs.vastipatrak.fragments.SettingFragment;
-import com.krs.vastipatrak.fragments.SponserByFragment;
+import com.krs.vastipatrak.fragments.SyncFragment;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NotificationUtils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -61,6 +60,8 @@ import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;
+
+import static com.krs.vastipatrak.utils.Common.Constant_Class.LOCATION_INTERVAL;
 
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, TimePickerDialog.OnTimeSetListener,
@@ -414,11 +415,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 //                Common.Title = getString(R.string.title_change_password);
                 break;
             case 3:
-                fragment = new SponserByFragment();
+                fragment = new AboutFragment();
                 break;
             case 4:
 
-                fragment = new SettingFragment();
+                fragment = new SyncFragment();
 //                Common.Title = getString(R.string.title_change_password);
                 break;
 
@@ -521,7 +522,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
 
-        String date = dayOfMonth + "/" + (++monthOfYear) + "/" + year;
+      //  String date = dayOfMonth + "/" + (++monthOfYear) + "/" + year;
+        String date = year + "-" + (++monthOfYear) + "-" + dayOfMonth;
     }
 
     @Override
@@ -545,7 +547,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     public void onConnected(Bundle bundle) {
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(1000 * 3); // Update location every second
+        mLocationRequest.setInterval(LOCATION_INTERVAL); // Update location every minutes
         try {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;

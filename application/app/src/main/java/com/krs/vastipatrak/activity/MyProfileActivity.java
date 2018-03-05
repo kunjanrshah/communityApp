@@ -213,7 +213,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 String Mobile = PersonalFragment.edtMobile.getText().toString().trim();
                 String Address = PersonalFragment.edtAddress.getText().toString().trim();
                 String Eaddress = PersonalFragment.edt_Eaddress.getText().toString().trim();
-
+                String city = PersonalFragment.edtCity.getText().toString().trim();
 
                 if (!Eaddress.equalsIgnoreCase("")) {
                     if (!Common.isValidEmail(Eaddress)) {
@@ -224,7 +224,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 String phone = PersonalFragment.edt_phone.getText().toString().trim();
                 String bdate = PersonalFragment.edtbdate.getText().toString().trim();
                 if (!bdate.equalsIgnoreCase("")) {
-                    if (!Common.isThisDateValid(bdate, "dd/MM/yyyy")) {
+                    if (!Common.isThisDateValid(bdate, "yyyy-mm-dd")) {
                         valid = "Birth Date is not valid Format";
                     }
                 }
@@ -259,7 +259,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     MSpouseName = FamilyFragment.edtMSpouseName.getText().toString().trim();
                     mdate = FamilyFragment.edt_mdate.getText().toString().trim();
                     if (!mdate.equalsIgnoreCase("")) {
-                        if (!Common.isThisDateValid(mdate, "dd/MM/yyyy")) {
+                        if (!Common.isThisDateValid(mdate, "yyyy-mm-dd")) {
                             valid = "Marriage Date is not valid Format";
                         }
                     }
@@ -287,6 +287,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mListProfileData.setAddress(Address);
                     mListProfileData.setEmail_address(Eaddress);
                     mListProfileData.setPhone(phone);
+                    mListProfileData.setCity(city);
                     mListProfileData.setBirth_date(bdate);
                     mListProfileData.setBirth_time(time);
                     mListProfileData.setGender(gender);
@@ -346,6 +347,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             mJsonObject.put(Common.Constant_Class.BIRTH_PLACE, mListProfileData.getBirth_place());
             mJsonObject.put(Common.Constant_Class.MOBILE, mListProfileData.getMobile());
             mJsonObject.put(Common.Constant_Class.PHONE, mListProfileData.getPhone());
+            mJsonObject.put(Common.Constant_Class.CITY, mListProfileData.getCity());
             mJsonObject.put(Common.Constant_Class.BLOOD_GROUP, mListProfileData.getBlood_group());
             mJsonObject.put(Common.Constant_Class.GENDER, mListProfileData.getGender());
             mJsonObject.put(Common.Constant_Class.GOTRA, mListProfileData.getGotra());
@@ -419,7 +421,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_NAME, mViewholder.edtchild_name.getText());
                     String child_bday = mViewholder.edtchild_bdate.getText().toString();
                     if (!child_bday.equalsIgnoreCase("")) {
-                        if (!Common.isThisDateValid(child_bday, "dd/MM/yyyy")) {
+                        if (!Common.isThisDateValid(child_bday, "yyyy-mm-dd")) {
                             valid = "Child Birth Date is not valid Format";
                         }
                     }
