@@ -1,9 +1,6 @@
 package com.krs.vastipatrak.model;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -12,13 +9,20 @@ public class ListProfileData extends RealmObject{
 
     @PrimaryKey
     private String profile_id="";
-
     private String profile_pic_url = "", img_spouse_url = "", img_father_url = "", img_mother_url = "", img_sfather_url = "", img_smother_url = "",status="",first_name="",last_name="",father_name="",mother_name="",email_address="",mobile="",phone="",blood_group="",gender="",gotra="",ekdo="",native_place="",birth_place="",birth_date="",birth_time="",education="",occupation="",
             work="",address="",office_address="",office_mobile="",office_lat="",office_lng="",home_lat="",home_lng="",user_lat="",user_lng="",spouse_name="",marriage_date="",spouse_father_name="",spouse_mother_name="";
-
     private boolean is_location_enable;
     private String updated_time;
     private String sync_time;
+    private String city;
+    private String str_profile_hash;
+    private String str_father_hash;
+    private String str_mother_hash;
+    private String str_fspouse_hash;
+    private String str_mspouse_hash;
+    private String str_spouse_hash;
+    private String password;
+    private RealmList<ListChildrenData> mListChildrenData;
 
     public boolean isIs_location_enable() {
         return is_location_enable;
@@ -44,16 +48,6 @@ public class ListProfileData extends RealmObject{
         this.sync_time = sync_time;
     }
 
-
-
-    private String str_profile_hash;
-    private String str_father_hash;
-    private String str_mother_hash;
-    private String str_fspouse_hash;
-    private String str_mspouse_hash;
-    private String str_spouse_hash;
-    private String password;
-
     public String getCity() {
         return city;
     }
@@ -61,9 +55,6 @@ public class ListProfileData extends RealmObject{
     public void setCity(String city) {
         this.city = city;
     }
-
-    private String city;
-    private RealmList<ListChildrenData> mListChildrenData;
 
     public String getPassword() {
         return password;
@@ -119,8 +110,6 @@ public class ListProfileData extends RealmObject{
     public void setStr_spouse_hash(String str_spouse_hash) {
         this.str_spouse_hash = str_spouse_hash;
     }
-
-
 
     public RealmList<ListChildrenData> getmListChildrenData() {
         return mListChildrenData;

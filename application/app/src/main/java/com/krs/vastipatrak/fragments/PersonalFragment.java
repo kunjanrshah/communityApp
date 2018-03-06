@@ -381,11 +381,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (Common.isOnline(getActivity())) {
                     if (isChecked) {
-                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE_SP, true);
+                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, true);
                         mEditor.commit();
                         getActivity().startService(new Intent(getActivity(), MyLocationService.class));
                     } else {
-                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE_SP, false);
+                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, false);
                         mEditor.commit();
                         getActivity().stopService(new Intent(getActivity(), MyLocationService.class));
                     }
@@ -661,7 +661,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 tbtn_share.setText(null);
                 tbtn_share.setTextOn(null);
                 tbtn_share.setTextOff(null);
-                boolean bool = mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE_SP, false);
+                boolean bool = mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false);
                 tbtn_share.setChecked(bool);
 
 

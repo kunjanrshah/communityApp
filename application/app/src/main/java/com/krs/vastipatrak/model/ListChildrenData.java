@@ -10,6 +10,9 @@ public class ListChildrenData extends RealmObject{
 
     @PrimaryKey
     private String child_id;
+    private String profile_id;
+    private String child_name, child_bday, child_edu, child_work, child_img_url;
+    private byte[] ChildBytes;
 
     public String getProfile_id() {
         return profile_id;
@@ -18,10 +21,6 @@ public class ListChildrenData extends RealmObject{
     public void setProfile_id(String profile_id) {
         this.profile_id = profile_id;
     }
-
-    private String profile_id;
-    private String child_name,child_bday,child_edu,child_work,child_img_url;
-    private byte[] ChildBytes;
 
     public byte[] getChildBytes() {
         return ChildBytes;

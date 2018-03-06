@@ -3,6 +3,7 @@ package com.krs.vastipatrak.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +24,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
@@ -41,6 +43,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -56,6 +59,11 @@ import PiyushBase64.Base64;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import jxl.Workbook;
+import jxl.WorkbookSettings;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
 
 
 public class Common {
@@ -63,15 +71,8 @@ public class Common {
     public static final int REQ_CODE_SPEECH_INPUT = 100;
     public static String Title = "";
     static int MAX_IMAGE_DIMENSION = 120;
+    static ProgressDialog pDialog;
     private static Realm realm = AppController.getInstance().realm;
-
-    public final static boolean IsValidate(final String time) {
-        String TIME24HOURS_PATTERN = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
-        Pattern pattern = Pattern.compile(TIME24HOURS_PATTERN);
-        Matcher matcher = pattern.matcher(time);
-        return matcher.matches();
-
-    }
 
 /*    public static void selectImage(final Activity mActivity) {
         final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
@@ -95,6 +96,14 @@ public class Common {
         });
         builder.show();
     }*/
+
+    public final static boolean IsValidate(final String time) {
+        String TIME24HOURS_PATTERN = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
+        Pattern pattern = Pattern.compile(TIME24HOURS_PATTERN);
+        Matcher matcher = pattern.matcher(time);
+        return matcher.matches();
+
+    }
 
     public final static boolean isValidEmail(CharSequence target) {
         if (target == null) {
@@ -211,7 +220,6 @@ public class Common {
             mActivity.startActivity(intent);
         }
     }
-
 
     public static boolean isOnline(Context mContext) {
         ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -934,8 +942,158 @@ public class Common {
         }
     }
 
-    public static class Constant_Class {
+    private static void showProgressDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
 
+    private static void hideProgressDialog() {
+        if (pDialog.isShowing())
+            pDialog.cancel();
+    }
+
+    private static void initProgressDialog(Activity mActiviy) {
+        if (pDialog == null) {
+            pDialog = new ProgressDialog(mActiviy);
+            pDialog.setMessage(Constant_Class.LOADING);
+            pDialog.setCancelable(false);
+        }
+    }
+
+    public static void ExportSearchData(Activity mActiviy) {
+        RealmList<ListProfileData> mListProfileDatas = AppController.getInstance().mListSearchData;
+
+        if (mListProfileDatas.size() > 0) {
+
+
+            File sd = Environment.getExternalStorageDirectory();
+            String csvFile = "Vastipatrak.xls";
+
+            File directory = new File(sd.getAbsolutePath());
+            //create directory if not exist
+            if (!directory.isDirectory()) {
+                directory.mkdirs();
+            }
+
+            initProgressDialog(mActiviy);
+            showProgressDialog();
+
+            try {
+
+
+                //file path
+                File file = new File(directory, csvFile);
+                WorkbookSettings wbSettings = new WorkbookSettings();
+                wbSettings.setLocale(new Locale("en", "EN"));
+                WritableWorkbook workbook;
+                workbook = Workbook.createWorkbook(file, wbSettings);
+                //Excel sheet name. 0 represents first sheet
+                WritableSheet sheet = workbook.createSheet("profileList", 0);
+
+                sheet.addCell(new Label(0, 0, "ID"));
+                sheet.addCell(new Label(1, 0, "FirstName"));
+                sheet.addCell(new Label(2, 0, "LastName"));
+                sheet.addCell(new Label(3, 0, "Address"));
+                sheet.addCell(new Label(4, 0, "City"));
+                sheet.addCell(new Label(5, 0, "Father"));
+                sheet.addCell(new Label(6, 0, "Mother"));
+                sheet.addCell(new Label(7, 0, "Email"));
+                sheet.addCell(new Label(8, 0, "Mobile"));
+                sheet.addCell(new Label(9, 0, "Phone"));
+                sheet.addCell(new Label(10, 0, "Blood"));
+                sheet.addCell(new Label(11, 0, "Gotra"));
+                sheet.addCell(new Label(12, 0, "Native"));
+                sheet.addCell(new Label(13, 0, "Birth Place"));
+                sheet.addCell(new Label(14, 0, "Birth date"));
+                sheet.addCell(new Label(15, 0, "Birth time"));
+                sheet.addCell(new Label(16, 0, "Education"));
+                sheet.addCell(new Label(17, 0, "Occupation"));
+                sheet.addCell(new Label(18, 0, "Work"));
+                sheet.addCell(new Label(19, 0, "Office Address"));
+                sheet.addCell(new Label(20, 0, "Office Mobile"));
+                sheet.addCell(new Label(21, 0, "Spouse"));
+                sheet.addCell(new Label(22, 0, "Marriage date"));
+                sheet.addCell(new Label(23, 0, "Father in law"));
+                sheet.addCell(new Label(24, 0, "Mother in law"));
+                sheet.addCell(new Label(25, 0, "Updated"));
+                sheet.addCell(new Label(26, 0, "Sync"));
+
+                for (int i = 0; i < mListProfileDatas.size(); i++) {
+                    int k = i + 1;
+                    sheet.addCell(new Label(0, k, mListProfileDatas.get(i).getProfile_id()));
+                    sheet.addCell(new Label(1, k, mListProfileDatas.get(i).getFirst_name()));
+                    sheet.addCell(new Label(2, k, mListProfileDatas.get(i).getLast_name()));
+                    sheet.addCell(new Label(3, k, mListProfileDatas.get(i).getAddress()));
+                    sheet.addCell(new Label(4, k, mListProfileDatas.get(i).getCity()));
+                    sheet.addCell(new Label(5, k, mListProfileDatas.get(i).getFather_name()));
+                    sheet.addCell(new Label(6, k, mListProfileDatas.get(i).getMother_name()));
+                    sheet.addCell(new Label(7, k, mListProfileDatas.get(i).getEmail_address())); // column and row
+                    sheet.addCell(new Label(8, k, mListProfileDatas.get(i).getMobile()));
+                    sheet.addCell(new Label(9, k, mListProfileDatas.get(i).getPhone()));
+                    sheet.addCell(new Label(10, k, mListProfileDatas.get(i).getBlood_group()));
+                    sheet.addCell(new Label(11, k, mListProfileDatas.get(i).getGotra()));
+                    sheet.addCell(new Label(12, k, mListProfileDatas.get(i).getNative_place()));
+                    sheet.addCell(new Label(13, k, mListProfileDatas.get(i).getBirth_place()));
+                    sheet.addCell(new Label(14, k, mListProfileDatas.get(i).getBirth_date()));
+                    sheet.addCell(new Label(15, k, mListProfileDatas.get(i).getBirth_time()));
+                    sheet.addCell(new Label(16, k, mListProfileDatas.get(i).getEducation()));
+                    sheet.addCell(new Label(17, k, mListProfileDatas.get(i).getOccupation()));
+                    sheet.addCell(new Label(18, k, mListProfileDatas.get(i).getWork()));
+                    sheet.addCell(new Label(19, k, mListProfileDatas.get(i).getOffice_address()));
+                    sheet.addCell(new Label(20, k, mListProfileDatas.get(i).getOffice_mobile()));
+                    sheet.addCell(new Label(21, k, mListProfileDatas.get(i).getSpouse_name()));
+                    sheet.addCell(new Label(22, k, mListProfileDatas.get(i).getMarriage_date()));
+                    sheet.addCell(new Label(23, k, mListProfileDatas.get(i).getSfather_name()));
+                    sheet.addCell(new Label(24, k, mListProfileDatas.get(i).getSmother_name()));
+                    sheet.addCell(new Label(25, k, mListProfileDatas.get(i).getUpdated_time()));
+                    sheet.addCell(new Label(26, k, mListProfileDatas.get(i).getSync_time()));
+                    int counter = 26;
+                    for (int j = 0; j < mListProfileDatas.get(i).getmListChildrenData().size(); j++) {
+
+                        sheet.addCell(new Label(++counter, 0, "Child Id"));
+                        sheet.addCell(new Label(counter, k, mListProfileDatas.get(i).getmListChildrenData().get(j).getChild_id()));
+
+                        sheet.addCell(new Label(++counter, 0, "Child Name"));
+                        sheet.addCell(new Label(counter, k, mListProfileDatas.get(i).getmListChildrenData().get(j).getChild_name()));
+
+                        sheet.addCell(new Label(++counter, 0, "Child Bdate"));
+                        sheet.addCell(new Label(counter, k, mListProfileDatas.get(i).getmListChildrenData().get(j).getChild_bday()));
+
+                        sheet.addCell(new Label(++counter, 0, "Child Edu"));
+                        sheet.addCell(new Label(counter, k, mListProfileDatas.get(i).getmListChildrenData().get(j).getChild_edu()));
+
+                        sheet.addCell(new Label(++counter, 0, "Child Work"));
+                        sheet.addCell(new Label(counter, k, mListProfileDatas.get(i).getmListChildrenData().get(j).getChild_work()));
+                    }
+                }
+                workbook.write();
+                workbook.close();
+                alert(mActiviy, "Data Exported in a Excel Sheet");
+                //Toast.makeText(mActiviy, "Data Exported in a Excel Sheet", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            hideProgressDialog();
+        } else {
+            alert(mActiviy, "No Search records found!");
+        }
+    }
+
+    public static void alert(Activity mActivity, String message) {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+        builder.setTitle(mActivity.getString(R.string.app_name));
+
+        builder.setMessage(message);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+
+            }
+        }).show();
+    }
+
+
+    public static class Constant_Class {
 
         public static final String ADMIN_1 = "4134";
         public static final String ADMIN_2 = "571";
@@ -1074,12 +1232,10 @@ public class Common {
         public static final String TABLE_CHILDREN = "Children";
         public static final String PROFILE_ID = "profile_id";
         public static final String CHILDREN_ID = "children_id";
-        public static final String OFFLINE_SP = "offline_sp";
-        public static final String TBTN_SHARE_SP = "tbtn_share_sp";
-        public static final String ONLINE = "Online";
-        public static final String OFFLINE = "Offline";
+        public static final String TBTN_SHARE = "tbtn_share";
+        public static final String TBTN_SYNC = "tbtn_sync";
         public static String DEVICE_ID_VALUE = "";
-
+        public static String EDT_SYNC_TIME = "edt_sync_time";
         public static int sCorner = 35;
         public static int sMargin = 2;
         public static int sBorder = 10;

@@ -2,6 +2,7 @@ package com.krs.vastipatrak.app;
 
 import android.app.Activity;
 import android.app.Application;
+import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -12,10 +13,12 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.model.ListProfileData;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmList;
 
 public class AppController extends Application {
 
@@ -28,6 +31,7 @@ public class AppController extends Application {
     public Realm realm;
     public boolean isUpdate = false;
     public FirebaseAnalytics firebaseAnalytics;
+    public RealmList<ListProfileData> mListSearchData = null;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
     private Activity mActivity;
@@ -47,11 +51,12 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        MultiDex.install(this);
         Fabric.with(this, new Crashlytics());
        // Fabric.with(this, new Crashlytics());
         mInstance = this;
       //  dbHelper = new DatabaseHandler(this);
-
+        mListSearchData = new RealmList<>();
         initRealm();
         initFirebaseAnalytics();
         // initialize the AdMob app

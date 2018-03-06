@@ -1,6 +1,6 @@
 package com.krs.vastipatrak.service;
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,14 +39,10 @@ import static com.krs.vastipatrak.fragments.SyncFragment.mHandler;
  * Created by kunjan on 28/2/18.
  */
 
-public class SyncService extends IntentService {
+public class SyncService extends Service {
 
     String TAG = "SyncService";
     SharedPreferences mSharedPreferences;
-
-    public SyncService() {
-        super(SyncService.class.getName());
-    }
 
     @Override
     public void onCreate() {
@@ -61,9 +57,13 @@ public class SyncService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
-        ArrayList<String> selectedCities = intent.getStringArrayListExtra("selectedCities");
-        callSyncWS(selectedCities);
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        if (intent != null) {
+            ArrayList<String> selectedCities = intent.getStringArrayListExtra("selectedCities");
+            callSyncWS(selectedCities);
+        }
+        return START_REDELIVER_INTENT;
     }
 
     private void callSyncWS(ArrayList<String> selectedCities) {
@@ -101,9 +101,20 @@ public class SyncService extends IntentService {
                         Bundle bundle = new Bundle();
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
+
+               /*         Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d(TAG,"SyncService: Success");
+                                Toast.makeText(SyncService.this,"Success",Toast.LENGTH_LONG).show();
+                            }
+                        }, 1000 * 30);*/
+
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
 
                             JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+
                             for (int i = 0; i < mJsonArray.length(); i++) {
 
                                 JSONObject mJsondata = mJsonArray.getJSONObject(i);

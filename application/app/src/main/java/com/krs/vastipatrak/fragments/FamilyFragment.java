@@ -250,16 +250,6 @@ public class FamilyFragment extends Fragment implements Serializable {
         img_spouse = root.findViewById(R.id.img_spouse);
         img_fspouse = root.findViewById(R.id.img_fspouse);
         img_mspouse = root.findViewById(R.id.img_mspouse);
-
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false)) {
-            img_spouse.setVisibility(View.GONE);
-            img_fspouse.setVisibility(View.GONE);
-            img_mspouse.setVisibility(View.GONE);
-        } else {
-            img_spouse.setVisibility(View.VISIBLE);
-            img_fspouse.setVisibility(View.VISIBLE);
-            img_mspouse.setVisibility(View.VISIBLE);
-        }
         btn_add = root.findViewById(R.id.btn_add);
         btn_add.setVisibility(View.GONE);
         rbtnChildYes = root.findViewById(R.id.rbtnChildYes);
@@ -464,13 +454,6 @@ public class FamilyFragment extends Fragment implements Serializable {
         final Viewholder mViewholder = new Viewholder();
         mViewholder.child_id = 0;
         mViewholder.img_child = addView.findViewById(R.id.img_child);
-
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false)) {
-            mViewholder.img_child.setVisibility(View.GONE);
-        } else {
-            mViewholder.img_child.setVisibility(View.VISIBLE);
-        }
-
         mViewholder.edtchild_name = addView.findViewById(R.id.edtchild_name);
         mViewholder.edtchild_bdate = addView.findViewById(R.id.edtchild_bdate);
         mViewholder.edtchild_edu = addView.findViewById(R.id.edtchild_edu);

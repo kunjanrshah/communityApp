@@ -14,18 +14,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
@@ -37,8 +34,7 @@ import com.krs.vastipatrak.model.ListParentData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.RoundedCornersTransformation;
-
-import org.json.JSONObject;
+import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,9 +53,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     String tag_json_obj = "jobj_req";
     SharedPreferences mSharedPreferences = null;
     SharedPreferences.Editor mEditor;
+    String[] SPINNERLIST = {"Father", "Son", "Daughter", "Brother", "Sister", "Grandfather", "Grandson", "Uncle", "Uncle's Son", "Uncle in low", "Uncle's Son"};
     private ChildViewHolder childViewHolder;
     private GroupViewHolder groupViewHolder;
-    //String[] check_string_array;
 
     public ExpandableListAdapter(Context context, ArrayList<ListParentData> listDataHeader, HashMap<ListParentData, List<ListChildData>> listDataChild) {
         this._context = context;
@@ -73,6 +69,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         checkboxMap = new HashMap<Integer, Boolean>();
         //check_string_array = new String[_listDataHeader.size()];
         popolaCheckMap(_listDataHeader.size());
+
+
     }
 
 
@@ -216,7 +214,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         styledText = "<u><font color='blue'>" + phone + "</font></u>";
         childViewHolder.txt_phone.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
         childViewHolder.txt_blood.setText(blood_group);
-        if (gender.equalsIgnoreCase("1")) {
+        if (gender.equalsIgnoreCase("1") || gender.equalsIgnoreCase("")) {
             gender = "Male";
         } else {
             gender = "Female";
@@ -280,6 +278,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.checkbox = convertView.findViewById(R.id.cbx1);
             groupViewHolder.imgSync = convertView.findViewById(R.id.imgSync);
             groupViewHolder.tvNudge = convertView.findViewById(R.id.tvNudge);
+            groupViewHolder.tvROR = convertView.findViewById(R.id.tvROR);
+
             groupViewHolder.tvUpdatedTime = convertView.findViewById(R.id.tvUpdatedTime);
             groupViewHolder.txt_distance = convertView.findViewById(R.id.txt_distance);
             groupViewHolder.tvCity = convertView.findViewById(R.id.tvCity);
@@ -360,6 +360,28 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         } else {
             groupViewHolder.img_home_loc.setVisibility(View.GONE);
         }
+
+        groupViewHolder.tvROR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final Dialog relation_dialog = new Dialog(_context);
+                relation_dialog.setTitle("Request of relation");
+                relation_dialog.setContentView(R.layout.custom_relation_dialog);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_dropdown_item_1line, SPINNERLIST);
+                MaterialBetterSpinner relation_spinner = relation_dialog.findViewById(R.id.relation_spinner);
+                relation_spinner.setAdapter(arrayAdapter);
+                Button btnSend = relation_dialog.findViewById(R.id.btnSend);
+                btnSend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(_context, "Request Sent Successfully!", Toast.LENGTH_SHORT).show();
+                        relation_dialog.cancel();
+                    }
+                });
+                relation_dialog.show();
+            }
+        });
 
         groupViewHolder.tvNudge.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -538,6 +560,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 */
 
+/*
     private void callProfileWS(String str_id) {
 
         if (!mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false) && Common.isOnline(_context)) {
@@ -585,6 +608,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             _context.startActivity(mIntent);
         }
     }
+*/
 
     private class ChildViewHolder {
         TextView txt_blood;
@@ -610,6 +634,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView tvFatherName;
         TextView tvMotherName;
         TextView tvNudge;
+        TextView tvROR;
         TextView tvCity;
         TextView txt_distance;
         TextView tvUpdatedTime;

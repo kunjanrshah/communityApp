@@ -73,8 +73,8 @@ public class SearchFragment extends Fragment {
     ProgressDialog pDialog;
     ArrayList<String> lstSelectedIDs = null;
     ExpandableListAdapter mExpandableListAdapter = null;
-   // WebView wv_home = null;
-    TextView txtLable=null;
+    // WebView wv_home = null;
+    TextView txtLable = null;
     //String webViewUrl = "http://www.androidexample.com/media/webview/details.html";
     String webViewUrl = "http://www.superbinstruments.com/WEB/photoes.php";
     private SharedPreferences mSharedPreferences = null;
@@ -126,9 +126,9 @@ public class SearchFragment extends Fragment {
             callSearchWS(query_string);
         } else {
             lvCustomList.setVisibility(View.GONE);
-         //   wv_home.setVisibility(View.VISIBLE);
+            //   wv_home.setVisibility(View.VISIBLE);
             txtLable.setVisibility(View.VISIBLE);
-          //  wv_home.getSettings().setJavaScriptEnabled(true);
+            //  wv_home.getSettings().setJavaScriptEnabled(true);
          /*   wv_home.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -144,32 +144,32 @@ public class SearchFragment extends Fragment {
                     .addTestDevice("C04B1BFFB0774708339BC273F8A43708")
                     .build();
 
-           mAdView.setAdListener(new AdListener(){
-               @Override
-               public void onAdLoaded() {
-                   super.onAdLoaded();
-               }
+            mAdView.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+                }
 
-               @Override
-               public void onAdClosed() {
-                   Toast.makeText(getActivity().getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
-               }
+                @Override
+                public void onAdClosed() {
+                    Toast.makeText(getActivity().getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
+                }
 
-               @Override
-               public void onAdFailedToLoad(int errorCode) {
-                   Toast.makeText(getActivity().getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
-               }
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
+                }
 
-               @Override
-               public void onAdLeftApplication() {
-                   Toast.makeText(getActivity().getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
-               }
+                @Override
+                public void onAdLeftApplication() {
+                    Toast.makeText(getActivity().getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
+                }
 
-               @Override
-               public void onAdOpened() {
-                   super.onAdOpened();
-               }
-           });
+                @Override
+                public void onAdOpened() {
+                    super.onAdOpened();
+                }
+            });
 
             mAdView.loadAd(adRequest);
         }
@@ -237,7 +237,7 @@ public class SearchFragment extends Fragment {
 
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
         lvCustomList = root.findViewById(R.id.lvCustomList);
-     //   wv_home = (WebView) root.findViewById(R.id.wv_home);
+        //   wv_home = (WebView) root.findViewById(R.id.wv_home);
         txtLable = root.findViewById(R.id.txtLable);
         TextView tv = root.findViewById(R.id.TextView03);
         tv.setSelected(true);
@@ -301,6 +301,15 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        MenuItem export = menu.findItem(R.id.action_export);
+        export.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Common.ExportSearchData(getActivity());
+                return false;
+            }
+        });
+
         MenuItem activeItem = menu.findItem(R.id.action_activate);
         MenuItem activeAdd = menu.findItem(R.id.action_add);
         MenuItem deactiveItem = menu.findItem(R.id.action_deactive);
@@ -319,22 +328,14 @@ public class SearchFragment extends Fragment {
 
 
         if (AppController.isAdmin) {
-            if (mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false)) {
-                activeItem.setVisible(false);
-                deactiveItem.setVisible(false);
-                deleteItem.setVisible(false);
-                nonActives.setVisible(false);
-                activeAdd.setVisible(false);
+            if (Common.isOnline(getActivity())) {
+                activeItem.setVisible(true);
+                deactiveItem.setVisible(true);
+                deleteItem.setVisible(true);
+                nonActives.setVisible(true);
+                activeAdd.setVisible(true);
             } else {
-                if (Common.isOnline(getActivity())) {
-                    activeItem.setVisible(true);
-                    deactiveItem.setVisible(true);
-                    deleteItem.setVisible(true);
-                    nonActives.setVisible(true);
-                    activeAdd.setVisible(true);
-                } else {
-                    Toast.makeText(getActivity(), "" + Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(getActivity(), "" + Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -551,17 +552,17 @@ public class SearchFragment extends Fragment {
 
             } else {*/
 
-                if (query_string != null && !query_string.equalsIgnoreCase("")) {
-                    OfflineSearch(str_search, 2);
-                } else {
-                    if (query != null && !str_search.equalsIgnoreCase("")) {
-                        OfflineSearch(str_search, 1);
-                    }
+            if (query_string != null && !query_string.equalsIgnoreCase("")) {
+                OfflineSearch(str_search, 2);
+            } else {
+                if (query != null && !str_search.equalsIgnoreCase("")) {
+                    OfflineSearch(str_search, 1);
                 }
+            }
 
-          //  }
+            //  }
         } else {
-         //   alertMessage("Search atleast 4 characters");
+            //   alertMessage("Search atleast 4 characters");
         }
     }
 
@@ -588,7 +589,7 @@ public class SearchFragment extends Fragment {
             if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
 
                 lvCustomList.setVisibility(View.VISIBLE);
-              //  wv_home.setVisibility(View.GONE);
+                //  wv_home.setVisibility(View.GONE);
                 txtLable.setVisibility(View.GONE);
                 JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                 for (int i = 0; i < mJsonArray.length(); i++) {
@@ -647,17 +648,17 @@ public class SearchFragment extends Fragment {
                     }
                 }
 
-  //              searchView.clearFocus();
-   //             lvCustomList.requestFocus();
+                //              searchView.clearFocus();
+                //             lvCustomList.requestFocus();
 
                 mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
                 lvCustomList.setAdapter(mExpandableListAdapter);
 
             } else {
-               lvCustomList.setVisibility(View.GONE);
-             //   wv_home.setVisibility(View.VISIBLE);
+                lvCustomList.setVisibility(View.GONE);
+                //   wv_home.setVisibility(View.VISIBLE);
                 txtLable.setVisibility(View.VISIBLE);
-     //           NoRecordAlert(message);
+                //           NoRecordAlert(message);
             }
 
 
@@ -676,27 +677,27 @@ public class SearchFragment extends Fragment {
 
     private void OfflineSearch(String str_search, int search) {
         RealmList<ListProfileData> mListProfileDatas = new RealmList<>();
-        RealmList<ListProfileData> mListProfileDatas1 = Common.getDataFromParentTable(str_search, search);
-        for (int i = 0; i < mListProfileDatas1.size(); i++) {
-           mListProfileDatas.add(mListProfileDatas1.get(i));
+        RealmList<ListProfileData> mListParentData = Common.getDataFromParentTable(str_search, search);
+        for (int i = 0; i < mListParentData.size(); i++) {
+            mListProfileDatas.add(mListParentData.get(i));
         }
 
-        RealmList<ListProfileData> mListProfileDatas2 = Common.getDataFromChildTable(str_search, search);
-        for (int j = 0; j < mListProfileDatas2.size(); j++) {
+        RealmList<ListProfileData> mListChildData = Common.getDataFromChildTable(str_search, search);
+        for (int j = 0; j < mListChildData.size(); j++) {
             boolean flag = true;
             for (int k = 0; k < mListProfileDatas.size(); k++) {
-                if (mListProfileDatas.get(k).getProfile_id() == mListProfileDatas2.get(j).getProfile_id()) {
+                if (mListProfileDatas.get(k).getProfile_id() == mListChildData.get(j).getProfile_id()) {
                     flag = false;
                     break;
                 }
             }
             if (flag) {
-                mListProfileDatas.add(mListProfileDatas2.get(j));
+                mListProfileDatas.add(mListChildData.get(j));
             }
         }
-
         listDataHeader.clear();
         listDataChild.clear();
+        AppController.getInstance().mListSearchData = mListProfileDatas;
         for (int i = 0; i < mListProfileDatas.size(); i++) {
             ListParentData lpd = new ListParentData();
             lpd.setName(mListProfileDatas.get(i).getFirst_name() + " " + mListProfileDatas.get(i).getLast_name());
@@ -733,7 +734,7 @@ public class SearchFragment extends Fragment {
             listDataChild.put(lpd, mlstChildData);
         }
 
-       // lvCustomList.requestFocus();
+        // lvCustomList.requestFocus();
         if (listDataHeader.size() > 0) {
             mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
             lvCustomList.setAdapter(mExpandableListAdapter);
@@ -828,8 +829,7 @@ public class SearchFragment extends Fragment {
 
                     hideProgressDialog();
                 }
-            })
-            {
+            }) {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
@@ -884,8 +884,7 @@ public class SearchFragment extends Fragment {
 
                     hideProgressDialog();
                 }
-            })
-            {
+            }) {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
@@ -893,9 +892,7 @@ public class SearchFragment extends Fragment {
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
                     return params;
                 }
-            }
-
-                    ;
+            };
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
         } else {

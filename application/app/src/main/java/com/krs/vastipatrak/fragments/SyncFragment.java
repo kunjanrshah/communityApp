@@ -1,9 +1,10 @@
 package com.krs.vastipatrak.fragments;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,7 +13,6 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -20,18 +20,22 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -73,15 +77,19 @@ public class SyncFragment extends Fragment {
             Bundle bundle = msg.getData();
             boolean sync_start = bundle.getBoolean("sync_start");
             String sync_time = bundle.getString("sync_time");
-            if (sync_start) {
-                pb_sync.setVisibility(View.VISIBLE);
-                btn_sync.setText("Stop");
-            } else {
-                pb_sync.setVisibility(View.GONE);
-                btn_sync.setText("Start");
-            }
-            if (sync_time != null && !sync_time.isEmpty()) {
-                tvUpdatedTime.setText(sync_time);
+            try {
+                if (sync_start) {
+                    pb_sync.setVisibility(View.VISIBLE);
+                    btn_sync.setText("Stop");
+                } else {
+                    pb_sync.setVisibility(View.GONE);
+                    btn_sync.setText("Start");
+                }
+                if (sync_time != null && !sync_time.isEmpty()) {
+                    tvUpdatedTime.setText(sync_time);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     };
@@ -89,11 +97,14 @@ public class SyncFragment extends Fragment {
     ProgressDialog pDialog;
     String TAG = "SyncFragment";
     String tag_json_obj = "jobj_req";
+    private ToggleButton tbtn_sync;
+    private EditText edt_sync;
     private SharedPreferences mSharedPreferences = null;
-
+    private SharedPreferences.Editor mEditor = null;
     private List<City> cityList = new ArrayList<>();
     private RecyclerView recyclerView;
     private CityAdapter mAdapter;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -103,17 +114,98 @@ public class SyncFragment extends Fragment {
         setHasOptionsMenu(true);
         MemoryAllocation(rootView);
 
-        recyclerView = rootView.findViewById(R.id.recycler_view);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-
-        mAdapter = new CityAdapter(cityList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
 
         prepareCityData();
 
+        edt_sync.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == 0) {
+                    if (!edt_sync.getText().toString().isEmpty()) {
+                        int val = Integer.parseInt(edt_sync.getText().toString());
+                        mEditor.putInt(Common.Constant_Class.EDT_SYNC_TIME, val);
+                        mEditor.commit();
+                    }
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        btn_sync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (btn_sync.getText().toString().equalsIgnoreCase("Start")) {
+                    final ArrayList<String> selectedList = mAdapter.getSelectedCities();
+                    final Dialog sync_dialog = new Dialog(getActivity());
+                    sync_dialog.setContentView(R.layout.custom_sync_dialog);
+                    sync_dialog.setTitle(getResources().getString(R.string.sync_data));
+
+                    TextView tvSyncCity = sync_dialog.findViewById(R.id.tvSyncCity);
+                    final RadioGroup radioGroupId = sync_dialog.findViewById(R.id.radioGroupId);
+                    Button btnDownload = sync_dialog.findViewById(R.id.btnDownload);
+
+                    if (selectedList != null && selectedList.size() > 0) {
+                        tvSyncCity.setText("City: " + selectedList.toString().replace("[", "").replace("]", ""));
+                    } else {
+                        tvSyncCity.setText("City: Default All");
+                    }
+
+                    btnDownload.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //int selectedId = radioGroupId.getCheckedRadioButtonId();
+                            // RadioButton radioSelButton = sync_dialog.findViewById(selectedId);
+                            Intent mIntent = new Intent(getActivity(), SyncService.class);
+                            mIntent.putStringArrayListExtra("selectedCities", selectedList);
+                            getActivity().startService(mIntent);
+                            btn_sync.setText("Stop");
+                            sync_dialog.cancel();
+                        }
+                    });
+                    sync_dialog.show();
+                } else {
+                    btn_sync.setText("Start");
+                    Intent mIntent = new Intent(getActivity(), SyncService.class);
+                    getActivity().stopService(mIntent);
+                }
+            }
+        });
+
+        tbtn_sync.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+                Intent serviceIntent = new Intent(getActivity(), SyncService.class);
+                ArrayList<String> selectedList = mAdapter.getSelectedCities();
+                serviceIntent.putStringArrayListExtra("selectedCities", selectedList);
+                PendingIntent servicePendingIntent = PendingIntent.getService(getActivity(), 0, serviceIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                if (isChecked) {
+                    mEditor.putBoolean(Common.Constant_Class.TBTN_SYNC, true);
+                    mEditor.commit();
+                    long interval = 0;
+                    if (!edt_sync.getText().toString().isEmpty()) {
+                        interval = Long.parseLong(edt_sync.getText().toString());
+                    }
+                    //interval = interval * 1000 * 60 * 60 * 24;
+                    interval = interval * 1000 * 30;
+                    if (interval != 0) {
+                        am.setRepeating(AlarmManager.RTC_WAKEUP, interval, interval, servicePendingIntent);
+                        Toast.makeText(getActivity(), "Enjoy Sync Service!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "Enter Days!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    mEditor.putBoolean(Common.Constant_Class.TBTN_SYNC, false);
+                    mEditor.commit();
+                    am.cancel(servicePendingIntent);
+                    Toast.makeText(getActivity(), "Cancelled Sync!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         return rootView;
     }
 
@@ -187,24 +279,6 @@ public class SyncFragment extends Fragment {
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
     }
 
-    private void SyncAlert() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
-        builder.setTitle(getString(R.string.app_name));
-
-        builder.setMessage("");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).show();
-    }
-
     private void showProgressDialog() {
         if (!pDialog.isShowing())
             pDialog.show();
@@ -217,58 +291,36 @@ public class SyncFragment extends Fragment {
 
     private void MemoryAllocation(View rootView) {
 
-
+        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
         tvUpdatedTime = rootView.findViewById(R.id.tvUpdatedTime1);
         btn_sync = rootView.findViewById(R.id.btn_sync);
         pb_sync = rootView.findViewById(R.id.pb_sync);
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+        edt_sync = rootView.findViewById(R.id.edt_sync);
+        tbtn_sync = rootView.findViewById(R.id.tbtn_sync);
+        tbtn_sync.setChecked(mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SYNC, false));
+        tbtn_sync.setTextOff(null);
+        tbtn_sync.setTextOn(null);
+        tbtn_sync.setText(null);
+        int val = mSharedPreferences.getInt(Common.Constant_Class.EDT_SYNC_TIME, 0);
+        edt_sync.setText("" + val);
+        edt_sync.setSelection(edt_sync.getText().length());
+        edt_sync.setCursorVisible(false);
         String date = Common.getUpdatedTime(mSharedPreferences.getString(Common.Constant_Class.UPDATED_TIME, "0"));
         tvUpdatedTime.setText(date);
         pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage("Fetching Cities...");
         pDialog.setCancelable(false);
 
-        btn_sync.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (btn_sync.getText().toString().equalsIgnoreCase("Start")) {
-                    final ArrayList<String> selectedList = mAdapter.getSelectedCities();
-                    final Dialog sync_dialog = new Dialog(getActivity());
-                    sync_dialog.setContentView(R.layout.custom_sync_dialog);
-                    sync_dialog.setTitle(getResources().getString(R.string.sync_data));
+        recyclerView = rootView.findViewById(R.id.recycler_view);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
 
-                    TextView tvSyncCity = sync_dialog.findViewById(R.id.tvSyncCity);
-                    final RadioGroup radioGroupId = sync_dialog.findViewById(R.id.radioGroupId);
-                    Button btnDownload = sync_dialog.findViewById(R.id.btnDownload);
+        mAdapter = new CityAdapter(cityList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
 
-                    if (selectedList != null && selectedList.size() > 0) {
-                        tvSyncCity.setText("City: " + selectedList.toString().replace("[", "").replace("]", ""));
-                    } else {
-                        tvSyncCity.setText("City: Default All");
-                    }
-
-                    btnDownload.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            int selectedId = radioGroupId.getCheckedRadioButtonId();
-                            RadioButton radioSelButton = sync_dialog.findViewById(selectedId);
-                            Intent mIntent = new Intent(getActivity(), SyncService.class);
-                            mIntent.putStringArrayListExtra("selectedCities", selectedList);
-
-                            mIntent.putExtra("", radioSelButton.getText());
-                            getActivity().startService(mIntent);
-                            btn_sync.setText("Stop");
-                            sync_dialog.cancel();
-                        }
-                    });
-                    sync_dialog.show();
-                } else {
-                    btn_sync.setText("Start");
-                    Intent mIntent = new Intent(getActivity(), SyncService.class);
-                    getActivity().stopService(mIntent);
-                }
-            }
-        });
     }
 
     @Override

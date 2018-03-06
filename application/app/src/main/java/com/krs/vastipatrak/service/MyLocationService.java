@@ -110,7 +110,7 @@ public class MyLocationService extends Service {
                 mJsonObject = new JSONObject();
                 mJsonObject.put(Common.Constant_Class.USER_LAT, mLastLocation.getLatitude());
                 mJsonObject.put(Common.Constant_Class.USER_LNG, mLastLocation.getLongitude());
-                mJsonObject.put(Common.Constant_Class.IS_LOCATION_ENABLE,mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE_SP,false) );
+                mJsonObject.put(Common.Constant_Class.IS_LOCATION_ENABLE, mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false));
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.IS_UPDATE, isUpdate);
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
