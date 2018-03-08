@@ -539,11 +539,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         switch (requestCode) {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
-
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
+                    searchView.setQueryHint(result.get(0));
+                    searchView.setQuery(result.get(0), true);
                     Toast.makeText(MainActivity.this, "" + result.get(0), Toast.LENGTH_SHORT).show();
-
                 }
                 break;
             }

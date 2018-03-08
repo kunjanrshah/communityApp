@@ -23,6 +23,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
@@ -36,9 +42,13 @@ import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.RoundedCornersTransformation;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.realm.RealmList;
 
@@ -264,7 +274,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        ListParentData mListParentData = (ListParentData) getGroup(groupPosition);
+        final ListParentData mListParentData = (ListParentData) getGroup(groupPosition);
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -393,6 +403,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         groupViewHolder.imgSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                SyncUser(mListParentData.getId());
+
                 Toast.makeText(_context, "Sync User!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -508,24 +521,21 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
     }
 
-/*
-    private void callStatusChangeWS(String id, boolean isChecked) {
+    private void SyncUser(String profile_id) {
         if (Common.isOnline(_context)) {
             showProgressDialog();
-            JSONObject mJsonObject = new JSONObject();
 
+            JSONObject mJsonObject = null;
             try {
-                if (isChecked) {
-                    mJsonObject.put(Common.Constant_Class.STATUS, "1");
-                } else {
-                    mJsonObject.put(Common.Constant_Class.STATUS, "0");
-                }
-                mJsonObject.put(Common.Constant_Class.IDList, id);
+                mJsonObject = new JSONObject();
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(Common.Constant_Class.PROFILE_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, profile_id));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            String search_url = Common.Constant_Class.STATUS_URL;
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, search_url, mJsonObject, new Response.Listener<JSONObject>() {
+            String sync_url = Common.Constant_Class.SYNC_URL;
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, sync_url, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
@@ -535,13 +545,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         Toast.makeText(_context, message, Toast.LENGTH_SHORT).show();
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            //   notifyDataSetChanged();
+                            JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                            for (int i = 0; i < mJsonArray.length(); i++) {
+                                JSONObject mJsondata = mJsonArray.getJSONObject(i);
+                                Common.SaveProfile(mJsondata);
+                            }
                         }
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 }
             }, new Response.ErrorListener() {
 
@@ -551,14 +563,21 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                     hideProgressDialog();
                 }
-            });
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    return params;
+                }
+            };
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
         }
 
     }
-*/
 
 /*
     private void callProfileWS(String str_id) {

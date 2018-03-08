@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.FilterActivity;
@@ -23,9 +24,11 @@ import java.util.Calendar;
 public class FamilyFilter extends Fragment {
 
 
+    public static String gender = "male";
+    public static EditText edt_mdate, edt_childbdate, edtSpouseName, edtSpouseFName, edtSpouseMName, edtchild_name, edtcedu, edtchild_work, edtchildbtime, edtchildbplace;
     FloatingActionButton floatingActionButton;
     ObservableScrollView scroll_fdetails;
-    public static EditText edt_mdate, edt_cdate, edtSpouseName, edtSpouseFName, edtSpouseMName, edtchild_name, edtcedu, edtchild_work;
+    private RadioGroup rgroupid;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,13 +83,13 @@ public class FamilyFilter extends Fragment {
             }
         });
 
-        edt_cdate.setOnTouchListener(new View.OnTouchListener() {
+        edt_childbdate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
                 final int DRAWABLE_RIGHT = 2;
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (edt_cdate.getRight() - edt_cdate.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if (event.getRawX() >= (edt_childbdate.getRight() - edt_childbdate.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         Calendar now = Calendar.getInstance();
                         DatePickerDialog dpd = DatePickerDialog.newInstance((DatePickerDialog.OnDateSetListener) getContext(), now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
                         dpd.setThemeDark(true);
@@ -113,7 +116,7 @@ public class FamilyFilter extends Fragment {
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
 
-                                edt_cdate.setText(date);
+                                edt_childbdate.setText(date);
                             }
                         });
                         dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
@@ -123,6 +126,18 @@ public class FamilyFilter extends Fragment {
                 }
 
                 return false;
+            }
+        });
+
+        rgroupid.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                if (checkedId == R.id.radioM) {
+                    gender = "male";
+                } else {
+                    gender = "female";
+                }
             }
         });
 
@@ -139,15 +154,20 @@ public class FamilyFilter extends Fragment {
     }
 
     void MemoryAllocation(View rootView) {
-        scroll_fdetails = (ObservableScrollView) rootView.findViewById(R.id.scroll_fdetails);
-        floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fab_fsave);
-        edt_mdate = (EditText) rootView.findViewById(R.id.edt_mdate);
-        edt_cdate = (EditText) rootView.findViewById(R.id.edt_cdate);
-        edtSpouseName = (EditText) rootView.findViewById(R.id.edtSpouseName);
-        edtSpouseFName = (EditText) rootView.findViewById(R.id.edtSpouseFName);
-        edtSpouseMName = (EditText) rootView.findViewById(R.id.edtSpouseMName);
-        edtchild_name = (EditText) rootView.findViewById(R.id.edtchild_name);
-        edtcedu = (EditText) rootView.findViewById(R.id.edtcedu);
-        edtchild_work = (EditText) rootView.findViewById(R.id.edtchild_work);
+        scroll_fdetails = rootView.findViewById(R.id.scroll_fdetails);
+        floatingActionButton = rootView.findViewById(R.id.fab_fsave);
+        edt_mdate = rootView.findViewById(R.id.edt_mdate);
+        edtSpouseName = rootView.findViewById(R.id.edtSpouseName);
+        edtSpouseFName = rootView.findViewById(R.id.edtSpouseFName);
+        edtSpouseMName = rootView.findViewById(R.id.edtSpouseMName);
+        edtchild_name = rootView.findViewById(R.id.edtchild_name);
+        edtcedu = rootView.findViewById(R.id.edtcedu);
+        edtchild_work = rootView.findViewById(R.id.edtchild_work);
+
+        edt_childbdate = rootView.findViewById(R.id.edt_cdate);
+        edtchildbtime = rootView.findViewById(R.id.edtchildbtime);
+        edtchildbplace = rootView.findViewById(R.id.edtchildbplace);
+        rgroupid = rootView.findViewById(R.id.rgroupid);
+
     }
 }

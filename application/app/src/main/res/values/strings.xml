@@ -69,6 +69,8 @@
     <string name="nav_item_filter">Filter</string>
     <string name="nav_item_change_password">Change Password</string>
     <string name="nav_item_about">About</string>
+    <string name="nav_item_relatives">Relatives</string>
+    <string name="nav_item_matrimony">Matrimony</string>
     <string name="nav_item_sync">Sync</string>
     <string name="nav_item_intro">Tour Video</string>
     <string name="nav_item_logout">Logout</string>
@@ -78,9 +80,11 @@
         <item>@string/nav_item_home</item>
         <item>@string/nav_item_my_profile</item>
         <item>@string/nav_item_change_password</item>
-        <item>@string/nav_item_about</item>
+        <item>@string/nav_item_relatives</item>
+        <item>@string/nav_item_matrimony</item>
         <item>@string/nav_item_sync</item>
         <item>@string/nav_item_intro</item>
+        <item>@string/nav_item_about</item>
         <item>@string/nav_item_logout</item>
 
     </string-array>

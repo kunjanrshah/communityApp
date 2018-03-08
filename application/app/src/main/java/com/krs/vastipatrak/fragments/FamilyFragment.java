@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +24,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -33,6 +36,8 @@ import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -332,8 +337,20 @@ public class FamilyFragment extends Fragment implements Serializable {
                         mViewholder.child_id = Integer.parseInt(mObjChild.getChild_id());
                         mViewholder.edtchild_name.setText(mObjChild.getChild_name());
                         mViewholder.edtchild_bdate.setText(mObjChild.getChild_bday());
+                        mViewholder.edtchild_btime.setText(mObjChild.getChild_btime());
+                        mViewholder.edtchild_bplace.setText(mObjChild.getChild_bplace());
+                        mViewholder.tbtn_interest.setChecked(mObjChild.isInterest());
+
+                        if (mObjChild.getGender().equalsIgnoreCase("male")) {
+                            mViewholder.radioGroupId.check(R.id.radioM);
+                        } else {
+                            mViewholder.radioGroupId.check(R.id.radioF);
+                        }
+
                         mViewholder.edtchild_edu.setText(mObjChild.getChild_edu());
                         mViewholder.edtchild_work.setText(mObjChild.getChild_work());
+
+
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
                             mViewholder.edtchild_name.setEnabled(true);
                             mViewholder.edtchild_bdate.setEnabled(true);
@@ -455,14 +472,34 @@ public class FamilyFragment extends Fragment implements Serializable {
         mViewholder.child_id = 0;
         mViewholder.img_child = addView.findViewById(R.id.img_child);
         mViewholder.edtchild_name = addView.findViewById(R.id.edtchild_name);
+        mViewholder.radioGroupId = addView.findViewById(R.id.radioGroupId);
+        mViewholder.tbtn_interest = addView.findViewById(R.id.tbtn_interest);
         mViewholder.edtchild_bdate = addView.findViewById(R.id.edtchild_bdate);
+        mViewholder.edtchild_btime = addView.findViewById(R.id.edtchild_btime);
+        mViewholder.edtchild_bplace = addView.findViewById(R.id.edtchild_bplace);
         mViewholder.edtchild_edu = addView.findViewById(R.id.edtchild_edu);
         mViewholder.edtchild_work = addView.findViewById(R.id.edtchild_work);
         mViewholder.edtchild_work.requestFocus();
+        mViewholder.tbtn_interest.setText(null);
+        mViewholder.tbtn_interest.setTextOn(null);
+        mViewholder.tbtn_interest.setTextOff(null);
 
         mViewholder.btn_remove = addView.findViewById(R.id.btn_remove);
         mViewholder.ImgHash = "";
         mViewholder.setClickBDate = false;
+
+        mViewholder.radioGroupId.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                if (checkedId == R.id.radioM) {
+                    mViewholder.gender = "male";
+                } else if (checkedId == R.id.radioF) {
+                    mViewholder.gender = "female";
+                }
+            }
+        });
+
         mViewholder.img_child.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -498,6 +535,15 @@ public class FamilyFragment extends Fragment implements Serializable {
 
                 mViewholder.edtchild_work.setKeyListener(null);
                 mViewholder.edtchild_work.setCursorVisible(false);
+
+                mViewholder.edtchild_bplace.setKeyListener(null);
+                mViewholder.edtchild_bplace.setCursorVisible(false);
+
+                mViewholder.edtchild_btime.setKeyListener(null);
+                mViewholder.edtchild_btime.setCursorVisible(false);
+
+                mViewholder.tbtn_interest.setEnabled(false);
+                mViewholder.radioGroupId.setEnabled(false);
 
             }
         }
@@ -554,7 +600,51 @@ public class FamilyFragment extends Fragment implements Serializable {
             }
         });
 
+        mViewholder.edtchild_btime.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
 
+                final int DRAWABLE_RIGHT = 2;
+
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (mViewholder.edtchild_btime.getRight() - mViewholder.edtchild_btime.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        Calendar now = Calendar.getInstance();
+                        TimePickerDialog tpd = TimePickerDialog.newInstance((TimePickerDialog.OnTimeSetListener) getContext(), now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), false);
+                        tpd.setThemeDark(true);
+                        tpd.vibrate(true);
+                        tpd.dismissOnPause(false);
+                        tpd.enableSeconds(false);
+                        if (false) {
+                            tpd.setAccentColor(Color.parseColor("#9C27B0"));
+                        }
+                        if (true) {
+                            tpd.setTitle("Birth Time");
+                        }
+                        tpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialogInterface) {
+                                Log.d("TimePicker", "Dialog was cancelled");
+                            }
+                        });
+                        tpd.setOnTimeSetListener(new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+                                String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+                                String minuteString = minute < 10 ? "0" + minute : "" + minute;
+                                String time = hourString + ":" + minuteString;
+                                mViewholder.edtchild_btime.setText(time);
+                            }
+                        });
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || AppController.isAdmin) {
+                            tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
+                        }
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        });
         mViewholder.btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -680,6 +770,11 @@ public class FamilyFragment extends Fragment implements Serializable {
         public int child_id;
         public EditText edtchild_name = null;
         public EditText edtchild_bdate = null;
+        public EditText edtchild_btime = null;
+        public EditText edtchild_bplace = null;
+        public RadioGroup radioGroupId = null;
+        public String gender = "male";
+        public ToggleButton tbtn_interest = null;
         public EditText edtchild_edu = null;
         public EditText edtchild_work = null;
         public Button btn_remove = null;

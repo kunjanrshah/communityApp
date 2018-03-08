@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +50,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.realm.RealmList;
+import io.realm.RealmResults;
 
 
 public class SearchFragment extends Fragment {
@@ -274,15 +273,14 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        MenuItem voiceItem = menu.findItem(R.id.action_voice);
-
+       /* MenuItem voiceItem = menu.findItem(R.id.action_voice);
         voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Common.promptSpeechInput(getActivity());
                 return false;
             }
-        });
+        });*/
 
         MenuItem activeItem = menu.findItem(R.id.action_activate);
         MenuItem activeAdd = menu.findItem(R.id.action_add);
@@ -418,7 +416,7 @@ public class SearchFragment extends Fragment {
         }).show();
     }
 
-    @Override
+ /*   @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
@@ -427,47 +425,46 @@ public class SearchFragment extends Fragment {
             default:
                 break;
         }
-
-
         return false;
-    }
+    }*/
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    /*  @Override
+      public void onActivityResult(int requestCode, int resultCode, Intent data) {
+          super.onActivityResult(requestCode, resultCode, data);
 
-        // Check if no view has focus:
-        View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-        switch (requestCode) {
-            case REQ_CODE_SPEECH_INPUT: {
-                if (resultCode == getActivity().RESULT_OK && null != data) {
+          // Check if no view has focus:
+          View view = getActivity().getCurrentFocus();
+          if (view != null) {
+              InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+              imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+          }
+          ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+          switch (requestCode) {
+              case REQ_CODE_SPEECH_INPUT: {
+                  if (resultCode == getActivity().RESULT_OK && null != data) {
 
-                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                      ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-                    searchView.setQueryHint(result.get(0));
-                    searchView.setQuery(result.get(0), true);
-                }
-                break;
-            }
+                      searchView.setQueryHint(result.get(0));
+                      searchView.setQuery(result.get(0), true);
+                  }
+                  break;
+              }
 
-        }
-    }
-
-
+          }
+      }
+  */
     private void callSearchWS(String str_search) {
         if (str_search.length() > 3) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(Common.Title);
+
             txtLable.setVisibility(View.GONE);
             lvCustomList.setVisibility(View.VISIBLE);
             if (query_string != null && !query_string.equalsIgnoreCase("")) {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(Common.Title);
                 OfflineSearch(str_search, 2);
             } else {
                 if (query != null && !str_search.equalsIgnoreCase("")) {
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(str_search);
                     OfflineSearch(str_search, 1);
                 }
             }
@@ -555,6 +552,7 @@ public class SearchFragment extends Fragment {
                         listDataChild.put(lpd, mlstChildData);
                     }
                 }
+
                 mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
                 lvCustomList.setAdapter(mExpandableListAdapter);
             } else {
@@ -589,37 +587,40 @@ public class SearchFragment extends Fragment {
         }
         listDataHeader.clear();
         listDataChild.clear();
-        AppController.getInstance().mListSearchData = mListProfileDatas;
-        for (int i = 0; i < mListProfileDatas.size(); i++) {
+
+        RealmResults<ListProfileData> mSortedProfiles = mListProfileDatas.sort(Common.Constant_Class.CITY);
+
+        AppController.getInstance().mListSearchResult = mSortedProfiles;
+        for (int i = 0; i < mSortedProfiles.size(); i++) {
             ListParentData lpd = new ListParentData();
-            lpd.setName(mListProfileDatas.get(i).getFirst_name() + " " + mListProfileDatas.get(i).getLast_name());
-            lpd.setFatherName(mListProfileDatas.get(i).getFather_name());
-            lpd.setMotherName(mListProfileDatas.get(i).getMother_name());
-            lpd.setStatus(mListProfileDatas.get(i).getStatus());
-            lpd.setId(mListProfileDatas.get(i).getProfile_id());
-            lpd.setProfilePicUrl(mListProfileDatas.get(i).getProfile_pic_url());
-            lpd.setUser_lat(mListProfileDatas.get(i).getUser_lat());
-            lpd.setUser_lng(mListProfileDatas.get(i).getUser_lng());
-            lpd.setIs_location_enable(mListProfileDatas.get(i).isIs_location_enable());
-            lpd.setUpdated_time(mListProfileDatas.get(i).getUpdated_time());
-            lpd.setCity(mListProfileDatas.get(i).getCity());
-            lpd.setUser_lng(mListProfileDatas.get(i).getUser_lng());
-            lpd.setUser_lat(mListProfileDatas.get(i).getUser_lat());
-            lpd.setHome_lat(mListProfileDatas.get(i).getHome_lat());
-            lpd.setHome_lng(mListProfileDatas.get(i).getHome_lng());
+            lpd.setName(mSortedProfiles.get(i).getFirst_name() + " " + mSortedProfiles.get(i).getLast_name());
+            lpd.setFatherName(mSortedProfiles.get(i).getFather_name());
+            lpd.setMotherName(mSortedProfiles.get(i).getMother_name());
+            lpd.setStatus(mSortedProfiles.get(i).getStatus());
+            lpd.setId(mSortedProfiles.get(i).getProfile_id());
+            lpd.setProfilePicUrl(mSortedProfiles.get(i).getProfile_pic_url());
+            lpd.setUser_lat(mSortedProfiles.get(i).getUser_lat());
+            lpd.setUser_lng(mSortedProfiles.get(i).getUser_lng());
+            lpd.setIs_location_enable(mSortedProfiles.get(i).isIs_location_enable());
+            lpd.setUpdated_time(mSortedProfiles.get(i).getUpdated_time());
+            lpd.setCity(mSortedProfiles.get(i).getCity());
+            lpd.setUser_lng(mSortedProfiles.get(i).getUser_lng());
+            lpd.setUser_lat(mSortedProfiles.get(i).getUser_lat());
+            lpd.setHome_lat(mSortedProfiles.get(i).getHome_lat());
+            lpd.setHome_lng(mSortedProfiles.get(i).getHome_lng());
 
             ListChildData lcd = new ListChildData();
-            lcd.setID(mListProfileDatas.get(i).getProfile_id());
-            lcd.setNative(mListProfileDatas.get(i).getNative_place());
-            lcd.setAddress(mListProfileDatas.get(i).getAddress());
-            lcd.setbirth_date(mListProfileDatas.get(i).getBirth_date());
-            lcd.setbirth_time(mListProfileDatas.get(i).getBirth_time());
-            lcd.setBirth_place(mListProfileDatas.get(i).getBirth_place());
-            lcd.setBlood_Group(mListProfileDatas.get(i).getBlood_group());
-            lcd.setMobile(mListProfileDatas.get(i).getMobile());
-            lcd.setPhone(mListProfileDatas.get(i).getPhone());
-            lcd.setGender(mListProfileDatas.get(i).getGender());
-            lcd.setGotra(mListProfileDatas.get(i).getGotra());
+            lcd.setID(mSortedProfiles.get(i).getProfile_id());
+            lcd.setNative(mSortedProfiles.get(i).getNative_place());
+            lcd.setAddress(mSortedProfiles.get(i).getAddress());
+            lcd.setbirth_date(mSortedProfiles.get(i).getBirth_date());
+            lcd.setbirth_time(mSortedProfiles.get(i).getBirth_time());
+            lcd.setBirth_place(mSortedProfiles.get(i).getBirth_place());
+            lcd.setBlood_Group(mSortedProfiles.get(i).getBlood_group());
+            lcd.setMobile(mSortedProfiles.get(i).getMobile());
+            lcd.setPhone(mSortedProfiles.get(i).getPhone());
+            lcd.setGender(mSortedProfiles.get(i).getGender());
+            lcd.setGotra(mSortedProfiles.get(i).getGotra());
             ArrayList<ListChildData> mlstChildData = new ArrayList<ListChildData>();
             mlstChildData.add(lcd);
             listDataHeader.add(lpd);
@@ -841,5 +842,14 @@ public class SearchFragment extends Fragment {
         super.onDetach();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        AppController.getInstance().mListSearchResult.deleteAllFromRealm();
+    }
 }

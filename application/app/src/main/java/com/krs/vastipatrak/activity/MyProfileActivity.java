@@ -351,15 +351,12 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             mJsonObject.put(Common.Constant_Class.EDUCATION, mListProfileData.getEducation());
             if (!mListProfileData.getStr_profile_hash().equalsIgnoreCase("")) {
                 mJsonObject.put(Common.Constant_Class.PROFILE_PIC, mListProfileData.getStr_profile_hash());
-                //mJsonObject.put(Common.Constant_Class.PROFILE_PIC_HASH, mListProfileData.getStr_profile_hash());
             }
             if (!mListProfileData.getStr_mother_hash().equalsIgnoreCase("")) {
                 mJsonObject.put(Common.Constant_Class.IMG_MOTHER, mListProfileData.getStr_mother_hash());
-                //mJsonObject.put(Common.Constant_Class.IMG_MOTHER_HASH, mListProfileData.getStr_mother_hash());
             }
             if (!mListProfileData.getStr_father_hash().equalsIgnoreCase("")) {
                 mJsonObject.put(Common.Constant_Class.IMG_FATHER, mListProfileData.getStr_father_hash());
-                //mJsonObject.put(Common.Constant_Class.IMG_FATHER_HASH, mListProfileData.getStr_father_hash());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -377,32 +374,26 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         }
 
         //Family Details
-        if (FamilyFragment.child_container != null) {
-            try {
-                //   mJsonObject.put(Common.Constant_Class.MARITAL_STATUS, "0");
-                mJsonObject.put(Common.Constant_Class.MARRIAGE_DATE, mListProfileData.getMarriage_date());
-                mJsonObject.put(Common.Constant_Class.SPOUSE_NAME, mListProfileData.getSpouse_name());
-                mJsonObject.put(Common.Constant_Class.SPOUSE_FATHER_NAME, mListProfileData.getSfather_name());
-                mJsonObject.put(Common.Constant_Class.SPOUSE_MOTHER_NAME, mListProfileData.getSmother_name());
+        try {
+            mJsonObject.put(Common.Constant_Class.MARRIAGE_DATE, mListProfileData.getMarriage_date());
+            mJsonObject.put(Common.Constant_Class.SPOUSE_NAME, mListProfileData.getSpouse_name());
+            mJsonObject.put(Common.Constant_Class.SPOUSE_FATHER_NAME, mListProfileData.getSfather_name());
+            mJsonObject.put(Common.Constant_Class.SPOUSE_MOTHER_NAME, mListProfileData.getSmother_name());
 
-                if (!mListProfileData.getStr_spouse_hash().equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.IMG_SPOUSE, mListProfileData.getStr_spouse_hash());
-                    //mJsonObject.put(Common.Constant_Class.IMG_SPOUSE_HASH, mListProfileData.getStr_spouse_hash());
-                }
-                if (!mListProfileData.getStr_mspouse_hash().equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.IMG_SMOTHER, mListProfileData.getStr_mspouse_hash());
-                    //mJsonObject.put(Common.Constant_Class.IMG_SMOTHER_HASH, mListProfileData.getStr_mspouse_hash());
-                }
-                if (!mListProfileData.getStr_fspouse_hash().equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.IMG_SFATHER, mListProfileData.getStr_fspouse_hash());
-                    //mJsonObject.put(Common.Constant_Class.IMG_SFATHER_HASH, mListProfileData.getStr_fspouse_hash());
-                }
+            if (!mListProfileData.getStr_spouse_hash().equalsIgnoreCase("")) {
+                mJsonObject.put(Common.Constant_Class.IMG_SPOUSE, mListProfileData.getStr_spouse_hash());
+            }
+            if (!mListProfileData.getStr_mspouse_hash().equalsIgnoreCase("")) {
+                mJsonObject.put(Common.Constant_Class.IMG_SMOTHER, mListProfileData.getStr_mspouse_hash());
+            }
+            if (!mListProfileData.getStr_fspouse_hash().equalsIgnoreCase("")) {
+                mJsonObject.put(Common.Constant_Class.IMG_SFATHER, mListProfileData.getStr_fspouse_hash());
+            }
 
+            if (child_container != null) {
                 int child_count = child_container.getChildCount();
                 JSONArray mJsonArray = new JSONArray();
-
                 for (int i = 0; i < child_count; i++) {
-
                     FamilyFragment.Viewholder mViewholder = (FamilyFragment.Viewholder) child_container.getChildAt(i).getTag();
                     JSONObject mJsonObject_Child = new JSONObject();
                     if (mViewholder.child_id != 0) {
@@ -411,7 +402,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     if (FamilyFragment.rbtnChildNo.isChecked()) {
                         mJsonObject_Child.put(Common.Constant_Class.CHILD_DELETE, "true");
                     }
-
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_NAME, mViewholder.edtchild_name.getText());
                     String child_bday = mViewholder.edtchild_bdate.getText().toString();
                     if (!child_bday.equalsIgnoreCase("")) {
@@ -420,15 +410,20 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                         }
                     }
 
+                    boolean child_interest = mViewholder.tbtn_interest.isChecked();
+                    String child_gender = mViewholder.gender;
+                    String child_btime = mViewholder.edtchild_btime.getText().toString();
+                    String child_bplace = mViewholder.edtchild_bplace.getText().toString();
+                    mJsonObject_Child.put(Common.Constant_Class.IS_INTERESTED, child_interest);
+                    mJsonObject_Child.put(Common.Constant_Class.CHILD_GENDER, child_gender);
+                    mJsonObject_Child.put(Common.Constant_Class.CHILD_BTIME, child_btime);
+                    mJsonObject_Child.put(Common.Constant_Class.CHILD_BPLACE, child_bplace);
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_BDAY, child_bday);
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_EDU, mViewholder.edtchild_edu.getText());
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_WORK, mViewholder.edtchild_work.getText());
                     if (!mViewholder.ImgHash.equalsIgnoreCase("")) {
-                        //mJsonObject_Child.put(Common.Constant_Class.CHILD_IMAGE, "child" + i + ".png");
                         mJsonObject_Child.put(Common.Constant_Class.CHILD_IMAGE, mViewholder.ImgHash);
-                        //mJsonObject_Child.put(Common.Constant_Class.CHILD_IMAGE_HASH, mViewholder.ImgHash);
                     }
-
                     mJsonArray.put(mJsonObject_Child);
                     mJsonObject.put(Common.Constant_Class.CHILDS, mJsonArray);
 
@@ -444,9 +439,11 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                         mJsonObject.put(Common.Constant_Class.CHILDS, mJsonArray);
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if (valid.equalsIgnoreCase("")) {

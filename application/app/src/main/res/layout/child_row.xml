@@ -17,10 +17,50 @@
             android:layout_height="@dimen/profile_image_height"
             android:src="@drawable/user_profile" />
 
-        <View
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ToggleButton
+                android:id="@+id/tbtn_interest"
+                android:layout_width="40dp"
+                android:layout_height="25dp"
+                android:background="@drawable/toggle_selector" />
+
+
+            <RadioGroup
+                android:id="@+id/radioGroupId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="M"
+                    android:textSize="14sp" />
+
+                <RadioButton
+                    android:id="@+id/radioF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="F"
+                    android:textSize="14sp" />
+            </RadioGroup>
+
+
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/btn_remove"
@@ -70,14 +110,35 @@
                 android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
 
-        <!--        <Button
-                    android:id="@+id/btn_cbdate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dip"
-                    android:layout_marginRight="10dip"
-                    android:text="Date" />-->
     </LinearLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edtchild_btime"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:drawableRight="@drawable/clock"
+            android:hint="Birth time"
+            android:singleLine="true" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edtchild_bplace"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:hint="Birth place"
+            android:singleLine="true" />
+    </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"

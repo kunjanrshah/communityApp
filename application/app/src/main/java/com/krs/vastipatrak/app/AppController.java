@@ -18,7 +18,7 @@ import com.krs.vastipatrak.model.ListProfileData;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmList;
+import io.realm.RealmResults;
 
 public class AppController extends Application {
 
@@ -31,7 +31,7 @@ public class AppController extends Application {
     public Realm realm;
     public boolean isUpdate = false;
     public FirebaseAnalytics firebaseAnalytics;
-    public RealmList<ListProfileData> mListSearchData = null;
+    public RealmResults<ListProfileData> mListSearchResult = null;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
     private Activity mActivity;
@@ -56,7 +56,7 @@ public class AppController extends Application {
        // Fabric.with(this, new Crashlytics());
         mInstance = this;
       //  dbHelper = new DatabaseHandler(this);
-        mListSearchData = new RealmList<>();
+
         initRealm();
         initFirebaseAnalytics();
         // initialize the AdMob app

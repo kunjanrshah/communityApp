@@ -3,16 +3,53 @@ package com.krs.vastipatrak.model;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-/**
- * Created by TecStub on 01-Sep-16.
- */
 public class ListChildrenData extends RealmObject{
 
     @PrimaryKey
     private String child_id;
     private String profile_id;
-    private String child_name, child_bday, child_edu, child_work, child_img_url;
+    private boolean isInterest;
+    private String child_name;
+    private String child_bday;
+    private String child_bplace;
+    private String child_btime;
+    private String child_edu;
+    private String child_work;
+    private String child_img_url;
+    private String gender;
     private byte[] ChildBytes;
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public boolean isInterest() {
+        return isInterest;
+    }
+
+    public void setInterest(boolean interest) {
+        isInterest = interest;
+    }
+
+    public String getChild_bplace() {
+        return child_bplace;
+    }
+
+    public void setChild_bplace(String child_bplace) {
+        this.child_bplace = child_bplace;
+    }
+
+    public String getChild_btime() {
+        return child_btime;
+    }
+
+    public void setChild_btime(String child_btime) {
+        this.child_btime = child_btime;
+    }
 
     public String getProfile_id() {
         return profile_id;

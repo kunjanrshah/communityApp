@@ -20,9 +20,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
-import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.FilterActivity;
+import com.krs.vastipatrak.utils.Common;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ObservableScrollView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -39,13 +39,13 @@ import java.util.List;
 public class PersonalFilter extends Fragment {
 
 
-    FloatingActionButton floatingActionButton;
-    ObservableScrollView scroll_pdetails;
+    private static final int CONTACT_PICKER_RESULT = 1001;
     public static Spinner spinnerBlood;
     public static RadioButton rbtnM, rbtnF, rbtnB;
-    public static EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbdate, edtbTime;
+    public static EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbdate, edtbTime, edtCity;
     public static String gender = "";
-    private static final int CONTACT_PICKER_RESULT = 1001;
+    FloatingActionButton floatingActionButton;
+    ObservableScrollView scroll_pdetails;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -228,29 +228,30 @@ public class PersonalFilter extends Fragment {
 
     void MemoryAllocation(View rootView) {
         gender = "";
-        scroll_pdetails = (ObservableScrollView) rootView.findViewById(R.id.scroll_pdetails);
-        floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fab_psave);
+        scroll_pdetails = rootView.findViewById(R.id.scroll_pdetails);
+        floatingActionButton = rootView.findViewById(R.id.fab_psave);
         //floatingActionButton.attachToScrollView(scroll_pdetails);
-        spinnerBlood = (Spinner) rootView.findViewById(R.id.spinnerBlood);
+        spinnerBlood = rootView.findViewById(R.id.spinnerBlood);
         //   spinnerBlood.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) getActivity());
-        rbtnM = (RadioButton) rootView.findViewById(R.id.rbtnM);
-        rbtnF = (RadioButton) rootView.findViewById(R.id.rbtnF);
-        rbtnB = (RadioButton) rootView.findViewById(R.id.rbtnB);
+        rbtnM = rootView.findViewById(R.id.rbtnM);
+        rbtnF = rootView.findViewById(R.id.rbtnF);
+        rbtnB = rootView.findViewById(R.id.rbtnB);
 
-        edtbdate = (EditText) rootView.findViewById(R.id.edtbdate);
-        edtbTime = (EditText) rootView.findViewById(R.id.edtbTime);
-        edtFName = (EditText) rootView.findViewById(R.id.edtFName);
-        edtLName = (EditText) rootView.findViewById(R.id.edtLName);
-        edtFatherName = (EditText) rootView.findViewById(R.id.edtFatherName);
-        edtMotherName = (EditText) rootView.findViewById(R.id.edtMotherName);
-        edtEducation = (EditText) rootView.findViewById(R.id.edtEducation);
-        edtBPlace = (EditText) rootView.findViewById(R.id.edtBPlace);
-        edtNPlace = (EditText) rootView.findViewById(R.id.edtNPlace);
-        edtGotra = (EditText) rootView.findViewById(R.id.edtGotra);
-        edtMobile = (EditText) rootView.findViewById(R.id.edtMobile);
-        edtAddress = (EditText) rootView.findViewById(R.id.edtAddress);
-        edt_Eaddress = (EditText) rootView.findViewById(R.id.edt_Eaddress);
-        edt_phone = (EditText) rootView.findViewById(R.id.edt_phone);
+        edtbdate = rootView.findViewById(R.id.edtbdate);
+        edtbTime = rootView.findViewById(R.id.edtbTime);
+        edtFName = rootView.findViewById(R.id.edtFName);
+        edtLName = rootView.findViewById(R.id.edtLName);
+        edtFatherName = rootView.findViewById(R.id.edtFatherName);
+        edtMotherName = rootView.findViewById(R.id.edtMotherName);
+        edtEducation = rootView.findViewById(R.id.edtEducation);
+        edtBPlace = rootView.findViewById(R.id.edtBPlace);
+        edtNPlace = rootView.findViewById(R.id.edtNPlace);
+        edtCity = rootView.findViewById(R.id.edtCity);
+        edtGotra = rootView.findViewById(R.id.edtGotra);
+        edtMobile = rootView.findViewById(R.id.edtMobile);
+        edtAddress = rootView.findViewById(R.id.edtAddress);
+        edt_Eaddress = rootView.findViewById(R.id.edt_Eaddress);
+        edt_phone = rootView.findViewById(R.id.edt_phone);
 
     }
 

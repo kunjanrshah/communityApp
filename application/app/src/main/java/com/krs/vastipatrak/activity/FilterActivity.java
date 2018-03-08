@@ -66,9 +66,9 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
     }
 
     private void MemoryAllocation() {
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        viewPager = findViewById(R.id.viewpager);
+        toolbar = findViewById(R.id.toolbar);
+        tabLayout = findViewById(R.id.tabs);
     }
 
 
@@ -162,6 +162,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String strbdate = PersonalFilter.edtbdate.getText().toString().trim();
                 String strbTime = PersonalFilter.edtbTime.getText().toString().trim();
                 String strEaddress = PersonalFilter.edt_Eaddress.getText().toString().trim();
+                String strCity = PersonalFilter.edtCity.getText().toString().trim();
                 String bgroup = PersonalFilter.spinnerBlood.getSelectedItem().toString().trim();
                 String gender = PersonalFilter.gender;
 
@@ -226,6 +227,9 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 if (!strNPlace.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.NATIVE_PLACE, strNPlace);
                 }
+                if (!strCity.equalsIgnoreCase("")) {
+                    mJsonObject.put(Common.Constant_Class.CITY, strCity);
+                }
                 if (!strEducation.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.EDUCATION, strEducation);
                 }
@@ -267,15 +271,17 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
             if (FamilyFilter.edt_mdate != null) {
 
-
                 String strmdate = FamilyFilter.edt_mdate.getText().toString().trim();
-                String strcdate = FamilyFilter.edt_cdate.getText().toString().trim();
                 String strSpouseName = FamilyFilter.edtSpouseName.getText().toString().trim();
                 String strSpouseFName = FamilyFilter.edtSpouseFName.getText().toString().trim();
                 String strSpouseMName = FamilyFilter.edtSpouseMName.getText().toString().trim();
                 String strchild_name = FamilyFilter.edtchild_name.getText().toString().trim();
                 String strcedu = FamilyFilter.edtcedu.getText().toString().trim();
                 String strchild_work = FamilyFilter.edtchild_work.getText().toString().trim();
+                String childBdate = FamilyFilter.edt_childbdate.getText().toString().trim();
+                String childBtime = FamilyFilter.edtchildbtime.getText().toString().trim();
+                String childBplace = FamilyFilter.edtchildbplace.getText().toString().trim();
+                String childGender = FamilyFilter.gender;
 
          /*       if (!strmdate.equalsIgnoreCase("")) {
                     if (!Common.isThisDateValid(strmdate, "dd/MM/yyyy")) {
@@ -289,11 +295,23 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     }
                 }*/
 
+                if (!childBtime.equalsIgnoreCase("")) {
+                    mJsonObject.put(Common.Constant_Class.CHILD_BTIME, childBtime);
+                }
+
+                if (!childBplace.equalsIgnoreCase("")) {
+                    mJsonObject.put(Common.Constant_Class.CHILD_BPLACE, childBplace);
+                }
+
+                if (!childGender.equalsIgnoreCase("")) {
+                    mJsonObject.put(Common.Constant_Class.CHILD_GENDER, childGender);
+                }
+
                 if (!strmdate.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.MARRIAGE_DATE, strmdate);
                 }
-                if (!strcdate.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.CHILD_BDAY, strcdate);
+                if (!childBdate.equalsIgnoreCase("")) {
+                    mJsonObject.put(Common.Constant_Class.CHILD_BDAY, childBdate);
                 }
                 if (!strSpouseName.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.SPOUSE_NAME, strSpouseName);

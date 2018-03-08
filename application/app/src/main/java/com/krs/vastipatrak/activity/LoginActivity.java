@@ -116,7 +116,7 @@ public class LoginActivity extends Activity {
         Bundle mBundle = getIntent().getExtras();
         if (mBundle != null) {
             screen = mBundle.getString(Common.Constant_Class.SCREEN);
-            if (screen.equalsIgnoreCase(Common.Constant_Class.SEARCH_FRAGMENT)) {
+            if (screen != null && screen.equalsIgnoreCase(Common.Constant_Class.SEARCH_FRAGMENT)) {
                 SignupToggle = true;
                 togglePage();
                 txtSignup.setVisibility(View.GONE);
@@ -124,8 +124,13 @@ public class LoginActivity extends Activity {
             }
         }
 
+        if (!mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").toString().equalsIgnoreCase("") /*&& screen==null*/) {
+            Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
+            mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+            startActivity(mIntent);
+        }
 
-        if (!mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").toString().equalsIgnoreCase("") && !screen.equalsIgnoreCase(Common.Constant_Class.SEARCH_FRAGMENT)) {
+        if (!mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").toString().equalsIgnoreCase("") && screen != null && screen.equalsIgnoreCase(Common.Constant_Class.SEARCH_FRAGMENT)) {
 
             if (!prefManager.isSliderWelcome()) {
                 Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);

@@ -17,8 +17,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.model.ListChildrenData;
-import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
 
 import org.json.JSONArray;
@@ -30,8 +28,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import io.realm.RealmList;
 
 import static com.krs.vastipatrak.fragments.SyncFragment.mHandler;
 
@@ -89,7 +85,7 @@ public class SyncService extends Service {
             mHandler.sendMessage(msg);
 
 
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SYNC_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            final JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SYNC_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(JSONObject response) {
@@ -118,7 +114,9 @@ public class SyncService extends Service {
                             for (int i = 0; i < mJsonArray.length(); i++) {
 
                                 JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                ListProfileData mListProfileData = new ListProfileData();
+                                Common.SaveProfile(mJsondata);
+
+                                /*ListProfileData mListProfileData = new ListProfileData();
 
                                 String profile_id = mJsondata.getString(Common.Constant_Class.ID);
                                 mListProfileData.setProfile_id(profile_id);
@@ -236,7 +234,7 @@ public class SyncService extends Service {
                                 AppController.getInstance().realm.copyToRealmOrUpdate(mListProfileData);
                                 AppController.getInstance().realm.commitTransaction();
 
-                                Log.d(TAG, "sync: id: " + mListProfileData.getProfile_id() + " name :" + mListProfileData.getFirst_name());
+                                Log.d(TAG, "sync: id: " + mListProfileData.getProfile_id() + " name :" + mListProfileData.getFirst_name());*/
                             }
 
                             Date c = Calendar.getInstance().getTime();

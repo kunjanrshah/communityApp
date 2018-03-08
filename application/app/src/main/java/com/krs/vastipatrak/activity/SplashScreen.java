@@ -1,37 +1,14 @@
 package com.krs.vastipatrak.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.model.ListChildrenData;
-import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 
 public class SplashScreen extends Activity {
@@ -59,17 +36,17 @@ public class SplashScreen extends Activity {
             new SyncAlertDialog(this, getString(R.string.sync_msg)).show();
 
         } else {*/
-            new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
 
-                @Override
-                public void run() {
+            @Override
+            public void run() {
 
-                    Intent i = new Intent(SplashScreen.this, LoginActivity.class);
-                    startActivity(i);
-                    finish();
-                }
-            }, SPLASH_TIME_OUT);
-       // }
+                Intent i = new Intent(SplashScreen.this, LoginActivity.class);
+                startActivity(i);
+                finish();
+            }
+        }, SPLASH_TIME_OUT);
+        // }
     }
 
 

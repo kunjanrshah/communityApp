@@ -117,7 +117,7 @@ public class FragmentDrawer extends Fragment {
 
                 if (AppController.getInstance().isUpdate) {
                     AppController.getInstance().isUpdate = false;
-                    Glide.with(getActivity()).load(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "")).thumbnail(0.5f).into(img_profile);
+                    Glide.with(getActivity()).load(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
                 //    new Common.ImageLoadTask(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, ""), img_profile).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
                     txt_name.setText(name);

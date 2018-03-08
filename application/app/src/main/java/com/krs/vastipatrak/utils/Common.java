@@ -59,6 +59,7 @@ import PiyushBase64.Base64;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.write.Label;
@@ -70,8 +71,8 @@ public class Common {
 
     public static final int REQ_CODE_SPEECH_INPUT = 100;
     public static String Title = "";
-    static int MAX_IMAGE_DIMENSION = 120;
     public static ProgressDialog pDialog;
+    static int MAX_IMAGE_DIMENSION = 120;
     private static Realm realm = AppController.getInstance().realm;
 
 /*    public static void selectImage(final Activity mActivity) {
@@ -409,6 +410,7 @@ public class Common {
                     contains(Common.Constant_Class.PHONE, query).or().
                     contains(Common.Constant_Class.BLOOD_GROUP, query).or().
                     contains(Common.Constant_Class.GENDER, query).or().
+                    contains(Constant_Class.CITY, query).or().
                     contains(Common.Constant_Class.GOTRA, query).or().
                     contains(Common.Constant_Class.EKDO, query).or().
                     contains(Common.Constant_Class.NATIVE_PLACE, query).or().
@@ -425,7 +427,7 @@ public class Common {
                     contains(Common.Constant_Class.MARRIAGE_DATE, query).or().
                     contains(Common.Constant_Class.SPOUSE_FATHER_NAME, query).or().
                     contains(Common.Constant_Class.SPOUSE_MOTHER_NAME, query).or().
-                    contains(Common.Constant_Class.STATUS, query).findAll();
+                    contains(Common.Constant_Class.STATUS, query).findAllSorted(Constant_Class.CITY, Sort.ASCENDING);
 
             for (int i = 0; i < profileData.size(); i++) {
                 mlistProfileData.add(profileData.get(i));
@@ -434,7 +436,7 @@ public class Common {
             ListProfileData profileData = realm.where(ListProfileData.class).equalTo(Common.Constant_Class.PROFILE_ID, query).findFirst();
             mlistProfileData.add(profileData);
         } else {
-            String first_name = "", last_name = "", father_name = "", mother_name = "", email_address = "", mobile = "", phone = "", blood_group = "", gender = "", gotra = "", ekdo = "", birth_place = "", native_place = "", birth_date = "",
+            String first_name = "", last_name = "", father_name = "", mother_name = "", email_address = "", mobile = "", phone = "", blood_group = "", gender = "", gotra = "", ekdo = "", birth_place = "", native_place = "", birth_date = "", city = "",
                     birth_time = "", education = "", occupation = "", work = "", address = "", office_mobile = "", office_address = "", spouse_name = "", marriage_date = "", spouse_father_name = "", spouse_mother_name = "";
             try {
 
@@ -536,7 +538,14 @@ public class Common {
                     for (int i = 0; i < native_place_data.size(); i++) {
                         mlistProfileData.add(native_place_data.get(i));
                     }
+                }
 
+                if (mJsonObject.has(Constant_Class.CITY)) {
+                    city = mJsonObject.getString(Constant_Class.CITY);
+                    RealmResults<ListProfileData> city_data = realm.where(ListProfileData.class).contains(Constant_Class.NATIVE_PLACE, city.toLowerCase()).equalTo(Common.Constant_Class.STATUS, "1").findAll();
+                    for (int i = 0; i < city_data.size(); i++) {
+                        mlistProfileData.add(city_data.get(i));
+                    }
                 }
 
                 if (mJsonObject.has(Common.Constant_Class.BIRTH_PLACE)) {
@@ -660,7 +669,7 @@ public class Common {
 
         if (search == 1) {
             query = query.toLowerCase();
-            RealmResults<ListChildrenData> childrenData = realm.where(ListChildrenData.class).contains(Constant_Class.CHILD_NAME, query).or().contains(Constant_Class.CHILD_EDU, query).or().contains(Constant_Class.CHILD_WORK, query).or().contains(Constant_Class.CHILD_BDAY, query).findAll();
+            RealmResults<ListChildrenData> childrenData = realm.where(ListChildrenData.class).contains(Constant_Class.CHILD_NAME, query).or().contains(Constant_Class.CHILD_EDU, query).or().contains(Constant_Class.CHILD_WORK, query).or().contains(Constant_Class.CHILD_BDAY, query).contains(Constant_Class.CHILD_BPLACE, query).contains(Constant_Class.CHILD_BTIME, query).findAll();
 
             for (int i = 0; i < childrenData.size(); i++) {
                 mListChildrenData.add(childrenData.get(i));
@@ -696,6 +705,30 @@ public class Common {
                     RealmResults<ListChildrenData> child_name_data = realm.where(ListChildrenData.class).contains(Constant_Class.CHILD_NAME, child_name.toLowerCase()).findAll();
                     for (int i = 0; i < child_name_data.size(); i++) {
                         mListChildrenData.add(child_name_data.get(i));
+                    }
+                }
+
+                if (mJsonObject.has(Constant_Class.CHILD_BPLACE)) {
+                    String child_bplace = mJsonObject.getString(Constant_Class.CHILD_BPLACE);
+                    RealmResults<ListChildrenData> child_bplace_data = realm.where(ListChildrenData.class).contains(Constant_Class.CHILD_BPLACE, child_bplace.toLowerCase()).findAll();
+                    for (int i = 0; i < child_bplace_data.size(); i++) {
+                        mListChildrenData.add(child_bplace_data.get(i));
+                    }
+                }
+
+                if (mJsonObject.has(Constant_Class.CHILD_BTIME)) {
+                    String child_btime = mJsonObject.getString(Constant_Class.CHILD_BTIME);
+                    RealmResults<ListChildrenData> child_btime_data = realm.where(ListChildrenData.class).contains(Constant_Class.CHILD_BTIME, child_btime.toLowerCase()).findAll();
+                    for (int i = 0; i < child_btime_data.size(); i++) {
+                        mListChildrenData.add(child_btime_data.get(i));
+                    }
+                }
+
+                if (mJsonObject.has(Constant_Class.CHILD_GENDER)) {
+                    String child_gender = mJsonObject.getString(Constant_Class.CHILD_GENDER);
+                    RealmResults<ListChildrenData> child_gender_data = realm.where(ListChildrenData.class).contains(Constant_Class.CHILD_GENDER, child_gender.toLowerCase()).findAll();
+                    for (int i = 0; i < child_gender_data.size(); i++) {
+                        mListChildrenData.add(child_gender_data.get(i));
                     }
                 }
 
@@ -896,19 +929,32 @@ public class Common {
                     }
 
                     if (mJsonObj.has(Common.Constant_Class.CHILD_NAME)) {
-                        //values1.put(Common.Constant_Class.CHILD_NAME, mJsonObj.getString(Common.Constant_Class.CHILD_NAME));
                         mListChildrendata.setChild_name(mJsonObj.getString(Common.Constant_Class.CHILD_NAME));
                     }
+                    if (mJsonObj.has(Constant_Class.CHILD_GENDER)) {
+                        mListChildrendata.setGender(mJsonObj.getString(Common.Constant_Class.CHILD_GENDER));
+                    }
+                    if (mJsonObj.has(Constant_Class.CHILD_BPLACE)) {
+                        mListChildrendata.setChild_bplace(mJsonObj.getString(Common.Constant_Class.CHILD_BPLACE));
+                    }
+                    if (mJsonObj.has(Constant_Class.CHILD_BTIME)) {
+                        mListChildrendata.setChild_btime(mJsonObj.getString(Common.Constant_Class.CHILD_BTIME));
+                    }
+                    if (mJsonObj.has(Constant_Class.IS_INTERESTED)) {
+                        String isInterest = mJsonObj.getString(Common.Constant_Class.IS_INTERESTED);
+                        if (isInterest.equals("1")) {
+                            mListChildrendata.setInterest(true);
+                        } else {
+                            mListChildrendata.setInterest(false);
+                        }
+                    }
                     if (mJsonObj.has(Common.Constant_Class.CHILD_BDAY)) {
-                        // values1.put(Common.Constant_Class.CHILD_BDAY, mJsonObj.getString(Common.Constant_Class.CHILD_BDAY));
                         mListChildrendata.setChild_bday(mJsonObj.getString(Common.Constant_Class.CHILD_BDAY));
                     }
                     if (mJsonObj.has(Common.Constant_Class.CHILD_EDU)) {
-                        //    values1.put(Common.Constant_Class.CHILD_EDU, mJsonObj.getString(Common.Constant_Class.CHILD_EDU));
                         mListChildrendata.setChild_edu(mJsonObj.getString(Common.Constant_Class.CHILD_EDU));
                     }
                     if (mJsonObj.has(Common.Constant_Class.CHILD_WORK)) {
-                        //    values1.put(Common.Constant_Class.CHILD_WORK, mJsonObj.getString(Common.Constant_Class.CHILD_WORK));
                         mListChildrendata.setChild_work(mJsonObj.getString(Common.Constant_Class.CHILD_WORK));
                     }
                     mListChildrendata.setProfile_id(mJsonObject.getString(Constant_Class.ID));
@@ -961,24 +1007,22 @@ public class Common {
     }
 
     public static void ExportSearchData(Activity mActiviy) {
-        RealmList<ListProfileData> mListProfileDatas = AppController.getInstance().mListSearchData;
+        RealmResults<ListProfileData> mListProfileResult = AppController.getInstance().mListSearchResult;
 
-        if (mListProfileDatas.size() > 0) {
-
-
-            File sd = Environment.getExternalStorageDirectory();
-            String csvFile = "Vastipatrak.xls";
-
-            File directory = new File(sd.getAbsolutePath());
-            //create directory if not exist
-            if (!directory.isDirectory()) {
-                directory.mkdirs();
-            }
-
-            initProgressDialog(mActiviy);
-            showProgressDialog();
+        if (mListProfileResult.size() > 0) {
 
             try {
+                File sd = Environment.getExternalStorageDirectory();
+                String csvFile = "Vastipatrak.xls";
+
+                File directory = new File(sd.getAbsolutePath());
+                //create directory if not exist
+                if (!directory.isDirectory()) {
+                    directory.mkdirs();
+                }
+
+                initProgressDialog(mActiviy);
+                showProgressDialog();
 
 
                 //file path
@@ -1018,69 +1062,116 @@ public class Common {
                 sheet.addCell(new Label(25, 0, "Updated"));
                 sheet.addCell(new Label(26, 0, "Sync"));
 
-                for (int i = 0; i < mListProfileDatas.size(); i++) {
+                for (int i = 0; i < mListProfileResult.size(); i++) {
                     int k = i + 1;
-                    sheet.addCell(new Label(0, k, mListProfileDatas.get(i).getProfile_id()));
-                    sheet.addCell(new Label(1, k, mListProfileDatas.get(i).getFirst_name()));
-                    sheet.addCell(new Label(2, k, mListProfileDatas.get(i).getLast_name()));
-                    sheet.addCell(new Label(3, k, mListProfileDatas.get(i).getAddress()));
-                    sheet.addCell(new Label(4, k, mListProfileDatas.get(i).getCity()));
-                    sheet.addCell(new Label(5, k, mListProfileDatas.get(i).getFather_name()));
-                    sheet.addCell(new Label(6, k, mListProfileDatas.get(i).getMother_name()));
-                    sheet.addCell(new Label(7, k, mListProfileDatas.get(i).getEmail_address())); // column and row
-                    sheet.addCell(new Label(8, k, mListProfileDatas.get(i).getMobile()));
-                    sheet.addCell(new Label(9, k, mListProfileDatas.get(i).getPhone()));
-                    sheet.addCell(new Label(10, k, mListProfileDatas.get(i).getBlood_group()));
-                    sheet.addCell(new Label(11, k, mListProfileDatas.get(i).getGotra()));
-                    sheet.addCell(new Label(12, k, mListProfileDatas.get(i).getNative_place()));
-                    sheet.addCell(new Label(13, k, mListProfileDatas.get(i).getBirth_place()));
-                    sheet.addCell(new Label(14, k, mListProfileDatas.get(i).getBirth_date()));
-                    sheet.addCell(new Label(15, k, mListProfileDatas.get(i).getBirth_time()));
-                    sheet.addCell(new Label(16, k, mListProfileDatas.get(i).getEducation()));
-                    sheet.addCell(new Label(17, k, mListProfileDatas.get(i).getOccupation()));
-                    sheet.addCell(new Label(18, k, mListProfileDatas.get(i).getWork()));
-                    sheet.addCell(new Label(19, k, mListProfileDatas.get(i).getOffice_address()));
-                    sheet.addCell(new Label(20, k, mListProfileDatas.get(i).getOffice_mobile()));
-                    sheet.addCell(new Label(21, k, mListProfileDatas.get(i).getSpouse_name()));
-                    sheet.addCell(new Label(22, k, mListProfileDatas.get(i).getMarriage_date()));
-                    sheet.addCell(new Label(23, k, mListProfileDatas.get(i).getSfather_name()));
-                    sheet.addCell(new Label(24, k, mListProfileDatas.get(i).getSmother_name()));
-                    sheet.addCell(new Label(25, k, mListProfileDatas.get(i).getUpdated_time()));
-                    sheet.addCell(new Label(26, k, mListProfileDatas.get(i).getSync_time()));
+                    sheet.addCell(new Label(0, k, mListProfileResult.get(i).getProfile_id()));
+                    sheet.addCell(new Label(1, k, mListProfileResult.get(i).getFirst_name()));
+                    sheet.addCell(new Label(2, k, mListProfileResult.get(i).getLast_name()));
+                    sheet.addCell(new Label(3, k, mListProfileResult.get(i).getAddress()));
+                    sheet.addCell(new Label(4, k, mListProfileResult.get(i).getCity()));
+                    sheet.addCell(new Label(5, k, mListProfileResult.get(i).getFather_name()));
+                    sheet.addCell(new Label(6, k, mListProfileResult.get(i).getMother_name()));
+                    sheet.addCell(new Label(7, k, mListProfileResult.get(i).getEmail_address())); // column and row
+                    sheet.addCell(new Label(8, k, mListProfileResult.get(i).getMobile()));
+                    sheet.addCell(new Label(9, k, mListProfileResult.get(i).getPhone()));
+                    sheet.addCell(new Label(10, k, mListProfileResult.get(i).getBlood_group()));
+                    sheet.addCell(new Label(11, k, mListProfileResult.get(i).getGotra()));
+                    sheet.addCell(new Label(12, k, mListProfileResult.get(i).getNative_place()));
+                    sheet.addCell(new Label(13, k, mListProfileResult.get(i).getBirth_place()));
+                    sheet.addCell(new Label(14, k, mListProfileResult.get(i).getBirth_date()));
+                    sheet.addCell(new Label(15, k, mListProfileResult.get(i).getBirth_time()));
+                    sheet.addCell(new Label(16, k, mListProfileResult.get(i).getEducation()));
+                    sheet.addCell(new Label(17, k, mListProfileResult.get(i).getOccupation()));
+                    sheet.addCell(new Label(18, k, mListProfileResult.get(i).getWork()));
+                    sheet.addCell(new Label(19, k, mListProfileResult.get(i).getOffice_address()));
+                    sheet.addCell(new Label(20, k, mListProfileResult.get(i).getOffice_mobile()));
+                    sheet.addCell(new Label(21, k, mListProfileResult.get(i).getSpouse_name()));
+                    sheet.addCell(new Label(22, k, mListProfileResult.get(i).getMarriage_date()));
+                    sheet.addCell(new Label(23, k, mListProfileResult.get(i).getSfather_name()));
+                    sheet.addCell(new Label(24, k, mListProfileResult.get(i).getSmother_name()));
+                    sheet.addCell(new Label(25, k, mListProfileResult.get(i).getUpdated_time()));
+                    sheet.addCell(new Label(26, k, mListProfileResult.get(i).getSync_time()));
                     int counter = 26;
-                    for (int j = 0; j < mListProfileDatas.get(i).getmListChildrenData().size(); j++) {
+                    for (int j = 0; j < mListProfileResult.get(i).getmListChildrenData().size(); j++) {
 
                         sheet.addCell(new Label(++counter, 0, "Child Id"));
-                        sheet.addCell(new Label(counter, k, mListProfileDatas.get(i).getmListChildrenData().get(j).getChild_id()));
+                        sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).getChild_id()));
 
                         sheet.addCell(new Label(++counter, 0, "Child Name"));
-                        sheet.addCell(new Label(counter, k, mListProfileDatas.get(i).getmListChildrenData().get(j).getChild_name()));
+                        sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).getChild_name()));
+
+                        sheet.addCell(new Label(++counter, 0, "Child Gender"));
+                        sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).getGender()));
 
                         sheet.addCell(new Label(++counter, 0, "Child Bdate"));
-                        sheet.addCell(new Label(counter, k, mListProfileDatas.get(i).getmListChildrenData().get(j).getChild_bday()));
+                        sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).getChild_bday()));
+
+                        sheet.addCell(new Label(++counter, 0, "Child Btime"));
+                        sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).getChild_btime()));
+
+                        sheet.addCell(new Label(++counter, 0, "Child Bplace"));
+                        sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).getChild_bplace()));
+
+                        sheet.addCell(new Label(++counter, 0, "Interested"));
+                        sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).isInterest() + ""));
 
                         sheet.addCell(new Label(++counter, 0, "Child Edu"));
-                        sheet.addCell(new Label(counter, k, mListProfileDatas.get(i).getmListChildrenData().get(j).getChild_edu()));
+                        sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).getChild_edu()));
 
                         sheet.addCell(new Label(++counter, 0, "Child Work"));
-                        sheet.addCell(new Label(counter, k, mListProfileDatas.get(i).getmListChildrenData().get(j).getChild_work()));
+                        sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).getChild_work()));
                     }
                 }
                 workbook.write();
                 workbook.close();
-                alert(mActiviy, "Data Exported in a Excel Sheet");
+                ExportAlert(mActiviy, "Data Exported in a Excel Sheet", file);
                 //Toast.makeText(mActiviy, "Data Exported in a Excel Sheet", Toast.LENGTH_SHORT).show();
+
+                hideProgressDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            hideProgressDialog();
         } else {
             alert(mActiviy, "No Search records found!");
         }
     }
 
+    private static void ExportAlert(final Activity mActivity, String msg, final File file) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+        builder.setTitle(mActivity.getString(R.string.app_name));
+
+        builder.setMessage(msg);
+        builder.setNegativeButton("Share", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                Intent intentShareFile = new Intent(Intent.ACTION_SEND);
+                //  File fileWithinMyDir = new File(myFilePath);
+
+                if (file.exists()) {
+                    intentShareFile.setType("application/xls");
+                    intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
+
+                    intentShareFile.putExtra(Intent.EXTRA_SUBJECT,
+                            "Sharing File...");
+                    intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...");
+
+                    mActivity.startActivity(Intent.createChooser(intentShareFile, "Share File"));
+                }
+
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
+    }
+
+
     public static void alert(Activity mActivity, String message) {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(mActivity.getString(R.string.app_name));
 
         builder.setMessage(message);
@@ -1214,6 +1305,12 @@ public class Common {
         public static final String CHILD_ID = "id";
         public static final String CHILD_NAME = "child_name";
         public static final String CHILD_BDAY = "child_bday";
+        public static final String CHILD_GENDER = "gender";
+        public static final String CHILD_BTIME = "birth_time";
+        public static final String CHILD_BPLACE = "birth_place";
+        public static final String IS_INTERESTED = "is_interested";
+
+
         public static final String CHILD_EDU = "child_edu";
         public static final String CHILD_WORK = "child_work";
         public static final String CHILD_IMAGE_URL = "child_image_url";
