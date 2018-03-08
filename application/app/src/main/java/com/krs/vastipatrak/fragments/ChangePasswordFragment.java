@@ -147,12 +147,12 @@ public class ChangePasswordFragment extends Fragment {
         return rootView;
     }
 
-    SearchView searchView;
+    //SearchView searchView;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) searchItem.getActionView();
+      /*  searchView = (SearchView) searchItem.getActionView();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -174,22 +174,7 @@ public class ChangePasswordFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
-        });
-
-        MenuItem filterItem = menu.findItem(R.id.action_filter);
-        filterItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                Intent mIntent = new Intent(getActivity(), FilterActivity.class);
-                startActivity(mIntent);
-                getActivity().overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-
-
-                return false;
-            }
-        });
-
+        });*/
         super.onCreateOptionsMenu(menu, inflater);
     }
 

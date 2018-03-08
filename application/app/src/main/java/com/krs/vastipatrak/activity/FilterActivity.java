@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,14 +40,14 @@ import java.util.List;
 public class FilterActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener {
 
-    SharedPreferences mSharedPreferences;
-    String TAG = "FilterActivity";
-
-    private Toolbar toolbar;
-    private TabLayout tabLayout;
-    ViewPager viewPager;
     private final String[] READ_CONTACT_PERMS = {Manifest.permission.READ_CONTACTS};
     private final int READ_CONTACT_REQUEST = 3;
+    SharedPreferences mSharedPreferences;
+    String TAG = "FilterActivity";
+    ViewPager viewPager;
+    SearchView searchView;
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,7 +93,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setSubtitle(R.string.title_filter);
-       // toolbar.setNavigationIcon(R.drawable.bac);
+        // toolbar.setNavigationIcon(R.drawable.bac);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,35 +138,6 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
     @Override
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
 
-    }
-
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFrag(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
     }
 
     public void callAdvanceSearchWS() {
@@ -356,6 +328,15 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         }
     }
 
+    private void navigateActivity(JSONObject mJsonObject) {
+        Intent mIntent = new Intent(FilterActivity.this, MainActivity.class);
+        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        mIntent.putExtra(Common.Constant_Class.QUERY_STRING, mJsonObject.toString());
+        startActivity(mIntent);
+        finish();
+        overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+    }
+
 /*    private void clear_string() {
         if (PersonalFilter.strFName != null) {
             PersonalFilter.strFName = "";
@@ -395,37 +376,80 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         }
     }*/
 
-
-    private void navigateActivity(JSONObject mJsonObject) {
-        Intent mIntent = new Intent(FilterActivity.this, MainActivity.class);
-        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        mIntent.putExtra(Common.Constant_Class.QUERY_STRING, mJsonObject.toString());
-        startActivity(mIntent);
-        finish();
-        overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
         MenuItem voiceItem = menu.findItem(R.id.action_voice);
         MenuItem filterItem = menu.findItem(R.id.action_filter);
-        MenuItem action_activate = menu.findItem(R.id.action_activate);
-        MenuItem action_delete = menu.findItem(R.id.action_delete);
-        MenuItem action_deactive = menu.findItem(R.id.action_deactive);
-
-        action_activate.setVisible(false);
-        action_delete.setVisible(false);
-        action_deactive.setVisible(false);
-        voiceItem.setVisible(false);
-        searchItem.setVisible(false);
         filterItem.setVisible(false);
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
 
+                Intent mIntent = new Intent(FilterActivity.this, MainActivity.class);
+                mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                mIntent.putExtra(Common.Constant_Class.QUERY, query);
+                startActivity(mIntent);
+                finish();
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        MenuItem export = menu.findItem(R.id.action_export);
+        export.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Common.ExportSearchData(FilterActivity.this);
+                return false;
+            }
+        });
+
+        voiceItem = menu.findItem(R.id.action_voice);
+        voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Common.promptSpeechInput(FilterActivity.this);
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+    }
 }

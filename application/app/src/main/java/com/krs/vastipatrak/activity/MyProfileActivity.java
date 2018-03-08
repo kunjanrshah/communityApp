@@ -146,8 +146,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
-
                 return false;
             }
         });
@@ -183,6 +181,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 return false;
             }
         });
+
         MenuItem saveItem = menu.findItem(R.id.action_save);
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || AppController.isAdmin) {
             saveItem.setVisible(true);

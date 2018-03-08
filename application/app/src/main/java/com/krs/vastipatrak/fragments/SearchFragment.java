@@ -3,7 +3,6 @@ package com.krs.vastipatrak.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,7 +35,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.FilterActivity;
 import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.adapter.ExpandableListAdapter;
 import com.krs.vastipatrak.app.AppController;
@@ -51,7 +49,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import io.realm.RealmList;
@@ -76,7 +73,7 @@ public class SearchFragment extends Fragment {
     // WebView wv_home = null;
     TextView txtLable = null;
     //String webViewUrl = "http://www.androidexample.com/media/webview/details.html";
-    String webViewUrl = "http://www.superbinstruments.com/WEB/photoes.php";
+    //String webViewUrl = "http://www.superbinstruments.com/WEB/photoes.php";
     private SharedPreferences mSharedPreferences = null;
     private AdView mAdView;
 
@@ -282,30 +279,7 @@ public class SearchFragment extends Fragment {
         voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                promptSpeechInput();
-                return false;
-            }
-        });
-        MenuItem filter = menu.findItem(R.id.action_filter);
-        filter.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-
-                Intent mIntent = new Intent(getActivity(), FilterActivity.class);
-                // mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(mIntent);
-                //finish();
-                getActivity().overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-                return false;
-            }
-        });
-
-        MenuItem export = menu.findItem(R.id.action_export);
-        export.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Common.ExportSearchData(getActivity());
+                Common.promptSpeechInput(getActivity());
                 return false;
             }
         });
@@ -458,19 +432,6 @@ public class SearchFragment extends Fragment {
         return false;
     }
 
-    private void promptSpeechInput() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say Something!");
-        try {
-            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
-        } catch (ActivityNotFoundException a) {
-            Toast.makeText(getActivity(), "Sorry! Your device doesn\\'t support speech input", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -499,59 +460,10 @@ public class SearchFragment extends Fragment {
 
 
     private void callSearchWS(String str_search) {
-
-
         if (str_search.length() > 3) {
-
             ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(Common.Title);
-            //wv_home.setVisibility(View.GONE);
             txtLable.setVisibility(View.GONE);
             lvCustomList.setVisibility(View.VISIBLE);
-/*            if (!mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false) && Common.isOnline(getActivity())) {
-
-                lstSelectedIDs.clear();
-                showProgressDialog();
-
-                JSONObject mJsonObject = null;
-                try {
-                    if (query_string != null && !query_string.equalsIgnoreCase("")) {
-                        mJsonObject = new JSONObject(query_string);
-                    } else {
-                        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(str_search);
-                        mJsonObject = new JSONObject();
-                        mJsonObject.put(Common.Constant_Class.ID, str_search.trim());
-                    }
-                    //   mJsonObject.put(Common.Constant_Class.STATUS, "0");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                Log.d(TAG, "request: " + mJsonObject.toString());
-                String search_url = Common.Constant_Class.SEARCH_URL;
-                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, search_url, mJsonObject, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        Log.d(TAG, "response: " + response.toString());
-                        hideProgressDialog();
-                        displayData(response, 1);
-
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        VolleyLog.d(TAG, "Error: " + error.getMessage());
-
-                        hideProgressDialog();
-                    }
-                });
-                // Adding request to request queue
-                AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
-
-            } else {*/
-
             if (query_string != null && !query_string.equalsIgnoreCase("")) {
                 OfflineSearch(str_search, 2);
             } else {
@@ -559,10 +471,6 @@ public class SearchFragment extends Fragment {
                     OfflineSearch(str_search, 1);
                 }
             }
-
-            //  }
-        } else {
-            //   alertMessage("Search atleast 4 characters");
         }
     }
 
@@ -647,28 +555,12 @@ public class SearchFragment extends Fragment {
                         listDataChild.put(lpd, mlstChildData);
                     }
                 }
-
-                //              searchView.clearFocus();
-                //             lvCustomList.requestFocus();
-
                 mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
                 lvCustomList.setAdapter(mExpandableListAdapter);
-
             } else {
                 lvCustomList.setVisibility(View.GONE);
-                //   wv_home.setVisibility(View.VISIBLE);
                 txtLable.setVisibility(View.VISIBLE);
-                //           NoRecordAlert(message);
             }
-
-
-            //Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
-                      /*  SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                        SharedPreferences.Editor preferencesEditor = settings.edit();
-                        preferencesEditor.clear();*/
-            // Check if no view has focus:
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }

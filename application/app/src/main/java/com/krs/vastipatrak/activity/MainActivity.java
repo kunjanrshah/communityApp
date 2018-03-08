@@ -23,6 +23,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private SharedPreferences.Editor mEditor;
     private PrefManager prefManager;
     private LocationRequest mLocationRequest;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     String message = intent.getStringExtra("message");
 
                     Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
-                    Log.d(TAG,"Push notification: "+message);
+                    Log.d(TAG, "Push notification: " + message);
                     //txtMessage.setText(message);
                 }
             }
@@ -204,11 +206,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         if (!TextUtils.isEmpty(regId)) {
             //txtRegId.setText("Firebase Reg Id: " + regId);
-            Log.d(TAG,"Firebase Reg Id: " + regId);
-        }
-        else {
+            Log.d(TAG, "Firebase Reg Id: " + regId);
+        } else {
             //txtRegId.setText("Firebase Reg Id is not received yet!");
-            Log.d(TAG,"Firebase Reg Id: is not received yet!");
+            Log.d(TAG, "Firebase Reg Id: is not received yet!");
         }
     }
 
@@ -348,6 +349,61 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
+        MenuItem filter = menu.findItem(R.id.action_filter);
+        filter.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent mIntent = new Intent(MainActivity.this, FilterActivity.class);
+                // mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(mIntent);
+                //finish();
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                return false;
+            }
+        });
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                Fragment fragment = new SearchFragment();
+                Bundle mBundle = new Bundle();
+                mBundle.putString(Common.Constant_Class.QUERY, query);
+                fragment.setArguments(mBundle);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container_body, fragment);
+                fragmentTransaction.commit();
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        MenuItem export = menu.findItem(R.id.action_export);
+        export.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Common.ExportSearchData(MainActivity.this);
+                return false;
+            }
+        });
+
+        MenuItem voiceItem = menu.findItem(R.id.action_voice);
+        voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Common.promptSpeechInput(MainActivity.this);
+                return false;
+            }
+        });
 
         return true;
     }
@@ -520,7 +576,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
 
-      //  String date = dayOfMonth + "/" + (++monthOfYear) + "/" + year;
+        //  String date = dayOfMonth + "/" + (++monthOfYear) + "/" + year;
         String date = year + "-" + (++monthOfYear) + "-" + dayOfMonth;
     }
 

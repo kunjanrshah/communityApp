@@ -11,20 +11,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -50,7 +44,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.FilterActivity;
 import com.krs.vastipatrak.adapter.CityAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.City;
@@ -93,7 +86,7 @@ public class SyncFragment extends Fragment {
             }
         }
     };
-    SearchView searchView;
+    //SearchView searchView;
     ProgressDialog pDialog;
     String TAG = "SyncFragment";
     String tag_json_obj = "jobj_req";
@@ -321,45 +314,5 @@ public class SyncFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) searchItem.getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                Fragment fragment = new SearchFragment();
-                Bundle mBundle = new Bundle();
-                mBundle.putString(Common.Constant_Class.QUERY, query);
-                fragment.setArguments(mBundle);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container_body, fragment);
-                fragmentTransaction.commit();
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        MenuItem filter = menu.findItem(R.id.action_filter);
-        filter.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                Intent mIntent = new Intent(getActivity(), FilterActivity.class);
-                startActivity(mIntent);
-                getActivity().overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-                return false;
-            }
-        });
     }
 }

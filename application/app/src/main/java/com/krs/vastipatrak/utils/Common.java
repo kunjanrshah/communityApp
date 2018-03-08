@@ -71,7 +71,7 @@ public class Common {
     public static final int REQ_CODE_SPEECH_INPUT = 100;
     public static String Title = "";
     static int MAX_IMAGE_DIMENSION = 120;
-    static ProgressDialog pDialog;
+    public static ProgressDialog pDialog;
     private static Realm realm = AppController.getInstance().realm;
 
 /*    public static void selectImage(final Activity mActivity) {
@@ -942,17 +942,17 @@ public class Common {
         }
     }
 
-    private static void showProgressDialog() {
+    public static void showProgressDialog() {
         if (!pDialog.isShowing())
             pDialog.show();
     }
 
-    private static void hideProgressDialog() {
+    public static void hideProgressDialog() {
         if (pDialog.isShowing())
             pDialog.cancel();
     }
 
-    private static void initProgressDialog(Activity mActiviy) {
+    public static void initProgressDialog(Activity mActiviy) {
         if (pDialog == null) {
             pDialog = new ProgressDialog(mActiviy);
             pDialog.setMessage(Constant_Class.LOADING);
