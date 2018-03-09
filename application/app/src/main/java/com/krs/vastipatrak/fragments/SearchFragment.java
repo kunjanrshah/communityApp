@@ -39,6 +39,7 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
 import com.krs.vastipatrak.model.ListProfileData;
+import com.krs.vastipatrak.model.ListProfiles;
 import com.krs.vastipatrak.utils.Common;
 
 import org.json.JSONArray;
@@ -564,33 +565,36 @@ public class SearchFragment extends Fragment {
         }
     }
 
-
     private void OfflineSearch(String str_search, int search) {
-        RealmList<ListProfileData> mListProfileDatas = new RealmList<>();
+        ListProfiles mProfilelist = new ListProfiles(new RealmList<ListProfileData>());
         RealmList<ListProfileData> mListParentData = Common.getDataFromParentTable(str_search, search);
         for (int i = 0; i < mListParentData.size(); i++) {
-            mListProfileDatas.add(mListParentData.get(i));
+            mProfilelist.realmlist.add(mListParentData.get(i));
         }
 
         RealmList<ListProfileData> mListChildData = Common.getDataFromChildTable(str_search, search);
         for (int j = 0; j < mListChildData.size(); j++) {
             boolean flag = true;
-            for (int k = 0; k < mListProfileDatas.size(); k++) {
-                if (mListProfileDatas.get(k).getProfile_id() == mListChildData.get(j).getProfile_id()) {
+            for (int k = 0; k < mProfilelist.realmlist.size(); k++) {
+                if (mProfilelist.realmlist.get(k).getProfile_id() == mListChildData.get(j).getProfile_id()) {
                     flag = false;
                     break;
                 }
             }
             if (flag) {
-                mListProfileDatas.add(mListChildData.get(j));
+                mProfilelist.realmlist.add(mListChildData.get(j));
             }
         }
         listDataHeader.clear();
         listDataChild.clear();
 
-        RealmResults<ListProfileData> mSortedProfiles = mListProfileDatas.sort(Common.Constant_Class.CITY);
+        AppController.getInstance().realm.beginTransaction();
+        mProfilelist = AppController.getInstance().realm.copyToRealm(mProfilelist);
+        RealmResults<ListProfileData> mSortedProfiles = mProfilelist.realmlist.sort(Common.Constant_Class.CITY);
+        AppController.getInstance().realm.commitTransaction();
 
-        AppController.getInstance().mListSearchResult = mSortedProfiles;
+        AppController.getInstance().mListSearchList = mSortedProfiles;
+
         for (int i = 0; i < mSortedProfiles.size(); i++) {
             ListParentData lpd = new ListParentData();
             lpd.setName(mSortedProfiles.get(i).getFirst_name() + " " + mSortedProfiles.get(i).getLast_name());
@@ -634,7 +638,8 @@ public class SearchFragment extends Fragment {
         } else {
             lvCustomList.setVisibility(View.GONE);
             txtLable.setVisibility(View.VISIBLE);
-//            NoRecordAlert("No Records Found !!");
+//            NoRecordAlert("No Records Found !!")
+// ;
         }
 
     }
@@ -738,7 +743,6 @@ public class SearchFragment extends Fragment {
             Toast.makeText(getActivity(), Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private void callDeleteWS() {
         if (Common.isOnline(getActivity())) {
@@ -850,6 +854,12 @@ public class SearchFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        AppController.getInstance().mListSearchResult.deleteAllFromRealm();
+        try {
+            AppController.getInstance().realm.beginTransaction();
+            AppController.getInstance().mListSearchList.deleteAllFromRealm();
+            AppController.getInstance().realm.commitTransaction();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

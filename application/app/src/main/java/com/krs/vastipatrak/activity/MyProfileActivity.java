@@ -61,7 +61,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     SearchView searchView;
     Bundle mBundle = null;
     String valid = "";
-    RealmList<ListProfileData> mListProfileData1 = null;
+    RealmList<ListProfileData> mListSearchProfile = null;
     Realm realm;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -80,17 +80,16 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         ToolbarSetup();
 
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-            mListProfileData1 = Common.getDataFromParentTable(mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""), 3);
+            mListSearchProfile = Common.getDataFromParentTable(mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""), 3);
         } else {
-            mListProfileData1 = Common.getDataFromParentTable(mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""), 3);
-
+            mListSearchProfile = Common.getDataFromParentTable(mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""), 3);
         }
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
     }
 
     public RealmList<ListProfileData> getMyData() {
-        return mListProfileData1;
+        return mListSearchProfile;
     }
 
     private void MemoryAllocation() {

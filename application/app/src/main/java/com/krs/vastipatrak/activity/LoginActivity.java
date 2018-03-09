@@ -678,15 +678,15 @@ public class LoginActivity extends Activity {
 
             String forgot_email = inputForgotPassword.getText().toString();
             if (!forgot_email.equalsIgnoreCase("")) {
-                /*JSONObject json = new JSONObject();
+                JSONObject json = new JSONObject();
                 try {
                     json.put(Common.Constant_Class.EMAIL_ADDRESS, forgot_email);
                 } catch (Exception e) {
                     e.printStackTrace();
-                }*/
+                }
 
-                String url = Common.Constant_Class.FORGOT_PASSWORD_URL + "?" + Common.Constant_Class.EMAIL_ADDRESS + "=" + forgot_email;
-                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                String url = Common.Constant_Class.FORGOT_PASSWORD_URL;
+                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {

@@ -51,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -427,8 +428,8 @@ public class Common {
                     contains(Common.Constant_Class.MARRIAGE_DATE, query).or().
                     contains(Common.Constant_Class.SPOUSE_FATHER_NAME, query).or().
                     contains(Common.Constant_Class.SPOUSE_MOTHER_NAME, query).or().
-                    contains(Common.Constant_Class.STATUS, query).findAllSorted(Constant_Class.CITY, Sort.ASCENDING);
-
+                    contains(Common.Constant_Class.STATUS, query).findAll();
+            profileData.sort(Constant_Class.CITY, Sort.ASCENDING);
             for (int i = 0; i < profileData.size(); i++) {
                 mlistProfileData.add(profileData.get(i));
             }
@@ -1007,7 +1008,7 @@ public class Common {
     }
 
     public static void ExportSearchData(Activity mActiviy) {
-        RealmResults<ListProfileData> mListProfileResult = AppController.getInstance().mListSearchResult;
+        List<ListProfileData> mListProfileResult = AppController.getInstance().mListSearchList;
 
         if (mListProfileResult.size() > 0) {
 
@@ -1306,8 +1307,8 @@ public class Common {
         public static final String CHILD_NAME = "child_name";
         public static final String CHILD_BDAY = "child_bday";
         public static final String CHILD_GENDER = "gender";
-        public static final String CHILD_BTIME = "birth_time";
-        public static final String CHILD_BPLACE = "birth_place";
+        public static final String CHILD_BTIME = "child_btime";
+        public static final String CHILD_BPLACE = "child_bplace";
         public static final String IS_INTERESTED = "is_interested";
 
 

@@ -1,0 +1,19 @@
+package com.krs.vastipatrak.model;
+
+import io.realm.RealmList;
+import io.realm.RealmObject;
+
+/**
+ * Created by kunjan on 9/3/18.
+ */
+
+public class ListProfiles extends RealmObject {
+    public RealmList<ListProfileData> realmlist;
+
+    public ListProfiles() {
+    }
+
+    public ListProfiles(RealmList<ListProfileData> realmlist) {
+        this.realmlist = realmlist;
+    }
+}

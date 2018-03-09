@@ -31,7 +31,7 @@ public class AppController extends Application {
     public Realm realm;
     public boolean isUpdate = false;
     public FirebaseAnalytics firebaseAnalytics;
-    public RealmResults<ListProfileData> mListSearchResult = null;
+    public RealmResults<ListProfileData> mListSearchList = null;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
     private Activity mActivity;
