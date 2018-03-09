@@ -103,7 +103,7 @@ public class SyncFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_sync, container, false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.title_setting);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.title_sync);
         setHasOptionsMenu(true);
         MemoryAllocation(rootView);
 

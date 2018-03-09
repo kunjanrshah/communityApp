@@ -855,9 +855,7 @@ public class SearchFragment extends Fragment {
     public void onStop() {
         super.onStop();
         try {
-            AppController.getInstance().realm.beginTransaction();
-            AppController.getInstance().mListSearchList.deleteAllFromRealm();
-            AppController.getInstance().realm.commitTransaction();
+            AppController.getInstance().mListSearchList=null;
         } catch (Exception e) {
             e.printStackTrace();
         }

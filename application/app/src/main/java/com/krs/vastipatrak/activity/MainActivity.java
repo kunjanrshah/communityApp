@@ -51,6 +51,8 @@ import com.krs.vastipatrak.app.PrefManager;
 import com.krs.vastipatrak.fragments.AboutFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
+import com.krs.vastipatrak.fragments.MatrimonyFragment;
+import com.krs.vastipatrak.fragments.RelativeFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
 import com.krs.vastipatrak.fragments.SyncFragment;
 import com.krs.vastipatrak.utils.Common;
@@ -449,8 +451,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     mBundle.putString(Common.Constant_Class.QUERY_STRING, query_string);
                 }
                 fragment.setArguments(mBundle);
-
-                //            Common.Title = getString(R.string.title_home);
+          //            Common.Title = getString(R.string.title_home);
                 break;
             case 1:
 
@@ -460,34 +461,31 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 Intent mIntent1 = new Intent(MainActivity.this, MyProfileActivity.class);
                 startActivity(mIntent1);
                 this.overridePendingTransition(0, 0);
-
-                //              Common.Title = getString(R.string.title_my_profile);
-                break;
+               break;
             case 2:
-
                 fragment = new ChangePasswordFragment();
 //                Common.Title = getString(R.string.title_change_password);
                 break;
             case 3:
-                fragment = new AboutFragment();
+                fragment = new RelativeFragment();
                 break;
             case 4:
-
-                fragment = new SyncFragment();
+                fragment = new MatrimonyFragment();
 //                Common.Title = getString(R.string.title_change_password);
                 break;
-
             case 5:
-
-                prefManager.setSliderWelcome(true);
-                prefManager.setFirstTimeLaunch(true);
-                mEditor.commit();
+                fragment = new SyncFragment();
+                break;
+            case 6:
                 Intent mIntent2 = new Intent(MainActivity.this, TourActivity.class);
                 startActivity(mIntent2);
                 this.overridePendingTransition(0, 0);
                 break;
-            case 6:
 
+            case 7:
+                fragment = new AboutFragment();
+                break;
+            case 8:
                 ExitAlert();
                 break;
 

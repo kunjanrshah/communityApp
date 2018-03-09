@@ -1010,7 +1010,7 @@ public class Common {
     public static void ExportSearchData(Activity mActiviy) {
         List<ListProfileData> mListProfileResult = AppController.getInstance().mListSearchList;
 
-        if (mListProfileResult.size() > 0) {
+        if (mListProfileResult!=null && mListProfileResult.size() > 0) {
 
             try {
                 File sd = Environment.getExternalStorageDirectory();
