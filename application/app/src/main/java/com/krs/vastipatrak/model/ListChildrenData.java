@@ -8,7 +8,7 @@ public class ListChildrenData extends RealmObject{
     @PrimaryKey
     private String child_id;
     private String profile_id;
-    private boolean isInterest;
+    private boolean is_interested;
     private String child_name;
     private String child_bday;
     private String child_bplace;
@@ -28,11 +28,11 @@ public class ListChildrenData extends RealmObject{
     }
 
     public boolean isInterest() {
-        return isInterest;
+        return is_interested;
     }
 
     public void setInterest(boolean interest) {
-        isInterest = interest;
+        is_interested = interest;
     }
 
     public String getChild_bplace() {

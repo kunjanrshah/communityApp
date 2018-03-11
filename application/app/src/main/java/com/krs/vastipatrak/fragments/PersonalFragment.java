@@ -116,51 +116,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             e.printStackTrace();
         }
 
-        /*Bundle args = getArguments();
-        if (args != null) {
-            String data = "";
-            try {
-                data = args.getString(Common.Constant_Class.DATA);
-                if (data != null && !data.equalsIgnoreCase("")) {
-                    setOnlineData(data);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            *//*try {
-                RealmList<ListProfileData> mListProfileData = ((MyProfileActivity) getActivity()).getMyData();
-                if (mListProfileData != null) {
-                    setOfflineData(mListProfileData);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*//*
-        }*/
-
-        rbtnM.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (isChecked) {
-                    rbtnF.setChecked(false);
-                    gender = "1";
-                }
-            }
-        });
-
-        rbtnF.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    rbtnM.setChecked(false);
-                    gender = "0";
-                }
-            }
-        });
-
         img_profile.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -214,7 +169,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                 if (isChecked) {
                     rbtnF.setChecked(false);
-                    gender = "1";
+                    gender = "Male";
                 }
             }
         });
@@ -225,7 +180,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     rbtnM.setChecked(false);
-                    gender = "0";
+                    gender = "Female";
                 }
             }
         });
@@ -629,10 +584,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             if (mListProfileData.getGender().equalsIgnoreCase("1") || mListProfileData.getGender().equalsIgnoreCase("")) {
                 rbtnF.setChecked(false);
                 rbtnM.setChecked(true);
+                gender="Male";
 
             } else {
                 rbtnF.setChecked(true);
                 rbtnM.setChecked(false);
+                gender="Female";
             }
 
             if (!mListProfileData.getUser_lat().equalsIgnoreCase("null") && !mListProfileData.getUser_lat().equalsIgnoreCase("")) {

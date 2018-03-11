@@ -1,8 +1,5 @@
 package com.krs.vastipatrak.model;
 
-/**
- * Created by kushal on 26/01/16.
- */
 public class ListParentData {
 
     String str_name;
@@ -18,6 +15,17 @@ public class ListParentData {
     String city;
     boolean is_location_enable;
     String updated_time;
+    String mobile;
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+
 
     public String getHome_lat() {
         return home_lat;

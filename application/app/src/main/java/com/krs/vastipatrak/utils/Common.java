@@ -46,6 +46,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1010,7 +1011,7 @@ public class Common {
     public static void ExportSearchData(Activity mActiviy) {
         List<ListProfileData> mListProfileResult = AppController.getInstance().mListSearchList;
 
-        if (mListProfileResult!=null && mListProfileResult.size() > 0) {
+        if (mListProfileResult != null && mListProfileResult.size() > 0) {
 
             try {
                 File sd = Environment.getExternalStorageDirectory();
@@ -1184,6 +1185,20 @@ public class Common {
         }).show();
     }
 
+    public static void SendWhatsappMessage(Context mActivity, String mob_num, String message) {
+        String digits = "\\d+";
+        if (mob_num.matches(digits)) {
+            try {
+                //linking for whatsapp
+                Uri uri = Uri.parse("whatsapp://send?phone=+91" + mob_num + "&text=" + URLEncoder.encode(message, "UTF-8"));
+                Intent i = new Intent(Intent.ACTION_VIEW, uri);
+                mActivity.startActivity(i);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(mActivity, "WhatsApp not installed.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     public static class Constant_Class {
 
@@ -1342,60 +1357,4 @@ public class Common {
         /*public static final String MY_LATITUDE = "my_latitude";
         public static final String MY_LONGITUDE = "my_longitude";*/
     }
-
-/*
-    public static class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
-
-        private String url;
-        private RoundedImageView imageView;
-
-        public ImageLoadTask(String url) {
-            this.url = url;
-        }
-
-        public ImageLoadTask(String url, RoundedImageView imageView) {
-            this.url = url;
-            this.imageView = imageView;
-        }
-
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            try {
-                if (url != null && !url.equalsIgnoreCase("")) {
-                    URL urlConnection = new URL(url);
-                    HttpURLConnection connection = (HttpURLConnection) urlConnection.openConnection();
-                    connection.setDoInput(true);
-                    connection.connect();
-                    InputStream input = connection.getInputStream();
-                    Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                    return myBitmap;
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            super.onPostExecute(result);
-            try {
-                if (result != null && imageView != null) {
-                    imageView.setImageBitmap(result);
-                } else if (result != null) {
-                    GetImageBytes(getBytes(result));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        public byte[] GetImageBytes(byte[] imgbytes) {
-            return imgbytes;
-        }
-    }
-*/
-
-
 }

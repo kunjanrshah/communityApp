@@ -396,17 +396,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         groupViewHolder.tvNudge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(_context, "Nudge for Update!", Toast.LENGTH_SHORT).show();
+                Common.SendWhatsappMessage(_context,mListParentData.getMobile(),"Hi");
             }
         });
+
+
 
         groupViewHolder.imgSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 SyncUser(mListParentData.getId());
-
-                Toast.makeText(_context, "Sync User!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -436,7 +435,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View v) {
 
-                String shareBody = "";
+                String shareBody = "",name="";
                 RealmList<ListProfileData> mListProfileData1 = Common.getDataFromParentTable(id, 3);
                 if (mListProfileData1.size() > 0) {
                     ListProfileData mListProfileData = mListProfileData1.get(0);
@@ -453,7 +452,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     String phone = mListProfileData.getPhone().toString().trim().replaceAll("\\?", "").replaceAll("\\+", "");
                     String mobile = mListProfileData.getMobile().toString().trim().replaceAll("\\?", "").replaceAll("\\+", "");
                     String office_mobile = mListProfileData.getOffice_mobile();
-                    shareBody = " Name :" + first_name + " " + last_name + "\n"
+                    name=first_name + " " + last_name;
+                    shareBody = " Name :" + name + "\n"
                             + " Father Name :" + father_name + "\n"
                             + " Mother Name :" + mother_name + "\n"
                             + " Mobile :" + mobile + "\n"
@@ -470,7 +470,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Profile details");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, name+" details");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                 _context.startActivity(Intent.createChooser(sharingIntent, _context.getResources().getString(R.string.share_using)));
             }

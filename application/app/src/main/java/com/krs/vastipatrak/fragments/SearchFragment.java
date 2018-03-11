@@ -59,8 +59,6 @@ public class SearchFragment extends Fragment {
 
     private static final String[] CALL_PHONE_PERMS = {Manifest.permission.CALL_PHONE};
     private static final int CALL_PHONE_REQUEST = 3;
-    private final int REQ_CODE_SPEECH_INPUT = 100;
-    ExpandableListView lvCustomList;
     String TAG = "SearchFragment";
     String tag_json_obj = "jobj_req";
     SearchView searchView;
@@ -69,11 +67,9 @@ public class SearchFragment extends Fragment {
     String query = "", query_string = "";
     ProgressDialog pDialog;
     ArrayList<String> lstSelectedIDs = null;
+    ExpandableListView lvCustomList;
     ExpandableListAdapter mExpandableListAdapter = null;
-    // WebView wv_home = null;
     TextView txtLable = null;
-    //String webViewUrl = "http://www.androidexample.com/media/webview/details.html";
-    //String webViewUrl = "http://www.superbinstruments.com/WEB/photoes.php";
     private SharedPreferences mSharedPreferences = null;
     private AdView mAdView;
 
@@ -115,7 +111,6 @@ public class SearchFragment extends Fragment {
 
         Memory_Allocation(rootView);
 
-
         if (query != null && !query.equalsIgnoreCase("")) {
             Common.Title = query;
             callSearchWS(query);
@@ -123,17 +118,7 @@ public class SearchFragment extends Fragment {
             callSearchWS(query_string);
         } else {
             lvCustomList.setVisibility(View.GONE);
-            //   wv_home.setVisibility(View.VISIBLE);
             txtLable.setVisibility(View.VISIBLE);
-            //  wv_home.getSettings().setJavaScriptEnabled(true);
-         /*   wv_home.setWebViewClient(new WebViewClient() {
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    view.loadUrl(url);
-                    return true;
-                }
-            });
-            wv_home.loadUrl(webViewUrl);*/
 
             AdRequest adRequest = new AdRequest.Builder()
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
@@ -234,17 +219,16 @@ public class SearchFragment extends Fragment {
 
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
         lvCustomList = root.findViewById(R.id.lvCustomList);
-        //   wv_home = (WebView) root.findViewById(R.id.wv_home);
         txtLable = root.findViewById(R.id.txtLable);
-        TextView tv = root.findViewById(R.id.TextView03);
+        TextView tv = root.findViewById(R.id.txt_marquee);
         tv.setSelected(true);
         pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage(Common.Constant_Class.LOADING);
         pDialog.setCancelable(true);
 
         lstSelectedIDs = new ArrayList<String>();
-        listDataHeader = new ArrayList<ListParentData>();
-        listDataChild = new HashMap<ListParentData, List<ListChildData>>();
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
 
         mAdView = root.findViewById(R.id.adView);
 //        mAdView.setAdSize(AdSize.BANNER);
@@ -612,7 +596,7 @@ public class SearchFragment extends Fragment {
             lpd.setUser_lat(mSortedProfiles.get(i).getUser_lat());
             lpd.setHome_lat(mSortedProfiles.get(i).getHome_lat());
             lpd.setHome_lng(mSortedProfiles.get(i).getHome_lng());
-
+            lpd.setMobile(mSortedProfiles.get(i).getMobile());
             ListChildData lcd = new ListChildData();
             lcd.setID(mSortedProfiles.get(i).getProfile_id());
             lcd.setNative(mSortedProfiles.get(i).getNative_place());
@@ -630,18 +614,13 @@ public class SearchFragment extends Fragment {
             listDataHeader.add(lpd);
             listDataChild.put(lpd, mlstChildData);
         }
-
-        // lvCustomList.requestFocus();
         if (listDataHeader.size() > 0) {
             mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
             lvCustomList.setAdapter(mExpandableListAdapter);
         } else {
             lvCustomList.setVisibility(View.GONE);
             txtLable.setVisibility(View.VISIBLE);
-//            NoRecordAlert("No Records Found !!")
-// ;
         }
-
     }
 
     private void callNonActivesWS() {
