@@ -512,13 +512,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         builder.setPositiveButton(getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
-                mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "");
+                //mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "");
                 mEditor.clear();
                 mEditor.commit();
-                //    Common.Title = getString(R.string.title_login);
                 Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+                mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(mIntent);
                 finish();
+                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                 dialog.dismiss();
             }
         });

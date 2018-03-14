@@ -581,7 +581,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_NAGATIVE)) {
                 spinnerBlood.setSelection(6);
             }
-            if (mListProfileData.getGender().equalsIgnoreCase("1") || mListProfileData.getGender().equalsIgnoreCase("")) {
+            if (mListProfileData.getGender().equalsIgnoreCase("male") || mListProfileData.getGender().equalsIgnoreCase("")) {
                 rbtnF.setChecked(false);
                 rbtnM.setChecked(true);
                 gender="Male";

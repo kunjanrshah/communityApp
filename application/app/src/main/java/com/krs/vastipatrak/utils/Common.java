@@ -1241,6 +1241,7 @@ public class Common {
         public static final String LOGIN_ACTIVITY = "LoginActivity";
         public static final String SEARCH_FRAGMENT = "search_fragment";
         public static final String IS_UPDATE = "is_update";
+        public static final String IS_RESET = "is_reset";
         public static final String USER_ID = "user_id";
         public static final String LOADING = "Loading...";
         public static final String NO_CONNECTION = "No internet connection!";
@@ -1322,8 +1323,8 @@ public class Common {
         public static final String CHILD_NAME = "child_name";
         public static final String CHILD_BDAY = "child_bday";
         public static final String CHILD_GENDER = "gender";
-        public static final String CHILD_BTIME = "child_btime";
-        public static final String CHILD_BPLACE = "child_bplace";
+        public static final String CHILD_BTIME = "birth_time";
+        public static final String CHILD_BPLACE = "birth_place";
         public static final String IS_INTERESTED = "is_interested";
 
 

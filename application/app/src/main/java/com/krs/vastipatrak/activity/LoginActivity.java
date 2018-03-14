@@ -774,7 +774,7 @@ public class LoginActivity extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
+                showProgressDialog();
                 JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.LOGIN_URL, json, new Response.Listener<JSONObject>() {
 
                     @Override
@@ -782,7 +782,7 @@ public class LoginActivity extends Activity {
                         Log.d(TAG, response.toString());
 
                         try {
-
+                            hideProgressDialog();
                             boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
 

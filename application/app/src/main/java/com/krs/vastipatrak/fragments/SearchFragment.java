@@ -29,9 +29,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.adapter.ExpandableListAdapter;
@@ -71,7 +69,7 @@ public class SearchFragment extends Fragment {
     ExpandableListAdapter mExpandableListAdapter = null;
     TextView txtLable = null;
     private SharedPreferences mSharedPreferences = null;
-    private AdView mAdView;
+   // private AdView mAdView;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -126,7 +124,7 @@ public class SearchFragment extends Fragment {
                     .addTestDevice("C04B1BFFB0774708339BC273F8A43708")
                     .build();
 
-            mAdView.setAdListener(new AdListener() {
+            /*mAdView.setAdListener(new AdListener() {
                 @Override
                 public void onAdLoaded() {
                     super.onAdLoaded();
@@ -151,9 +149,9 @@ public class SearchFragment extends Fragment {
                 public void onAdOpened() {
                     super.onAdOpened();
                 }
-            });
+            });*/
 
-            mAdView.loadAd(adRequest);
+            //mAdView.loadAd(adRequest);
         }
 
         lvCustomList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
@@ -170,15 +168,15 @@ public class SearchFragment extends Fragment {
         return rootView;
     }
 
-    @Override
+ /*   @Override
     public void onResume() {
         super.onResume();
         if (mAdView != null) {
             mAdView.resume();
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onPause() {
         if (mAdView != null) {
             mAdView.pause();
@@ -194,7 +192,7 @@ public class SearchFragment extends Fragment {
         }
         super.onDestroy();
 
-    }
+    }*/
 
     private void showProgressDialog() {
 
@@ -230,7 +228,7 @@ public class SearchFragment extends Fragment {
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
 
-        mAdView = root.findViewById(R.id.adView);
+        //mAdView = root.findViewById(R.id.adView);
 //        mAdView.setAdSize(AdSize.BANNER);
 //        mAdView.setAdUnitId(getString(R.string.banner1));
     }

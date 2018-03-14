@@ -462,9 +462,23 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mJsonObject.put(Common.Constant_Class.IS_UPDATE, "0");
                 }
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(!(isFinishing()))
+                        {
+                            Common.initProgressDialog(MyProfileActivity.this);
+                            Common.showProgressDialog();
+                        }
+                    }
+                });
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
 
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
@@ -472,6 +486,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 public void onResponse(JSONObject response) {
 
                     try {
+                        Common.hideProgressDialog();
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {

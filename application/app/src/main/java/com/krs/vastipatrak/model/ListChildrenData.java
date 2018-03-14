@@ -11,8 +11,51 @@ public class ListChildrenData extends RealmObject{
     private boolean is_interested;
     private String child_name;
     private String child_bday;
-    private String child_bplace;
-    private String child_btime;
+
+    public boolean isIs_interested() {
+        return is_interested;
+    }
+
+    public void setIs_interested(boolean is_interested) {
+        this.is_interested = is_interested;
+    }
+
+    public String getBirth_place() {
+        return birth_place;
+    }
+
+    public void setBirth_place(String birth_place) {
+        this.birth_place = birth_place;
+    }
+
+    public String getBirth_time() {
+        return birth_time;
+    }
+
+    public void setBirth_time(String birth_time) {
+        this.birth_time = birth_time;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getBlood_group() {
+        return blood_group;
+    }
+
+    public void setBlood_group(String blood_group) {
+        this.blood_group = blood_group;
+    }
+
+    private String birth_place;
+    private String birth_time;
+    private String mobile;
+    private String blood_group;
     private String child_edu;
     private String child_work;
     private String child_img_url;
@@ -33,22 +76,6 @@ public class ListChildrenData extends RealmObject{
 
     public void setInterest(boolean interest) {
         is_interested = interest;
-    }
-
-    public String getChild_bplace() {
-        return child_bplace;
-    }
-
-    public void setChild_bplace(String child_bplace) {
-        this.child_bplace = child_bplace;
-    }
-
-    public String getChild_btime() {
-        return child_btime;
-    }
-
-    public void setChild_btime(String child_btime) {
-        this.child_btime = child_btime;
     }
 
     public String getProfile_id() {

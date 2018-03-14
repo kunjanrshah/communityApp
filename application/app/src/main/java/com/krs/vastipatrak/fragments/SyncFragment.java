@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -149,10 +150,17 @@ public class SyncFragment extends Fragment {
                     btnDownload.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //int selectedId = radioGroupId.getCheckedRadioButtonId();
-                            // RadioButton radioSelButton = sync_dialog.findViewById(selectedId);
+                            int selectedId = radioGroupId.getCheckedRadioButtonId();
+                            RadioButton radioSelButton = sync_dialog.findViewById(selectedId);
+                            boolean is_reset = false;
+                            if (radioSelButton.getId() == R.id.radioResetSync) {
+                                is_reset = true;
+                            } else {
+                                is_reset = false;
+                            }
                             Intent mIntent = new Intent(getActivity(), SyncService.class);
                             mIntent.putStringArrayListExtra("selectedCities", selectedList);
+                            mIntent.putExtra(Common.Constant_Class.IS_RESET, is_reset);
                             getActivity().startService(mIntent);
                             btn_sync.setText("Stop");
                             sync_dialog.cancel();
