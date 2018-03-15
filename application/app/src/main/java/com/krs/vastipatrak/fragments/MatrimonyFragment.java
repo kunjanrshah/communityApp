@@ -92,8 +92,8 @@ public class MatrimonyFragment extends Fragment {
                 lcd.setProfile_id(data.getProfile_id());
                 lcd.setChild_address(address);
                 lcd.setChild_birth_date(data.getChild_bday());
-                lcd.setChild_birth_time(data.getChild_btime());
-                lcd.setChild_birth_place(data.getChild_bplace());
+                lcd.setChild_birth_time(data.getBirth_time());
+                lcd.setChild_birth_place(data.getBirth_place());
                 lcd.setChild_blood_group("");
                 lcd.setChild_mobile("");
                 lcd.setChild_gotra(gotra);

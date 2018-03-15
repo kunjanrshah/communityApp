@@ -937,10 +937,10 @@ public class Common {
                         mListChildrendata.setGender(mJsonObj.getString(Common.Constant_Class.CHILD_GENDER));
                     }
                     if (mJsonObj.has(Constant_Class.CHILD_BPLACE)) {
-                        mListChildrendata.setChild_bplace(mJsonObj.getString(Common.Constant_Class.CHILD_BPLACE));
+                        mListChildrendata.setBirth_place(mJsonObj.getString(Common.Constant_Class.CHILD_BPLACE));
                     }
                     if (mJsonObj.has(Constant_Class.CHILD_BTIME)) {
-                        mListChildrendata.setChild_btime(mJsonObj.getString(Common.Constant_Class.CHILD_BTIME));
+                        mListChildrendata.setBirth_time(mJsonObj.getString(Common.Constant_Class.CHILD_BTIME));
                     }
                     if (mJsonObj.has(Constant_Class.IS_INTERESTED)) {
                         String isInterest = mJsonObj.getString(Common.Constant_Class.IS_INTERESTED);
@@ -1109,10 +1109,10 @@ public class Common {
                         sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).getChild_bday()));
 
                         sheet.addCell(new Label(++counter, 0, "Child Btime"));
-                        sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).getChild_btime()));
+                        sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).getBirth_time()));
 
                         sheet.addCell(new Label(++counter, 0, "Child Bplace"));
-                        sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).getChild_bplace()));
+                        sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).getBirth_place()));
 
                         sheet.addCell(new Label(++counter, 0, "Interested"));
                         sheet.addCell(new Label(counter, k, mListProfileResult.get(i).getmListChildrenData().get(j).isInterest() + ""));

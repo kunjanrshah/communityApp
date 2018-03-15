@@ -337,8 +337,8 @@ public class FamilyFragment extends Fragment implements Serializable {
                         mViewholder.child_id = Integer.parseInt(mObjChild.getChild_id());
                         mViewholder.edtchild_name.setText(mObjChild.getChild_name());
                         mViewholder.edtchild_bdate.setText(mObjChild.getChild_bday());
-                        mViewholder.edtchild_btime.setText(mObjChild.getChild_btime());
-                        mViewholder.edtchild_bplace.setText(mObjChild.getChild_bplace());
+                        mViewholder.edtchild_btime.setText(mObjChild.getBirth_time());
+                        mViewholder.edtchild_bplace.setText(mObjChild.getBirth_place());
                         mViewholder.tbtn_interest.setChecked(mObjChild.isInterest());
 
                         if (mObjChild.getGender().equalsIgnoreCase("male")) {

@@ -302,8 +302,8 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                     String father_name = profileData.getFirst_name() + " " + profileData.getLast_name();
                     String mother_name = profileData.getSpouse_name();
                     String birth_date = childData.getChild_bday();
-                    String birth_time = childData.getChild_btime();
-                    String birthPlace = childData.getChild_bplace();
+                    String birth_time = childData.getBirth_time();
+                    String birthPlace = childData.getBirth_place();
                     String address = profileData.getAddress();
                     String gotra = profileData.getGotra();
                     String blood = profileData.getBlood_group();
