@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
@@ -472,6 +473,8 @@ public class FamilyFragment extends Fragment implements Serializable {
         mViewholder.child_id = 0;
         mViewholder.img_child = addView.findViewById(R.id.img_child);
         mViewholder.edtchild_name = addView.findViewById(R.id.edtchild_name);
+        mViewholder.edtMobile = addView.findViewById(R.id.edtMobile);
+        mViewholder.spinnerBlood = addView.findViewById(R.id.spinnerBlood);
         mViewholder.radioGroupId = addView.findViewById(R.id.radioGroupId);
         mViewholder.tbtn_interest = addView.findViewById(R.id.tbtn_interest);
         mViewholder.edtchild_bdate = addView.findViewById(R.id.edtchild_bdate);
@@ -526,6 +529,9 @@ public class FamilyFragment extends Fragment implements Serializable {
 
                 mViewholder.edtchild_name.setKeyListener(null);
                 mViewholder.edtchild_name.setCursorVisible(false);
+
+                mViewholder.edtMobile.setKeyListener(null);
+                mViewholder.edtMobile.setCursorVisible(false);
 
                 mViewholder.edtchild_bdate.setKeyListener(null);
                 mViewholder.edtchild_bdate.setCursorVisible(false);
@@ -769,6 +775,8 @@ public class FamilyFragment extends Fragment implements Serializable {
         public ImageView img_child = null;
         public int child_id;
         public EditText edtchild_name = null;
+        public EditText edtMobile=null;
+        public Spinner spinnerBlood=null;
         public EditText edtchild_bdate = null;
         public EditText edtchild_btime = null;
         public EditText edtchild_bplace = null;
