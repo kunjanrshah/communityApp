@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <WebView
-        android:id="@+id/wv_home"
+    <ExpandableListView
+        android:id="@+id/lvEventList"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="match_parent"></WebView>
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
 
+        />
+
+    <TextView
+        android:id="@+id/txtLable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+
+        android:text="Events not found!"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        />
 
 </LinearLayout>

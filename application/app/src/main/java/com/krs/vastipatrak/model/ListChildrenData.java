@@ -11,6 +11,15 @@ public class ListChildrenData extends RealmObject{
     private boolean is_interested;
     private String child_name;
     private String child_bday;
+    private String birth_place;
+    private String birth_time;
+    private String mobile;
+    private String blood_group;
+    private String child_edu;
+    private String child_work;
+    private String child_img_url;
+    private String gender;
+    private byte[] ChildBytes;
 
     public boolean isIs_interested() {
         return is_interested;
@@ -51,16 +60,6 @@ public class ListChildrenData extends RealmObject{
     public void setBlood_group(String blood_group) {
         this.blood_group = blood_group;
     }
-
-    private String birth_place;
-    private String birth_time;
-    private String mobile;
-    private String blood_group;
-    private String child_edu;
-    private String child_work;
-    private String child_img_url;
-    private String gender;
-    private byte[] ChildBytes;
 
     public String getGender() {
         return gender;

@@ -408,7 +408,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private void MemoryAllocation(View rootView) {
 
 
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
         edtFName = rootView.findViewById(R.id.edtFName);

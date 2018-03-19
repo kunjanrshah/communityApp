@@ -24,7 +24,7 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-;
+
 
 /**
  * Created by Kunjan on 09-03-2018.
@@ -94,8 +94,8 @@ public class MatrimonyFragment extends Fragment {
                 lcd.setChild_birth_date(data.getChild_bday());
                 lcd.setChild_birth_time(data.getBirth_time());
                 lcd.setChild_birth_place(data.getBirth_place());
-                lcd.setChild_blood_group("");
-                lcd.setChild_mobile("");
+                lcd.setChild_blood_group(data.getBlood_group());
+                lcd.setChild_mobile(data.getMobile());
                 lcd.setChild_gotra(gotra);
                 ArrayList<ListMatrimonyChildData> mlstChildData = new ArrayList<ListMatrimonyChildData>();
                 mlstChildData.add(lcd);

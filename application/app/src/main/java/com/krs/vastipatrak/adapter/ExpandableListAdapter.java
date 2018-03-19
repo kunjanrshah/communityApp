@@ -74,7 +74,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         pDialog = new ProgressDialog(_context);
         pDialog.setMessage(Common.Constant_Class.LOADING);
         pDialog.setCancelable(true);
-        mSharedPreferences = _context.getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = _context.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         checkboxMap = new HashMap<Integer, Boolean>();
         //check_string_array = new String[_listDataHeader.size()];

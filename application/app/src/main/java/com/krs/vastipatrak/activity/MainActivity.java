@@ -51,6 +51,7 @@ import com.krs.vastipatrak.app.PrefManager;
 import com.krs.vastipatrak.fragments.AboutFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
+import com.krs.vastipatrak.fragments.HomeFragment;
 import com.krs.vastipatrak.fragments.MatrimonyFragment;
 import com.krs.vastipatrak.fragments.RelativeFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         setContentView(R.layout.activity_main);
 
         prefManager = new PrefManager(this);
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -439,39 +440,34 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         switch (position) {
 
             case 0:
-                //  fragment = new HomeFragment();
-           /*     Intent mIntent = new Intent(MainActivity.this, ShowWebView.class);
-                startActivity(mIntent);*/
+                fragment = new HomeFragment();
 
-                fragment = new SearchFragment();
+                /*fragment = new SearchFragment();
                 Bundle mBundle = new Bundle();
                 if (query != null) {
                     mBundle.putString(Common.Constant_Class.QUERY, query);
                 } else if (query_string != null) {
                     mBundle.putString(Common.Constant_Class.QUERY_STRING, query_string);
                 }
-                fragment.setArguments(mBundle);
-          //            Common.Title = getString(R.string.title_home);
+                fragment.setArguments(mBundle);*/
+
                 break;
             case 1:
 
                 mEditor.putBoolean("myprofile", true);
                 mEditor.commit();
-
                 Intent mIntent1 = new Intent(MainActivity.this, MyProfileActivity.class);
                 startActivity(mIntent1);
                 this.overridePendingTransition(0, 0);
                break;
             case 2:
                 fragment = new ChangePasswordFragment();
-//                Common.Title = getString(R.string.title_change_password);
                 break;
             case 3:
                 fragment = new RelativeFragment();
                 break;
             case 4:
                 fragment = new MatrimonyFragment();
-//                Common.Title = getString(R.string.title_change_password);
                 break;
             case 5:
                 fragment = new SyncFragment();

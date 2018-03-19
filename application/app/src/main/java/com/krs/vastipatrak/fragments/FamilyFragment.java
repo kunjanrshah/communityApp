@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -43,10 +45,11 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import io.realm.RealmList;
 
-public class FamilyFragment extends Fragment implements Serializable {
+public class FamilyFragment extends Fragment implements Serializable,AdapterView.OnItemSelectedListener {
 
 
     public static EditText edtSpouseName, edtSpouseFName, edtMSpouseName, edt_mdate;
@@ -246,7 +249,7 @@ public class FamilyFragment extends Fragment implements Serializable {
 
     private void Memory_Allocation(View root) {
 
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
 
         edt_mdate = root.findViewById(R.id.edt_mdate);
@@ -338,6 +341,25 @@ public class FamilyFragment extends Fragment implements Serializable {
                         mViewholder.child_id = Integer.parseInt(mObjChild.getChild_id());
                         mViewholder.edtchild_name.setText(mObjChild.getChild_name());
                         mViewholder.edtchild_bdate.setText(mObjChild.getChild_bday());
+                        mViewholder.edtMobile.setText(mObjChild.getMobile());
+                        String blood=mObjChild.getBlood_group();
+                        if(blood!=null && !blood.toString().isEmpty())
+                        {
+                            if (blood.equalsIgnoreCase(Common.Constant_Class.A_POSITIVE)) {
+                                mViewholder.spinnerBlood.setSelection(1);
+                            } else if (blood.equalsIgnoreCase(Common.Constant_Class.A_NAGATIVE)) {
+                                mViewholder.spinnerBlood.setSelection(2);
+                            } else if (blood.equalsIgnoreCase(Common.Constant_Class.B_POSITIVE)) {
+                                mViewholder.spinnerBlood.setSelection(3);
+                            } else if (blood.equalsIgnoreCase(Common.Constant_Class.B_NAGATIVE)) {
+                                mViewholder.spinnerBlood.setSelection(4);
+                            } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_POSITIVE)) {
+                                mViewholder.spinnerBlood.setSelection(5);
+                            } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_NAGATIVE)) {
+                                mViewholder.spinnerBlood.setSelection(6);
+                            }
+                        }
+
                         mViewholder.edtchild_btime.setText(mObjChild.getBirth_time());
                         mViewholder.edtchild_bplace.setText(mObjChild.getBirth_place());
                         mViewholder.tbtn_interest.setChecked(mObjChild.isInterest());
@@ -487,6 +509,23 @@ public class FamilyFragment extends Fragment implements Serializable {
         mViewholder.tbtn_interest.setTextOn(null);
         mViewholder.tbtn_interest.setTextOff(null);
 
+        mViewholder.spinnerBlood.setOnItemSelectedListener(this);
+
+
+        List<String> blood_cate = new ArrayList<String>();
+        blood_cate.add(Common.Constant_Class.TITLE_BLOOD_GROUP);
+        blood_cate.add(Common.Constant_Class.A_POSITIVE);
+        blood_cate.add(Common.Constant_Class.A_NAGATIVE);
+        blood_cate.add(Common.Constant_Class.B_POSITIVE);
+        blood_cate.add(Common.Constant_Class.B_NAGATIVE);
+        blood_cate.add(Common.Constant_Class.O_POSITIVE);
+        blood_cate.add(Common.Constant_Class.O_NAGATIVE);
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, blood_cate);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mViewholder.spinnerBlood.setAdapter(dataAdapter);
+
+
         mViewholder.btn_remove = addView.findViewById(R.id.btn_remove);
         mViewholder.ImgHash = "";
         mViewholder.setClickBDate = false;
@@ -532,6 +571,8 @@ public class FamilyFragment extends Fragment implements Serializable {
 
                 mViewholder.edtMobile.setKeyListener(null);
                 mViewholder.edtMobile.setCursorVisible(false);
+
+                mViewholder.spinnerBlood.setEnabled(false);
 
                 mViewholder.edtchild_bdate.setKeyListener(null);
                 mViewholder.edtchild_bdate.setCursorVisible(false);
@@ -768,6 +809,16 @@ public class FamilyFragment extends Fragment implements Serializable {
                 break;
             }
         }
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
 

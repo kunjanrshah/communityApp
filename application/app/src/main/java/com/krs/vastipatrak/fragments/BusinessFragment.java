@@ -226,7 +226,7 @@ public class BusinessFragment extends Fragment implements Serializable {
         edtWork = rootView.findViewById(R.id.edtWork);
         edtOMobile = rootView.findViewById(R.id.edtOMobile);
         edtOAddress = rootView.findViewById(R.id.edtOAddress);
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
         txt_office = rootView.findViewById(R.id.txt_office);
     }

@@ -2,21 +2,14 @@ package com.krs.vastipatrak.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,10 +22,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
-import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.FilterActivity;
 
 import org.json.JSONObject;
 
@@ -146,39 +138,6 @@ public class ChangePasswordFragment extends Fragment {
 
         return rootView;
     }
-
-    //SearchView searchView;
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-      /*  searchView = (SearchView) searchItem.getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                Fragment fragment = new SearchFragment();
-                Bundle mBundle = new Bundle();
-                mBundle.putString(Common.Constant_Class.QUERY, query);
-                fragment.setArguments(mBundle);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container_body, fragment);
-                fragmentTransaction.commit();
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });*/
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-
     private void call_change_password_ws() {
 
         if (Common.isOnline(getActivity())) {
@@ -251,7 +210,7 @@ public class ChangePasswordFragment extends Fragment {
         input_repeat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage(Common.Constant_Class.LOADING);
         pDialog.setCancelable(false);

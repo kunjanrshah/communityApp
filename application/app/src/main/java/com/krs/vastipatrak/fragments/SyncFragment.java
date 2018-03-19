@@ -292,7 +292,7 @@ public class SyncFragment extends Fragment {
 
     private void MemoryAllocation(View rootView) {
 
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         tvUpdatedTime = rootView.findViewById(R.id.tvUpdatedTime1);
         btn_sync = rootView.findViewById(R.id.btn_sync);

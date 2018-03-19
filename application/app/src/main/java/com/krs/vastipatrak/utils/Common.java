@@ -933,6 +933,14 @@ public class Common {
                     if (mJsonObj.has(Common.Constant_Class.CHILD_NAME)) {
                         mListChildrendata.setChild_name(mJsonObj.getString(Common.Constant_Class.CHILD_NAME));
                     }
+
+                    if (mJsonObj.has(Constant_Class.MOBILE)) {
+                        mListChildrendata.setMobile(mJsonObj.getString(Common.Constant_Class.MOBILE));
+                    }
+                    if (mJsonObj.has(Constant_Class.BLOOD_GROUP)) {
+                        mListChildrendata.setBlood_group(mJsonObj.getString(Common.Constant_Class.BLOOD_GROUP));
+                    }
+
                     if (mJsonObj.has(Constant_Class.CHILD_GENDER)) {
                         mListChildrendata.setGender(mJsonObj.getString(Common.Constant_Class.CHILD_GENDER));
                     }
@@ -1228,9 +1236,10 @@ public class Common {
         public static final String SYNC_URL = "http://www.srbrothersinfotech.com/directory-dev/API/sync";
         public static final String INACTIVES_URL = "http://srbrothersinfotech.com/directory-dev/API/getInactiveUsers";
         public static final String PROFILE_URL = "http://srbrothersinfotech.com/directory-dev/API/profile";
+        public static final String EVENTS_URL = "http://srbrothersinfotech.com/directory-dev/API/getEvents";
         //public static final String PROFILE_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/profile/id/";
         public static final String SEARCH_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/search";
-        public static final String PREFERENCE_NAME = "Directory";
+
         /*public static final String STATUS_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/status";*/
         /*public static final String CHANGE_PASSWORD_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/changepassword/id/";
           public static final String DELETE_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/delete";

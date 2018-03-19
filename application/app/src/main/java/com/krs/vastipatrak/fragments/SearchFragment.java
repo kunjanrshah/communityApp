@@ -29,7 +29,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.gms.ads.AdRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.adapter.ExpandableListAdapter;
@@ -69,7 +68,6 @@ public class SearchFragment extends Fragment {
     ExpandableListAdapter mExpandableListAdapter = null;
     TextView txtLable = null;
     private SharedPreferences mSharedPreferences = null;
-   // private AdView mAdView;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -117,42 +115,7 @@ public class SearchFragment extends Fragment {
         } else {
             lvCustomList.setVisibility(View.GONE);
             txtLable.setVisibility(View.VISIBLE);
-
-            AdRequest adRequest = new AdRequest.Builder()
-                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                    // Check the LogCat to get your test device ID
-                    .addTestDevice("C04B1BFFB0774708339BC273F8A43708")
-                    .build();
-
-            /*mAdView.setAdListener(new AdListener() {
-                @Override
-                public void onAdLoaded() {
-                    super.onAdLoaded();
-                }
-
-                @Override
-                public void onAdClosed() {
-                    Toast.makeText(getActivity().getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onAdFailedToLoad(int errorCode) {
-                    Toast.makeText(getActivity().getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onAdLeftApplication() {
-                    Toast.makeText(getActivity().getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onAdOpened() {
-                    super.onAdOpened();
-                }
-            });*/
-
-            //mAdView.loadAd(adRequest);
-        }
+       }
 
         lvCustomList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             int previousGroup = -1;
@@ -168,31 +131,6 @@ public class SearchFragment extends Fragment {
         return rootView;
     }
 
- /*   @Override
-    public void onResume() {
-        super.onResume();
-        if (mAdView != null) {
-            mAdView.resume();
-        }
-    }*/
-
-    /*@Override
-    public void onPause() {
-        if (mAdView != null) {
-            mAdView.pause();
-        }
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-
-        if (mAdView != null) {
-            mAdView.destroy();
-        }
-        super.onDestroy();
-
-    }*/
 
     private void showProgressDialog() {
 
@@ -215,7 +153,7 @@ public class SearchFragment extends Fragment {
 
     private void Memory_Allocation(View root) {
 
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         lvCustomList = root.findViewById(R.id.lvCustomList);
         txtLable = root.findViewById(R.id.txtLable);
         TextView tv = root.findViewById(R.id.txt_marquee);
@@ -255,16 +193,6 @@ public class SearchFragment extends Fragment {
                 return false;
             }
         });
-
-       /* MenuItem voiceItem = menu.findItem(R.id.action_voice);
-        voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Common.promptSpeechInput(getActivity());
-                return false;
-            }
-        });*/
-
         MenuItem activeItem = menu.findItem(R.id.action_activate);
         MenuItem activeAdd = menu.findItem(R.id.action_add);
         MenuItem deactiveItem = menu.findItem(R.id.action_deactive);
@@ -399,44 +327,6 @@ public class SearchFragment extends Fragment {
         }).show();
     }
 
- /*   @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_search:
-                return true;
-
-            default:
-                break;
-        }
-        return false;
-    }*/
-
-    /*  @Override
-      public void onActivityResult(int requestCode, int resultCode, Intent data) {
-          super.onActivityResult(requestCode, resultCode, data);
-
-          // Check if no view has focus:
-          View view = getActivity().getCurrentFocus();
-          if (view != null) {
-              InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-              imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-          }
-          ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-          switch (requestCode) {
-              case REQ_CODE_SPEECH_INPUT: {
-                  if (resultCode == getActivity().RESULT_OK && null != data) {
-
-                      ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
-                      searchView.setQueryHint(result.get(0));
-                      searchView.setQuery(result.get(0), true);
-                  }
-                  break;
-              }
-
-          }
-      }
-  */
     private void callSearchWS(String str_search) {
         if (str_search.length() > 3) {
 

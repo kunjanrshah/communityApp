@@ -44,7 +44,7 @@ public class SyncService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
 
     }
 

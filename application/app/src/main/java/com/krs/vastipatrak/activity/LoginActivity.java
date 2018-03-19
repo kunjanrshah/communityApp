@@ -246,7 +246,7 @@ public class LoginActivity extends Activity {
 
 
         prefManager = new PrefManager(this);
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         realm = AppController.getInstance().realm;
         pDialog = new ProgressDialog(this);
@@ -911,6 +911,7 @@ public class LoginActivity extends Activity {
     private void SignupWS() {
         if (Common.isOnline(this)) {
 
+            showProgressDialog();
             final String name = inputName.getText().toString();
             final String email = inputEmail.getText().toString();
             final String mobile = inputMobile.getText().toString();
@@ -957,6 +958,7 @@ public class LoginActivity extends Activity {
                             Log.d(TAG, response.toString());
 
                             try {
+                                hideProgressDialog();
                                 boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                                 String message = response.getString(Common.Constant_Class.MESSAGE);
 
@@ -1020,6 +1022,7 @@ public class LoginActivity extends Activity {
                                     msg = mJsonArray.getString(0);
                                     alert(msg);
                                 }
+                                Toast.makeText(LoginActivity.this,message,Toast.LENGTH_SHORT).show();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -1028,7 +1031,7 @@ public class LoginActivity extends Activity {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-
+                            hideProgressDialog();
                             VolleyLog.d(TAG, "Error: " + error.getMessage());
                             String message = null;
                             if (error instanceof NetworkError) {

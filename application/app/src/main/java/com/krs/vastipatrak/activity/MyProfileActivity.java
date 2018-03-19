@@ -95,7 +95,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private void MemoryAllocation() {
         realm = AppController.getInstance().realm;
         toolbar = findViewById(R.id.toolbar);
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mBundle = getIntent().getExtras();
         viewPager = findViewById(R.id.viewpager);
@@ -413,6 +413,11 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     String child_gender = mViewholder.gender;
                     String child_btime = mViewholder.edtchild_btime.getText().toString();
                     String child_bplace = mViewholder.edtchild_bplace.getText().toString();
+                    String child_mobile=mViewholder.edtMobile.getText().toString();
+                    String child_blood=mViewholder.spinnerBlood.getSelectedItem().toString();
+
+                    mJsonObject_Child.put(Common.Constant_Class.BLOOD_GROUP,child_blood);
+                    mJsonObject_Child.put(Common.Constant_Class.MOBILE, child_mobile);
                     mJsonObject_Child.put(Common.Constant_Class.IS_INTERESTED, child_interest);
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_GENDER, child_gender);
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_BTIME, child_btime);

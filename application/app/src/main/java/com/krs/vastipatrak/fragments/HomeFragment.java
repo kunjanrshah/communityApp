@@ -1,278 +1,212 @@
 package com.krs.vastipatrak.fragments;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.net.Uri;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Parcelable;
-import android.provider.MediaStore;
-import android.webkit.ConsoleMessage;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.adapter.ExpandableEventListAdapter;
+import com.krs.vastipatrak.app.AppController;
+import com.krs.vastipatrak.model.ListEventChildData;
+import com.krs.vastipatrak.model.ListEventData;
+import com.krs.vastipatrak.model.ListEventParentData;
+import com.krs.vastipatrak.utils.Common;
 
-import java.io.File;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-/**
- * Created by TecStub on 22-Sep-16.
- */
-public class HomeFragment extends Activity {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-    WebView wv_home;
-    String wv_url = "";
-    private static final int FILECHOOSER_RESULTCODE   = 2888;
-    private ValueCallback<Uri> mUploadMessage;
-    private Uri mCapturedImageURI = null;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
+
+public class HomeFragment extends Fragment {
+
+    ExpandableListView lvEventList;
+    ExpandableEventListAdapter mExpandableEventListAdapter = null;
+    ArrayList<ListEventParentData> listDataHeader = null;
+    HashMap<ListEventParentData, List<ListEventChildData>> listDataChild = null;
+    Realm realm;
+    String TAG = "HomeFragment";
+    SharedPreferences mSharedPreferences;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_home);
-
-        //View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        wv_home = (WebView) findViewById(R.id.wv_home);
-        wv_home.getSettings().setJavaScriptEnabled(true);
-        // Other webview options
-        wv_home.getSettings().setLoadWithOverviewMode(true);
-        wv_home.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        wv_home.setScrollbarFadingEnabled(false);
-        wv_home.getSettings().setBuiltInZoomControls(true);
-        wv_home.getSettings().setPluginState(WebSettings.PluginState.ON);
-        wv_home.getSettings().setAllowFileAccess(true);
-        wv_home.getSettings().setSupportZoom(true);
-        wv_home.getSettings().setLoadWithOverviewMode(true);
-        //wv_url = "http://www.superbinstruments.com/WEB/photoes.php?username=admin";
-        wv_url = "http://www.androidexample.com/media/webview/details.html";
-
-        wv_home.loadUrl(wv_url);
-
-
-
-        startWebView();
-    }
-
-/*    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        wv_home = (WebView) rootView.findViewById(R.id.wv_home);
-        wv_home.getSettings().setJavaScriptEnabled(true);
-        // Other webview options
-        wv_home.getSettings().setLoadWithOverviewMode(true);
-        wv_home.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        wv_home.setScrollbarFadingEnabled(false);
-        wv_home.getSettings().setBuiltInZoomControls(true);
-        wv_home.getSettings().setPluginState(WebSettings.PluginState.ON);
-        wv_home.getSettings().setAllowFileAccess(true);
-        wv_home.getSettings().setSupportZoom(true);
-        wv_home.getSettings().setLoadWithOverviewMode(true);
-        wv_url = "http://www.superbinstruments.com/WEB/photoes.php?username=admin";
-        wv_home.loadUrl(wv_url);
-
-
-
-        startWebView();
-
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.title_events);
+        setHasOptionsMenu(true);
+        MemoryAllocation(rootView);
+        getEvents();
         return rootView;
-    }*/
-
-
-
-
-    private void startWebView() {
-
-        //Create new webview Client to show progress dialog
-        //Called When opening a url or click on link
-
-        wv_home.setWebViewClient(new WebViewClient() {
-            ProgressDialog progressDialog;
-
-            //If you will not use this method url links are open in new brower not in webview
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
-                // Check if Url contains ExternalLinks string in url
-                // then open url in new browser
-                // else all webview links will open in webview browser
-                if(url.contains("ExternalLinks")){
-
-                    // Could be cleverer and use a regex
-                    //Open links in new browser
-                    view.getContext().startActivity(
-                            new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-
-                    // Here we can open new activity
-
-                    return true;
-
-                } else {
-
-                    // Stay within this webview and load url
-                    view.loadUrl(url);
-                    return true;
-                }
-
-            }
-
-
-
-            //Show loader on url load
-            public void onLoadResource (WebView view, String url) {
-
-                // if url contains string androidexample
-                // Then show progress  Dialog
-                if (progressDialog == null && url.contains("androidexample")
-                        ) {
-
-                    // in standard case YourActivity.this
-                    progressDialog = new ProgressDialog(HomeFragment.this);
-                    progressDialog.setMessage("Loading...");
-                    progressDialog.show();
-                }
-            }
-
-            // Called when all page resources loaded
-            public void onPageFinished(WebView view, String url) {
-
-                try{
-                    // Close progressDialog
-                    if (progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                        progressDialog = null;
-                    }
-                }catch(Exception exception){
-                    exception.printStackTrace();
-                }
-            }
-
-        });
-
-
-
-        // implement WebChromeClient inner class
-        // we will define openFileChooser for select file from camera
-        wv_home.setWebChromeClient(new WebChromeClient() {
-
-            // openFileChooser for Android 3.0+
-            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType){
-                /**updated, out of the IF **/
-                mUploadMessage = uploadMsg;
-                /**updated, out of the IF **/
-
-
-
-                try{
-                    File imageStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "AndroidExampleFolder");
-                    if (!imageStorageDir.exists()) {
-                        imageStorageDir.mkdirs();
-                    }
-                    File file = new File(imageStorageDir + File.separator + "IMG_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
-                    mCapturedImageURI = Uri.fromFile(file); // save to the private variable
-
-                    final Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
-                    // captureIntent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-                    Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                    i.addCategory(Intent.CATEGORY_OPENABLE);
-                    i.setType("image/*");
-
-                    Intent chooserIntent = Intent.createChooser(i, "Image Chooser");
-                    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Parcelable[] { captureIntent });
-
-                    startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE);
-                }
-                catch(Exception e){
-                    Toast.makeText(HomeFragment.this, "Camera Exception:"+e, Toast.LENGTH_LONG).show();
-                }
-                //}
-            }
-
-            // openFileChooser for Android < 3.0
-            public void openFileChooser(ValueCallback<Uri> uploadMsg){
-                openFileChooser(uploadMsg, "");
-            }
-
-            //openFileChooser for other Android versions
-            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
-                openFileChooser(uploadMsg, acceptType);
-            }
-
-
-
-            /** Added code to clarify chooser. **/
-
-            //The webPage has 2 filechoosers and will send a console message informing what action to perform, taking a photo or updating the file
-            public boolean onConsoleMessage(ConsoleMessage cm) {
-                onConsoleMessage(cm.message(), cm.lineNumber(), cm.sourceId());
-                //Toast.makeText(getBaseContext(), cm.message()+" :message", Toast.LENGTH_LONG).show();
-                return true;
-            }
-            public void onConsoleMessage(String message, int lineNumber, String sourceID) {
-                //Log.d("androidruntime", "Per c�nsola: " + message);
-                //Toast.makeText(getBaseContext(), message+":message", Toast.LENGTH_LONG).show();
-                //if(message.endsWith("foto")){ boolFileChooser= true; }
-                //else if(message.endsWith("pujada")){ boolFileChooser= false; }
-            }
-            /** Added code to clarify chooser. **/
-
-        });
     }
 
-/*    private class MyWebClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
-            return true;
+    private void MemoryAllocation(View rootView) {
+        lvEventList = rootView.findViewById(R.id.lvEventList);
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
+        realm = AppController.getInstance().realm;
+        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+    }
+
+    private void getEventRecords() {
+
+        RealmResults<ListEventData> eventData = realm.where(ListEventData.class).findAll();
+        if (eventData != null && eventData.size() > 0) {
+            for (ListEventData data : eventData) {
+                ListEventParentData lpd = new ListEventParentData();
+                lpd.setEventId(data.getId());
+                lpd.setEventTitle(data.getTitle());
+                lpd.setEventDesc(data.getDescription());
+                lpd.setEventLocation(data.getLocation());
+                lpd.setEventDate(data.getEventDate());
+                listDataHeader.add(lpd);
+                ListEventChildData lcd = new ListEventChildData();
+                lcd.setImageUrls(data.getImages());
+                lcd.setYoutubeUrls(data.getYoutubeUrl());
+                ArrayList<ListEventChildData> mlstChildData = new ArrayList<ListEventChildData>();
+                mlstChildData.add(lcd);
+                listDataChild.put(lpd, mlstChildData);
+            }
+            mExpandableEventListAdapter = new ExpandableEventListAdapter(getActivity(), listDataHeader, listDataChild);
+            lvEventList.setAdapter(mExpandableEventListAdapter);
+            lvEventList.setVisibility(View.VISIBLE);
+        } else {
+            lvEventList.setVisibility(View.GONE);
         }
-    }*/
+    }
 
+    private void getEvents() {
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-  /*      if (requestCode == FILECHOOSER_RESULTCODE) {
-            if (null == mUploadMessage) return;
-            Uri result = intent == null || resultCode != getActivity().RESULT_OK ? null : intent.getData();
-            mUploadMessage.onReceiveValue(result);
-            mUploadMessage = null;
-        }*/
+        if (Common.isOnline(getActivity())) {
+            Common.initProgressDialog(getActivity());
+            Common.showProgressDialog();
 
-        if(requestCode==FILECHOOSER_RESULTCODE)
-        {
+            JSONObject mJsonObject = new JSONObject();
+            try {
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
 
-            if (null == this.mUploadMessage) {
-                return;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            Uri result=null;
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.EVENTS_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
-            try{
-                if (resultCode != RESULT_OK) {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.d(TAG, response.toString());
 
-                    result = null;
+                    try {
+                        Common.hideProgressDialog();
+                        boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
+                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        if (success) {
+                            JSONArray mJsonArray = response.getJSONArray("data");
+                            RealmList<String> YoutubeUrls = null, ImagesUrls = null;
+                            ListEventData mEventdata = new ListEventData();
 
-                } else {
+                            for (int i = 0; i < mJsonArray.length(); i++) {
+                                JSONObject mjson = mJsonArray.getJSONObject(i);
+                                mEventdata.setId(mjson.getString("id"));
+                                mEventdata.setTitle(mjson.getString("title"));
+                                mEventdata.setDescription(mjson.getString("description"));
+                                mEventdata.setLocation(mjson.getString("location"));
+                                mEventdata.setEventDate(mjson.getString("event_date"));
+                                mEventdata.setLat(mjson.getString("lat"));
+                                mEventdata.setLng(mjson.getString("lng"));
 
-                    // retrieve from the private variable if the intent is null
-                    result = intent == null ? mCapturedImageURI : intent.getData();
+                                JSONArray youtubeArray = mjson.getJSONArray("youtube_url");
+                                if (youtubeArray != null && youtubeArray.length() > 0) {
+                                    YoutubeUrls = new RealmList<>();
+                                    for (int j = 0; j < youtubeArray.length(); j++) {
+                                        String YUrl = youtubeArray.getString(j);
+                                        YoutubeUrls.add(YUrl);
+                                    }
+                                    mEventdata.setYoutubeUrl(YoutubeUrls);
+                                }
+
+                                JSONArray ImagesArray = mjson.getJSONArray("images");
+                                if (ImagesArray != null && ImagesArray.length() > 0) {
+                                    ImagesUrls = new RealmList<>();
+                                    for (int k = 0; k < ImagesArray.length(); k++) {
+                                        String IUrl = ImagesArray.getString(k);
+                                        ImagesUrls.add(IUrl);
+                                    }
+                                    mEventdata.setImages(ImagesUrls);
+                                }
+                            }
+                            realm.beginTransaction();
+                            realm.copyToRealmOrUpdate(mEventdata);
+                            realm.commitTransaction();
+                        }
+
+                        getEventRecords();
+
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-            catch(Exception e)
-            {
-                Toast.makeText(HomeFragment.this, "activity :"+e, Toast.LENGTH_LONG).show();
-            }
+            }, new Response.ErrorListener() {
 
-            mUploadMessage.onReceiveValue(result);
-            mUploadMessage = null;
-
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Common.hideProgressDialog();
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    String message = null;
+                    if (error instanceof NetworkError) {
+                        message = "Cannot connect to Internet...Please check your connection!";
+                    } else if (error instanceof ServerError) {
+                        message = "The server could not be found. Please try again after some time!!";
+                    } else if (error instanceof AuthFailureError) {
+                        message = "Cannot connect to Internet...Please check your connection!";
+                    } else if (error instanceof ParseError) {
+                        message = "Parsing error! Please try again after some time!!";
+                    } else if (error instanceof NoConnectionError) {
+                        message = "Cannot connect to Internet...Please check your connection!";
+                    } else if (error instanceof TimeoutError) {
+                        message = "Connection TimeOut! Please check your internet connection.";
+                    }
+                    Toast.makeText(getActivity(), "" + message, Toast.LENGTH_LONG).show();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    return params;
+                }
+            };
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }
-
     }
 }

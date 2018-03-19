@@ -56,7 +56,7 @@ public class MyLocationService extends Service {
     @Override
     public void onCreate() {
         Log.e(TAG, "onCreate");
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREFERENCE_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         initializeLocationManager();
         try {
