@@ -905,7 +905,6 @@ public class LoginActivity extends Activity {
         } else {
             Toast.makeText(LoginActivity.this, getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
         }
-
     }
 
     private void SignupWS() {

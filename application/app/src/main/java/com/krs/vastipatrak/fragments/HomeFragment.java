@@ -6,11 +6,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -25,32 +28,23 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.adapter.ExpandableEventListAdapter;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.model.ListEventChildData;
 import com.krs.vastipatrak.model.ListEventData;
-import com.krs.vastipatrak.model.ListEventParentData;
 import com.krs.vastipatrak.utils.Common;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
-
 public class HomeFragment extends Fragment {
 
-    ExpandableListView lvEventList;
-    ExpandableEventListAdapter mExpandableEventListAdapter = null;
-    ArrayList<ListEventParentData> listDataHeader = null;
-    HashMap<ListEventParentData, List<ListEventChildData>> listDataChild = null;
+    RecyclerView recycler_view;
     Realm realm;
     String TAG = "HomeFragment";
     SharedPreferences mSharedPreferences;
@@ -60,46 +54,129 @@ public class HomeFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.title_events);
-        setHasOptionsMenu(true);
+
         MemoryAllocation(rootView);
+
         getEvents();
         return rootView;
     }
 
     private void MemoryAllocation(View rootView) {
-        lvEventList = rootView.findViewById(R.id.lvEventList);
-        listDataHeader = new ArrayList<>();
-        listDataChild = new HashMap<>();
+        recycler_view = rootView.findViewById(R.id.recycler_view);
         realm = AppController.getInstance().realm;
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
     }
 
-    private void getEventRecords() {
 
-        RealmResults<ListEventData> eventData = realm.where(ListEventData.class).findAll();
-        if (eventData != null && eventData.size() > 0) {
-            for (ListEventData data : eventData) {
-                ListEventParentData lpd = new ListEventParentData();
-                lpd.setEventId(data.getId());
-                lpd.setEventTitle(data.getTitle());
-                lpd.setEventDesc(data.getDescription());
-                lpd.setEventLocation(data.getLocation());
-                lpd.setEventDate(data.getEventDate());
-                listDataHeader.add(lpd);
-                ListEventChildData lcd = new ListEventChildData();
-                lcd.setImageUrls(data.getImages());
-                lcd.setYoutubeUrls(data.getYoutubeUrl());
-                ArrayList<ListEventChildData> mlstChildData = new ArrayList<ListEventChildData>();
-                mlstChildData.add(lcd);
-                listDataChild.put(lpd, mlstChildData);
+    public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHolder> {
+
+
+        private RealmResults<ListEventData> eventData;
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            public TextView txtTitle;
+            public TextView txtDesc;
+            public TextView txtLocation;
+            public TextView txtEventDate;
+
+            public MyViewHolder(View view) {
+                super(view);
+                txtTitle = (TextView) view.findViewById(R.id.tvEventTitle);
+                txtDesc = (TextView) view.findViewById(R.id.tvEventDesc);
+                txtLocation = (TextView) view.findViewById(R.id.tvEventLocation);
+                txtEventDate = (TextView) view.findViewById(R.id.tvEventDate);
+
             }
-            mExpandableEventListAdapter = new ExpandableEventListAdapter(getActivity(), listDataHeader, listDataChild);
-            lvEventList.setAdapter(mExpandableEventListAdapter);
-            lvEventList.setVisibility(View.VISIBLE);
-        } else {
-            lvEventList.setVisibility(View.GONE);
+        }
+
+
+        public MoviesAdapter(RealmResults<ListEventData> eventData) {
+            this.eventData = eventData;
+        }
+
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_event_group, parent, false);
+
+            return new MyViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(MyViewHolder holder, int position) {
+
+            ListEventData data=eventData.get(position);
+            holder.txtTitle.setText(data.getTitle());
+            holder.txtDesc.setText(data.getDescription());
+            holder.txtLocation.setText(data.getLocation());
+            holder.txtEventDate.setText(data.getEventDate());
+        }
+
+        @Override
+        public int getItemCount() {
+            return eventData.size();
         }
     }
+
+
+  /*  private class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.MyViewHolder> {
+
+        RealmResults<ListEventData> eventData;
+        ArrayList<String> list=new ArrayList<>();
+        EventListAdapter(RealmResults<ListEventData> eventData) {
+            this.eventData = eventData;
+            list.add("1");
+            list.add("2");
+        }
+        EventListAdapter()
+        {
+            list.add("1");
+            list.add("2");
+        }
+
+
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_event_group, parent, false);
+
+            return new MyViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(MyViewHolder holder, int position) {
+            *//*holder.txtTitle.setText(eventData.get(position).getTitle());
+            holder.txtDesc.setText(eventData.get(position).getDescription());
+            holder.txtLocation.setText(eventData.get(position).getLocation());
+            holder.txtEventDate.setText(eventData.get(position).getEventDate());*//*
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+            *//*if (eventData != null && eventData.size() > 0) {
+                return eventData.size();
+            } else {
+                return 0;
+            }*//*
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            private TextView txtTitle;
+            private TextView txtDesc;
+            private TextView txtLocation;
+            private TextView txtEventDate;
+
+
+            public MyViewHolder(View view) {
+                super(view);
+                txtTitle = (TextView) view.findViewById(R.id.tvEventTitle);
+                txtDesc = (TextView) view.findViewById(R.id.tvEventDesc);
+                txtLocation = (TextView) view.findViewById(R.id.tvEventLocation);
+                txtEventDate = (TextView) view.findViewById(R.id.tvEventDate);
+            }
+        }
+    }*/
 
     private void getEvents() {
 
@@ -166,9 +243,20 @@ public class HomeFragment extends Fragment {
                             realm.commitTransaction();
                         }
 
-                        getEventRecords();
+                        RealmResults<ListEventData> eventData = realm.where(ListEventData.class).findAll();
+                       for(int i=0; i<eventData.size(); i++)
+                       {
+                           eventData.get(i).getTitle();
+                       }
 
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        MoviesAdapter mEventListAdapter = new MoviesAdapter(eventData);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+                        recycler_view.setLayoutManager(mLayoutManager);
+                        recycler_view.setItemAnimator(new DefaultItemAnimator());
+                        recycler_view.setAdapter(mEventListAdapter);
+
+
+                        //Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -209,4 +297,7 @@ public class HomeFragment extends Fragment {
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }
     }
+
+
+
 }

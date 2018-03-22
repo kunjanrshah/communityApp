@@ -9,13 +9,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.model.ListProfileData;
 
-import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
@@ -52,7 +48,7 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
         MultiDex.install(this);
-        Fabric.with(this, new Crashlytics());
+       // Fabric.with(this, new Crashlytics());
        // Fabric.with(this, new Crashlytics());
         mInstance = this;
       //  dbHelper = new DatabaseHandler(this);
@@ -60,7 +56,7 @@ public class AppController extends Application {
         initRealm();
         initFirebaseAnalytics();
         // initialize the AdMob app
-        MobileAds.initialize(this, getResources().getString(R.string.admob_app_id));
+//        MobileAds.initialize(this, getResources().getString(R.string.admob_app_id));
         // Obtain the Firebase Analytics instance.
 
     }
