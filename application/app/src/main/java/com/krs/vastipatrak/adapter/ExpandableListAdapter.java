@@ -314,15 +314,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String MotherName = mListParentData.getMotherName();
         String city = mListParentData.getCity();
 
-//        int status = Integer.parseInt(mListParentData.getStatus().toString());
-        //Glide.with(_context).load(imgURL).apply(RequestOptions.circleCropTransform().encodeQuality(100)).thumbnail(1f).into(groupViewHolder.ivIcon);
-
         // Rounded corners
         Glide.with(_context).load(imgURL)
                 .apply(RequestOptions.bitmapTransform(
                         new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).into(groupViewHolder.ivIcon);
 
-        //   new Common.ImageLoadTask(imgURL, groupViewHolder.ivIcon).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         groupViewHolder.tvCity.setText(Common.camelCase(city));
         groupViewHolder.tvName.setText(Common.camelCase(Name));
         groupViewHolder.tvFatherName.setText(Common.camelCase(FatherName));

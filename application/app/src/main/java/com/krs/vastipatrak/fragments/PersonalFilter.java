@@ -26,7 +26,6 @@ import com.krs.vastipatrak.utils.Common;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ObservableScrollView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;
@@ -169,7 +168,7 @@ public class PersonalFilter extends Fragment {
                         });
                         tpd.setOnTimeSetListener(new TimePickerDialog.OnTimeSetListener() {
                             @Override
-                            public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+                            public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
                                 String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
                                 String minuteString = minute < 10 ? "0" + minute : "" + minute;
                                 String time = hourString + ":" + minuteString;

@@ -39,7 +39,6 @@ import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.io.Serializable;
@@ -675,7 +674,7 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
                         });
                         tpd.setOnTimeSetListener(new TimePickerDialog.OnTimeSetListener() {
                             @Override
-                            public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+                            public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
                                 String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
                                 String minuteString = minute < 10 ? "0" + minute : "" + minute;
                                 String time = hourString + ":" + minuteString;

@@ -280,8 +280,7 @@ public class Common {
             Matrix matrix = new Matrix();
             matrix.postRotate(orientation);
 
-            srcBitmap = Bitmap.createBitmap(srcBitmap, 0, 0, srcBitmap.getWidth(),
-                    srcBitmap.getHeight(), matrix, true);
+            srcBitmap = Bitmap.createBitmap(srcBitmap, 0, 0, srcBitmap.getWidth(), srcBitmap.getHeight(), matrix, true);
         }
 
         String type = context.getContentResolver().getType(photoUri);
@@ -331,8 +330,7 @@ public class Common {
 
     public static int getOrientation(Context context, Uri photoUri) {
         /* it's on the external media. */
-        Cursor cursor = context.getContentResolver().query(photoUri,
-                new String[]{MediaStore.Images.ImageColumns.ORIENTATION}, null, null, null);
+        Cursor cursor = context.getContentResolver().query(photoUri, new String[]{MediaStore.Images.ImageColumns.ORIENTATION}, null, null, null);
 
         if (cursor.getCount() != 1) {
             return -1;
@@ -343,8 +341,7 @@ public class Common {
     }
 
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
-                .getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
         final int color = 0xff424242;
@@ -378,8 +375,7 @@ public class Common {
     public static void promptSpeechInput(Activity mActivity) {
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say Something!");
         try {
@@ -390,10 +386,8 @@ public class Common {
     }
 
     public static String camelCase(String stringToConvert) {
-        if (stringToConvert == null || TextUtils.isEmpty(stringToConvert))
-            return "";
-        return Character.toUpperCase(stringToConvert.charAt(0)) +
-                stringToConvert.substring(1).toLowerCase();
+        if (stringToConvert == null || TextUtils.isEmpty(stringToConvert)) return "";
+        return Character.toUpperCase(stringToConvert.charAt(0)) + stringToConvert.substring(1).toLowerCase();
     }
 
     public static RealmList<ListProfileData> getDataFromParentTable(String query, int search) {
@@ -438,8 +432,7 @@ public class Common {
             ListProfileData profileData = realm.where(ListProfileData.class).equalTo(Common.Constant_Class.PROFILE_ID, query).findFirst();
             mlistProfileData.add(profileData);
         } else {
-            String first_name = "", last_name = "", father_name = "", mother_name = "", email_address = "", mobile = "", phone = "", blood_group = "", gender = "", gotra = "", ekdo = "", birth_place = "", native_place = "", birth_date = "", city = "",
-                    birth_time = "", education = "", occupation = "", work = "", address = "", office_mobile = "", office_address = "", spouse_name = "", marriage_date = "", spouse_father_name = "", spouse_mother_name = "";
+            String first_name = "", last_name = "", father_name = "", mother_name = "", email_address = "", mobile = "", phone = "", blood_group = "", gender = "", gotra = "", ekdo = "", birth_place = "", native_place = "", birth_date = "", city = "", birth_time = "", education = "", occupation = "", work = "", address = "", office_mobile = "", office_address = "", spouse_name = "", marriage_date = "", spouse_father_name = "", spouse_mother_name = "";
             try {
 
                 JSONObject mJsonObject = new JSONObject(query);
@@ -999,13 +992,15 @@ public class Common {
     }
 
     public static void showProgressDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
+        try {
+            if (!pDialog.isShowing()) pDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void hideProgressDialog() {
-        if (pDialog.isShowing())
-            pDialog.cancel();
+        if (pDialog.isShowing()) pDialog.cancel();
     }
 
     public static void initProgressDialog(Activity mActiviy) {
@@ -1162,8 +1157,7 @@ public class Common {
                     intentShareFile.setType("application/xls");
                     intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
 
-                    intentShareFile.putExtra(Intent.EXTRA_SUBJECT,
-                            "Sharing File...");
+                    intentShareFile.putExtra(Intent.EXTRA_SUBJECT, "Sharing File...");
                     intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...");
 
                     mActivity.startActivity(Intent.createChooser(intentShareFile, "Share File"));
@@ -1212,7 +1206,7 @@ public class Common {
 
         public static final String ADMIN_1 = "4134";
         public static final String ADMIN_2 = "571";
-
+        public static final String YOUTUBE_API_KEY = "AIzaSyBOkoXTYsY32OQtLTxidxci5R3Zml84oUY";
 
         public static final String PERSONAL = "     PERSONAL  ";
         public static final String BUSINESS = "     BUSINESS  ";
@@ -1237,18 +1231,10 @@ public class Common {
         public static final String INACTIVES_URL = "http://srbrothersinfotech.com/directory-dev/API/getInactiveUsers";
         public static final String PROFILE_URL = "http://srbrothersinfotech.com/directory-dev/API/profile";
         public static final String EVENTS_URL = "http://srbrothersinfotech.com/directory-dev/API/getEvents";
-        //public static final String PROFILE_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/profile/id/";
-        public static final String SEARCH_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/search";
 
-        /*public static final String STATUS_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/status";*/
-        /*public static final String CHANGE_PASSWORD_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/changepassword/id/";
-          public static final String DELETE_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/delete";
-          public static final String FORGOT_PASSWORD_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/forgotpassword";
-        public static final String LOGIN_URL = "http://www.superbinstruments.com/directory/index.php?r=webservice/login";*/
         public static final String PREF_NAME = "Vastipatrak";
         public static final String SCREEN = "screen";
-        public static final String LOGIN_ACTIVITY = "LoginActivity";
-        public static final String SEARCH_FRAGMENT = "search_fragment";
+        public static final String SEARCH_FRAGMENT = "SearchFragment";
         public static final String IS_UPDATE = "is_update";
         public static final String IS_RESET = "is_reset";
         public static final String USER_ID = "user_id";

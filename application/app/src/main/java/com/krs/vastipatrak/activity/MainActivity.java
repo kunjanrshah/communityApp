@@ -47,7 +47,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.Config;
-import com.krs.vastipatrak.app.PrefManager;
 import com.krs.vastipatrak.fragments.AboutFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
@@ -58,18 +57,13 @@ import com.krs.vastipatrak.fragments.SearchFragment;
 import com.krs.vastipatrak.fragments.SyncFragment;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NotificationUtils;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog.OnDateSetListener;
-import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;
 
 import static com.krs.vastipatrak.utils.Common.Constant_Class.LOCATION_INTERVAL;
 
 
-public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, TimePickerDialog.OnTimeSetListener,
-        OnDateSetListener, GoogleApiClient.ConnectionCallbacks,
+public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener
 
 {
@@ -105,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private Toolbar mToolbar;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
-    private PrefManager prefManager;
     private LocationRequest mLocationRequest;
     private SearchView searchView;
 
@@ -114,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        prefManager = new PrefManager(this);
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mToolbar = findViewById(R.id.toolbar);
@@ -129,12 +121,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         if (mBundle != null) {
             query = mBundle.getString(Common.Constant_Class.QUERY);
             query_string = mBundle.getString(Common.Constant_Class.QUERY_STRING);
-           /* try {
-                JSONObject mJsonObject = new JSONObject(query_string);
-                Log.i("jsonObject :", "" + mJsonObject.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*/
         }
 
         if (Build.VERSION.SDK_INT >= 23) {
@@ -158,14 +144,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             AppController.isAdmin = true;
         }
         displayView(0);
-
-
-
-/*
-        String userid = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
-        String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "") + " - " + mSharedPreferences.getString(Common.Constant_Class.NATIVE_PLACE, "");
-*/
-
         if (!Common.CheckGpsStatus(this)) {
             displayLocationSettingsRequest(MainActivity.this);
         }
@@ -184,13 +162,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     displayFirebaseRegId();
 
                 } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
-                    // new push notification is received
-
                     String message = intent.getStringExtra("message");
-
                     Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
                     Log.d(TAG, "Push notification: " + message);
-                    //txtMessage.setText(message);
                 }
             }
         };
@@ -377,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment.setArguments(mBundle);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container_body, fragment);
+                fragmentTransaction.replace(R.id.container_body, fragment).addToBackStack(fragment.getClass().getSimpleName().toString());
                 fragmentTransaction.commit();
 
                 return false;
@@ -441,16 +415,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
             case 0:
                 fragment = new HomeFragment();
-
-                /*fragment = new SearchFragment();
-                Bundle mBundle = new Bundle();
-                if (query != null) {
-                    mBundle.putString(Common.Constant_Class.QUERY, query);
-                } else if (query_string != null) {
-                    mBundle.putString(Common.Constant_Class.QUERY_STRING, query_string);
-                }
-                fragment.setArguments(mBundle);*/
-
                 break;
             case 1:
 
@@ -492,11 +456,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_body, fragment);
+            fragmentTransaction.replace(R.id.container_body, fragment).addToBackStack(fragment.getClass().getSimpleName().toString());
             fragmentTransaction.commit();
-
-            // set the toolbar title
-            //  getSupportActionBar().setTitle(Common.Title);
         }
     }
 
@@ -508,7 +469,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         builder.setPositiveButton(getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
-                //mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "");
                 mEditor.clear();
                 mEditor.commit();
                 Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
@@ -549,39 +509,46 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     public void onBackPressed() {
 
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
+
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Press Back again to exit", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
         }
 
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Press Back again to exit", Toast.LENGTH_SHORT).show();
 
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce = false;
-            }
-        }, 2000);
 
     }
 
-    @Override
+   /* @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
 
         //  String date = dayOfMonth + "/" + (++monthOfYear) + "/" + year;
-        String date = year + "-" + (++monthOfYear) + "-" + dayOfMonth;
-    }
+      //  String date = year + "-" + (++monthOfYear) + "-" + dayOfMonth;
+    }*/
 
-    @Override
+    /*@Override
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
 
         String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
         String minuteString = minute < 10 ? "0" + minute : "" + minute;
         String secondString = second < 10 ? "0" + second : "" + second;
         String time = hourString + ":" + minuteString;
-    }
+    }*/
 
     synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -630,4 +597,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         buildGoogleApiClient();
     }
 
+   /* @Override
+    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+
+        String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+        String minuteString = minute < 10 ? "0" + minute : "" + minute;
+        String secondString = second < 10 ? "0" + second : "" + second;
+        String time = hourString + ":" + minuteString;
+    }*/
 }

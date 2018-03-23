@@ -26,7 +26,6 @@ import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.PersonalFilter;
 import com.krs.vastipatrak.utils.Common;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.json.JSONObject;
@@ -135,11 +134,11 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
     }
 
-    @Override
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+    /* @Override
+     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
 
-    }
-
+     }
+ */
     public void callAdvanceSearchWS() {
         JSONObject mJsonObject = new JSONObject();
         try {
@@ -440,6 +439,11 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

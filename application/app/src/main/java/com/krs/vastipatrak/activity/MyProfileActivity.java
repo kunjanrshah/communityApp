@@ -38,7 +38,6 @@ import com.krs.vastipatrak.fragments.PersonalFragment;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.json.JSONArray;
@@ -650,8 +649,13 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
     }
 
-    @Override
+   /* @Override
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+
+    }*/
+
+    @Override
+    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
 
     }
 

@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,6 +31,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
+import com.krs.vastipatrak.interfaces.OnItemClickListener;
 import com.krs.vastipatrak.model.ListEventData;
 import com.krs.vastipatrak.utils.Common;
 
@@ -49,6 +52,7 @@ public class HomeFragment extends Fragment {
     String TAG = "HomeFragment";
     SharedPreferences mSharedPreferences;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -56,8 +60,8 @@ public class HomeFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.title_events);
 
         MemoryAllocation(rootView);
-
         getEvents();
+
         return rootView;
     }
 
@@ -66,117 +70,6 @@ public class HomeFragment extends Fragment {
         realm = AppController.getInstance().realm;
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
     }
-
-
-    public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHolder> {
-
-
-        private RealmResults<ListEventData> eventData;
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            public TextView txtTitle;
-            public TextView txtDesc;
-            public TextView txtLocation;
-            public TextView txtEventDate;
-
-            public MyViewHolder(View view) {
-                super(view);
-                txtTitle = (TextView) view.findViewById(R.id.tvEventTitle);
-                txtDesc = (TextView) view.findViewById(R.id.tvEventDesc);
-                txtLocation = (TextView) view.findViewById(R.id.tvEventLocation);
-                txtEventDate = (TextView) view.findViewById(R.id.tvEventDate);
-
-            }
-        }
-
-
-        public MoviesAdapter(RealmResults<ListEventData> eventData) {
-            this.eventData = eventData;
-        }
-
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.list_event_group, parent, false);
-
-            return new MyViewHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
-
-            ListEventData data=eventData.get(position);
-            holder.txtTitle.setText(data.getTitle());
-            holder.txtDesc.setText(data.getDescription());
-            holder.txtLocation.setText(data.getLocation());
-            holder.txtEventDate.setText(data.getEventDate());
-        }
-
-        @Override
-        public int getItemCount() {
-            return eventData.size();
-        }
-    }
-
-
-  /*  private class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.MyViewHolder> {
-
-        RealmResults<ListEventData> eventData;
-        ArrayList<String> list=new ArrayList<>();
-        EventListAdapter(RealmResults<ListEventData> eventData) {
-            this.eventData = eventData;
-            list.add("1");
-            list.add("2");
-        }
-        EventListAdapter()
-        {
-            list.add("1");
-            list.add("2");
-        }
-
-
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.list_event_group, parent, false);
-
-            return new MyViewHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
-            *//*holder.txtTitle.setText(eventData.get(position).getTitle());
-            holder.txtDesc.setText(eventData.get(position).getDescription());
-            holder.txtLocation.setText(eventData.get(position).getLocation());
-            holder.txtEventDate.setText(eventData.get(position).getEventDate());*//*
-        }
-
-        @Override
-        public int getItemCount() {
-            return list.size();
-            *//*if (eventData != null && eventData.size() > 0) {
-                return eventData.size();
-            } else {
-                return 0;
-            }*//*
-        }
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            private TextView txtTitle;
-            private TextView txtDesc;
-            private TextView txtLocation;
-            private TextView txtEventDate;
-
-
-            public MyViewHolder(View view) {
-                super(view);
-                txtTitle = (TextView) view.findViewById(R.id.tvEventTitle);
-                txtDesc = (TextView) view.findViewById(R.id.tvEventDesc);
-                txtLocation = (TextView) view.findViewById(R.id.tvEventLocation);
-                txtEventDate = (TextView) view.findViewById(R.id.tvEventDate);
-            }
-        }
-    }*/
 
     private void getEvents() {
 
@@ -237,25 +130,13 @@ public class HomeFragment extends Fragment {
                                     }
                                     mEventdata.setImages(ImagesUrls);
                                 }
+                                realm.beginTransaction();
+                                realm.copyToRealmOrUpdate(mEventdata);
+                                realm.commitTransaction();
                             }
-                            realm.beginTransaction();
-                            realm.copyToRealmOrUpdate(mEventdata);
-                            realm.commitTransaction();
                         }
 
-                        RealmResults<ListEventData> eventData = realm.where(ListEventData.class).findAll();
-                       for(int i=0; i<eventData.size(); i++)
-                       {
-                           eventData.get(i).getTitle();
-                       }
-
-                        MoviesAdapter mEventListAdapter = new MoviesAdapter(eventData);
-                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-                        recycler_view.setLayoutManager(mLayoutManager);
-                        recycler_view.setItemAnimator(new DefaultItemAnimator());
-                        recycler_view.setAdapter(mEventListAdapter);
-
-
+                        setEventAdapter();
                         //Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -295,9 +176,86 @@ public class HomeFragment extends Fragment {
             };
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
+        } else {
+            setEventAdapter();
         }
     }
 
+    private void setEventAdapter() {
+
+        EventAdapter mEventListAdapter = new EventAdapter(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+
+                Fragment fragment = new EventlistFragment();
+                Bundle mBundle = new Bundle();
+                mBundle.putInt("position", position);
+                fragment.setArguments(mBundle);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.container_body, fragment).addToBackStack(fragment.getClass().getSimpleName().toString()).commit();
+            }
+        });
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        recycler_view.setLayoutManager(mLayoutManager);
+        recycler_view.setItemAnimator(new DefaultItemAnimator());
+        recycler_view.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        recycler_view.setAdapter(mEventListAdapter);
+    }
+
+    public class EventAdapter extends RecyclerView.Adapter<EventAdapter.MyViewHolder> {
 
 
+        private final OnItemClickListener listener;
+        private RealmResults<ListEventData> eventData;
+
+        public EventAdapter(OnItemClickListener listener) {
+            eventData = realm.where(ListEventData.class).findAll();
+            this.listener = listener;
+        }
+
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_event_group, parent, false);
+            final MyViewHolder holder = new MyViewHolder(itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(v, holder.getPosition());
+                }
+            });
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(MyViewHolder holder, int position) {
+
+            ListEventData data = eventData.get(position);
+            holder.txtTitle.setText(data.getTitle());
+            holder.txtDesc.setText(data.getDescription());
+            holder.txtLocation.setText(data.getLocation());
+            holder.txtEventDate.setText(data.getEventDate());
+        }
+
+        @Override
+        public int getItemCount() {
+            return eventData.size();
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            public TextView txtTitle;
+            public TextView txtDesc;
+            public TextView txtLocation;
+            public TextView txtEventDate;
+
+            public MyViewHolder(View view) {
+                super(view);
+                txtTitle = view.findViewById(R.id.tvEventTitle);
+                txtDesc = view.findViewById(R.id.tvEventDesc);
+                txtLocation = view.findViewById(R.id.tvEventLocation);
+                txtEventDate = view.findViewById(R.id.tvEventDate);
+
+            }
+        }
+    }
 }

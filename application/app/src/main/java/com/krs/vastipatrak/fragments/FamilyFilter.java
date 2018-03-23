@@ -1,8 +1,10 @@
 package com.krs.vastipatrak.fragments;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +17,7 @@ import com.krs.vastipatrak.activity.FilterActivity;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ObservableScrollView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.Calendar;
 
@@ -149,6 +152,54 @@ public class FamilyFilter extends Fragment {
 
             }
         });
+
+
+        edtchildbtime.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                final int DRAWABLE_RIGHT = 2;
+
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (edtchildbtime.getRight() - edtchildbtime.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+
+                        Calendar now = Calendar.getInstance();
+                        TimePickerDialog tpd = TimePickerDialog.newInstance((TimePickerDialog.OnTimeSetListener) getContext(), now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), false);
+                        tpd.setThemeDark(true);
+                        tpd.vibrate(true);
+                        tpd.dismissOnPause(false);
+                        tpd.enableSeconds(false);
+                        if (false) {
+                            tpd.setAccentColor(Color.parseColor("#9C27B0"));
+                        }
+                        if (true) {
+                            tpd.setTitle("Birth Time");
+                        }
+                        tpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialogInterface) {
+                                Log.d("TimePicker", "Dialog was cancelled");
+                            }
+                        });
+                        tpd.setOnTimeSetListener(new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                                String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+                                String minuteString = minute < 10 ? "0" + minute : "" + minute;
+                                String time = hourString + ":" + minuteString;
+                                edtchildbtime.setText(time);
+                            }
+                        });
+                        tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
+
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        });
+
 
         return rootView;
     }

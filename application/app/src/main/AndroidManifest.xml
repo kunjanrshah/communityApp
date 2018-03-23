@@ -37,18 +37,6 @@
 
         </activity>
 
-
-        <activity
-            android:name=".activity.SplashScreen"
-            android:label="@string/theme_app_name"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/theme_app_name"
@@ -61,23 +49,12 @@
 
         </activity>
 
-        <activity
-            android:name=".activity.WelcomeActivity"
-            android:label="@string/theme_app_name"
-            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".activity.TourActivity"
             android:label="@string/theme_app_name"
             android:screenOrientation="portrait"></activity>
 
-
-        <activity
-            android:name=".activity.ShowWebView"
-            android:label="@string/theme_app_name"
-            android:screenOrientation="portrait">
-
-        </activity>
 
         <activity
             android:name=".activity.MyProfileActivity"

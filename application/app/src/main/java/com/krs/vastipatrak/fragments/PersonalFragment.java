@@ -46,7 +46,6 @@ import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.service.MyLocationService;
 import com.krs.vastipatrak.utils.Common;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.json.JSONObject;
@@ -213,12 +212,20 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         });
                         tpd.setOnTimeSetListener(new TimePickerDialog.OnTimeSetListener() {
                             @Override
-                            public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+                            public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
                                 String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
                                 String minuteString = minute < 10 ? "0" + minute : "" + minute;
                                 String time = hourString + ":" + minuteString;
                                 edtbTime.setText(time);
                             }
+
+                           /* @Override
+                            public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+                                String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+                                String minuteString = minute < 10 ? "0" + minute : "" + minute;
+                                String time = hourString + ":" + minuteString;
+                                edtbTime.setText(time);
+                            }*/
                         });
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || AppController.isAdmin) {
                             tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");

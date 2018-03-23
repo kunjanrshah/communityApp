@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
-import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -52,12 +51,10 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.PrefManager;
-import com.krs.vastipatrak.model.ForgotPasswordData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -91,7 +88,6 @@ public class LoginActivity extends Activity {
     private boolean SignupToggle = true;
     private Button btn_signup;
     private TextView txt_forgot, txtSignup;
-    // These tags will be used to cancel the requests
     private String tag_json_obj = "jobj_req";
     private String TAG = MainActivity.class.getSimpleName();
 
@@ -157,7 +153,6 @@ public class LoginActivity extends Activity {
                 } else {
                     SignupWS();
                 }
-                //      clearAll();
             }
         });
 
@@ -178,9 +173,6 @@ public class LoginActivity extends Activity {
                     @Override
                     public void onClick(View v) {
                         ForgotPasswordWS();
-                        //String url = Common.Constant_Class.FORGOT_PASSWORD_URL + "?" + Common.Constant_Class.EMAIL_ADDRESS + "=" + "kunjanrshah@gmail.com";
-
-//                        new JsonTask().execute(url);
                     }
                 });
                 Forgot_dialog.show();
@@ -223,23 +215,6 @@ public class LoginActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
-    }
-
-    private void clearAll() {
-        inputEmail.setText("");
-        inputPassword.setText("");
-        inputName.setText("");
-        inputConformPassword.setText("");
-        //inputForgotPassword.setText("");
-        inputMobile.setText("");
-        input_email_mobile.setText("");
-
-        edt_surname.setText("");
-        edt_native.setText("");
-        edt_father_name.setText("");
-        edt_address.setText("");
-
     }
 
     private void Memory_Allocation() {
@@ -278,9 +253,6 @@ public class LoginActivity extends Activity {
 
         inputPassword = findViewById(R.id.input_password);
 
-        //  inputPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
-
-
         inputLayoutPassword = findViewById(R.id.input_layout_password);
         inputConformPassword = findViewById(R.id.input_conform_password);
 
@@ -293,7 +265,6 @@ public class LoginActivity extends Activity {
         btn_signup = findViewById(R.id.btn_signup);
         txt_forgot = findViewById(R.id.txt_forgot);
         txtSignup = findViewById(R.id.txtSignup);
-        //  fab = (FloatingActionButton) findViewById(R.id.fab);
         img_profile = findViewById(R.id.img_profile);
         spinnerSubcast = findViewById(R.id.spinnerSubcast);
         spinnerEkdo = findViewById(R.id.spinnerEkdo);
@@ -312,10 +283,8 @@ public class LoginActivity extends Activity {
         inputPassword.setOnTouchListener(new EditText.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
+
                 final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (inputPassword.getRight() - inputPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
@@ -343,10 +312,8 @@ public class LoginActivity extends Activity {
         inputConformPassword.setOnTouchListener(new EditText.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
+
                 final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (inputConformPassword.getRight() - inputConformPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
@@ -572,107 +539,6 @@ public class LoginActivity extends Activity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
-    private void send_sms(final String phoneNo, final String password) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
-        builder.setTitle(getString(R.string.app_name));
-
-        builder.setMessage("Send SMS Your Password ??");
-        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                try {
-                    SmsManager smsManager = SmsManager.getDefault();
-                    String str = "Vastipatrak Application Password :" + password;
-                    smsManager.sendTextMessage(phoneNo, null, str, null, null);
-                    Toast.makeText(LoginActivity.this, getString(R.string.sms_sent), Toast.LENGTH_LONG).show();
-                } catch (Exception e) {
-                    Toast.makeText(LoginActivity.this, getString(R.string.sms_failed), Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
-            }
-        })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
-
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-    }
-
-
-    /*ProgressDialog pd;
-    private class JsonTask extends AsyncTask<String, String, String> {
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pd = new ProgressDialog(LoginActivity.this);
-            pd.setMessage("Please wait");
-            pd.setCancelable(false);
-            pd.show();
-        }
-
-        protected String doInBackground(String... params) {
-
-
-            HttpURLConnection connection = null;
-            BufferedReader reader = null;
-
-            try {
-                URL url = new URL(params[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-
-
-                InputStream stream = connection.getInputStream();
-
-                reader = new BufferedReader(new InputStreamReader(stream));
-
-                StringBuffer buffer = new StringBuffer();
-                String line = "";
-
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line+"\n");
-                    Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
-
-                }
-
-                return buffer.toString();
-
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if (pd.isShowing()){
-                pd.dismiss();
-            }
-            Toast.makeText(LoginActivity.this,""+result,Toast.LENGTH_SHORT).show();
-
-        }
-    }*/
-
-
     private void ForgotPasswordWS() {
         if (Common.isOnline(this)) {
 
@@ -695,34 +561,17 @@ public class LoginActivity extends Activity {
                             Forgot_dialog.dismiss();
                         }
 
-                        //{"success":true,"message":"Password has been sent to your email address.","password":"UiacrkPa","mobile":"9825450261"}
                         try {
                             boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
-
-                            ForgotPasswordData mfpassData = new ForgotPasswordData();
-                            mfpassData.setMessage(message);
-                            mfpassData.setSuccess(success);
-
 
                             if (success) {
                                 if (response.has(Common.Constant_Class.PASSWORD) && response.has(Common.Constant_Class.MOBILE)) {
                                     String mobile = response.getString(Common.Constant_Class.MOBILE);
                                     String password = response.getString(Common.Constant_Class.PASSWORD);
-                                    mfpassData.getMobile(mobile);
-                                    mfpassData.setPassword(password);
-
                                     inputPassword.setText("");
-                                    // send_sms(mobile, password);
                                 }
-
                             }
-
-                            realm.beginTransaction();
-                            realm.copyToRealm(mfpassData);
-                            realm.commitTransaction();
-
-                            // Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
                             alert(message);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -736,7 +585,6 @@ public class LoginActivity extends Activity {
                         if (Forgot_dialog != null) {
                             Forgot_dialog.dismiss();
                         }
-
                     }
                 })
                 {
@@ -872,8 +720,6 @@ public class LoginActivity extends Activity {
 
 
                 jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-                // Adding request to request queue
                 AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
             } else {
 
@@ -900,7 +746,6 @@ public class LoginActivity extends Activity {
                     startActivity(mIntent);
                     finish();
                 }
-                //  Toast.makeText(LoginActivity.this, Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_LONG).show();
             }
         } else {
             Toast.makeText(LoginActivity.this, getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
@@ -1005,23 +850,9 @@ public class LoginActivity extends Activity {
                                         realm.commitTransaction();
 
                                         alert(message);
-                                        // AppController.dbHelper.InsertProfileData(mListProfileData);
-
                                     }
-                                } else {
-
-                                    JSONObject mObjData = response.getJSONObject(Common.Constant_Class.DATA);
-                                    String msg = "";
-                                    if (mObjData.has(Common.Constant_Class.EMAIL_ADDRESS)) {
-                                        msg = mObjData.getString(Common.Constant_Class.EMAIL_ADDRESS);
-                                    } else if (mObjData.has(Common.Constant_Class.MOBILE)) {
-                                        msg = mObjData.getString(Common.Constant_Class.MOBILE);
-                                    }
-                                    JSONArray mJsonArray = new JSONArray(msg);
-                                    msg = mJsonArray.getString(0);
-                                    alert(msg);
                                 }
-                                Toast.makeText(LoginActivity.this,message,Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -1073,65 +904,6 @@ public class LoginActivity extends Activity {
         }
     }
 
-    /*private void callStatusChangeWS(final int mode, final String user_id) {
-        if (Common.isOnline(this)) {
-            showProgressDialog();
-            JSONObject mJsonObject = new JSONObject();
-            try {
-                mJsonObject.put(Common.Constant_Class.IDList, user_id);
-                mJsonObject.put(Common.Constant_Class.STATUS, String.valueOf(mode));
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            String deActivate_url = Common.Constant_Class.STATUS_URL;
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, deActivate_url, mJsonObject, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    Log.d(TAG, "response: " + response.toString());
-                    hideProgressDialog();
-                    try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
-
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            ArrayList<String> lstSelectedIDs = new ArrayList<String>();
-                            lstSelectedIDs.add(user_id);
-                            Common.UpdateProfileStatus(lstSelectedIDs, String.valueOf(mode));
-
-                            if (screen != null && screen.equalsIgnoreCase(Common.Constant_Class.SEARCH_FRAGMENT)) {
-                                Intent mIntent = new Intent(LoginActivity.this, MyProfileActivity.class);
-                                mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                mIntent.putExtra(Common.Constant_Class.DATA, user_id);
-                                mIntent.putExtra(Common.Constant_Class.SCREEN, Common.Constant_Class.LOGIN_ACTIVITY);
-                                startActivity(mIntent);
-                                finish();
-                            } else {
-                                alert(message);
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    VolleyLog.d(TAG, "Error: " + error.getMessage());
-
-                    hideProgressDialog();
-                }
-            });
-            // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
-
-        } else {
-            Toast.makeText(this, Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
-        }
-    }*/
-
     private void selectImage(final Activity mActivity) {
         final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
 
@@ -1174,7 +946,6 @@ public class LoginActivity extends Activity {
             if (bmp != null) {
                 if (resultCode == RESULT_OK) {
                     Glide.with(this).load(bmp).thumbnail(0.5f).apply(RequestOptions.circleCropTransform()).into(img_profile);
-                    //img_profile.setImageBitmap(bmp);
                     str_profile_hash = Common.getBase64(this, bmp);
                 }
 

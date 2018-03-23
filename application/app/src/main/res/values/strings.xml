@@ -130,4 +130,9 @@
 
     <string name="admob_app_id">ca-app-pub-8416782517840563~2944903715</string>
     <string name="banner1">ca-app-pub-8416782517840563/4536298935</string>
+
+    <string name="player_error">Error initializing YouTube player: %s</string>
+    <string name="seek_to">Jump To</string>
+    <string name="seek_to_hint">Seconds</string>
+
 </resources>
