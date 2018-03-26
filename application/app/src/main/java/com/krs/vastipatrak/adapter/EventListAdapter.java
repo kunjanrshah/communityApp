@@ -38,7 +38,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             listUrls.add(data.getYoutubeUrl().get(i));
         }
 
-    }
+        }
 
     @Override
     public int getItemViewType(int position) {

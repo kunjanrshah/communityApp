@@ -60,7 +60,7 @@
     <string name="action_voice">Voice</string>
     <string name="action_advsearch">Advance Search</string>
     <string name="action_export">Export Search</string>
-
+    <string name="action_scan">Scan QRCode</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 

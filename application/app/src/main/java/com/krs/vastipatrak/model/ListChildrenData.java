@@ -6,7 +6,7 @@ import io.realm.annotations.PrimaryKey;
 public class ListChildrenData extends RealmObject{
 
     @PrimaryKey
-    private String child_id;
+    private String id;
     private String profile_id;
     private boolean is_interested;
     private String child_name;
@@ -94,11 +94,11 @@ public class ListChildrenData extends RealmObject{
     }
 
     public String getChild_id() {
-        return child_id;
+        return id;
     }
 
-    public void setChild_id(String child_id) {
-        this.child_id = child_id;
+    public void setChild_id(String id) {
+        this.id = id;
     }
 
     public String getChild_name() {

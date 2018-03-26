@@ -25,7 +25,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,11 +43,14 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.fragments.AboutFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
+import com.krs.vastipatrak.fragments.EventlistFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.HomeFragment;
 import com.krs.vastipatrak.fragments.MatrimonyFragment;
@@ -101,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private SharedPreferences.Editor mEditor;
     private LocationRequest mLocationRequest;
     private SearchView searchView;
+    private IntentIntegrator qrScan;
+    Fragment fragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +116,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        //intializing scan object
+        qrScan = new IntentIntegrator(this);
         drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
@@ -159,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     // now subscribe to `global` topic to receive app wide notifications
                     FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
 
-                    displayFirebaseRegId();
 
                 } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
                     String message = intent.getStringExtra("message");
@@ -169,26 +173,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         };
 
-        displayFirebaseRegId();
+
         Common.getDeviceId(this);
     }
 
-    // Fetches reg id from shared preferences
-    // and displays on the screen
-    private void displayFirebaseRegId() {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
-        String regId = pref.getString("regId", null);
-
-        Log.e(TAG, "Firebase reg id: " + regId);
-
-        if (!TextUtils.isEmpty(regId)) {
-            //txtRegId.setText("Firebase Reg Id: " + regId);
-            Log.d(TAG, "Firebase Reg Id: " + regId);
-        } else {
-            //txtRegId.setText("Firebase Reg Id is not received yet!");
-            Log.d(TAG, "Firebase Reg Id: is not received yet!");
-        }
-    }
 
 
     private void displayLocationSettingsRequest(Context context) {
@@ -382,8 +370,114 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         });
 
+        MenuItem action_scan = menu.findItem(R.id.action_scan);
+        action_scan.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                //initiating the qr code scan
+                qrScan.initiateScan();
+
+                return false;
+            }
+        });
+
+        MenuItem activeItem = menu.findItem(R.id.action_activate);
+        MenuItem activeAdd = menu.findItem(R.id.action_add);
+        MenuItem deactiveItem = menu.findItem(R.id.action_deactive);
+        MenuItem deleteItem = menu.findItem(R.id.action_delete);
+        MenuItem nonActives = menu.findItem(R.id.action_nonActives);
+        if (AppController.isAdmin) {
+            if (Common.isOnline(this)) {
+                activeItem.setVisible(true);
+                deactiveItem.setVisible(true);
+                deleteItem.setVisible(true);
+                nonActives.setVisible(true);
+                activeAdd.setVisible(true);
+            } else {
+                Toast.makeText(this, "" + Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+            }
+        }
+        nonActives.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if(fragment.getClass().getSimpleName().equalsIgnoreCase(SearchFragment.class.getSimpleName()))
+                {
+                    ((SearchFragment)fragment).callNonActivesWS();
+                }else
+                {
+                    fragment=new SearchFragment();
+                    ((SearchFragment)fragment).callNonActivesWS();
+                }
+
+                return false;
+            }
+        });
+
+        activeAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+                mIntent.putExtra(Common.Constant_Class.SCREEN, Common.Constant_Class.SEARCH_FRAGMENT);
+                startActivity(mIntent);
+                return false;
+            }
+        });
+
+        activeItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                String msg1 = ((SearchFragment)fragment).getSelectedName();
+                String msg = "Do you want to Activate " + ((SearchFragment)fragment).lstSelectedIDs.size() + " Records ? \n" + msg1;
+                if (((SearchFragment)fragment).lstSelectedIDs.size() > 0) {
+                    ((SearchFragment)fragment).alert(msg, 1);
+                } else {
+                    Toast.makeText(MainActivity.this, "Please select profile !", Toast.LENGTH_SHORT).show();
+                }
+
+                return false;
+            }
+        });
+
+        deactiveItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                String msg1 = ((SearchFragment)fragment).getSelectedName();
+                String msg = "Do you want to Deactivate  " + ((SearchFragment)fragment).lstSelectedIDs.size() + " Records ? \n" + msg1;
+                if (((SearchFragment)fragment).lstSelectedIDs.size() > 0) {
+                    ((SearchFragment)fragment).alert(msg, 0);
+                } else {
+                    Toast.makeText(MainActivity.this, "Please select profile !", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+
+
+        deleteItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                String msg1 = ((SearchFragment)fragment).getSelectedName();
+                String msg = "Do you want to Delete  " + ((SearchFragment)fragment).lstSelectedIDs.size() + " Records ? \n" + msg1;
+                if (((SearchFragment)fragment).lstSelectedIDs.size() > 0) {
+                    ((SearchFragment)fragment).alert(msg, 2);
+                } else {
+                    Toast.makeText(MainActivity.this, "Please select profile !", Toast.LENGTH_SHORT).show();
+                }
+
+                return false;
+            }
+        });
+
+
         return true;
     }
+
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -409,7 +503,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
     private void displayView(int position) {
-        Fragment fragment = null;
+
         Common.Title = getString(R.string.app_name);
         switch (position) {
 
@@ -423,7 +517,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 Intent mIntent1 = new Intent(MainActivity.this, MyProfileActivity.class);
                 startActivity(mIntent1);
                 this.overridePendingTransition(0, 0);
-               break;
+                break;
             case 2:
                 fragment = new ChangePasswordFragment();
                 break;
@@ -504,23 +598,39 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             case REQUEST_CHECK_SETTINGS:
                 break;
         }
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            //if qrcode has nothing in it
+            if (result.getContents() == null) {
+                Toast.makeText(this, "Result Not Found", Toast.LENGTH_LONG).show();
+            } else {
+                //if qr contains data
+                String id = result.getContents();
+                mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
+                mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+                mEditor.commit();
+                Intent mIntent = new Intent(this, MyProfileActivity.class);
+                startActivity(mIntent);
+            }
+        }
     }
 
     @Override
     public void onBackPressed() {
 
-
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
+        if (mSharedPreferences.getString(Common.Constant_Class.FragmentSp, "").equalsIgnoreCase(EventlistFragment.class.getSimpleName().toString())) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+           // Fragment fragment = new HomeFragment();
+            fragmentTransaction.replace(R.id.container_body, fragment).addToBackStack(fragment.getClass().getSimpleName().toString());
+            fragmentTransaction.commit();
         } else {
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
                 return;
             }
-
             this.doubleBackToExitPressedOnce = true;
             Toast.makeText(this, "Press Back again to exit", Toast.LENGTH_SHORT).show();
-
             new Handler().postDelayed(new Runnable() {
 
                 @Override
@@ -529,10 +639,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 }
             }, 2000);
         }
-
-
-
     }
+
 
    /* @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {

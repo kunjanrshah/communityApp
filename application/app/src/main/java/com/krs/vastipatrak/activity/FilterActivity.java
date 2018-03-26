@@ -96,20 +96,26 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Fragment fragment = new FragmentDrawer();
-                getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
-
-                Intent mIntent = new Intent(FilterActivity.this, MainActivity.class);
-                mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(mIntent);
-                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-
-                finish();
+                backNavigation();
             }
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        backNavigation();
+    }
+
+    private void backNavigation() {
+        Fragment fragment = new FragmentDrawer();
+        getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
+        Intent mIntent = new Intent(FilterActivity.this, MainActivity.class);
+        mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(mIntent);
+        finish();
+        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+    }
 
     private void setupViewPager(ViewPager viewPager) {
 

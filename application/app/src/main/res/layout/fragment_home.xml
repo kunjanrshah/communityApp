@@ -1,29 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_drawer"
     android:orientation="vertical">
 
-    <RelativeLayout
-
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
+        android:id="@+id/main_swipe"
+        android:hapticFeedbackEnabled="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".MainActivity"
-        tools:showIn="@layout/activity_main">
-
+        android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="vertical" />
-
-
-
-    </RelativeLayout>
+            android:scrollbars="none" />
+    </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
 
     <TextView
         android:id="@+id/txtLable"
@@ -35,6 +27,6 @@
         android:gravity="center"
         android:text="Events not found!"
         android:textColor="@android:color/black"
-        android:textSize="20sp"        />
+        android:textSize="20sp" />
 
 </LinearLayout>

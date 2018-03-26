@@ -8,13 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,18 +40,21 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+
 
 public class HomeFragment extends Fragment {
 
-    RecyclerView recycler_view;
+    RecyclerView mRecycleView;
     Realm realm;
     String TAG = "HomeFragment";
     SharedPreferences mSharedPreferences;
-
+    WaveSwipeRefreshLayout mWaveSwipeRefreshLayout ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,13 +63,22 @@ public class HomeFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.title_events);
 
         MemoryAllocation(rootView);
-        getEvents();
 
+        mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getEvents();
+            }
+        });
+
+        setEventAdapter();
         return rootView;
     }
 
     private void MemoryAllocation(View rootView) {
-        recycler_view = rootView.findViewById(R.id.recycler_view);
+        mRecycleView = rootView.findViewById(R.id.recycler_view);
+        mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) rootView.findViewById(R.id.main_swipe);
+        mWaveSwipeRefreshLayout.setWaveColor(getResources().getColor(R.color.colorPrimary));
         realm = AppController.getInstance().realm;
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
     }
@@ -74,9 +86,9 @@ public class HomeFragment extends Fragment {
     private void getEvents() {
 
         if (Common.isOnline(getActivity())) {
-            Common.initProgressDialog(getActivity());
-            Common.showProgressDialog();
-
+     //       Common.initProgressDialog(getActivity());
+      //      Common.showProgressDialog();
+            mWaveSwipeRefreshLayout.setRefreshing(true);
             JSONObject mJsonObject = new JSONObject();
             try {
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
@@ -93,7 +105,7 @@ public class HomeFragment extends Fragment {
                     Log.d(TAG, response.toString());
 
                     try {
-                        Common.hideProgressDialog();
+//                        Common.hideProgressDialog();
                         boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success) {
@@ -169,8 +181,9 @@ public class HomeFragment extends Fragment {
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
                     return params;
                 }
             };
@@ -186,21 +199,70 @@ public class HomeFragment extends Fragment {
         EventAdapter mEventListAdapter = new EventAdapter(new OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
+                RealmResults<ListEventData> eventData = realm.where(ListEventData.class).findAll();
+                int i=eventData.get(position).getImages().size();
+                int j=eventData.get(position).getYoutubeUrl().size();
+                if(i>0 || j>0)
+                {
+                    Fragment fragment = new EventlistFragment();
+                    Bundle mBundle = new Bundle();
+                    mBundle.putInt("position", position);
+                    fragment.setArguments(mBundle);
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.container_body, fragment).addToBackStack(fragment.getClass().getSimpleName().toString()).commit();
+                }else
+                {
+                    Toast.makeText(getActivity(),"Event Details not found!",Toast.LENGTH_SHORT).show();
+                }
 
-                Fragment fragment = new EventlistFragment();
-                Bundle mBundle = new Bundle();
-                mBundle.putInt("position", position);
-                fragment.setArguments(mBundle);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.container_body, fragment).addToBackStack(fragment.getClass().getSimpleName().toString()).commit();
             }
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        recycler_view.setLayoutManager(mLayoutManager);
-        recycler_view.setItemAnimator(new DefaultItemAnimator());
-        recycler_view.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-        recycler_view.setAdapter(mEventListAdapter);
+        mRecycleView.setLayoutManager(mLayoutManager);
+        mRecycleView.setItemAnimator(new DefaultItemAnimator());
+        mRecycleView.setAdapter(mEventListAdapter);
+        mWaveSwipeRefreshLayout.setRefreshing(false);
     }
+
+    private void getRandomColor(int min,int max,LinearLayout ll_event) {
+        int i= (new Random()).nextInt((max - min) + 1) + min;
+        Log.v("color number:",""+i);
+        ll_event.setAlpha((float) 0.9);
+        switch (i) {
+            case 1:
+                ll_event.setBackground(getResources().getDrawable(R.drawable.shape1));
+                break;
+            case 2:
+                ll_event.setBackground(getResources().getDrawable(R.drawable.shape2));
+                break;
+            case 3:
+                ll_event.setBackground(getResources().getDrawable(R.drawable.shape3));
+                break;
+            case 4:
+                ll_event.setBackground(getResources().getDrawable(R.drawable.shape4));
+                break;
+            case 5:
+                ll_event.setBackground(getResources().getDrawable(R.drawable.shape5));
+                break;
+            case 6:
+                ll_event.setBackground(getResources().getDrawable(R.drawable.shape6));
+                break;
+            case 7:
+                ll_event.setBackground(getResources().getDrawable(R.drawable.shape7));
+                break;
+            case 8:
+                ll_event.setBackground(getResources().getDrawable(R.drawable.shape8));
+                break;
+            case 9:
+                ll_event.setBackground(getResources().getDrawable(R.drawable.shape9));
+                break;
+            case 10:
+                ll_event.setBackground(getResources().getDrawable(R.drawable.shape10));
+                break;
+        }
+
+    }
+
 
     public class EventAdapter extends RecyclerView.Adapter<EventAdapter.MyViewHolder> {
 
@@ -235,11 +297,20 @@ public class HomeFragment extends Fragment {
             holder.txtDesc.setText(data.getDescription());
             holder.txtLocation.setText(data.getLocation());
             holder.txtEventDate.setText(data.getEventDate());
+            getRandomColor(1,10,holder.ll_event);
         }
 
         @Override
         public int getItemCount() {
-            return eventData.size();
+            if(eventData!=null && eventData.size()>0)
+            {
+                return eventData.size();
+            }else
+            {
+                mRecycleView.setVisibility(View.GONE);
+                return 0;
+            }
+
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -247,6 +318,7 @@ public class HomeFragment extends Fragment {
             public TextView txtDesc;
             public TextView txtLocation;
             public TextView txtEventDate;
+            public LinearLayout ll_event;
 
             public MyViewHolder(View view) {
                 super(view);
@@ -254,7 +326,7 @@ public class HomeFragment extends Fragment {
                 txtDesc = view.findViewById(R.id.tvEventDesc);
                 txtLocation = view.findViewById(R.id.tvEventLocation);
                 txtEventDate = view.findViewById(R.id.tvEventDate);
-
+                ll_event=view.findViewById(R.id.ll_event);
             }
         }
     }

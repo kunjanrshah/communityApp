@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,7 +29,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.adapter.ExpandableListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildData;
@@ -63,7 +61,7 @@ public class SearchFragment extends Fragment {
     HashMap<ListParentData, List<ListChildData>> listDataChild = null;
     String query = "", query_string = "";
     ProgressDialog pDialog;
-    ArrayList<String> lstSelectedIDs = null;
+    public ArrayList<String> lstSelectedIDs = null;
     ExpandableListView lvCustomList;
     ExpandableListAdapter mExpandableListAdapter = null;
     TextView txtLable = null;
@@ -193,99 +191,11 @@ public class SearchFragment extends Fragment {
                 return false;
             }
         });
-        MenuItem activeItem = menu.findItem(R.id.action_activate);
-        MenuItem activeAdd = menu.findItem(R.id.action_add);
-        MenuItem deactiveItem = menu.findItem(R.id.action_deactive);
-        MenuItem deleteItem = menu.findItem(R.id.action_delete);
-        MenuItem nonActives = menu.findItem(R.id.action_nonActives);
-
-        nonActives.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                callNonActivesWS();
-
-                return false;
-            }
-        });
-
-
-        if (AppController.isAdmin) {
-            if (Common.isOnline(getActivity())) {
-                activeItem.setVisible(true);
-                deactiveItem.setVisible(true);
-                deleteItem.setVisible(true);
-                nonActives.setVisible(true);
-                activeAdd.setVisible(true);
-            } else {
-                Toast.makeText(getActivity(), "" + Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        activeAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                Intent mIntent = new Intent(getActivity(), LoginActivity.class);
-                mIntent.putExtra(Common.Constant_Class.SCREEN, Common.Constant_Class.SEARCH_FRAGMENT);
-                startActivity(mIntent);
-                return false;
-            }
-        });
-
-        activeItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                String msg1 = getSelectedName();
-                String msg = "Do you want to Activate " + lstSelectedIDs.size() + " Records ? \n" + msg1;
-                if (lstSelectedIDs.size() > 0) {
-                    alert(msg, 1);
-                } else {
-                    Toast.makeText(getActivity(), "Please select profile !", Toast.LENGTH_SHORT).show();
-                }
-
-                return false;
-            }
-        });
-
-        deactiveItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                String msg1 = getSelectedName();
-                String msg = "Do you want to Deactivate  " + lstSelectedIDs.size() + " Records ? \n" + msg1;
-                if (lstSelectedIDs.size() > 0) {
-                    alert(msg, 0);
-                } else {
-                    Toast.makeText(getActivity(), "Please select profile !", Toast.LENGTH_SHORT).show();
-                }
-                return false;
-            }
-        });
-
-
-        deleteItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                String msg1 = getSelectedName();
-                String msg = "Do you want to Delete  " + lstSelectedIDs.size() + " Records ? \n" + msg1;
-                if (lstSelectedIDs.size() > 0) {
-                    alert(msg, 2);
-                } else {
-                    Toast.makeText(getActivity(), "Please select profile !", Toast.LENGTH_SHORT).show();
-                }
-
-                return false;
-            }
-        });
-
 
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private String getSelectedName() {
+    public String getSelectedName() {
         String msgNames = "";
         lstSelectedIDs.clear();
         if (mExpandableListAdapter != null) {
@@ -300,7 +210,7 @@ public class SearchFragment extends Fragment {
         return msgNames;
     }
 
-    private void alert(String message, final int mode) {
+    public void alert(String message, final int mode) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getActivity().getString(R.string.app_name));
 
@@ -511,7 +421,7 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    private void callNonActivesWS() {
+    public void callNonActivesWS() {
         if (Common.isOnline(getActivity())) {
             showProgressDialog();
             ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(getString(R.string.action_nonActives));
@@ -544,6 +454,8 @@ public class SearchFragment extends Fragment {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
                     return params;
                 }
             };
@@ -600,6 +512,8 @@ public class SearchFragment extends Fragment {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
                     return params;
                 }
             };
@@ -654,6 +568,8 @@ public class SearchFragment extends Fragment {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
                     return params;
                 }
             };
@@ -727,4 +643,5 @@ public class SearchFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
 }

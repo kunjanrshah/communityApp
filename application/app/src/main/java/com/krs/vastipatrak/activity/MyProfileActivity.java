@@ -106,22 +106,39 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setSubtitle("My Profile");
 
-        //  toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Fragment fragment = new FragmentDrawer();
-                getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
-                //    Intent mIntent = new Intent(MyProfileActivity.this, MainActivity.class);
-                //   mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                //    startActivity(mIntent);
-                finish();
-                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                backNavigation();
             }
         });
     }
 
+    private void backNavigation()
+    {
+        Fragment fragment = new FragmentDrawer();
+        getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
+        Intent mIntent = new Intent(MyProfileActivity.this, MainActivity.class);
+        mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(mIntent);
+        finish();
+        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            onBackPressed();
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        backNavigation();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -412,10 +429,10 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     String child_gender = mViewholder.gender;
                     String child_btime = mViewholder.edtchild_btime.getText().toString();
                     String child_bplace = mViewholder.edtchild_bplace.getText().toString();
-                    String child_mobile=mViewholder.edtMobile.getText().toString();
-                    String child_blood=mViewholder.spinnerBlood.getSelectedItem().toString();
+                    String child_mobile = mViewholder.edtMobile.getText().toString();
+                    String child_blood = mViewholder.spinnerBlood.getSelectedItem().toString();
 
-                    mJsonObject_Child.put(Common.Constant_Class.BLOOD_GROUP,child_blood);
+                    mJsonObject_Child.put(Common.Constant_Class.BLOOD_GROUP, child_blood);
                     mJsonObject_Child.put(Common.Constant_Class.MOBILE, child_mobile);
                     mJsonObject_Child.put(Common.Constant_Class.IS_INTERESTED, child_interest);
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_GENDER, child_gender);
@@ -471,8 +488,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(!(isFinishing()))
-                        {
+                        if (!(isFinishing())) {
                             Common.initProgressDialog(MyProfileActivity.this);
                             Common.showProgressDialog();
                         }
@@ -555,6 +571,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
                     return params;
                 }
             };

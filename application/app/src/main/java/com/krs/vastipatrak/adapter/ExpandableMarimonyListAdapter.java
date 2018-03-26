@@ -6,9 +6,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +29,11 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
@@ -34,7 +41,6 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListMatrimonyChildData;
 import com.krs.vastipatrak.model.ListMatrimonyParentData;
-import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.RoundedCornersTransformation;
 
@@ -292,10 +298,24 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View v) {
 
-                ListChildrenData childData = realm.where(ListChildrenData.class).equalTo(Common.Constant_Class.ID, child_id).findFirst();
-                ListProfileData profileData = realm.where(ListProfileData.class).equalTo(Common.Constant_Class.PROFILE_ID, child_profile_id).findFirst();
+                ListChildrenData childData = realm.where(ListChildrenData.class).equalTo(Common.Constant_Class.CHILD_ID, child_id).findFirst();
+                String name="";
+                Bitmap bitmap=null;
+                if (childData != null) {
+                    name = childData.getChild_name();
+                    String id=childData.getProfile_id();
+                    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+                    try {
+                        BitMatrix bitMatrix = multiFormatWriter.encode(id, BarcodeFormat.QR_CODE, 200, 200);
+                        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                        bitmap = barcodeEncoder.createBitmap(bitMatrix);
 
-                String shareBody = "", child_name = "";
+                    } catch (WriterException e) {
+                        e.printStackTrace();
+                    }
+                }
+                shareImage(bitmap,name);
+                /*String shareBody = "", child_name = "";
                 if (childData != null && profileData != null) {
 
                     child_name = childData.getChild_name();
@@ -321,19 +341,30 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                             + " Mobile :" + mobile + "\n"
                             + " Address :" + address + "\n"
                             + " City :" + city + "\n";
-                }
+                }*/
 
 
-                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+/*                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "" + child_name + " details");
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                _context.startActivity(Intent.createChooser(sharingIntent, _context.getResources().getString(R.string.share_using)));
+                _context.startActivity(Intent.createChooser(sharingIntent, _context.getResources().getString(R.string.share_using)));*/
             }
         });
         return convertView;
     }
 
+
+    void shareImage(Bitmap bitmap, String text){
+        String pathofBmp= MediaStore.Images.Media.insertImage(_context.getContentResolver(), bitmap,"title", null);
+        Uri uri = Uri.parse(pathofBmp);
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("image/*");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, text+"'s Father Profile QR Code");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, text+"'s Father Profile QR Code");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        _context.startActivity(Intent.createChooser(shareIntent, "Vastipatrak"));
+    }
 
     @Override
     public boolean hasStableIds() {
@@ -406,6 +437,8 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
                     return params;
                 }
             };

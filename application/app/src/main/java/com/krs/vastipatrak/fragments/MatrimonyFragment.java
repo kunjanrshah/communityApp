@@ -1,5 +1,6 @@
 package com.krs.vastipatrak.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -102,5 +103,10 @@ public class MatrimonyFragment extends Fragment {
                 listDataChild.put(lpd, mlstChildData);
             }
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

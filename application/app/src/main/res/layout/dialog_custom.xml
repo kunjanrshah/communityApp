@@ -5,10 +5,18 @@
     android:background="@android:color/white"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="20dp">
+    >
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="Vastipatrak"
+        android:textSize="16dp"
+        android:textStyle="bold" />
 
     <android.support.design.widget.TextInputLayout
+        android:padding="20dp"
         android:id="@+id/input_layout_forgot_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

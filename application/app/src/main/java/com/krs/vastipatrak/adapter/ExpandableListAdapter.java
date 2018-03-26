@@ -6,9 +6,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +33,11 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
@@ -431,13 +438,27 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View v) {
 
-                String shareBody = "",name="";
+                String name="";
+                Bitmap bitmap=null;
+                ImageView imageView=new ImageView(_context);
                 RealmList<ListProfileData> mListProfileData1 = Common.getDataFromParentTable(id, 3);
                 if (mListProfileData1.size() > 0) {
                     ListProfileData mListProfileData = mListProfileData1.get(0);
                     String first_name = mListProfileData.getFirst_name();
                     String last_name = mListProfileData.getLast_name();
-                    String father_name = mListProfileData.getFather_name();
+                    name = first_name + " " + last_name;
+                    String id = mListParentData.getId();
+                    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+                    try {
+                        BitMatrix bitMatrix = multiFormatWriter.encode(id, BarcodeFormat.QR_CODE, 200, 200);
+                        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                        bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                        imageView.setImageBitmap(bitmap);
+                    } catch (WriterException e) {
+                        e.printStackTrace();
+                    }
+                }
+                 /*    String father_name = mListProfileData.getFather_name();
                     String mother_name = mListProfileData.getMother_name();
                     String birth_date = mListProfileData.getBirth_date();
                     String birth_time = mListProfileData.getBirth_time();
@@ -448,7 +469,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     String phone = mListProfileData.getPhone().toString().trim().replaceAll("\\?", "").replaceAll("\\+", "");
                     String mobile = mListProfileData.getMobile().toString().trim().replaceAll("\\?", "").replaceAll("\\+", "");
                     String office_mobile = mListProfileData.getOffice_mobile();
-                    name=first_name + " " + last_name;
+
                     shareBody = " Name :" + name + "\n"
                             + " Father Name :" + father_name + "\n"
                             + " Mother Name :" + mother_name + "\n"
@@ -461,17 +482,28 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             + " Birth Date :" + birth_date + "\n"
                             + " Birth Time :" + birth_time + "\n"
                             + " Birth Place :" + birthPlace + "\n";
-                }
-
-
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                }*/
+                 shareImage(bitmap,name);
+                //share_bitMap_to_Apps(bitmap,name);
+             /*   Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, name+" details");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                _context.startActivity(Intent.createChooser(sharingIntent, _context.getResources().getString(R.string.share_using)));
+                _context.startActivity(Intent.createChooser(sharingIntent, _context.getResources().getString(R.string.share_using)));*/
             }
         });
         return convertView;
+    }
+
+    void shareImage(Bitmap bitmap,String text){
+        String pathofBmp= MediaStore.Images.Media.insertImage(_context.getContentResolver(), bitmap,"title", null);
+        Uri uri = Uri.parse(pathofBmp);
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("image/*");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, text+"'s Profile QR Code");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, text+"'s Profile");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        _context.startActivity(Intent.createChooser(shareIntent, "Vastipatrak"));
     }
 
 
@@ -565,6 +597,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
                     return params;
                 }
             };

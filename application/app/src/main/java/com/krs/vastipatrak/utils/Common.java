@@ -1220,7 +1220,8 @@ public class Common {
 
         public static final String API_KEY_VALUE = "q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
         public static final String DEVICE_TYPE_VALUE = "Android";
-        public static final String GET_CITIES_URL = "http://srbrothersinfotech.com/directory-dev/API/getCities";
+
+
         public static final String LOGIN_URL = "http://www.srbrothersinfotech.com/directory-dev/API/login";
         public static final String SIGNUP_URL = "http://www.srbrothersinfotech.com/directory-dev/API/register";
         public static final String FORGOT_PASSWORD_URL = "http://www.srbrothersinfotech.com/directory-dev/API/forgotPassword";
@@ -1231,6 +1232,7 @@ public class Common {
         public static final String INACTIVES_URL = "http://srbrothersinfotech.com/directory-dev/API/getInactiveUsers";
         public static final String PROFILE_URL = "http://srbrothersinfotech.com/directory-dev/API/profile";
         public static final String EVENTS_URL = "http://srbrothersinfotech.com/directory-dev/API/getEvents";
+        public static final String GET_CITIES_URL = "http://srbrothersinfotech.com/directory-dev/API/getCities";
 
         public static final String PREF_NAME = "Vastipatrak";
         public static final String SCREEN = "screen";
@@ -1350,6 +1352,7 @@ public class Common {
         public static int sBorder = 10;
         public static String sColor = "#FFC0CB";
         public static long LOCATION_INTERVAL = 1000 * 1 * 30;
+        public static String FragmentSp="fragment";
         /*public static final String MY_LATITUDE = "my_latitude";
         public static final String MY_LONGITUDE = "my_longitude";*/
     }

@@ -1,7 +1,9 @@
 package com.krs.vastipatrak.fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -37,10 +39,12 @@ public class EventlistFragment extends Fragment implements YouTubePlayer.OnIniti
     private RealmResults<ListEventData> eventData;
     private ListEventData data;
     private EventListAdapter adapter;
+    private SharedPreferences mSharedPreferences=null;
+    private SharedPreferences.Editor mEditor=null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.activity_eventlist, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_eventlist, container, false);
         MemoryAllocation(rootView);
 
         position = getArguments().getInt("position");
@@ -52,6 +56,8 @@ public class EventlistFragment extends Fragment implements YouTubePlayer.OnIniti
         listEvents.setLayoutManager(mLayoutManager);
         listEvents.setItemAnimator(new DefaultItemAnimator());
         listEvents.setAdapter(adapter);
+        mEditor.putString(Common.Constant_Class.FragmentSp,EventlistFragment.class.getSimpleName());
+        mEditor.commit();
 
         return rootView;
     }
@@ -59,6 +65,8 @@ public class EventlistFragment extends Fragment implements YouTubePlayer.OnIniti
     private void MemoryAllocation(View rootView) {
         listEvents = rootView.findViewById(R.id.listEvents);
         realm = AppController.getInstance().realm;
+        mSharedPreferences=getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mEditor=mSharedPreferences.edit();
     }
 
     @Override

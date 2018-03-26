@@ -32,10 +32,18 @@
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
+        android:id="@+id/action_scan"
+        android:icon="@drawable/ic_food"
+        android:title="@string/action_scan"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+
+    <item
         android:id="@+id/action_export"
         android:icon="@drawable/ic_food"
         android:title="@string/action_export"
         app:showAsAction="ifRoom|collapseActionView" />
+
 
     <item
         android:id="@+id/action_nonActives"

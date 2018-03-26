@@ -50,7 +50,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.app.PrefManager;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
@@ -69,7 +68,7 @@ public class LoginActivity extends Activity {
     private final String[] INIT_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS};
     private final int INIT_REQUEST = 1;
     JSONObject json = null;
-    Dialog Forgot_dialog;
+
     String[] SubcastList = {"Dasha"};
     String[] EkdoList = {"Modasa"};
     ImageView img_profile;
@@ -84,7 +83,6 @@ public class LoginActivity extends Activity {
     private TextInputLayout inputLayoutName, inputLayoutEmail, input_layout_email_mobile, inputLayoutPassword, inputLayoutConformPassword, InputLayoutForgotPassword, inputLayoutMobile, input_layout_father_name, input_layout_surname, input_layout_address, input_layout_native_place;
     private SharedPreferences mSharedPreferences = null;
     private SharedPreferences.Editor mEditor;
-    private PrefManager prefManager;
     private boolean SignupToggle = true;
     private Button btn_signup;
     private TextView txt_forgot, txtSignup;
@@ -120,22 +118,10 @@ public class LoginActivity extends Activity {
             }
         }
 
-        if (!mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").toString().equalsIgnoreCase("") /*&& screen==null*/) {
+        if (!mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").toString().equalsIgnoreCase("")) {
             Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
             mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
             startActivity(mIntent);
-        }
-
-        if (!mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").toString().equalsIgnoreCase("") && screen != null && screen.equalsIgnoreCase(Common.Constant_Class.SEARCH_FRAGMENT)) {
-
-            if (!prefManager.isSliderWelcome()) {
-                Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
-                mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                startActivity(mIntent);
-            } else {
-                prefManager.setSliderWelcome(false);
-            }
-            finish();
         }
 
         txtSignup.setOnClickListener(new View.OnClickListener() {
@@ -160,22 +146,22 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                Forgot_dialog = new Dialog(LoginActivity.this);
-                Forgot_dialog.setContentView(R.layout.dialog_custom);
-                Forgot_dialog.setTitle(getResources().getString(R.string.forgot_password));
-
-                InputLayoutForgotPassword = Forgot_dialog.findViewById(R.id.input_layout_forgot_password);
-                inputForgotPassword = Forgot_dialog.findViewById(R.id.input_forgot_password);
+                final Dialog forgot_dialog = new Dialog(LoginActivity.this);
+                forgot_dialog.setContentView(R.layout.dialog_custom);
+                forgot_dialog.setTitle(R.string.app_name);
+                InputLayoutForgotPassword = forgot_dialog.findViewById(R.id.input_layout_forgot_password);
+                inputForgotPassword = forgot_dialog.findViewById(R.id.input_forgot_password);
                 inputForgotPassword.addTextChangedListener(new MyTextWatcher(inputForgotPassword));
-                Button btn_send = Forgot_dialog.findViewById(R.id.btn_send);
+                Button btn_send = forgot_dialog.findViewById(R.id.btn_send);
 
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        forgot_dialog.dismiss();
                         ForgotPasswordWS();
                     }
                 });
-                Forgot_dialog.show();
+                forgot_dialog.show();
             }
         });
 
@@ -218,9 +204,6 @@ public class LoginActivity extends Activity {
     }
 
     private void Memory_Allocation() {
-
-
-        prefManager = new PrefManager(this);
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         realm = AppController.getInstance().realm;
@@ -524,7 +507,7 @@ public class LoginActivity extends Activity {
         }
     }
 
-    private void alert(String message) {
+   /* private void alert(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getString(R.string.app_name));
 
@@ -538,7 +521,7 @@ public class LoginActivity extends Activity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
-
+*/
     private void ForgotPasswordWS() {
         if (Common.isOnline(this)) {
 
@@ -557,9 +540,6 @@ public class LoginActivity extends Activity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, response.toString());
-                        if (Forgot_dialog != null) {
-                            Forgot_dialog.dismiss();
-                        }
 
                         try {
                             boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
@@ -572,7 +552,8 @@ public class LoginActivity extends Activity {
                                     inputPassword.setText("");
                                 }
                             }
-                            alert(message);
+                            Common.alert(LoginActivity.this,message);
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -582,9 +563,7 @@ public class LoginActivity extends Activity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         VolleyLog.d(TAG, "Error: " + error.getMessage());
-                        if (Forgot_dialog != null) {
-                            Forgot_dialog.dismiss();
-                        }
+
                     }
                 })
                 {
@@ -674,10 +653,10 @@ public class LoginActivity extends Activity {
                                     finish();
                                     Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                                 } else {
-                                    alert("Registration request is pending. Please contact to Admin !!");
+                                    Common.alert(LoginActivity.this,"Registration request is pending. Please contact to Admin !!");
                                 }
                             } else {
-                                alert(message);
+                                Common.alert(LoginActivity.this,message);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -711,9 +690,9 @@ public class LoginActivity extends Activity {
                     public Map<String, String> getHeaders() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
                         params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                        params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
                         params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-
+                        params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                        params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
                         return params;
                     }
                 };
@@ -848,8 +827,7 @@ public class LoginActivity extends Activity {
                                         realm.beginTransaction();
                                         realm.copyToRealm(mListProfileData);
                                         realm.commitTransaction();
-
-                                        alert(message);
+                                        Common.alert(LoginActivity.this,message);
                                     }
                                 }
                                 Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
@@ -885,9 +863,9 @@ public class LoginActivity extends Activity {
                         public Map<String, String> getHeaders() throws AuthFailureError {
                             Map<String, String> params = new HashMap<>();
                             params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                            params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
                             params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-
+                            params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                            params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
                             return params;
                         }
                     };
