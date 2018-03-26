@@ -140,6 +140,10 @@ public class Common {
         return true;
     }
 
+    public static boolean canCAMARA(Context mContext) {
+        return (hasPermission(mContext, Manifest.permission.CAMERA));
+    }
+
     public static boolean canCallPhone(Context mContext) {
         return (hasPermission(mContext, Manifest.permission.CALL_PHONE));
     }
@@ -760,11 +764,15 @@ public class Common {
     }
 
     public static void UpdateProfileStatus(ArrayList<String> lstSelectedIDs, String status) {
-        for (int i = 0; i < lstSelectedIDs.size(); i++) {
-            ListProfileData mListProfile = realm.where(ListProfileData.class).equalTo(Common.Constant_Class.PROFILE_ID, lstSelectedIDs.get(i)).findFirst();
-            realm.beginTransaction();
-            mListProfile.setStatus(status);
-            realm.commitTransaction();
+        try {
+            for (int i = 0; i < lstSelectedIDs.size(); i++) {
+                ListProfileData mListProfile = realm.where(ListProfileData.class).equalTo(Common.Constant_Class.PROFILE_ID, lstSelectedIDs.get(i)).findFirst();
+                realm.beginTransaction();
+                mListProfile.setStatus(status);
+                realm.commitTransaction();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -772,7 +780,9 @@ public class Common {
 
         for (int i = 0; i < lstSelectedIDs.size(); i++) {
             RealmResults<ListProfileData> results = realm.where(ListProfileData.class).equalTo(Constant_Class.PROFILE_ID, lstSelectedIDs.get(i)).findAll();
+            realm.beginTransaction();
             results.deleteAllFromRealm();
+            realm.commitTransaction();
         }
     }
 
@@ -991,8 +1001,16 @@ public class Common {
         }
     }
 
-    public static void showProgressDialog() {
+    public static void showProgressDialog(Context mContext) {
         try {
+
+            if (pDialog == null) {
+                pDialog = new ProgressDialog(mContext);
+                pDialog.setMessage(Constant_Class.LOADING);
+                pDialog.setCancelable(false);
+            }
+
+
             if (!pDialog.isShowing()) pDialog.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1003,13 +1021,6 @@ public class Common {
         if (pDialog.isShowing()) pDialog.cancel();
     }
 
-    public static void initProgressDialog(Activity mActiviy) {
-        if (pDialog == null) {
-            pDialog = new ProgressDialog(mActiviy);
-            pDialog.setMessage(Constant_Class.LOADING);
-            pDialog.setCancelable(false);
-        }
-    }
 
     public static void ExportSearchData(Activity mActiviy) {
         List<ListProfileData> mListProfileResult = AppController.getInstance().mListSearchList;
@@ -1026,9 +1037,7 @@ public class Common {
                     directory.mkdirs();
                 }
 
-                initProgressDialog(mActiviy);
-                showProgressDialog();
-
+                showProgressDialog(mActiviy);
 
                 //file path
                 File file = new File(directory, csvFile);
@@ -1212,6 +1221,10 @@ public class Common {
         public static final String BUSINESS = "     BUSINESS  ";
         public static final String FAMILY = "     FAMILY  ";
 
+        public static final int NonActive = 0;
+        public static final String AdminControl = "AdminControl";
+
+
         public static final String API_KEY = "api_key";
         public static final String DEVICE_TYPE = "device_type";
         public static final String DEVICE_TOKEN = "device_token";
@@ -1352,7 +1365,7 @@ public class Common {
         public static int sBorder = 10;
         public static String sColor = "#FFC0CB";
         public static long LOCATION_INTERVAL = 1000 * 1 * 30;
-        public static String FragmentSp="fragment";
+        public static String FragmentSp = "fragment";
         /*public static final String MY_LATITUDE = "my_latitude";
         public static final String MY_LONGITUDE = "my_longitude";*/
     }

@@ -31,6 +31,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.ExpandableListAdapter;
 import com.krs.vastipatrak.app.AppController;
+import com.krs.vastipatrak.interfaces.DisplaySearchFragment;
 import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
 import com.krs.vastipatrak.model.ListProfileData;
@@ -48,20 +49,24 @@ import java.util.Map;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
+import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
+import static com.krs.vastipatrak.utils.Common.showProgressDialog;
 
-public class SearchFragment extends Fragment {
+
+public class SearchFragment extends Fragment implements DisplaySearchFragment {
 
 
     private static final String[] CALL_PHONE_PERMS = {Manifest.permission.CALL_PHONE};
     private static final int CALL_PHONE_REQUEST = 3;
+    public ArrayList<String> lstSelectedIDs = null;
     String TAG = "SearchFragment";
     String tag_json_obj = "jobj_req";
     SearchView searchView;
     ArrayList<ListParentData> listDataHeader = null;
     HashMap<ListParentData, List<ListChildData>> listDataChild = null;
     String query = "", query_string = "";
+    int adminControl = -1;
     ProgressDialog pDialog;
-    public ArrayList<String> lstSelectedIDs = null;
     ExpandableListView lvCustomList;
     ExpandableListAdapter mExpandableListAdapter = null;
     TextView txtLable = null;
@@ -93,14 +98,14 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("Search");
         Bundle args = getArguments();
         if (args != null) {
-            query = args.getString(Common.Constant_Class.QUERY);
-            query_string = args.getString(Common.Constant_Class.QUERY_STRING);
+            query = args.getString(Common.Constant_Class.QUERY, "");
+            query_string = args.getString(Common.Constant_Class.QUERY_STRING, "");
+            adminControl = args.getInt(Common.Constant_Class.AdminControl, -1);
         }
 
         Memory_Allocation(rootView);
@@ -110,18 +115,19 @@ public class SearchFragment extends Fragment {
             callSearchWS(query);
         } else if (query_string != null && !query_string.equalsIgnoreCase("")) {
             callSearchWS(query_string);
+        } else if (adminControl == Common.Constant_Class.NonActive) {
+            callNonActivesWS();
         } else {
             lvCustomList.setVisibility(View.GONE);
             txtLable.setVisibility(View.VISIBLE);
-       }
+        }
 
         lvCustomList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             int previousGroup = -1;
 
             @Override
             public void onGroupExpand(int groupPosition) {
-                if (groupPosition != previousGroup)
-                    lvCustomList.collapseGroup(previousGroup);
+                if (groupPosition != previousGroup) lvCustomList.collapseGroup(previousGroup);
                 previousGroup = groupPosition;
             }
         });
@@ -129,25 +135,6 @@ public class SearchFragment extends Fragment {
         return rootView;
     }
 
-
-    private void showProgressDialog() {
-
-        if (pDialog == null) {
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage(Common.Constant_Class.LOADING);
-            pDialog.setCancelable(true);
-        }
-
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
-
-    private void hideProgressDialog() {
-        if (pDialog != null) {
-            pDialog.dismiss();
-            pDialog = null;
-        }
-    }
 
     private void Memory_Allocation(View root) {
 
@@ -165,8 +152,8 @@ public class SearchFragment extends Fragment {
         listDataChild = new HashMap<>();
 
         //mAdView = root.findViewById(R.id.adView);
-//        mAdView.setAdSize(AdSize.BANNER);
-//        mAdView.setAdUnitId(getString(R.string.banner1));
+        //        mAdView.setAdSize(AdSize.BANNER);
+        //        mAdView.setAdUnitId(getString(R.string.banner1));
     }
 
     @Override
@@ -292,7 +279,7 @@ public class SearchFragment extends Fragment {
                     String status = mJsondata.getString(Common.Constant_Class.STATUS);
                     String city = mJsondata.getString(Common.Constant_Class.CITY);
                     String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
-                    boolean is_location_enable = mJsondata.getBoolean(Common.Constant_Class.IS_LOCATION_ENABLE);
+                    boolean is_location_enable = Boolean.parseBoolean(mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE));
 
                     if (status.equalsIgnoreCase("1") || stat == 0) {
                         ListParentData lpd = new ListParentData();
@@ -338,10 +325,16 @@ public class SearchFragment extends Fragment {
 
                 mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
                 lvCustomList.setAdapter(mExpandableListAdapter);
+                Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
+                hideProgressDialog();
             } else {
+                hideProgressDialog();
                 lvCustomList.setVisibility(View.GONE);
                 txtLable.setVisibility(View.VISIBLE);
+                Common.alert(getActivity(), message);
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -423,11 +416,13 @@ public class SearchFragment extends Fragment {
 
     public void callNonActivesWS() {
         if (Common.isOnline(getActivity())) {
-            showProgressDialog();
+            showProgressDialog(getActivity());
             ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(getString(R.string.action_nonActives));
 
             JSONObject mJsonObject = new JSONObject();
             try {
+
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -437,7 +432,7 @@ public class SearchFragment extends Fragment {
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
-                    hideProgressDialog();
+
                     displayData(response, 0);
                 }
             }, new Response.ErrorListener() {
@@ -455,7 +450,7 @@ public class SearchFragment extends Fragment {
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
                     params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -468,10 +463,10 @@ public class SearchFragment extends Fragment {
 
     private void callStatusChangeWS(final int mode) {
         if (Common.isOnline(getActivity())) {
-            showProgressDialog();
+            showProgressDialog(getActivity());
             JSONObject mJsonObject = new JSONObject();
             try {
-
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.IDList, android.text.TextUtils.join(",", lstSelectedIDs));
                 mJsonObject.put(Common.Constant_Class.STATUS, String.valueOf(mode));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
@@ -513,7 +508,7 @@ public class SearchFragment extends Fragment {
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
                     params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -527,10 +522,11 @@ public class SearchFragment extends Fragment {
 
     private void callDeleteWS() {
         if (Common.isOnline(getActivity())) {
-            showProgressDialog();
+            showProgressDialog(getActivity());
             String delete_url = Common.Constant_Class.DELETE_URL;
             JSONObject mJsonObject = new JSONObject();
             try {
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.IDList, android.text.TextUtils.join(",", lstSelectedIDs));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             } catch (Exception e) {
@@ -569,7 +565,7 @@ public class SearchFragment extends Fragment {
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
                     params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -638,10 +634,45 @@ public class SearchFragment extends Fragment {
     public void onStop() {
         super.onStop();
         try {
-            AppController.getInstance().mListSearchList=null;
+            AppController.getInstance().mListSearchList = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
+    @Override
+    public void CallActivate() {
+        String msg1 = getSelectedName();
+        String msg = "Do you want to Activate " + lstSelectedIDs.size() + " Records ? \n" + msg1;
+        if (lstSelectedIDs.size() > 0) {
+            alert(msg, 1);
+        } else {
+            Toast.makeText(getActivity(), "Please select profile !", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void CallDelete() {
+        String msg1 = getSelectedName();
+        String msg = "Do you want to Delete  " + lstSelectedIDs.size() + " Records ? \n" + msg1;
+        if (lstSelectedIDs.size() > 0) {
+            alert(msg, 2);
+        } else {
+            Toast.makeText(getActivity(), "Please select profile !", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void CallDeActivate() {
+        String msg1 = getSelectedName();
+        String msg = "Do you want to Deactivate  " + lstSelectedIDs.size() + " Records ? \n" + msg1;
+        if (lstSelectedIDs.size() > 0) {
+            alert(msg, 0);
+        } else {
+            Toast.makeText(getActivity(), "Please select profile !", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 }

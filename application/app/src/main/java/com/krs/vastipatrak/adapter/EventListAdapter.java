@@ -26,7 +26,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     private final static int TYPE_IMAGE = 1, TYPE_YOUTUBE = 2;
     private Context context;
     private ArrayList<String> listUrls;
-
+    private String YoutubeUrl = "";
 
     public EventListAdapter(Context context, ListEventData data) {
         this.context = context;
@@ -37,8 +37,15 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         for (int i = 0; i < data.getYoutubeUrl().size(); i++) {
             listUrls.add(data.getYoutubeUrl().get(i));
         }
+    }
 
-        }
+    public String getYoutubeUrl() {
+        return YoutubeUrl;
+    }
+
+    public void setYoutubeUrl(String youtubeUrl) {
+        YoutubeUrl = youtubeUrl;
+    }
 
     @Override
     public int getItemViewType(int position) {
@@ -69,8 +76,8 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         int viewType = holder.getItemViewType();
         if (viewType == 1) {
             Glide.with(context).load(listUrls.get(position)).apply(new RequestOptions().override(1200, 1000).placeholder(R.drawable.ic_launcher).error(R.drawable.ic_launcher)).into(holder.eventImage);
-            //Glide.with(context).load(listUrls.get(position)).thumbnail(1f).into(holder.eventImage);
         } else {
+            setYoutubeUrl(listUrls.get(position));
             ViewHolder.youTubeView.initialize(Common.Constant_Class.YOUTUBE_API_KEY, (YouTubePlayer.OnInitializedListener) context);
         }
     }

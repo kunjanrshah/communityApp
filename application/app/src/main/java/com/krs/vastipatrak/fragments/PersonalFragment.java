@@ -101,8 +101,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_personal, container, false);
         MemoryAllocation(rootView);
 
@@ -315,13 +314,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                         }
 
                                     }
-                                })
-                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        })
-                                        .show();
+                                }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).show();
 
                             } else {
                                 double lat = Double.valueOf(MainActivity.lat);
@@ -374,11 +371,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setContentView(R.layout.image_dialog);
         dialog.setTitle(name);
-
         ImageView image = dialog.findViewById(R.id.img_dialog);
         Glide.with(getActivity()).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
-
-        // new Common.ImageLoadTask(url, image).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         dialog.show();
     }
 
@@ -391,8 +385,13 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals("Take Photo")) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent, 0);
+                    if (Common.canCAMARA(getActivity())) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(intent, 0);
+                    } else {
+                        requestPermissions(MainActivity.CALL_CAMARA, MainActivity.CAMARA_REQUEST);
+                    }
+
                 } else if (items[item].equals("Choose from Library")) {
                     Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
@@ -591,12 +590,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             if (mListProfileData.getGender().equalsIgnoreCase("male") || mListProfileData.getGender().equalsIgnoreCase("")) {
                 rbtnF.setChecked(false);
                 rbtnM.setChecked(true);
-                gender="Male";
+                gender = "Male";
 
             } else {
                 rbtnF.setChecked(true);
                 rbtnM.setChecked(false);
-                gender="Female";
+                gender = "Female";
             }
 
             if (!mListProfileData.getUser_lat().equalsIgnoreCase("null") && !mListProfileData.getUser_lat().equalsIgnoreCase("")) {
@@ -874,7 +873,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
                     params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
                     return params;
                 }
             };

@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -67,8 +68,9 @@ public class LoginActivity extends Activity {
 
     private final String[] INIT_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS};
     private final int INIT_REQUEST = 1;
+    private final int CAMARA_REQUEST = 4;
+    private final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
     JSONObject json = null;
-
     String[] SubcastList = {"Dasha"};
     String[] EkdoList = {"Modasa"};
     ImageView img_profile;
@@ -118,10 +120,11 @@ public class LoginActivity extends Activity {
             }
         }
 
-        if (!mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").toString().equalsIgnoreCase("")) {
+        if (!mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").toString().equalsIgnoreCase("") && screen == null) {
             Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
             mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
             startActivity(mIntent);
+            finish();
         }
 
         txtSignup.setOnClickListener(new View.OnClickListener() {
@@ -795,7 +798,6 @@ public class LoginActivity extends Activity {
                                         String first_name = response.getString(Common.Constant_Class.FIRST_NAME);
                                         String last_name = response.getString(Common.Constant_Class.LAST_NAME);
 
-
                                         mEditor.putString(Common.Constant_Class.EMAIL, email);
                                         mEditor.putString(Common.Constant_Class.PASSWORD, password);
                                         mEditor.putString(Common.Constant_Class.USER_ID, user_id);
@@ -804,12 +806,10 @@ public class LoginActivity extends Activity {
                                         mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, profile_url);
                                         mEditor.commit();
 
-
                                         Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
                                         mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                                         startActivity(mIntent);
                                         finish();
-                                        Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
                                     } else {
 
                                         ListProfileData mListProfileData = new ListProfileData();
@@ -827,10 +827,11 @@ public class LoginActivity extends Activity {
                                         realm.beginTransaction();
                                         realm.copyToRealm(mListProfileData);
                                         realm.commitTransaction();
-                                        Common.alert(LoginActivity.this,message);
+
                                     }
                                 }
-                                Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+                                Common.alert(LoginActivity.this, message);
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -888,13 +889,20 @@ public class LoginActivity extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals("Take Photo")) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    mActivity.startActivityForResult(intent, 0);
+                    if (Common.canCAMARA(LoginActivity.this)) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(intent, 0);
+                    } else {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            requestPermissions(CALL_CAMARA, CAMARA_REQUEST);
+                        }
+                    }
                 } else if (items[item].equals("Choose from Library")) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
                     mActivity.startActivityForResult(Intent.createChooser(intent, "Select File"), 1);
                 } else if (items[item].equals("Cancel")) {

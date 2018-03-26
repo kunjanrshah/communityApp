@@ -50,13 +50,13 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.fragments.AboutFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
-import com.krs.vastipatrak.fragments.EventlistFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.HomeFragment;
 import com.krs.vastipatrak.fragments.MatrimonyFragment;
 import com.krs.vastipatrak.fragments.RelativeFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
 import com.krs.vastipatrak.fragments.SyncFragment;
+import com.krs.vastipatrak.interfaces.DisplaySearchFragment;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
@@ -65,17 +65,18 @@ import java.util.ArrayList;
 import static com.krs.vastipatrak.utils.Common.Constant_Class.LOCATION_INTERVAL;
 
 
-public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener
+public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 
 {
 
+    public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
+    public static final int CAMARA_REQUEST = 4;
     static final int REQUEST_CHECK_SETTINGS = 199;
     private static final String TAG = MainActivity.class.getSimpleName();
     public static Location mLastLocation;
     public static GoogleApiClient mGoogleApiClient;
     public static String lat, lon;
-    private final String[] INIT_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS};
+    private final String[] INIT_PERMS = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS};
     private final String[] LOCATION_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION};
     private final String[] CALL_PERMS = {Manifest.permission.CALL_PHONE};
     private final int INIT_REQUEST = 1;
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         }
     };
+    Fragment fragment = null;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private Toolbar mToolbar;
     private SharedPreferences mSharedPreferences;
@@ -104,8 +106,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private LocationRequest mLocationRequest;
     private SearchView searchView;
     private IntentIntegrator qrScan;
-    Fragment fragment = null;
-
+    private DisplaySearchFragment displaySearchFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +136,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 requestPermissions(LOCATION_PERMS, LOCATION_REQUEST);
             } else if (!Common.canCallPhone(this)) {
                 requestPermissions(CALL_PERMS, CALL_REQUEST);
+            } else if (!Common.canCallPhone(this)) {
+                requestPermissions(CALL_CAMARA, CAMARA_REQUEST);
             }
         }
         if (Build.VERSION.SDK_INT >= 23) {
@@ -176,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         Common.getDeviceId(this);
     }
-
 
 
     private void displayLocationSettingsRequest(Context context) {
@@ -230,13 +232,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     protected void onResume() {
         super.onResume();
         // register GCM registration complete receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(Config.REGISTRATION_COMPLETE));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(Config.REGISTRATION_COMPLETE));
 
         // register new push message receiver
         // by doing this, the activity will be notified each time a new message arrives
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(Config.PUSH_NOTIFICATION));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(Config.PUSH_NOTIFICATION));
 
         // clear the notification area when the app is opened
         NotificationUtils.clearNotifications(getApplicationContext());
@@ -304,7 +304,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 } else if (Common.canAccessLocation(this)) {
                     buildGoogleApiClient();
                 }
-
+                break;
+            case CAMARA_REQUEST:
+                Toast.makeText(this, "Give permission to access CAMARA ! ", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -333,14 +335,15 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                Fragment fragment = new SearchFragment();
                 Bundle mBundle = new Bundle();
-                mBundle.putString(Common.Constant_Class.QUERY, query);
-                fragment.setArguments(mBundle);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container_body, fragment).addToBackStack(fragment.getClass().getSimpleName().toString());
-                fragmentTransaction.commit();
+
+                Fragment mSearch = new SearchFragment();
+                displaySearchFragment = (DisplaySearchFragment) mSearch;
+                mBundle.putString(Common.Constant_Class.QUERY, query);
+                mSearch.setArguments(mBundle);
+                fragmentTransaction.replace(R.id.container_body, mSearch).commit();
 
                 return false;
             }
@@ -375,7 +378,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                //initiating the qr code scan
                 qrScan.initiateScan();
 
                 return false;
@@ -401,15 +403,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         nonActives.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if(fragment.getClass().getSimpleName().equalsIgnoreCase(SearchFragment.class.getSimpleName()))
-                {
-                    ((SearchFragment)fragment).callNonActivesWS();
-                }else
-                {
-                    fragment=new SearchFragment();
-                    ((SearchFragment)fragment).callNonActivesWS();
-                }
 
+                moveToSearch(1);
                 return false;
             }
         });
@@ -427,15 +422,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         activeItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-
-                String msg1 = ((SearchFragment)fragment).getSelectedName();
-                String msg = "Do you want to Activate " + ((SearchFragment)fragment).lstSelectedIDs.size() + " Records ? \n" + msg1;
-                if (((SearchFragment)fragment).lstSelectedIDs.size() > 0) {
-                    ((SearchFragment)fragment).alert(msg, 1);
-                } else {
-                    Toast.makeText(MainActivity.this, "Please select profile !", Toast.LENGTH_SHORT).show();
-                }
-
+                moveToSearch(2);
                 return false;
             }
         });
@@ -443,14 +430,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         deactiveItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                moveToSearch(3);
 
-                String msg1 = ((SearchFragment)fragment).getSelectedName();
-                String msg = "Do you want to Deactivate  " + ((SearchFragment)fragment).lstSelectedIDs.size() + " Records ? \n" + msg1;
-                if (((SearchFragment)fragment).lstSelectedIDs.size() > 0) {
-                    ((SearchFragment)fragment).alert(msg, 0);
-                } else {
-                    Toast.makeText(MainActivity.this, "Please select profile !", Toast.LENGTH_SHORT).show();
-                }
                 return false;
             }
         });
@@ -460,24 +441,54 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                String msg1 = ((SearchFragment)fragment).getSelectedName();
-                String msg = "Do you want to Delete  " + ((SearchFragment)fragment).lstSelectedIDs.size() + " Records ? \n" + msg1;
-                if (((SearchFragment)fragment).lstSelectedIDs.size() > 0) {
-                    ((SearchFragment)fragment).alert(msg, 2);
-                } else {
-                    Toast.makeText(MainActivity.this, "Please select profile !", Toast.LENGTH_SHORT).show();
-                }
-
+                moveToSearch(4);
                 return false;
             }
         });
-
-
         return true;
     }
 
 
+    private void moveToSearch(int menu) {
 
+        Bundle mBundle = new Bundle();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        switch (menu) {
+            case 1:
+                Fragment mSearch1 = new SearchFragment();
+                displaySearchFragment = (DisplaySearchFragment) mSearch1;
+                mBundle.putInt(Common.Constant_Class.AdminControl, Common.Constant_Class.NonActive);
+                mSearch1.setArguments(mBundle);
+                fragmentTransaction.replace(R.id.container_body, mSearch1).commit();
+                break;
+            case 2:
+                try {
+                    displaySearchFragment.CallActivate();
+                } catch (Exception e) {
+                    Toast.makeText(this, "Select Non-Actives First", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+                break;
+            case 3:
+                try {
+                    displaySearchFragment.CallDeActivate();
+                } catch (Exception e) {
+                    Toast.makeText(this, "Select Non-Actives First", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+                break;
+            case 4:
+                try {
+                    displaySearchFragment.CallDelete();
+                } catch (Exception e) {
+                    Toast.makeText(this, "Select Non-Actives First", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+                break;
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -504,7 +515,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     private void displayView(int position) {
 
-        Common.Title = getString(R.string.app_name);
         switch (position) {
 
             case 0:
@@ -550,7 +560,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_body, fragment).addToBackStack(fragment.getClass().getSimpleName().toString());
+            fragmentTransaction.replace(R.id.container_body, fragment);
             fragmentTransaction.commit();
         }
     }
@@ -615,16 +625,17 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     }
 
+
     @Override
     public void onBackPressed() {
 
-        if (mSharedPreferences.getString(Common.Constant_Class.FragmentSp, "").equalsIgnoreCase(EventlistFragment.class.getSimpleName().toString())) {
+ /*       if (mSharedPreferences.getString(Common.Constant_Class.FragmentSp, "").equalsIgnoreCase(EventlistActivity.class.getSimpleName().toString())) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-           // Fragment fragment = new HomeFragment();
-            fragmentTransaction.replace(R.id.container_body, fragment).addToBackStack(fragment.getClass().getSimpleName().toString());
+            fragmentTransaction.replace(R.id.container_body, fragment);
             fragmentTransaction.commit();
-        } else {
+        }
+        else {*/
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
                 return;
@@ -638,7 +649,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     doubleBackToExitPressedOnce = false;
                 }
             }, 2000);
-        }
+        //     }
     }
 
 
@@ -659,11 +670,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }*/
 
     synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
     }
 
     @Override

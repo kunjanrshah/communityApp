@@ -489,8 +489,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     @Override
                     public void run() {
                         if (!(isFinishing())) {
-                            Common.initProgressDialog(MyProfileActivity.this);
-                            Common.showProgressDialog();
+                            Common.showProgressDialog(MyProfileActivity.this);
                         }
                     }
                 });

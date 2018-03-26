@@ -11,6 +11,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
 
     <application
         android:name=".app.AppController"
@@ -54,6 +57,11 @@
             android:name=".activity.TourActivity"
             android:label="@string/theme_app_name"
             android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".activity.EventlistActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/theme_app_name"></activity>
 
 
         <activity

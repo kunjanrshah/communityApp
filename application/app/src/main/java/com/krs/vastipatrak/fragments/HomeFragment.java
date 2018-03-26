@@ -2,10 +2,10 @@ package com.krs.vastipatrak.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.EventlistActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.interfaces.OnItemClickListener;
 import com.krs.vastipatrak.model.ListEventData;
@@ -54,6 +55,7 @@ public class HomeFragment extends Fragment {
     Realm realm;
     String TAG = "HomeFragment";
     SharedPreferences mSharedPreferences;
+    SharedPreferences.Editor mEditor;
     WaveSwipeRefreshLayout mWaveSwipeRefreshLayout ;
 
     @Override
@@ -77,10 +79,13 @@ public class HomeFragment extends Fragment {
 
     private void MemoryAllocation(View rootView) {
         mRecycleView = rootView.findViewById(R.id.recycler_view);
-        mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) rootView.findViewById(R.id.main_swipe);
+        mWaveSwipeRefreshLayout = rootView.findViewById(R.id.main_swipe);
         mWaveSwipeRefreshLayout.setWaveColor(getResources().getColor(R.color.colorPrimary));
         realm = AppController.getInstance().realm;
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
+        mEditor.putString(Common.Constant_Class.FragmentSp, HomeFragment.class.getSimpleName());
+        mEditor.commit();
     }
 
     private void getEvents() {
@@ -204,12 +209,10 @@ public class HomeFragment extends Fragment {
                 int j=eventData.get(position).getYoutubeUrl().size();
                 if(i>0 || j>0)
                 {
-                    Fragment fragment = new EventlistFragment();
-                    Bundle mBundle = new Bundle();
-                    mBundle.putInt("position", position);
-                    fragment.setArguments(mBundle);
-                    FragmentManager fragmentManager = getFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.container_body, fragment).addToBackStack(fragment.getClass().getSimpleName().toString()).commit();
+                    Intent mIntent = new Intent(getActivity(), EventlistActivity.class);
+                    mIntent.putExtra("", position);
+                    startActivity(mIntent);
+
                 }else
                 {
                     Toast.makeText(getActivity(),"Event Details not found!",Toast.LENGTH_SHORT).show();
