@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.utils.NotificationUtils;
@@ -22,6 +23,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private NotificationUtils notificationUtils;
 
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.e(TAG, "From: " + remoteMessage.getFrom());
@@ -29,22 +31,34 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage == null)
             return;
 
-        // Check if message contains a notification payload.
+       /* // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.e(TAG, "Notification Body: " + remoteMessage.getNotification().getBody());
             handleNotification(remoteMessage.getNotification().getBody());
-        }
+        }*/
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "Data Payload: " + remoteMessage.getData().toString());
 
+            String event_id = remoteMessage.getData().get("event_id");
+            String notification = remoteMessage.getData().get("notification");
+            Long tsLong = System.currentTimeMillis() / 1000;
+            String ts = tsLong.toString();
             try {
-                JSONObject json = new JSONObject(remoteMessage.getData().toString());
+                JSONObject json = new JSONObject("data");
+                json.put("title", getResources().getString(R.string.app_name));
+                json.put("message", notification);
+                //json.put("isBackground","");
+                json.put("payload", "");
+                json.put("imageUrl", "");
+                json.put("timestamp", ts);
                 handleDataMessage(json);
             } catch (Exception e) {
                 Log.e(TAG, "Exception: " + e.getMessage());
             }
+
+
         }
     }
 
@@ -71,14 +85,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             String title = data.getString("title");
             String message = data.getString("message");
-            boolean isBackground = data.getBoolean("is_background");
+            //  boolean isBackground = data.getBoolean("is_background");
             String imageUrl = data.getString("image");
             String timestamp = data.getString("timestamp");
             JSONObject payload = data.getJSONObject("payload");
 
             Log.e(TAG, "title: " + title);
             Log.e(TAG, "message: " + message);
-            Log.e(TAG, "isBackground: " + isBackground);
+            //  Log.e(TAG, "isBackground: " + isBackground);
             Log.e(TAG, "payload: " + payload.toString());
             Log.e(TAG, "imageUrl: " + imageUrl);
             Log.e(TAG, "timestamp: " + timestamp);

@@ -1253,6 +1253,9 @@ public class Common {
         public static final String IS_UPDATE = "is_update";
         public static final String IS_RESET = "is_reset";
         public static final String USER_ID = "user_id";
+
+        public static final String EVENT_ID = "event_id";
+        public static final String EVENT_DATE = "event_date";
         public static final String LOADING = "Loading...";
         public static final String NO_CONNECTION = "No internet connection!";
         public static final String EMAIL = "email";
