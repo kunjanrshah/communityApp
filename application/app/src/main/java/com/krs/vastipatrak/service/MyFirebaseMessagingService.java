@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.utils.NotificationUtils;
@@ -43,22 +42,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             String event_id = remoteMessage.getData().get("event_id");
             String notification = remoteMessage.getData().get("notification");
+            String title = remoteMessage.getData().get("title");
+            String location = remoteMessage.getData().get("location");
+            String imgUrl = remoteMessage.getData().get("imgUrl");
+            String lat = remoteMessage.getData().get("lat");
+            String lng = remoteMessage.getData().get("lng");
+
+
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
             try {
-                JSONObject json = new JSONObject("data");
-                json.put("title", getResources().getString(R.string.app_name));
-                json.put("message", notification);
+                JSONObject json = new JSONObject();
+                json.put("title", notification);
+                json.put("message", title);
                 //json.put("isBackground","");
-                json.put("payload", "");
-                json.put("imageUrl", "");
+                json.put("payload", location);
+                json.put("imageUrl", imgUrl);
                 json.put("timestamp", ts);
                 handleDataMessage(json);
             } catch (Exception e) {
                 Log.e(TAG, "Exception: " + e.getMessage());
             }
-
-
         }
     }
 
@@ -81,19 +85,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.e(TAG, "push json: " + json.toString());
 
         try {
-            JSONObject data = json.getJSONObject("data");
 
-            String title = data.getString("title");
-            String message = data.getString("message");
+
+            String title = json.getString("title");
+            String message = json.getString("message");
             //  boolean isBackground = data.getBoolean("is_background");
-            String imageUrl = data.getString("image");
-            String timestamp = data.getString("timestamp");
-            JSONObject payload = data.getJSONObject("payload");
+            String imageUrl = json.getString("imageUrl");
+            String timestamp = json.getString("timestamp");
+          //  JSONObject payload = json.getJSONObject("payload");
 
             Log.e(TAG, "title: " + title);
             Log.e(TAG, "message: " + message);
             //  Log.e(TAG, "isBackground: " + isBackground);
-            Log.e(TAG, "payload: " + payload.toString());
+            //Log.e(TAG, "payload: " + payload.toString());
             Log.e(TAG, "imageUrl: " + imageUrl);
             Log.e(TAG, "timestamp: " + timestamp);
 

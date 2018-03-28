@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment {
 
     RecyclerView mRecycleView;
     Realm realm;
-    eve
+
     String TAG = "HomeFragment";
     SharedPreferences mSharedPreferences;
     SharedPreferences.Editor mEditor;
