@@ -41,12 +41,16 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+
+import static com.krs.vastipatrak.utils.Common.DatetoString;
+import static com.krs.vastipatrak.utils.Common.getRandomColor;
+import static com.krs.vastipatrak.utils.Common.parseDateToddMMyyyy;
 
 
 public class HomeFragment extends Fragment {
@@ -101,7 +105,7 @@ public class HomeFragment extends Fragment {
             try {
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 if (eventData.size() > 1) {
-                    String date = eventData.get(eventData.size() - 1).getEventDate();
+                    String date = DatetoString(eventData.get(eventData.size() - 1).getEventDate());
                     mJsonObject.put(Common.Constant_Class.EVENT_DATE, date);
                 }
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
@@ -130,7 +134,7 @@ public class HomeFragment extends Fragment {
                                 mEventdata.setTitle(mjson.getString("title"));
                                 mEventdata.setDescription(mjson.getString("description"));
                                 mEventdata.setLocation(mjson.getString("location"));
-                                mEventdata.setEventDate(mjson.getString("event_date"));
+                                mEventdata.setEventDate(Common.StringToDate(mjson.getString("event_date")));
                                 mEventdata.setLat(mjson.getString("lat"));
                                 mEventdata.setLng(mjson.getString("lng"));
 
@@ -231,54 +235,14 @@ public class HomeFragment extends Fragment {
         mWaveSwipeRefreshLayout.setRefreshing(false);
     }
 
-    private void getRandomColor(int min, int max, LinearLayout ll_event) {
-        int i = (new Random()).nextInt((max - min) + 1) + min;
-        Log.v("color number:", "" + i);
-        ll_event.setAlpha((float) 0.9);
-        switch (i) {
-            case 1:
-                ll_event.setBackground(getResources().getDrawable(R.drawable.shape1));
-                break;
-            case 2:
-                ll_event.setBackground(getResources().getDrawable(R.drawable.shape2));
-                break;
-            case 3:
-                ll_event.setBackground(getResources().getDrawable(R.drawable.shape3));
-                break;
-            case 4:
-                ll_event.setBackground(getResources().getDrawable(R.drawable.shape4));
-                break;
-            case 5:
-                ll_event.setBackground(getResources().getDrawable(R.drawable.shape5));
-                break;
-            case 6:
-                ll_event.setBackground(getResources().getDrawable(R.drawable.shape6));
-                break;
-            case 7:
-                ll_event.setBackground(getResources().getDrawable(R.drawable.shape7));
-                break;
-            case 8:
-                ll_event.setBackground(getResources().getDrawable(R.drawable.shape8));
-                break;
-            case 9:
-                ll_event.setBackground(getResources().getDrawable(R.drawable.shape9));
-                break;
-            case 10:
-                ll_event.setBackground(getResources().getDrawable(R.drawable.shape10));
-                break;
-        }
-
-    }
 
 
     public class EventAdapter extends RecyclerView.Adapter<EventAdapter.MyViewHolder> {
 
-
         private final OnItemClickListener listener;
 
-
         public EventAdapter(OnItemClickListener listener) {
-            eventData = realm.where(ListEventData.class).findAll();
+            eventData = realm.where(ListEventData.class).sort(Common.Constant_Class.EVENT_DATE, Sort.DESCENDING).findAll();
             this.listener = listener;
         }
 
@@ -303,8 +267,8 @@ public class HomeFragment extends Fragment {
             holder.txtTitle.setText(data.getTitle());
             holder.txtDesc.setText(data.getDescription());
             holder.txtLocation.setText(data.getLocation());
-            holder.txtEventDate.setText(data.getEventDate());
-            getRandomColor(1, 10, holder.ll_event);
+            holder.txtEventDate.setText(parseDateToddMMyyyy(DatetoString(data.getEventDate())));
+            getRandomColor(getActivity(), position, holder.ll_event);
         }
 
         @Override

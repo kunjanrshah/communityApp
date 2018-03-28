@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_parent_matrimony"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -13,13 +14,13 @@
             android:id="@+id/ivChildIcon"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginLeft="-10dp"
             android:src="@drawable/ic_launcher" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -61,8 +62,8 @@
             >
         <ImageView
             android:id="@+id/imgChildGender"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_margin="3dp"
             android:background="@drawable/boy"
             />
@@ -71,57 +72,22 @@
             android:id="@+id/imgChildShare"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_marginTop="3dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="3dp"
             android:background="@drawable/share_icon"
             android:focusable="false" />
         </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-
-
-        <TextView
-            android:id="@+id/tvNudge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
-            android:text="ROU"
-            android:textSize="16dp" />
-
-        <ImageView
-            android:id="@+id/img_home_loc"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/house" />
-
-
-        <ImageView
-            android:id="@+id/imgSync"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/clock"
-            android:focusable="false" />
-
 
 
         <TextView
             android:id="@+id/tvUpdatedTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="-15dp"
             android:gravity="right"
             android:text="Updated: "
             android:textColor="@android:color/black"
             android:textSize="12dp" />
-    </LinearLayout>
 
 </LinearLayout>

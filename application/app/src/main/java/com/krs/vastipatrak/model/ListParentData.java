@@ -2,20 +2,21 @@ package com.krs.vastipatrak.model;
 
 public class ListParentData {
 
-    String str_name;
+
     String str_father_name;
     String str_mother_name;
     String str_profile_pic_url;
     String status;
     String id;
-    String user_lat;
-    String user_lng;
-    String home_lat;
-    String home_lng;
+
+
     String city;
     boolean is_location_enable;
     String updated_time;
     String mobile;
+    String user_lat;
+    String user_lng;
+    String str_name;
 
     public String getMobile() {
         return mobile;
@@ -25,24 +26,6 @@ public class ListParentData {
         this.mobile = mobile;
     }
 
-
-
-    public String getHome_lat() {
-        return home_lat;
-    }
-
-    public void setHome_lat(String home_lat) {
-        this.home_lat = home_lat;
-    }
-
-    public String getHome_lng() {
-        return home_lng;
-    }
-
-    public void setHome_lng(String home_lng) {
-        this.home_lng = home_lng;
-    }
-
     public String getCity() {
         return city;
     }
@@ -50,8 +33,6 @@ public class ListParentData {
     public void setCity(String city) {
         this.city = city;
     }
-
-
 
     public boolean isIs_location_enable() {
         return is_location_enable;
@@ -69,9 +50,6 @@ public class ListParentData {
         this.updated_time = updated_time;
     }
 
-
-
-
     public String getUser_lat() {
         return user_lat;
     }
@@ -87,7 +65,6 @@ public class ListParentData {
     public void setUser_lng(String user_lng) {
         this.user_lng = user_lng;
     }
-
 
     public String getName() {
         return str_name;

@@ -84,8 +84,6 @@ public class MatrimonyFragment extends Fragment {
                 lpd.setFatherName(father);
                 lpd.setMotherName(mother);
                 lpd.setCity(city);
-                lpd.setHome_lat(home_lat);
-                lpd.setHome_lng(home_lng);
                 lpd.setUpdated_time(updated);
 
                 listDataHeader.add(lpd);
@@ -98,6 +96,9 @@ public class MatrimonyFragment extends Fragment {
                 lcd.setChild_blood_group(data.getBlood_group());
                 lcd.setChild_mobile(data.getMobile());
                 lcd.setChild_gotra(gotra);
+                lcd.setHome_lat(home_lat);
+                lcd.setHome_lng(home_lng);
+                lcd.setName(data.getChild_name());
                 ArrayList<ListMatrimonyChildData> mlstChildData = new ArrayList<ListMatrimonyChildData>();
                 mlstChildData.add(lcd);
                 listDataChild.put(lpd, mlstChildData);

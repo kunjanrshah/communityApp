@@ -385,8 +385,6 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
             lpd.setCity(mSortedProfiles.get(i).getCity());
             lpd.setUser_lng(mSortedProfiles.get(i).getUser_lng());
             lpd.setUser_lat(mSortedProfiles.get(i).getUser_lat());
-            lpd.setHome_lat(mSortedProfiles.get(i).getHome_lat());
-            lpd.setHome_lng(mSortedProfiles.get(i).getHome_lng());
             lpd.setMobile(mSortedProfiles.get(i).getMobile());
             ListChildData lcd = new ListChildData();
             lcd.setID(mSortedProfiles.get(i).getProfile_id());
@@ -400,6 +398,11 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
             lcd.setPhone(mSortedProfiles.get(i).getPhone());
             lcd.setGender(mSortedProfiles.get(i).getGender());
             lcd.setGotra(mSortedProfiles.get(i).getGotra());
+            lcd.setHome_lat(mSortedProfiles.get(i).getHome_lat());
+            lcd.setHome_lng(mSortedProfiles.get(i).getHome_lng());
+            lcd.setUser_lng(mSortedProfiles.get(i).getUser_lng());
+            lcd.setUser_lat(mSortedProfiles.get(i).getUser_lat());
+            lcd.setName(mSortedProfiles.get(i).getFirst_name() + " " + mSortedProfiles.get(i).getLast_name());
             ArrayList<ListChildData> mlstChildData = new ArrayList<ListChildData>();
             mlstChildData.add(lcd);
             listDataHeader.add(lpd);

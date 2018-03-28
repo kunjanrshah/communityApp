@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -116,12 +119,15 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
             childViewHolder.txt_details = convertView.findViewById(R.id.txt_details);
             childViewHolder.txt_address = convertView.findViewById(R.id.txt_address);
             childViewHolder.txt_mobile = convertView.findViewById(R.id.txt_mobile);
-
+            childViewHolder.imgSync = convertView.findViewById(R.id.imgSync);
+            childViewHolder.imgNudge = convertView.findViewById(R.id.imgNudge);
+            childViewHolder.img_home_loc = convertView.findViewById(R.id.img_home_loc);
+            childViewHolder.ll_child_matrimony = convertView.findViewById(R.id.ll_child_matrimony);
             convertView.setTag(childViewHolder);
         } else {
             childViewHolder = (ChildViewHolder) convertView.getTag();
         }
-
+        Common.getChildRandomColor(_context, childPosition, childViewHolder.ll_child_matrimony);
         final String id = mListMatrimonyChildData.getProfile_id();
         String address = mListMatrimonyChildData.getChild_address();
         String birth_date = mListMatrimonyChildData.getChild_birth_date();
@@ -129,7 +135,92 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         String birth_time = mListMatrimonyChildData.getChild_birth_time();
         String blood_group = mListMatrimonyChildData.getChild_blood_group();
         String gotra = mListMatrimonyChildData.getChild_gotra();
-        String mobile = mListMatrimonyChildData.getChild_mobile().trim().replaceAll("\\?", "").replaceAll("\\+", "");
+        final String name = mListMatrimonyChildData.getName();
+        final String mobile = mListMatrimonyChildData.getChild_mobile().trim().replaceAll("\\?", "").replaceAll("\\+", "");
+
+        final String home_lat = mListMatrimonyChildData.getHome_lat();
+        final String home_lng = mListMatrimonyChildData.getHome_lng();
+        if (home_lat != null && home_lng != null && !home_lat.isEmpty() && !home_lng.isEmpty() && !home_lat.equalsIgnoreCase("null") && !home_lng.equalsIgnoreCase("null")) {
+            childViewHolder.img_home_loc.setVisibility(View.VISIBLE);
+        } else {
+            childViewHolder.img_home_loc.setVisibility(View.GONE);
+        }
+        childViewHolder.imgNudge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(_context, R.style.AppCompatAlertDialogStyle);
+                builder.setTitle(_context.getString(R.string.app_name));
+
+                builder.setMessage("Do you want to request for update ?");
+                builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Common.SendWhatsappMessage(_context, mobile, "Hi");
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        });
+
+        childViewHolder.imgSync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String message = "Do you want to Sync ?";
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(_context, R.style.AppCompatAlertDialogStyle);
+                builder.setTitle(_context.getString(R.string.app_name));
+
+                builder.setMessage(message);
+                builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        SyncUser(id);
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        });
+
+
+        childViewHolder.img_home_loc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String message = "Do you want to navigate " + name + " home ?";
+                AlertDialog.Builder builder = new AlertDialog.Builder(_context, R.style.AppCompatAlertDialogStyle);
+                builder.setTitle(_context.getString(R.string.app_name));
+
+                builder.setMessage(message);
+                builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (MainActivity.lat != null && MainActivity.lon != null) {
+                            Common.showDirections((Activity) _context, Double.parseDouble(home_lat), Double.parseDouble(home_lng), "");
+                            Toast.makeText(_context, "distance between you and " + name + "'s home", Toast.LENGTH_SHORT).show();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+
+
+            }
+        });
 
         childViewHolder.txt_mobile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,17 +310,16 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.imgChildShare = convertView.findViewById(R.id.imgChildShare);
             groupViewHolder.tvChildFatherName = convertView.findViewById(R.id.tvChildFatherName);
             groupViewHolder.tvChildMotherName = convertView.findViewById(R.id.tvChildMotherName);
-            groupViewHolder.imgSync = convertView.findViewById(R.id.imgSync);
-            groupViewHolder.tvNudge = convertView.findViewById(R.id.tvNudge);
             groupViewHolder.tvUpdatedTime = convertView.findViewById(R.id.tvUpdatedTime);
             groupViewHolder.tvChildCity = convertView.findViewById(R.id.tvChildCity);
-            groupViewHolder.img_home_loc = convertView.findViewById(R.id.img_home_loc);
             groupViewHolder.imgChildGender = convertView.findViewById(R.id.imgChildGender);
+            groupViewHolder.ll_parent_matrimony = convertView.findViewById(R.id.ll_parent_matrimony);
             convertView.setTag(groupViewHolder);
         } else {
             groupViewHolder = (GroupViewHolder) convertView.getTag();
         }
 
+        Common.getParentRandomColor(_context, groupPosition, groupViewHolder.ll_parent_matrimony);
         final String child_id = mListMatrimonyParentData.getId();
         final String child_profile_id = mListMatrimonyParentData.getProfile_id();
         final String imgURL = mListMatrimonyParentData.getProfilePicUrl();
@@ -261,39 +351,6 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         String updated_time = mListMatrimonyParentData.getUpdated_time();
         groupViewHolder.tvUpdatedTime.setText("Updated: " + Common.getUpdatedTime(updated_time));
 
-        final String home_lat = mListMatrimonyParentData.getHome_lat();
-        final String home_lng = mListMatrimonyParentData.getHome_lng();
-        if (home_lat != null && home_lng != null && !home_lat.isEmpty() && !home_lng.isEmpty() && !home_lat.equalsIgnoreCase("null") && !home_lng.equalsIgnoreCase("null")) {
-            groupViewHolder.img_home_loc.setVisibility(View.VISIBLE);
-        } else {
-            groupViewHolder.img_home_loc.setVisibility(View.GONE);
-        }
-        groupViewHolder.tvNudge.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(_context, "Request of Update!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        groupViewHolder.imgSync.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SyncUser(mListMatrimonyParentData.getProfile_id());
-            }
-        });
-
-
-        groupViewHolder.img_home_loc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (MainActivity.lat != null && MainActivity.lon != null) {
-                    Common.showDirections((Activity) _context, Double.parseDouble(home_lat), Double.parseDouble(home_lng), "");
-                    Toast.makeText(_context, "distance between you and " + Name + "'s home", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
         groupViewHolder.imgChildShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -315,40 +372,6 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                     }
                 }
                 shareImage(bitmap,name);
-                /*String shareBody = "", child_name = "";
-                if (childData != null && profileData != null) {
-
-                    child_name = childData.getChild_name();
-                    String father_name = profileData.getFirst_name() + " " + profileData.getLast_name();
-                    String mother_name = profileData.getSpouse_name();
-                    String birth_date = childData.getChild_bday();
-                    String birth_time = childData.getBirth_time();
-                    String birthPlace = childData.getBirth_place();
-                    String address = profileData.getAddress();
-                    String gotra = profileData.getGotra();
-                    String blood = profileData.getBlood_group();
-                    String city = profileData.getCity();
-                    String mobile = profileData.getMobile().toString().trim().replaceAll("\\?", "").replaceAll("\\+", "");
-
-                    shareBody = " Name :" + child_name + "\n"
-                            + " Father Name :" + father_name + "\n"
-                            + " Mother Name :" + mother_name + "\n"
-                            + " Gotra :" + gotra + "\n"
-                            + " Birth Date :" + birth_date + "\n"
-                            + " Birth Time :" + birth_time + "\n"
-                            + " Birth Place :" + birthPlace + "\n"
-                            + " Blood :" + blood + "\n"
-                            + " Mobile :" + mobile + "\n"
-                            + " Address :" + address + "\n"
-                            + " City :" + city + "\n";
-                }*/
-
-
-/*                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "" + child_name + " details");
-                sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                _context.startActivity(Intent.createChooser(sharingIntent, _context.getResources().getString(R.string.share_using)));*/
             }
         });
         return convertView;
@@ -456,19 +479,23 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         TextView txt_details;
         TextView txt_address;
         TextView txt_mobile;
+        ImageView imgSync;
+        LinearLayout ll_child_matrimony;
+        ImageView img_home_loc;
+        ImageView imgNudge;
     }
 
     private class GroupViewHolder {
         ImageView ivChildIcon;
         ImageView imgChildShare;
-        ImageView imgSync;
-        ImageView img_home_loc;
         ImageView imgChildGender;
-        TextView tvNudge;
         TextView tvChildName;
         TextView tvChildFatherName;
         TextView tvChildMotherName;
         TextView tvChildCity;
         TextView tvUpdatedTime;
+        LinearLayout ll_parent_matrimony;
     }
+
+
 }

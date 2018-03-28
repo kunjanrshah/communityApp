@@ -1,6 +1,8 @@
 
 package com.krs.vastipatrak.model;
 
+import java.util.Date;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -12,7 +14,7 @@ public class ListEventData extends RealmObject{
     private String title;
     private String description;
     private String location;
-    private String eventDate;
+    private Date event_date;
     private String lat;
     private String lng;
     private RealmList<String> youtubeUrl = null;
@@ -50,13 +52,6 @@ public class ListEventData extends RealmObject{
         this.location = location;
     }
 
-    public String getEventDate() {
-        return eventDate;
-    }
-
-    public void setEventDate(String eventDate) {
-        this.eventDate = eventDate;
-    }
 
     public String getLat() {
         return lat;
@@ -88,6 +83,14 @@ public class ListEventData extends RealmObject{
 
     public void setImages(RealmList<String> images) {
         this.images = images;
+    }
+
+    public Date getEventDate() {
+        return event_date;
+    }
+
+    public void setEventDate(Date event_date) {
+        this.event_date = event_date;
     }
 
 }

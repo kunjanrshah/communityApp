@@ -31,6 +31,8 @@ import android.speech.RecognizerIntent;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
@@ -985,6 +987,29 @@ public class Common {
         }
     }
 
+    public static String DatetoString(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            String dateTime = dateFormat.format(date);
+            System.out.println("Current Date Time : " + dateTime);
+            return dateTime;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static Date StringToDate(String dtStart) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = format.parse(dtStart);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void getDeviceId(Context mContext) {
         String m_androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         Constant_Class.DEVICE_ID_VALUE = m_androidId;
@@ -1211,6 +1236,154 @@ public class Common {
         }
     }
 
+
+    public static void getChildRandomColor(Context context, int position, LinearLayout ll_event) {
+        int i = position % 10;
+        Log.v("color number:", "" + i);
+        ll_event.setAlpha((float) 0.9);
+        switch (i) {
+            case 0:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.child_shape5));
+                break;
+            case 1:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.child_shape1));
+                break;
+            case 2:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.child_shape2));
+                break;
+            case 3:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.child_shape3));
+                break;
+            case 4:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.child_shape4));
+                break;
+            case 5:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.child_shape5));
+                break;
+            case 6:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.child_shape6));
+                break;
+            case 7:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.child_shape7));
+                break;
+            case 8:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.child_shape8));
+                break;
+            case 9:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.child_shape9));
+                break;
+            case 10:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.child_shape10));
+                break;
+        }
+
+    }
+
+
+    public static void getParentRandomColor(Context context, int position, LinearLayout ll_event) {
+        int i = position % 10;
+        Log.v("color number:", "" + i);
+        ll_event.setAlpha((float) 0.9);
+        switch (i) {
+            case 0:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.parent_shape5));
+                break;
+            case 1:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.parent_shape1));
+                break;
+            case 2:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.parent_shape2));
+                break;
+            case 3:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.parent_shape3));
+                break;
+            case 4:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.parent_shape4));
+                break;
+            case 5:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.parent_shape5));
+                break;
+            case 6:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.parent_shape6));
+                break;
+            case 7:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.parent_shape7));
+                break;
+            case 8:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.parent_shape8));
+                break;
+            case 9:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.parent_shape9));
+                break;
+            case 10:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.parent_shape10));
+                break;
+        }
+
+    }
+
+
+    public static void getRandomColor(Context context, int position, LinearLayout ll_event) {
+        int i = position % 10;
+        Log.v("color number:", "" + i);
+        ll_event.setAlpha((float) 0.9);
+        switch (i) {
+            case 0:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape5));
+                break;
+            case 1:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape1));
+                break;
+            case 2:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape2));
+                break;
+            case 3:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape3));
+                break;
+            case 4:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape4));
+                break;
+            case 5:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape5));
+                break;
+            case 6:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape6));
+                break;
+            case 7:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape7));
+                break;
+            case 8:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape8));
+                break;
+            case 9:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape9));
+                break;
+            case 10:
+                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape10));
+                break;
+        }
+
+    }
+
+
+    public static String parseDateToddMMyyyy(String time) {
+        String inputPattern = "yyyy-MM-dd";
+        String outputPattern = "dd-MMM-yyyy";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+        Date date = null;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
+            str = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
     public static class Constant_Class {
 
         public static final String ADMIN_1 = "4134";
@@ -1363,9 +1536,9 @@ public class Common {
         public static final String TBTN_SYNC = "tbtn_sync";
         public static String DEVICE_ID_VALUE = "";
         public static String EDT_SYNC_TIME = "edt_sync_time";
-        public static int sCorner = 35;
-        public static int sMargin = 2;
-        public static int sBorder = 10;
+        public static int sCorner = 25;
+        public static int sMargin = 1;
+        public static int sBorder = 5;
         public static String sColor = "#FFC0CB";
         public static long LOCATION_INTERVAL = 1000 * 1 * 30;
         public static String FragmentSp = "fragment";

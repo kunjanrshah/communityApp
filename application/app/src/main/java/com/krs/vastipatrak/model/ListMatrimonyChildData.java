@@ -10,6 +10,34 @@ public class ListMatrimonyChildData {
     String child_blood_group;
     String child_mobile;
     String profile_id;
+    String home_lat;
+    String home_lng;
+    String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String str_name) {
+        this.name = str_name;
+    }
+
+    public String getHome_lat() {
+        return home_lat;
+    }
+
+    public void setHome_lat(String home_lat) {
+        this.home_lat = home_lat;
+    }
+
+    public String getHome_lng() {
+        return home_lng;
+    }
+
+    public void setHome_lng(String home_lng) {
+        this.home_lng = home_lng;
+    }
+
 
     public String getChild_address() {
         return child_address;

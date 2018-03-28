@@ -15,6 +15,55 @@ public class ListChildData {
     String str_blood_group;
     String str_mobile;
     String str_id;
+    String home_lat;
+    String home_lng;
+
+    String user_lat;
+    String user_lng;
+
+
+    String str_name;
+
+    public String getName() {
+        return str_name;
+    }
+
+    public void setName(String str_name) {
+        this.str_name = str_name;
+    }
+
+    public String getUser_lat() {
+        return user_lat;
+    }
+
+    public void setUser_lat(String user_lat) {
+        this.user_lat = user_lat;
+    }
+
+    public String getUser_lng() {
+        return user_lng;
+    }
+
+    public void setUser_lng(String user_lng) {
+        this.user_lng = user_lng;
+    }
+
+
+    public String getHome_lat() {
+        return home_lat;
+    }
+
+    public void setHome_lat(String home_lat) {
+        this.home_lat = home_lat;
+    }
+
+    public String getHome_lng() {
+        return home_lng;
+    }
+
+    public void setHome_lng(String home_lng) {
+        this.home_lng = home_lng;
+    }
 
     public String getID() {
         return str_id;

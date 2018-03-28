@@ -5,14 +5,12 @@ public class ListMatrimonyParentData {
     String id;
     String profile_id;
     String profile_pic_url;
-    String name;
     String father_name;
     String mother_name;
-    String home_lat;
-    String home_lng;
     String city;
     String updated_time;
     String child_gender;
+    String name;
 
     public String getChild_gender() {
         return child_gender;
@@ -28,22 +26,6 @@ public class ListMatrimonyParentData {
 
     public void setProfile_id(String profile_id) {
         this.profile_id = profile_id;
-    }
-
-    public String getHome_lat() {
-        return home_lat;
-    }
-
-    public void setHome_lat(String home_lat) {
-        this.home_lat = home_lat;
-    }
-
-    public String getHome_lng() {
-        return home_lng;
-    }
-
-    public void setHome_lng(String home_lng) {
-        this.home_lng = home_lng;
     }
 
     public String getCity() {
