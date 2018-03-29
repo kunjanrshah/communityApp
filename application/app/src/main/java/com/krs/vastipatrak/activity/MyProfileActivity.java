@@ -23,7 +23,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -52,8 +51,7 @@ import io.realm.Realm;
 import io.realm.RealmList;
 
 
-public class MyProfileActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
-        DatePickerDialog.OnDateSetListener {
+public class MyProfileActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
 
     SharedPreferences.Editor mEditor;
@@ -114,13 +112,14 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         });
     }
 
-    private void backNavigation()
-    {
+    private void backNavigation() {
         Fragment fragment = new FragmentDrawer();
         getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
-        Intent mIntent = new Intent(MyProfileActivity.this, MainActivity.class);
-        mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(mIntent);
+        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
+            Intent mIntent = new Intent(MyProfileActivity.this, MainActivity.class);
+            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(mIntent);
+        }
         finish();
         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
@@ -566,12 +565,12 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 }
             }) {
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
                     params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
                     return params;
                 }
             };

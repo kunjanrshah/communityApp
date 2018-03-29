@@ -70,10 +70,10 @@
 
         <ImageView
             android:id="@+id/imgChildShare"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/share_icon"
             android:focusable="false" />
         </LinearLayout>

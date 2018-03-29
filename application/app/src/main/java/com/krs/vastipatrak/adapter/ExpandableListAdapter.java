@@ -28,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -147,7 +146,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             childViewHolder.imgROR = convertView.findViewById(R.id.imgROR);
             childViewHolder.img_home_loc = convertView.findViewById(R.id.img_home_loc);
             childViewHolder.img_user_loc = convertView.findViewById(R.id.img_user_loc);
-            childViewHolder.txt_details = convertView.findViewById(R.id.txt_details);
+            childViewHolder.img_details = convertView.findViewById(R.id.img_details);
 
             convertView.setTag(childViewHolder);
         } else {
@@ -221,14 +220,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        String styledText = "<font color='blue'> Details </font>";
-        childViewHolder.txt_details.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
-
         childViewHolder.txt_address.setText(Common.camelCase(address));
         childViewHolder.txt_native.setText(Common.camelCase(str_native));
         childViewHolder.txt_mobile.setText(mobile);
 
-        styledText = "<u><font color='blue'>" + mobile + "</font></u>";
+        String styledText = "<u><font color='blue'>" + mobile + "</font></u>";
         childViewHolder.txt_mobile.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
 
         childViewHolder.txt_phone.setText(phone);
@@ -246,20 +242,20 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         childViewHolder.txt_btime.setText(birth_time);
         childViewHolder.txt_bplace.setText(Common.camelCase(birth_place));
 
-        convertView.setOnClickListener(new View.OnClickListener() {
+        childViewHolder.img_details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.commit();
                 Intent mIntent = new Intent(_context, MyProfileActivity.class);
                 _context.startActivity(mIntent);
+
             }
         });
 
-
         if (home_lat != null && home_lng != null && !home_lat.isEmpty() && !home_lng.isEmpty() && !home_lat.equalsIgnoreCase("null") && !home_lng.equalsIgnoreCase("null")) {
-
             childViewHolder.img_home_loc.setVisibility(View.VISIBLE);
         } else {
             childViewHolder.img_home_loc.setVisibility(View.GONE);
@@ -303,7 +299,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 builder.setMessage("Do you want to request for update ?");
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Common.SendWhatsappMessage(_context, mobile, "Hi");
+
+
+                        Common.SendWhatsappMessage(_context, mobile, _context.getResources().getString(R.string.nice_html));
                         dialog.dismiss();
                     }
                 });
@@ -607,7 +605,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 }
             }) {
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
@@ -640,7 +638,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         ImageView img_home_loc;
         ImageView imgNudge;
         ImageView imgROR;
-        TextView txt_details;
+        ImageView img_details;
     }
 
     private class GroupViewHolder {

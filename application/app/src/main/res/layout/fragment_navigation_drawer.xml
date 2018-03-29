@@ -18,7 +18,7 @@
             android:layout_centerInParent="true"
             android:layout_gravity="right|center_vertical"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_profile" />
+            android:src="@drawable/user_profile" />
 
         <TextView
             android:id="@+id/txt_name"

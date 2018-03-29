@@ -288,14 +288,14 @@
                 android:background="@drawable/home" />
 
 
-            <TextView
-                android:id="@+id/txt_details"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/img_details"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:padding="10dp"
-                android:text="Details"
-                android:textSize="20sp"
-                android:visibility="gone" />
+                android:layout_marginTop="10dp"
+                android:background="@drawable/detail"
+                android:textSize="20sp" />
 
         </LinearLayout>
     </LinearLayout>

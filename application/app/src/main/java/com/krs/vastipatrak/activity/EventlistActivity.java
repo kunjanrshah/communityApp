@@ -18,7 +18,6 @@ import com.krs.vastipatrak.model.ListEventData;
 import com.krs.vastipatrak.utils.Common;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * Created by kunjan on 23/3/18.
@@ -30,9 +29,8 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
     private RecyclerView listEvents;
     private Realm realm;
     private String TAG = "EventlistActivity";
-    private int position = 0;
-    private RealmResults<ListEventData> eventData;
-    private ListEventData data;
+    private String eventId = "";
+    private ListEventData eventData;
     private EventListAdapter adapter;
 
     @Override
@@ -42,7 +40,7 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
 
         Bundle mBundle = getIntent().getExtras();
         if (mBundle != null) {
-            position = mBundle.getInt("position");
+            eventId = mBundle.getString("eventId");
         }
 
         MemoryAllocation();
@@ -55,9 +53,8 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
     private void MemoryAllocation() {
         listEvents = findViewById(R.id.listEvents);
         realm = AppController.getInstance().realm;
-        eventData = realm.where(ListEventData.class).findAll();
-        data = eventData.get(position);
-        adapter = new EventListAdapter(this, data);
+        eventData = realm.where(ListEventData.class).endsWith("id", eventId).findFirst();
+        adapter = new EventListAdapter(this, eventData);
     }
 
     @Override
@@ -86,6 +83,4 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
             e.printStackTrace();
         }
     }
-
-
 }

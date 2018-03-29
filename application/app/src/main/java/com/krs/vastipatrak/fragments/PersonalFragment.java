@@ -30,7 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -338,15 +337,47 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         tbtn_share.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+                builder.setTitle(getActivity().getString(R.string.app_name));
                 if (Common.isOnline(getActivity())) {
                     if (isChecked) {
-                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, true);
-                        mEditor.commit();
-                        getActivity().startService(new Intent(getActivity(), MyLocationService.class));
+                        String message = "Do you want to Share your Location ?";
+                        builder.setMessage(message);
+                        builder.setPositiveButton(getActivity().getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, true);
+                                mEditor.commit();
+                                getActivity().startService(new Intent(getActivity(), MyLocationService.class));
+
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.setNegativeButton(getActivity().getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                tbtn_share.setChecked(false);
+                                dialog.dismiss();
+                            }
+                        }).show();
                     } else {
-                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, false);
-                        mEditor.commit();
-                        getActivity().stopService(new Intent(getActivity(), MyLocationService.class));
+                        String message = "Do you want to Stop sharing your Location ?";
+                        builder.setMessage(message);
+                        builder.setPositiveButton(getActivity().getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, false);
+                                mEditor.commit();
+                                getActivity().stopService(new Intent(getActivity(), MyLocationService.class));
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.setNegativeButton(getActivity().getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                tbtn_share.setChecked(true);
+                                dialog.dismiss();
+                            }
+                        }).show();
                     }
                 } else {
                     Toast.makeText(getActivity(), Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
@@ -868,7 +899,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 }
             }) {
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);

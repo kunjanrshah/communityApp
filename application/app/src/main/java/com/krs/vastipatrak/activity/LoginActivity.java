@@ -242,6 +242,7 @@ public class LoginActivity extends Activity {
         inputLayoutPassword = findViewById(R.id.input_layout_password);
         inputConformPassword = findViewById(R.id.input_conform_password);
 
+
         inputConformPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
 
         inputLayoutConformPassword = findViewById(R.id.input_layout_conform_password);
@@ -571,7 +572,7 @@ public class LoginActivity extends Activity {
                 })
                 {
                     @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
+                    public Map<String, String> getHeaders() {
                         Map<String, String> params = new HashMap<>();
                         params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                         params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
@@ -690,7 +691,7 @@ public class LoginActivity extends Activity {
                     }
                 }) {
                     @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
+                    public Map<String, String> getHeaders() {
                         Map<String, String> params = new HashMap<>();
                         params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                         params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
@@ -861,7 +862,7 @@ public class LoginActivity extends Activity {
                         }
                     }) {
                         @Override
-                        public Map<String, String> getHeaders() throws AuthFailureError {
+                        public Map<String, String> getHeaders() {
                             Map<String, String> params = new HashMap<>();
                             params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                             params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);

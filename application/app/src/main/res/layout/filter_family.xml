@@ -209,7 +209,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dip"
                         android:hint="Child Birth Place"
-                        android:inputType="date"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 

@@ -24,7 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -116,11 +115,12 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
             childViewHolder.txt_bdate = convertView.findViewById(R.id.txt_bdate);
             childViewHolder.txt_btime = convertView.findViewById(R.id.txt_btime);
             childViewHolder.txt_bplace = convertView.findViewById(R.id.txt_bplace);
-            childViewHolder.txt_details = convertView.findViewById(R.id.txt_details);
+            childViewHolder.imgDetail = convertView.findViewById(R.id.imgDetail);
             childViewHolder.txt_address = convertView.findViewById(R.id.txt_address);
             childViewHolder.txt_mobile = convertView.findViewById(R.id.txt_mobile);
             childViewHolder.imgSync = convertView.findViewById(R.id.imgSync);
             childViewHolder.imgNudge = convertView.findViewById(R.id.imgNudge);
+            childViewHolder.imgDetail = convertView.findViewById(R.id.imgDetail);
             childViewHolder.img_home_loc = convertView.findViewById(R.id.img_home_loc);
             childViewHolder.ll_child_matrimony = convertView.findViewById(R.id.ll_child_matrimony);
             convertView.setTag(childViewHolder);
@@ -154,7 +154,8 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                 builder.setMessage("Do you want to request for update ?");
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Common.SendWhatsappMessage(_context, mobile, "Hi");
+
+                        Common.SendWhatsappMessage(_context, mobile, _context.getResources().getString(R.string.nice_html));
                         dialog.dismiss();
                     }
                 });
@@ -248,19 +249,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        String styledText = "<font color='blue'> Details </font>";
-        childViewHolder.txt_details.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
-        childViewHolder.txt_address.setText(Common.camelCase(address));
-        childViewHolder.txt_mobile.setText(mobile);
-        styledText = "<u><font color='blue'>" + mobile + "</font></u>";
-        childViewHolder.txt_mobile.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
-        childViewHolder.txt_blood.setText(blood_group);
-        childViewHolder.txt_gotra.setText(Common.camelCase(gotra));
-        childViewHolder.txt_bdate.setText(birth_date);
-        childViewHolder.txt_btime.setText(birth_time);
-        childViewHolder.txt_bplace.setText(Common.camelCase(birth_place));
-
-        convertView.setOnClickListener(new View.OnClickListener() {
+        childViewHolder.imgDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
@@ -268,10 +257,20 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                 mEditor.commit();
                 Intent mIntent = new Intent(_context, MyProfileActivity.class);
                 _context.startActivity(mIntent);
-                // mIntent.putExtra(Common.Constant_Class.DATA, str_id);
-                // callProfileWS(id);
             }
         });
+
+
+        childViewHolder.txt_address.setText(Common.camelCase(address));
+        childViewHolder.txt_mobile.setText(mobile);
+        String styledText = "<u><font color='blue'>" + mobile + "</font></u>";
+        childViewHolder.txt_mobile.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
+        childViewHolder.txt_blood.setText(blood_group);
+        childViewHolder.txt_gotra.setText(Common.camelCase(gotra));
+        childViewHolder.txt_bdate.setText(birth_date);
+        childViewHolder.txt_btime.setText(birth_time);
+        childViewHolder.txt_bplace.setText(Common.camelCase(birth_place));
+
 
         return convertView;
     }
@@ -334,7 +333,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         if (mListMatrimonyParentData.getChild_gender().toString().equalsIgnoreCase("male")) {
             groupViewHolder.imgChildGender.setBackgroundResource(R.drawable.boy);
         } else {
-            groupViewHolder.imgChildGender.setBackgroundResource(R.drawable.girl);
+            groupViewHolder.imgChildGender.setBackgroundResource(R.drawable.woman);
         }
         groupViewHolder.tvChildCity.setText(Common.camelCase(city));
         groupViewHolder.tvChildName.setText(Common.camelCase(Name));
@@ -456,7 +455,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                 }
             }) {
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
@@ -476,13 +475,13 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         TextView txt_bdate;
         TextView txt_btime;
         TextView txt_bplace;
-        TextView txt_details;
         TextView txt_address;
         TextView txt_mobile;
-        ImageView imgSync;
         LinearLayout ll_child_matrimony;
         ImageView img_home_loc;
         ImageView imgNudge;
+        ImageView imgDetail;
+        ImageView imgSync;
     }
 
     private class GroupViewHolder {

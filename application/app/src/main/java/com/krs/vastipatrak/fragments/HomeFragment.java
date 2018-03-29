@@ -193,7 +193,7 @@ public class HomeFragment extends Fragment {
                 }
             }) {
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
@@ -214,12 +214,12 @@ public class HomeFragment extends Fragment {
         EventAdapter mEventListAdapter = new EventAdapter(new OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                eventData = realm.where(ListEventData.class).findAll();
+                // eventData = realm.where(ListEventData.class).findAll();
                 int i = eventData.get(position).getImages().size();
                 int j = eventData.get(position).getYoutubeUrl().size();
                 if (i > 0 || j > 0) {
                     Intent mIntent = new Intent(getActivity(), EventlistActivity.class);
-                    mIntent.putExtra("", position);
+                    mIntent.putExtra("eventId", eventData.get(position).getId());
                     startActivity(mIntent);
 
                 } else {
