@@ -1,8 +1,9 @@
 package com.krs.vastipatrak.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,28 +21,27 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.Calendar;
+import java.util.Objects;
 
-/**
- * Created by Kunjan on 27/08/2016.
- */
 public class FamilyFilter extends Fragment {
 
-
-    public static String gender = "male";
-    public static EditText edt_mdate, edt_childbdate, edtSpouseName, edtSpouseFName, edtSpouseMName, edtchild_name, edtcedu, edtchild_work, edtchildbtime, edtchildbplace;
+    @NonNull
+    public String gender = "male";
+    public EditText edt_mdate, edt_childbdate, edtSpouseName, edtSpouseFName, edtSpouseMName, edtchild_name, edtcedu, edtchild_work, edtchildbtime, edtchildbplace;
     FloatingActionButton floatingActionButton;
     ObservableScrollView scroll_fdetails;
     private RadioGroup rgroupid;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.filter_family, container, false);
 
         MemoryAllocation(rootView);
 
         edt_mdate.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
 
                 final int DRAWABLE_RIGHT = 2;
                 if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -52,12 +52,7 @@ public class FamilyFilter extends Fragment {
                         dpd.vibrate(true);
                         dpd.dismissOnPause(false);
                         dpd.showYearPickerFirst(false);
-                        if (false) {
-                            dpd.setAccentColor(Color.parseColor("#9C27B0"));
-                        }
-                        if (true) {
-                            dpd.setTitle("Marriage Date");
-                        }
+                        dpd.setTitle("Marriage Date");
                         dpd.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
@@ -76,7 +71,7 @@ public class FamilyFilter extends Fragment {
                                 edt_mdate.setText(date);
                             }
                         });
-                        dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+                        dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
 
                         return true;
                     }
@@ -88,7 +83,7 @@ public class FamilyFilter extends Fragment {
 
         edt_childbdate.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
 
                 final int DRAWABLE_RIGHT = 2;
                 if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -99,12 +94,7 @@ public class FamilyFilter extends Fragment {
                         dpd.vibrate(true);
                         dpd.dismissOnPause(false);
                         dpd.showYearPickerFirst(false);
-                        if (false) {
-                            dpd.setAccentColor(Color.parseColor("#9C27B0"));
-                        }
-                        if (true) {
-                            dpd.setTitle("Child Birth Date");
-                        }
+                        dpd.setTitle("Child Birth Date");
                         dpd.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
@@ -122,7 +112,7 @@ public class FamilyFilter extends Fragment {
                                 edt_childbdate.setText(date);
                             }
                         });
-                        dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+                        dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
 
                         return true;
                     }
@@ -148,7 +138,7 @@ public class FamilyFilter extends Fragment {
             @Override
             public void onClick(View v) {
 
-                ((FilterActivity) getActivity()).callAdvanceSearchWS();
+                ((FilterActivity) Objects.requireNonNull(getActivity())).callAdvanceSearchWS();
 
             }
         });
@@ -156,7 +146,7 @@ public class FamilyFilter extends Fragment {
 
         edtchildbtime.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
 
                 final int DRAWABLE_RIGHT = 2;
 
@@ -169,12 +159,7 @@ public class FamilyFilter extends Fragment {
                         tpd.vibrate(true);
                         tpd.dismissOnPause(false);
                         tpd.enableSeconds(false);
-                        if (false) {
-                            tpd.setAccentColor(Color.parseColor("#9C27B0"));
-                        }
-                        if (true) {
-                            tpd.setTitle("Birth Time");
-                        }
+                        tpd.setTitle("Birth Time");
                         tpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialogInterface) {
@@ -190,7 +175,7 @@ public class FamilyFilter extends Fragment {
                                 edtchildbtime.setText(time);
                             }
                         });
-                        tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
+                        tpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Timepickerdialog");
 
                         return true;
                     }
@@ -204,7 +189,7 @@ public class FamilyFilter extends Fragment {
         return rootView;
     }
 
-    void MemoryAllocation(View rootView) {
+    void MemoryAllocation(@NonNull View rootView) {
         scroll_fdetails = rootView.findViewById(R.id.scroll_fdetails);
         floatingActionButton = rootView.findViewById(R.id.fab_fsave);
         edt_mdate = rootView.findViewById(R.id.edt_mdate);

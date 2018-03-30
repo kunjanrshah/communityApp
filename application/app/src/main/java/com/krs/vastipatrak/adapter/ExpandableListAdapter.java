@@ -1,5 +1,6 @@
 package com.krs.vastipatrak.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -12,6 +13,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
@@ -58,6 +61,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.realm.RealmList;
 
@@ -67,18 +71,19 @@ import static com.krs.vastipatrak.utils.Common.getParentRandomColor;
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     public HashMap<Integer, Boolean> checkboxMap;
-    Context _context;
-    ArrayList<ListParentData> _listDataHeader = null;
-    HashMap<ListParentData, List<ListChildData>> _listDataChild = null;
-    ProgressDialog pDialog;
-    String TAG = "ExpandableListAdapter";
-    String tag_json_obj = "jobj_req";
-    SharedPreferences mSharedPreferences = null;
-    SharedPreferences.Editor mEditor;
-    String[] SPINNERLIST = {"Father", "Son", "Daughter", "Brother", "Sister", "Grandfather", "Grandson", "Uncle", "Uncle's Son", "Uncle in low", "Uncle's Son"};
+    private Context _context;
+    private ArrayList<ListParentData> _listDataHeader;
+    private HashMap<ListParentData, List<ListChildData>> _listDataChild;
+    @Nullable
+    private ProgressDialog pDialog;
+    private String TAG = ExpandableListAdapter.class.getSimpleName();
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+    @NonNull
+    private String[] SPINNERLIST = {"Father", "Son", "Daughter", "Brother", "Sister", "Grandfather", "Grandson", "Uncle", "Uncle's Son", "Uncle in low", "Uncle's Son"};
     private ChildViewHolder childViewHolder;
-    private GroupViewHolder groupViewHolder;
 
+    @SuppressLint("UseSparseArrays")
     public ExpandableListAdapter(Context context, ArrayList<ListParentData> listDataHeader, HashMap<ListParentData, List<ListChildData>> listDataChild) {
         this._context = context;
         this._listDataHeader = listDataHeader;
@@ -88,14 +93,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         pDialog.setCancelable(true);
         mSharedPreferences = _context.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
-        checkboxMap = new HashMap<Integer, Boolean>();
+        mEditor.apply();
+        checkboxMap = new HashMap<>();
         popolaCheckMap(_listDataHeader.size());
     }
 
 
     private void openImageDialog(String name, String url) {
         Dialog dialog = new Dialog(_context);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setContentView(R.layout.image_dialog);
         dialog.setTitle(name);
         ImageView image = dialog.findViewById(R.id.img_dialog);
@@ -103,8 +109,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         dialog.show();
     }
 
-    public void popolaCheckMap(int len) {
-
+    private void popolaCheckMap(int len) {
         for (int i = 0; i < len; i++) {
             checkboxMap.put(i, false);
         }
@@ -120,13 +125,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return childPosition;
     }
 
+    @Nullable
+    @SuppressLint("InflateParams")
     @Override
-    public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, @Nullable View convertView, ViewGroup parent) {
 
         final ListChildData mListChildData = (ListChildData) getChild(groupPosition, childPosition);
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            assert infalInflater != null;
             convertView = infalInflater.inflate(R.layout.list_item, null);
             childViewHolder = new ChildViewHolder();
             childViewHolder.ll_child = convertView.findViewById(R.id.ll_child);
@@ -248,7 +256,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
-                mEditor.commit();
+                mEditor.apply();
                 Intent mIntent = new Intent(_context, MyProfileActivity.class);
                 _context.startActivity(mIntent);
 
@@ -274,7 +282,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 final Dialog relation_dialog = new Dialog(_context);
                 relation_dialog.setTitle("Request of relation");
                 relation_dialog.setContentView(R.layout.custom_relation_dialog);
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_dropdown_item_1line, SPINNERLIST);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(_context, android.R.layout.simple_dropdown_item_1line, SPINNERLIST);
                 MaterialBetterSpinner relation_spinner = relation_dialog.findViewById(R.id.relation_spinner);
                 relation_spinner.setAdapter(arrayAdapter);
                 Button btnSend = relation_dialog.findViewById(R.id.btnSend);
@@ -298,7 +306,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                 builder.setMessage("Do you want to request for update ?");
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
 
 
                         Common.SendWhatsappMessage(_context, mobile, _context.getResources().getString(R.string.nice_html));
@@ -307,7 +315,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 });
                 builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 }).show();
@@ -326,14 +334,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                 builder.setMessage(message);
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
                         SyncUser(id);
                         dialog.dismiss();
                     }
                 });
                 builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 }).show();
@@ -350,7 +358,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                 builder.setMessage("Do you want to navigate " + name + " location ?");
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
                         if (MainActivity.lat != null && MainActivity.lon != null) {
                             Common.showDirections((Activity) _context, Double.parseDouble(user_lat), Double.parseDouble(user_lng), "");
                             Toast.makeText(_context, "distance between you and " + name, Toast.LENGTH_LONG).show();
@@ -360,7 +368,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 });
                 builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 }).show();
@@ -378,7 +386,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                 builder.setMessage("Do you want to navigate " + name + " home location ?");
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
                         if (MainActivity.lat != null && MainActivity.lon != null) {
                             Common.showDirections((Activity) _context, Double.parseDouble(home_lat), Double.parseDouble(home_lng), "");
                             Toast.makeText(_context, "distance between your home and " + name + " home", Toast.LENGTH_SHORT).show();
@@ -388,7 +396,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 });
                 builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 }).show();
@@ -418,13 +426,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return groupPosition;
     }
 
+    @Nullable
+    @SuppressLint({"SetTextI18n", "InflateParams"})
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(int groupPosition, boolean isExpanded, @Nullable View convertView, ViewGroup parent) {
         final ListParentData mListParentData = (ListParentData) getGroup(groupPosition);
 
+        GroupViewHolder groupViewHolder;
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.list_group, null);
+            convertView = Objects.requireNonNull(infalInflater).inflate(R.layout.list_group, null);
             groupViewHolder = new GroupViewHolder();
             groupViewHolder.ll_parent = convertView.findViewById(R.id.ll_parent);
             groupViewHolder.ivIcon = convertView.findViewById(R.id.ivIcon);
@@ -507,7 +518,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 RealmList<ListProfileData> mListProfileData1 = Common.getDataFromParentTable(id, 3);
                 if (mListProfileData1.size() > 0) {
                     ListProfileData mListProfileData = mListProfileData1.get(0);
-                    String first_name = mListProfileData.getFirst_name();
+                    String first_name = Objects.requireNonNull(mListProfileData).getFirst_name();
                     String last_name = mListProfileData.getLast_name();
                     name = first_name + " " + last_name;
                     String id = mListParentData.getId();
@@ -528,7 +539,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
-    void shareImage(Bitmap bitmap, String text) {
+    private void shareImage(Bitmap bitmap, String text) {
         String pathofBmp = MediaStore.Images.Media.insertImage(_context.getContentResolver(), bitmap, "title", null);
         Uri uri = Uri.parse(pathofBmp);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -577,7 +588,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             String sync_url = Common.Constant_Class.SYNC_URL;
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, sync_url, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
-                public void onResponse(JSONObject response) {
+                public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
                     hideProgressDialog();
                     try {
@@ -598,12 +609,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
 
                     hideProgressDialog();
                 }
             }) {
+                @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
@@ -615,6 +627,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 }
             };
             // Adding request to request queue
+            String tag_json_obj = "jobj_req";
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
         }

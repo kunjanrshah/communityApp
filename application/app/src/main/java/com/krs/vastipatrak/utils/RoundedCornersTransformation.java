@@ -1,9 +1,5 @@
 package com.krs.vastipatrak.utils;
 
-/**
- * Created by Kunjan on 04-03-2018.
- */
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -12,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.support.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Transformation;
@@ -41,11 +38,11 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
     private String mColor;
     private int mBorder;
 
-    public RoundedCornersTransformation(Context context, int radius, int margin) {
+    public RoundedCornersTransformation(@NonNull Context context, int radius, int margin) {
         this(context, radius, margin, CornerType.ALL);
     }
 
-    public RoundedCornersTransformation(Context context, int radius, int margin, String color, int border) {
+    public RoundedCornersTransformation(@NonNull Context context, int radius, int margin, String color, int border) {
         this(context, radius, margin, CornerType.BORDER);
         mColor = color;
         mBorder = border;
@@ -55,7 +52,7 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         this(pool, radius, margin, CornerType.ALL);
     }
 
-    public RoundedCornersTransformation(Context context, int radius, int margin,
+    public RoundedCornersTransformation(@NonNull Context context, int radius, int margin,
                                         CornerType cornerType) {
         this(Glide.get(context).getBitmapPool(), radius, margin, cornerType);
     }
@@ -69,6 +66,7 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         mCornerType = cornerType;
     }
 
+    @NonNull
     @Override
     public Resource<Bitmap> transform(Context context, Resource<Bitmap> resource, int outWidth, int outHeight) {
         Bitmap source = resource.get();
@@ -89,7 +87,7 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         return BitmapResource.obtain(bitmap, mBitmapPool);
     }
 
-    private void drawRoundRect(Canvas canvas, Paint paint, float width, float height) {
+    private void drawRoundRect(@NonNull Canvas canvas, @NonNull Paint paint, float width, float height) {
         float right = width - mMargin;
         float bottom = height - mMargin;
 
@@ -148,59 +146,59 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         }
     }
 
-    private void drawTopLeftRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
+    private void drawTopLeftRoundRect(Canvas canvas, @NonNull Paint paint, float right, float bottom) {
         canvas.drawRoundRect(new RectF(mMargin, mMargin, mMargin + mDiameter, mMargin + mDiameter),
                 mRadius, mRadius, paint);
         canvas.drawRect(new RectF(mMargin, mMargin + mRadius, mMargin + mRadius, bottom), paint);
         canvas.drawRect(new RectF(mMargin + mRadius, mMargin, right, bottom), paint);
     }
 
-    private void drawTopRightRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
+    private void drawTopRightRoundRect(Canvas canvas, @NonNull Paint paint, float right, float bottom) {
         canvas.drawRoundRect(new RectF(right - mDiameter, mMargin, right, mMargin + mDiameter), mRadius,
                 mRadius, paint);
         canvas.drawRect(new RectF(mMargin, mMargin, right - mRadius, bottom), paint);
         canvas.drawRect(new RectF(right - mRadius, mMargin + mRadius, right, bottom), paint);
     }
 
-    private void drawBottomLeftRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
+    private void drawBottomLeftRoundRect(Canvas canvas, @NonNull Paint paint, float right, float bottom) {
         canvas.drawRoundRect(new RectF(mMargin, bottom - mDiameter, mMargin + mDiameter, bottom),
                 mRadius, mRadius, paint);
         canvas.drawRect(new RectF(mMargin, mMargin, mMargin + mDiameter, bottom - mRadius), paint);
         canvas.drawRect(new RectF(mMargin + mRadius, mMargin, right, bottom), paint);
     }
 
-    private void drawBottomRightRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
+    private void drawBottomRightRoundRect(Canvas canvas, @NonNull Paint paint, float right, float bottom) {
         canvas.drawRoundRect(new RectF(right - mDiameter, bottom - mDiameter, right, bottom), mRadius,
                 mRadius, paint);
         canvas.drawRect(new RectF(mMargin, mMargin, right - mRadius, bottom), paint);
         canvas.drawRect(new RectF(right - mRadius, mMargin, right, bottom - mRadius), paint);
     }
 
-    private void drawTopRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
+    private void drawTopRoundRect(Canvas canvas, @NonNull Paint paint, float right, float bottom) {
         canvas.drawRoundRect(new RectF(mMargin, mMargin, right, mMargin + mDiameter), mRadius, mRadius,
                 paint);
         canvas.drawRect(new RectF(mMargin, mMargin + mRadius, right, bottom), paint);
     }
 
-    private void drawBottomRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
+    private void drawBottomRoundRect(Canvas canvas, @NonNull Paint paint, float right, float bottom) {
         canvas.drawRoundRect(new RectF(mMargin, bottom - mDiameter, right, bottom), mRadius, mRadius,
                 paint);
         canvas.drawRect(new RectF(mMargin, mMargin, right, bottom - mRadius), paint);
     }
 
-    private void drawLeftRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
+    private void drawLeftRoundRect(Canvas canvas, @NonNull Paint paint, float right, float bottom) {
         canvas.drawRoundRect(new RectF(mMargin, mMargin, mMargin + mDiameter, bottom), mRadius, mRadius,
                 paint);
         canvas.drawRect(new RectF(mMargin + mRadius, mMargin, right, bottom), paint);
     }
 
-    private void drawRightRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
+    private void drawRightRoundRect(Canvas canvas, @NonNull Paint paint, float right, float bottom) {
         canvas.drawRoundRect(new RectF(right - mDiameter, mMargin, right, bottom), mRadius, mRadius,
                 paint);
         canvas.drawRect(new RectF(mMargin, mMargin, right - mRadius, bottom), paint);
     }
 
-    private void drawOtherTopLeftRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
+    private void drawOtherTopLeftRoundRect(Canvas canvas, @NonNull Paint paint, float right, float bottom) {
         canvas.drawRoundRect(new RectF(mMargin, bottom - mDiameter, right, bottom), mRadius, mRadius,
                 paint);
         canvas.drawRoundRect(new RectF(right - mDiameter, mMargin, right, bottom), mRadius, mRadius,
@@ -208,7 +206,7 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         canvas.drawRect(new RectF(mMargin, mMargin, right - mRadius, bottom - mRadius), paint);
     }
 
-    private void drawOtherTopRightRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
+    private void drawOtherTopRightRoundRect(Canvas canvas, @NonNull Paint paint, float right, float bottom) {
         canvas.drawRoundRect(new RectF(mMargin, mMargin, mMargin + mDiameter, bottom), mRadius, mRadius,
                 paint);
         canvas.drawRoundRect(new RectF(mMargin, bottom - mDiameter, right, bottom), mRadius, mRadius,
@@ -216,7 +214,7 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         canvas.drawRect(new RectF(mMargin + mRadius, mMargin, right, bottom - mRadius), paint);
     }
 
-    private void drawOtherBottomLeftRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
+    private void drawOtherBottomLeftRoundRect(Canvas canvas, @NonNull Paint paint, float right, float bottom) {
         canvas.drawRoundRect(new RectF(mMargin, mMargin, right, mMargin + mDiameter), mRadius, mRadius,
                 paint);
         canvas.drawRoundRect(new RectF(right - mDiameter, mMargin, right, bottom), mRadius, mRadius,
@@ -224,7 +222,7 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         canvas.drawRect(new RectF(mMargin, mMargin + mRadius, right - mRadius, bottom), paint);
     }
 
-    private void drawOtherBottomRightRoundRect(Canvas canvas, Paint paint, float right,
+    private void drawOtherBottomRightRoundRect(Canvas canvas, @NonNull Paint paint, float right,
                                                float bottom) {
         canvas.drawRoundRect(new RectF(mMargin, mMargin, right, mMargin + mDiameter), mRadius, mRadius,
                 paint);
@@ -233,7 +231,7 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         canvas.drawRect(new RectF(mMargin + mRadius, mMargin + mRadius, right, bottom), paint);
     }
 
-    private void drawDiagonalFromTopLeftRoundRect(Canvas canvas, Paint paint, float right,
+    private void drawDiagonalFromTopLeftRoundRect(Canvas canvas, @NonNull Paint paint, float right,
                                                   float bottom) {
         canvas.drawRoundRect(new RectF(mMargin, mMargin, mMargin + mDiameter, mMargin + mDiameter),
                 mRadius, mRadius, paint);
@@ -243,7 +241,7 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         canvas.drawRect(new RectF(mMargin + mDiameter, mMargin, right, bottom - mRadius), paint);
     }
 
-    private void drawDiagonalFromTopRightRoundRect(Canvas canvas, Paint paint, float right,
+    private void drawDiagonalFromTopRightRoundRect(Canvas canvas, @NonNull Paint paint, float right,
                                                    float bottom) {
         canvas.drawRoundRect(new RectF(right - mDiameter, mMargin, right, mMargin + mDiameter), mRadius,
                 mRadius, paint);
@@ -253,7 +251,7 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         canvas.drawRect(new RectF(mMargin + mRadius, mMargin + mRadius, right, bottom), paint);
     }
 
-    private void drawBorder(Canvas canvas, Paint paint, float right,
+    private void drawBorder(@NonNull Canvas canvas, @NonNull Paint paint, float right,
                             float bottom) {
 
         // stroke
@@ -278,8 +276,8 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
 
     }
 
+    @NonNull
     public String getId() {
-        return "RoundedTransformation(radius=" + mRadius + ", margin=" + mMargin + ", diameter="
-                + mDiameter + ", cornerType=" + mCornerType.name() + ")";
+        return "RoundedTransformation(radius=" + mRadius + ", margin=" + mMargin + ", diameter=" + mDiameter + ", cornerType=" + mCornerType.name() + ")";
     }
 }

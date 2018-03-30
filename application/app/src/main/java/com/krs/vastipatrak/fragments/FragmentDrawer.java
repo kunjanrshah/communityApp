@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,16 +31,17 @@ import com.krs.vastipatrak.utils.Common;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class FragmentDrawer extends Fragment {
 
-    private static String TAG = FragmentDrawer.class.getSimpleName();
+
+    @Nullable
     private static String[] titles = null;
-    private RecyclerView recyclerView;
+    @Nullable
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    private NavigationDrawerAdapter adapter;
     private View containerView;
     private ImageView img_profile;
     private TextView txt_name;
@@ -49,14 +52,16 @@ public class FragmentDrawer extends Fragment {
 
     }
 
+    @NonNull
     public static List<NavDrawerItem> getData() {
         List<NavDrawerItem> data = new ArrayList<>();
 
 
         // preparing navigation drawer items
-        for (int i = 0; i < titles.length; i++) {
+        assert titles != null;
+        for (String title : titles) {
             NavDrawerItem navItem = new NavDrawerItem();
-            navItem.setTitle(titles[i]);
+            navItem.setTitle(title);
             data.add(navItem);
         }
         return data;
@@ -71,18 +76,18 @@ public class FragmentDrawer extends Fragment {
         super.onCreate(savedInstanceState);
 
         // drawer labels
-        titles = getActivity().getResources().getStringArray(R.array.nav_drawer_labels);
+        titles = Objects.requireNonNull(getActivity()).getResources().getStringArray(R.array.nav_drawer_labels);
     }
 
     @SuppressLint("Range")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         // Inflating view layout
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
-        recyclerView = layout.findViewById(R.id.drawerList);
+        RecyclerView recyclerView = layout.findViewById(R.id.drawerList);
 
         img_profile = layout.findViewById(R.id.img_profile);
         txt_name = layout.findViewById(R.id.txt_name);
@@ -90,7 +95,7 @@ public class FragmentDrawer extends Fragment {
         //new Common.ImageLoadTask(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, ""), img_profile).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
         txt_name.setText(name);
-        adapter = new NavigationDrawerAdapter(getActivity(), getData());
+        NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(getActivity(), getData());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
       //  recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
@@ -111,8 +116,8 @@ public class FragmentDrawer extends Fragment {
     }
 
 
-    public void setUp(int fragmentId, DrawerLayout drawerLayout, final Toolbar toolbar) {
-        containerView = getActivity().findViewById(fragmentId);
+    public void setUp(int fragmentId, DrawerLayout drawerLayout, @NonNull final Toolbar toolbar) {
+        containerView = Objects.requireNonNull(getActivity()).findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
@@ -165,10 +170,12 @@ public class FragmentDrawer extends Fragment {
 
     static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
+        @Nullable
         private GestureDetector gestureDetector;
+        @Nullable
         private ClickListener clickListener;
 
-        public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener) {
+        RecyclerTouchListener(Context context, @NonNull final RecyclerView recyclerView, @Nullable final ClickListener clickListener) {
             this.clickListener = clickListener;
             gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
                 @Override
@@ -177,7 +184,7 @@ public class FragmentDrawer extends Fragment {
                 }
 
                 @Override
-                public void onLongPress(MotionEvent e) {
+                public void onLongPress(@NonNull MotionEvent e) {
                     View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                     if (child != null && clickListener != null) {
                         clickListener.onLongClick(child, recyclerView.getChildPosition(child));
@@ -187,10 +194,10 @@ public class FragmentDrawer extends Fragment {
         }
 
         @Override
-        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+        public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
 
             View child = rv.findChildViewUnder(e.getX(), e.getY());
-            if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
+            if (child != null && clickListener != null && Objects.requireNonNull(gestureDetector).onTouchEvent(e)) {
                 clickListener.onClick(child, rv.getChildPosition(child));
             }
             return false;

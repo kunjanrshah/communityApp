@@ -2,6 +2,7 @@ package com.krs.vastipatrak.service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,7 +25,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
+    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         Log.e(TAG, "From: " + remoteMessage.getFrom());
 
         if (remoteMessage == null)

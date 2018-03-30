@@ -3,20 +3,20 @@
 
     >
 
-    <solid android:color="#fee5ee"></solid>
+    <solid android:color="#fee5ee" />
 
     <stroke
         android:width="3dp"
-        android:color="#fee5ee"></stroke>
+        android:color="#fee5ee" />
 
     <padding
         android:bottom="5dp"
         android:left="5dp"
         android:right="5dp"
-        android:top="5dp"></padding>
+        android:top="5dp" />
 
     <corners
         android:topLeftRadius="15dp"
-        android:topRightRadius="15dp"></corners>
+        android:topRightRadius="15dp" />
 
 </shape>

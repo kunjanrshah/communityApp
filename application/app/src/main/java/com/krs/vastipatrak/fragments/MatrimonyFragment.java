@@ -1,7 +1,10 @@
 package com.krs.vastipatrak.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -21,28 +24,29 @@ import com.krs.vastipatrak.utils.Common;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-
-
-/**
- * Created by Kunjan on 09-03-2018.
- */
-
 public class MatrimonyFragment extends Fragment {
 
     ExpandableListView lvMatrimonyList;
+    @Nullable
     ExpandableMarimonyListAdapter mExpandableMatrimonyListAdapter = null;
+    @Nullable
     ArrayList<ListMatrimonyParentData> listDataHeader = null;
+    @Nullable
     HashMap<ListMatrimonyParentData, List<ListMatrimonyChildData>> listDataChild = null;
     Realm realm;
+    Activity mActivity;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_matrimony, container, false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.title_matrimony);
+        assert getActivity() != null;
+        mActivity = getActivity();
+        Objects.requireNonNull(((AppCompatActivity) mActivity).getSupportActionBar()).setSubtitle(R.string.title_matrimony);
         setHasOptionsMenu(true);
         MemoryAllocation(rootView);
         getChildRecords();
@@ -86,7 +90,7 @@ public class MatrimonyFragment extends Fragment {
                 lpd.setCity(city);
                 lpd.setUpdated_time(updated);
 
-                listDataHeader.add(lpd);
+                Objects.requireNonNull(listDataHeader).add(lpd);
                 ListMatrimonyChildData lcd = new ListMatrimonyChildData();
                 lcd.setProfile_id(data.getProfile_id());
                 lcd.setChild_address(address);
@@ -99,9 +103,9 @@ public class MatrimonyFragment extends Fragment {
                 lcd.setHome_lat(home_lat);
                 lcd.setHome_lng(home_lng);
                 lcd.setName(data.getChild_name());
-                ArrayList<ListMatrimonyChildData> mlstChildData = new ArrayList<ListMatrimonyChildData>();
+                ArrayList<ListMatrimonyChildData> mlstChildData = new ArrayList<>();
                 mlstChildData.add(lcd);
-                listDataChild.put(lpd, mlstChildData);
+                Objects.requireNonNull(listDataChild).put(lpd, mlstChildData);
             }
         }
     }

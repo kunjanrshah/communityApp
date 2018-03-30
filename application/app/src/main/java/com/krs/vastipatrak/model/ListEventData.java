@@ -1,6 +1,8 @@
 
 package com.krs.vastipatrak.model;
 
+import android.support.annotation.Nullable;
+
 import java.util.Date;
 
 import io.realm.RealmList;
@@ -17,7 +19,9 @@ public class ListEventData extends RealmObject{
     private Date event_date;
     private String lat;
     private String lng;
+    @Nullable
     private RealmList<String> youtubeUrl = null;
+    @Nullable
     private RealmList<String> images = null;
 
     public String getId() {
@@ -69,6 +73,7 @@ public class ListEventData extends RealmObject{
         this.lng = lng;
     }
 
+    @Nullable
     public RealmList<String> getYoutubeUrl() {
         return youtubeUrl;
     }
@@ -77,6 +82,7 @@ public class ListEventData extends RealmObject{
         this.youtubeUrl = youtubeUrl;
     }
 
+    @Nullable
     public RealmList<String> getImages() {
         return images;
     }

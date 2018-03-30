@@ -1,9 +1,5 @@
 package com.krs.vastipatrak.utils;
 
-/**
- * Created by TecStub on 04-Oct-16.
- */
-
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -19,6 +15,8 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.Html;
 import android.text.TextUtils;
@@ -91,11 +89,11 @@ public class NotificationUtils {
         return 0;
     }
 
-    public void showNotificationMessage(String title, String message, String timeStamp, Intent intent) {
+    public void showNotificationMessage(String title, String message, String timeStamp, @NonNull Intent intent) {
         showNotificationMessage(title, message, timeStamp, intent, null);
     }
 
-    public void showNotificationMessage(final String title, final String message, final String timeStamp, Intent intent, String imageUrl) {
+    public void showNotificationMessage(final String title, final String message, final String timeStamp, @NonNull Intent intent, @Nullable String imageUrl) {
         // Check for empty push message
         if (TextUtils.isEmpty(message))
             return;
@@ -186,6 +184,7 @@ public class NotificationUtils {
      * Downloading push notification image before displaying it in
      * the notification tray
      */
+    @Nullable
     public Bitmap getBitmapFromURL(String strURL) {
         try {
             URL url = new URL(strURL);

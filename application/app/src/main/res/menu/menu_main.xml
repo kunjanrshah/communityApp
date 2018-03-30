@@ -37,6 +37,12 @@
         android:title="@string/action_scan"
         app:showAsAction="ifRoom|collapseActionView" />
 
+    <item
+        android:id="@+id/action_scan_image"
+        android:icon="@drawable/qr_code_image"
+        android:title="@string/action_scan_img"
+        app:showAsAction="ifRoom|collapseActionView" />
+
 
     <item
         android:id="@+id/action_export"

@@ -7,10 +7,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
@@ -38,6 +39,7 @@ import static com.krs.vastipatrak.fragments.SyncFragment.mHandler;
 
 public class SyncService extends Service {
 
+    @NonNull
     String TAG = "SyncService";
     SharedPreferences mSharedPreferences;
     boolean is_reset=false;
@@ -54,7 +56,7 @@ public class SyncService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
 
         if (intent != null) {
             ArrayList<String> selectedCities = intent.getStringArrayListExtra("selectedCities");
@@ -64,7 +66,7 @@ public class SyncService extends Service {
         return START_REDELIVER_INTENT;
     }
 
-    private void callSyncWS(ArrayList<String> selectedCities) {
+    private void callSyncWS(@NonNull ArrayList<String> selectedCities) {
 
         if (Common.isOnline(this)) {
 
@@ -91,7 +93,7 @@ public class SyncService extends Service {
             final JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SYNC_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
-                public void onResponse(JSONObject response) {
+                public void onResponse(@NonNull JSONObject response) {
 
                     Log.d(TAG, "response: " + response.toString());
 
@@ -257,12 +259,13 @@ public class SyncService extends Service {
             }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                 }
             }) {
+                @NonNull
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
@@ -283,7 +286,7 @@ public class SyncService extends Service {
                 }
 
                 @Override
-                public void retry(VolleyError error) throws VolleyError {
+                public void retry(VolleyError error) {
 
                 }
             });

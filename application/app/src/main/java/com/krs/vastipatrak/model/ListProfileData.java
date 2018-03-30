@@ -9,8 +9,52 @@ public class ListProfileData extends RealmObject{
 
     @PrimaryKey
     private String profile_id="";
-    private String profile_pic_url = "", img_spouse_url = "", img_father_url = "", img_mother_url = "", img_sfather_url = "", img_smother_url = "",status="",first_name="",last_name="",father_name="",mother_name="",email_address="",mobile="",phone="",blood_group="",gender="",gotra="",ekdo="",native_place="",birth_place="",birth_date="",birth_time="",education="",occupation="",
-            work="",address="",office_address="",office_mobile="",office_lat="",office_lng="",home_lat="",home_lng="",user_lat="",user_lng="",spouse_name="",marriage_date="",spouse_father_name="",spouse_mother_name="";
+    private String profile_pic_url = "";
+    private String img_spouse_url = "";
+    private String img_father_url = "";
+    private String img_mother_url = "";
+    private String img_sfather_url = "";
+    private String img_smother_url = "";
+    private String status = "";
+    private String first_name = "";
+    private String last_name = "";
+    private String father_name = "";
+    private String mother_name = "";
+    private String email_address = "";
+    private String mobile = "";
+    private String phone = "";
+    private String blood_group = "";
+    private String gender = "";
+    private String gotra = "";
+    private String native_place = "";
+    private String birth_place = "";
+    private String birth_date = "";
+    private String birth_time = "";
+    private String education = "";
+    private String occupation = "";
+    private String work = "";
+    private String address = "";
+    private String office_address = "";
+    private String office_mobile = "";
+    private String office_lat = "";
+    private String office_lng = "";
+    private String home_lat = "";
+    private String home_lng = "";
+    private String user_lat = "";
+    private String user_lng = "";
+    private String spouse_name = "";
+    private String marriage_date = "";
+    private String spouse_father_name = "";
+    private String spouse_mother_name = "";
+    private String ekdo = "";
+
+    public String getEkdo() {
+        return ekdo;
+    }
+
+    public void setEkdo(String ekdo) {
+        this.ekdo = ekdo;
+    }
     private boolean is_location_enable;
     private String updated_time;
     private String sync_time;
@@ -261,14 +305,6 @@ public class ListProfileData extends RealmObject{
 
     public void setGotra(String gotra) {
         this.gotra = gotra;
-    }
-
-    public String getEkdo() {
-        return ekdo;
-    }
-
-    public void setEkdo(String ekdo) {
-        this.ekdo = ekdo;
     }
 
     public String getNative_place() {

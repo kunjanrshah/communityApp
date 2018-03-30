@@ -1,5 +1,6 @@
 package com.krs.vastipatrak.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -12,6 +13,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
@@ -53,21 +56,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.realm.Realm;
 
 public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
 
-    Realm realm = AppController.getInstance().realm;
+    private Realm realm = AppController.getInstance().realm;
     private Context _context;
-    private ArrayList<ListMatrimonyParentData> _listDataHeader = null;
-    private HashMap<ListMatrimonyParentData, List<ListMatrimonyChildData>> _listDataChild = null;
+    private ArrayList<ListMatrimonyParentData> _listDataHeader;
+    /**
+     * Display detail view in Expandable list
+     */
+    private HashMap<ListMatrimonyParentData, List<ListMatrimonyChildData>> _listDataChild;
+    @Nullable
     private ProgressDialog pDialog;
-    private String TAG = "ExpandableMarimonyListAdapter";
-    private SharedPreferences mSharedPreferences = null;
-    private SharedPreferences.Editor mEditor = null;
+    @NonNull
+    private String TAG = ExpandableMarimonyListAdapter.class.getSimpleName();
+    /**
+     * stored session in SharedPreferences
+     */
+    private SharedPreferences mSharedPreferences;
+    @Nullable
+    private SharedPreferences.Editor mEditor;
     private ChildViewHolder childViewHolder;
-    private GroupViewHolder groupViewHolder;
 
     public ExpandableMarimonyListAdapter(Context context, ArrayList<ListMatrimonyParentData> listDataHeader, HashMap<ListMatrimonyParentData, List<ListMatrimonyChildData>> listDataChild) {
         this._context = context;
@@ -78,12 +90,13 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         pDialog.setCancelable(true);
         mSharedPreferences = _context.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
+        mEditor.apply();
     }
 
 
     private void openImageDialog(String name, String url) {
         Dialog dialog = new Dialog(_context);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setContentView(R.layout.image_dialog);
         dialog.setTitle(name);
         ImageView image = dialog.findViewById(R.id.img_dialog);
@@ -101,15 +114,20 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         return childPosition;
     }
 
+    @Nullable
+    @SuppressLint("InflateParams")
     @Override
-    public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, @Nullable View convertView, ViewGroup parent) {
 
         ListMatrimonyChildData mListMatrimonyChildData = (ListMatrimonyChildData) getChild(groupPosition, childPosition);
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.list_matrimony_item, null);
+            if (infalInflater != null) {
+                convertView = infalInflater.inflate(R.layout.list_matrimony_item, null);
+            }
             childViewHolder = new ChildViewHolder();
+            assert convertView != null;
             childViewHolder.txt_blood = convertView.findViewById(R.id.txt_blood);
             childViewHolder.txt_gotra = convertView.findViewById(R.id.txt_gotra);
             childViewHolder.txt_bdate = convertView.findViewById(R.id.txt_bdate);
@@ -153,7 +171,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
 
                 builder.setMessage("Do you want to request for update ?");
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
 
                         Common.SendWhatsappMessage(_context, mobile, _context.getResources().getString(R.string.nice_html));
                         dialog.dismiss();
@@ -161,7 +179,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                 });
                 builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 }).show();
@@ -179,14 +197,14 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
 
                 builder.setMessage(message);
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
                         SyncUser(id);
                         dialog.dismiss();
                     }
                 });
                 builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 }).show();
@@ -204,7 +222,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
 
                 builder.setMessage(message);
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
                         if (MainActivity.lat != null && MainActivity.lon != null) {
                             Common.showDirections((Activity) _context, Double.parseDouble(home_lat), Double.parseDouble(home_lng), "");
                             Toast.makeText(_context, "distance between you and " + name + "'s home", Toast.LENGTH_SHORT).show();
@@ -214,7 +232,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                 });
                 builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 }).show();
@@ -252,9 +270,10 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         childViewHolder.imgDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                assert mEditor != null;
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
-                mEditor.commit();
+                mEditor.apply();
                 Intent mIntent = new Intent(_context, MyProfileActivity.class);
                 _context.startActivity(mIntent);
             }
@@ -296,12 +315,16 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         return groupPosition;
     }
 
+    @Nullable
+    @SuppressLint({"SetTextI18n", "InflateParams"})
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(int groupPosition, boolean isExpanded, @Nullable View convertView, ViewGroup parent) {
         final ListMatrimonyParentData mListMatrimonyParentData = (ListMatrimonyParentData) getGroup(groupPosition);
 
+        GroupViewHolder groupViewHolder;
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            assert infalInflater != null;
             convertView = infalInflater.inflate(R.layout.list_marimony_group, null);
             groupViewHolder = new GroupViewHolder();
             groupViewHolder.ivChildIcon = convertView.findViewById(R.id.ivChildIcon);
@@ -320,17 +343,14 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
 
         Common.getParentRandomColor(_context, groupPosition, groupViewHolder.ll_parent_matrimony);
         final String child_id = mListMatrimonyParentData.getId();
-        final String child_profile_id = mListMatrimonyParentData.getProfile_id();
         final String imgURL = mListMatrimonyParentData.getProfilePicUrl();
         final String Name = mListMatrimonyParentData.getName();
         String FatherName = mListMatrimonyParentData.getFatherName();
         String MotherName = mListMatrimonyParentData.getMotherName();
         String city = mListMatrimonyParentData.getCity();
 
-        Glide.with(_context).load(imgURL)
-                .apply(RequestOptions.bitmapTransform(
-                        new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).into(groupViewHolder.ivChildIcon);
-        if (mListMatrimonyParentData.getChild_gender().toString().equalsIgnoreCase("male")) {
+        Glide.with(_context).load(imgURL).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).into(groupViewHolder.ivChildIcon);
+        if (mListMatrimonyParentData.getChild_gender().equalsIgnoreCase("male")) {
             groupViewHolder.imgChildGender.setBackgroundResource(R.drawable.boy);
         } else {
             groupViewHolder.imgChildGender.setBackgroundResource(R.drawable.woman);
@@ -377,7 +397,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
     }
 
 
-    void shareImage(Bitmap bitmap, String text){
+    private void shareImage(Bitmap bitmap, String text) {
         String pathofBmp= MediaStore.Images.Media.insertImage(_context.getContentResolver(), bitmap,"title", null);
         Uri uri = Uri.parse(pathofBmp);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -426,7 +446,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
             String sync_url = Common.Constant_Class.SYNC_URL;
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, sync_url, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
-                public void onResponse(JSONObject response) {
+                public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
                     hideProgressDialog();
                     try {
@@ -448,12 +468,13 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
             }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
 
                     hideProgressDialog();
                 }
             }) {
+                @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();

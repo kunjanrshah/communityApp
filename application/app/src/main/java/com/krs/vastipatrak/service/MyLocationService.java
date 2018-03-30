@@ -8,10 +8,11 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -36,11 +37,11 @@ public class MyLocationService extends Service {
     SharedPreferences mSharedPreferences;
     SharedPreferences.Editor mEditor;
     Location mLastLocation;
+    @NonNull
     String tag_json_obj = "jobj_req";
-    LocationListener[] mLocationListeners = new LocationListener[]{
-            new LocationListener(LocationManager.GPS_PROVIDER),
-            new LocationListener(LocationManager.NETWORK_PROVIDER)
-    };
+    @NonNull
+    LocationListener[] mLocationListeners = new LocationListener[]{new LocationListener(LocationManager.GPS_PROVIDER), new LocationListener(LocationManager.NETWORK_PROVIDER)};
+    @Nullable
     private LocationManager mLocationManager = null;
 
     @Override
@@ -102,7 +103,7 @@ public class MyLocationService extends Service {
         }
     }
 
-    private void userLocationUpdateWS(final String isUpdate) {
+    private void userLocationUpdateWS(@NonNull final String isUpdate) {
 
         if (Common.isOnline(MyLocationService.this)) {
             JSONObject mJsonObject = null;
@@ -120,7 +121,7 @@ public class MyLocationService extends Service {
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
-                public void onResponse(JSONObject response) {
+                public void onResponse(@NonNull JSONObject response) {
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
@@ -140,12 +141,13 @@ public class MyLocationService extends Service {
             }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d("TimeService", "Error: " + error.getMessage());
                 }
             }){
+                @NonNull
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
@@ -173,7 +175,7 @@ public class MyLocationService extends Service {
             mLastLocation.set(location);
             /*mEditor.putString(Common.Constant_Class.MY_LATITUDE, String.valueOf(location.getLatitude()));
             mEditor.putString(Common.Constant_Class.MY_LONGITUDE, String.valueOf(location.getLongitude()));
-            mEditor.commit();*/
+            mEditor.apply();*/
             userLocationUpdateWS("1");
 
            /* new Handler().postDelayed(new Runnable() {

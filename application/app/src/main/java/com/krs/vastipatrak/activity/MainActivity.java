@@ -9,12 +9,17 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -43,6 +48,16 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.ChecksumException;
+import com.google.zxing.FormatException;
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.NotFoundException;
+import com.google.zxing.RGBLuminanceSource;
+import com.google.zxing.Reader;
+import com.google.zxing.Result;
+import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.krs.vastipatrak.R;
@@ -61,6 +76,7 @@ import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.Constant_Class.LOCATION_INTERVAL;
 
@@ -71,22 +87,25 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
     public static final int CAMARA_REQUEST = 4;
-    static final int REQUEST_CHECK_SETTINGS = 199;
     private static final String TAG = MainActivity.class.getSimpleName();
     public static Location mLastLocation;
     public static GoogleApiClient mGoogleApiClient;
     public static String lat, lon;
+    private final int REQUEST_CHECK_SETTINGS = 199;
+    private final int IMAGEREQUESTCODE = 1;
     private final String[] INIT_PERMS = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS};
     private final String[] LOCATION_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION};
     private final String[] CALL_PERMS = {Manifest.permission.CALL_PHONE};
     private final int INIT_REQUEST = 1;
     private final int CALL_REQUEST = 2;
     private final int LOCATION_REQUEST = 3;
-    private final int REQ_CODE_SPEECH_INPUT = 100;
+    @Nullable
     String query = "", query_string = "";
     FragmentDrawer drawerFragment;
     boolean doubleBackToExitPressedOnce = false;
+    @Nullable
     GoogleApiClient googleApiClient;
+    @Nullable
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -98,31 +117,33 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         }
     };
+    @Nullable
     Fragment fragment = null;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
-    private Toolbar mToolbar;
-    private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
-    private LocationRequest mLocationRequest;
     private SearchView searchView;
     private IntentIntegrator qrScan;
+
     private DisplaySearchFragment displaySearchFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
-        mToolbar = findViewById(R.id.toolbar);
+        mEditor.apply();
+        Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         //intializing scan object
         qrScan = new IntentIntegrator(this);
         drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
-        AppController.getInstance().setMainActivityContext(MainActivity.this);
+
         Bundle mBundle = getIntent().getExtras();
         if (mBundle != null) {
             query = mBundle.getString(Common.Constant_Class.QUERY);
@@ -159,10 +180,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent) {
+            public void onReceive(Context context, @NonNull Intent intent) {
 
                 // checking for type intent filter
-                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                if (Objects.requireNonNull(intent.getAction()).equals(Config.REGISTRATION_COMPLETE)) {
                     // gcm successfully registered
                     // now subscribe to `global` topic to receive app wide notifications
                     FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
@@ -181,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
 
-    private void displayLocationSettingsRequest(Context context) {
+    private void displayLocationSettingsRequest(@NonNull Context context) {
         if (this.googleApiClient == null) {
             this.googleApiClient = new GoogleApiClient.Builder(context).addApi(LocationServices.API).build();
             this.googleApiClient.connect();
@@ -199,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(this.googleApiClient, builder.build());
             result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
                 @Override
-                public void onResult(LocationSettingsResult result) {
+                public void onResult(@NonNull LocationSettingsResult result) {
                     Status status = result.getStatus();
                     switch (status.getStatusCode()) {
                         case LocationSettingsStatusCodes.SUCCESS:
@@ -213,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                             try {
                                 // Show the dialog by calling startResolutionForResult(), and check the result
                                 // in onActivityResult().
-                                status.startResolutionForResult(MainActivity.this, MainActivity.REQUEST_CHECK_SETTINGS);
+                                status.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
                             } catch (IntentSender.SendIntentException e) {
                                 Log.i("Vastipatrak", "PendingIntent unable to execute request.");
                             }
@@ -271,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case LOCATION_REQUEST:
 
@@ -280,11 +301,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     Toast.makeText(this, "You need to give permission to access location ! ", Toast.LENGTH_SHORT).show();
                 } else if (Common.canAccessLocation(this)) {
                     buildGoogleApiClient();
-                } else {
-                    //Never ask again selected, or device policy prohibits the app from having that permission.
-                    //So, disable that feature, or fall back to another situation...
                 }
-
 
                 break;
             case CALL_REQUEST:
@@ -292,9 +309,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 // Should we show an explanation?
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
                     Toast.makeText(this, "You need to give permission to access phone ! ", Toast.LENGTH_SHORT).show();
-                } else {
-                    //Never ask again selected, or device policy prohibits the app from having that permission.
-                    //So, disable that feature, or fall back to another situation...
                 }
 
                 break;
@@ -312,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
@@ -321,9 +335,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Intent mIntent = new Intent(MainActivity.this, FilterActivity.class);
-                // mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(mIntent);
-                //finish();
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 return false;
             }
@@ -383,6 +395,20 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 return false;
             }
         });
+
+        MenuItem action_scan_image = menu.findItem(R.id.action_scan_image);
+        action_scan_image.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent, "Select File"), IMAGEREQUESTCODE);
+
+                return false;
+            }
+        });
+
 
         MenuItem activeItem = menu.findItem(R.id.action_activate);
         MenuItem activeAdd = menu.findItem(R.id.action_add);
@@ -523,7 +549,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             case 1:
 
                 mEditor.putBoolean("myprofile", true);
-                mEditor.commit();
+                mEditor.apply();
                 Intent mIntent1 = new Intent(MainActivity.this, MyProfileActivity.class);
                 startActivity(mIntent1);
                 this.overridePendingTransition(0, 0);
@@ -571,10 +597,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         builder.setMessage("Do you want to logout ?");
         builder.setPositiveButton(getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
 
                 mEditor.clear();
-                mEditor.commit();
+                mEditor.apply();
                 Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(mIntent);
@@ -585,15 +611,16 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         });
         builder.setNegativeButton(getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         }).show();
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        final int REQ_CODE_SPEECH_INPUT = 100;
 
         switch (requestCode) {
             case REQ_CODE_SPEECH_INPUT: {
@@ -605,9 +632,15 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 }
                 break;
             }
+            case IMAGEREQUESTCODE:
+
+                assert data != null;
+                manageImageFromUri(data.getData());
+                break;
             case REQUEST_CHECK_SETTINGS:
                 break;
         }
+
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             //if qrcode has nothing in it
@@ -618,10 +651,53 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 String id = result.getContents();
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
-                mEditor.commit();
+                mEditor.apply();
                 Intent mIntent = new Intent(this, MyProfileActivity.class);
                 startActivity(mIntent);
             }
+        }
+    }
+
+    private void readQRImage(Bitmap bMap) {
+        String id;
+
+        int[] intArray = new int[bMap.getWidth() * bMap.getHeight()];
+        //copy pixel data from the Bitmap into the 'intArray' array
+        bMap.getPixels(intArray, 0, bMap.getWidth(), 0, 0, bMap.getWidth(), bMap.getHeight());
+
+        LuminanceSource source = new RGBLuminanceSource(bMap.getWidth(), bMap.getHeight(), intArray);
+        BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+
+        Reader reader = new MultiFormatReader();// use this otherwise ChecksumException
+        try {
+            Result result = reader.decode(bitmap);
+            id = result.getText();
+            if (id != null) {
+                mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
+                mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+                mEditor.apply();
+                Intent mIntent = new Intent(MainActivity.this, MyProfileActivity.class);
+                startActivity(mIntent);
+            }
+            //byte[] rawBytes = result.getRawBytes();
+            //BarcodeFormat format = result.getBarcodeFormat();
+            //ResultPoint[] points = result.getResultPoints();
+        } catch (@NonNull NotFoundException | ChecksumException | FormatException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private void manageImageFromUri(Uri imageUri) {
+
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), imageUri);
+            if (bitmap != null) {
+                readQRImage(bitmap);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -629,45 +705,21 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     public void onBackPressed() {
 
- /*       if (mSharedPreferences.getString(Common.Constant_Class.FragmentSp, "").equalsIgnoreCase(EventlistActivity.class.getSimpleName().toString())) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_body, fragment);
-            fragmentTransaction.commit();
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
         }
-        else {*/
-            if (doubleBackToExitPressedOnce) {
-                super.onBackPressed();
-                return;
-            }
-            this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, "Press Back again to exit", Toast.LENGTH_SHORT).show();
-            new Handler().postDelayed(new Runnable() {
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Press Back again to exit", Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
 
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce = false;
-                }
-            }, 2000);
-        //     }
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
     }
 
-
-   /* @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-
-        //  String date = dayOfMonth + "/" + (++monthOfYear) + "/" + year;
-      //  String date = year + "-" + (++monthOfYear) + "-" + dayOfMonth;
-    }*/
-
-    /*@Override
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-
-        String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
-        String minuteString = minute < 10 ? "0" + minute : "" + minute;
-        String secondString = second < 10 ? "0" + second : "" + second;
-        String time = hourString + ":" + minuteString;
-    }*/
 
     synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
@@ -675,7 +727,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     @Override
     public void onConnected(Bundle bundle) {
-        mLocationRequest = LocationRequest.create();
+        LocationRequest mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(LOCATION_INTERVAL); // Update location every minutes
         try {
@@ -702,22 +754,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(@NonNull Location location) {
         lat = String.valueOf(location.getLatitude());
         lon = String.valueOf(location.getLongitude());
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         buildGoogleApiClient();
     }
-
-   /* @Override
-    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-
-        String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
-        String minuteString = minute < 10 ? "0" + minute : "" + minute;
-        String secondString = second < 10 ? "0" + second : "" + second;
-        String time = hourString + ":" + minuteString;
-    }*/
 }

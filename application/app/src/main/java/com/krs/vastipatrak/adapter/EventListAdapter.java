@@ -1,6 +1,8 @@
 package com.krs.vastipatrak.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +19,6 @@ import com.krs.vastipatrak.utils.Common;
 
 import java.util.ArrayList;
 
-
-/**
- * Created by root on 2/3/16.
- */
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
 
     private final static int TYPE_IMAGE = 1, TYPE_YOUTUBE = 2;
@@ -31,19 +29,15 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     public EventListAdapter(Context context, ListEventData data) {
         this.context = context;
         listUrls = new ArrayList<>();
-        for (int i = 0; i < data.getImages().size(); i++) {
-            listUrls.add(data.getImages().get(i));
-        }
-        for (int i = 0; i < data.getYoutubeUrl().size(); i++) {
-            listUrls.add(data.getYoutubeUrl().get(i));
-        }
+        listUrls.addAll(data.getImages());
+        listUrls.addAll(data.getYoutubeUrl());
     }
 
     public String getYoutubeUrl() {
         return YoutubeUrl;
     }
 
-    public void setYoutubeUrl(String youtubeUrl) {
+    private void setYoutubeUrl(String youtubeUrl) {
         YoutubeUrl = youtubeUrl;
     }
 
@@ -56,11 +50,14 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         }
     }
 
+    @NonNull
+    @SuppressLint("InflateParams")
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View cardView;
+        assert inflater != null;
         if (viewType == 1) {
             cardView = inflater.inflate(R.layout.item_child, null, false);
         } else {
@@ -71,7 +68,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         int viewType = holder.getItemViewType();
         if (viewType == 1) {
@@ -88,16 +85,17 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        @SuppressLint("StaticFieldLeak")
         public static YouTubePlayerView youTubeView;
         ImageView eventImage;
 
-        public ViewHolder(View itemView, int ViewType) {
+        ViewHolder(@NonNull View itemView, int ViewType) {
             super(itemView);
             if (ViewType == 1) {
                 eventImage = itemView.findViewById(R.id.image_event);

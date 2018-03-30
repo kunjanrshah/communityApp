@@ -61,6 +61,7 @@
     <string name="action_advsearch">Advance Search</string>
     <string name="action_export">Export Search</string>
     <string name="action_scan">Scan QRCode</string>
+    <string name="action_scan_img">QRCode Image</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
@@ -141,5 +142,15 @@ https://play.google.com/store/apps/details?id=com.king.candycrushsaga&hl=en
 \n Download the community app and update your profile!.
 ]]>
 </string>
+    <string name="gotra">Gotra :</string>
+    <string name="blood_group">Blood Group :</string>
+    <string name="mobile">Mobile :</string>
+    <string name="address">Address :</string>
+    <string name="birth_place">Birth Place :</string>
+    <string name="birth_time">Birth Time :</string>
+    <string name="birth_date">Birth Date :</string>
+    <string name="no_set_location">User has not set location</string>
+    <string name="enable_location">Need to enable location</string>
+    <string name="km">Km</string>
 
 </resources>

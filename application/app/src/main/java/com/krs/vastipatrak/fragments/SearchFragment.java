@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +24,6 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -58,18 +60,27 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
 
     private static final String[] CALL_PHONE_PERMS = {Manifest.permission.CALL_PHONE};
     private static final int CALL_PHONE_REQUEST = 3;
+    @Nullable
     public ArrayList<String> lstSelectedIDs = null;
+    @NonNull
     String TAG = "SearchFragment";
+    @NonNull
     String tag_json_obj = "jobj_req";
     SearchView searchView;
+    @Nullable
     ArrayList<ListParentData> listDataHeader = null;
+    @Nullable
     HashMap<ListParentData, List<ListChildData>> listDataChild = null;
     String query = "", query_string = "";
     int adminControl = -1;
+    @Nullable
     ProgressDialog pDialog;
     ExpandableListView lvCustomList;
+    @Nullable
     ExpandableListAdapter mExpandableListAdapter = null;
+    @Nullable
     TextView txtLable = null;
+    @Nullable
     private SharedPreferences mSharedPreferences = null;
 
     public SearchFragment() {
@@ -77,10 +88,10 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case CALL_PHONE_REQUEST:
-                if (!Common.canCallPhone(getActivity())) {
+                if (!Common.canCallPhone(Objects.requireNonNull(getActivity()))) {
                     Toast.makeText(getActivity(), "You need to give permission to access phone ! ", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -92,15 +103,15 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        if (!Common.canCallPhone(getActivity())) {
+        if (!Common.canCallPhone(Objects.requireNonNull(getActivity()))) {
             requestPermissions(CALL_PHONE_PERMS, CALL_PHONE_REQUEST);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("Search");
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle("Search");
         Bundle args = getArguments();
         if (args != null) {
             query = args.getString(Common.Constant_Class.QUERY, "");
@@ -119,7 +130,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
             callNonActivesWS();
         } else {
             lvCustomList.setVisibility(View.GONE);
-            txtLable.setVisibility(View.VISIBLE);
+            Objects.requireNonNull(txtLable).setVisibility(View.VISIBLE);
         }
 
         lvCustomList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
@@ -138,7 +149,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
 
     private void Memory_Allocation(View root) {
 
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         lvCustomList = root.findViewById(R.id.lvCustomList);
         txtLable = root.findViewById(R.id.txtLable);
         TextView tv = root.findViewById(R.id.txt_marquee);
@@ -147,17 +158,14 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
         pDialog.setMessage(Common.Constant_Class.LOADING);
         pDialog.setCancelable(true);
 
-        lstSelectedIDs = new ArrayList<String>();
+        lstSelectedIDs = new ArrayList<>();
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
 
-        //mAdView = root.findViewById(R.id.adView);
-        //        mAdView.setAdSize(AdSize.BANNER);
-        //        mAdView.setAdUnitId(getString(R.string.banner1));
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchItem.getActionView();
 
@@ -171,7 +179,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
+            public boolean onQueryTextChange(@NonNull String newText) {
                 query_string = "";
                 query = newText;
                 callSearchWS(newText);
@@ -182,28 +190,29 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @NonNull
     public String getSelectedName() {
-        String msgNames = "";
-        lstSelectedIDs.clear();
+        StringBuilder msgNames = new StringBuilder();
+        Objects.requireNonNull(lstSelectedIDs).clear();
         if (mExpandableListAdapter != null) {
-            for (int i = 0, j = 1; i < listDataHeader.size(); i++) {
+            for (int i = 0, j = 1; i < Objects.requireNonNull(listDataHeader).size(); i++) {
                 if (mExpandableListAdapter.checkboxMap.get(i)) {
-                    msgNames += j + ": " + listDataHeader.get(i).getName() + "\n";
+                    msgNames.append(j).append(": ").append(listDataHeader.get(i).getName()).append("\n");
                     lstSelectedIDs.add(listDataHeader.get(i).getId());
                     j++;
                 }
             }
         }
-        return msgNames;
+        return msgNames.toString();
     }
 
     public void alert(String message, final int mode) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()), R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getActivity().getString(R.string.app_name));
 
         builder.setMessage(message);
         builder.setPositiveButton(getActivity().getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
 
                 if (mode == 0) {
                     callStatusChangeWS(0);
@@ -218,7 +227,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
         });
         builder.setNegativeButton(getActivity().getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         }).show();
@@ -227,45 +236,32 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
     private void callSearchWS(String str_search) {
         if (str_search.length() > 3) {
 
-            txtLable.setVisibility(View.GONE);
+            Objects.requireNonNull(txtLable).setVisibility(View.GONE);
             lvCustomList.setVisibility(View.VISIBLE);
             if (query_string != null && !query_string.equalsIgnoreCase("")) {
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(Common.Title);
+                Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(Common.Title);
                 OfflineSearch(str_search, 2);
             } else {
-                if (query != null && !str_search.equalsIgnoreCase("")) {
-                    ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(str_search);
+                if (query != null) {
+                    Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(str_search);
                     OfflineSearch(str_search, 1);
                 }
             }
         }
     }
 
-    private void alertMessage(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
-        builder.setTitle(getActivity().getString(R.string.app_name));
-
-        builder.setMessage(message);
-        builder.setPositiveButton(getActivity().getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-
-                dialog.dismiss();
-            }
-        }).show();
-    }
-
-    private void displayData(JSONObject response, int stat) {
+    private void displayData(@NonNull JSONObject response) {
         try {
             String success = response.getString(Common.Constant_Class.SUCCESS);
             String message = response.getString(Common.Constant_Class.MESSAGE);
 
-            listDataHeader.clear();
-            listDataChild.clear();
+            Objects.requireNonNull(listDataHeader).clear();
+            Objects.requireNonNull(listDataChild).clear();
             if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
 
                 lvCustomList.setVisibility(View.VISIBLE);
                 //  wv_home.setVisibility(View.GONE);
-                txtLable.setVisibility(View.GONE);
+                Objects.requireNonNull(txtLable).setVisibility(View.GONE);
                 JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                 for (int i = 0; i < mJsonArray.length(); i++) {
 
@@ -281,7 +277,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
                     String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
                     boolean is_location_enable = Boolean.parseBoolean(mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE));
 
-                    if (status.equalsIgnoreCase("1") || stat == 0) {
+                    if (status.equalsIgnoreCase("1")) {
                         ListParentData lpd = new ListParentData();
                         lpd.setName(first_name + " " + last_name);
                         lpd.setFatherName(father_name);
@@ -316,7 +312,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
                         lcd.setPhone(phone);
                         lcd.setGender(gender);
                         lcd.setGotra(gotra);
-                        ArrayList<ListChildData> mlstChildData = new ArrayList<ListChildData>();
+                        ArrayList<ListChildData> mlstChildData = new ArrayList<>();
                         mlstChildData.add(lcd);
                         listDataHeader.add(lpd);
                         listDataChild.put(lpd, mlstChildData);
@@ -330,8 +326,8 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
             } else {
                 hideProgressDialog();
                 lvCustomList.setVisibility(View.GONE);
-                txtLable.setVisibility(View.VISIBLE);
-                Common.alert(getActivity(), message);
+                Objects.requireNonNull(txtLable).setVisibility(View.VISIBLE);
+                Common.alert(Objects.requireNonNull(getActivity()), message);
             }
 
 
@@ -343,15 +339,13 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
     private void OfflineSearch(String str_search, int search) {
         ListProfiles mProfilelist = new ListProfiles(new RealmList<ListProfileData>());
         RealmList<ListProfileData> mListParentData = Common.getDataFromParentTable(str_search, search);
-        for (int i = 0; i < mListParentData.size(); i++) {
-            mProfilelist.realmlist.add(mListParentData.get(i));
-        }
+        mProfilelist.realmlist.addAll(mListParentData);
 
         RealmList<ListProfileData> mListChildData = Common.getDataFromChildTable(str_search, search);
         for (int j = 0; j < mListChildData.size(); j++) {
             boolean flag = true;
             for (int k = 0; k < mProfilelist.realmlist.size(); k++) {
-                if (mProfilelist.realmlist.get(k).getProfile_id() == mListChildData.get(j).getProfile_id()) {
+                if (Objects.equals(Objects.requireNonNull(mProfilelist.realmlist.get(k)).getProfile_id(), Objects.requireNonNull(mListChildData.get(j)).getProfile_id())) {
                     flag = false;
                     break;
                 }
@@ -360,8 +354,8 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
                 mProfilelist.realmlist.add(mListChildData.get(j));
             }
         }
-        listDataHeader.clear();
-        listDataChild.clear();
+        Objects.requireNonNull(listDataHeader).clear();
+        Objects.requireNonNull(listDataChild).clear();
 
         AppController.getInstance().realm.beginTransaction();
         mProfilelist = AppController.getInstance().realm.copyToRealm(mProfilelist);
@@ -372,38 +366,38 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
 
         for (int i = 0; i < mSortedProfiles.size(); i++) {
             ListParentData lpd = new ListParentData();
-            lpd.setName(mSortedProfiles.get(i).getFirst_name() + " " + mSortedProfiles.get(i).getLast_name());
-            lpd.setFatherName(mSortedProfiles.get(i).getFather_name());
-            lpd.setMotherName(mSortedProfiles.get(i).getMother_name());
-            lpd.setStatus(mSortedProfiles.get(i).getStatus());
-            lpd.setId(mSortedProfiles.get(i).getProfile_id());
-            lpd.setProfilePicUrl(mSortedProfiles.get(i).getProfile_pic_url());
-            lpd.setUser_lat(mSortedProfiles.get(i).getUser_lat());
-            lpd.setUser_lng(mSortedProfiles.get(i).getUser_lng());
-            lpd.setIs_location_enable(mSortedProfiles.get(i).isIs_location_enable());
-            lpd.setUpdated_time(mSortedProfiles.get(i).getUpdated_time());
-            lpd.setCity(mSortedProfiles.get(i).getCity());
-            lpd.setUser_lng(mSortedProfiles.get(i).getUser_lng());
-            lpd.setUser_lat(mSortedProfiles.get(i).getUser_lat());
-            lpd.setMobile(mSortedProfiles.get(i).getMobile());
+            lpd.setName(Objects.requireNonNull(mSortedProfiles.get(i)).getFirst_name() + " " + Objects.requireNonNull(mSortedProfiles.get(i)).getLast_name());
+            lpd.setFatherName(Objects.requireNonNull(mSortedProfiles.get(i)).getFather_name());
+            lpd.setMotherName(Objects.requireNonNull(mSortedProfiles.get(i)).getMother_name());
+            lpd.setStatus(Objects.requireNonNull(mSortedProfiles.get(i)).getStatus());
+            lpd.setId(Objects.requireNonNull(mSortedProfiles.get(i)).getProfile_id());
+            lpd.setProfilePicUrl(Objects.requireNonNull(mSortedProfiles.get(i)).getProfile_pic_url());
+            lpd.setUser_lat(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lat());
+            lpd.setUser_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lng());
+            lpd.setIs_location_enable(Objects.requireNonNull(mSortedProfiles.get(i)).isIs_location_enable());
+            lpd.setUpdated_time(Objects.requireNonNull(mSortedProfiles.get(i)).getUpdated_time());
+            lpd.setCity(Objects.requireNonNull(mSortedProfiles.get(i)).getCity());
+            lpd.setUser_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lng());
+            lpd.setUser_lat(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lat());
+            lpd.setMobile(Objects.requireNonNull(mSortedProfiles.get(i)).getMobile());
             ListChildData lcd = new ListChildData();
-            lcd.setID(mSortedProfiles.get(i).getProfile_id());
-            lcd.setNative(mSortedProfiles.get(i).getNative_place());
-            lcd.setAddress(mSortedProfiles.get(i).getAddress());
-            lcd.setbirth_date(mSortedProfiles.get(i).getBirth_date());
-            lcd.setbirth_time(mSortedProfiles.get(i).getBirth_time());
-            lcd.setBirth_place(mSortedProfiles.get(i).getBirth_place());
-            lcd.setBlood_Group(mSortedProfiles.get(i).getBlood_group());
-            lcd.setMobile(mSortedProfiles.get(i).getMobile());
-            lcd.setPhone(mSortedProfiles.get(i).getPhone());
-            lcd.setGender(mSortedProfiles.get(i).getGender());
-            lcd.setGotra(mSortedProfiles.get(i).getGotra());
-            lcd.setHome_lat(mSortedProfiles.get(i).getHome_lat());
-            lcd.setHome_lng(mSortedProfiles.get(i).getHome_lng());
-            lcd.setUser_lng(mSortedProfiles.get(i).getUser_lng());
-            lcd.setUser_lat(mSortedProfiles.get(i).getUser_lat());
-            lcd.setName(mSortedProfiles.get(i).getFirst_name() + " " + mSortedProfiles.get(i).getLast_name());
-            ArrayList<ListChildData> mlstChildData = new ArrayList<ListChildData>();
+            lcd.setID(Objects.requireNonNull(mSortedProfiles.get(i)).getProfile_id());
+            lcd.setNative(Objects.requireNonNull(mSortedProfiles.get(i)).getNative_place());
+            lcd.setAddress(Objects.requireNonNull(mSortedProfiles.get(i)).getAddress());
+            lcd.setbirth_date(Objects.requireNonNull(mSortedProfiles.get(i)).getBirth_date());
+            lcd.setbirth_time(Objects.requireNonNull(mSortedProfiles.get(i)).getBirth_time());
+            lcd.setBirth_place(Objects.requireNonNull(mSortedProfiles.get(i)).getBirth_place());
+            lcd.setBlood_Group(Objects.requireNonNull(mSortedProfiles.get(i)).getBlood_group());
+            lcd.setMobile(Objects.requireNonNull(mSortedProfiles.get(i)).getMobile());
+            lcd.setPhone(Objects.requireNonNull(mSortedProfiles.get(i)).getPhone());
+            lcd.setGender(Objects.requireNonNull(mSortedProfiles.get(i)).getGender());
+            lcd.setGotra(Objects.requireNonNull(mSortedProfiles.get(i)).getGotra());
+            lcd.setHome_lat(Objects.requireNonNull(mSortedProfiles.get(i)).getHome_lat());
+            lcd.setHome_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getHome_lng());
+            lcd.setUser_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lng());
+            lcd.setUser_lat(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lat());
+            lcd.setName(Objects.requireNonNull(mSortedProfiles.get(i)).getFirst_name() + " " + Objects.requireNonNull(mSortedProfiles.get(i)).getLast_name());
+            ArrayList<ListChildData> mlstChildData = new ArrayList<>();
             mlstChildData.add(lcd);
             listDataHeader.add(lpd);
             listDataChild.put(lpd, mlstChildData);
@@ -413,19 +407,21 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
             lvCustomList.setAdapter(mExpandableListAdapter);
         } else {
             lvCustomList.setVisibility(View.GONE);
-            txtLable.setVisibility(View.VISIBLE);
+            if (txtLable != null) {
+                txtLable.setVisibility(View.VISIBLE);
+            }
         }
     }
 
     public void callNonActivesWS() {
-        if (Common.isOnline(getActivity())) {
+        if (Common.isOnline(Objects.requireNonNull(getActivity()))) {
             showProgressDialog(getActivity());
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(getString(R.string.action_nonActives));
+            Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setSubtitle(getString(R.string.action_nonActives));
 
             JSONObject mJsonObject = new JSONObject();
             try {
 
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.USER_ID, Objects.requireNonNull(mSharedPreferences).getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -433,22 +429,23 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
             String NonActives_url = Common.Constant_Class.INACTIVES_URL;
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, NonActives_url, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
-                public void onResponse(JSONObject response) {
+                public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
 
-                    displayData(response, 0);
+                    displayData(response);
                 }
             }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
 
                     hideProgressDialog();
                 }
             }) {
+                @NonNull
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
@@ -465,12 +462,12 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
     }
 
     private void callStatusChangeWS(final int mode) {
-        if (Common.isOnline(getActivity())) {
+        if (Common.isOnline(Objects.requireNonNull(getActivity()))) {
             showProgressDialog(getActivity());
             JSONObject mJsonObject = new JSONObject();
             try {
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.IDList, android.text.TextUtils.join(",", lstSelectedIDs));
+                mJsonObject.put(Common.Constant_Class.USER_ID, Objects.requireNonNull(mSharedPreferences).getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.IDList, android.text.TextUtils.join(",", Objects.requireNonNull(lstSelectedIDs)));
                 mJsonObject.put(Common.Constant_Class.STATUS, String.valueOf(mode));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
 
@@ -480,7 +477,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
             String status_url = Common.Constant_Class.STATUS_URL;
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, status_url, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
-                public void onResponse(JSONObject response) {
+                public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
                     hideProgressDialog();
                     try {
@@ -499,14 +496,15 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
             }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
 
                     hideProgressDialog();
                 }
             }) {
+                @NonNull
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
@@ -524,20 +522,21 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
     }
 
     private void callDeleteWS() {
-        if (Common.isOnline(getActivity())) {
+        if (Common.isOnline(Objects.requireNonNull(getActivity()))) {
             showProgressDialog(getActivity());
             String delete_url = Common.Constant_Class.DELETE_URL;
             JSONObject mJsonObject = new JSONObject();
             try {
+                assert mSharedPreferences != null;
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.IDList, android.text.TextUtils.join(",", lstSelectedIDs));
+                mJsonObject.put(Common.Constant_Class.IDList, android.text.TextUtils.join(",", Objects.requireNonNull(lstSelectedIDs)));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, delete_url, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
-                public void onResponse(JSONObject response) {
+                public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
                     hideProgressDialog();
                     try {
@@ -556,14 +555,15 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
             }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
 
                     hideProgressDialog();
                 }
             }) {
+                @NonNull
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
@@ -579,28 +579,16 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
         }
     }
 
-    private void NoRecordAlert(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
-        builder.setTitle(getActivity().getString(R.string.app_name));
-
-        builder.setMessage(message);
-        builder.setPositiveButton(getActivity().getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).show();
-    }
-
     private void alert(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()), R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getActivity().getString(R.string.app_name));
 
         builder.setMessage(message);
         builder.setPositiveButton(getActivity().getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
 
-                String str = (String) ((AppCompatActivity) getActivity()).getSupportActionBar().getSubtitle();
-
+                String str = (String) Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).getSubtitle();
+                assert str != null;
                 if (str.equalsIgnoreCase(getString(R.string.action_nonActives))) {
                     callNonActivesWS();
                 } else {
@@ -610,9 +598,9 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
                 dialog.dismiss();
             }
         });
-        builder.setNegativeButton(getActivity().getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(Objects.requireNonNull(getActivity()).getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         }).show();
@@ -647,6 +635,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
     @Override
     public void CallActivate() {
         String msg1 = getSelectedName();
+        assert lstSelectedIDs != null;
         String msg = "Do you want to Activate " + lstSelectedIDs.size() + " Records ? \n" + msg1;
         if (lstSelectedIDs.size() > 0) {
             alert(msg, 1);
@@ -658,6 +647,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
     @Override
     public void CallDelete() {
         String msg1 = getSelectedName();
+        assert lstSelectedIDs != null;
         String msg = "Do you want to Delete  " + lstSelectedIDs.size() + " Records ? \n" + msg1;
         if (lstSelectedIDs.size() > 0) {
             alert(msg, 2);
@@ -669,6 +659,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
     @Override
     public void CallDeActivate() {
         String msg1 = getSelectedName();
+        assert lstSelectedIDs != null;
         String msg = "Do you want to Deactivate  " + lstSelectedIDs.size() + " Records ? \n" + msg1;
         if (lstSelectedIDs.size() > 0) {
             alert(msg, 0);

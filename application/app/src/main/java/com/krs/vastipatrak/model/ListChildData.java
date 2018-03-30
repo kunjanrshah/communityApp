@@ -1,8 +1,6 @@
 package com.krs.vastipatrak.model;
 
-/**
- * Created by kushal on 26/01/16.
- */
+
 public class ListChildData {
     String str_phone;
     String str_native;

@@ -1,11 +1,14 @@
 package com.krs.vastipatrak.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -17,7 +20,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -36,21 +38,21 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import io.realm.RealmList;
 
 public class BusinessFragment extends Fragment implements Serializable {
 
 
-    public static EditText edtOccupation, edtWork, edtOMobile, edtOAddress;
+    public EditText edtOccupation, edtWork, edtOMobile, edtOAddress;
     SharedPreferences mSharedPreferences;
     String tag_json_obj = "jobj_req";
-    String TAG = "BusinessFragment";
-    /*boolean office_loc_flag = false;*/
+    String TAG = BusinessFragment.class.getSimpleName();
     TextView txt_office;
     double office_lat = 0, office_lng = 0;
     String user_id = "";
-
+    Activity mActivity;
     public BusinessFragment() {
         // Required empty public constructor
     }
@@ -60,15 +62,15 @@ public class BusinessFragment extends Fragment implements Serializable {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_business, container, false);
         Memory_Allocation(rootView);
 
         try {
-            RealmList<ListProfileData> mListProfileData = ((MyProfileActivity) getActivity()).getMyData();
+            RealmList<ListProfileData> mListProfileData = ((MyProfileActivity) mActivity).getMyData();
             if (mListProfileData != null) {
                 SetOfflineData(mListProfileData);
             }
@@ -76,41 +78,19 @@ public class BusinessFragment extends Fragment implements Serializable {
             e.printStackTrace();
         }
 
-        /*Bundle args = getArguments();
-        if (args != null) {
-            String data = "";
-            try {
-                data = args.getString(Common.Constant_Class.DATA);
-                if (data != null && !data.equalsIgnoreCase("")) {
-                    SetOnlineData(data);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                RealmList<ListProfileData> mListProfileData = ((MyProfileActivity) getActivity()).getMyData();
-                if (mListProfileData != null) {
-                    SetOfflineData(mListProfileData);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }*/
-
         edtOAddress.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
 
                 final int DRAWABLE_RIGHT = 2;
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (edtOAddress.getRight() - edtOAddress.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         if (MainActivity.lat == null && MainActivity.lon == null) {
-                            Common.showSettingsAlert(getActivity());
+                            Common.showSettingsAlert(mActivity);
                         } else {
                             if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
 
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                 builder.setTitle(getString(R.string.app_name));
 
                                 builder.setMessage(getString(R.string.office_location));
@@ -121,19 +101,17 @@ public class BusinessFragment extends Fragment implements Serializable {
                                             officeLocUpdateWS();
                                         }
                                     }
-                                })
-                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        })
-                                        .show();
+                                }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(@NonNull DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).show();
 
                             } else {
                                 if (MainActivity.lat != null && MainActivity.lon != null && office_lat != 0 && office_lng != 0) {
                                     showDirections(Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
                                 } else {
-                                    Toast.makeText(getActivity(), "Something wrong went!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, "Something wrong went!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -163,7 +141,7 @@ public class BusinessFragment extends Fragment implements Serializable {
 
     private void officeLocUpdateWS() {
 
-        if (Common.isOnline(getActivity())) {
+        if (Common.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
 
             try {
@@ -184,11 +162,11 @@ public class BusinessFragment extends Fragment implements Serializable {
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
-                public void onResponse(JSONObject response) {
+                public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
+
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             alert("Home location updated!");
                         } else {
@@ -201,14 +179,15 @@ public class BusinessFragment extends Fragment implements Serializable {
             }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                 }
             }
 
             ) {
+                @NonNull
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
@@ -224,21 +203,22 @@ public class BusinessFragment extends Fragment implements Serializable {
 
     private void Memory_Allocation(View rootView) {
 
+        mActivity = getActivity();
         edtOccupation = rootView.findViewById(R.id.edtOccupation);
         edtWork = rootView.findViewById(R.id.edtWork);
         edtOMobile = rootView.findViewById(R.id.edtOMobile);
         edtOAddress = rootView.findViewById(R.id.edtOAddress);
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = mActivity.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
         txt_office = rootView.findViewById(R.id.txt_office);
     }
 
     private void alert(String message) {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getString(R.string.app_name));
         builder.setMessage(message);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         }).show();
@@ -265,17 +245,18 @@ public class BusinessFragment extends Fragment implements Serializable {
         edtOAddress.setEnabled(true);
     }
 
+    @SuppressLint("SetTextI18n")
     private void SetOfflineData(RealmList<ListProfileData> mListProfileDatas) {
 
         if (mListProfileDatas.size() > 0) {
             ListProfileData mListProfileData = mListProfileDatas.get(0);
 
-            edtOccupation.setText(mListProfileData.getOccupation());
+            edtOccupation.setText(Objects.requireNonNull(mListProfileData).getOccupation());
             edtWork.setText(mListProfileData.getWork());
             edtOMobile.setText(mListProfileData.getOffice_mobile());
             edtOAddress.setText(mListProfileData.getOffice_address());
 
-            if (!mListProfileData.getOffice_lat().toString().equalsIgnoreCase("null") && !mListProfileData.getOffice_lat().toString().equalsIgnoreCase("")) {
+            if (!mListProfileData.getOffice_lat().equalsIgnoreCase("null") && !mListProfileData.getOffice_lat().equalsIgnoreCase("")) {
                 office_lat = Double.parseDouble(mListProfileData.getOffice_lat());
             }
             if (!mListProfileData.getOffice_lng().equalsIgnoreCase("null") && !mListProfileData.getOffice_lng().equalsIgnoreCase("")) {
@@ -283,14 +264,14 @@ public class BusinessFragment extends Fragment implements Serializable {
             }
             if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
                 if (office_lat != 0 && office_lng != 0) {
-                    int distance = (int) Common.getDistance(getActivity(), office_lat, office_lng);
+                    int distance = (int) Common.getDistance(mActivity, office_lat, office_lng);
                     if (distance == -1) {
-                        txt_office.setText("Need to enable location");
+                        txt_office.setText(R.string.enable_location);
                     } else {
-                        txt_office.setText("" + (distance / 1000) + " Km");
+                        txt_office.setText("" + (distance / 1000) + getString(R.string.km));
                     }
                 } else {
-                    txt_office.setText("User has not set location");
+                    txt_office.setText(R.string.no_set_location);
                 }
             }
         }
@@ -300,38 +281,4 @@ public class BusinessFragment extends Fragment implements Serializable {
             DisableAll();
         }
     }
-    /*private void SetOnlineData(String data) {
-        try {
-            JSONObject mData = new JSONObject(data);
-
-            edtOccupation.setText(mData.getString(Common.Constant_Class.OCCUPATION));
-            edtWork.setText(mData.getString(Common.Constant_Class.WORK));
-            edtOMobile.setText(mData.getString(Common.Constant_Class.OFFICE_MOBILE));
-            edtOAddress.setText(mData.getString(Common.Constant_Class.OFFICE_ADDRESS));
-
-            if (!mData.getString(Common.Constant_Class.OFFICE_LAT).toString().equalsIgnoreCase("null")) {
-                office_lat = Double.parseDouble(mData.getString(Common.Constant_Class.OFFICE_LAT));
-            }
-
-            if (!mData.getString(Common.Constant_Class.OFFICE_LNG).toString().equalsIgnoreCase("null")) {
-                office_lng = Double.parseDouble(mData.getString(Common.Constant_Class.OFFICE_LNG));
-            }
-
-            if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-                if (office_lat != 0 && office_lng != 0) {
-                    int distance = (int) Common.getDistance(getActivity(), office_lat, office_lng);
-                    if (distance == -1) {
-                        txt_office.setText("Need to enable location");
-                    } else {
-                        txt_office.setText("" + (distance / 1000) + " Km");
-                    }
-                } else {
-                    txt_office.setText("User has not set location");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
-
 }

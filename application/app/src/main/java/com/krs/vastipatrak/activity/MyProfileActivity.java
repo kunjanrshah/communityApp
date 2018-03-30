@@ -1,11 +1,14 @@
 package com.krs.vastipatrak.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -46,6 +49,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -56,15 +60,19 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
     SharedPreferences.Editor mEditor;
     SearchView searchView;
+    @Nullable
     Bundle mBundle = null;
+    @NonNull
     String valid = "";
+    @Nullable
     RealmList<ListProfileData> mListSearchProfile = null;
     Realm realm;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private Toolbar toolbar;
-    private String tag_json_obj = "jobj_req";
     private String TAG = MainActivity.class.getSimpleName();
+    Fragment personal, business, family;
+    @Nullable
     private SharedPreferences mSharedPreferences = null;
 
     @Override
@@ -76,6 +84,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         MemoryAllocation();
         ToolbarSetup();
 
+        assert mSharedPreferences != null;
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             mListSearchProfile = Common.getDataFromParentTable(mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""), 3);
         } else {
@@ -85,10 +94,12 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    @Nullable
     public RealmList<ListProfileData> getMyData() {
         return mListSearchProfile;
     }
 
+    @SuppressLint("CommitPrefEdits")
     private void MemoryAllocation() {
         realm = AppController.getInstance().realm;
         toolbar = findViewById(R.id.toolbar);
@@ -101,7 +112,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
     private void ToolbarSetup() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setSubtitle("My Profile");
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -115,6 +126,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private void backNavigation() {
         Fragment fragment = new FragmentDrawer();
         getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
+        assert mSharedPreferences != null;
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
             Intent mIntent = new Intent(MyProfileActivity.this, MainActivity.class);
             mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -140,7 +152,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
@@ -197,7 +209,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         });
 
         MenuItem saveItem = menu.findItem(R.id.action_save);
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || AppController.isAdmin) {
+        if (Objects.requireNonNull(mSharedPreferences).getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || AppController.isAdmin) {
             saveItem.setVisible(true);
         } else {
             saveItem.setVisible(false);
@@ -210,18 +222,18 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 ListProfileData mListProfileData = new ListProfileData();
 
                 // Personal Details
-                String fname = PersonalFragment.edtFName.getText().toString().trim();
-                String lname = PersonalFragment.edtLName.getText().toString().trim();
-                String FatherName = PersonalFragment.edtFatherName.getText().toString().trim();
-                String MotherName = PersonalFragment.edtMotherName.getText().toString().trim();
-                String Education = PersonalFragment.edtEducation.getText().toString().trim();
-                String BPlace = PersonalFragment.edtBPlace.getText().toString().trim();
-                String NPlace = PersonalFragment.edtNPlace.getText().toString().trim();
-                String Gotra = PersonalFragment.edtGotra.getText().toString().trim();
-                String Mobile = PersonalFragment.edtMobile.getText().toString().trim();
-                String Address = PersonalFragment.edtAddress.getText().toString().trim();
-                String Eaddress = PersonalFragment.edt_Eaddress.getText().toString().trim();
-                String city = PersonalFragment.edtCity.getText().toString().trim();
+                String fname = Objects.requireNonNull(((PersonalFragment) personal).edtFName).getText().toString().trim();
+                String lname = Objects.requireNonNull(((PersonalFragment) personal).edtLName).getText().toString().trim();
+                String FatherName = Objects.requireNonNull(((PersonalFragment) personal).edtFatherName).getText().toString().trim();
+                String MotherName = Objects.requireNonNull(((PersonalFragment) personal).edtMotherName).getText().toString().trim();
+                String Education = Objects.requireNonNull(((PersonalFragment) personal).edtEducation).getText().toString().trim();
+                String BPlace = Objects.requireNonNull(((PersonalFragment) personal).edtBPlace).getText().toString().trim();
+                String NPlace = Objects.requireNonNull(((PersonalFragment) personal).edtNPlace).getText().toString().trim();
+                String Gotra = Objects.requireNonNull(((PersonalFragment) personal).edtGotra).getText().toString().trim();
+                String Mobile = Objects.requireNonNull(((PersonalFragment) personal).edtMobile).getText().toString().trim();
+                String Address = Objects.requireNonNull(((PersonalFragment) personal).edtAddress).getText().toString().trim();
+                String Eaddress = Objects.requireNonNull(((PersonalFragment) personal).edt_Eaddress).getText().toString().trim();
+                String city = Objects.requireNonNull(((PersonalFragment) personal).edtCity).getText().toString().trim();
 
                 if (!Eaddress.equalsIgnoreCase("")) {
                     if (!Common.isValidEmail(Eaddress)) {
@@ -229,32 +241,32 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     }
                 }
 
-                String phone = PersonalFragment.edt_phone.getText().toString().trim();
-                String bdate = PersonalFragment.edtbdate.getText().toString().trim();
+                String phone = Objects.requireNonNull(((PersonalFragment) personal).edt_phone).getText().toString().trim();
+                String bdate = Objects.requireNonNull(((PersonalFragment) personal).edtbdate).getText().toString().trim();
                 if (!bdate.equalsIgnoreCase("")) {
                     if (!Common.isThisDateValid(bdate, "yyyy-mm-dd")) {
                         valid = "Birth Date is not valid Format";
                     }
                 }
 
-                String time = PersonalFragment.edtbTime.getText().toString().trim();
+                String time = Objects.requireNonNull(((PersonalFragment) personal).edtbTime).getText().toString().trim();
                 if (!time.equalsIgnoreCase("")) {
                     if (!Common.IsValidate(time)) {
                         valid = "Birth Time is not valid 24 Hours";
                     }
                 }
 
-                String gender = PersonalFragment.gender;
-                String bgroup = PersonalFragment.spinnerBlood.getSelectedItem().toString().trim();
-                String str_profile_hash = PersonalFragment.str_profile_hash;
-                String str_father_hash = PersonalFragment.str_father_hash;
-                String str_mother_hash = PersonalFragment.str_mother_hash;
+                String gender = ((PersonalFragment) personal).gender;
+                String bgroup = ((PersonalFragment) personal).spinnerBlood.getSelectedItem().toString().trim();
+                String str_profile_hash = ((PersonalFragment) personal).str_profile_hash;
+                String str_father_hash = ((PersonalFragment) personal).str_father_hash;
+                String str_mother_hash = ((PersonalFragment) personal).str_mother_hash;
 
                 // Business Details
-                String occupation = BusinessFragment.edtOccupation.getText().toString().trim();
-                String Work = BusinessFragment.edtWork.getText().toString().trim();
-                String OMobile = BusinessFragment.edtOMobile.getText().toString().trim();
-                String OAddress = BusinessFragment.edtOAddress.getText().toString().trim();
+                String occupation = ((BusinessFragment) business).edtOccupation.getText().toString().trim();
+                String Work = ((BusinessFragment) business).edtWork.getText().toString().trim();
+                String OMobile = ((BusinessFragment) business).edtOMobile.getText().toString().trim();
+                String OAddress = ((BusinessFragment) business).edtOAddress.getText().toString().trim();
 
 
                 // Familty Details
@@ -262,21 +274,21 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 LinearLayout child_container = null;
                 ArrayList<Integer> lst_delID = null;
                 try {
-                    spouseName = FamilyFragment.edtSpouseName.getText().toString().trim();
-                    SpouseFName = FamilyFragment.edtSpouseFName.getText().toString().trim();
-                    MSpouseName = FamilyFragment.edtMSpouseName.getText().toString().trim();
-                    mdate = FamilyFragment.edt_mdate.getText().toString().trim();
+                    spouseName = ((FamilyFragment) family).edtSpouseName.getText().toString().trim();
+                    SpouseFName = ((FamilyFragment) family).edtSpouseFName.getText().toString().trim();
+                    MSpouseName = ((FamilyFragment) family).edtMSpouseName.getText().toString().trim();
+                    mdate = ((FamilyFragment) family).edt_mdate.getText().toString().trim();
                     if (!mdate.equalsIgnoreCase("")) {
                         if (!Common.isThisDateValid(mdate, "yyyy-mm-dd")) {
                             valid = "Marriage Date is not valid Format";
                         }
                     }
 
-                    str_fspouse_hash = FamilyFragment.str_fspouse_hash;
-                    str_mspouse_hash = FamilyFragment.str_mspouse_hash;
-                    str_spouse_hash = FamilyFragment.str_spouse_hash;
-                    child_container = FamilyFragment.child_container;
-                    lst_delID = FamilyFragment.lst_delID;
+                    str_fspouse_hash = ((FamilyFragment) family).str_fspouse_hash;
+                    str_mspouse_hash = ((FamilyFragment) family).str_mspouse_hash;
+                    str_spouse_hash = ((FamilyFragment) family).str_spouse_hash;
+                    child_container = ((FamilyFragment) family).child_container;
+                    lst_delID = ((FamilyFragment) family).lst_delID;
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -315,14 +327,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mListProfileData.setStr_mspouse_hash(str_mspouse_hash);
                     mListProfileData.setStr_spouse_hash(str_spouse_hash);
 
-                  /*  ListChildrenData mListChildrenData=new ListChildrenData();
-                    mListChildrenData.setChild_id("");
-                    mListChildrenData.setChild_name("");
-                    mListChildrenData.setChild_bday("");
-                    mListChildrenData.setChild_edu("");
-                    mListChildrenData.setChild_work("");*/
-
-                    setProfileJsonObject(mListProfileData, child_container, lst_delID);
+                    setProfileJsonObject(mListProfileData, child_container, Objects.requireNonNull(lst_delID));
                 } else {
                     Toast.makeText(MyProfileActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
                     valid = "";
@@ -335,7 +340,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         return true;
     }
 
-    private void setProfileJsonObject(ListProfileData mListProfileData, LinearLayout child_container, ArrayList<Integer> lst_delID) {
+    private void setProfileJsonObject(@NonNull ListProfileData mListProfileData, @Nullable LinearLayout child_container, @NonNull ArrayList<Integer> lst_delID) {
 
 
         JSONObject mJsonObject = null;
@@ -345,7 +350,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             mJsonObject = new JSONObject();
 
             mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
-            mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+            mJsonObject.put(Common.Constant_Class.USER_ID, Objects.requireNonNull(mSharedPreferences).getString(Common.Constant_Class.USER_ID, ""));
             mJsonObject.put(Common.Constant_Class.FIRST_NAME, mListProfileData.getFirst_name());
             mJsonObject.put(Common.Constant_Class.LAST_NAME, mListProfileData.getLast_name());
             mJsonObject.put(Common.Constant_Class.FATHER_NAME, mListProfileData.getFather_name());
@@ -379,6 +384,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         // Business details
         try {
 
+            assert mJsonObject != null;
             mJsonObject.put(Common.Constant_Class.OCCUPATION, mListProfileData.getOccupation());
             mJsonObject.put(Common.Constant_Class.OFFICE_MOBILE, mListProfileData.getOffice_mobile());
             mJsonObject.put(Common.Constant_Class.WORK, mListProfileData.getWork());
@@ -389,7 +395,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
         //Family Details
         try {
-            mJsonObject.put(Common.Constant_Class.MARRIAGE_DATE, mListProfileData.getMarriage_date());
+            Objects.requireNonNull(mJsonObject).put(Common.Constant_Class.MARRIAGE_DATE, mListProfileData.getMarriage_date());
             mJsonObject.put(Common.Constant_Class.SPOUSE_NAME, mListProfileData.getSpouse_name());
             mJsonObject.put(Common.Constant_Class.SPOUSE_FATHER_NAME, mListProfileData.getSfather_name());
             mJsonObject.put(Common.Constant_Class.SPOUSE_MOTHER_NAME, mListProfileData.getSmother_name());
@@ -413,23 +419,23 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     if (mViewholder.child_id != 0) {
                         mJsonObject_Child.put("id", mViewholder.child_id);
                     }
-                    if (FamilyFragment.rbtnChildNo.isChecked()) {
+                    if (((FamilyFragment) family).rbtnChildNo.isChecked()) {
                         mJsonObject_Child.put(Common.Constant_Class.CHILD_DELETE, "true");
                     }
-                    mJsonObject_Child.put(Common.Constant_Class.CHILD_NAME, mViewholder.edtchild_name.getText());
-                    String child_bday = mViewholder.edtchild_bdate.getText().toString();
+                    mJsonObject_Child.put(Common.Constant_Class.CHILD_NAME, Objects.requireNonNull(mViewholder.edtchild_name).getText());
+                    String child_bday = Objects.requireNonNull(mViewholder.edtchild_bdate).getText().toString();
                     if (!child_bday.equalsIgnoreCase("")) {
                         if (!Common.isThisDateValid(child_bday, "yyyy-mm-dd")) {
                             valid = "Child Birth Date is not valid Format";
                         }
                     }
 
-                    boolean child_interest = mViewholder.tbtn_interest.isChecked();
+                    boolean child_interest = Objects.requireNonNull(mViewholder.tbtn_interest).isChecked();
                     String child_gender = mViewholder.gender;
-                    String child_btime = mViewholder.edtchild_btime.getText().toString();
-                    String child_bplace = mViewholder.edtchild_bplace.getText().toString();
-                    String child_mobile = mViewholder.edtMobile.getText().toString();
-                    String child_blood = mViewholder.spinnerBlood.getSelectedItem().toString();
+                    String child_btime = Objects.requireNonNull(mViewholder.edtchild_btime).getText().toString();
+                    String child_bplace = Objects.requireNonNull(mViewholder.edtchild_bplace).getText().toString();
+                    String child_mobile = Objects.requireNonNull(mViewholder.edtMobile).getText().toString();
+                    String child_blood = Objects.requireNonNull(mViewholder.spinnerBlood).getSelectedItem().toString();
 
                     mJsonObject_Child.put(Common.Constant_Class.BLOOD_GROUP, child_blood);
                     mJsonObject_Child.put(Common.Constant_Class.MOBILE, child_mobile);
@@ -438,8 +444,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_BTIME, child_btime);
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_BPLACE, child_bplace);
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_BDAY, child_bday);
-                    mJsonObject_Child.put(Common.Constant_Class.CHILD_EDU, mViewholder.edtchild_edu.getText());
-                    mJsonObject_Child.put(Common.Constant_Class.CHILD_WORK, mViewholder.edtchild_work.getText());
+                    mJsonObject_Child.put(Common.Constant_Class.CHILD_EDU, Objects.requireNonNull(mViewholder.edtchild_edu).getText());
+                    mJsonObject_Child.put(Common.Constant_Class.CHILD_WORK, Objects.requireNonNull(mViewholder.edtchild_work).getText());
                     if (!mViewholder.ImgHash.equalsIgnoreCase("")) {
                         mJsonObject_Child.put(Common.Constant_Class.CHILD_IMAGE, mViewholder.ImgHash);
                     }
@@ -473,8 +479,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         }
     }
 
-    private void call_profile_ws(JSONObject mJsonObject) {
-        if (Common.isOnline(this)) {
+    private void call_profile_ws(@Nullable JSONObject mJsonObject) {
+        if (Common.isOnline(this) && mSharedPreferences != null) {
             try {
                 if (mJsonObject == null) {
                     mJsonObject = new JSONObject();
@@ -482,7 +488,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mJsonObject.put(Common.Constant_Class.IS_UPDATE, "0");
                 }
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -501,7 +506,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
-                public void onResponse(JSONObject response) {
+                public void onResponse(@NonNull JSONObject response) {
 
                     try {
                         Common.hideProgressDialog();
@@ -514,30 +519,10 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                             mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, mData.getString(Common.Constant_Class.PROFILE_PIC_URL));
                             mEditor.putString(Common.Constant_Class.FIRST_NAME, mData.getString(Common.Constant_Class.FIRST_NAME));
                             mEditor.putString(Common.Constant_Class.LAST_NAME, mData.getString(Common.Constant_Class.LAST_NAME));
-                            mEditor.commit();
+                            mEditor.apply();
                             Common.SaveProfile(mData);
-                            //  mListProfileData1 = Common.getDataFromParentTable(mData.getString(Common.Constant_Class.ID), 3);
-                            // setupViewPager(viewPager);
-                            // tabLayout.setupWithViewPager(viewPager);
-                            //  if(message.contains("updated"))
-                            // {
                             AppController.getInstance().isUpdate = true;
                             alert(message);
-                            //  Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
-                            // }
-                            /*if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-                                mBundle = new Bundle();
-                                mBundle.putString(Common.Constant_Class.DATA, data);
-                                setupViewPager(viewPager);
-                                tabLayout.setupWithViewPager(viewPager);
-                            } else {
-//                                mRefreshFragment.refreshFragmentDrawer();
-                                *//*String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
-                                if (FragmentDrawer.txt_name != null) {
-                                    FragmentDrawer.txt_name.setText(name);
-                                    new Common.ImageLoadTask(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, ""), FragmentDrawer.img_profile).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                }*//*
-                            }*/
                         } else {
                             try {
 
@@ -560,10 +545,11 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                 }
             }) {
+                @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
@@ -574,8 +560,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     return params;
                 }
             };
-            // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         } else {
             Toast.makeText(MyProfileActivity.this, "" + Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
         }
@@ -588,7 +574,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
         builder.setMessage(message);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
                 dialog.dismiss();
 
             }
@@ -598,7 +584,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
 
@@ -642,13 +628,13 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        Fragment personal = new PersonalFragment();
+        personal = new PersonalFragment();
         personal.setArguments(mBundle);
 
-        Fragment business = new BusinessFragment();
+        business = new BusinessFragment();
         business.setArguments(mBundle);
 
-        Fragment family = new FamilyFragment();
+        family = new FamilyFragment();
         family.setArguments(mBundle);
 
         adapter.addFrag(personal, Common.Constant_Class.PERSONAL);
@@ -679,7 +665,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        public ViewPagerAdapter(FragmentManager manager) {
+        ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
 
@@ -693,7 +679,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             return mFragmentList.size();
         }
 
-        public void addFrag(Fragment fragment, String title) {
+        void addFrag(Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }

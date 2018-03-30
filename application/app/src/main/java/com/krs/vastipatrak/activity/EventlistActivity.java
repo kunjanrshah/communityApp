@@ -3,6 +3,8 @@ package com.krs.vastipatrak.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,18 +21,13 @@ import com.krs.vastipatrak.utils.Common;
 
 import io.realm.Realm;
 
-/**
- * Created by kunjan on 23/3/18.
- */
-
 public class EventlistActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
 
     private static final int RECOVERY_REQUEST = 1;
     private RecyclerView listEvents;
-    private Realm realm;
-    private String TAG = "EventlistActivity";
+    @Nullable
     private String eventId = "";
-    private ListEventData eventData;
+    @Nullable
     private EventListAdapter adapter;
 
     @Override
@@ -52,13 +49,16 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
 
     private void MemoryAllocation() {
         listEvents = findViewById(R.id.listEvents);
-        realm = AppController.getInstance().realm;
-        eventData = realm.where(ListEventData.class).endsWith("id", eventId).findFirst();
+        Realm realm = AppController.getInstance().realm;
+        assert eventId != null;
+        ListEventData eventData = realm.where(ListEventData.class).endsWith("id", eventId).findFirst();
+        assert eventData != null;
         adapter = new EventListAdapter(this, eventData);
     }
 
     @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, @NonNull YouTubePlayer youTubePlayer, boolean b) {
+        assert adapter != null;
         String url = adapter.getYoutubeUrl();
         int i = url.indexOf("v=");
         url = url.substring(i + 2);
@@ -66,7 +66,7 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
     }
 
     @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+    public void onInitializationFailure(YouTubePlayer.Provider provider, @NonNull YouTubeInitializationResult youTubeInitializationResult) {
         if (youTubeInitializationResult.isUserRecoverableError()) {
             youTubeInitializationResult.getErrorDialog(this, RECOVERY_REQUEST).show();
         } else {

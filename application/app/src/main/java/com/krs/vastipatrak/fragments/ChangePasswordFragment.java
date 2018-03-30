@@ -1,9 +1,13 @@
 package com.krs.vastipatrak.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -30,20 +33,22 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-/**
- * Created by kushal on 31/01/16.
- */
 public class ChangePasswordFragment extends Fragment {
 
 
+    @Nullable
     ProgressDialog pDialog;
     SharedPreferences mSharedPreferences;
+    @NonNull
     String TAG = "ChangePasswordFragment";
+    @NonNull
     String tag_json_obj = "jobj_req";
     EditText input_password, input_repeat;
     FloatingActionButton fab;
     boolean isShow = true, isShow1 = true;
+    Activity mActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,25 +56,26 @@ public class ChangePasswordFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_change_password, container, false);
         Memory_Allocation(rootView);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("Change Password");
+        Objects.requireNonNull(((AppCompatActivity) mActivity).getSupportActionBar()).setSubtitle("Change Password");
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (!input_password.getText().toString().equalsIgnoreCase("") && !input_repeat.getText().toString().equalsIgnoreCase("")) {
                     if (input_password.getText().toString().equalsIgnoreCase(input_repeat.getText().toString())) {
-                        if (Common.isOnline(getActivity())) {
+                        if (Common.isOnline(mActivity)) {
                             call_change_password_ws();
                         } else {
-                            Toast.makeText(getActivity(), Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(getActivity(), "Password does not match !!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "Password does not match !!", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -78,11 +84,8 @@ public class ChangePasswordFragment extends Fragment {
 
         input_password.setOnTouchListener(new EditText.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
                 final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (input_password.getRight() - input_password.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
@@ -108,12 +111,8 @@ public class ChangePasswordFragment extends Fragment {
 
         input_repeat.setOnTouchListener(new EditText.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
                 final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
-
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (input_repeat.getRight() - input_repeat.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         if (isShow1) {
@@ -128,7 +127,6 @@ public class ChangePasswordFragment extends Fragment {
                             isShow1 = true;
                         }
                         input_repeat.setSelection(input_repeat.length());
-
                         return true;
                     }
                 }
@@ -140,7 +138,7 @@ public class ChangePasswordFragment extends Fragment {
     }
     private void call_change_password_ws() {
 
-        if (Common.isOnline(getActivity())) {
+        if (Common.isOnline(mActivity)) {
 
             showProgressDialog();
             JSONObject mJsonObject = null;
@@ -162,7 +160,7 @@ public class ChangePasswordFragment extends Fragment {
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, password_url, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
-                public void onResponse(JSONObject response) {
+                public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "profile_url: " + password_url);
                     Log.d(TAG, "response: " + response.toString());
                     hideProgressDialog();
@@ -172,7 +170,7 @@ public class ChangePasswordFragment extends Fragment {
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             Common.UpdateProfilePassword(input_password.getText().toString(), mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                             String message = response.getString(Common.Constant_Class.MESSAGE);
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, message, Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -181,15 +179,16 @@ public class ChangePasswordFragment extends Fragment {
             }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
 
                     hideProgressDialog();
                 }
             })
             {
+                @NonNull
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
@@ -205,28 +204,29 @@ public class ChangePasswordFragment extends Fragment {
 
     private void Memory_Allocation(View rootView) {
 
-        input_password = (EditText) rootView.findViewById(R.id.input_password);
-        input_repeat = (EditText) rootView.findViewById(R.id.input_repeat);
-
+        mActivity = getActivity();
+        input_password = rootView.findViewById(R.id.input_password);
+        input_repeat = rootView.findViewById(R.id.input_repeat);
         input_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
         input_repeat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
 
-        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
-        pDialog = new ProgressDialog(getActivity());
+        fab = rootView.findViewById(R.id.fab);
+        mSharedPreferences = mActivity.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        pDialog = new ProgressDialog(mActivity);
         pDialog.setMessage(Common.Constant_Class.LOADING);
         pDialog.setCancelable(false);
+
 
     }
 
 
     private void showProgressDialog() {
-        if (!pDialog.isShowing())
+        if (!Objects.requireNonNull(pDialog).isShowing())
             pDialog.show();
     }
 
     private void hideProgressDialog() {
-        if (pDialog.isShowing())
+        if (Objects.requireNonNull(pDialog).isShowing())
             pDialog.hide();
     }
 

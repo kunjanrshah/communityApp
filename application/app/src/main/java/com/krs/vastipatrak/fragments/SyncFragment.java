@@ -1,5 +1,6 @@
 package com.krs.vastipatrak.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -10,6 +11,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -35,7 +38,6 @@ import android.widget.ToggleButton;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -59,13 +61,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class SyncFragment extends Fragment {
 
+    @SuppressLint("StaticFieldLeak")
     private static ProgressBar pb_sync;
+    @SuppressLint("StaticFieldLeak")
     private static TextView tvUpdatedTime;
+    @SuppressLint("StaticFieldLeak")
     private static Button btn_sync;
+    @SuppressLint("HandlerLeak")
+    @Nullable
     public static Handler mHandler = new Handler() {
+        @SuppressLint("SetTextI18n")
         @Override
         public void handleMessage(Message msg) {
             Bundle bundle = msg.getData();
@@ -88,23 +97,28 @@ public class SyncFragment extends Fragment {
         }
     };
     //SearchView searchView;
+    @Nullable
     ProgressDialog pDialog;
+    @NonNull
     String TAG = "SyncFragment";
+    @NonNull
     String tag_json_obj = "jobj_req";
     private ToggleButton tbtn_sync;
     private EditText edt_sync;
+    @Nullable
     private SharedPreferences mSharedPreferences = null;
+    @Nullable
     private SharedPreferences.Editor mEditor = null;
+    @NonNull
     private List<City> cityList = new ArrayList<>();
-    private RecyclerView recyclerView;
     private CityAdapter mAdapter;
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_sync, container, false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.title_sync);
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(R.string.title_sync);
         setHasOptionsMenu(true);
         MemoryAllocation(rootView);
 
@@ -113,14 +127,16 @@ public class SyncFragment extends Fragment {
 
         edt_sync.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            public boolean onEditorAction(@NonNull TextView v, int actionId, KeyEvent event) {
                 if (actionId == 0) {
                     if (!edt_sync.getText().toString().isEmpty()) {
                         int val = Integer.parseInt(edt_sync.getText().toString());
+                        assert mEditor != null;
                         mEditor.putInt(Common.Constant_Class.EDT_SYNC_TIME, val);
-                        mEditor.commit();
+                        mEditor.apply();
                     }
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     return true;
                 }
@@ -129,6 +145,7 @@ public class SyncFragment extends Fragment {
         });
 
         btn_sync.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
                 if (btn_sync.getText().toString().equalsIgnoreCase("Start")) {
@@ -141,7 +158,7 @@ public class SyncFragment extends Fragment {
                     final RadioGroup radioGroupId = sync_dialog.findViewById(R.id.radioGroupId);
                     Button btnDownload = sync_dialog.findViewById(R.id.btnDownload);
 
-                    if (selectedList != null && selectedList.size() > 0) {
+                    if (selectedList.size() > 0) {
                         tvSyncCity.setText("City: " + selectedList.toString().replace("[", "").replace("]", ""));
                     } else {
                         tvSyncCity.setText("City: Default All");
@@ -152,12 +169,7 @@ public class SyncFragment extends Fragment {
                         public void onClick(View view) {
                             int selectedId = radioGroupId.getCheckedRadioButtonId();
                             RadioButton radioSelButton = sync_dialog.findViewById(selectedId);
-                            boolean is_reset = false;
-                            if (radioSelButton.getId() == R.id.radioResetSync) {
-                                is_reset = true;
-                            } else {
-                                is_reset = false;
-                            }
+                            boolean is_reset = radioSelButton.getId() == R.id.radioResetSync;
                             Intent mIntent = new Intent(getActivity(), SyncService.class);
                             mIntent.putStringArrayListExtra("selectedCities", selectedList);
                             mIntent.putExtra(Common.Constant_Class.IS_RESET, is_reset);
@@ -184,15 +196,18 @@ public class SyncFragment extends Fragment {
                 ArrayList<String> selectedList = mAdapter.getSelectedCities();
                 serviceIntent.putStringArrayListExtra("selectedCities", selectedList);
                 PendingIntent servicePendingIntent = PendingIntent.getService(getActivity(), 0, serviceIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                assert am != null;
+                assert mEditor != null;
                 if (isChecked) {
                     mEditor.putBoolean(Common.Constant_Class.TBTN_SYNC, true);
-                    mEditor.commit();
+                    mEditor.apply();
                     long interval = 0;
                     if (!edt_sync.getText().toString().isEmpty()) {
                         interval = Long.parseLong(edt_sync.getText().toString());
                     }
                     //interval = interval * 1000 * 60 * 60 * 24;
                     interval = interval * 1000 * 30;
+
                     if (interval != 0) {
                         am.setRepeating(AlarmManager.RTC_WAKEUP, interval, interval, servicePendingIntent);
                         Toast.makeText(getActivity(), "Enjoy Sync Service!", Toast.LENGTH_SHORT).show();
@@ -201,7 +216,7 @@ public class SyncFragment extends Fragment {
                     }
                 } else {
                     mEditor.putBoolean(Common.Constant_Class.TBTN_SYNC, false);
-                    mEditor.commit();
+                    mEditor.apply();
                     am.cancel(servicePendingIntent);
                     Toast.makeText(getActivity(), "Cancelled Sync!", Toast.LENGTH_SHORT).show();
                 }
@@ -214,6 +229,7 @@ public class SyncFragment extends Fragment {
 
         JSONObject json = new JSONObject();
         try {
+            assert mSharedPreferences != null;
             json.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             showProgressDialog();
         } catch (Exception e) {
@@ -222,12 +238,12 @@ public class SyncFragment extends Fragment {
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.GET_CITIES_URL, json, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(@NonNull JSONObject response) {
                 Log.d(TAG, "response: " + response);
                 hideProgressDialog();
                 try {
                     boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
-                    String message = response.getString(Common.Constant_Class.MESSAGE);
+
                     if (success) {
                         JSONArray mJsonArray = response.getJSONArray("data");
                         for (int i = 0; i < mJsonArray.length(); i++) {
@@ -242,7 +258,7 @@ public class SyncFragment extends Fragment {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(@NonNull VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 String message = null;
                 if (error instanceof NetworkError) {
@@ -253,8 +269,6 @@ public class SyncFragment extends Fragment {
                     message = "Cannot connect to Internet...Please check your connection!";
                 } else if (error instanceof ParseError) {
                     message = "Parsing error! Please try again after some time!!";
-                } else if (error instanceof NoConnectionError) {
-                    message = "Cannot connect to Internet...Please check your connection!";
                 } else if (error instanceof TimeoutError) {
                     message = "Connection TimeOut! Please check your internet connection.";
                 }
@@ -263,8 +277,9 @@ public class SyncFragment extends Fragment {
             }
         }
         ) {
+            @NonNull
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 Map<String, String> params = new HashMap<>();
                 params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                 params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
@@ -280,19 +295,23 @@ public class SyncFragment extends Fragment {
     }
 
     private void showProgressDialog() {
+        assert pDialog != null;
         if (!pDialog.isShowing())
             pDialog.show();
     }
 
     private void hideProgressDialog() {
+        assert pDialog != null;
         if (pDialog.isShowing())
             pDialog.cancel();
     }
 
+    @SuppressLint("SetTextI18n")
     private void MemoryAllocation(View rootView) {
 
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
+        mEditor.apply();
         tvUpdatedTime = rootView.findViewById(R.id.tvUpdatedTime1);
         btn_sync = rootView.findViewById(R.id.btn_sync);
         pb_sync = rootView.findViewById(R.id.pb_sync);
@@ -312,7 +331,7 @@ public class SyncFragment extends Fragment {
         pDialog.setMessage("Fetching Cities...");
         pDialog.setCancelable(false);
 
-        recyclerView = rootView.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
 
         mAdapter = new CityAdapter(cityList);

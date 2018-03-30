@@ -8,9 +8,6 @@ import android.widget.VideoView;
 
 import com.krs.vastipatrak.R;
 
-/**
- * Created by TecStub on 14-Oct-16.
- */
 public class TourActivity extends Activity {
 
     VideoView video_player_view;
@@ -20,7 +17,7 @@ public class TourActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_tour);
-        video_player_view = (VideoView) findViewById(R.id.video_player_view);
+        video_player_view = findViewById(R.id.video_player_view);
         Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.connectingcommunty1);
         video_player_view.setVideoURI(video);
 

@@ -1,5 +1,7 @@
 package com.krs.vastipatrak.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -7,11 +9,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -55,6 +58,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import io.realm.RealmList;
 
@@ -62,22 +66,28 @@ import io.realm.RealmList;
 public class PersonalFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
 
-    public static EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbdate = null, edtbTime = null, edtCity = null;
-    public static String str_profile_hash = "", str_father_hash = "", str_mother_hash = "";
-    public static String gender = "";
-    public static Spinner spinnerBlood;
+    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbdate = null, edtbTime = null, edtCity = null;
+    public String str_profile_hash = "", str_father_hash = "", str_mother_hash = "";
+
+    public String gender = "";
+    public Spinner spinnerBlood;
     ToggleButton tbtn_share;
     RadioButton rbtnM, rbtnF;
     ImageView img_profile, img_father, img_mother;
     TextView txt_home;
+
     String img_selection = "";
     String profile_url = "", father_url = "", mother_url = "";
     SharedPreferences mSharedPreferences;
     SharedPreferences.Editor mEditor;
 
+
     String tag_json_obj = "jobj_req";
+
     String TAG = "PersonalFragment";
+
     String name = "";
+
     String user_id = "";
     double home_lat, home_lng, user_lat, user_lng;
 
@@ -99,13 +109,18 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
+    Activity mActivity;
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_personal, container, false);
+        mActivity = getActivity();
+
         MemoryAllocation(rootView);
 
         try {
-            RealmList<ListProfileData> mListProfileData = ((MyProfileActivity) getActivity()).getMyData();
+            RealmList<ListProfileData> mListProfileData = ((MyProfileActivity) mActivity).getMyData();
             if (mListProfileData != null) {
                 setOfflineData(mListProfileData);
             }
@@ -184,7 +199,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
         edtbTime.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
 
                 final int DRAWABLE_RIGHT = 2;
 
@@ -196,12 +211,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         tpd.vibrate(true);
                         tpd.dismissOnPause(false);
                         tpd.enableSeconds(false);
-                        if (false) {
-                            tpd.setAccentColor(Color.parseColor("#9C27B0"));
-                        }
-                        if (true) {
-                            tpd.setTitle("Birth Time");
-                        }
+                        tpd.setTitle("Birth Time");
                         tpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialogInterface) {
@@ -226,7 +236,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                             }*/
                         });
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || AppController.isAdmin) {
-                            tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
+                            tpd.show(mActivity.getFragmentManager(), "Timepickerdialog");
                         }
 
                         return true;
@@ -238,7 +248,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
         edtbdate.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
 
                 final int DRAWABLE_RIGHT = 2;
                 if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -249,12 +259,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         dpd.vibrate(true);
                         dpd.dismissOnPause(false);
                         dpd.showYearPickerFirst(false);
-                        if (false) {
-                            dpd.setAccentColor(Color.parseColor("#9C27B0"));
-                        }
-                        if (true) {
-                            dpd.setTitle("Birth Date");
-                        }
+                        dpd.setTitle("Birth Date");
                         dpd.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
@@ -274,7 +279,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                             }
                         });
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || AppController.isAdmin) {
-                            dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+                            dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
                         }
 
                         return true;
@@ -286,20 +291,20 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
         edtAddress.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
 
                 final int DRAWABLE_RIGHT = 2;
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (edtAddress.getRight() - edtAddress.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         if (MainActivity.lat == null && MainActivity.lon == null) {
-                            Common.showSettingsAlert(getActivity());
+                            Common.showSettingsAlert(mActivity);
 
                         } else {
 
                             if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
 
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                 builder.setTitle(getString(R.string.app_name));
 
                                 builder.setMessage(getString(R.string.home_location));
@@ -309,12 +314,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                         if (MainActivity.lat != null && MainActivity.lon != null) {
                                             homeLocationUpdateWS();
                                         } else {
-                                            Toast.makeText(getActivity(), "You need to give permission to access location ! ", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(mActivity, "You need to give permission to access location ! ", Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
                                 }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
+                                    public void onClick(@NonNull DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                     }
                                 }).show();
@@ -338,24 +343,24 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
-                builder.setTitle(getActivity().getString(R.string.app_name));
-                if (Common.isOnline(getActivity())) {
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+                builder.setTitle(mActivity.getString(R.string.app_name));
+                if (Common.isOnline(mActivity)) {
                     if (isChecked) {
                         String message = "Do you want to Share your Location ?";
                         builder.setMessage(message);
-                        builder.setPositiveButton(getActivity().getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                        builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
                                 mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, true);
-                                mEditor.commit();
-                                getActivity().startService(new Intent(getActivity(), MyLocationService.class));
+                                mEditor.apply();
+                                mActivity.startService(new Intent(mActivity, MyLocationService.class));
 
                                 dialog.dismiss();
                             }
                         });
-                        builder.setNegativeButton(getActivity().getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                        builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
                                 tbtn_share.setChecked(false);
                                 dialog.dismiss();
                             }
@@ -363,24 +368,24 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     } else {
                         String message = "Do you want to Stop sharing your Location ?";
                         builder.setMessage(message);
-                        builder.setPositiveButton(getActivity().getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                        builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
                                 mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, false);
-                                mEditor.commit();
-                                getActivity().stopService(new Intent(getActivity(), MyLocationService.class));
+                                mEditor.apply();
+                                mActivity.stopService(new Intent(mActivity, MyLocationService.class));
                                 dialog.dismiss();
                             }
                         });
-                        builder.setNegativeButton(getActivity().getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                        builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
                                 tbtn_share.setChecked(true);
                                 dialog.dismiss();
                             }
                         }).show();
                     }
                 } else {
-                    Toast.makeText(getActivity(), Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
                     tbtn_share.setChecked(!isChecked);
                 }
             }
@@ -398,25 +403,25 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     private void openImageDialog(String name, String url) {
-        Dialog dialog = new Dialog(getActivity());
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        Dialog dialog = new Dialog(mActivity);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setContentView(R.layout.image_dialog);
         dialog.setTitle(name);
         ImageView image = dialog.findViewById(R.id.img_dialog);
-        Glide.with(getActivity()).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
+        Glide.with(mActivity).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
         dialog.show();
     }
 
     public void selectImage() {
         final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int item) {
+            public void onClick(@NonNull DialogInterface dialog, int item) {
                 if (items[item].equals("Take Photo")) {
-                    if (Common.canCAMARA(getActivity())) {
+                    if (Common.canCAMARA(mActivity)) {
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         startActivityForResult(intent, 0);
                     } else {
@@ -445,8 +450,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private void MemoryAllocation(View rootView) {
 
 
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = mActivity.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
+        mEditor.apply();
         user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
         edtFName = rootView.findViewById(R.id.edtFName);
         edtLName = rootView.findViewById(R.id.edtLName);
@@ -470,16 +476,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         img_mother = rootView.findViewById(R.id.img_mother);
         tbtn_share = rootView.findViewById(R.id.tbtn_share);
 
-        /*if (mSharedPreferences.getBoolean(Common.Constant_Class.OFFLINE_SP, false)) {
-            img_profile.setVisibility(View.GONE);
-            img_father.setVisibility(View.GONE);
-            img_mother.setVisibility(View.GONE);
-        } else {
-            img_profile.setVisibility(View.VISIBLE);
-            img_father.setVisibility(View.VISIBLE);
-            img_mother.setVisibility(View.VISIBLE);
-        }*/
-
         rbtnM = rootView.findViewById(R.id.rbtnM);
         rbtnM.setChecked(true);
         rbtnF = rootView.findViewById(R.id.rbtnF);
@@ -488,7 +484,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         spinnerBlood.setOnItemSelectedListener(this);
 
 
-        List<String> blood_cate = new ArrayList<String>();
+        List<String> blood_cate = new ArrayList<>();
         blood_cate.add(Common.Constant_Class.TITLE_BLOOD_GROUP);
         blood_cate.add(Common.Constant_Class.A_POSITIVE);
         blood_cate.add(Common.Constant_Class.A_NAGATIVE);
@@ -497,7 +493,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         blood_cate.add(Common.Constant_Class.O_POSITIVE);
         blood_cate.add(Common.Constant_Class.O_NAGATIVE);
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, blood_cate);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, blood_cate);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerBlood.setAdapter(dataAdapter);
     }
@@ -579,30 +575,32 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         spinnerBlood.setEnabled(false);
     }
 
+    @SuppressLint("SetTextI18n")
     private void setOfflineData(RealmList<ListProfileData> mListProfileDatas) {
 
         if (mListProfileDatas.size() > 0) {
             ListProfileData mListProfileData = mListProfileDatas.get(0);
 
-            edtFName.setText(mListProfileData.getFirst_name());
-            edtLName.setText(mListProfileData.getLast_name());
-            edtFatherName.setText(mListProfileData.getFather_name());
-            edtMotherName.setText(mListProfileData.getMother_name());
-            edtbdate.setText(mListProfileData.getBirth_date());
-            edtBPlace.setText(mListProfileData.getBirth_place());
+            assert mListProfileData != null;
+            Objects.requireNonNull(edtFName).setText(mListProfileData.getFirst_name());
+            Objects.requireNonNull(edtLName).setText(mListProfileData.getLast_name());
+            Objects.requireNonNull(edtFatherName).setText(mListProfileData.getFather_name());
+            Objects.requireNonNull(edtMotherName).setText(mListProfileData.getMother_name());
+            Objects.requireNonNull(edtbdate).setText(mListProfileData.getBirth_date());
+            Objects.requireNonNull(edtBPlace).setText(mListProfileData.getBirth_place());
             String str_time = mListProfileData.getBirth_time();
             if (str_time.length() > 5) {
                 str_time = mListProfileData.getBirth_time().substring(0, 5);
             }
-            edtbTime.setText(str_time);
-            edtMobile.setText(mListProfileData.getMobile());
-            edt_phone.setText(mListProfileData.getPhone());
-            edtCity.setText(mListProfileData.getCity());
-            edtGotra.setText(mListProfileData.getGotra());
-            edtNPlace.setText(mListProfileData.getNative_place());
-            edtEducation.setText(mListProfileData.getEducation());
-            edt_Eaddress.setText(mListProfileData.getEmail_address());
-            edtAddress.setText(mListProfileData.getAddress());
+            Objects.requireNonNull(edtbTime).setText(str_time);
+            Objects.requireNonNull(edtMobile).setText(mListProfileData.getMobile());
+            Objects.requireNonNull(edt_phone).setText(mListProfileData.getPhone());
+            Objects.requireNonNull(edtCity).setText(mListProfileData.getCity());
+            Objects.requireNonNull(edtGotra).setText(mListProfileData.getGotra());
+            Objects.requireNonNull(edtNPlace).setText(mListProfileData.getNative_place());
+            Objects.requireNonNull(edtEducation).setText(mListProfileData.getEducation());
+            Objects.requireNonNull(edt_Eaddress).setText(mListProfileData.getEmail_address());
+            Objects.requireNonNull(edtAddress).setText(mListProfileData.getAddress());
             String blood = mListProfileData.getBlood_group();
 
             if (blood.equalsIgnoreCase(Common.Constant_Class.A_POSITIVE)) {
@@ -645,11 +643,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
 
                 EnableAll();
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("My Profile");
+                Objects.requireNonNull(((AppCompatActivity) mActivity).getSupportActionBar()).setSubtitle("My Profile");
                 mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, mListProfileData.getProfile_pic_url());
                 mEditor.putString(Common.Constant_Class.FIRST_NAME, mListProfileData.getFirst_name());
                 mEditor.putString(Common.Constant_Class.LAST_NAME, mListProfileData.getLast_name());
-                mEditor.commit();
+                mEditor.apply();
 
                 tbtn_share.setVisibility(View.VISIBLE);
                 tbtn_share.setText(null);
@@ -666,30 +664,13 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Email Address", edt_Eaddress.getText().toString());
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Home Address", edtAddress.getText().toString());
 
-
-
-                /*if (mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE_SP, false)) {
-                    txt_distance.setVisibility(View.VISIBLE);
-
-                    if (user_lat != 0 && user_lng != 0) {
-                        int distance = (int) Common.getDistance(getActivity(), user_lat, user_lng);
-                        if (distance == -1) {
-                            txt_distance.setText("Need to enable location");
-                        } else {
-                            txt_distance.setText("" + (distance / 1000) + " Km");
-                        }
-                    } else {
-                        txt_distance.setText("User has not set location");
-                    }
-                }*/
-
             } else {
                 if (!AppController.isAdmin) {
                     DisableAll();
                 }
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(name + " Profile");
+                Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(mActivity)).getSupportActionBar()).setSubtitle(name + " Profile");
                 if (home_lat != 0 && home_lng != 0) {
-                    int distance = (int) Common.getDistance(getActivity(), home_lat, home_lng);
+                    int distance = (int) Common.getDistance(mActivity, home_lat, home_lng);
                     if (distance == -1) {
                         txt_home.setText("Need to enable location");
                     } else {
@@ -705,160 +686,18 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             father_url = mListProfileData.getImg_father_url();
             mother_url = mListProfileData.getImg_mother_url();
 
-            Glide.with(getActivity()).load(profile_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
-            Glide.with(getActivity()).load(father_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_father);
-            Glide.with(getActivity()).load(mother_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mother);
+            Glide.with(mActivity).load(profile_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+            Glide.with(mActivity).load(father_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_father);
+            Glide.with(mActivity).load(mother_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mother);
 
 
         } else {
-            Toast.makeText(getActivity(), "No Record Found !!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "No Record Found !!", Toast.LENGTH_SHORT).show();
         }
     }
-
-/*
-    private void setOnlineData(String data) {
-        try {
-            JSONObject mData = new JSONObject(data);
-            name = mData.getString(Common.Constant_Class.FIRST_NAME) + " " + mData.getString(Common.Constant_Class.LAST_NAME);
-
-            edtFName.setText(mData.getString(Common.Constant_Class.FIRST_NAME));
-            edtLName.setText(mData.getString(Common.Constant_Class.LAST_NAME));
-            edtFatherName.setText(mData.getString(Common.Constant_Class.FATHER_NAME));
-            edtMotherName.setText(mData.getString(Common.Constant_Class.MOTHER_NAME));
-            edtbdate.setText(mData.getString(Common.Constant_Class.BIRTH_DATE));
-            edtBPlace.setText(mData.getString(Common.Constant_Class.BIRTH_PLACE));
-            String str_time = mData.getString(Common.Constant_Class.BIRTH_TIME);
-            if (str_time.length() > 5) {
-                str_time = str_time.substring(0, 5);
-            }
-            edtbTime.setText(str_time);
-            // edtbTime.setText(mData.getString(Common.Constant_Class.BIRTH_TIME));
-            edtMobile.setText(mData.getString(Common.Constant_Class.MOBILE));
-            edt_phone.setText(mData.getString(Common.Constant_Class.PHONE));
-            edtGotra.setText(mData.getString(Common.Constant_Class.GOTRA));
-            edtCity.setText(mData.getString(Common.Constant_Class.CITY));
-            edtNPlace.setText(mData.getString(Common.Constant_Class.NATIVE_PLACE));
-            edtEducation.setText(mData.getString(Common.Constant_Class.EDUCATION));
-            edt_Eaddress.setText(mData.getString(Common.Constant_Class.EMAIL_ADDRESS));
-            edtAddress.setText(mData.getString(Common.Constant_Class.ADDRESS));
-            String blood = mData.getString(Common.Constant_Class.BLOOD_GROUP);
-
-            if (blood.equalsIgnoreCase(Common.Constant_Class.A_POSITIVE)) {
-                spinnerBlood.setSelection(1);
-            } else if (blood.equalsIgnoreCase(Common.Constant_Class.A_NAGATIVE)) {
-                spinnerBlood.setSelection(2);
-            } else if (blood.equalsIgnoreCase(Common.Constant_Class.B_POSITIVE)) {
-                spinnerBlood.setSelection(3);
-            } else if (blood.equalsIgnoreCase(Common.Constant_Class.B_NAGATIVE)) {
-                spinnerBlood.setSelection(4);
-            } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_POSITIVE)) {
-                spinnerBlood.setSelection(5);
-            } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_NAGATIVE)) {
-                spinnerBlood.setSelection(6);
-            }
-            if (mData.getString(Common.Constant_Class.GENDER).equalsIgnoreCase("1")) {
-                rbtnF.setChecked(false);
-                rbtnM.setChecked(true);
-
-            } else {
-                rbtnF.setChecked(true);
-                rbtnM.setChecked(false);
-            }
-
-            String _user_lat = mData.getString(Common.Constant_Class.USER_LAT).toString();
-            if (!_user_lat.isEmpty() && !_user_lat.equalsIgnoreCase("null")) {
-                user_lat = Double.parseDouble(mData.getString(Common.Constant_Class.USER_LAT));
-            }
-            String _user_lng = mData.getString(Common.Constant_Class.USER_LNG).toString();
-            if (!_user_lng.isEmpty() && !_user_lng.equalsIgnoreCase("null")) {
-                user_lng = Double.parseDouble(mData.getString(Common.Constant_Class.USER_LNG));
-            }
-
-
-            String _home_lat = mData.getString(Common.Constant_Class.HOME_LAT).toString();
-            if (!_home_lat.isEmpty() && !_home_lat.equalsIgnoreCase("null")) {
-                home_lat = Double.parseDouble(mData.getString(Common.Constant_Class.HOME_LAT));
-            }
-
-            String _home_lng = mData.getString(Common.Constant_Class.HOME_LNG).toString();
-            if (!_home_lng.isEmpty() && !_home_lng.equalsIgnoreCase("null")) {
-                home_lng = Double.parseDouble(mData.getString(Common.Constant_Class.HOME_LNG));
-            }
-
-            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("My Profile");
-                mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, mData.getString(Common.Constant_Class.PROFILE_PIC_URL));
-                mEditor.putString(Common.Constant_Class.FIRST_NAME, mData.getString(Common.Constant_Class.FIRST_NAME));
-                mEditor.putString(Common.Constant_Class.LAST_NAME, mData.getString(Common.Constant_Class.LAST_NAME));
-                mEditor.commit();
-
-                tbtn_share.setVisibility(View.VISIBLE);
-                tbtn_share.setText(null);
-                tbtn_share.setTextOn(null);
-                tbtn_share.setTextOff(null);
-                boolean bool = mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE_SP, false);
-                tbtn_share.setChecked(bool);
-
-                AppController.getInstance().firebaseAnalytics.setUserProperty("Name", edtFName.getText().toString());
-                AppController.getInstance().firebaseAnalytics.setUserProperty("Father Name", edtFatherName.getText().toString());
-                AppController.getInstance().firebaseAnalytics.setUserProperty("Mother Name", edtMotherName.getText().toString());
-                AppController.getInstance().firebaseAnalytics.setUserProperty("Mobile", edtMobile.getText().toString());
-                AppController.getInstance().firebaseAnalytics.setUserProperty("Email Address", edt_Eaddress.getText().toString());
-                AppController.getInstance().firebaseAnalytics.setUserProperty("Home Address", edtAddress.getText().toString());
-
-
-            } else {
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(name + " Profile");
-                if (home_lat != 0 && home_lng != 0) {
-                    int distance = (int) Common.getDistance(getActivity(), home_lat, home_lng);
-                    if (distance == -1) {
-                        txt_home.setText("Need to enable location");
-                    } else {
-                        txt_home.setText("" + (distance / 1000) + " Km");
-                    }
-                } else {
-                    txt_home.setText("User has not set location");
-                }
-
-                tbtn_share.setVisibility(View.GONE);
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE_SP, false)) {
-                    txt_distance.setVisibility(View.VISIBLE);
-
-                    if (user_lat != 0 && user_lng != 0) {
-                        int distance = (int) Common.getDistance(getActivity(), user_lat, user_lng);
-                        if (distance == -1) {
-                            txt_distance.setText("Need to enable location");
-                        } else {
-                            txt_distance.setText("" + (distance / 1000) + " Km");
-                        }
-                    } else {
-                        txt_distance.setText("User has not set location");
-                    }
-                }
-
-            }
-
-            profile_url = mData.getString(Common.Constant_Class.PROFILE_PIC_URL);
-            father_url = mData.getString(Common.Constant_Class.IMG_FATHER_URL);
-            mother_url = mData.getString(Common.Constant_Class.IMG_MOTHER_URL);
-
-            Glide.with(getActivity()).load(profile_url).thumbnail(0.5f).into(img_profile);
-            Glide.with(getActivity()).load(father_url).thumbnail(0.5f).into(img_father);
-            Glide.with(getActivity()).load(mother_url).thumbnail(0.5f).into(img_mother);
-
-            //     new Common.ImageLoadTask(profile_url, img_profile).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            //     new Common.ImageLoadTask(father_url, img_father).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            //     new Common.ImageLoadTask(mother_url, img_mother).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-*/
 
     private void homeLocationUpdateWS() {
-        if (Common.isOnline(getActivity())) {
+        if (Common.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
             try {
                 double lat = Double.valueOf(MainActivity.lat);
@@ -877,10 +716,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
-                public void onResponse(JSONObject response) {
+                public void onResponse(@NonNull JSONObject response) {
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
 
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             alert("Home location updated!");
@@ -894,10 +732,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                 }
             }) {
+                @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
@@ -914,29 +753,29 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     private void alert(String message) {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getString(R.string.app_name));
         builder.setMessage(message);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         }).show();
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         Bitmap bmp = null;
         if (data != null) {
 
             if (data.getData() == null) {
-                bmp = (Bitmap) data.getExtras().get("data");
+                bmp = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             } else {
                 Uri selectedImage = data.getData();
                 try {
-                    bmp = Common.scaleImage(getActivity(), selectedImage);
+                    bmp = Common.scaleImage(mActivity, selectedImage);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -946,12 +785,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                 switch (requestCode) {
                     case 0:
-                        if (resultCode == getActivity().RESULT_OK) {
+                        if (resultCode == Activity.RESULT_OK) {
                             setImageFromActivityResult(bmp);
                         }
                         break;
                     case 1:
-                        if (resultCode == getActivity().RESULT_OK) {
+                        if (resultCode == Activity.RESULT_OK) {
                             setImageFromActivityResult(bmp);
                         }
                         break;
@@ -960,36 +799,27 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
-    private void setImageFromActivityResult(Bitmap bmp) {
+    private void setImageFromActivityResult(@NonNull Bitmap bmp) {
+        assert mActivity != null;
         if (img_selection.equalsIgnoreCase("profile")) {
-            //  img_profile.setImageBitmap(bmp);
-            Glide.with(getActivity()).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
-            str_profile_hash = Common.getBase64(getActivity(), bmp);
+            Glide.with(mActivity).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+            str_profile_hash = Common.getBase64(mActivity, bmp);
         } else if (img_selection.equalsIgnoreCase("father")) {
-            // img_father.setImageBitmap(bmp);
-            Glide.with(getActivity()).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_father);
-            str_father_hash = Common.getBase64(getActivity(), bmp);
-
+            Glide.with(mActivity).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_father);
+            str_father_hash = Common.getBase64(mActivity, bmp);
         } else if (img_selection.equalsIgnoreCase("mother")) {
-            //img_mother.setImageBitmap(bmp);
-            Glide.with(getActivity()).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mother);
-            str_mother_hash = Common.getBase64(getActivity(), bmp);
+            Glide.with(mActivity).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mother);
+            str_mother_hash = Common.getBase64(mActivity, bmp);
         }
     }
 
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String item = parent.getItemAtPosition(position).toString();
-
-        // Showing selected spinner item
-        //  Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
-
+    public void onItemSelected(@NonNull AdapterView<?> parent, View view, int position, long id) {
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
 }

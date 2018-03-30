@@ -2,6 +2,7 @@ package com.krs.vastipatrak.activity;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -14,6 +15,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
@@ -37,7 +40,6 @@ import android.widget.Toast;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -59,6 +61,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import io.realm.Realm;
 
@@ -67,32 +70,39 @@ public class LoginActivity extends Activity {
 
 
     private final String[] INIT_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS};
-    private final int INIT_REQUEST = 1;
     private final int CAMARA_REQUEST = 4;
     private final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
+    @Nullable
     JSONObject json = null;
+    @NonNull
     String[] SubcastList = {"Dasha"};
+    @NonNull
     String[] EkdoList = {"Modasa"};
     ImageView img_profile;
     String str_profile_hash = "";
     MaterialBetterSpinner spinnerSubcast, spinnerEkdo;
     boolean isShow = true, isShow1 = true;
+    @Nullable
     String screen = "";
+    @Nullable
     ProgressDialog pDialog;
+    @Nullable
     TextView txtTour = null;
     Realm realm;
     private EditText inputEmail, inputPassword, inputName, inputConformPassword, inputForgotPassword, inputMobile, input_email_mobile, edt_father_name, edt_surname, edt_address, edt_native;
     private TextInputLayout inputLayoutName, inputLayoutEmail, input_layout_email_mobile, inputLayoutPassword, inputLayoutConformPassword, InputLayoutForgotPassword, inputLayoutMobile, input_layout_father_name, input_layout_surname, input_layout_address, input_layout_native_place;
+    @Nullable
     private SharedPreferences mSharedPreferences = null;
     private SharedPreferences.Editor mEditor;
     private boolean SignupToggle = true;
     private Button btn_signup;
     private TextView txt_forgot, txtSignup;
+    @NonNull
     private String tag_json_obj = "jobj_req";
     private String TAG = MainActivity.class.getSimpleName();
 
-    private static boolean isValidEmail(String email) {
-        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    private static boolean isValidEmail(@NonNull String email) {
+        return TextUtils.isEmpty(email) || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     @Override
@@ -105,6 +115,7 @@ public class LoginActivity extends Activity {
         if (Build.VERSION.SDK_INT >= 23) {
 
             if (!Common.canCallPhone(this) || !Common.canAccessLocation(this) || !Common.canSMS(this)) {
+                int INIT_REQUEST = 1;
                 requestPermissions(INIT_PERMS, INIT_REQUEST);
             }
         }
@@ -120,7 +131,7 @@ public class LoginActivity extends Activity {
             }
         }
 
-        if (!mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").toString().equalsIgnoreCase("") && screen == null) {
+        if (mSharedPreferences != null && !mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase("") && screen == null) {
             Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
             mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
             startActivity(mIntent);
@@ -180,7 +191,7 @@ public class LoginActivity extends Activity {
 
         inputPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            public boolean onEditorAction(TextView v, int actionId, @Nullable KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     if (SignupToggle) {
                         LoginWS();
@@ -190,6 +201,7 @@ public class LoginActivity extends Activity {
             }
         });
 
+        assert txtTour != null;
         txtTour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -206,9 +218,11 @@ public class LoginActivity extends Activity {
         super.onResume();
     }
 
+    @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     private void Memory_Allocation() {
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
+        mEditor.apply();
         realm = AppController.getInstance().realm;
         pDialog = new ProgressDialog(this);
         pDialog.setMessage(Common.Constant_Class.LOADING);
@@ -256,11 +270,11 @@ public class LoginActivity extends Activity {
         spinnerSubcast = findViewById(R.id.spinnerSubcast);
         spinnerEkdo = findViewById(R.id.spinnerEkdo);
 
-        ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, EkdoList);
+        ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, EkdoList);
         spinnerEkdo.setAdapter(arrayAdapter1);
         spinnerEkdo.setText("Modasa");
 
-        ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, SubcastList);
+        ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, SubcastList);
         spinnerSubcast.setAdapter(arrayAdapter2);
         spinnerSubcast.setText("Dasha");
 
@@ -269,7 +283,7 @@ public class LoginActivity extends Activity {
 
         inputPassword.setOnTouchListener(new EditText.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
 
                 final int DRAWABLE_RIGHT = 2;
 
@@ -298,7 +312,7 @@ public class LoginActivity extends Activity {
 
         inputConformPassword.setOnTouchListener(new EditText.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
 
                 final int DRAWABLE_RIGHT = 2;
 
@@ -396,113 +410,91 @@ public class LoginActivity extends Activity {
         }
     }
 
-    private boolean validateFatherName() {
+    private void validateFatherName() {
         if (edt_father_name.getText().toString().trim().isEmpty()) {
             input_layout_father_name.setError(getString(R.string.err_msg_father_name));
             requestFocus(edt_father_name);
-            return false;
         } else {
             input_layout_father_name.setErrorEnabled(false);
         }
-        return true;
     }
 
-    private boolean validateSurname() {
+    private void validateSurname() {
         if (edt_surname.getText().toString().trim().isEmpty()) {
             input_layout_surname.setError(getString(R.string.err_msg_surname));
             requestFocus(edt_surname);
-            return false;
         } else {
             input_layout_surname.setErrorEnabled(false);
         }
-        return true;
     }
 
-    private boolean validateNative() {
+    private void validateNative() {
         if (edt_native.getText().toString().trim().isEmpty()) {
             input_layout_native_place.setError(getString(R.string.err_msg_native));
             requestFocus(edt_native);
-            return false;
         } else {
             input_layout_native_place.setErrorEnabled(false);
         }
-        return true;
     }
 
-    private boolean validateAddress() {
+    private void validateAddress() {
         if (edt_address.getText().toString().trim().isEmpty()) {
             input_layout_address.setError(getString(R.string.err_msg_address));
             requestFocus(edt_address);
-            return false;
         } else {
             input_layout_address.setErrorEnabled(false);
         }
-        return true;
     }
 
-    private boolean validateName() {
+    private void validateName() {
         if (inputName.getText().toString().trim().isEmpty()) {
             inputLayoutName.setError(getString(R.string.err_msg_name));
             requestFocus(inputName);
-            return false;
         } else {
             inputLayoutName.setErrorEnabled(false);
         }
-
-        return true;
     }
 
-    private boolean validateEmail() {
+    private void validateEmail() {
         String email = inputEmail.getText().toString().trim();
 
-        if (email.isEmpty() || !isValidEmail(email)) {
+        if (email.isEmpty() || isValidEmail(email)) {
             inputLayoutEmail.setError(getString(R.string.err_msg_email));
             requestFocus(inputEmail);
-            return false;
         } else {
             inputLayoutEmail.setErrorEnabled(false);
         }
-
-        return true;
     }
 
-    private boolean validatePassword() {
+    private void validatePassword() {
         if (inputPassword.getText().toString().trim().isEmpty()) {
             inputLayoutPassword.setError(getString(R.string.err_msg_password));
             requestFocus(inputPassword);
-            return false;
         } else {
             inputLayoutPassword.setErrorEnabled(false);
         }
-
-        return true;
     }
 
-    private boolean validateConformPassword() {
+    private void validateConformPassword() {
         if (!inputPassword.getText().toString().trim().equalsIgnoreCase(inputConformPassword.getText().toString().trim())) {
             inputLayoutConformPassword.setError(getString(R.string.err_msg_conform_password));
             requestFocus(inputConformPassword);
-            return false;
         } else {
             inputLayoutConformPassword.setErrorEnabled(false);
         }
-
-        return true;
     }
 
 
-    private boolean validateForgotPassword() {
+    private void validateForgotPassword() {
         String email = inputForgotPassword.getText().toString().trim();
 
-        if (email.isEmpty() || !isValidEmail(email)) {
+        if (email.isEmpty() || isValidEmail(email)) {
             InputLayoutForgotPassword.setError("Enter valid email address");
             requestFocus(inputForgotPassword);
-            return false;
         } else {
             InputLayoutForgotPassword.setErrorEnabled(false);
         }
 
-        return true;
     }
 
     private void requestFocus(View view) {
@@ -511,21 +503,7 @@ public class LoginActivity extends Activity {
         }
     }
 
-   /* private void alert(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
-        builder.setTitle(getString(R.string.app_name));
 
-        builder.setMessage(message);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-
-            }
-        }).show();
-
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-    }
-*/
     private void ForgotPasswordWS() {
         if (Common.isOnline(this)) {
 
@@ -542,7 +520,7 @@ public class LoginActivity extends Activity {
                 JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
 
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(@NonNull JSONObject response) {
                         Log.d(TAG, response.toString());
 
                         try {
@@ -551,8 +529,6 @@ public class LoginActivity extends Activity {
 
                             if (success) {
                                 if (response.has(Common.Constant_Class.PASSWORD) && response.has(Common.Constant_Class.MOBILE)) {
-                                    String mobile = response.getString(Common.Constant_Class.MOBILE);
-                                    String password = response.getString(Common.Constant_Class.PASSWORD);
                                     inputPassword.setText("");
                                 }
                             }
@@ -565,12 +541,13 @@ public class LoginActivity extends Activity {
                 }, new Response.ErrorListener() {
 
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(@NonNull VolleyError error) {
                         VolleyLog.d(TAG, "Error: " + error.getMessage());
 
                     }
                 })
                 {
+                    @NonNull
                     @Override
                     public Map<String, String> getHeaders() {
                         Map<String, String> params = new HashMap<>();
@@ -609,7 +586,7 @@ public class LoginActivity extends Activity {
                 JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.LOGIN_URL, json, new Response.Listener<JSONObject>() {
 
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(@NonNull JSONObject response) {
                         Log.d(TAG, response.toString());
 
                         try {
@@ -640,7 +617,7 @@ public class LoginActivity extends Activity {
                                     mEditor.putString(Common.Constant_Class.LAST_NAME, last_name);
                                     mEditor.putString(Common.Constant_Class.ACCESS_TOKEN, access_token);
                                     mEditor.putString(Common.Constant_Class.UPDATED_TIME, updated_time);
-                                    mEditor.commit();
+                                    mEditor.apply();
 
                                     Bundle fb_bundle = new Bundle();
                                     fb_bundle.putInt(FirebaseAnalytics.Param.ITEM_ID, Integer.parseInt(user_id));
@@ -652,7 +629,9 @@ public class LoginActivity extends Activity {
                                         AppController.isAdmin = true;
                                     }
                                     Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
-                                    mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                                    if (mSharedPreferences != null) {
+                                        mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                                    }
                                     startActivity(mIntent);
                                     finish();
                                     Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -671,7 +650,7 @@ public class LoginActivity extends Activity {
                 }, new Response.ErrorListener() {
 
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(@NonNull VolleyError error) {
                         VolleyLog.d(TAG, "Error: " + error.getMessage());
                         String message = null;
                         if (error instanceof NetworkError) {
@@ -682,21 +661,22 @@ public class LoginActivity extends Activity {
                             message = "Cannot connect to Internet...Please check your connection!";
                         } else if (error instanceof ParseError) {
                             message = "Parsing error! Please try again after some time!!";
-                        } else if (error instanceof NoConnectionError) {
-                            message = "Cannot connect to Internet...Please check your connection!";
                         } else if (error instanceof TimeoutError) {
                             message = "Connection TimeOut! Please check your internet connection.";
                         }
                         Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_LONG).show();
                     }
                 }) {
+                    @NonNull
                     @Override
                     public Map<String, String> getHeaders() {
                         Map<String, String> params = new HashMap<>();
                         params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                         params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
                         params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                        params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
+                        if (mSharedPreferences != null) {
+                            params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                        }
                         return params;
                     }
                 };
@@ -722,10 +702,12 @@ public class LoginActivity extends Activity {
                     mEditor.putString(Common.Constant_Class.EMAIL, email);
                     mEditor.putString(Common.Constant_Class.PASSWORD, password);
                     mEditor.putString(Common.Constant_Class.USER_ID, user_id);
-                    mEditor.commit();
+                    mEditor.apply();
 
                     Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
-                    mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                    if (mSharedPreferences != null) {
+                        mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                    }
                     startActivity(mIntent);
                     finish();
                 }
@@ -781,7 +763,7 @@ public class LoginActivity extends Activity {
                     JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SIGNUP_URL, json, new Response.Listener<JSONObject>() {
 
                         @Override
-                        public void onResponse(JSONObject response) {
+                        public void onResponse(@NonNull JSONObject response) {
                             Log.d(TAG, response.toString());
 
                             try {
@@ -789,9 +771,7 @@ public class LoginActivity extends Activity {
                                 boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                                 String message = response.getString(Common.Constant_Class.MESSAGE);
 
-
                                 if (success) {
-
                                     String user_id = response.getString(Common.Constant_Class.USER_ID);
                                     if (!message.contains("admin")) {
 
@@ -805,10 +785,12 @@ public class LoginActivity extends Activity {
                                         mEditor.putString(Common.Constant_Class.FIRST_NAME, first_name);
                                         mEditor.putString(Common.Constant_Class.LAST_NAME, last_name);
                                         mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, profile_url);
-                                        mEditor.commit();
+                                        mEditor.apply();
 
                                         Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
-                                        mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                                        if (mSharedPreferences != null) {
+                                            mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                                        }
                                         startActivity(mIntent);
                                         finish();
                                     } else {
@@ -840,7 +822,7 @@ public class LoginActivity extends Activity {
                     }, new Response.ErrorListener() {
 
                         @Override
-                        public void onErrorResponse(VolleyError error) {
+                        public void onErrorResponse(@NonNull VolleyError error) {
                             hideProgressDialog();
                             VolleyLog.d(TAG, "Error: " + error.getMessage());
                             String message = null;
@@ -852,8 +834,6 @@ public class LoginActivity extends Activity {
                                 message = "Cannot connect to Internet...Please check your connection!";
                             } else if (error instanceof ParseError) {
                                 message = "Parsing error! Please try again after some time!!";
-                            } else if (error instanceof NoConnectionError) {
-                                message = "Cannot connect to Internet...Please check your connection!";
                             } else if (error instanceof TimeoutError) {
                                 message = "Connection TimeOut! Please check your internet connection.";
                             }
@@ -861,12 +841,14 @@ public class LoginActivity extends Activity {
 
                         }
                     }) {
+                        @NonNull
                         @Override
                         public Map<String, String> getHeaders() {
                             Map<String, String> params = new HashMap<>();
                             params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                             params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
                             params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                            assert mSharedPreferences != null;
                             params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
                             return params;
                         }
@@ -884,7 +866,7 @@ public class LoginActivity extends Activity {
         }
     }
 
-    private void selectImage(final Activity mActivity) {
+    private void selectImage(@NonNull final Activity mActivity) {
         final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
@@ -892,7 +874,7 @@ public class LoginActivity extends Activity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
-            public void onClick(DialogInterface dialog, int item) {
+            public void onClick(@NonNull DialogInterface dialog, int item) {
                 if (items[item].equals("Take Photo")) {
                     if (Common.canCAMARA(LoginActivity.this)) {
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -915,12 +897,12 @@ public class LoginActivity extends Activity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         Bitmap bmp = null;
         if (data != null) {
 
             if (data.getData() == null) {
-                bmp = (Bitmap) data.getExtras().get("data");
+                bmp = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             } else {
                 Uri selectedImage = data.getData();
                 try {

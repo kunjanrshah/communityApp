@@ -1,13 +1,13 @@
 package com.krs.vastipatrak.app;
 
-import android.app.Activity;
 import android.app.Application;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.krs.vastipatrak.model.ListProfileData;
@@ -20,44 +20,29 @@ public class AppController extends Application {
 
     public static final String TAG = AppController.class
             .getSimpleName();
-    public static DatabaseHandler dbHelper;
-    public static boolean isSplashLive = false;
+
     public static boolean isAdmin=false;
     private static AppController mInstance;
     public Realm realm;
     public boolean isUpdate = false;
     public FirebaseAnalytics firebaseAnalytics;
+    @Nullable
     public RealmResults<ListProfileData> mListSearchList = null;
     private RequestQueue mRequestQueue;
-    private ImageLoader mImageLoader;
-    private Activity mActivity;
+
 
     public static synchronized AppController getInstance() {
         return mInstance;
     }
 
-    public Activity getMainActivityContext() {
-        return mActivity;
-    }
-
-    public void setMainActivityContext(Activity mActivity) {
-        this.mActivity = mActivity;
-    }
 
     @Override
     public void onCreate() {
         super.onCreate();
         MultiDex.install(this);
-       // Fabric.with(this, new Crashlytics());
-       // Fabric.with(this, new Crashlytics());
         mInstance = this;
-      //  dbHelper = new DatabaseHandler(this);
-
         initRealm();
         initFirebaseAnalytics();
-        // initialize the AdMob app
-//        MobileAds.initialize(this, getResources().getString(R.string.admob_app_id));
-        // Obtain the Firebase Analytics instance.
 
     }
 
@@ -95,30 +80,15 @@ public class AppController extends Application {
         return mRequestQueue;
     }
 
-
-  /*  public ImageLoader getImageLoader() {
-        getRequestQueue();
-        if (mImageLoader == null) {
-            mImageLoader = new ImageLoader(this.mRequestQueue,
-                    new LruBitmapCache());
-        }
-        return this.mImageLoader;
-    }*/
-
-    public <T> void addToRequestQueue(Request<T> req, String tag) {
+    public <T> void addToRequestQueue(@NonNull Request<T> req, String tag) {
         // set the default tag if tag is empty
         req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
         getRequestQueue().add(req);
     }
 
-    public <T> void addToRequestQueue(Request<T> req) {
+    public <T> void addToRequestQueue(@NonNull Request<T> req) {
         req.setTag(TAG);
         getRequestQueue().add(req);
     }
 
-    public void cancelPendingRequests(Object tag) {
-        if (mRequestQueue != null) {
-            mRequestQueue.cancelAll(tag);
-        }
-    }
 }

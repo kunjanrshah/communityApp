@@ -28,6 +28,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -112,7 +114,7 @@ public class Common {
         return newBitmap;
     }
 
-    public final static boolean IsValidate(final String time) {
+    public final static boolean IsValidate(@NonNull final String time) {
         String TIME24HOURS_PATTERN = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
         Pattern pattern = Pattern.compile(TIME24HOURS_PATTERN);
         Matcher matcher = pattern.matcher(time);
@@ -120,7 +122,7 @@ public class Common {
 
     }
 
-    public final static boolean isValidEmail(CharSequence target) {
+    public final static boolean isValidEmail(@Nullable CharSequence target) {
         if (target == null) {
             return false;
         } else {
@@ -128,7 +130,7 @@ public class Common {
         }
     }
 
-    public static boolean isThisDateValid(String dateToValidate, String dateFromat) {
+    public static boolean isThisDateValid(@Nullable String dateToValidate, @NonNull String dateFromat) {
 
         if (dateToValidate == null) {
             return false;
@@ -152,31 +154,31 @@ public class Common {
         return true;
     }
 
-    public static boolean canCAMARA(Context mContext) {
+    public static boolean canCAMARA(@NonNull Context mContext) {
         return (hasPermission(mContext, Manifest.permission.CAMERA));
     }
 
-    public static boolean canCallPhone(Context mContext) {
+    public static boolean canCallPhone(@NonNull Context mContext) {
         return (hasPermission(mContext, Manifest.permission.CALL_PHONE));
     }
 
-    public static boolean canAccessLocation(Context mContext) {
+    public static boolean canAccessLocation(@NonNull Context mContext) {
         return (hasPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION));
     }
 
-    public static boolean canSMS(Context mContext) {
+    public static boolean canSMS(@NonNull Context mContext) {
         return (hasPermission(mContext, Manifest.permission.SEND_SMS));
     }
 
-    public static boolean canReadContacts(Context mContext) {
+    public static boolean canReadContacts(@NonNull Context mContext) {
         return (Common.hasPermission(mContext, Manifest.permission.READ_CONTACTS));
     }
 
-    public static boolean hasPermission(Context mContext, String perm) {
+    public static boolean hasPermission(@NonNull Context mContext, @NonNull String perm) {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
     }
 
-    public static float getDistance(Activity mActivity, double lat, double lon) {
+    public static float getDistance(@NonNull Activity mActivity, double lat, double lon) {
 
         double curr_lat = 0.0, curr_lng = 0.0;
         float rvalue = -1.0f;
@@ -229,7 +231,7 @@ public class Common {
 
     }
 
-    public static void showDirections(Activity mActivity, double latitude, double longitude, String address) {
+    public static void showDirections(@NonNull Activity mActivity, double latitude, double longitude, String address) {
 
 
         if (MainActivity.lat != null && MainActivity.lon != null) {
@@ -254,7 +256,7 @@ public class Common {
         return Base64.encodeBytes(ba);
     }
 
-    public static Bitmap scaleImage(Context context, Uri photoUri) throws IOException {
+    public static Bitmap scaleImage(Context context, @NonNull Uri photoUri) throws IOException {
         InputStream is = context.getContentResolver().openInputStream(photoUri);
         BitmapFactory.Options dbo = new BitmapFactory.Options();
         dbo.inJustDecodeBounds = true;
@@ -311,7 +313,7 @@ public class Common {
         return BitmapFactory.decodeByteArray(bMapArray, 0, bMapArray.length);
     }
 
-    public static void showSettingsAlert(final Activity mActivity) {
+    public static void showSettingsAlert(@NonNull final Activity mActivity) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mActivity);
 
         //Setting Dialog Title
@@ -324,7 +326,7 @@ public class Common {
         alertDialog.setPositiveButton("Setting", new DialogInterface.OnClickListener() {
 
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mActivity.startActivity(intent);
                 dialog.cancel();
@@ -336,7 +338,7 @@ public class Common {
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
@@ -344,7 +346,7 @@ public class Common {
         alertDialog.show();
     }
 
-    public static int getOrientation(Context context, Uri photoUri) {
+    public static int getOrientation(Context context, @NonNull Uri photoUri) {
         /* it's on the external media. */
         Cursor cursor = context.getContentResolver().query(photoUri, new String[]{MediaStore.Images.ImageColumns.ORIENTATION}, null, null, null);
 
@@ -384,7 +386,7 @@ public class Common {
     }
 
     // convert from byte array to bitmap
-    public static Bitmap getPhoto(byte[] image) {
+    public static Bitmap getPhoto(@NonNull byte[] image) {
         return BitmapFactory.decodeByteArray(image, 100, image.length);
     }
 
@@ -401,11 +403,12 @@ public class Common {
         }
     }
 
-    public static String camelCase(String stringToConvert) {
+    public static String camelCase(@Nullable String stringToConvert) {
         if (stringToConvert == null || TextUtils.isEmpty(stringToConvert)) return "";
         return Character.toUpperCase(stringToConvert.charAt(0)) + stringToConvert.substring(1).toLowerCase();
     }
 
+    @NonNull
     public static RealmList<ListProfileData> getDataFromParentTable(String query, int search) {
         RealmList<ListProfileData> mlistProfileData = new RealmList<>();
 
@@ -674,6 +677,7 @@ public class Common {
         return mlistProfileData;
     }
 
+    @NonNull
     public static RealmList<ListProfileData> getDataFromChildTable(String query, int search) {
         RealmList<ListProfileData> mlistProfileData = new RealmList<>();
         RealmList<ListChildrenData> mListChildrenData = new RealmList<>();
@@ -775,7 +779,7 @@ public class Common {
         AppController.getInstance().realm.commitTransaction();
     }
 
-    public static void UpdateProfileStatus(ArrayList<String> lstSelectedIDs, String status) {
+    public static void UpdateProfileStatus(@NonNull ArrayList<String> lstSelectedIDs, String status) {
         try {
             for (int i = 0; i < lstSelectedIDs.size(); i++) {
                 ListProfileData mListProfile = realm.where(ListProfileData.class).equalTo(Common.Constant_Class.PROFILE_ID, lstSelectedIDs.get(i)).findFirst();
@@ -798,7 +802,7 @@ public class Common {
         }
     }
 
-    public static void SaveProfile(JSONObject mJsonObject) {
+    public static void SaveProfile(@NonNull JSONObject mJsonObject) {
         try {
             ListProfileData mListProfileData = new ListProfileData();
             if (mJsonObject.has(Constant_Class.ID)) {
@@ -887,7 +891,7 @@ public class Common {
                 mListProfileData.setOffice_lng(mJsonObject.getString(Common.Constant_Class.OFFICE_LNG));
             }
             if (mJsonObject.has(Common.Constant_Class.HOME_LAT)) {
-                mListProfileData.setUser_lat(mJsonObject.getString(Common.Constant_Class.HOME_LAT));
+                mListProfileData.setHome_lat(mJsonObject.getString(Common.Constant_Class.HOME_LAT));
             }
             if (mJsonObject.has(Common.Constant_Class.HOME_LNG)) {
                 mListProfileData.setHome_lng(mJsonObject.getString(Common.Constant_Class.HOME_LNG));
@@ -1025,6 +1029,7 @@ public class Common {
         Constant_Class.DEVICE_ID_VALUE = m_androidId;
     }
 
+    @NonNull
     public static String getUpdatedTime(String timestamp) {
         try {
             Calendar cal = Calendar.getInstance(Locale.ENGLISH);
@@ -1057,7 +1062,7 @@ public class Common {
     }
 
 
-    public static void ExportSearchData(Activity mActiviy) {
+    public static void ExportSearchData(@NonNull Activity mActiviy) {
         List<ListProfileData> mListProfileResult = AppController.getInstance().mListSearchList;
 
         if (mListProfileResult != null && mListProfileResult.size() > 0) {
@@ -1185,14 +1190,14 @@ public class Common {
         }
     }
 
-    private static void ExportAlert(final Activity mActivity, String msg, final File file) {
+    private static void ExportAlert(@NonNull final Activity mActivity, String msg, @NonNull final File file) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(mActivity.getString(R.string.app_name));
 
         builder.setMessage(msg);
         builder.setNegativeButton("Share", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
 
                 Intent intentShareFile = new Intent(Intent.ACTION_SEND);
                 //  File fileWithinMyDir = new File(myFilePath);
@@ -1211,27 +1216,27 @@ public class Common {
             }
         });
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         }).show();
     }
 
 
-    public static void alert(Activity mActivity, String message) {
+    public static void alert(@NonNull Activity mActivity, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(mActivity.getString(R.string.app_name));
 
         builder.setMessage(message);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
                 dialog.dismiss();
 
             }
         }).show();
     }
 
-    public static void SendWhatsappMessage(Context mActivity, String mob_num, String message) {
+    public static void SendWhatsappMessage(@NonNull Context mActivity, String mob_num, String message) {
         String digits = "\\d+";
         if (mob_num.matches(digits)) {
             try {
@@ -1247,7 +1252,7 @@ public class Common {
     }
 
 
-    public static void getChildRandomColor(Context context, int position, LinearLayout ll_event) {
+    public static void getChildRandomColor(@NonNull Context context, int position, LinearLayout ll_event) {
         int i = position % 10;
         Log.v("color number:", "" + i);
         ll_event.setAlpha((float) 0.9);
@@ -1290,7 +1295,7 @@ public class Common {
     }
 
 
-    public static void getParentRandomColor(Context context, int position, LinearLayout ll_event) {
+    public static void getParentRandomColor(@NonNull Context context, int position, LinearLayout ll_event) {
         int i = position % 10;
         Log.v("color number:", "" + i);
         ll_event.setAlpha((float) 0.9);
@@ -1333,7 +1338,7 @@ public class Common {
     }
 
 
-    public static void getRandomColor(Context context, int position, LinearLayout ll_event) {
+    public static void getRandomColor(@NonNull Context context, int position, LinearLayout ll_event) {
         int i = position % 10;
         Log.v("color number:", "" + i);
         ll_event.setAlpha((float) 0.9);
@@ -1376,6 +1381,7 @@ public class Common {
     }
 
 
+    @Nullable
     public static String parseDateToddMMyyyy(String time) {
         String inputPattern = "yyyy-MM-dd";
         String outputPattern = "dd-MMM-yyyy";
@@ -1545,12 +1551,15 @@ public class Common {
         public static final String TBTN_SHARE = "tbtn_share";
         public static final String TBTN_SYNC = "tbtn_sync";
         public static String DEVICE_ID_VALUE = "";
+        @NonNull
         public static String EDT_SYNC_TIME = "edt_sync_time";
         public static int sCorner = 25;
         public static int sMargin = 1;
         public static int sBorder = 5;
+        @NonNull
         public static String sColor = "#FFC0CB";
         public static long LOCATION_INTERVAL = 1000 * 1 * 30;
+        @NonNull
         public static String FragmentSp = "fragment";
         /*public static final String MY_LATITUDE = "my_latitude";
         public static final String MY_LONGITUDE = "my_longitude";*/

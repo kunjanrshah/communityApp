@@ -1,5 +1,6 @@
 package com.krs.vastipatrak.adapter;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,29 +15,25 @@ import com.krs.vastipatrak.model.City;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by kunjan on 1/3/18.
- */
-
 public class CityAdapter extends RecyclerView.Adapter<CityAdapter.MyViewHolder> {
 
-    public ArrayList<String> selectedList = new ArrayList<>();
+    @NonNull
+    private ArrayList<String> selectedList = new ArrayList<>();
     private List<City> cityList;
-
     public CityAdapter(List<City> cityList) {
         this.cityList = cityList;
     }
 
+    @NonNull
     @Override
-    public CityAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.city_list_row, parent, false);
+    public CityAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.city_list_row, parent, false);
 
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(CityAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CityAdapter.MyViewHolder holder, int position) {
         final City city = cityList.get(position);
         holder.name.setText(city.getName());
         holder.chkCity.setChecked(city.isSelected());
@@ -53,8 +50,8 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.MyViewHolder> 
         });
     }
 
-    public ArrayList<String> getSelectedCities()
-    {
+    @NonNull
+    public ArrayList<String> getSelectedCities() {
         return selectedList;
     }
 
@@ -67,7 +64,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.MyViewHolder> 
         public TextView name;
         public CheckBox chkCity;
 
-        public MyViewHolder(View view) {
+        MyViewHolder(@NonNull View view) {
             super(view);
             name = view.findViewById(R.id.txtcityname);
             chkCity = view.findViewById(R.id.chkCity);
