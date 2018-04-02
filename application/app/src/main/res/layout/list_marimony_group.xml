@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_parent_matrimony"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,11 +15,12 @@
             android:id="@+id/ivChildIcon"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginLeft="-10dp"
+            android:layout_marginStart="-10dp"
+            android:contentDescription="TODO"
             android:src="@drawable/ic_launcher" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
@@ -29,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Kunjan Shah"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -37,22 +39,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Rajendra Shah"
-                android:textSize="14dp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tvChildMotherName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Shraddha ben"
-                android:textSize="14dp" />
+                android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/tvChildCity"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
                     android:text="Ahmedabd"
-                    android:textSize="14dp" />
+                    android:textSize="14sp"
+                    tools:ignore="NestedWeights" />
 
         </LinearLayout>
         <LinearLayout
@@ -66,7 +69,7 @@
             android:layout_height="35dp"
             android:layout_margin="3dp"
             android:background="@drawable/boy"
-            />
+            android:contentDescription="TODO" />
 
         <ImageView
             android:id="@+id/imgChildShare"
@@ -75,6 +78,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
             android:background="@drawable/share_icon"
+            android:contentDescription="TODO"
             android:focusable="false" />
         </LinearLayout>
     </LinearLayout>
@@ -85,9 +89,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="-15dp"
-            android:gravity="right"
+            android:gravity="end"
             android:text="Updated: "
             android:textColor="@android:color/black"
-            android:textSize="12dp" />
+            android:textSize="12sp" />
 
 </LinearLayout>

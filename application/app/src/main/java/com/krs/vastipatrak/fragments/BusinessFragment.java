@@ -46,20 +46,16 @@ public class BusinessFragment extends Fragment implements Serializable {
 
 
     public EditText edtOccupation, edtWork, edtOMobile, edtOAddress;
-    SharedPreferences mSharedPreferences;
-    String tag_json_obj = "jobj_req";
-    String TAG = BusinessFragment.class.getSimpleName();
-    TextView txt_office;
-    double office_lat = 0, office_lng = 0;
-    String user_id = "";
-    Activity mActivity;
+    private final String tag_json_obj = "jobj_req";
+    private final String TAG = BusinessFragment.class.getSimpleName();
+    private SharedPreferences mSharedPreferences;
+    private TextView txt_office;
+    private double office_lat = 0;
+    private double office_lng = 0;
+    private String user_id = "";
+    private Activity mActivity;
     public BusinessFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -131,7 +127,7 @@ public class BusinessFragment extends Fragment implements Serializable {
     }
 
 
-    public void showDirections(double latitude, double longitude) {
+    private void showDirections(double latitude, double longitude) {
         String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", latitude, longitude, "", office_lat, office_lng, edtOAddress.getText().toString().trim());
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");

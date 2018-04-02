@@ -28,8 +28,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         Log.e(TAG, "From: " + remoteMessage.getFrom());
 
-        if (remoteMessage == null)
-            return;
+        /*if (remoteMessage == null)
+            return;*/
 
        /* // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
@@ -41,13 +41,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "Data Payload: " + remoteMessage.getData().toString());
 
-            String event_id = remoteMessage.getData().get("event_id");
+
             String notification = remoteMessage.getData().get("notification");
             String title = remoteMessage.getData().get("title");
             String location = remoteMessage.getData().get("location");
             String imgUrl = remoteMessage.getData().get("imgUrl");
-            String lat = remoteMessage.getData().get("lat");
-            String lng = remoteMessage.getData().get("lng");
 
 
             Long tsLong = System.currentTimeMillis() / 1000;
@@ -67,8 +65,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void handleNotification(String message) {
-        if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+  /*  private void handleNotification(String message) {
+        if (NotificationUtils.isAppIsInBackground(getApplicationContext())) {
             // app is in foreground, broadcast the push message
             Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
             pushNotification.putExtra("message", message);
@@ -77,10 +75,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             // play notification sound
             NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
             notificationUtils.playNotificationSound();
-        }else{
-            // If the app is in background, firebase itself handles the notification
         }
-    }
+    }*/
 
     private void handleDataMessage(JSONObject json) {
         Log.e(TAG, "push json: " + json.toString());
@@ -103,7 +99,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.e(TAG, "timestamp: " + timestamp);
 
 
-            if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+            if (NotificationUtils.isAppIsInBackground(getApplicationContext())) {
                 // app is in foreground, broadcast the push message
                 Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
                 pushNotification.putExtra("message", message);

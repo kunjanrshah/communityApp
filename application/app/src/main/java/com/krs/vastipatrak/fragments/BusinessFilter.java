@@ -30,8 +30,8 @@ import static java.util.Objects.requireNonNull;
 
 public class BusinessFilter extends Fragment {
 
-    FloatingActionButton floatingActionButton;
-    ObservableScrollView scroll_bdetails;
+    private FloatingActionButton floatingActionButton;
+    private ObservableScrollView scroll_bdetails;
     public EditText edtOccupation, edtWork, edtOMobile, edtOAddress;
     private static final int CONTACT_PICKER_RESULT = 1001;
 
@@ -76,7 +76,7 @@ public class BusinessFilter extends Fragment {
     }
 
 
-    void MemoryAllocation(@NonNull View rootView) {
+    private void MemoryAllocation(@NonNull View rootView) {
         scroll_bdetails = rootView.findViewById(R.id.scroll_bdetails);
         floatingActionButton = rootView.findViewById(R.id.fab_bsave);
         edtOccupation = rootView.findViewById(R.id.edtOccupation);

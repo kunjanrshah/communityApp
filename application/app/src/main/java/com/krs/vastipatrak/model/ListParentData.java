@@ -3,20 +3,20 @@ package com.krs.vastipatrak.model;
 public class ListParentData {
 
 
-    String str_father_name;
-    String str_mother_name;
-    String str_profile_pic_url;
-    String status;
-    String id;
+    private String str_father_name;
+    private String str_mother_name;
+    private String str_profile_pic_url;
+    private String status;
+    private String id;
 
 
-    String city;
-    boolean is_location_enable;
-    String updated_time;
-    String mobile;
-    String user_lat;
-    String user_lng;
-    String str_name;
+    private String city;
+    private boolean is_location_enable;
+    private String updated_time;
+    private String mobile;
+    private String user_lat;
+    private String user_lng;
+    private String str_name;
 
     public String getMobile() {
         return mobile;

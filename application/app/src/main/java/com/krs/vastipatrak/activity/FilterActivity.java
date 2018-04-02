@@ -39,11 +39,13 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
     private final String[] READ_CONTACT_PERMS = {Manifest.permission.READ_CONTACTS};
     private final int READ_CONTACT_REQUEST = 3;
-    ViewPager viewPager;
-    SearchView searchView;
+    private ViewPager viewPager;
+    private SearchView searchView;
     private Toolbar toolbar;
     private TabLayout tabLayout;
-    Fragment personal, business, family;
+    private Fragment personal;
+    private Fragment business;
+    private Fragment family;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,6 +138,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void callAdvanceSearchWS() {
         JSONObject mJsonObject = new JSONObject();
         try {
@@ -172,7 +175,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 }
 
                 if (!strEaddress.equalsIgnoreCase("")) {
-                    if (!Common.isValidEmail(strEaddress)) {
+                    if (Common.isValidEmail(strEaddress)) {
                         valid = "Email is not valid Format";
                     }
                 }
@@ -183,7 +186,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 }*/
 
                 if (!strbTime.equalsIgnoreCase("")) {
-                    if (!Common.IsValidate(strbTime)) {
+                    if (Common.IsValidate(strbTime)) {
                         valid = "Birth Time is not valid 24 Hours";
                     }
                 }

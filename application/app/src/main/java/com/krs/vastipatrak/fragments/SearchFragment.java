@@ -1,7 +1,6 @@
 package com.krs.vastipatrak.fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -60,26 +59,27 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
 
     private static final String[] CALL_PHONE_PERMS = {Manifest.permission.CALL_PHONE};
     private static final int CALL_PHONE_REQUEST = 3;
-    @Nullable
-    public ArrayList<String> lstSelectedIDs = null;
     @NonNull
-    String TAG = "SearchFragment";
+    private final String TAG = "SearchFragment";
     @NonNull
-    String tag_json_obj = "jobj_req";
-    SearchView searchView;
+    private final String tag_json_obj = "jobj_req";
     @Nullable
-    ArrayList<ListParentData> listDataHeader = null;
+    private ArrayList<String> lstSelectedIDs = null;
+    private SearchView searchView;
     @Nullable
-    HashMap<ListParentData, List<ListChildData>> listDataChild = null;
-    String query = "", query_string = "";
-    int adminControl = -1;
+    private ArrayList<ListParentData> listDataHeader = null;
     @Nullable
-    ProgressDialog pDialog;
-    ExpandableListView lvCustomList;
+    private HashMap<ListParentData, List<ListChildData>> listDataChild = null;
+    private String query = "";
+    private String query_string = "";
+    private int adminControl = -1;
     @Nullable
-    ExpandableListAdapter mExpandableListAdapter = null;
+    private ProgressDialog pDialog;
+    private ExpandableListView lvCustomList;
     @Nullable
-    TextView txtLable = null;
+    private ExpandableListAdapter mExpandableListAdapter = null;
+    @Nullable
+    private TextView txtLable = null;
     @Nullable
     private SharedPreferences mSharedPreferences = null;
 
@@ -91,7 +91,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case CALL_PHONE_REQUEST:
-                if (!Common.canCallPhone(Objects.requireNonNull(getActivity()))) {
+                if (Common.canCallPhone(Objects.requireNonNull(getActivity()))) {
                     Toast.makeText(getActivity(), "You need to give permission to access phone ! ", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -103,7 +103,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        if (!Common.canCallPhone(Objects.requireNonNull(getActivity()))) {
+        if (Common.canCallPhone(Objects.requireNonNull(getActivity()))) {
             requestPermissions(CALL_PHONE_PERMS, CALL_PHONE_REQUEST);
         }
     }
@@ -191,7 +191,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
     }
 
     @NonNull
-    public String getSelectedName() {
+    private String getSelectedName() {
         StringBuilder msgNames = new StringBuilder();
         Objects.requireNonNull(lstSelectedIDs).clear();
         if (mExpandableListAdapter != null) {
@@ -206,7 +206,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
         return msgNames.toString();
     }
 
-    public void alert(String message, final int mode) {
+    private void alert(String message, final int mode) {
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()), R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getActivity().getString(R.string.app_name));
 
@@ -214,12 +214,16 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
         builder.setPositiveButton(getActivity().getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
             public void onClick(@NonNull DialogInterface dialog, int which) {
 
-                if (mode == 0) {
-                    callStatusChangeWS(0);
-                } else if (mode == 1) {
-                    callStatusChangeWS(1);
-                } else if (mode == 2) {
-                    callDeleteWS();
+                switch (mode) {
+                    case 0:
+                        callStatusChangeWS(0);
+                        break;
+                    case 1:
+                        callStatusChangeWS(1);
+                        break;
+                    case 2:
+                        callDeleteWS();
+                        break;
                 }
 
                 dialog.dismiss();
@@ -413,7 +417,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
         }
     }
 
-    public void callNonActivesWS() {
+    private void callNonActivesWS() {
         if (Common.isOnline(Objects.requireNonNull(getActivity()))) {
             showProgressDialog(getActivity());
             Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setSubtitle(getString(R.string.action_nonActives));
@@ -604,21 +608,6 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
                 dialog.dismiss();
             }
         }).show();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 
     @Override

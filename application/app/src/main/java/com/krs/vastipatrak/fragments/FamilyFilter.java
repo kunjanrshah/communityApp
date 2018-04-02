@@ -28,8 +28,8 @@ public class FamilyFilter extends Fragment {
     @NonNull
     public String gender = "male";
     public EditText edt_mdate, edt_childbdate, edtSpouseName, edtSpouseFName, edtSpouseMName, edtchild_name, edtcedu, edtchild_work, edtchildbtime, edtchildbplace;
-    FloatingActionButton floatingActionButton;
-    ObservableScrollView scroll_fdetails;
+    private FloatingActionButton floatingActionButton;
+    private ObservableScrollView scroll_fdetails;
     private RadioGroup rgroupid;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -189,7 +189,7 @@ public class FamilyFilter extends Fragment {
         return rootView;
     }
 
-    void MemoryAllocation(@NonNull View rootView) {
+    private void MemoryAllocation(@NonNull View rootView) {
         scroll_fdetails = rootView.findViewById(R.id.scroll_fdetails);
         floatingActionButton = rootView.findViewById(R.id.fab_fsave);
         edt_mdate = rootView.findViewById(R.id.edt_mdate);

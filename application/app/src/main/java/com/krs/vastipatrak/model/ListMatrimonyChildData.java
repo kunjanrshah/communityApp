@@ -2,17 +2,17 @@ package com.krs.vastipatrak.model;
 
 public class ListMatrimonyChildData {
 
-    String child_address;
-    String child_birth_date;
-    String child_birth_time;
-    String child_birth_place;
-    String child_gotra;
-    String child_blood_group;
-    String child_mobile;
-    String profile_id;
-    String home_lat;
-    String home_lng;
-    String name;
+    private String child_address;
+    private String child_birth_date;
+    private String child_birth_time;
+    private String child_birth_place;
+    private String child_gotra;
+    private String child_blood_group;
+    private String child_mobile;
+    private String profile_id;
+    private String home_lat;
+    private String home_lng;
+    private String name;
 
     public String getName() {
         return name;

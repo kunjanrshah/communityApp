@@ -78,7 +78,7 @@ public class ListEventData extends RealmObject{
         return youtubeUrl;
     }
 
-    public void setYoutubeUrl(RealmList<String> youtubeUrl) {
+    public void setYoutubeUrl(@Nullable RealmList<String> youtubeUrl) {
         this.youtubeUrl = youtubeUrl;
     }
 
@@ -87,7 +87,7 @@ public class ListEventData extends RealmObject{
         return images;
     }
 
-    public void setImages(RealmList<String> images) {
+    public void setImages(@Nullable RealmList<String> images) {
         this.images = images;
     }
 

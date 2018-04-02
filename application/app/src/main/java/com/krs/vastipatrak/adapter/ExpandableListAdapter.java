@@ -70,17 +70,17 @@ import static com.krs.vastipatrak.utils.Common.getParentRandomColor;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
-    public HashMap<Integer, Boolean> checkboxMap;
-    private Context _context;
-    private ArrayList<ListParentData> _listDataHeader;
-    private HashMap<ListParentData, List<ListChildData>> _listDataChild;
+    public final HashMap<Integer, Boolean> checkboxMap;
+    private final Context _context;
+    private final ArrayList<ListParentData> _listDataHeader;
+    private final HashMap<ListParentData, List<ListChildData>> _listDataChild;
     @Nullable
     private ProgressDialog pDialog;
-    private String TAG = ExpandableListAdapter.class.getSimpleName();
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor mEditor;
+    private final String TAG = ExpandableListAdapter.class.getSimpleName();
+    private final SharedPreferences mSharedPreferences;
+    private final SharedPreferences.Editor mEditor;
     @NonNull
-    private String[] SPINNERLIST = {"Father", "Son", "Daughter", "Brother", "Sister", "Grandfather", "Grandson", "Uncle", "Uncle's Son", "Uncle in low", "Uncle's Son"};
+    private final String[] SPINNERLIST = {"Father", "Son", "Daughter", "Brother", "Sister", "Grandfather", "Grandson", "Uncle", "Uncle's Son", "Uncle in low", "Uncle's Son"};
     private ChildViewHolder childViewHolder;
 
     @SuppressLint("UseSparseArrays")
@@ -186,7 +186,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 try {
                     boolean flag = true;
                     if (Build.VERSION.SDK_INT >= 23) {
-                        if (!Common.canCallPhone(_context)) {
+                        if (Common.canCallPhone(_context)) {
                             flag = false;
                         }
                     }
@@ -210,7 +210,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 try {
                     boolean flag = true;
                     if (Build.VERSION.SDK_INT >= 23) {
-                        if (!Common.canCallPhone(_context)) {
+                        if (Common.canCallPhone(_context)) {
                             flag = false;
                         }
                     }
@@ -667,11 +667,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         CheckBox checkbox;
     }
 
-    public class CheckListener implements CompoundButton.OnCheckedChangeListener {
+    class CheckListener implements CompoundButton.OnCheckedChangeListener {
 
         int pos;
 
-        public void setPosition(int p) {
+        void setPosition(int p) {
             pos = p;
         }
 

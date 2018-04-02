@@ -2,25 +2,25 @@ package com.krs.vastipatrak.model;
 
 
 public class ListChildData {
-    String str_phone;
-    String str_native;
-    String str_address;
-    String str_birth_date;
-    String str_birth_time;
-    String str_birth_place;
-    String str_gotra;
-    String str_gender;
-    String str_blood_group;
-    String str_mobile;
-    String str_id;
-    String home_lat;
-    String home_lng;
+    private String str_phone;
+    private String str_native;
+    private String str_address;
+    private String str_birth_date;
+    private String str_birth_time;
+    private String str_birth_place;
+    private String str_gotra;
+    private String str_gender;
+    private String str_blood_group;
+    private String str_mobile;
+    private String str_id;
+    private String home_lat;
+    private String home_lng;
 
-    String user_lat;
-    String user_lng;
+    private String user_lat;
+    private String user_lng;
 
 
-    String str_name;
+    private String str_name;
 
     public String getName() {
         return str_name;

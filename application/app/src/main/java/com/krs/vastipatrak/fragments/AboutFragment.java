@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class AboutFragment extends Fragment {
 
-    String TAG = "";
+    private String TAG = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

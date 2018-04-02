@@ -18,8 +18,8 @@ import java.util.List;
 public class CityAdapter extends RecyclerView.Adapter<CityAdapter.MyViewHolder> {
 
     @NonNull
-    private ArrayList<String> selectedList = new ArrayList<>();
-    private List<City> cityList;
+    private final ArrayList<String> selectedList = new ArrayList<>();
+    private final List<City> cityList;
     public CityAdapter(List<City> cityList) {
         this.cityList = cityList;
     }
@@ -61,8 +61,8 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.MyViewHolder> 
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name;
-        public CheckBox chkCity;
+        final TextView name;
+        final CheckBox chkCity;
 
         MyViewHolder(@NonNull View view) {
             super(view);

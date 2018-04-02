@@ -22,8 +22,8 @@ import java.util.ArrayList;
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
 
     private final static int TYPE_IMAGE = 1, TYPE_YOUTUBE = 2;
-    private Context context;
-    private ArrayList<String> listUrls;
+    private final Context context;
+    private final ArrayList<String> listUrls;
     private String YoutubeUrl = "";
 
     public EventListAdapter(Context context, ListEventData data) {
@@ -82,11 +82,6 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     @Override
     public int getItemCount() {
         return listUrls.size();
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

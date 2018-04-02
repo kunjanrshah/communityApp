@@ -73,7 +73,7 @@ public class SyncFragment extends Fragment {
     private static Button btn_sync;
     @SuppressLint("HandlerLeak")
     @Nullable
-    public static Handler mHandler = new Handler() {
+    public static final Handler mHandler = new Handler() {
         @SuppressLint("SetTextI18n")
         @Override
         public void handleMessage(Message msg) {
@@ -96,23 +96,21 @@ public class SyncFragment extends Fragment {
             }
         }
     };
-    //SearchView searchView;
-    @Nullable
-    ProgressDialog pDialog;
     @NonNull
-    String TAG = "SyncFragment";
+    private final String TAG = "SyncFragment";
     @NonNull
-    String tag_json_obj = "jobj_req";
+    private final List<City> cityList = new ArrayList<>();
+
     private ToggleButton tbtn_sync;
     private EditText edt_sync;
     @Nullable
     private SharedPreferences mSharedPreferences = null;
     @Nullable
     private SharedPreferences.Editor mEditor = null;
-    @NonNull
-    private List<City> cityList = new ArrayList<>();
+    //SearchView searchView;
+    @Nullable
+    private ProgressDialog pDialog;
     private CityAdapter mAdapter;
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,9 +128,8 @@ public class SyncFragment extends Fragment {
             public boolean onEditorAction(@NonNull TextView v, int actionId, KeyEvent event) {
                 if (actionId == 0) {
                     if (!edt_sync.getText().toString().isEmpty()) {
-                        int val = Integer.parseInt(edt_sync.getText().toString());
                         assert mEditor != null;
-                        mEditor.putInt(Common.Constant_Class.EDT_SYNC_TIME, val);
+                        mEditor.putString(Common.Constant_Class.SYNC_TIME, edt_sync.getText().toString());
                         mEditor.apply();
                     }
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -181,6 +178,7 @@ public class SyncFragment extends Fragment {
                     sync_dialog.show();
                 } else {
                     btn_sync.setText("Start");
+                    pb_sync.setVisibility(View.GONE);
                     Intent mIntent = new Intent(getActivity(), SyncService.class);
                     getActivity().stopService(mIntent);
                 }
@@ -198,6 +196,7 @@ public class SyncFragment extends Fragment {
                 PendingIntent servicePendingIntent = PendingIntent.getService(getActivity(), 0, serviceIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                 assert am != null;
                 assert mEditor != null;
+                mEditor.putString(Common.Constant_Class.SYNC_TIME, edt_sync.getText().toString());
                 if (isChecked) {
                     mEditor.putBoolean(Common.Constant_Class.TBTN_SYNC, true);
                     mEditor.apply();
@@ -291,7 +290,7 @@ public class SyncFragment extends Fragment {
         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+        AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
     }
 
     private void showProgressDialog() {
@@ -315,16 +314,20 @@ public class SyncFragment extends Fragment {
         tvUpdatedTime = rootView.findViewById(R.id.tvUpdatedTime1);
         btn_sync = rootView.findViewById(R.id.btn_sync);
         pb_sync = rootView.findViewById(R.id.pb_sync);
+        if (SyncService.isProcessing) {
+            pb_sync.setVisibility(View.VISIBLE);
+            btn_sync.setText("Stop");
+        }
         edt_sync = rootView.findViewById(R.id.edt_sync);
         tbtn_sync = rootView.findViewById(R.id.tbtn_sync);
         tbtn_sync.setChecked(mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SYNC, false));
         tbtn_sync.setTextOff(null);
         tbtn_sync.setTextOn(null);
         tbtn_sync.setText(null);
-        int val = mSharedPreferences.getInt(Common.Constant_Class.EDT_SYNC_TIME, 0);
+        String val = mSharedPreferences.getString(Common.Constant_Class.SYNC_TIME, "0");
         edt_sync.setText("" + val);
         edt_sync.setSelection(edt_sync.getText().length());
-        edt_sync.setCursorVisible(false);
+        //  edt_sync.setCursorVisible(false);
         String date = Common.getUpdatedTime(mSharedPreferences.getString(Common.Constant_Class.UPDATED_TIME, "0"));
         tvUpdatedTime.setText(date);
         pDialog = new ProgressDialog(getActivity());

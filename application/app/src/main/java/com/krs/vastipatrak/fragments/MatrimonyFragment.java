@@ -1,7 +1,6 @@
 package com.krs.vastipatrak.fragments;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,15 +30,15 @@ import io.realm.RealmResults;
 
 public class MatrimonyFragment extends Fragment {
 
-    ExpandableListView lvMatrimonyList;
+    private ExpandableListView lvMatrimonyList;
     @Nullable
-    ExpandableMarimonyListAdapter mExpandableMatrimonyListAdapter = null;
+    private ExpandableMarimonyListAdapter mExpandableMatrimonyListAdapter = null;
     @Nullable
-    ArrayList<ListMatrimonyParentData> listDataHeader = null;
+    private ArrayList<ListMatrimonyParentData> listDataHeader = null;
     @Nullable
-    HashMap<ListMatrimonyParentData, List<ListMatrimonyChildData>> listDataChild = null;
-    Realm realm;
-    Activity mActivity;
+    private HashMap<ListMatrimonyParentData, List<ListMatrimonyChildData>> listDataChild = null;
+    private Realm realm;
+    private Activity mActivity;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,8 +109,4 @@ public class MatrimonyFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 }

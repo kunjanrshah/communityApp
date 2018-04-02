@@ -53,7 +53,7 @@ public class FragmentDrawer extends Fragment {
     }
 
     @NonNull
-    public static List<NavDrawerItem> getData() {
+    private static List<NavDrawerItem> getData() {
         List<NavDrawerItem> data = new ArrayList<>();
 
 
@@ -92,7 +92,6 @@ public class FragmentDrawer extends Fragment {
         img_profile = layout.findViewById(R.id.img_profile);
         txt_name = layout.findViewById(R.id.txt_name);
         Glide.with(getActivity()).load(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
-        //new Common.ImageLoadTask(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, ""), img_profile).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
         txt_name.setText(name);
         NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(getActivity(), getData());
@@ -104,11 +103,6 @@ public class FragmentDrawer extends Fragment {
             public void onClick(View view, int position) {
                 drawerListener.onDrawerItemSelected(view, position);
                 mDrawerLayout.closeDrawer(containerView);
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
             }
         }));
 
@@ -127,7 +121,6 @@ public class FragmentDrawer extends Fragment {
                 if (AppController.getInstance().isUpdate) {
                     AppController.getInstance().isUpdate = false;
                     Glide.with(getActivity()).load(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
-                //    new Common.ImageLoadTask(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, ""), img_profile).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
                     txt_name.setText(name);
                 }
@@ -158,10 +151,9 @@ public class FragmentDrawer extends Fragment {
 
     }
 
-    public interface ClickListener {
+    interface ClickListener {
         void onClick(View view, int position);
 
-        void onLongClick(View view, int position);
     }
 
     public interface FragmentDrawerListener {
@@ -171,9 +163,9 @@ public class FragmentDrawer extends Fragment {
     static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
         @Nullable
-        private GestureDetector gestureDetector;
+        private final GestureDetector gestureDetector;
         @Nullable
-        private ClickListener clickListener;
+        private final ClickListener clickListener;
 
         RecyclerTouchListener(Context context, @NonNull final RecyclerView recyclerView, @Nullable final ClickListener clickListener) {
             this.clickListener = clickListener;
@@ -185,10 +177,10 @@ public class FragmentDrawer extends Fragment {
 
                 @Override
                 public void onLongPress(@NonNull MotionEvent e) {
-                    View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                   /* View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                     if (child != null && clickListener != null) {
                         clickListener.onLongClick(child, recyclerView.getChildPosition(child));
-                    }
+                    }*/
                 }
             });
         }

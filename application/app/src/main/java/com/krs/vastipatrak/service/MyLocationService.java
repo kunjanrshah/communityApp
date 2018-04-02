@@ -34,13 +34,13 @@ public class MyLocationService extends Service {
     private static final String TAG = "MyLocationService";
     //private static final int LOCATION_INTERVAL = 1000 * 3 * 60;
     private static final float LOCATION_DISTANCE = 1f;
-    SharedPreferences mSharedPreferences;
-    SharedPreferences.Editor mEditor;
-    Location mLastLocation;
     @NonNull
-    String tag_json_obj = "jobj_req";
+    private final String tag_json_obj = "jobj_req";
     @NonNull
-    LocationListener[] mLocationListeners = new LocationListener[]{new LocationListener(LocationManager.GPS_PROVIDER), new LocationListener(LocationManager.NETWORK_PROVIDER)};
+    private final LocationListener[] mLocationListeners = new LocationListener[]{new LocationListener(LocationManager.GPS_PROVIDER), new LocationListener(LocationManager.NETWORK_PROVIDER)};
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+    private Location mLastLocation;
     @Nullable
     private LocationManager mLocationManager = null;
 
@@ -59,8 +59,10 @@ public class MyLocationService extends Service {
         Log.e(TAG, "onCreate");
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
+        mEditor.apply();
         initializeLocationManager();
         try {
+            assert mLocationManager != null;
             mLocationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
                     mLocationListeners[1]);
@@ -85,9 +87,9 @@ public class MyLocationService extends Service {
         Log.e(TAG, "onDestroy");
         super.onDestroy();
         if (mLocationManager != null) {
-            for (int i = 0; i < mLocationListeners.length; i++) {
+            for (LocationListener mLocationListener : mLocationListeners) {
                 try {
-                    mLocationManager.removeUpdates(mLocationListeners[i]);
+                    mLocationManager.removeUpdates(mLocationListener);
                 } catch (Exception ex) {
                     Log.i(TAG, "fail to remove location listners, ignore", ex);
                 }
@@ -124,7 +126,7 @@ public class MyLocationService extends Service {
                 public void onResponse(@NonNull JSONObject response) {
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        //  String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             if (isUpdate.equals("1")) {
                                 Toast.makeText(MyLocationService.this, "Vastipatrak is sharing your location!", Toast.LENGTH_SHORT).show();
@@ -164,7 +166,7 @@ public class MyLocationService extends Service {
     private class LocationListener implements android.location.LocationListener {
 
 
-        public LocationListener(String provider) {
+        LocationListener(String provider) {
             Log.e(TAG, "LocationListener " + provider);
             mLastLocation = new Location(provider);
         }

@@ -30,17 +30,17 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         DIAGONAL_FROM_TOP_LEFT, DIAGONAL_FROM_TOP_RIGHT, BORDER
     }
 
-    private BitmapPool mBitmapPool;
-    private int mRadius;
-    private int mDiameter;
-    private int mMargin;
-    private CornerType mCornerType;
+    private final BitmapPool mBitmapPool;
+    private final int mRadius;
+    private final int mDiameter;
+    private final int mMargin;
+    private final CornerType mCornerType;
     private String mColor;
     private int mBorder;
 
-    public RoundedCornersTransformation(@NonNull Context context, int radius, int margin) {
+    /*public RoundedCornersTransformation(@NonNull Context context, int radius, int margin) {
         this(context, radius, margin, CornerType.ALL);
-    }
+    }*/
 
     public RoundedCornersTransformation(@NonNull Context context, int radius, int margin, String color, int border) {
         this(context, radius, margin, CornerType.BORDER);
@@ -48,17 +48,15 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         mBorder = border;
     }
 
-    public RoundedCornersTransformation(BitmapPool pool, int radius, int margin) {
+    /*public RoundedCornersTransformation(BitmapPool pool, int radius, int margin) {
         this(pool, radius, margin, CornerType.ALL);
-    }
+    }*/
 
-    public RoundedCornersTransformation(@NonNull Context context, int radius, int margin,
-                                        CornerType cornerType) {
+    private RoundedCornersTransformation(@NonNull Context context, int radius, int margin, CornerType cornerType) {
         this(Glide.get(context).getBitmapPool(), radius, margin, cornerType);
     }
 
-    public RoundedCornersTransformation(BitmapPool pool, int radius, int margin,
-                                        CornerType cornerType) {
+    private RoundedCornersTransformation(BitmapPool pool, int radius, int margin, CornerType cornerType) {
         mBitmapPool = pool;
         mRadius = radius;
         mDiameter = mRadius * 2;
@@ -66,19 +64,19 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         mCornerType = cornerType;
     }
 
+
     @NonNull
     @Override
-    public Resource<Bitmap> transform(Context context, Resource<Bitmap> resource, int outWidth, int outHeight) {
+    public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
         Bitmap source = resource.get();
 
         int width = source.getWidth();
         int height = source.getHeight();
 
         Bitmap bitmap = mBitmapPool.get(width, height, Bitmap.Config.ARGB_8888);
-        if (bitmap == null) {
+        /*if (bitmap == null) {
             bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        }
-
+        }*/
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint();
         paint.setAntiAlias(true);
@@ -272,7 +270,7 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
 
 
     @Override
-    public void updateDiskCacheKey(MessageDigest messageDigest) {
+    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
 
     }
 

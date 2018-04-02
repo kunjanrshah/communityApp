@@ -27,7 +27,7 @@
                     android:id="@+id/edtFName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
+                    android:layout_marginStart="10dip"
                     android:hint="@string/hint_name"
                     android:inputType="textCapSentences"
                     android:nextFocusDown="@+id/edtLName"
@@ -43,7 +43,7 @@
                     android:id="@+id/edtLName"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
+                    android:layout_marginStart="10dip"
                     android:hint="@string/hint_surname"
                     android:inputType="textCapSentences"
                     android:nextFocusDown="@+id/edtFatherName"
@@ -90,6 +90,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -109,8 +110,8 @@
                             android:id="@+id/edtbdate"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:drawableRight="@drawable/calendar"
+                            android:layout_marginEnd="10dp"
+                            android:drawableEnd="@drawable/calendar"
                             android:hint="@string/hint_birth_date"
                             android:inputType="date"
                             android:nextFocusDown="@+id/edtbTime"
@@ -121,9 +122,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="DD/MM or DD/MM/YYYY"
-                        android:textSize="10dp" />
+                        android:textSize="10sp" />
                 </LinearLayout>
 
 
@@ -138,15 +139,15 @@
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/input_layout_btime"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:layout_weight="1">
 
                         <EditText
                             android:id="@+id/edtbTime"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:drawableRight="@drawable/clock"
+                            android:layout_marginEnd="10dp"
+                            android:drawableEnd="@drawable/clock"
                             android:hint="@string/hint_birth_time"
                             android:inputType="time"
                             android:nextFocusDown="@+id/edtEducation"
@@ -156,16 +157,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="24 Hours"
-                        android:textSize="10dp" />
+                        android:textSize="10sp" />
                 </LinearLayout>
             </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_education"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1">
 
                 <EditText
@@ -193,21 +194,21 @@
                     android:id="@+id/rbtnM"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dip"
+                    android:layout_marginEnd="10dip"
                     android:text="Male " />
 
                 <RadioButton
                     android:id="@+id/rbtnF"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dip"
+                    android:layout_marginEnd="10dip"
                     android:text="Female " />
 
                 <RadioButton
                     android:id="@+id/rbtnB"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dip"
+                    android:layout_marginEnd="10dip"
                     android:checked="true"
                     android:text="Both " />
 
@@ -217,6 +218,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dip"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
                 <android.support.design.widget.TextInputLayout
@@ -229,7 +231,7 @@
                         android:id="@+id/edtBPlace"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dip"
+                        android:layout_marginStart="10dip"
                         android:hint="@string/hint_birth_place"
                         android:inputType="textCapSentences"
                         android:nextFocusDown="@+id/edtNPlace"
@@ -246,7 +248,7 @@
                         android:id="@+id/edtNPlace"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="10dip"
+                        android:layout_marginEnd="10dip"
                         android:hint="@string/hint_native_place"
                         android:inputType="textCapSentences"
                         android:nextFocusDown="@+id/edtBlood"
@@ -257,6 +259,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
                 <android.support.design.widget.TextInputLayout
@@ -289,7 +292,7 @@
                         android:id="@+id/edtGotra"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="10dip"
+                        android:layout_marginEnd="10dip"
                         android:hint="@string/hint_gotra"
                         android:inputType="textCapSentences"
                         android:nextFocusDown="@+id/edtMobile"
@@ -313,8 +316,8 @@
                         android:id="@+id/edtMobile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dip"
-                        android:drawableRight="@drawable/icon_contacts"
+                        android:layout_marginStart="10dip"
+                        android:drawableEnd="@drawable/icon_contacts"
                         android:hint="@string/hint_mobile"
                         android:inputType="phone"
                         android:singleLine="true" />
@@ -325,7 +328,7 @@
                     android:id="@+id/spinnerBlood"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
+                    android:layout_marginStart="10dip"
                     android:layout_weight="1"
                     android:paddingTop="10dp"
                     android:prompt="@string/spinner_blood" />
@@ -336,8 +339,8 @@
                 android:id="@+id/input_layout_Eaddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dip">
+                android:layout_marginEnd="10dip"
+                android:layout_marginStart="10dp">
 
 
                 <EditText
@@ -352,8 +355,8 @@
                 android:id="@+id/input_layout_city"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dip">
+                android:layout_marginEnd="10dip"
+                android:layout_marginStart="10dp">
 
                 <EditText
                     android:id="@+id/edtCity"
@@ -367,8 +370,8 @@
                 android:id="@+id/input_layout_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dip">
+                android:layout_marginEnd="10dip"
+                android:layout_marginStart="10dp">
 
 
                 <EditText
@@ -387,7 +390,7 @@
         android:id="@+id/fab_psave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@drawable/ic_action_search"
         app:fab_colorNormal="@color/accent"

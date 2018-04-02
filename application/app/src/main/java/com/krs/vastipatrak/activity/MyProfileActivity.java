@@ -51,28 +51,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import io.realm.Realm;
 import io.realm.RealmList;
 
 
 public class MyProfileActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
 
-    SharedPreferences.Editor mEditor;
-    SearchView searchView;
-    @Nullable
-    Bundle mBundle = null;
-    @NonNull
-    String valid = "";
-    @Nullable
-    RealmList<ListProfileData> mListSearchProfile = null;
-    Realm realm;
+    private final String TAG = MainActivity.class.getSimpleName();
+    private SharedPreferences.Editor mEditor;
+    private SearchView searchView;
+    private Bundle mBundle = null;
+    private String valid = "";
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private Toolbar toolbar;
-    private String TAG = MainActivity.class.getSimpleName();
-    Fragment personal, business, family;
-    @Nullable
+    private RealmList<ListProfileData> mListSearchProfile = null;
+    private Fragment personal;
+    private Fragment business;
+    private Fragment family;
     private SharedPreferences mSharedPreferences = null;
 
     @Override
@@ -101,7 +97,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
     @SuppressLint("CommitPrefEdits")
     private void MemoryAllocation() {
-        realm = AppController.getInstance().realm;
+
         toolbar = findViewById(R.id.toolbar);
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
@@ -236,7 +232,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 String city = Objects.requireNonNull(((PersonalFragment) personal).edtCity).getText().toString().trim();
 
                 if (!Eaddress.equalsIgnoreCase("")) {
-                    if (!Common.isValidEmail(Eaddress)) {
+                    if (Common.isValidEmail(Eaddress)) {
                         valid = "Email is not valid Format";
                     }
                 }
@@ -244,14 +240,14 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 String phone = Objects.requireNonNull(((PersonalFragment) personal).edt_phone).getText().toString().trim();
                 String bdate = Objects.requireNonNull(((PersonalFragment) personal).edtbdate).getText().toString().trim();
                 if (!bdate.equalsIgnoreCase("")) {
-                    if (!Common.isThisDateValid(bdate, "yyyy-mm-dd")) {
+                    if (Common.isThisDateValid(bdate, "yyyy-mm-dd")) {
                         valid = "Birth Date is not valid Format";
                     }
                 }
 
                 String time = Objects.requireNonNull(((PersonalFragment) personal).edtbTime).getText().toString().trim();
                 if (!time.equalsIgnoreCase("")) {
-                    if (!Common.IsValidate(time)) {
+                    if (Common.IsValidate(time)) {
                         valid = "Birth Time is not valid 24 Hours";
                     }
                 }
@@ -279,7 +275,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     MSpouseName = ((FamilyFragment) family).edtMSpouseName.getText().toString().trim();
                     mdate = ((FamilyFragment) family).edt_mdate.getText().toString().trim();
                     if (!mdate.equalsIgnoreCase("")) {
-                        if (!Common.isThisDateValid(mdate, "yyyy-mm-dd")) {
+                        if (Common.isThisDateValid(mdate, "yyyy-mm-dd")) {
                             valid = "Marriage Date is not valid Format";
                         }
                     }
@@ -425,7 +421,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_NAME, Objects.requireNonNull(mViewholder.edtchild_name).getText());
                     String child_bday = Objects.requireNonNull(mViewholder.edtchild_bdate).getText().toString();
                     if (!child_bday.equalsIgnoreCase("")) {
-                        if (!Common.isThisDateValid(child_bday, "yyyy-mm-dd")) {
+                        if (Common.isThisDateValid(child_bday, "yyyy-mm-dd")) {
                             valid = "Child Birth Date is not valid Format";
                         }
                     }

@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:hint="Mobile"
-                    android:drawableRight="@drawable/icon_contacts"
+                    android:drawableEnd="@drawable/icon_contacts"
                     android:phoneNumber="true"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
@@ -89,7 +89,7 @@
         android:id="@+id/fab_bsave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@drawable/ic_action_search"
         app:fab_colorNormal="@color/accent"

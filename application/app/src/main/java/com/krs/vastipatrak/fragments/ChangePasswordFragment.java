@@ -38,17 +38,19 @@ import java.util.Objects;
 public class ChangePasswordFragment extends Fragment {
 
 
+    @NonNull
+    private final String TAG = "ChangePasswordFragment";
+    @NonNull
+    private final String tag_json_obj = "jobj_req";
     @Nullable
-    ProgressDialog pDialog;
-    SharedPreferences mSharedPreferences;
-    @NonNull
-    String TAG = "ChangePasswordFragment";
-    @NonNull
-    String tag_json_obj = "jobj_req";
-    EditText input_password, input_repeat;
-    FloatingActionButton fab;
-    boolean isShow = true, isShow1 = true;
-    Activity mActivity;
+    private ProgressDialog pDialog;
+    private SharedPreferences mSharedPreferences;
+    private EditText input_password;
+    private EditText input_repeat;
+    private FloatingActionButton fab;
+    private boolean isShow = true;
+    private boolean isShow1 = true;
+    private Activity mActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

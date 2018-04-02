@@ -17,8 +17,8 @@ import java.util.List;
 
 
 public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDrawerAdapter.MyViewHolder> {
-    private List<NavDrawerItem> data;
-    private LayoutInflater inflater;
+    private final List<NavDrawerItem> data;
+    private final LayoutInflater inflater;
 
     public NavigationDrawerAdapter(Context context, List<NavDrawerItem> data) {
         inflater = LayoutInflater.from(context);
@@ -75,8 +75,8 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        ImageView imgDrawer;
+        final TextView title;
+        final ImageView imgDrawer;
 
         MyViewHolder(@NonNull View itemView) {
             super(itemView);

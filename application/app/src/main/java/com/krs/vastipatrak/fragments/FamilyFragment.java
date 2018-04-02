@@ -60,21 +60,22 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
     public String str_spouse_hash = "", str_fspouse_hash = "", str_mspouse_hash = "";
     public LinearLayout child_container = null;
     public ArrayList<Integer> lst_delID = null;
-    public RadioButton rbtnChildYes, rbtnChildNo;
-    String spouse_url = "", fspouse_url = "", mspouse_url = "";
-    Button btn_add;
-    ImageView img_spouse, img_fspouse, img_mspouse;
-    String img_selection = "";
-    SharedPreferences mSharedPreferences;
-    String user_id = "";
-    Activity mActivity;
+    public RadioButton rbtnChildNo;
+    private RadioButton rbtnChildYes;
+    private String spouse_url = "";
+    private String fspouse_url = "";
+    private String mspouse_url = "";
+    private Button btn_add;
+    private ImageView img_spouse;
+    private ImageView img_fspouse;
+    private ImageView img_mspouse;
+    private String img_selection = "";
+    private SharedPreferences mSharedPreferences;
+    private String user_id = "";
+    private Activity mActivity;
 
     public FamilyFragment() {
         // Required empty public constructor
-    }
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -691,22 +692,22 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
         if (img_selection.equalsIgnoreCase("spouse")) {
             //    img_spouse.setImageBitmap(bmp);
             Glide.with(mActivity).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_spouse);
-            str_spouse_hash = Common.getBase64(mActivity, bmp);
+            str_spouse_hash = Common.getBase64(bmp);
         } else if (img_selection.equalsIgnoreCase("fspouse")) {
             //  img_fspouse.setImageBitmap(bmp);
             Glide.with(mActivity).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_fspouse);
-            str_fspouse_hash = Common.getBase64(mActivity, bmp);
+            str_fspouse_hash = Common.getBase64(bmp);
         } else if (img_selection.equalsIgnoreCase("mspouse")) {
             //img_mspouse.setImageBitmap(bmp);
             Glide.with(mActivity).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mspouse);
-            str_mspouse_hash = Common.getBase64(mActivity, bmp);
+            str_mspouse_hash = Common.getBase64(bmp);
         }
         img_selection = "";
         for (int i = 0; i < child_container.getChildCount(); i++) {
             Viewholder cViewholder = (Viewholder) child_container.getChildAt(i).getTag();
             if (cViewholder.ImgHash.equalsIgnoreCase("selectImage")) {
                 Glide.with(mActivity).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(Objects.requireNonNull(cViewholder.img_child));
-                cViewholder.ImgHash = Common.getBase64(mActivity, bmp);
+                cViewholder.ImgHash = Common.getBase64(bmp);
                 break;
             }
         }
@@ -725,7 +726,7 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
 
     public static class Viewholder {
         @Nullable
-        public ImageView img_child = null;
+        ImageView img_child = null;
         public int child_id;
         @Nullable
         public EditText edtchild_name = null;
@@ -740,7 +741,7 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
         @Nullable
         public EditText edtchild_bplace = null;
         @Nullable
-        public RadioGroup radioGroupId = null;
+        RadioGroup radioGroupId = null;
         @NonNull
         public String gender = "male";
         @Nullable
@@ -750,8 +751,8 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
         @Nullable
         public EditText edtchild_work = null;
         @Nullable
-        public Button btn_remove = null;
+        Button btn_remove = null;
         public String ImgHash = "";
-        public boolean setClickBDate = false;
+        boolean setClickBDate = false;
     }
 }

@@ -18,7 +18,7 @@ import io.realm.RealmResults;
 
 public class AppController extends Application {
 
-    public static final String TAG = AppController.class
+    private static final String TAG = AppController.class
             .getSimpleName();
 
     public static boolean isAdmin=false;
@@ -72,7 +72,7 @@ public class AppController extends Application {
 
     }
 
-    public RequestQueue getRequestQueue() {
+    private RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(getApplicationContext());
         }

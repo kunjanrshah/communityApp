@@ -65,7 +65,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:drawableRight="@drawable/office"
+                android:drawableEnd="@drawable/office"
                 android:hint="Address"
                 android:inputType="textCapSentences"
                 android:lines="2"
@@ -77,7 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:inputType="textCapSentences"
             android:text="Set office location" />
 

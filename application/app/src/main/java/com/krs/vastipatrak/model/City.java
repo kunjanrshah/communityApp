@@ -3,7 +3,7 @@ package com.krs.vastipatrak.model;
 public class City {
 
     private String name;
-    private boolean isSelected;
+    private final boolean isSelected;
 
     public City(String name, boolean isSelected) {
         this.name = name;

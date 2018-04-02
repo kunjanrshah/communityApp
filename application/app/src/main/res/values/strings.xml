@@ -106,9 +106,7 @@
     <string name="title_logout">Logout</string>
     <string name="spinner_blood">Select BloodGroup</string>
 
-    <string name="next">NEXT</string>
-    <string name="skip">SKIP</string>
-    <string name="start">GOT IT</string>
+    <string name="start">Start</string>
 
     <string name="slide_1_title">Signup and Login </string>
     <string name="slide_1_desc">Signup -> varify and Approve Admin -> Login </string>
@@ -152,5 +150,9 @@ https://play.google.com/store/apps/details?id=com.king.candycrushsaga&hl=en
     <string name="no_set_location">User has not set location</string>
     <string name="enable_location">Need to enable location</string>
     <string name="km">Km</string>
+    <string name="days">days</string>
+    <string name="_0">0</string>
+    <string name="every">Every</string>
+    <string name="todo">TODO</string>
 
 </resources>

@@ -41,12 +41,14 @@ public class PersonalFilter extends Fragment {
 
     private static final int CONTACT_PICKER_RESULT = 1001;
     public Spinner spinnerBlood;
-    public RadioButton rbtnM, rbtnF, rbtnB;
+    public RadioButton rbtnM;
+    public RadioButton rbtnF;
+    private RadioButton rbtnB;
     public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbdate, edtbTime, edtCity;
 
     public String gender = "";
-    FloatingActionButton floatingActionButton;
-    ObservableScrollView scroll_pdetails;
+    private FloatingActionButton floatingActionButton;
+    private ObservableScrollView scroll_pdetails;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -214,7 +216,7 @@ public class PersonalFilter extends Fragment {
         return rootView;
     }
 
-    void MemoryAllocation(@NonNull View rootView) {
+    private void MemoryAllocation(@NonNull View rootView) {
         gender = "";
         scroll_pdetails = rootView.findViewById(R.id.scroll_pdetails);
         floatingActionButton = rootView.findViewById(R.id.fab_psave);
@@ -241,7 +243,7 @@ public class PersonalFilter extends Fragment {
 
     }
 
-    void setAdapterBGlist() {
+    private void setAdapterBGlist() {
         List<String> blood_cate = new ArrayList<>();
         blood_cate.add(Common.Constant_Class.TITLE_BLOOD_GROUP);
         blood_cate.add(Common.Constant_Class.A_POSITIVE);

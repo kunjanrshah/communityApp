@@ -39,6 +39,6 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(Common.Constant_Class.DEVICE_TOKEN, token);
-        editor.commit();
+        editor.apply();
     }
 }

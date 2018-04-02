@@ -72,23 +72,25 @@ public class LoginActivity extends Activity {
     private final String[] INIT_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS};
     private final int CAMARA_REQUEST = 4;
     private final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
-    @Nullable
-    JSONObject json = null;
     @NonNull
-    String[] SubcastList = {"Dasha"};
+    private final String[] SubcastList = {"Dasha"};
     @NonNull
-    String[] EkdoList = {"Modasa"};
-    ImageView img_profile;
-    String str_profile_hash = "";
-    MaterialBetterSpinner spinnerSubcast, spinnerEkdo;
-    boolean isShow = true, isShow1 = true;
+    private final String[] EkdoList = {"Modasa"};
+    @NonNull
+    private final String tag_json_obj = "jobj_req";
+    private final String TAG = MainActivity.class.getSimpleName();
     @Nullable
-    String screen = "";
+    private JSONObject json = null;
+    private ImageView img_profile;
+    private String str_profile_hash = "";
+    private MaterialBetterSpinner spinnerSubcast;
+    private MaterialBetterSpinner spinnerEkdo;
+    private boolean isShow = true;
+    private boolean isShow1 = true;
     @Nullable
-    ProgressDialog pDialog;
+    private String screen = "";
     @Nullable
-    TextView txtTour = null;
-    Realm realm;
+    private ProgressDialog pDialog;
     private EditText inputEmail, inputPassword, inputName, inputConformPassword, inputForgotPassword, inputMobile, input_email_mobile, edt_father_name, edt_surname, edt_address, edt_native;
     private TextInputLayout inputLayoutName, inputLayoutEmail, input_layout_email_mobile, inputLayoutPassword, inputLayoutConformPassword, InputLayoutForgotPassword, inputLayoutMobile, input_layout_father_name, input_layout_surname, input_layout_address, input_layout_native_place;
     @Nullable
@@ -97,9 +99,9 @@ public class LoginActivity extends Activity {
     private boolean SignupToggle = true;
     private Button btn_signup;
     private TextView txt_forgot, txtSignup;
-    @NonNull
-    private String tag_json_obj = "jobj_req";
-    private String TAG = MainActivity.class.getSimpleName();
+    @Nullable
+    private TextView txtTour = null;
+    private Realm realm;
 
     private static boolean isValidEmail(@NonNull String email) {
         return TextUtils.isEmpty(email) || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -114,7 +116,7 @@ public class LoginActivity extends Activity {
 
         if (Build.VERSION.SDK_INT >= 23) {
 
-            if (!Common.canCallPhone(this) || !Common.canAccessLocation(this) || !Common.canSMS(this)) {
+            if (Common.canCallPhone(this) || !Common.canAccessLocation(this) || !Common.canSMS(this)) {
                 int INIT_REQUEST = 1;
                 requestPermissions(INIT_PERMS, INIT_REQUEST);
             }
@@ -211,11 +213,6 @@ public class LoginActivity extends Activity {
         });
         Common.getDeviceId(this);
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
@@ -915,7 +912,7 @@ public class LoginActivity extends Activity {
             if (bmp != null) {
                 if (resultCode == RESULT_OK) {
                     Glide.with(this).load(bmp).thumbnail(0.5f).apply(RequestOptions.circleCropTransform()).into(img_profile);
-                    str_profile_hash = Common.getBase64(this, bmp);
+                    str_profile_hash = Common.getBase64(bmp);
                 }
 
             }
@@ -924,7 +921,7 @@ public class LoginActivity extends Activity {
 
     private class MyTextWatcher implements TextWatcher {
 
-        private View view;
+        private final View view;
 
         private MyTextWatcher(View view) {
             this.view = view;

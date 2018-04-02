@@ -10,7 +10,7 @@ import com.krs.vastipatrak.R;
 
 public class TourActivity extends Activity {
 
-    VideoView video_player_view;
+    private VideoView video_player_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

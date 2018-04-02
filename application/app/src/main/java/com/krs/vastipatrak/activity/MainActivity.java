@@ -88,9 +88,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
     public static final int CAMARA_REQUEST = 4;
     private static final String TAG = MainActivity.class.getSimpleName();
-    public static Location mLastLocation;
     public static GoogleApiClient mGoogleApiClient;
     public static String lat, lon;
+    private static Location mLastLocation;
     private final int REQUEST_CHECK_SETTINGS = 199;
     private final int IMAGEREQUESTCODE = 1;
     private final String[] INIT_PERMS = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS};
@@ -99,26 +99,23 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private final int INIT_REQUEST = 1;
     private final int CALL_REQUEST = 2;
     private final int LOCATION_REQUEST = 3;
-    @Nullable
-    String query = "", query_string = "";
-    FragmentDrawer drawerFragment;
-    boolean doubleBackToExitPressedOnce = false;
-    @Nullable
-    GoogleApiClient googleApiClient;
-    @Nullable
+    private String query = "";
+    private String query_string = "";
+    private boolean doubleBackToExitPressedOnce = false;
+    private GoogleApiClient googleApiClient;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(action)) {
-                if (!Common.CheckGpsStatus(MainActivity.this)) {
+                if (Common.CheckGpsStatus(MainActivity.this)) {
                     MainActivity.this.displayLocationSettingsRequest(MainActivity.this);
                 }
             }
         }
     };
     @Nullable
-    Fragment fragment = null;
+    private Fragment fragment = null;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private SharedPreferences.Editor mEditor;
     private SearchView searchView;
@@ -140,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         //intializing scan object
         qrScan = new IntentIntegrator(this);
-        drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        FragmentDrawer drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
 
@@ -151,13 +148,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
 
         if (Build.VERSION.SDK_INT >= 23) {
-            if (!Common.canCallPhone(this) && !Common.canAccessLocation(this)) {
+            if (Common.canCallPhone(this) && !Common.canAccessLocation(this)) {
                 requestPermissions(INIT_PERMS, INIT_REQUEST);
             } else if (!Common.canAccessLocation(this)) {
                 requestPermissions(LOCATION_PERMS, LOCATION_REQUEST);
-            } else if (!Common.canCallPhone(this)) {
+            } else if (Common.canCallPhone(this)) {
                 requestPermissions(CALL_PERMS, CALL_REQUEST);
-            } else if (!Common.canCallPhone(this)) {
+            } else if (Common.canCallPhone(this)) {
                 requestPermissions(CALL_CAMARA, CAMARA_REQUEST);
             }
         }
@@ -172,8 +169,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         if (id.equalsIgnoreCase(Common.Constant_Class.ADMIN_1) || id.equalsIgnoreCase(Common.Constant_Class.ADMIN_2)) {
             AppController.isAdmin = true;
         }
-        displayView(0);
-        if (!Common.CheckGpsStatus(this)) {
+
+        if (Common.CheckGpsStatus(this)) {
             displayLocationSettingsRequest(MainActivity.this);
         }
 
@@ -197,7 +194,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         };
 
-
+        if (query == null && query_string == null) {
+            displayView(0);
+        } else if (query_string != null && query != null && query.isEmpty() && query_string.isEmpty()) {
+            displayView(0);
+        } else {
+            displayView(-1);
+        }
         Common.getDeviceId(this);
     }
 
@@ -313,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
                 break;
             case INIT_REQUEST:
-                if (!Common.canCallPhone(this) && !Common.canAccessLocation(this)) {
+                if (Common.canCallPhone(this) && !Common.canAccessLocation(this)) {
                     Toast.makeText(this, "You need to give permission to access phone and location ! ", Toast.LENGTH_SHORT).show();
                 } else if (Common.canAccessLocation(this)) {
                     buildGoogleApiClient();
@@ -531,10 +534,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     public void onDrawerItemSelected(View view, int position) {
 
-        if (position == 0) {
+       /* if (position == 0) {
             query = "";
             query_string = "";
-        }
+        }*/
 
         displayView(position);
     }
@@ -542,7 +545,16 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private void displayView(int position) {
 
         switch (position) {
-
+            case -1:
+                fragment = new SearchFragment();
+                Bundle mBundle = new Bundle();
+                if (query != null) {
+                    mBundle.putString(Common.Constant_Class.QUERY, query);
+                } else if (query_string != null) {
+                    mBundle.putString(Common.Constant_Class.QUERY_STRING, query_string);
+                }
+                fragment.setArguments(mBundle);
+                break;
             case 0:
                 fragment = new HomeFragment();
                 break;
@@ -721,7 +733,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
 
-    synchronized void buildGoogleApiClient() {
+    private synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
     }
 

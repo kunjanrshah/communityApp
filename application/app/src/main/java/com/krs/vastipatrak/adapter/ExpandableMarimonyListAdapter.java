@@ -62,23 +62,23 @@ import io.realm.Realm;
 
 public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
 
-    private Realm realm = AppController.getInstance().realm;
-    private Context _context;
-    private ArrayList<ListMatrimonyParentData> _listDataHeader;
+    private final Realm realm = AppController.getInstance().realm;
+    private final Context _context;
+    private final ArrayList<ListMatrimonyParentData> _listDataHeader;
     /**
      * Display detail view in Expandable list
      */
-    private HashMap<ListMatrimonyParentData, List<ListMatrimonyChildData>> _listDataChild;
+    private final HashMap<ListMatrimonyParentData, List<ListMatrimonyChildData>> _listDataChild;
     @Nullable
     private ProgressDialog pDialog;
     @NonNull
-    private String TAG = ExpandableMarimonyListAdapter.class.getSimpleName();
+    private final String TAG = ExpandableMarimonyListAdapter.class.getSimpleName();
     /**
      * stored session in SharedPreferences
      */
-    private SharedPreferences mSharedPreferences;
+    private final SharedPreferences mSharedPreferences;
     @Nullable
-    private SharedPreferences.Editor mEditor;
+    private final SharedPreferences.Editor mEditor;
     private ChildViewHolder childViewHolder;
 
     public ExpandableMarimonyListAdapter(Context context, ArrayList<ListMatrimonyParentData> listDataHeader, HashMap<ListMatrimonyParentData, List<ListMatrimonyChildData>> listDataChild) {
@@ -248,7 +248,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                 try {
                     boolean flag = true;
                     if (Build.VERSION.SDK_INT >= 23) {
-                        if (!Common.canCallPhone(_context)) {
+                        if (Common.canCallPhone(_context)) {
                             flag = false;
                         }
                     }

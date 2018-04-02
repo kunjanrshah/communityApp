@@ -56,15 +56,14 @@ import static com.krs.vastipatrak.utils.Common.parseDateToddMMyyyy;
 
 public class HomeFragment extends Fragment {
 
-    RecyclerView mRecycleView;
-    Realm realm;
-
     @NonNull
-    String TAG = "HomeFragment";
-    SharedPreferences mSharedPreferences;
-    SharedPreferences.Editor mEditor;
-    WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
-    RealmResults<ListEventData> eventData;
+    private final String TAG = "HomeFragment";
+    private RecyclerView mRecycleView;
+    private Realm realm;
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+    private WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
+    private RealmResults<ListEventData> eventData;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -284,11 +283,11 @@ public class HomeFragment extends Fragment {
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {
-            TextView txtTitle;
-            TextView txtDesc;
-            TextView txtLocation;
-            TextView txtEventDate;
-            LinearLayout ll_event;
+            final TextView txtTitle;
+            final TextView txtDesc;
+            final TextView txtLocation;
+            final TextView txtEventDate;
+            final LinearLayout ll_event;
 
             MyViewHolder(@NonNull View view) {
                 super(view);

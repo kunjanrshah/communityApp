@@ -36,8 +36,8 @@
                         android:id="@+id/edt_mdate"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dip"
-                        android:drawableRight="@drawable/calendar"
+                        android:layout_marginStart="10dip"
+                        android:drawableEnd="@drawable/calendar"
                         android:hint="Marriage Date"
                         android:inputType="date"
                         android:singleLine="true" />
@@ -47,9 +47,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
                     android:text="DD/MM or DD/MM/YYYY"
-                    android:textSize="10dp" />
+                    android:textSize="10sp" />
 
             </LinearLayout>
 
@@ -62,7 +62,7 @@
                     android:id="@+id/edtSpouseName"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
+                    android:layout_marginStart="10dip"
                     android:hint="Spouse Name"
                     android:inputType="textCapSentences"
                     android:singleLine="true" />
@@ -78,7 +78,7 @@
                     android:id="@+id/edtSpouseFName"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
+                    android:layout_marginStart="10dip"
                     android:hint="Spouse father Name"
                     android:inputType="textCapSentences"
                     android:singleLine="true" />
@@ -93,7 +93,7 @@
                     android:id="@+id/edtSpouseMName"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
+                    android:layout_marginStart="10dip"
                     android:hint="Spouse mother Name"
                     android:inputType="textCapSentences"
                     android:singleLine="true" />
@@ -109,7 +109,7 @@
                     android:id="@+id/edtchild_name"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
+                    android:layout_marginStart="10dip"
                     android:hint="Child Name"
                     android:inputType="textCapSentences"
                     android:singleLine="true" />
@@ -118,6 +118,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -135,8 +136,8 @@
                             android:id="@+id/edt_cdate"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dip"
-                            android:drawableRight="@drawable/calendar"
+                            android:layout_marginStart="10dip"
+                            android:drawableEnd="@drawable/calendar"
                             android:hint="Child Birth Date"
                             android:inputType="date"
                             android:singleLine="true" />
@@ -146,9 +147,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
                         android:text="DD/MM or DD/MM/YYYY"
-                        android:textSize="10dp" />
+                        android:textSize="10sp" />
 
                 </LinearLayout>
 
@@ -162,8 +163,8 @@
                         android:id="@+id/edtchildbtime"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dip"
-                        android:drawableRight="@drawable/clock"
+                        android:layout_marginStart="10dip"
+                        android:drawableEnd="@drawable/clock"
                         android:hint="Child Birth Time"
                         android:inputType="date"
                         android:singleLine="true" />
@@ -172,7 +173,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
@@ -193,7 +194,7 @@
                         android:id="@+id/radioF"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="F" />
 
                 </RadioGroup>
@@ -207,7 +208,7 @@
                         android:id="@+id/edtchildbplace"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dip"
+                        android:layout_marginStart="10dip"
                         android:hint="Child Birth Place"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
@@ -224,7 +225,7 @@
                     android:id="@+id/edtcedu"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
+                    android:layout_marginStart="10dip"
                     android:hint="Child Education"
                     android:inputType="textCapSentences"
                     android:singleLine="true" />
@@ -239,7 +240,7 @@
                     android:id="@+id/edtchild_work"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
+                    android:layout_marginStart="10dip"
                     android:hint="Child Work"
                     android:inputType="textCapSentences"
                     android:singleLine="true" />
@@ -252,7 +253,7 @@
         android:id="@+id/fab_fsave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@drawable/ic_action_search"
         app:fab_colorNormal="@color/accent"

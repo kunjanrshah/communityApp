@@ -2,15 +2,15 @@ package com.krs.vastipatrak.model;
 
 public class ListMatrimonyParentData {
 
-    String id;
-    String profile_id;
-    String profile_pic_url;
-    String father_name;
-    String mother_name;
-    String city;
-    String updated_time;
-    String child_gender;
-    String name;
+    private String id;
+    private String profile_id;
+    private String profile_pic_url;
+    private String father_name;
+    private String mother_name;
+    private String city;
+    private String updated_time;
+    private String child_gender;
+    private String name;
 
     public String getChild_gender() {
         return child_gender;
