@@ -576,18 +576,22 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new MatrimonyFragment();
                 break;
             case 5:
-                fragment = new SyncFragment();
+                Intent mIntent = new Intent(MainActivity.this, PDFActivity.class);
+                startActivity(mIntent);
+                this.overridePendingTransition(0, 0);
                 break;
             case 6:
+                fragment = new SyncFragment();
+                break;
+            case 7:
                 Intent mIntent2 = new Intent(MainActivity.this, TourActivity.class);
                 startActivity(mIntent2);
                 this.overridePendingTransition(0, 0);
                 break;
-
-            case 7:
+            case 8:
                 fragment = new AboutFragment();
                 break;
-            case 8:
+            case 9:
                 ExitAlert();
                 break;
 

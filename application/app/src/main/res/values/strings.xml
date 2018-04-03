@@ -72,6 +72,7 @@
     <string name="nav_item_about">About</string>
     <string name="nav_item_relatives">Relatives</string>
     <string name="nav_item_matrimony">Matrimony</string>
+    <string name="nav_item_pdf">Matrimony PDF</string>
     <string name="nav_item_sync">Sync</string>
     <string name="nav_item_intro">Tour Video</string>
     <string name="nav_item_logout">Logout</string>
@@ -83,6 +84,7 @@
         <item>@string/nav_item_change_password</item>
         <item>@string/nav_item_relatives</item>
         <item>@string/nav_item_matrimony</item>
+        <item>@string/nav_item_pdf</item>
         <item>@string/nav_item_sync</item>
         <item>@string/nav_item_intro</item>
         <item>@string/nav_item_about</item>
@@ -90,6 +92,7 @@
 
     </string-array>
     <string name="marquee_text">Technical help: 9427051418 Kunjan R. Shah (Limbadiya) Admin help: 9426419124 Kunjbihari P. Shah (Radodara) </string>
+    <string name="pdf_marquee">This PDF file is temporary. Please update your profile or contact admin immediately.</string>
     <string name="title_home">Home</string>
     <string name="title_personal">Personal</string>
     <string name="title_business">Business</string>

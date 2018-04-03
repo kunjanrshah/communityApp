@@ -32,25 +32,22 @@ public class MatrimonyFragment extends Fragment {
 
     private ExpandableListView lvMatrimonyList;
     @Nullable
-    private ExpandableMarimonyListAdapter mExpandableMatrimonyListAdapter = null;
-    @Nullable
     private ArrayList<ListMatrimonyParentData> listDataHeader = null;
     @Nullable
     private HashMap<ListMatrimonyParentData, List<ListMatrimonyChildData>> listDataChild = null;
     private Realm realm;
-    private Activity mActivity;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_matrimony, container, false);
         assert getActivity() != null;
-        mActivity = getActivity();
+        Activity mActivity = getActivity();
         Objects.requireNonNull(((AppCompatActivity) mActivity).getSupportActionBar()).setSubtitle(R.string.title_matrimony);
         setHasOptionsMenu(true);
         MemoryAllocation(rootView);
         getChildRecords();
 
-        mExpandableMatrimonyListAdapter = new ExpandableMarimonyListAdapter(getActivity(), listDataHeader, listDataChild);
+        ExpandableMarimonyListAdapter mExpandableMatrimonyListAdapter = new ExpandableMarimonyListAdapter(getActivity(), listDataHeader, listDataChild);
         lvMatrimonyList.setAdapter(mExpandableMatrimonyListAdapter);
         return rootView;
     }

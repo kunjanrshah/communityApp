@@ -76,6 +76,7 @@
             android:name=".activity.FilterActivity"
             android:label="@string/theme_app_name"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.PDFActivity" />
 
         <service android:name=".service.MyLocationService" />
         <service android:name=".service.SyncService" />

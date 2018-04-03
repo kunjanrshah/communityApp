@@ -940,6 +940,10 @@ public class Common {
     }
 
 
+    public static void ExportMatrimonyData(@NonNull Activity mActiviy) {
+
+    }
+
     public static void ExportSearchData(@NonNull Activity mActiviy) {
         List<ListProfileData> mListProfileResult = AppController.getInstance().mListSearchList;
 
@@ -1284,6 +1288,10 @@ public class Common {
         public static final String PERSONAL = "     PERSONAL  ";
         public static final String BUSINESS = "     BUSINESS  ";
         public static final String FAMILY = "     FAMILY  ";
+
+        public static final String GIRLS = "     GIRLS  ";
+        public static final String BOYS_P1 = "  BOYS PART-1  ";
+        public static final String BOYS_P2 = "   BOYS PART-2";
 
         public static final int NonActive = 0;
         public static final String AdminControl = "AdminControl";

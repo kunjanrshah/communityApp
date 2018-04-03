@@ -75,7 +75,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.fragment_profile);
+        setContentView(R.layout.activity_profile);
 
         MemoryAllocation();
         ToolbarSetup();
