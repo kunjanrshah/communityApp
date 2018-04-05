@@ -937,12 +937,13 @@ public class Common {
 
     public static void hideProgressDialog() {
         if (pDialog.isShowing()) pDialog.cancel();
+        pDialog = null;
     }
 
 
-    public static void ExportMatrimonyData(@NonNull Activity mActiviy) {
+    /*public static void ExportMatrimonyData(@NonNull Activity mActiviy) {
 
-    }
+    }*/
 
     public static void ExportSearchData(@NonNull Activity mActiviy) {
         List<ListProfileData> mListProfileResult = AppController.getInstance().mListSearchList;
@@ -1306,18 +1307,19 @@ public class Common {
         public static final String API_KEY_VALUE = "q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
         public static final String DEVICE_TYPE_VALUE = "Android";
 
-
-        public static final String LOGIN_URL = "http://www.srbrothersinfotech.com/directory-dev/API/login";
-        public static final String SIGNUP_URL = "http://www.srbrothersinfotech.com/directory-dev/API/register";
-        public static final String FORGOT_PASSWORD_URL = "http://www.srbrothersinfotech.com/directory-dev/API/forgotPassword";
-        public static final String CHANGE_PASSWORD_URL = "http://www.srbrothersinfotech.com/directory-dev/API/changePassword";
-        public static final String DELETE_URL = "http://www.srbrothersinfotech.com/directory-dev/API/delete";
-        public static final String STATUS_URL = "http://www.srbrothersinfotech.com/directory-dev/API/StatusChange";
-        public static final String SYNC_URL = "http://www.srbrothersinfotech.com/directory-dev/API/sync";
-        public static final String INACTIVES_URL = "http://srbrothersinfotech.com/directory-dev/API/getInactiveUsers";
-        public static final String PROFILE_URL = "http://srbrothersinfotech.com/directory-dev/API/profile";
-        public static final String EVENTS_URL = "http://srbrothersinfotech.com/directory-dev/API/getEvents";
-        public static final String GET_CITIES_URL = "http://srbrothersinfotech.com/directory-dev/API/getCities";
+        private static final String BASE_URL = "http://www.srbrothersinfotech.com/directory-dev/";
+        //  private static final String BASE_URL= "http://www.geniusaccountancy.in/directory-dev";
+        public static final String LOGIN_URL = BASE_URL + "/API/login";
+        public static final String SIGNUP_URL = BASE_URL + "/API/register";
+        public static final String FORGOT_PASSWORD_URL = BASE_URL + "/API/forgotPassword";
+        public static final String CHANGE_PASSWORD_URL = BASE_URL + "/API/changePassword";
+        public static final String DELETE_URL = BASE_URL + "/API/delete";
+        public static final String STATUS_URL = BASE_URL + "/API/StatusChange";
+        public static final String SYNC_URL = BASE_URL + "/API/sync";
+        public static final String INACTIVES_URL = BASE_URL + "/API/getInactiveUsers";
+        public static final String PROFILE_URL = BASE_URL + "/API/profile";
+        public static final String EVENTS_URL = BASE_URL + "/API/getEvents";
+        public static final String GET_CITIES_URL = BASE_URL + "/API/getCities";
 
         public static final String PREF_NAME = "Vastipatrak";
         public static final String SCREEN = "screen";

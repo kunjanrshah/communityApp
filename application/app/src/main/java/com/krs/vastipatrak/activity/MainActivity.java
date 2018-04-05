@@ -615,8 +615,16 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         builder.setPositiveButton(getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
             public void onClick(@NonNull DialogInterface dialog, int which) {
 
-                mEditor.clear();
-                mEditor.apply();
+                try {
+                    mEditor.clear();
+                    mEditor.apply();
+                   /* AppController.getInstance().realm.beginTransaction();
+                    AppController.getInstance().realm.deleteAll();
+                    AppController.getInstance().realm.commitTransaction();*/
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(mIntent);

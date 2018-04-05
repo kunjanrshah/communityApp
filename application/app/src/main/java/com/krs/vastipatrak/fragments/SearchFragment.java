@@ -281,7 +281,7 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
                     String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
                     boolean is_location_enable = Boolean.parseBoolean(mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE));
 
-                    if (status.equalsIgnoreCase("1")) {
+                    if (status.equalsIgnoreCase("0")) {
                         ListParentData lpd = new ListParentData();
                         lpd.setName(first_name + " " + last_name);
                         lpd.setFatherName(father_name);

@@ -74,13 +74,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private final Context _context;
     private final ArrayList<ListParentData> _listDataHeader;
     private final HashMap<ListParentData, List<ListChildData>> _listDataChild;
-    @Nullable
-    private ProgressDialog pDialog;
     private final String TAG = ExpandableListAdapter.class.getSimpleName();
     private final SharedPreferences mSharedPreferences;
     private final SharedPreferences.Editor mEditor;
     @NonNull
-    private final String[] SPINNERLIST = {"Father", "Son", "Daughter", "Brother", "Sister", "Grandfather", "Grandson", "Uncle", "Uncle's Son", "Uncle in low", "Uncle's Son"};
+    private final String[] SPINNERLIST = {"Father", "Son", "Daughter", "Brother", "Sister", "Grandfather", "Grandson", "Uncle", "Uncle's Son", "Uncle in law", "Uncle's Son"};
+    @Nullable
+    private ProgressDialog pDialog;
     private ChildViewHolder childViewHolder;
 
     @SuppressLint("UseSparseArrays")
@@ -88,9 +88,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listDataChild;
-        pDialog = new ProgressDialog(_context);
-        pDialog.setMessage(Common.Constant_Class.LOADING);
-        pDialog.setCancelable(true);
+        try {
+            pDialog = new ProgressDialog(_context);
+            pDialog.setMessage(Common.Constant_Class.LOADING);
+            pDialog.setCancelable(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         mSharedPreferences = _context.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
@@ -508,6 +513,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.txt_distance.setVisibility(View.GONE);
         }
 
+        if (mListParentData.getStatus().equalsIgnoreCase("0")) {
+            groupViewHolder.imgShare.setVisibility(View.GONE);
+        } else {
+            groupViewHolder.imgShare.setVisibility(View.VISIBLE);
+        }
         groupViewHolder.imgShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

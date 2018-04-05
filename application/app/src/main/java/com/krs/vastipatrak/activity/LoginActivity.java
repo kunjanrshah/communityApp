@@ -324,7 +324,11 @@ public class LoginActivity extends Activity {
                             inputConformPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                             isShow1 = true;
                         }
-                        inputConformPassword.setSelection(inputPassword.length());
+                        try {
+                            inputConformPassword.setSelection(inputPassword.length());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         return true;
                     }
                 }

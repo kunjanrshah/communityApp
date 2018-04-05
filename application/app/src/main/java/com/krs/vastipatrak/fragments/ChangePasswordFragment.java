@@ -2,12 +2,10 @@ package com.krs.vastipatrak.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -37,13 +35,7 @@ import java.util.Objects;
 
 public class ChangePasswordFragment extends Fragment {
 
-
-    @NonNull
-    private final String TAG = "ChangePasswordFragment";
-    @NonNull
-    private final String tag_json_obj = "jobj_req";
-    @Nullable
-    private ProgressDialog pDialog;
+    private final String TAG = ChangePasswordFragment.class.getSimpleName();
     private SharedPreferences mSharedPreferences;
     private EditText input_password;
     private EditText input_repeat;
@@ -138,11 +130,12 @@ public class ChangePasswordFragment extends Fragment {
 
         return rootView;
     }
+
     private void call_change_password_ws() {
 
         if (Common.isOnline(mActivity)) {
 
-            showProgressDialog();
+            Common.showProgressDialog(getActivity());
             JSONObject mJsonObject = null;
 
             try {
@@ -165,7 +158,7 @@ public class ChangePasswordFragment extends Fragment {
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "profile_url: " + password_url);
                     Log.d(TAG, "response: " + response.toString());
-                    hideProgressDialog();
+                    Common.hideProgressDialog();
 
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
@@ -184,10 +177,9 @@ public class ChangePasswordFragment extends Fragment {
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
 
-                    hideProgressDialog();
+                    Common.hideProgressDialog();
                 }
-            })
-            {
+            }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
@@ -195,12 +187,12 @@ public class ChangePasswordFragment extends Fragment {
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
                     params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
             // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }
     }
 
@@ -214,22 +206,5 @@ public class ChangePasswordFragment extends Fragment {
 
         fab = rootView.findViewById(R.id.fab);
         mSharedPreferences = mActivity.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
-        pDialog = new ProgressDialog(mActivity);
-        pDialog.setMessage(Common.Constant_Class.LOADING);
-        pDialog.setCancelable(false);
-
-
     }
-
-
-    private void showProgressDialog() {
-        if (!Objects.requireNonNull(pDialog).isShowing())
-            pDialog.show();
-    }
-
-    private void hideProgressDialog() {
-        if (Objects.requireNonNull(pDialog).isShowing())
-            pDialog.hide();
-    }
-
 }
