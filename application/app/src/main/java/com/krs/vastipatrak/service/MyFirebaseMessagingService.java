@@ -46,16 +46,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String title = remoteMessage.getData().get("title");
             String location = remoteMessage.getData().get("location");
             String imgUrl = remoteMessage.getData().get("imgUrl");
+         //   String timestamp= remoteMessage.getData().get("timestamp");
 
 
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
             try {
                 JSONObject json = new JSONObject();
-                json.put("title", notification);
-                json.put("message", title);
+                json.put("notification", notification);
+                json.put("title", title);
                 //json.put("isBackground","");
-                json.put("payload", location);
                 json.put("imageUrl", imgUrl);
                 json.put("timestamp", ts);
                 handleDataMessage(json);
@@ -80,19 +80,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void handleDataMessage(JSONObject json) {
         Log.e(TAG, "push json: " + json.toString());
+        String notification = "", title = "", imageUrl = "", timestamp = "";
 
         try {
 
+            notification = json.getString("notification");
+            timestamp = json.getString("timestamp");
+            if (json.has("title")) {
+                title = json.getString("title");
+            }
+            if (json.has("imageUrl")) {
+                imageUrl = json.getString("imageUrl");
+            }
 
-            String title = json.getString("title");
-            String message = json.getString("message");
             //  boolean isBackground = data.getBoolean("is_background");
-            String imageUrl = json.getString("imageUrl");
-            String timestamp = json.getString("timestamp");
-          //  JSONObject payload = json.getJSONObject("payload");
 
+
+            //  JSONObject payload = json.getJSONObject("payload");
+
+            Log.e(TAG, "notification: " + notification);
             Log.e(TAG, "title: " + title);
-            Log.e(TAG, "message: " + message);
             //  Log.e(TAG, "isBackground: " + isBackground);
             //Log.e(TAG, "payload: " + payload.toString());
             Log.e(TAG, "imageUrl: " + imageUrl);
@@ -102,7 +109,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if (NotificationUtils.isAppIsInBackground(getApplicationContext())) {
                 // app is in foreground, broadcast the push message
                 Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-                pushNotification.putExtra("message", message);
+                pushNotification.putExtra("message", notification);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
                 // play notification sound
@@ -111,14 +118,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             } else {
                 // app is in background, show the notification in notification tray
                 Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-                resultIntent.putExtra("message", message);
+                resultIntent.putExtra("message", notification);
 
                 // check for image attachment
                 if (TextUtils.isEmpty(imageUrl)) {
-                    showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
+                    showNotificationMessage(getApplicationContext(), title, notification, timestamp, resultIntent);
                 } else {
                     // image is present, show notification with image
-                    showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl);
+                    showNotificationMessageWithBigImage(getApplicationContext(), title, notification, timestamp, resultIntent, imageUrl);
                 }
             }
         } catch (JSONException e) {

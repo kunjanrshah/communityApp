@@ -1283,7 +1283,7 @@ public class Common {
     public static class Constant_Class {
 
         public static final String ADMIN_1 = "4134";
-        public static final String ADMIN_2 = "571";
+        public static final String ADMIN_2 = "1";
         public static final String YOUTUBE_API_KEY = "AIzaSyBOkoXTYsY32OQtLTxidxci5R3Zml84oUY";
 
         public static final String PERSONAL = "     PERSONAL  ";
@@ -1313,6 +1313,7 @@ public class Common {
         public static final String SIGNUP_URL = BASE_URL + "/API/register";
         public static final String FORGOT_PASSWORD_URL = BASE_URL + "/API/forgotPassword";
         public static final String CHANGE_PASSWORD_URL = BASE_URL + "/API/changePassword";
+        public static final String LOGOUT_URL = BASE_URL + "/API/logout";
         public static final String DELETE_URL = BASE_URL + "/API/delete";
         public static final String STATUS_URL = BASE_URL + "/API/StatusChange";
         public static final String SYNC_URL = BASE_URL + "/API/sync";
@@ -1322,6 +1323,7 @@ public class Common {
         public static final String GET_CITIES_URL = BASE_URL + "/API/getCities";
 
         public static final String PREF_NAME = "Vastipatrak";
+        public static final String PREF_TOKEN = "Pref_Token";
         public static final String SCREEN = "screen";
         public static final String SEARCH_FRAGMENT = "SearchFragment";
         public static final String IS_UPDATE = "is_update";

@@ -36,6 +36,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -75,7 +80,11 @@ import com.krs.vastipatrak.interfaces.DisplaySearchFragment;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.Constant_Class.LOCATION_INTERVAL;
@@ -117,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Nullable
     private Fragment fragment = null;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
     private SearchView searchView;
     private IntentIntegrator qrScan;
@@ -129,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
         Toolbar mToolbar = findViewById(R.id.toolbar);
@@ -181,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
                 // checking for type intent filter
                 if (Objects.requireNonNull(intent.getAction()).equals(Config.REGISTRATION_COMPLETE)) {
+                    String token = intent.getStringExtra("token");
                     // gcm successfully registered
                     // now subscribe to `global` topic to receive app wide notifications
                     FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
@@ -615,22 +626,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         builder.setPositiveButton(getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
             public void onClick(@NonNull DialogInterface dialog, int which) {
 
-                try {
-                    mEditor.clear();
-                    mEditor.apply();
-                   /* AppController.getInstance().realm.beginTransaction();
-                    AppController.getInstance().realm.deleteAll();
-                    AppController.getInstance().realm.commitTransaction();*/
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
-                mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(mIntent);
-                finish();
-                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                 dialog.dismiss();
+                call_log_out_ws();
             }
         });
         builder.setNegativeButton(getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -639,6 +636,82 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 dialog.dismiss();
             }
         }).show();
+    }
+
+    private void call_log_out_ws() {
+
+        if (Common.isOnline(this)) {
+
+            Common.showProgressDialog(this);
+            JSONObject mJsonObject = null;
+
+            try {
+                mJsonObject = new JSONObject();
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            final String password_url = Common.Constant_Class.LOGOUT_URL;
+
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, password_url, mJsonObject, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+
+                    Common.hideProgressDialog();
+
+                    try {
+                        String success = response.getString(Common.Constant_Class.SUCCESS);
+                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+
+                            try {
+                             //   mEditor.clear();
+                              //  mEditor.apply();
+                                   /* AppController.getInstance().realm.beginTransaction();
+                                    AppController.getInstance().realm.deleteAll();
+                                    AppController.getInstance().realm.commitTransaction();*/
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+                            mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(mIntent);
+                            finish();
+                            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+
+                    Common.hideProgressDialog();
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
+        }
     }
 
     @Override
