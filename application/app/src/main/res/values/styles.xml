@@ -36,10 +36,5 @@
         <item name="searchViewStyle">@style/CustomSearchView</item>
     </style>
 
-    <style name="MyRadioButton" parent="Theme.AppCompat.Light">
-        <item name="colorControlNormal">@color/indigo</item>
-        <item name="colorControlActivated">@color/pink</item>
-    </style>
-
 
 </resources>

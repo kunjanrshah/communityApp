@@ -205,7 +205,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         });
 
         MenuItem saveItem = menu.findItem(R.id.action_save);
-        if (Objects.requireNonNull(mSharedPreferences).getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || AppController.isAdmin) {
+        if (Objects.requireNonNull(mSharedPreferences).getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
             saveItem.setVisible(true);
         } else {
             saveItem.setVisible(false);

@@ -1282,8 +1282,9 @@ public class Common {
 
     public static class Constant_Class {
 
-        public static final String ADMIN_1 = "4134";
-        public static final String ADMIN_2 = "1";
+        public static final String ADMIN = "ADMIN";
+        public static final String USER = "USER";
+
         public static final String YOUTUBE_API_KEY = "AIzaSyBOkoXTYsY32OQtLTxidxci5R3Zml84oUY";
 
         public static final String PERSONAL = "     PERSONAL  ";
@@ -1321,6 +1322,8 @@ public class Common {
         public static final String PROFILE_URL = BASE_URL + "/API/profile";
         public static final String EVENTS_URL = BASE_URL + "/API/getEvents";
         public static final String GET_CITIES_URL = BASE_URL + "/API/getCities";
+        public static final String CHANGE_ROLE_URL = BASE_URL + "/API/changeRole";
+        public static final String BLOCK_USERS_URL = BASE_URL + "/API/blockUsers";
 
         public static final String PREF_NAME = "Vastipatrak";
         public static final String PREF_TOKEN = "Pref_Token";
@@ -1378,6 +1381,7 @@ public class Common {
         public static final String GOTRA = "gotra";
         public static final String IS_LOCATION_ENABLE = "is_location_enable";
         public static final String UPDATED_TIME = "updated_time";
+        public static final String ROLE = "role";
         public static final String SYNC_TIME = "sync_time";
         public static final String CITY = "city";
         public static final String TITLE_BLOOD_GROUP = "Blood Group";

@@ -43,13 +43,23 @@
         android:title="@string/action_scan_img"
         app:showAsAction="ifRoom|collapseActionView" />
 
-
     <item
         android:id="@+id/action_export"
         android:icon="@drawable/export"
         android:title="@string/action_export"
         app:showAsAction="ifRoom|collapseActionView" />
 
+    <item
+        android:id="@+id/action_block_users"
+        android:title="@string/action_block_users"
+        android:visible="false"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/action_change_role"
+        android:title="@string/action_change_role"
+        android:visible="false"
+        app:showAsAction="ifRoom|collapseActionView" />
 
     <item
         android:id="@+id/action_nonActives"

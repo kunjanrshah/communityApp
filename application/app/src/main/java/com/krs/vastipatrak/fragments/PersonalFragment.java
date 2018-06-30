@@ -227,7 +227,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 edtbTime.setText(time);
                             }*/
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || AppController.isAdmin) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
                             tpd.show(mActivity.getFragmentManager(), "Timepickerdialog");
                         }
 
@@ -270,7 +270,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 edtbdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || AppController.isAdmin) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
                             dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
                         }
 
@@ -393,7 +393,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             EnableAll();
         } else {
-            if (!AppController.isAdmin) {
+            if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {
                 DisableAll();
             }
         }
@@ -665,7 +665,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Home Address", edtAddress.getText().toString());
 
             } else {
-                if (!AppController.isAdmin) {
+                if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {
                     DisableAll();
                 }
 

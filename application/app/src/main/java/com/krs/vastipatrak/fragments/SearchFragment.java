@@ -1,6 +1,7 @@
 package com.krs.vastipatrak.fragments;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,12 +20,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -37,6 +46,7 @@ import com.krs.vastipatrak.model.ListParentData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.model.ListProfiles;
 import com.krs.vastipatrak.utils.Common;
+import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -561,7 +571,6 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
-
                     hideProgressDialog();
                 }
             }) {
@@ -657,5 +666,123 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
         }
     }
 
+    private void changeRoleWS(String ids, String role) {
+        if (!ids.equalsIgnoreCase("") && !role.equalsIgnoreCase("")) {
+            if (Common.isOnline(getActivity())) {
+                JSONObject json = null;
+                try {
+                    json = new JSONObject();
+                    json.put(Common.Constant_Class.ID, ids);
+                    json.put(Common.Constant_Class.ROLE, role);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Common.showProgressDialog(getActivity());
+                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.CHANGE_ROLE_URL, json, new Response.Listener<JSONObject>() {
 
+                    @Override
+                    public void onResponse(@NonNull JSONObject response) {
+                        Log.d(TAG, response.toString());
+
+                        try {
+                            Common.hideProgressDialog();
+                            boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
+                            String message = response.getString(Common.Constant_Class.MESSAGE);
+                            if (success) {
+                               // SearchFragment.this.notify();
+                                lvCustomList.setAdapter(mExpandableListAdapter);
+
+                             //   mExpandableListAdapter.notifyDataSetChanged();
+                              //  mExpandableListAdapter.notifyDataSetInvalidated();
+                            }
+                            Common.alert(getActivity(), message);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(@NonNull VolleyError error) {
+                        VolleyLog.d(TAG, "Error: " + error.getMessage());
+                        String message = null;
+                        Common.hideProgressDialog();
+                        if (error instanceof NetworkError) {
+                            message = "Cannot connect to Internet...Please check your connection!";
+                        } else if (error instanceof ServerError) {
+                            message = "The server could not be found. Please try again after some time!!";
+                        } else if (error instanceof AuthFailureError) {
+                            message = "Cannot connect to Internet...Please check your connection!";
+                        } else if (error instanceof ParseError) {
+                            message = "Parsing error! Please try again after some time!!";
+                        } else if (error instanceof TimeoutError) {
+                            message = "Connection TimeOut! Please check your internet connection.";
+                        }
+                        Toast.makeText(getActivity(), "" + message, Toast.LENGTH_LONG).show();
+                    }
+                }) {
+                    @NonNull
+                    @Override
+                    public Map<String, String> getHeaders() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                        params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                        params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                        params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                        if (mSharedPreferences != null) {
+                            params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                        }
+                        return params;
+                    }
+                };
+
+
+                jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+            }
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void changeRoleDialog(String msg) {
+        String[] SPINNERLIST = {"ADMIN", "USER"};
+        final Dialog role_dialog = new Dialog(getActivity());
+        role_dialog.setTitle("Change Role");
+        role_dialog.setContentView(R.layout.custom_role_dialog);
+        TextView txtlist = role_dialog.findViewById(R.id.txtlist);
+        txtlist.setText(msg);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, SPINNERLIST);
+        final MaterialBetterSpinner role_spinner = role_dialog.findViewById(R.id.role_spinner);
+
+        role_spinner.setAdapter(arrayAdapter);
+        Button btnSubmit = role_dialog.findViewById(R.id.btnSubmit);
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!role_spinner.getText().toString().isEmpty()) {
+                    changeRoleWS(lstSelectedIDs.toString().replace("[","").replace("]",""), role_spinner.getText().toString());
+                    role_dialog.cancel();
+                } else {
+                    Toast.makeText(getActivity(), "Please select Role !", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        role_dialog.show();
+    }
+
+    @Override
+    public void ChangeRole() {
+        String msg1 = getSelectedName();
+        assert lstSelectedIDs != null;
+        String msg = "Do you want to Change Role for  " + lstSelectedIDs.size() + " Records ? \n" + msg1;
+        if (lstSelectedIDs.size() > 0) {
+            changeRoleDialog(msg);
+        } else {
+            Toast.makeText(getActivity(), "Please select profile !", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

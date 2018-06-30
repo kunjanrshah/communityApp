@@ -6,4 +6,6 @@ public interface DisplaySearchFragment {
     void CallDelete();
 
     void CallDeActivate();
+
+    void ChangeRole();
 }

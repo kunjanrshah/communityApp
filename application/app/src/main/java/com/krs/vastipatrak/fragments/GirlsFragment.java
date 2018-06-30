@@ -1,3 +1,4 @@
+/*
 package com.krs.vastipatrak.fragments;
 
 
@@ -76,3 +77,4 @@ public class GirlsFragment extends Fragment implements OnPageChangeListener, OnL
         }
     }
 }
+*/

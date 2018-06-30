@@ -21,7 +21,7 @@ public class AppController extends Application {
     private static final String TAG = AppController.class
             .getSimpleName();
 
-    public static boolean isAdmin=false;
+    //public static boolean isAdmin=false;
     private static AppController mInstance;
     public Realm realm;
     public boolean isUpdate = false;
@@ -39,6 +39,7 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         MultiDex.install(this);
         mInstance = this;
         initRealm();

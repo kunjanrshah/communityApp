@@ -119,7 +119,7 @@ public class BusinessFragment extends Fragment implements Serializable {
             }
         });
         if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-            if (!AppController.isAdmin) {
+            if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {
                 DisableAll();
             }
         }
@@ -271,7 +271,7 @@ public class BusinessFragment extends Fragment implements Serializable {
                 }
             }
         }
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || AppController.isAdmin) {
+        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {
             EnableAll();
         } else {
             DisableAll();

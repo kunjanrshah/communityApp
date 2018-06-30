@@ -454,7 +454,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.tvCity = convertView.findViewById(R.id.tvCity);
 
 
-            if (AppController.isAdmin) {
+            if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
                 groupViewHolder.checkbox.setVisibility(View.VISIBLE);
             } else {
                 groupViewHolder.checkbox.setVisibility(View.GONE);

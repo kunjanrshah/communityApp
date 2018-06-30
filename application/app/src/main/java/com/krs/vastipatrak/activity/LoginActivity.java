@@ -609,6 +609,7 @@ public class LoginActivity extends Activity {
                                     String last_name = mjson_data.getString(Common.Constant_Class.LAST_NAME);
                                     String access_token=mjson_data.getString(Common.Constant_Class.ACCESS_TOKEN);
                                     String updated_time=mjson_data.getString(Common.Constant_Class.UPDATED_TIME);
+                                    String role=mjson_data.getString(Common.Constant_Class.ROLE);
 
                                     mEditor.putString(Common.Constant_Class.EMAIL, email);
                                     mEditor.putString(Common.Constant_Class.PASSWORD, password);
@@ -618,6 +619,7 @@ public class LoginActivity extends Activity {
                                     mEditor.putString(Common.Constant_Class.LAST_NAME, last_name);
                                     mEditor.putString(Common.Constant_Class.ACCESS_TOKEN, access_token);
                                     mEditor.putString(Common.Constant_Class.UPDATED_TIME, updated_time);
+                                    mEditor.putString(Common.Constant_Class.ROLE, role);
                                     mEditor.apply();
 
                                     Bundle fb_bundle = new Bundle();
@@ -626,9 +628,9 @@ public class LoginActivity extends Activity {
                                     AppController.getInstance().firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, fb_bundle);
 
 
-                                    if (user_id.equalsIgnoreCase(Common.Constant_Class.ADMIN_1) || user_id.equalsIgnoreCase(Common.Constant_Class.ADMIN_2)) {
+                                   /* if (user_id.equalsIgnoreCase(Common.Constant_Class.ADMIN_1) || user_id.equalsIgnoreCase(Common.Constant_Class.ADMIN_2)) {
                                         AppController.isAdmin = true;
-                                    }
+                                    }*/
                                     Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
                                     if (mSharedPreferences != null) {
                                         mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));

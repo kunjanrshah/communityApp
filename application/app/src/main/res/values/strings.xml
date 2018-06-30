@@ -1,8 +1,6 @@
 <resources>
     <string name="theme_app_name">VastiPatrak</string>
     <string name="app_name">VastiPatrak</string>
-    <string name="fb_app_id">1749295805152367</string>
-    <string name="share_using">share using</string>
     <string name="hint_email">Email</string>
     <string name="hint_email_mobile">Email or Mobile</string>
     <string name="hint_mobile">Mobile</string>
@@ -41,15 +39,7 @@
     <string name="err_msg_address">Enter your address </string>
     <string name="err_msg_repeat_password">Password and Repeat password must be same</string>
 
-    <string name="set_your_location">Set Your Location</string>
-    <string name="set_your_home_location">Set Your Home Location</string>
-    <string name="set_your_office_location">Set Your Office Location</string>
 
-
-    <string name="sms_sent">SMS sent.</string>
-    <string name="sms_failed">SMS faild, please try again.</string>
-
-    <string name="msg_forgot_password">"Your password has been sent to your registered email, do you want to SMS with registered mobile ?"</string>
     <string name="action_search">Search</string>
     <string name="action_save">Save</string>
     <string name="action_nonActives">NonActives</string>
@@ -60,6 +50,8 @@
     <string name="action_voice">Voice</string>
     <string name="action_advsearch">Advance Search</string>
     <string name="action_export">Export Search</string>
+    <string name="action_change_role">Change Role</string>
+    <string name="action_block_users">Block Users</string>
     <string name="action_scan">Scan QRCode</string>
     <string name="action_scan_img">QRCode Image</string>
     <string name="drawer_open">Open</string>
@@ -67,13 +59,12 @@
 
     <string name="nav_item_home">Home</string>
     <string name="nav_item_my_profile">My Profile</string>
-    <string name="nav_item_filter">Filter</string>
     <string name="nav_item_change_password">Change Password</string>
     <string name="nav_item_about">About</string>
     <string name="nav_item_relatives">Relatives</string>
     <string name="nav_item_matrimony">Matrimony</string>
-    <string name="nav_item_pdf">Matrimony PDF</string>
-    <string name="nav_item_sync">Sync</string>
+    <!--<string name="nav_item_pdf">Matrimony PDF</string>
+    <string name="nav_item_sync">Sync</string>-->
     <string name="nav_item_intro">Tour Video</string>
     <string name="nav_item_logout">Logout</string>
 
@@ -84,58 +75,28 @@
         <item>@string/nav_item_change_password</item>
         <item>@string/nav_item_relatives</item>
         <item>@string/nav_item_matrimony</item>
-        <item>@string/nav_item_pdf</item>
+        <!--<item>@string/nav_item_pdf</item>
         <item>@string/nav_item_sync</item>
-        <item>@string/nav_item_intro</item>
+-->        <item>@string/nav_item_intro</item>
         <item>@string/nav_item_about</item>
         <item>@string/nav_item_logout</item>
 
     </string-array>
     <string name="marquee_text">Technical help: 9427051418 Kunjan R. Shah (Limbadiya) Admin help: 9426419124 Kunjbihari P. Shah (Radodara) </string>
-    <string name="pdf_marquee">This PDF file is temporary. Please update your profile or contact admin immediately.</string>
-    <string name="title_home">Home</string>
-    <string name="title_personal">Personal</string>
-    <string name="title_business">Business</string>
-    <string name="title_family">Family</string>
-    <string name="title_my_profile">My Profile</string>
     <string name="title_filter">Advance Search</string>
-    <string name="title_login">Login</string>
-    <string name="title_change_password">Change Password</string>
     <string name="title_about">About</string>
     <string name="title_matrimony">Matrimony</string>
     <string name="title_events">Events</string>
     <string name="title_relatives">Relatives</string>
     <string name="title_sync">Sync</string>
-    <string name="title_logout">Logout</string>
     <string name="spinner_blood">Select BloodGroup</string>
 
     <string name="start">Start</string>
 
-    <string name="slide_1_title">Signup and Login </string>
-    <string name="slide_1_desc">Signup -> varify and Approve Admin -> Login </string>
-
-    <string name="slide_2_title">Global, Advance, Voice Search</string>
-    <string name="slide_2_desc">You can Search Globally or Using Advance Search Facility and also with Your Voice !</string>
-
-    <string name="slide_3_title"> Sync and Offline </string>
-    <string name="slide_3_desc">You can share any profiles after search !</string>
-
-    <string name="slide_4_title">Update Profile Info with your Home and Office Location</string>
-    <string name="slide_4_desc">From My Profile Option you can update your Information! \n Please avail at your Home while Updating Home Location ! \n Please avail at your Office while Updating Office Location !</string>
-
-    <string name="play_again_desc">Navigation using MAP </string>
-    <string name="play_again">Search profiles -> go to  Home or Office location -> Press profile location Icon -> Open map with navigation using your current location </string>
-
     <string name="home_location">ARE YOU AT YOUR HOME ? </string>
     <string name="office_location">ARE YOU AT YOUR OFFICE ? </string>
-    <string name="offline_progress"> Preparing for Offline support \nNeed good internet connectivity !!</string>
-
-    <string name="admob_app_id">ca-app-pub-8416782517840563~2944903715</string>
-    <string name="banner1">ca-app-pub-8416782517840563/4536298935</string>
 
     <string name="player_error">Error initializing YouTube player: %s</string>
-    <string name="seek_to">Jump To</string>
-    <string name="seek_to_hint">Seconds</string>
 
     <string name="nice_html">
 <![CDATA[

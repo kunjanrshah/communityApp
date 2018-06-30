@@ -175,10 +175,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         } else {
             buildGoogleApiClient();
         }
-        String id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+        /*String id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
         if (id.equalsIgnoreCase(Common.Constant_Class.ADMIN_1) || id.equalsIgnoreCase(Common.Constant_Class.ADMIN_2)) {
             AppController.isAdmin = true;
-        }
+        }*/
 
         if (Common.CheckGpsStatus(this)) {
             displayLocationSettingsRequest(MainActivity.this);
@@ -429,17 +429,30 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         MenuItem deactiveItem = menu.findItem(R.id.action_deactive);
         MenuItem deleteItem = menu.findItem(R.id.action_delete);
         MenuItem nonActives = menu.findItem(R.id.action_nonActives);
-        if (AppController.isAdmin) {
+        MenuItem block_users = menu.findItem(R.id.action_block_users);
+        MenuItem change_role = menu.findItem(R.id.action_change_role);
+        if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
             if (Common.isOnline(this)) {
                 activeItem.setVisible(true);
                 deactiveItem.setVisible(true);
                 deleteItem.setVisible(true);
                 nonActives.setVisible(true);
                 activeAdd.setVisible(true);
+                block_users.setVisible(true);
+                change_role.setVisible(true);
             } else {
                 Toast.makeText(this, "" + Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
             }
         }
+
+        block_users.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                return false;
+            }
+        });
+
         nonActives.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -485,9 +498,17 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 return false;
             }
         });
+
+        change_role.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                moveToSearch(5);
+                return false;
+            }
+        });
+
         return true;
     }
-
 
     private void moveToSearch(int menu) {
 
@@ -524,6 +545,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     displaySearchFragment.CallDelete();
                 } catch (Exception e) {
                     Toast.makeText(this, "Select Non-Actives First", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            case 5:
+                try
+                {
+                    displaySearchFragment.ChangeRole();
+                }catch (Exception e)
+                {
                     e.printStackTrace();
                 }
                 break;
@@ -570,7 +599,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new HomeFragment();
                 break;
             case 1:
-
                 mEditor.putBoolean("myprofile", true);
                 mEditor.apply();
                 Intent mIntent1 = new Intent(MainActivity.this, MyProfileActivity.class);
@@ -587,24 +615,24 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new MatrimonyFragment();
                 break;
             case 5:
-                Intent mIntent = new Intent(MainActivity.this, PDFActivity.class);
+                /*Intent mIntent = new Intent(MainActivity.this, PDFActivity.class);
                 startActivity(mIntent);
-                this.overridePendingTransition(0, 0);
-                break;
-            case 6:
-                fragment = new SyncFragment();
-                break;
-            case 7:
+                this.overridePendingTransition(0, 0);*/
+               // fragment = new SyncFragment();
                 Intent mIntent2 = new Intent(MainActivity.this, TourActivity.class);
                 startActivity(mIntent2);
                 this.overridePendingTransition(0, 0);
                 break;
-            case 8:
+            case 6:
                 fragment = new AboutFragment();
                 break;
-            case 9:
+            case 7:
                 ExitAlert();
                 break;
+            /*case 8:
+                break;*/
+            /*case 9:
+                break;*/
 
             default:
                 break;

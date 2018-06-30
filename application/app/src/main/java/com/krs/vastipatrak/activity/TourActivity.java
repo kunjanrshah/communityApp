@@ -18,9 +18,9 @@ public class TourActivity extends Activity {
 
         setContentView(R.layout.activity_tour);
         video_player_view = findViewById(R.id.video_player_view);
-        Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.connectingcommunty1);
+       /* Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.connectingcommunty1);
         video_player_view.setVideoURI(video);
-
+*/
         video_player_view.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {

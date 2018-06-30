@@ -127,7 +127,7 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
                                 edt_mdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || AppController.isAdmin) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
                             dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         }
 
@@ -143,7 +143,7 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
         img_spouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || AppController.isAdmin) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || role.equals(Common.Constant_Class.ADMIN)) {
                     img_selection = "spouse";
                     selectImage();
                 } else {
@@ -157,7 +157,7 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
         img_fspouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || AppController.isAdmin) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || role.equals(Common.Constant_Class.ADMIN)) {
                     img_selection = "fspouse";
                     selectImage();
                 } else {
@@ -171,7 +171,7 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
         img_mspouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || AppController.isAdmin) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || role.equals(Common.Constant_Class.ADMIN)) {
                     img_selection = "mspouse";
                     selectImage();
                 } else {
@@ -217,20 +217,20 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
         });
 
         if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-            if (!AppController.isAdmin) {
+            if (role.equals(Common.Constant_Class.USER)) {
                 DisableAll();
             }
         }
 
         return rootView;
     }
-
+String role="";
     private void Memory_Allocation(View root) {
 
         mActivity = Objects.requireNonNull(getActivity());
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
-
+        role=mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER);
         edt_mdate = root.findViewById(R.id.edt_mdate);
         edtSpouseName = root.findViewById(R.id.edtSpouseName);
         edtSpouseFName = root.findViewById(R.id.edtSpouseFName);
@@ -280,7 +280,7 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
 
         if (mListProfileDatas.size() > 0) {
 
-            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || AppController.isAdmin) {
+            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
                 EnableAll();
             } else {
                 DisableAll();
@@ -308,7 +308,7 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
                         if (i == 0) {
                             rbtnChildYes.setChecked(true);
                             rbtnChildNo.setChecked(false);
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || AppController.isAdmin) {
+                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
                                 btn_add.setVisibility(View.VISIBLE);
                             } else {
                                 btn_add.setVisibility(View.GONE);
@@ -381,7 +381,7 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
                             @Override
                             public void onClick(View v) {
 
-                                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || AppController.isAdmin) {
+                                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || role.equals(Common.Constant_Class.ADMIN)) {
                                     mViewholder.ImgHash = "selectImage";
                                     selectImage();
                                 } else {
@@ -468,7 +468,7 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
             @Override
             public void onClick(View v) {
 
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || AppController.isAdmin) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || role.equals(Common.Constant_Class.ADMIN)) {
                     mViewholder.ImgHash = "selectImage";
                     selectImage();
                 }
@@ -477,7 +477,7 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
 
         if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
 
-            if (!AppController.isAdmin) {
+            if (role.equals(Common.Constant_Class.USER)) {
 
                 Objects.requireNonNull(mViewholder.btn_remove).setVisibility(View.GONE);
                 Objects.requireNonNull(mViewholder.edtchild_name).setKeyListener(null);
@@ -542,7 +542,7 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
                                 mViewholder.edtchild_bdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || AppController.isAdmin) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
                             dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
@@ -583,7 +583,7 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
                                 mViewholder.edtchild_btime.setText(time);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || AppController.isAdmin) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
                             tpd.show(mActivity.getFragmentManager(), "Timepickerdialog");
                         }
                         return true;

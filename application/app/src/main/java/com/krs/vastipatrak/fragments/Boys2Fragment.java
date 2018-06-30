@@ -1,3 +1,4 @@
+/*
 package com.krs.vastipatrak.fragments;
 
 
@@ -76,3 +77,4 @@ public class Boys2Fragment extends Fragment implements OnPageChangeListener, OnL
         }
     }
 }
+*/
