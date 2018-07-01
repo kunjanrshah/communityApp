@@ -29,6 +29,8 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -940,7 +942,16 @@ public class Common {
         pDialog = null;
     }
 
-
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
     /*public static void ExportMatrimonyData(@NonNull Activity mActiviy) {
 
     }*/
@@ -1108,7 +1119,7 @@ public class Common {
     public static void alert(@NonNull Activity mActivity, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(mActivity.getString(R.string.app_name));
-
+        builder.setCancelable(false);
         builder.setMessage(message);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(@NonNull DialogInterface dialog, int which) {
@@ -1308,7 +1319,7 @@ public class Common {
         public static final String API_KEY_VALUE = "q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
         public static final String DEVICE_TYPE_VALUE = "Android";
 
-        private static final String BASE_URL = "http://www.srbrothersinfotech.com/directory-dev/";
+        private static final String BASE_URL = "http://www.srbrothersinfotech.com/directory-dev";
         //  private static final String BASE_URL= "http://www.geniusaccountancy.in/directory-dev";
         public static final String LOGIN_URL = BASE_URL + "/API/login";
         public static final String SIGNUP_URL = BASE_URL + "/API/register";
@@ -1363,6 +1374,7 @@ public class Common {
         public static final String WORK = "work";
         public static final String QUERY = "query";
         public static final String QUERY_STRING = "query_string";
+        public static final String PUSH_MESSAGE = "push_message";
         public static final String ID = "id";
         public static final String IDList = "idList";
         public static final String STATUS = "status";

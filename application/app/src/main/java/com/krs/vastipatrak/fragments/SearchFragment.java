@@ -40,7 +40,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.ExpandableListAdapter;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.interfaces.DisplaySearchFragment;
+import com.krs.vastipatrak.interfaces.IAdminControl;
 import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
 import com.krs.vastipatrak.model.ListProfileData;
@@ -64,7 +64,7 @@ import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 import static com.krs.vastipatrak.utils.Common.showProgressDialog;
 
 
-public class SearchFragment extends Fragment implements DisplaySearchFragment {
+public class SearchFragment extends Fragment implements IAdminControl {
 
 
     private static final String[] CALL_PHONE_PERMS = {Manifest.permission.CALL_PHONE};
@@ -145,7 +145,6 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
 
         lvCustomList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             int previousGroup = -1;
-
             @Override
             public void onGroupExpand(int groupPosition) {
                 if (groupPosition != previousGroup) lvCustomList.collapseGroup(previousGroup);
@@ -427,14 +426,13 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
         }
     }
 
-    private void callNonActivesWS() {
+    public void callNonActivesWS() {
         if (Common.isOnline(Objects.requireNonNull(getActivity()))) {
             showProgressDialog(getActivity());
             Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setSubtitle(getString(R.string.action_nonActives));
 
             JSONObject mJsonObject = new JSONObject();
             try {
-
                 mJsonObject.put(Common.Constant_Class.USER_ID, Objects.requireNonNull(mSharedPreferences).getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             } catch (Exception e) {
@@ -445,7 +443,6 @@ public class SearchFragment extends Fragment implements DisplaySearchFragment {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
-
                     displayData(response);
                 }
             }, new Response.ErrorListener() {

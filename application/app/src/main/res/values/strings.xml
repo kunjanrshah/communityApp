@@ -24,9 +24,8 @@
     <string name="hint_land_line">Land Line </string>
     <string name="hint_gotra">Gotra </string>
 
-
     <string name="err_msg_email">Enter valid email</string>
-
+    <string name="err_msg_invalid_mobile">Invalid Mobile Number</string>
     <string name="err_msg_blank">Please enter missing details</string>
     <string name="err_msg_password">Enter the password</string>
     <string name="err_msg_conform_password">Wrong password</string>
@@ -38,7 +37,6 @@
     <string name="err_msg_native">Enter your native place</string>
     <string name="err_msg_address">Enter your address </string>
     <string name="err_msg_repeat_password">Password and Repeat password must be same</string>
-
 
     <string name="action_search">Search</string>
     <string name="action_save">Save</string>

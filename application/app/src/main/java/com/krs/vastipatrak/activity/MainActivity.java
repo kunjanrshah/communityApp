@@ -75,8 +75,7 @@ import com.krs.vastipatrak.fragments.HomeFragment;
 import com.krs.vastipatrak.fragments.MatrimonyFragment;
 import com.krs.vastipatrak.fragments.RelativeFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
-import com.krs.vastipatrak.fragments.SyncFragment;
-import com.krs.vastipatrak.interfaces.DisplaySearchFragment;
+import com.krs.vastipatrak.interfaces.IAdminControl;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
@@ -109,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private final int CALL_REQUEST = 2;
     private final int LOCATION_REQUEST = 3;
     private String query = "";
+    private String push_message = null;
     private String query_string = "";
     private boolean doubleBackToExitPressedOnce = false;
     private GoogleApiClient googleApiClient;
@@ -125,13 +125,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     };
     @Nullable
     private Fragment fragment = null;
+    private Fragment searchFragment = null;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
     private SearchView searchView;
     private IntentIntegrator qrScan;
 
-    private DisplaySearchFragment displaySearchFragment;
+    private IAdminControl IAdminControl;
 
 
     @Override
@@ -150,12 +151,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         FragmentDrawer drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
+        searchFragment = new SearchFragment();
 
-        Bundle mBundle = getIntent().getExtras();
-        if (mBundle != null) {
-            query = mBundle.getString(Common.Constant_Class.QUERY);
-            query_string = mBundle.getString(Common.Constant_Class.QUERY_STRING);
-        }
 
         if (Build.VERSION.SDK_INT >= 23) {
             if (Common.canCallPhone(this) && !Common.canAccessLocation(this)) {
@@ -196,22 +193,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     // now subscribe to `global` topic to receive app wide notifications
                     FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
 
-
                 } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
-                    String message = intent.getStringExtra("message");
+                    String message = intent.getStringExtra(Common.Constant_Class.PUSH_MESSAGE);
                     Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
                     Log.d(TAG, "Push notification: " + message);
                 }
             }
         };
-
-        if (query == null && query_string == null) {
-            displayView(0);
-        } else if (query_string != null && query != null && query.isEmpty() && query_string.isEmpty()) {
-            displayView(0);
-        } else {
-            displayView(-1);
-        }
         Common.getDeviceId(this);
     }
 
@@ -275,6 +263,19 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         // clear the notification area when the app is opened
         NotificationUtils.clearNotifications(getApplicationContext());
+
+        Bundle mBundle = getIntent().getExtras();
+        if (mBundle != null) {
+            query = mBundle.getString(Common.Constant_Class.QUERY);
+            query_string = mBundle.getString(Common.Constant_Class.QUERY_STRING);
+        }
+        if (query == null && query_string == null && push_message == null) {
+            displayView(0);
+        } else if (query_string != null && query != null && query.isEmpty() && query_string.isEmpty()) {
+            displayView(0);
+        } else {
+            displayView(-1);
+        }
     }
 
     @Override
@@ -365,11 +366,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                Fragment mSearch = new SearchFragment();
-                displaySearchFragment = (DisplaySearchFragment) mSearch;
+
+                IAdminControl = (IAdminControl) searchFragment;
                 mBundle.putString(Common.Constant_Class.QUERY, query);
-                mSearch.setArguments(mBundle);
-                fragmentTransaction.replace(R.id.container_body, mSearch).commit();
+                searchFragment.setArguments(mBundle);
+                fragmentTransaction.replace(R.id.container_body, searchFragment).commit();
 
                 return false;
             }
@@ -405,7 +406,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             public boolean onMenuItemClick(MenuItem item) {
 
                 qrScan.initiateScan();
-
                 return false;
             }
         });
@@ -422,7 +422,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 return false;
             }
         });
-
 
         MenuItem activeItem = menu.findItem(R.id.action_activate);
         MenuItem activeAdd = menu.findItem(R.id.action_add);
@@ -518,15 +517,21 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         switch (menu) {
             case 1:
-                Fragment mSearch1 = new SearchFragment();
-                displaySearchFragment = (DisplaySearchFragment) mSearch1;
+                fragment = searchFragment;
+                IAdminControl = (IAdminControl) fragment;
+                try {
+                    ((SearchFragment) fragment).callNonActivesWS();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 mBundle.putInt(Common.Constant_Class.AdminControl, Common.Constant_Class.NonActive);
-                mSearch1.setArguments(mBundle);
-                fragmentTransaction.replace(R.id.container_body, mSearch1).commit();
+                fragment.setArguments(mBundle);
+                fragmentTransaction.replace(R.id.container_body, fragment).commit();
+
                 break;
             case 2:
                 try {
-                    displaySearchFragment.CallActivate();
+                    IAdminControl.CallActivate();
                 } catch (Exception e) {
                     Toast.makeText(this, "Select Non-Actives First", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
@@ -534,7 +539,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 break;
             case 3:
                 try {
-                    displaySearchFragment.CallDeActivate();
+                    IAdminControl.CallDeActivate();
                 } catch (Exception e) {
                     Toast.makeText(this, "Select Non-Actives First", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
@@ -542,17 +547,15 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 break;
             case 4:
                 try {
-                    displaySearchFragment.CallDelete();
+                    IAdminControl.CallDelete();
                 } catch (Exception e) {
                     Toast.makeText(this, "Select Non-Actives First", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             case 5:
-                try
-                {
-                    displaySearchFragment.ChangeRole();
-                }catch (Exception e)
-                {
+                try {
+                    IAdminControl.ChangeRole();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
@@ -582,18 +585,38 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         displayView(position);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle mBundle = intent.getExtras();
+        if (mBundle != null) {
+            push_message = mBundle.getString(Common.Constant_Class.PUSH_MESSAGE);
+            String user_id = mBundle.getString(Common.Constant_Class.USER_ID);
+        }
+    }
+
     private void displayView(int position) {
 
         switch (position) {
             case -1:
-                fragment = new SearchFragment();
+                fragment = searchFragment;
                 Bundle mBundle = new Bundle();
                 if (query != null) {
                     mBundle.putString(Common.Constant_Class.QUERY, query);
                 } else if (query_string != null) {
                     mBundle.putString(Common.Constant_Class.QUERY_STRING, query_string);
+                } else if (push_message != null) {
+                    IAdminControl = (IAdminControl) fragment;
+                    mBundle.putString(Common.Constant_Class.PUSH_MESSAGE, push_message);
+                    mBundle.putInt(Common.Constant_Class.AdminControl, Common.Constant_Class.NonActive);
+                    fragment.setArguments(mBundle);
+                    push_message = null;
+                    try {
+                        ((SearchFragment) fragment).callNonActivesWS();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-                fragment.setArguments(mBundle);
                 break;
             case 0:
                 fragment = new HomeFragment();
@@ -618,7 +641,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 /*Intent mIntent = new Intent(MainActivity.this, PDFActivity.class);
                 startActivity(mIntent);
                 this.overridePendingTransition(0, 0);*/
-               // fragment = new SyncFragment();
+                // fragment = new SyncFragment();
                 Intent mIntent2 = new Intent(MainActivity.this, TourActivity.class);
                 startActivity(mIntent2);
                 this.overridePendingTransition(0, 0);
@@ -699,8 +722,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
 
                             try {
-                             //   mEditor.clear();
-                              //  mEditor.apply();
+                                //   mEditor.clear();
+                                //  mEditor.apply();
                                    /* AppController.getInstance().realm.beginTransaction();
                                     AppController.getInstance().realm.deleteAll();
                                     AppController.getInstance().realm.commitTransaction();*/

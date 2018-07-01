@@ -61,7 +61,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import io.realm.Realm;
 
@@ -81,7 +80,7 @@ public class LoginActivity extends Activity {
     private final String TAG = MainActivity.class.getSimpleName();
     @Nullable
     private JSONObject json = null;
-    private ImageView img_profile;
+    private ImageView img_profile,img_cancel;
     private String str_profile_hash = "";
     private MaterialBetterSpinner spinnerSubcast;
     private MaterialBetterSpinner spinnerEkdo;
@@ -165,16 +164,22 @@ public class LoginActivity extends Activity {
                 final Dialog forgot_dialog = new Dialog(LoginActivity.this);
                 forgot_dialog.setContentView(R.layout.dialog_custom);
                 forgot_dialog.setTitle(R.string.app_name);
+                forgot_dialog.setCancelable(false);
                 InputLayoutForgotPassword = forgot_dialog.findViewById(R.id.input_layout_forgot_password);
                 inputForgotPassword = forgot_dialog.findViewById(R.id.input_forgot_password);
                 inputForgotPassword.addTextChangedListener(new MyTextWatcher(inputForgotPassword));
                 Button btn_send = forgot_dialog.findViewById(R.id.btn_send);
-
-                btn_send.setOnClickListener(new View.OnClickListener() {
+                Button btn_cancel = forgot_dialog.findViewById(R.id.btn_cancel);
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         forgot_dialog.dismiss();
-                        ForgotPasswordWS();
+                    }
+                });
+                btn_send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ForgotPasswordWS(forgot_dialog);
                     }
                 });
                 forgot_dialog.show();
@@ -264,6 +269,7 @@ public class LoginActivity extends Activity {
         txt_forgot = findViewById(R.id.txt_forgot);
         txtSignup = findViewById(R.id.txtSignup);
         img_profile = findViewById(R.id.img_profile);
+        img_cancel = findViewById(R.id.img_cancel);
         spinnerSubcast = findViewById(R.id.spinnerSubcast);
         spinnerEkdo = findViewById(R.id.spinnerEkdo);
 
@@ -336,6 +342,12 @@ public class LoginActivity extends Activity {
             }
         });
 
+        img_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                img_profile.setImageDrawable(getDrawable(R.drawable.user_profile));
+            }
+        });
     }
 
     private void showProgressDialog() {
@@ -380,6 +392,7 @@ public class LoginActivity extends Activity {
             input_layout_email_mobile.setVisibility(View.GONE);
             txt_forgot.setVisibility(View.GONE);
             img_profile.setVisibility(View.VISIBLE);
+            img_cancel.setVisibility(View.VISIBLE);
             input_layout_address.setVisibility(View.GONE);
             input_layout_father_name.setVisibility(View.GONE);
             input_layout_native_place.setVisibility(View.GONE);
@@ -400,6 +413,7 @@ public class LoginActivity extends Activity {
             spinnerSubcast.setVisibility(View.GONE);
             spinnerEkdo.setVisibility(View.GONE);
             img_profile.setVisibility(View.INVISIBLE);
+            img_cancel.setVisibility(View.INVISIBLE);
             input_layout_address.setVisibility(View.GONE);
             input_layout_father_name.setVisibility(View.GONE);
             input_layout_native_place.setVisibility(View.GONE);
@@ -505,11 +519,12 @@ public class LoginActivity extends Activity {
     }
 
 
-    private void ForgotPasswordWS() {
+    private void ForgotPasswordWS(Dialog d) {
         if (Common.isOnline(this)) {
 
             String forgot_email = inputForgotPassword.getText().toString();
             if (!forgot_email.equalsIgnoreCase("")) {
+                d.dismiss();
                 JSONObject json = new JSONObject();
                 try {
                     json.put(Common.Constant_Class.EMAIL_ADDRESS, forgot_email);
@@ -518,6 +533,7 @@ public class LoginActivity extends Activity {
                 }
 
                 String url = Common.Constant_Class.FORGOT_PASSWORD_URL;
+                showProgressDialog();
                 JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
 
                     @Override
@@ -525,6 +541,7 @@ public class LoginActivity extends Activity {
                         Log.d(TAG, response.toString());
 
                         try {
+                            hideProgressDialog();
                             boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
 
@@ -533,7 +550,7 @@ public class LoginActivity extends Activity {
                                     inputPassword.setText("");
                                 }
                             }
-                            Common.alert(LoginActivity.this,message);
+                            Common.alert(LoginActivity.this, message);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -544,10 +561,9 @@ public class LoginActivity extends Activity {
                     @Override
                     public void onErrorResponse(@NonNull VolleyError error) {
                         VolleyLog.d(TAG, "Error: " + error.getMessage());
-
+                        hideProgressDialog();
                     }
-                })
-                {
+                }) {
                     @NonNull
                     @Override
                     public Map<String, String> getHeaders() {
@@ -607,9 +623,9 @@ public class LoginActivity extends Activity {
                                     String profile_url = mjson_data.getString(Common.Constant_Class.PROFILE_PIC_URL);
                                     String first_name = mjson_data.getString(Common.Constant_Class.FIRST_NAME);
                                     String last_name = mjson_data.getString(Common.Constant_Class.LAST_NAME);
-                                    String access_token=mjson_data.getString(Common.Constant_Class.ACCESS_TOKEN);
-                                    String updated_time=mjson_data.getString(Common.Constant_Class.UPDATED_TIME);
-                                    String role=mjson_data.getString(Common.Constant_Class.ROLE);
+                                    String access_token = mjson_data.getString(Common.Constant_Class.ACCESS_TOKEN);
+                                    String updated_time = mjson_data.getString(Common.Constant_Class.UPDATED_TIME);
+                                    String role = mjson_data.getString(Common.Constant_Class.ROLE);
 
                                     mEditor.putString(Common.Constant_Class.EMAIL, email);
                                     mEditor.putString(Common.Constant_Class.PASSWORD, password);
@@ -639,10 +655,10 @@ public class LoginActivity extends Activity {
                                     finish();
                                     Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Common.alert(LoginActivity.this,"Registration request is pending. Please contact to Admin !!");
+                                    Common.alert(LoginActivity.this, "Registration request is pending. Please contact to Admin !!");
                                 }
                             } else {
-                                Common.alert(LoginActivity.this,message);
+                                Common.alert(LoginActivity.this, message);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -677,7 +693,7 @@ public class LoginActivity extends Activity {
                         params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                         params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
                         params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                        params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
+                        params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
                         if (mSharedPreferences != null) {
                             params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
                         }
@@ -724,7 +740,7 @@ public class LoginActivity extends Activity {
     private void SignupWS() {
         if (Common.isOnline(this)) {
 
-            showProgressDialog();
+
             final String name = inputName.getText().toString();
             final String email = inputEmail.getText().toString();
             final String mobile = inputMobile.getText().toString();
@@ -740,125 +756,129 @@ public class LoginActivity extends Activity {
 
             if (!email.equalsIgnoreCase("") && !name.equalsIgnoreCase("") && !mobile.equalsIgnoreCase("") && !password.equalsIgnoreCase("") && !cpassword.equalsIgnoreCase("")) {
                 if (password.equalsIgnoreCase(cpassword)) {
+                    if (mobile.length() >= 10) {
+                        try {
+                            json = new JSONObject();
+                            showProgressDialog();
+                            json.put(Common.Constant_Class.FIRST_NAME, name);
+                            json.put(Common.Constant_Class.EMAIL_ADDRESS, email);
+                            json.put(Common.Constant_Class.MOBILE, mobile);
+                            json.put(Common.Constant_Class.PASSWORD, password);
+                            json.put(Common.Constant_Class.REPEAT_PASSWORD, cpassword);
+                            json.put(Common.Constant_Class.SUB_CAST, subcast);
+                            json.put(Common.Constant_Class.EKDO, ekdo);
 
-                    try {
-                        json = new JSONObject();
-                        json.put(Common.Constant_Class.FIRST_NAME, name);
-                        json.put(Common.Constant_Class.EMAIL_ADDRESS, email);
-                        json.put(Common.Constant_Class.MOBILE, mobile);
-                        json.put(Common.Constant_Class.PASSWORD, password);
-                        json.put(Common.Constant_Class.REPEAT_PASSWORD, cpassword);
-                        json.put(Common.Constant_Class.SUB_CAST, subcast);
-                        json.put(Common.Constant_Class.EKDO, ekdo);
-
-                        if (screen != null && screen.equalsIgnoreCase(Common.Constant_Class.SEARCH_FRAGMENT)) {
-                            json.put(Common.Constant_Class.STATUS, "1");
-                        } else {
-                            json.put(Common.Constant_Class.STATUS, "0");
+                            if (screen != null && screen.equalsIgnoreCase(Common.Constant_Class.SEARCH_FRAGMENT)) {
+                                json.put(Common.Constant_Class.STATUS, "1");
+                            } else {
+                                json.put(Common.Constant_Class.STATUS, "0");
+                            }
+                            if (!str_profile_hash.isEmpty()) {
+                                json.put(Common.Constant_Class.PROFILE_PIC, "profile.png");
+                                json.put(Common.Constant_Class.PROFILE_PIC_HASH, str_profile_hash);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        if (!str_profile_hash.isEmpty()) {
-                            json.put(Common.Constant_Class.PROFILE_PIC, "profile.png");
-                            json.put(Common.Constant_Class.PROFILE_PIC_HASH, str_profile_hash);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
 
-                    JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SIGNUP_URL, json, new Response.Listener<JSONObject>() {
+                        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SIGNUP_URL, json, new Response.Listener<JSONObject>() {
 
-                        @Override
-                        public void onResponse(@NonNull JSONObject response) {
-                            Log.d(TAG, response.toString());
+                            @Override
+                            public void onResponse(@NonNull JSONObject response) {
+                                Log.d(TAG, response.toString());
 
-                            try {
-                                hideProgressDialog();
-                                boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
-                                String message = response.getString(Common.Constant_Class.MESSAGE);
+                                try {
+                                    hideProgressDialog();
+                                    boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
+                                    String message = response.getString(Common.Constant_Class.MESSAGE);
 
-                                if (success) {
-                                    String user_id = response.getString(Common.Constant_Class.USER_ID);
-                                    if (!message.contains("admin")) {
+                                    if (success) {
+                                        String user_id = response.getString(Common.Constant_Class.USER_ID);
+                                        if (!message.contains("admin")) {
 
-                                        String profile_url = response.getString(Common.Constant_Class.PROFILE_PIC_URL);
-                                        String first_name = response.getString(Common.Constant_Class.FIRST_NAME);
-                                        String last_name = response.getString(Common.Constant_Class.LAST_NAME);
+                                            String profile_url = response.getString(Common.Constant_Class.PROFILE_PIC_URL);
+                                            String first_name = response.getString(Common.Constant_Class.FIRST_NAME);
+                                            String last_name = response.getString(Common.Constant_Class.LAST_NAME);
 
-                                        mEditor.putString(Common.Constant_Class.EMAIL, email);
-                                        mEditor.putString(Common.Constant_Class.PASSWORD, password);
-                                        mEditor.putString(Common.Constant_Class.USER_ID, user_id);
-                                        mEditor.putString(Common.Constant_Class.FIRST_NAME, first_name);
-                                        mEditor.putString(Common.Constant_Class.LAST_NAME, last_name);
-                                        mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, profile_url);
-                                        mEditor.apply();
+                                            mEditor.putString(Common.Constant_Class.EMAIL, email);
+                                            mEditor.putString(Common.Constant_Class.PASSWORD, password);
+                                            mEditor.putString(Common.Constant_Class.USER_ID, user_id);
+                                            mEditor.putString(Common.Constant_Class.FIRST_NAME, first_name);
+                                            mEditor.putString(Common.Constant_Class.LAST_NAME, last_name);
+                                            mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, profile_url);
+                                            mEditor.apply();
 
-                                        Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
-                                        if (mSharedPreferences != null) {
-                                            mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                                            Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
+                                            if (mSharedPreferences != null) {
+                                                mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                                            }
+                                            startActivity(mIntent);
+                                            finish();
+                                        } else {
+
+                                            ListProfileData mListProfileData = new ListProfileData();
+                                            mListProfileData.setProfile_id(user_id);
+                                            mListProfileData.setFirst_name(name);
+                                            mListProfileData.setLast_name(surname);
+                                            mListProfileData.setNative_place(_native);
+                                            mListProfileData.setFather_name(father_name);
+                                            mListProfileData.setAddress(address);
+                                            mListProfileData.setEkdo(ekdo);
+                                            mListProfileData.setEmail_address(email);
+                                            mListProfileData.setPassword(password);
+                                            mListProfileData.setMobile(mobile);
+
+                                            realm.beginTransaction();
+                                            realm.copyToRealm(mListProfileData);
+                                            realm.commitTransaction();
+
                                         }
-                                        startActivity(mIntent);
-                                        finish();
-                                    } else {
-
-                                        ListProfileData mListProfileData = new ListProfileData();
-                                        mListProfileData.setProfile_id(user_id);
-                                        mListProfileData.setFirst_name(name);
-                                        mListProfileData.setLast_name(surname);
-                                        mListProfileData.setNative_place(_native);
-                                        mListProfileData.setFather_name(father_name);
-                                        mListProfileData.setAddress(address);
-                                        mListProfileData.setEkdo(ekdo);
-                                        mListProfileData.setEmail_address(email);
-                                        mListProfileData.setPassword(password);
-                                        mListProfileData.setMobile(mobile);
-
-                                        realm.beginTransaction();
-                                        realm.copyToRealm(mListProfileData);
-                                        realm.commitTransaction();
-
                                     }
+                                    Common.alert(LoginActivity.this, message);
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                                Common.alert(LoginActivity.this, message);
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
-                        }
-                    }, new Response.ErrorListener() {
+                        }, new Response.ErrorListener() {
 
-                        @Override
-                        public void onErrorResponse(@NonNull VolleyError error) {
-                            hideProgressDialog();
-                            VolleyLog.d(TAG, "Error: " + error.getMessage());
-                            String message = null;
-                            if (error instanceof NetworkError) {
-                                message = "Cannot connect to Internet...Please check your connection!";
-                            } else if (error instanceof ServerError) {
-                                message = "The server could not be found. Please try again after some time!!";
-                            } else if (error instanceof AuthFailureError) {
-                                message = "Cannot connect to Internet...Please check your connection!";
-                            } else if (error instanceof ParseError) {
-                                message = "Parsing error! Please try again after some time!!";
-                            } else if (error instanceof TimeoutError) {
-                                message = "Connection TimeOut! Please check your internet connection.";
+                            @Override
+                            public void onErrorResponse(@NonNull VolleyError error) {
+                                hideProgressDialog();
+                                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                                String message = null;
+                                if (error instanceof NetworkError) {
+                                    message = "Cannot connect to Internet...Please check your connection!";
+                                } else if (error instanceof ServerError) {
+                                    message = "The server could not be found. Please try again after some time!!";
+                                } else if (error instanceof AuthFailureError) {
+                                    message = "Cannot connect to Internet...Please check your connection!";
+                                } else if (error instanceof ParseError) {
+                                    message = "Parsing error! Please try again after some time!!";
+                                } else if (error instanceof TimeoutError) {
+                                    message = "Connection TimeOut! Please check your internet connection.";
+                                }
+                                Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_LONG).show();
+
                             }
-                            Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_LONG).show();
-
-                        }
-                    }) {
-                        @NonNull
-                        @Override
-                        public Map<String, String> getHeaders() {
-                            Map<String, String> params = new HashMap<>();
-                            params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                            params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                            params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                            assert mSharedPreferences != null;
-                            params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
-                            return params;
-                        }
-                    };
-                    // Adding request to request queue
-                    AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+                        }) {
+                            @NonNull
+                            @Override
+                            public Map<String, String> getHeaders() {
+                                Map<String, String> params = new HashMap<>();
+                                params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                                params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                                params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                                assert mSharedPreferences != null;
+                                params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                                return params;
+                            }
+                        };
+                        // Adding request to request queue
+                        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+                    } else {
+                        Toast.makeText(LoginActivity.this, getString(R.string.err_msg_invalid_mobile), Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     Toast.makeText(LoginActivity.this, getString(R.string.err_msg_repeat_password), Toast.LENGTH_LONG).show();
                 }
@@ -904,16 +924,15 @@ public class LoginActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         Bitmap bmp = null;
         if (data != null) {
-
-            if (data.getData() == null) {
-                bmp = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
-            } else {
-                Uri selectedImage = data.getData();
-                try {
+            try {
+                if (data.getData() == null) {
+                    bmp = (Bitmap) data.getExtras().get("data");
+                } else {
+                    Uri selectedImage = data.getData();
                     bmp = Common.scaleImage(this, selectedImage);
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             if (bmp != null) {
@@ -921,7 +940,6 @@ public class LoginActivity extends Activity {
                     Glide.with(this).load(bmp).thumbnail(0.5f).apply(RequestOptions.circleCropTransform()).into(img_profile);
                     str_profile_hash = Common.getBase64(bmp);
                 }
-
             }
         }
     }

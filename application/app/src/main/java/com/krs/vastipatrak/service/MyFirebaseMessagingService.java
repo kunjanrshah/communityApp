@@ -11,6 +11,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.app.Config;
+import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
 import org.json.JSONException;
@@ -37,17 +38,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             handleNotification(remoteMessage.getNotification().getBody());
         }*/
 
+        //MyFirebaseMessagingService: From: 900336668958
+        //MyFirebaseMessagingService: Data Payload: {user_id=4185, notification=Please approve Abcd1 's Request }
+
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "Data Payload: " + remoteMessage.getData().toString());
-
-
+            String user_id = remoteMessage.getData().get("user_id");
             String notification = remoteMessage.getData().get("notification");
             String title = remoteMessage.getData().get("title");
             String location = remoteMessage.getData().get("location");
             String imgUrl = remoteMessage.getData().get("imgUrl");
-         //   String timestamp= remoteMessage.getData().get("timestamp");
+            //   String timestamp= remoteMessage.getData().get("timestamp");
 
+            if (title == null || title.isEmpty()) {
+                title = "MEDK Vastipatrak";
+            }
 
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
@@ -57,6 +63,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 json.put("title", title);
                 //json.put("isBackground","");
                 json.put("imageUrl", imgUrl);
+                json.put("user_id", user_id);
                 json.put("timestamp", ts);
                 handleDataMessage(json);
             } catch (Exception e) {
@@ -80,7 +87,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void handleDataMessage(JSONObject json) {
         Log.e(TAG, "push json: " + json.toString());
-        String notification = "", title = "", imageUrl = "", timestamp = "";
+        String notification = "", title = "", imageUrl = "", timestamp = "",user_id="";
 
         try {
 
@@ -91,6 +98,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
             if (json.has("imageUrl")) {
                 imageUrl = json.getString("imageUrl");
+            }
+            if (json.has("user_id")) {
+                user_id = json.getString("user_id");
             }
 
             //  boolean isBackground = data.getBoolean("is_background");
@@ -109,7 +119,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if (NotificationUtils.isAppIsInBackground(getApplicationContext())) {
                 // app is in foreground, broadcast the push message
                 Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-                pushNotification.putExtra("message", notification);
+                pushNotification.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
                 // play notification sound
@@ -118,8 +128,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             } else {
                 // app is in background, show the notification in notification tray
                 Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-                resultIntent.putExtra("message", notification);
-
+                resultIntent.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
+                resultIntent.putExtra(Common.Constant_Class.USER_ID, user_id);
                 // check for image attachment
                 if (TextUtils.isEmpty(imageUrl)) {
                     showNotificationMessage(getApplicationContext(), title, notification, timestamp, resultIntent);

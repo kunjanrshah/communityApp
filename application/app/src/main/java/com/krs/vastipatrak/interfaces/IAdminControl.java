@@ -1,6 +1,6 @@
 package com.krs.vastipatrak.interfaces;
 
-public interface DisplaySearchFragment {
+public interface IAdminControl {
     void CallActivate();
 
     void CallDelete();
