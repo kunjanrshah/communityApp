@@ -938,8 +938,12 @@ public class Common {
     }
 
     public static void hideProgressDialog() {
-        if (pDialog.isShowing()) pDialog.cancel();
-        pDialog = null;
+        try {
+            if (pDialog.isShowing()) pDialog.cancel();
+            pDialog = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void hideKeyboard(Activity activity) {
@@ -1318,24 +1322,6 @@ public class Common {
 
         public static final String API_KEY_VALUE = "q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
         public static final String DEVICE_TYPE_VALUE = "Android";
-
-        private static final String BASE_URL = "http://www.srbrothersinfotech.com/directory-dev";
-        //  private static final String BASE_URL= "http://www.geniusaccountancy.in/directory-dev";
-        public static final String LOGIN_URL = BASE_URL + "/API/login";
-        public static final String SIGNUP_URL = BASE_URL + "/API/register";
-        public static final String FORGOT_PASSWORD_URL = BASE_URL + "/API/forgotPassword";
-        public static final String CHANGE_PASSWORD_URL = BASE_URL + "/API/changePassword";
-        public static final String LOGOUT_URL = BASE_URL + "/API/logout";
-        public static final String DELETE_URL = BASE_URL + "/API/delete";
-        public static final String STATUS_URL = BASE_URL + "/API/StatusChange";
-        public static final String SYNC_URL = BASE_URL + "/API/sync";
-        public static final String INACTIVES_URL = BASE_URL + "/API/getInactiveUsers";
-        public static final String PROFILE_URL = BASE_URL + "/API/profile";
-        public static final String EVENTS_URL = BASE_URL + "/API/getEvents";
-        public static final String GET_CITIES_URL = BASE_URL + "/API/getCities";
-        public static final String CHANGE_ROLE_URL = BASE_URL + "/API/changeRole";
-        public static final String BLOCK_USERS_URL = BASE_URL + "/API/blockUsers";
-
         public static final String PREF_NAME = "Vastipatrak";
         public static final String PREF_TOKEN = "Pref_Token";
         public static final String SCREEN = "screen";
@@ -1424,7 +1410,6 @@ public class Common {
         public static final String CHILD_BTIME = "birth_time";
         public static final String CHILD_BPLACE = "birth_place";
         public static final String IS_INTERESTED = "is_interested";
-
         public static final String CHILD_EDU = "child_edu";
         public static final String CHILD_WORK = "child_work";
         public static final String FragmentSp = "fragment";
@@ -1435,12 +1420,28 @@ public class Common {
         public static final String PROFILE_ID = "profile_id";
         public static final String TBTN_SHARE = "tbtn_share";
         public static final String TBTN_SYNC = "tbtn_sync";
-        public static String DEVICE_ID_VALUE = "";
         static final String IMG_FATHER_URL = "img_father_url";
         static final String IMG_MOTHER_URL = "img_mother_url";
         static final String IMG_SPOUSE_URL = "img_spouse_url";
         static final String IMG_SFATHER_URL = "img_sfather_url";
         static final String IMG_SMOTHER_URL = "img_smother_url";
         static final String CHILD_IMAGE_URL = "child_image_url";
+        private static final String BASE_URL = "http://www.srbrothersinfotech.com/directory-dev";
+        //  private static final String BASE_URL= "http://www.geniusaccountancy.in/directory-dev";
+        public static final String LOGIN_URL = BASE_URL + "/API/login";
+        public static final String SIGNUP_URL = BASE_URL + "/API/register";
+        public static final String FORGOT_PASSWORD_URL = BASE_URL + "/API/forgotPassword";
+        public static final String CHANGE_PASSWORD_URL = BASE_URL + "/API/changePassword";
+        public static final String LOGOUT_URL = BASE_URL + "/API/logout";
+        public static final String DELETE_URL = BASE_URL + "/API/delete";
+        public static final String STATUS_URL = BASE_URL + "/API/StatusChange";
+        public static final String SYNC_URL = BASE_URL + "/API/sync";
+        public static final String INACTIVES_URL = BASE_URL + "/API/getInactiveUsers";
+        public static final String PROFILE_URL = BASE_URL + "/API/profile";
+        public static final String EVENTS_URL = BASE_URL + "/API/getEvents";
+        public static final String GET_CITIES_URL = BASE_URL + "/API/getCities";
+        public static final String CHANGE_ROLE_URL = BASE_URL + "/API/changeRole";
+        public static final String BLOCK_USERS_URL = BASE_URL + "/API/blockUsers";
+        public static String DEVICE_ID_VALUE = "";
     }
 }

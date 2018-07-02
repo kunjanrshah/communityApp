@@ -552,6 +552,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     Toast.makeText(this, "Select Non-Actives First", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
+                break;
             case 5:
                 try {
                     IAdminControl.ChangeRole();
