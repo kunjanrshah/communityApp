@@ -743,7 +743,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
             Toast.makeText(getActivity(), getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
         }
     }
-
     private void changeRoleDialog(String msg) {
         String[] SPINNERLIST = {"ADMIN", "USER"};
         final Dialog role_dialog = new Dialog(getActivity());
