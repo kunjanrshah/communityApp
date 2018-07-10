@@ -25,6 +25,7 @@
     <string name="hint_gotra">Gotra </string>
 
     <string name="err_msg_email">Enter valid email</string>
+    <string name="err_msg_search">Enter search string</string>
     <string name="err_msg_invalid_mobile">Invalid Mobile Number</string>
     <string name="err_msg_blank">Please enter missing details</string>
     <string name="err_msg_password">Enter the password</string>

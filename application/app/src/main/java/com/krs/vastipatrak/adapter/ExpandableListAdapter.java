@@ -513,7 +513,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.txt_distance.setVisibility(View.GONE);
         }
 
-        if (mListParentData.getStatus().equalsIgnoreCase("0")) {
+        if (mListParentData.getStatus()!=null&& mListParentData.getStatus().equalsIgnoreCase("0")) {
             groupViewHolder.imgShare.setVisibility(View.GONE);
         } else {
             groupViewHolder.imgShare.setVisibility(View.VISIBLE);

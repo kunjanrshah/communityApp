@@ -1102,7 +1102,6 @@ public class Common {
                 if (file.exists()) {
                     intentShareFile.setType("application/xls");
                     intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
-
                     intentShareFile.putExtra(Intent.EXTRA_SUBJECT, "Sharing File...");
                     intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...");
 
@@ -1396,6 +1395,8 @@ public class Common {
         public static final String IMG_FATHER = "img_father";
         public static final String SPOUSE_NAME = "spouse_name";
         public static final String MARRIAGE_DATE = "marriage_date";
+        public static final String MARRIED = "1";
+        public static final String UNMARRIED = "0";
         public static final String SPOUSE_FATHER_NAME = "spouse_father_name";
         public static final String SPOUSE_MOTHER_NAME = "spouse_mother_name";
         public static final int sBorder = 5;
@@ -1431,6 +1432,8 @@ public class Common {
         public static final String LOGIN_URL = BASE_URL + "/API/login";
         public static final String SIGNUP_URL = BASE_URL + "/API/register";
         public static final String FORGOT_PASSWORD_URL = BASE_URL + "/API/forgotPassword";
+        public static final String ADVANCE_SEARCH_URL = BASE_URL + "/API/searchUsers";
+        public static final String GLOBAL_SEARCH_URL = BASE_URL + "/API/globalSearch";
         public static final String CHANGE_PASSWORD_URL = BASE_URL + "/API/changePassword";
         public static final String LOGOUT_URL = BASE_URL + "/API/logout";
         public static final String DELETE_URL = BASE_URL + "/API/delete";

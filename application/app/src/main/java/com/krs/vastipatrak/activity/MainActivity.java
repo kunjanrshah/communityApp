@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private static final String TAG = MainActivity.class.getSimpleName();
     public static GoogleApiClient mGoogleApiClient;
     public static String lat, lon;
+    public static int MOVE_TO_SEARCH = 0;
     private static Location mLastLocation;
     private final int REQUEST_CHECK_SETTINGS = 199;
     private final int IMAGEREQUESTCODE = 1;
@@ -131,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private SharedPreferences.Editor mEditor;
     private SearchView searchView;
     private IntentIntegrator qrScan;
-
     private IAdminControl IAdminControl;
 
 
@@ -422,23 +422,23 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 return false;
             }
         });
-
-        MenuItem activeItem = menu.findItem(R.id.action_activate);
         MenuItem activeAdd = menu.findItem(R.id.action_add);
-        MenuItem deactiveItem = menu.findItem(R.id.action_deactive);
-        MenuItem deleteItem = menu.findItem(R.id.action_delete);
         MenuItem nonActives = menu.findItem(R.id.action_nonActives);
         MenuItem block_users = menu.findItem(R.id.action_block_users);
         MenuItem change_role = menu.findItem(R.id.action_change_role);
+        MenuItem deactiveItem = menu.findItem(R.id.action_deactive);
+        MenuItem deleteItem = menu.findItem(R.id.action_delete);
+        MenuItem activeItem = menu.findItem(R.id.action_activate);
         if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
             if (Common.isOnline(this)) {
-                activeItem.setVisible(true);
-                deactiveItem.setVisible(true);
-                deleteItem.setVisible(true);
                 nonActives.setVisible(true);
-                activeAdd.setVisible(true);
-                block_users.setVisible(true);
                 change_role.setVisible(true);
+                activeAdd.setVisible(true);
+                if (MOVE_TO_SEARCH == 1) {
+                    activeItem.setVisible(true);
+                    deactiveItem.setVisible(true);
+                    deleteItem.setVisible(true);
+                }
             } else {
                 Toast.makeText(this, "" + Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
             }
@@ -447,7 +447,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         block_users.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-
                 return false;
             }
         });
@@ -455,8 +454,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         nonActives.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-
-                moveToSearch(1);
+                MOVE_TO_SEARCH = 1;
+                moveToSearch(MOVE_TO_SEARCH);
                 return false;
             }
         });
@@ -474,7 +473,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         activeItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                moveToSearch(2);
+                MOVE_TO_SEARCH = 2;
+                moveToSearch(MOVE_TO_SEARCH);
                 return false;
             }
         });
@@ -482,18 +482,17 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         deactiveItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                moveToSearch(3);
-
+                MOVE_TO_SEARCH = 3;
+                moveToSearch(MOVE_TO_SEARCH);
                 return false;
             }
         });
 
-
         deleteItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-
-                moveToSearch(4);
+                MOVE_TO_SEARCH = 4;
+                moveToSearch(MOVE_TO_SEARCH);
                 return false;
             }
         });
@@ -501,7 +500,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         change_role.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                moveToSearch(5);
+                MOVE_TO_SEARCH = 5;
+                moveToSearch(MOVE_TO_SEARCH);
                 return false;
             }
         });
@@ -604,8 +604,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 Bundle mBundle = new Bundle();
                 if (query != null) {
                     mBundle.putString(Common.Constant_Class.QUERY, query);
+                    fragment.setArguments(mBundle);
                 } else if (query_string != null) {
                     mBundle.putString(Common.Constant_Class.QUERY_STRING, query_string);
+                    fragment.setArguments(mBundle);
                 } else if (push_message != null) {
                     IAdminControl = (IAdminControl) fragment;
                     mBundle.putString(Common.Constant_Class.PUSH_MESSAGE, push_message);
@@ -783,8 +785,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
             case IMAGEREQUESTCODE:
 
-                assert data != null;
-                manageImageFromUri(data.getData());
+                if (data != null) {
+                    manageImageFromUri(data.getData());
+                }
+
                 break;
             case REQUEST_CHECK_SETTINGS:
                 break;

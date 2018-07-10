@@ -38,6 +38,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.adapter.ExpandableListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.interfaces.IAdminControl;
@@ -46,6 +47,8 @@ import com.krs.vastipatrak.model.ListParentData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.model.ListProfiles;
 import com.krs.vastipatrak.utils.Common;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.json.JSONArray;
@@ -92,6 +95,10 @@ public class SearchFragment extends Fragment implements IAdminControl {
     private TextView txtLable = null;
     @Nullable
     private SharedPreferences mSharedPreferences = null;
+    private SwipyRefreshLayout mSwipyRefreshLayout;
+    private int page = 1;
+    private String search = "";
+    private String search_url = "";
 
     public SearchFragment() {
         // Required empty public constructor
@@ -107,6 +114,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 break;
         }
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,9 +141,9 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
         if (query != null && !query.equalsIgnoreCase("")) {
             Common.Title = query;
-            callSearchWS(query);
+            OnlineSearch(query, Common.Constant_Class.GLOBAL_SEARCH_URL);
         } else if (query_string != null && !query_string.equalsIgnoreCase("")) {
-            callSearchWS(query_string);
+            OnlineSearch(query_string, Common.Constant_Class.ADVANCE_SEARCH_URL);
         } else if (adminControl == Common.Constant_Class.NonActive) {
             callNonActivesWS();
         } else {
@@ -145,10 +153,30 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
         lvCustomList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             int previousGroup = -1;
+
             @Override
             public void onGroupExpand(int groupPosition) {
                 if (groupPosition != previousGroup) lvCustomList.collapseGroup(previousGroup);
                 previousGroup = groupPosition;
+            }
+        });
+
+        mSwipyRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh(SwipyRefreshLayoutDirection direction) {
+                Log.d("MainActivity", "Refresh triggered at " + (direction == SwipyRefreshLayoutDirection.TOP ? "top" : "bottom"));
+
+                if (direction == SwipyRefreshLayoutDirection.TOP) {
+                    page--;
+                } else {
+                    page++;
+                }
+                if (page > 0) {
+                    OnlineSearch(search, search_url);
+                } else {
+                    mSwipyRefreshLayout.setRefreshing(false);
+                    Toast.makeText(getActivity(), "No record found!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -161,6 +189,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
         mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         lvCustomList = root.findViewById(R.id.lvCustomList);
         txtLable = root.findViewById(R.id.txtLable);
+        mSwipyRefreshLayout = root.findViewById(R.id.swipyrefreshlayout);
         TextView tv = root.findViewById(R.id.txt_marquee);
         tv.setSelected(true);
         pDialog = new ProgressDialog(getActivity());
@@ -181,17 +210,19 @@ public class SearchFragment extends Fragment implements IAdminControl {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String str) {
-                /*query_string = "";
+                query_string = "";
                 query = str;
-                callSearchWS(str);*/
+                page = 1;
+                OnlineSearch(str, Common.Constant_Class.GLOBAL_SEARCH_URL);
+                //callSearchWS(str, Common.Constant_Class.GLOBAL_SEARCH_URL);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(@NonNull String newText) {
-                query_string = "";
+                /*query_string = "";
                 query = newText;
-                callSearchWS(newText);
+                callSearchWS(newText);*/
                 return false;
             }
         });
@@ -246,14 +277,16 @@ public class SearchFragment extends Fragment implements IAdminControl {
         }).show();
     }
 
-    private void callSearchWS(String str_search) {
+   /* private void callSearchWS(String str_search,String url) {
         if (str_search.length() > 3) {
 
             Objects.requireNonNull(txtLable).setVisibility(View.GONE);
             lvCustomList.setVisibility(View.VISIBLE);
+
             if (query_string != null && !query_string.equalsIgnoreCase("")) {
                 Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(Common.Title);
-                OfflineSearch(str_search, 2);
+                //  OfflineSearch(str_search, 2);
+                OnlineSearch(str_search,url);
             } else {
                 if (query != null) {
                     Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(str_search);
@@ -262,90 +295,92 @@ public class SearchFragment extends Fragment implements IAdminControl {
             }
         }
     }
+*/
 
-    private void displayData(@NonNull JSONObject response) {
-        try {
-            String success = response.getString(Common.Constant_Class.SUCCESS);
-            String message = response.getString(Common.Constant_Class.MESSAGE);
 
-            Objects.requireNonNull(listDataHeader).clear();
-            Objects.requireNonNull(listDataChild).clear();
-            if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+   /* private void OnlineSearch(String query_string) {
+        saveRecordsFromServerWS(query_string);
+       *//* ListProfiles mProfilelist = new ListProfiles(new RealmList<ListProfileData>());
+        RealmResults<ListProfileData> realmList=AppController.getInstance().realm.where(ListProfileData.class).findAll();
+        mProfilelist.realmlist.addAll(realmList);
+        setAdapter(mProfilelist);*//*
+    }*/
 
-                lvCustomList.setVisibility(View.VISIBLE);
-                //  wv_home.setVisibility(View.GONE);
-                Objects.requireNonNull(txtLable).setVisibility(View.GONE);
-                JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
-                for (int i = 0; i < mJsonArray.length(); i++) {
 
-                    JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                    String profile_id = mJsondata.getString(Common.Constant_Class.ID);
-                    String profile_pic_url = mJsondata.getString(Common.Constant_Class.PROFILE_PIC_URL);
-                    String first_name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
-                    String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
-                    String father_name = mJsondata.getString(Common.Constant_Class.FATHER_NAME);
-                    String mother_name = mJsondata.getString(Common.Constant_Class.MOTHER_NAME);
-                    String status = mJsondata.getString(Common.Constant_Class.STATUS);
-                    String city = mJsondata.getString(Common.Constant_Class.CITY);
-                    String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
-                    boolean is_location_enable = Boolean.parseBoolean(mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE));
+    private void OnlineSearch(String search, String search_url) {
+        if (Common.isOnline(getActivity())) {
 
-                    if (status.equalsIgnoreCase("0")) {
-                        ListParentData lpd = new ListParentData();
-                        lpd.setName(first_name + " " + last_name);
-                        lpd.setFatherName(father_name);
-                        lpd.setMotherName(mother_name);
-                        lpd.setProfilePicUrl(profile_pic_url);
-                        lpd.setStatus(status);
-                        lpd.setId(profile_id);
-                        lpd.setCity(city);
-                        lpd.setUpdated_time(updated_time);
-                        lpd.setIs_location_enable(is_location_enable);
-
-                        String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
-                        String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
-                        String birth_date = mJsondata.getString(Common.Constant_Class.BIRTH_DATE);
-                        String birth_time = mJsondata.getString(Common.Constant_Class.BIRTH_TIME);
-                        String birth_place = mJsondata.getString(Common.Constant_Class.BIRTH_PLACE);
-                        String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
-                        String mobile = mJsondata.getString(Common.Constant_Class.MOBILE);
-                        String phone = mJsondata.getString(Common.Constant_Class.PHONE);
-                        String gender = mJsondata.getString(Common.Constant_Class.GENDER);
-                        String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
-
-                        ListChildData lcd = new ListChildData();
-                        lcd.setID(profile_id);
-                        lcd.setNative(native_place);
-                        lcd.setAddress(address);
-                        lcd.setbirth_date(birth_date);
-                        lcd.setbirth_time(birth_time);
-                        lcd.setBirth_place(birth_place);
-                        lcd.setBlood_Group(blood_group);
-                        lcd.setMobile(mobile);
-                        lcd.setPhone(phone);
-                        lcd.setGender(gender);
-                        lcd.setGotra(gotra);
-                        ArrayList<ListChildData> mlstChildData = new ArrayList<>();
-                        mlstChildData.add(lcd);
-                        listDataHeader.add(lpd);
-                        listDataChild.put(lpd, mlstChildData);
+            if (!search.equalsIgnoreCase("")) {
+                JSONObject mJsonObject = null;
+                try {
+                    this.search = search;
+                    this.search_url = search_url;
+                    if (search_url.equalsIgnoreCase(Common.Constant_Class.GLOBAL_SEARCH_URL)) {
+                        JSONObject globalObj = new JSONObject();
+                        globalObj.put("search_str", search);
+                        search = globalObj.toString();
                     }
+                    mJsonObject = new JSONObject(search);
+                    mJsonObject.put("page", String.valueOf(page));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                if (page == 1) {
+                    showProgressDialog(getActivity());
+                }
+                mSwipyRefreshLayout.setRefreshing(true);
+                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, search_url, mJsonObject, new Response.Listener<JSONObject>() {
 
-                mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
-                lvCustomList.setAdapter(mExpandableListAdapter);
-                Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
-                hideProgressDialog();
+                    @Override
+                    public void onResponse(@NonNull JSONObject response) {
+                        Log.d(TAG, response.toString());
+
+                        try {
+                            hideProgressDialog();
+                            mSwipyRefreshLayout.setRefreshing(false);
+                            displayData(response,1);
+                          /*  boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
+                            String message = response.getString(Common.Constant_Class.MESSAGE);
+
+                            if (success) {
+                                JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                                for (int i = 0; i < mJsonArray.length(); i++) {
+                                    JSONObject mJsondata = mJsonArray.getJSONObject(i);
+                                    Common.SaveProfile(mJsondata);
+                                }
+                            }
+                            Common.alert(getActivity(), message);*/
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(@NonNull VolleyError error) {
+                        VolleyLog.d(TAG, "Error: " + error.getMessage());
+                        hideProgressDialog();
+                        mSwipyRefreshLayout.setRefreshing(false);
+                    }
+                }) {
+                    @NonNull
+                    @Override
+                    public Map<String, String> getHeaders() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                        params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                        return params;
+                    }
+                };
+                // Adding request to request queue
+                AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+
             } else {
-                hideProgressDialog();
-                lvCustomList.setVisibility(View.GONE);
-                Objects.requireNonNull(txtLable).setVisibility(View.VISIBLE);
-                Common.alert(Objects.requireNonNull(getActivity()), message);
+                Toast.makeText(getActivity(), getString(R.string.err_msg_search), Toast.LENGTH_SHORT).show();
             }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            Toast.makeText(getActivity(), Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -367,11 +402,15 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 mProfilelist.realmlist.add(mListChildData.get(j));
             }
         }
+        setAdapter(mProfilelist);
+    }
+
+    private void setAdapter(ListProfiles mProfilelist) {
         Objects.requireNonNull(listDataHeader).clear();
         Objects.requireNonNull(listDataChild).clear();
 
         AppController.getInstance().realm.beginTransaction();
-        mProfilelist = AppController.getInstance().realm.copyToRealm(mProfilelist);
+        // mProfilelist = AppController.getInstance().realm.copyToRealm(mProfilelist);
         RealmResults<ListProfileData> mSortedProfiles = mProfilelist.realmlist.sort(Common.Constant_Class.CITY);
         AppController.getInstance().realm.commitTransaction();
 
@@ -426,6 +465,94 @@ public class SearchFragment extends Fragment implements IAdminControl {
         }
     }
 
+    private void displayData(@NonNull JSONObject response, int active) {
+        try {
+            String success = response.getString(Common.Constant_Class.SUCCESS);
+            String message = response.getString(Common.Constant_Class.MESSAGE);
+
+            Objects.requireNonNull(listDataHeader).clear();
+            Objects.requireNonNull(listDataChild).clear();
+            if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+
+                lvCustomList.setVisibility(View.VISIBLE);
+                //  wv_home.setVisibility(View.GONE);
+                Objects.requireNonNull(txtLable).setVisibility(View.GONE);
+                JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                for (int i = 0; i < mJsonArray.length(); i++) {
+
+                    JSONObject mJsondata = mJsonArray.getJSONObject(i);
+                    String profile_id = mJsondata.getString(Common.Constant_Class.ID);
+                    String profile_pic_url = mJsondata.getString(Common.Constant_Class.PROFILE_PIC_URL);
+                    String first_name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
+                    String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
+                    String father_name = mJsondata.getString(Common.Constant_Class.FATHER_NAME);
+                    String mother_name = mJsondata.getString(Common.Constant_Class.MOTHER_NAME);
+                    String status = mJsondata.getString(Common.Constant_Class.STATUS);
+                    String city = mJsondata.getString(Common.Constant_Class.CITY);
+                    String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
+                    boolean is_location_enable = Boolean.parseBoolean(mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE));
+                    ListParentData lpd = new ListParentData();
+                    if (status.equalsIgnoreCase(Common.Constant_Class.MARRIED)) {
+                        lpd.setName(first_name + " " + last_name);
+                        lpd.setFatherName(father_name);
+                        lpd.setMotherName(mother_name);
+                        lpd.setProfilePicUrl(profile_pic_url);
+                        lpd.setStatus(status);
+                        lpd.setId(profile_id);
+                        lpd.setCity(city);
+                        lpd.setUpdated_time(updated_time);
+                        lpd.setIs_location_enable(is_location_enable);
+
+                        String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
+                        String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
+                        String birth_date = mJsondata.getString(Common.Constant_Class.BIRTH_DATE);
+                        String birth_time = mJsondata.getString(Common.Constant_Class.BIRTH_TIME);
+                        String birth_place = mJsondata.getString(Common.Constant_Class.BIRTH_PLACE);
+                        String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
+                        String mobile = mJsondata.getString(Common.Constant_Class.MOBILE);
+                        String phone = mJsondata.getString(Common.Constant_Class.PHONE);
+                        String gender = mJsondata.getString(Common.Constant_Class.GENDER);
+                        String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
+
+                        ListChildData lcd = new ListChildData();
+                        lcd.setID(profile_id);
+                        lcd.setNative(native_place);
+                        lcd.setAddress(address);
+                        lcd.setbirth_date(birth_date);
+                        lcd.setbirth_time(birth_time);
+                        lcd.setBirth_place(birth_place);
+                        lcd.setBlood_Group(blood_group);
+                        lcd.setMobile(mobile);
+                        lcd.setPhone(phone);
+                        lcd.setGender(gender);
+                        lcd.setGotra(gotra);
+                        ArrayList<ListChildData> mlstChildData = new ArrayList<>();
+                        mlstChildData.add(lcd);
+                        listDataHeader.add(lpd);
+                        listDataChild.put(lpd, mlstChildData);
+                    } else {
+                        listDataHeader.add(lpd);
+                    }
+                }
+                mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
+                lvCustomList.setAdapter(mExpandableListAdapter);
+                Toast.makeText(getActivity(), "" + message+" Page "+page, Toast.LENGTH_LONG).show();
+                hideProgressDialog();
+            } else {
+                hideProgressDialog();
+                if (active == 0) {
+                    lvCustomList.setVisibility(View.GONE);
+                    Objects.requireNonNull(txtLable).setVisibility(View.VISIBLE);
+                    Common.alert(Objects.requireNonNull(getActivity()), message);
+                } else {
+                    Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void callNonActivesWS() {
         if (Common.isOnline(Objects.requireNonNull(getActivity()))) {
             showProgressDialog(getActivity());
@@ -443,14 +570,13 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
-                    displayData(response);
+                    displayData(response, 0);
                 }
             }, new Response.ErrorListener() {
 
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
-
                     hideProgressDialog();
                 }
             }) {
@@ -602,9 +728,10 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 if (str.equalsIgnoreCase(getString(R.string.action_nonActives))) {
                     callNonActivesWS();
                 } else {
-                    callSearchWS(Common.Title);
+                    page = 1;
+                    OnlineSearch(Common.Title, Common.Constant_Class.GLOBAL_SEARCH_URL);
+                    // callSearchWS(Common.Title, Common.Constant_Class.GLOBAL_SEARCH_URL);
                 }
-
                 dialog.dismiss();
             }
         });
@@ -686,11 +813,11 @@ public class SearchFragment extends Fragment implements IAdminControl {
                             boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
                             if (success) {
-                               // SearchFragment.this.notify();
+                                // SearchFragment.this.notify();
                                 lvCustomList.setAdapter(mExpandableListAdapter);
 
-                             //   mExpandableListAdapter.notifyDataSetChanged();
-                              //  mExpandableListAdapter.notifyDataSetInvalidated();
+                                //   mExpandableListAdapter.notifyDataSetChanged();
+                                //  mExpandableListAdapter.notifyDataSetInvalidated();
                             }
                             Common.alert(getActivity(), message);
                         } catch (Exception e) {
@@ -743,6 +870,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             Toast.makeText(getActivity(), getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
         }
     }
+
     private void changeRoleDialog(String msg) {
         String[] SPINNERLIST = {"ADMIN", "USER"};
         final Dialog role_dialog = new Dialog(getActivity());
@@ -760,7 +888,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             public void onClick(View v) {
 
                 if (!role_spinner.getText().toString().isEmpty()) {
-                    changeRoleWS(lstSelectedIDs.toString().replace("[","").replace("]",""), role_spinner.getText().toString());
+                    changeRoleWS(lstSelectedIDs.toString().replace("[", "").replace("]", ""), role_spinner.getText().toString());
                     role_dialog.cancel();
                 } else {
                     Toast.makeText(getActivity(), "Please select Role !", Toast.LENGTH_SHORT).show();
@@ -768,6 +896,12 @@ public class SearchFragment extends Fragment implements IAdminControl {
             }
         });
         role_dialog.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MainActivity.MOVE_TO_SEARCH=0;
     }
 
     @Override
