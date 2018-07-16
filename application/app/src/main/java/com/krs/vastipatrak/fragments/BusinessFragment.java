@@ -45,15 +45,16 @@ import io.realm.RealmList;
 public class BusinessFragment extends Fragment implements Serializable {
 
 
-    public EditText edtOccupation, edtWork, edtOMobile, edtOAddress;
     private final String tag_json_obj = "jobj_req";
     private final String TAG = BusinessFragment.class.getSimpleName();
+    public EditText edtOccupation, edtWork, edtOMobile, edtOAddress;
     private SharedPreferences mSharedPreferences;
     private TextView txt_office;
     private double office_lat = 0;
     private double office_lng = 0;
     private String user_id = "";
     private Activity mActivity;
+
     public BusinessFragment() {
         // Required empty public constructor
     }
@@ -127,6 +128,8 @@ public class BusinessFragment extends Fragment implements Serializable {
     }
 
 
+
+
     private void showDirections(double latitude, double longitude) {
         String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", latitude, longitude, "", office_lat, office_lng, edtOAddress.getText().toString().trim());
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
@@ -188,7 +191,7 @@ public class BusinessFragment extends Fragment implements Serializable {
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
                     params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -208,6 +211,7 @@ public class BusinessFragment extends Fragment implements Serializable {
         user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
         txt_office = rootView.findViewById(R.id.txt_office);
     }
+
 
     private void alert(String message) {
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);

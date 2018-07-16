@@ -17,7 +17,9 @@
     <string name="hint_father_name">Father Name</string>
     <string name="hint_mother_name">Mother Name</string>
     <string name="hint_birth_date">Birth Date</string>
+    <string name="hint_birth_date_from">Birth Date From</string>
     <string name="hint_birth_time">Birth Time</string>
+    <string name="hint_birth_date_to">Birth Date To</string>
     <string name="hint_education">Education </string>
     <string name="hint_birth_place">Birth Place </string>
     <string name="hint_native_place">Native Place </string>

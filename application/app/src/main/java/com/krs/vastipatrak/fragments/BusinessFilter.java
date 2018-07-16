@@ -2,7 +2,9 @@ package com.krs.vastipatrak.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -24,27 +26,28 @@ import com.krs.vastipatrak.utils.Common;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ObservableScrollView;
 
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
 public class BusinessFilter extends Fragment {
 
+    private static final int CONTACT_PICKER_RESULT = 1001;
+    public EditText edtOccupation, edtWork, edtOMobile, edtOAddress;
     private FloatingActionButton floatingActionButton;
     private ObservableScrollView scroll_bdetails;
-    public EditText edtOccupation, edtWork, edtOMobile, edtOAddress;
-    private static final int CONTACT_PICKER_RESULT = 1001;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.filter_business, container, false);
         MemoryAllocation(rootView);
-
+        setPreferenceData();
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 ((FilterActivity) requireNonNull(getActivity())).callAdvanceSearchWS();
             }
         });
@@ -71,10 +74,8 @@ public class BusinessFilter extends Fragment {
                 return false;
             }
         });
-
         return rootView;
     }
-
 
     private void MemoryAllocation(@NonNull View rootView) {
         scroll_bdetails = rootView.findViewById(R.id.scroll_bdetails);
@@ -84,6 +85,31 @@ public class BusinessFilter extends Fragment {
         edtOMobile = rootView.findViewById(R.id.edtOMobile);
         edtOAddress = rootView.findViewById(R.id.edtOAddress);
     }
+
+    private void setPreferenceData() {
+        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        String json = mSharedPreferences.getString("adv_search", "");
+        JSONObject mjsonObject = null;
+        try {
+            mjsonObject = new JSONObject(json);
+            if (mjsonObject.has(Common.Constant_Class.OCCUPATION)) {
+                edtOccupation.setText(mjsonObject.getString(Common.Constant_Class.OCCUPATION));
+            }
+            if (mjsonObject.has(Common.Constant_Class.WORK)) {
+                edtWork.setText(mjsonObject.getString(Common.Constant_Class.WORK));
+            }
+            if (mjsonObject.has(Common.Constant_Class.OFFICE_MOBILE)) {
+                edtOMobile.setText(mjsonObject.getString(Common.Constant_Class.OFFICE_MOBILE));
+            }
+            if (mjsonObject.has(Common.Constant_Class.OFFICE_ADDRESS)) {
+                edtOAddress.setText(mjsonObject.getString(Common.Constant_Class.OFFICE_ADDRESS));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

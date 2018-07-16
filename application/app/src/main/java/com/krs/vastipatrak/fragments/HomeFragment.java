@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -81,11 +82,16 @@ public class HomeFragment extends Fragment {
         });
 
         getEvents();
+
+
+
+
         return rootView;
     }
 
     private void MemoryAllocation(View rootView) {
         mRecycleView = rootView.findViewById(R.id.recycler_view);
+
         mWaveSwipeRefreshLayout = rootView.findViewById(R.id.main_swipe);
         mWaveSwipeRefreshLayout.setWaveColor(getResources().getColor(R.color.colorPrimary));
         realm = AppController.getInstance().realm;
@@ -95,6 +101,8 @@ public class HomeFragment extends Fragment {
         mEditor.putString(Common.Constant_Class.FragmentSp, HomeFragment.class.getSimpleName());
         mEditor.apply();
     }
+
+
 
     private void getEvents() {
 

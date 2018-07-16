@@ -83,7 +83,7 @@
                     android:layout_marginRight="10dip"
                     android:hint="@string/hint_mother_name"
                     android:inputType="textCapSentences"
-                    android:nextFocusDown="@+id/edtbdate"
+                    android:nextFocusDown="@+id/edtbdate_from"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
@@ -97,24 +97,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
                     <android.support.design.widget.TextInputLayout
-                        android:id="@+id/input_layout_bdate"
+                        android:id="@+id/input_layout_bdate_from"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
                         <EditText
-                            android:id="@+id/edtbdate"
+                            android:id="@+id/edtbdate_from"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
                             android:drawableEnd="@drawable/calendar"
-                            android:hint="@string/hint_birth_date"
+                            android:hint="@string/hint_birth_date_from"
                             android:inputType="date"
-                            android:nextFocusDown="@+id/edtbTime"
+                            android:nextFocusDown="@+id/input_layout_bdate_to"
                             android:singleLine="true" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -123,96 +122,62 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:text="DD/MM or DD/MM/YYYY"
+                        android:text="DD/MM/YYYY"
                         android:textSize="10sp" />
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
                     android:layout_marginRight="10dip"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
                     <android.support.design.widget.TextInputLayout
-                        android:id="@+id/input_layout_btime"
+                        android:id="@+id/input_layout_bdate_to"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1">
+                        android:layout_height="wrap_content">
 
                         <EditText
-                            android:id="@+id/edtbTime"
+                            android:id="@+id/edtbdate_to"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
-                            android:drawableEnd="@drawable/clock"
-                            android:hint="@string/hint_birth_time"
-                            android:inputType="time"
-                            android:nextFocusDown="@+id/edtEducation"
+                            android:drawableEnd="@drawable/calendar"
+                            android:hint="@string/hint_birth_date_to"
+                            android:inputType="date"
+                            android:nextFocusDown="@+id/input_layout_btime_from"
                             android:singleLine="true" />
+
                     </android.support.design.widget.TextInputLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:text="24 Hours"
+                        android:text="DD/MM/YYYY"
                         android:textSize="10sp" />
                 </LinearLayout>
             </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_education"
+                android:id="@+id/input_layout_btime"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/edtEducation"
-                    android:layout_width="fill_parent"
+                    android:id="@+id/edtbtime"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
-                    android:hint="@string/hint_education"
-                    android:inputType="textCapSentences"
-                    android:nextFocusDown="@+id/rbtnM"
+                    android:layout_marginEnd="10dp"
+                    android:drawableEnd="@drawable/clock"
+                    android:hint="@string/hint_birth_time"
+                    android:inputType="time"
                     android:singleLine="true" />
+
             </android.support.design.widget.TextInputLayout>
 
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-
-                <RadioButton
-                    android:id="@+id/rbtnM"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dip"
-                    android:text="Male " />
-
-                <RadioButton
-                    android:id="@+id/rbtnF"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dip"
-                    android:text="Female " />
-
-                <RadioButton
-                    android:id="@+id/rbtnB"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dip"
-                    android:checked="true"
-                    android:text="Both " />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -251,10 +216,28 @@
                         android:layout_marginEnd="10dip"
                         android:hint="@string/hint_native_place"
                         android:inputType="textCapSentences"
-                        android:nextFocusDown="@+id/edtBlood"
+                        android:nextFocusDown="@+id/edtEducation"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_education"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/edtEducation"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginRight="10dip"
+                    android:hint="@string/hint_education"
+                    android:inputType="textCapSentences"
+                    android:nextFocusDown="@+id/input_layout_phone"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -277,7 +260,7 @@
                         android:layout_weight="1"
                         android:hint="@string/hint_land_line"
                         android:inputType="phone"
-                        android:nextFocusDown="@+id/edtAddress"
+                        android:nextFocusDown="@+id/input_layout_gotra"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -332,6 +315,38 @@
                     android:layout_weight="1"
                     android:paddingTop="10dp"
                     android:prompt="@string/spinner_blood" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/rbtnM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dip"
+                    android:text="Male " />
+
+                <RadioButton
+                    android:id="@+id/rbtnF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dip"
+                    android:text="Female " />
+
+                <RadioButton
+                    android:id="@+id/rbtnB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dip"
+                    android:checked="true"
+                    android:text="Both " />
 
             </LinearLayout>
 

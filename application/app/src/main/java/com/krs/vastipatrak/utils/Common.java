@@ -13,7 +13,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -114,10 +116,10 @@ public class Common {
         } catch (ParseException e) {
 
             e.printStackTrace();
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     public static boolean canCAMARA(@NonNull Context mContext) {
@@ -1132,6 +1134,22 @@ public class Common {
         }).show();
     }
 
+    //method to convert your text to image
+    public static Bitmap textAsBitmap(String text, float textSize, int textColor) {
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setTextSize(textSize);
+        paint.setColor(textColor);
+        paint.setTextAlign(Paint.Align.LEFT);
+        float baseline = -paint.ascent(); // ascent() is negative
+        int width = (int) (paint.measureText(text) + 0.0f); // round
+        int height = (int) (baseline + paint.descent() + 0.0f);
+        Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(image);
+        canvas.drawText(text, 0, baseline, paint);
+        return image;
+    }
+
     public static void SendWhatsappMessage(@NonNull Context mActivity, String mob_num, String message) {
         String digits = "\\d+";
         if (mob_num.matches(digits)) {
@@ -1294,6 +1312,39 @@ public class Common {
         return str;
     }
 
+    public static boolean CompareTwoDates(String from, String to) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Date strFrom = sdf.parse(from);
+        Date strTo = sdf.parse(to);
+        if (strTo.after(strFrom) || strTo.equals(strFrom)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean checktimings(String time, String endtime) {
+
+        String pattern = "HH:mm";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+
+        try {
+            Date date1 = sdf.parse(time);
+            Date date2 = sdf.parse(endtime);
+
+            if(date1.before(date2)) {
+                return true;
+            } else {
+
+                return false;
+            }
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
     public static class Constant_Class {
 
         public static final String ADMIN = "ADMIN";
@@ -1339,6 +1390,7 @@ public class Common {
         public static final String REPEAT_PASSWORD = "repeat_password";
         public static final String SUCCESS = "success";
         public static final String MESSAGE = "message";
+        public static final String TOTAL_RECORDS = "totalRecords";
         public static final String TRUE = "true";
         public static final String USERNAME = "username";
         public static final String MOBILE = "mobile";
@@ -1369,8 +1421,10 @@ public class Common {
         public static final String FATHER_NAME = "father_name";
         public static final String MOTHER_NAME = "mother_name";
         public static final String NATIVE_PLACE = "native_place";
-        public static final String BIRTH_DATE = "birth_date";
+        public static final String FROM_BIRTH_DATE= "from_birth_date";
+        public static final String TO_BIRTH_DATE = "to_birth_date";
         public static final String BIRTH_TIME = "birth_time";
+        public static final String BIRTH_DATE= "from_birth_date";
         public static final String BIRTH_PLACE = "birth_place";
         public static final String BLOOD_GROUP = "blood_group";
         public static final String PHONE = "phone";

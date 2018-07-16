@@ -1,7 +1,11 @@
 package com.krs.vastipatrak.activity;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,14 +16,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.adapter.ItemArrayAdapter;
 import com.krs.vastipatrak.fragments.BusinessFilter;
 import com.krs.vastipatrak.fragments.FamilyFilter;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
@@ -31,21 +40,25 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class FilterActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener {
 
+    static final int CUSTOM_DIALOG_ID = 0;
     private final String[] READ_CONTACT_PERMS = {Manifest.permission.READ_CONTACTS};
     private final int READ_CONTACT_REQUEST = 3;
+
+    RecyclerView recyclerView;
     private ViewPager viewPager;
-    private SearchView searchView;
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private Fragment personal;
     private Fragment business;
     private Fragment family;
+    private SharedPreferences.Editor mEditor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,8 +80,10 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         viewPager = findViewById(R.id.viewpager);
         toolbar = findViewById(R.id.toolbar);
         tabLayout = findViewById(R.id.tabs);
+        SharedPreferences mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
+        mEditor.apply();
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -144,6 +159,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         try {
 
             String valid = "";
+            ArrayList<String> lstProceed = new ArrayList<>();
             if (((PersonalFilter) personal).edtFName != null) {
 
                 String strFName = ((PersonalFilter) personal).edtFName.getText().toString().trim();
@@ -157,8 +173,10 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String strMobile = ((PersonalFilter) personal).edtMobile.getText().toString().trim();
                 String strAddress = ((PersonalFilter) personal).edtAddress.getText().toString().trim();
                 String strphone = ((PersonalFilter) personal).edt_phone.getText().toString().trim();
-                String strbdate = ((PersonalFilter) personal).edtbdate.getText().toString().trim();
-                String strbTime = ((PersonalFilter) personal).edtbTime.getText().toString().trim();
+                String strbdateFrom = ((PersonalFilter) personal).edtbdateFrom.getText().toString().trim();
+                String strbdateTo = ((PersonalFilter) personal).edtbdateTo.getText().toString().trim();
+                String strbtime = ((PersonalFilter) personal).edtbtime.getText().toString().trim();
+
                 String strEaddress = ((PersonalFilter) personal).edt_Eaddress.getText().toString().trim();
                 String strCity = ((PersonalFilter) personal).edtCity.getText().toString().trim();
                 String bgroup = ((PersonalFilter) personal).spinnerBlood.getSelectedItem().toString().trim();
@@ -178,70 +196,109 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     if (Common.isValidEmail(strEaddress)) {
                         valid = "Email is not valid Format";
                     }
+                    lstProceed.add("Email: " + strEaddress);
                 }
-          /*      if (!strbdate.equalsIgnoreCase("")) {
-                    if (!Common.isThisDateValid(strbdate, "dd/MM/yyyy")) {
-                        valid = "Birth Date is not valid Format";
+                if (!strbdateFrom.equalsIgnoreCase("")) {
+                    if (!Common.isThisDateValid(strbdateFrom, "dd/MM/yyyy")) {
+                        valid = "Birth Date From is not valid Format";
                     }
-                }*/
-
-                if (!strbTime.equalsIgnoreCase("")) {
-                    if (Common.IsValidate(strbTime)) {
-                        valid = "Birth Time is not valid 24 Hours";
+                    if (!strbdateTo.equalsIgnoreCase("")) {
+                        if (!Common.isThisDateValid(strbdateTo, "dd/MM/yyyy")) {
+                            valid = "Birth Date To is not valid Format";
+                        }
+                    } else {
+                        valid = "Enter Birthdate To";
                     }
                 }
 
+                if (!strbtime.equalsIgnoreCase("")) {
+                    if (Common.IsValidate(strbtime)) {
+                        valid = "Birth Time From is not valid 24 Hours";
+                    }
+                    lstProceed.add("BirthTime: " + strbtime);
+                }
                 if (!strFName.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.FIRST_NAME, strFName);
+
+                    lstProceed.add("FirstName: " + strFName);
                 }
                 if (!strLName.equalsIgnoreCase("")) {
+                    lstProceed.add("LastName: " + strLName);
+
                     mJsonObject.put(Common.Constant_Class.LAST_NAME, strLName);
                 }
                 if (!strFatherName.equalsIgnoreCase("")) {
+                    lstProceed.add("FatherName: " + strFatherName);
+
                     mJsonObject.put(Common.Constant_Class.FATHER_NAME, strFatherName);
                 }
                 if (!strMotherName.equalsIgnoreCase("")) {
+                    lstProceed.add("MotherName: " + strMotherName);
+
                     mJsonObject.put(Common.Constant_Class.MOTHER_NAME, strMotherName);
                 }
-                if (!strbdate.equalsIgnoreCase("")) {
-
-                    mJsonObject.put(Common.Constant_Class.BIRTH_DATE, strbdate);
+                if (!strbdateFrom.equalsIgnoreCase("")) {
+                    mJsonObject.put(Common.Constant_Class.FROM_BIRTH_DATE, strbdateFrom);
+                    if (!strbdateTo.equalsIgnoreCase("")) {
+                        mJsonObject.put(Common.Constant_Class.TO_BIRTH_DATE, strbdateTo);
+                    } else {
+                        valid = "Enter birth date To";
+                    }
+                    lstProceed.add("Birthdate From: " + strbdateFrom);
+                    lstProceed.add("Birthdate To: " + strbdateTo);
                 }
                 if (!strBPlace.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.BIRTH_PLACE, strBPlace);
+                    lstProceed.add("BirthPalace: " + strBPlace);
                 }
-                if (!strbTime.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.BIRTH_TIME, strbTime);
+                if (!strbtime.equalsIgnoreCase("")) {
+                    mJsonObject.put(Common.Constant_Class.BIRTH_TIME, strbtime);
+                    lstProceed.add("BirthTime: " + strbtime);
                 }
                 if (!strMobile.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.MOBILE, strMobile);
+
+                    lstProceed.add("Mobile: " + strMobile);
                 }
                 if (!strphone.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.PHONE, strphone);
+                    lstProceed.add("Phone: " + strphone);
                 }
                 if (!strGotra.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.GOTRA, strGotra);
+                    lstProceed.add("Gotra: " + strGotra);
                 }
                 if (!strNPlace.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.NATIVE_PLACE, strNPlace);
+                    lstProceed.add("Native Place: " + strNPlace);
                 }
                 if (!strCity.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.CITY, strCity);
+                    lstProceed.add("City: " + strCity);
                 }
                 if (!strEducation.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.EDUCATION, strEducation);
+                    lstProceed.add("Education: " + strEducation);
                 }
                 if (!strEaddress.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.EMAIL_ADDRESS, strEaddress);
+                    lstProceed.add("Email: " + strEducation);
                 }
                 if (!strAddress.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.ADDRESS, strAddress);
+                    lstProceed.add("Address: " + strEducation);
                 }
                 if (!bgroup.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.BLOOD_GROUP, bgroup);
+                    lstProceed.add("BloodGroup: " + strEducation);
                 }
                 if (!gender.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.GENDER, gender);
+                    if (gender.equalsIgnoreCase("1")) {
+                        lstProceed.add("Gender: " + "Male");
+                    } else {
+                        lstProceed.add("Gender: " + "Female");
+                    }
                 }
             }
 
@@ -255,21 +312,25 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
                 if (!strOccupation.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.OCCUPATION, strOccupation);
+                    lstProceed.add("Occupation: " + strOccupation);
                 }
                 if (!strWork.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.WORK, strWork);
+                    lstProceed.add("Work: " + strWork);
                 }
                 if (!strOMobile.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.OFFICE_MOBILE, strOMobile);
+                    lstProceed.add("Office Mobile: " + strOMobile);
                 }
                 if (!strOAddress.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.OFFICE_ADDRESS, strOAddress);
+                    lstProceed.add("Office Address: " + strOAddress);
                 }
             }
 
-            if (((FamilyFilter) family).edt_mdate != null) {
+            if (((FamilyFilter) family).edt_mdate_from != null) {
 
-                String strmdate = ((FamilyFilter) family).edt_mdate.getText().toString().trim();
+                String strmdate = ((FamilyFilter) family).edt_mdate_from.getText().toString().trim();
                 String strSpouseName = ((FamilyFilter) family).edtSpouseName.getText().toString().trim();
                 String strSpouseFName = ((FamilyFilter) family).edtSpouseFName.getText().toString().trim();
                 String strSpouseMName = ((FamilyFilter) family).edtSpouseMName.getText().toString().trim();
@@ -283,58 +344,161 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
                 if (!childBtime.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.CHILD_BTIME, childBtime);
+                    lstProceed.add("Child BitrhTime: " + childBtime);
                 }
 
                 if (!childBplace.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.CHILD_BPLACE, childBplace);
+                    lstProceed.add("Child BirthPlace: " + childBplace);
                 }
 
                 if (!childGender.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.CHILD_GENDER, childGender);
+                    lstProceed.add("Child Gender: " + childGender);
                 }
 
                 if (!strmdate.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.MARRIAGE_DATE, strmdate);
+                    lstProceed.add("Marriage Date: " + strmdate);
                 }
                 if (!childBdate.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.CHILD_BDAY, childBdate);
+                    lstProceed.add("Child BirthDate: " + childBdate);
                 }
                 if (!strSpouseName.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.SPOUSE_NAME, strSpouseName);
+                    lstProceed.add("Spouse Name: " + strSpouseName);
                 }
                 if (!strSpouseFName.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.SPOUSE_FATHER_NAME, strSpouseFName);
+                    lstProceed.add("Spouse Father Name: " + strSpouseFName);
                 }
                 if (!strSpouseMName.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.SPOUSE_MOTHER_NAME, strSpouseMName);
+                    lstProceed.add("Spouse Mother Name: " + strSpouseMName);
                 }
                 if (!strchild_name.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.CHILD_NAME, strchild_name);
+                    lstProceed.add("Child Name: " + strchild_name);
                 }
                 if (!strcedu.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.CHILD_EDU, strcedu);
+                    lstProceed.add("Child Education: " + strcedu);
                 }
                 if (!strchild_work.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.CHILD_WORK, strchild_work);
+                    lstProceed.add("Child Work: " + strchild_work);
                 }
             }
 
             if (valid.equalsIgnoreCase("")) {
-                navigateActivity(mJsonObject);
+                Bundle mBundle = new Bundle();
+                mBundle.putString("search_json", mJsonObject.toString());
+                mBundle.putStringArrayList("proceed", lstProceed);
+                showDialog(CUSTOM_DIALOG_ID,mBundle);
             } else {
                 Toast.makeText(FilterActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+        protected Dialog onCreateDialog(int id, Bundle mBundle) {
+        Dialog dialog = null;
+        switch (id) {
+            case CUSTOM_DIALOG_ID:
+                dialog = new Dialog(FilterActivity.this);
+                dialog.setContentView(R.layout.dialog_layout);
+                dialog.setTitle("Custom Dialog");
+
+                dialog.setCancelable(true);
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        // TODO Auto-generated method stub
+                        Toast.makeText(FilterActivity.this, "OnCancelListener", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        // TODO Auto-generated method stub
+                        Toast.makeText(FilterActivity.this, "OnDismissListener", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+                ArrayList<String> itemList = new ArrayList<>();
+                itemList = mBundle.getStringArrayList("proceed");
+                String json = mBundle.getString("search_json");
+               /* // Initializing list view with the custom adapter
+                ArrayList<Item> itemList = new ArrayList<Item>();
+                String json = mBundle.getString("search_json");
+
+                json = json.replaceAll("\\{", "").replaceAll("\\}", "").replaceAll("^\"|\"$", "");
+                List<String> items = new ArrayList<String>(Arrays.asList(json.split("\\s*,\\s*")));
+                for (int i = 0; i < items.size(); i++) {
+                    itemList.add(new Item(items.get(i)));
+                }*/
+                ItemArrayAdapter itemArrayAdapter = new ItemArrayAdapter(R.layout.list_item_search, itemList);
+                recyclerView = dialog.findViewById(R.id.item_list);
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setAdapter(itemArrayAdapter);
+                Button btn_proceed = dialog.findViewById(R.id.btn_proceed);
+                Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
+                btn_proceed.setTag(json);
+                btn_proceed.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String json = (String) v.getTag();
+                        try {
+                            if (json != null && !json.isEmpty()) {
+                                JSONObject mJson = new JSONObject(json);
+                                navigateActivity(mJson);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                final Dialog finalDialog = dialog;
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finalDialog.dismiss();
+                    }
+                });
+
+                // Populating list items
+
+                break;
+        }
+        return dialog;
+    }
+
+    @Override
+    protected void onPrepareDialog(int id, Dialog dialog, Bundle bundle) {
+        // TODO Auto-generated method stub
+        super.onPrepareDialog(id, dialog, bundle);
+
+        switch (id) {
+            case CUSTOM_DIALOG_ID:
+                //
+                break;
+        }
+
     }
 
     private void navigateActivity(JSONObject mJsonObject) {
         Intent mIntent = new Intent(FilterActivity.this, MainActivity.class);
         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         mIntent.putExtra(Common.Constant_Class.QUERY_STRING, mJsonObject.toString());
+        mEditor.putString("adv_search", mJsonObject.toString());
+        mEditor.apply();
         startActivity(mIntent);
         finish();
         overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
@@ -347,7 +511,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
         MenuItem filterItem = menu.findItem(R.id.action_filter);
         filterItem.setVisible(false);
-        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -390,6 +554,24 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
     @Override
     public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
 
+    }
+
+
+    public class Item {
+
+        private String name;
+
+        public Item(String n) {
+            name = n;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

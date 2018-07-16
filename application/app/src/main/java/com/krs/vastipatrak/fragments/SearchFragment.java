@@ -6,9 +6,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +22,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,6 +69,7 @@ import io.realm.RealmResults;
 
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 import static com.krs.vastipatrak.utils.Common.showProgressDialog;
+import static com.krs.vastipatrak.utils.Common.textAsBitmap;
 
 
 public class SearchFragment extends Fragment implements IAdminControl {
@@ -76,6 +81,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
     private final String TAG = "SearchFragment";
     @NonNull
     private final String tag_json_obj = "jobj_req";
+    int page_count = 0;
     @Nullable
     private ArrayList<String> lstSelectedIDs = null;
     private SearchView searchView;
@@ -99,6 +105,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
     private int page = 1;
     private String search = "";
     private String search_url = "";
+    private FloatingActionButton mFloatingActionButton;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -180,6 +187,58 @@ public class SearchFragment extends Fragment implements IAdminControl {
             }
         });
 
+
+        lvCustomList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int lastItem = firstVisibleItem + visibleItemCount;
+                if (lastItem == totalItemCount) {
+
+                    mFloatingActionButton.setVisibility(View.INVISIBLE);
+                } else {
+                    mFloatingActionButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(getActivity());
+                dialog.setContentView(R.layout.dialog_page_count);
+                dialog.setTitle(R.string.app_name);
+                dialog.setCancelable(false);
+                final EditText input_page = dialog.findViewById(R.id.input_page);
+
+                Button btn_send = dialog.findViewById(R.id.btn_send);
+                Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                btn_send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int page1 = Integer.parseInt(input_page.getText().toString());
+                        if (page1 > 0 && page1 <= page_count) {
+                            page = page1;
+                            OnlineSearch(search, search_url);
+                        } else {
+                            Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+                dialog.show();
+            }
+        });
         return rootView;
     }
 
@@ -188,6 +247,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
         mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         lvCustomList = root.findViewById(R.id.lvCustomList);
+        mFloatingActionButton = root.findViewById(R.id.floating_action_button);
         txtLable = root.findViewById(R.id.txtLable);
         mSwipyRefreshLayout = root.findViewById(R.id.swipyrefreshlayout);
         TextView tv = root.findViewById(R.id.txt_marquee);
@@ -338,7 +398,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         try {
                             hideProgressDialog();
                             mSwipyRefreshLayout.setRefreshing(false);
-                            displayData(response,1);
+                            displayData(response, 1);
                           /*  boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
 
@@ -469,13 +529,28 @@ public class SearchFragment extends Fragment implements IAdminControl {
         try {
             String success = response.getString(Common.Constant_Class.SUCCESS);
             String message = response.getString(Common.Constant_Class.MESSAGE);
+            String total_records = "0";
+            if (response.has(Common.Constant_Class.TOTAL_RECORDS)) {
+                total_records = response.getString(Common.Constant_Class.TOTAL_RECORDS);
+            }
 
             Objects.requireNonNull(listDataHeader).clear();
             Objects.requireNonNull(listDataChild).clear();
+            int total = 0;
             if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
 
                 lvCustomList.setVisibility(View.VISIBLE);
-                //  wv_home.setVisibility(View.GONE);
+                try {
+                    total = Integer.parseInt(total_records);
+                    page_count = total / 25;
+                    int mod = total % 25;
+                    if (mod != 0) {
+                        page_count = page_count + 1;
+                    }
+                    mFloatingActionButton.setImageBitmap(textAsBitmap(String.valueOf(page) + "/" + String.valueOf(page_count), 40, Color.WHITE));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 Objects.requireNonNull(txtLable).setVisibility(View.GONE);
                 JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                 for (int i = 0; i < mJsonArray.length(); i++) {
@@ -536,7 +611,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 }
                 mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
                 lvCustomList.setAdapter(mExpandableListAdapter);
-                Toast.makeText(getActivity(), "" + message+" Page "+page, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "" + message + " Page " + page, Toast.LENGTH_LONG).show();
                 hideProgressDialog();
             } else {
                 hideProgressDialog();
@@ -901,7 +976,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        MainActivity.MOVE_TO_SEARCH=0;
+        MainActivity.MOVE_TO_SEARCH = 0;
     }
 
     @Override
