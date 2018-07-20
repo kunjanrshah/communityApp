@@ -29,8 +29,8 @@
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/input_layout_mdate_from"
                     android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
                     <EditText
                         android:id="@+id/edt_mdate_from"
@@ -47,8 +47,8 @@
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/input_layout_mdate_to"
                     android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
                     <EditText
                         android:id="@+id/edt_mdate_to"
@@ -169,15 +169,29 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                    <EditText
-                        android:id="@+id/edtchildbtime"
-                        android:layout_width="fill_parent"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dip"
-                        android:drawableEnd="@drawable/clock"
-                        android:hint="Child Birth Time"
-                        android:inputType="date"
-                        android:singleLine="true" />
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/edtchildbtime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:hint="Child Birth Time"
+                            android:inputType="date"
+                            android:singleLine="true" />
+
+                        <ImageView
+                            android:id="@+id/imgClock"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/clock" />
+                    </LinearLayout>
+
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -189,7 +203,7 @@
 
                 <RadioGroup
                     android:id="@+id/rgroupid"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:orientation="horizontal">
@@ -206,6 +220,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:text="F" />
+
+                    <RadioButton
+                        android:id="@+id/radioB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="B" />
 
                 </RadioGroup>
 

@@ -40,7 +40,6 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -157,11 +156,9 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
     public void callAdvanceSearchWS() {
         JSONObject mJsonObject = new JSONObject();
         try {
-
             String valid = "";
             ArrayList<String> lstProceed = new ArrayList<>();
             if (((PersonalFilter) personal).edtFName != null) {
-
                 String strFName = ((PersonalFilter) personal).edtFName.getText().toString().trim();
                 String strLName = ((PersonalFilter) personal).edtLName.getText().toString().trim();
                 String strFatherName = ((PersonalFilter) personal).edtFatherName.getText().toString().trim();
@@ -180,16 +177,18 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String strEaddress = ((PersonalFilter) personal).edt_Eaddress.getText().toString().trim();
                 String strCity = ((PersonalFilter) personal).edtCity.getText().toString().trim();
                 String bgroup = ((PersonalFilter) personal).spinnerBlood.getSelectedItem().toString().trim();
-                String gender = ((PersonalFilter) personal).gender;
+                String gender;
 
                 if (bgroup.equalsIgnoreCase(Common.Constant_Class.TITLE_BLOOD_GROUP)) {
                     bgroup = "";
                 }
 
                 if (((PersonalFilter) personal).rbtnF.isChecked()) {
-                    gender = "0";
+                    gender = "female";
                 } else if (((PersonalFilter) personal).rbtnM.isChecked()) {
-                    gender = "1";
+                    gender = "male";
+                } else {
+                    gender = "both";
                 }
 
                 if (!strEaddress.equalsIgnoreCase("")) {
@@ -219,22 +218,18 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 }
                 if (!strFName.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.FIRST_NAME, strFName);
-
                     lstProceed.add("FirstName: " + strFName);
                 }
                 if (!strLName.equalsIgnoreCase("")) {
                     lstProceed.add("LastName: " + strLName);
-
                     mJsonObject.put(Common.Constant_Class.LAST_NAME, strLName);
                 }
                 if (!strFatherName.equalsIgnoreCase("")) {
                     lstProceed.add("FatherName: " + strFatherName);
-
                     mJsonObject.put(Common.Constant_Class.FATHER_NAME, strFatherName);
                 }
                 if (!strMotherName.equalsIgnoreCase("")) {
                     lstProceed.add("MotherName: " + strMotherName);
-
                     mJsonObject.put(Common.Constant_Class.MOTHER_NAME, strMotherName);
                 }
                 if (!strbdateFrom.equalsIgnoreCase("")) {
@@ -257,7 +252,6 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 }
                 if (!strMobile.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.MOBILE, strMobile);
-
                     lstProceed.add("Mobile: " + strMobile);
                 }
                 if (!strphone.equalsIgnoreCase("")) {
@@ -282,22 +276,24 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 }
                 if (!strEaddress.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.EMAIL_ADDRESS, strEaddress);
-                    lstProceed.add("Email: " + strEducation);
+                    lstProceed.add("Email: " + strEaddress);
                 }
                 if (!strAddress.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.ADDRESS, strAddress);
-                    lstProceed.add("Address: " + strEducation);
+                    lstProceed.add("Address: " + strAddress);
                 }
                 if (!bgroup.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.BLOOD_GROUP, bgroup);
-                    lstProceed.add("BloodGroup: " + strEducation);
+                    lstProceed.add("BloodGroup: " + bgroup);
                 }
                 if (!gender.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.GENDER, gender);
-                    if (gender.equalsIgnoreCase("1")) {
+                    if (gender.equalsIgnoreCase("male")) {
                         lstProceed.add("Gender: " + "Male");
-                    } else {
+                    } else if (gender.equalsIgnoreCase("female")) {
                         lstProceed.add("Gender: " + "Female");
+                    } else {
+                        lstProceed.add("Gender: " + "Both");
                     }
                 }
             }
@@ -392,10 +388,11 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
             }
 
             if (valid.equalsIgnoreCase("")) {
-                Bundle mBundle = new Bundle();
-                mBundle.putString("search_json", mJsonObject.toString());
-                mBundle.putStringArrayList("proceed", lstProceed);
-                showDialog(CUSTOM_DIALOG_ID,mBundle);
+                // Bundle mBundle = new Bundle();
+                // mBundle.putString("search_json", mJsonObject.toString());
+                // mBundle.putStringArrayList("proceed", lstProceed);
+                DisplayConfimDialog(mJsonObject.toString(), lstProceed);
+                //showDialog(CUSTOM_DIALOG_ID, mBundle);
             } else {
                 Toast.makeText(FilterActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
             }
@@ -404,101 +401,70 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         }
     }
 
-    @Override
-        protected Dialog onCreateDialog(int id, Bundle mBundle) {
+    private void DisplayConfimDialog(String json, ArrayList<String> lstProceed) {
         Dialog dialog = null;
-        switch (id) {
-            case CUSTOM_DIALOG_ID:
-                dialog = new Dialog(FilterActivity.this);
-                dialog.setContentView(R.layout.dialog_layout);
-                dialog.setTitle("Custom Dialog");
+        dialog = new Dialog(FilterActivity.this);
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.setTitle("Custom Dialog");
 
-                dialog.setCancelable(true);
-                dialog.setCanceledOnTouchOutside(true);
-                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        // TODO Auto-generated method stub
-                        Toast.makeText(FilterActivity.this, "OnCancelListener", Toast.LENGTH_LONG).show();
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                // TODO Auto-generated method stub
+                Toast.makeText(FilterActivity.this, "OnCancelListener", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                // TODO Auto-generated method stub
+                Toast.makeText(FilterActivity.this, "OnDismissListener", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        ItemArrayAdapter itemArrayAdapter = new ItemArrayAdapter(R.layout.list_item_search, lstProceed);
+        recyclerView = dialog.findViewById(R.id.item_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(itemArrayAdapter);
+        Button btn_proceed = dialog.findViewById(R.id.btn_proceed);
+        Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
+        btn_proceed.setTag(json);
+        mEditor.putString("adv_search", json);
+        mEditor.apply();
+        btn_proceed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String json = (String) v.getTag();
+                try {
+                    if (json != null && !json.isEmpty()) {
+                        JSONObject mJson = new JSONObject(json);
+                        navigateActivity(mJson);
                     }
-                });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        // TODO Auto-generated method stub
-                        Toast.makeText(FilterActivity.this, "OnDismissListener", Toast.LENGTH_LONG).show();
-                    }
-                });
-
-                ArrayList<String> itemList = new ArrayList<>();
-                itemList = mBundle.getStringArrayList("proceed");
-                String json = mBundle.getString("search_json");
-               /* // Initializing list view with the custom adapter
-                ArrayList<Item> itemList = new ArrayList<Item>();
-                String json = mBundle.getString("search_json");
-
-                json = json.replaceAll("\\{", "").replaceAll("\\}", "").replaceAll("^\"|\"$", "");
-                List<String> items = new ArrayList<String>(Arrays.asList(json.split("\\s*,\\s*")));
-                for (int i = 0; i < items.size(); i++) {
-                    itemList.add(new Item(items.get(i)));
-                }*/
-                ItemArrayAdapter itemArrayAdapter = new ItemArrayAdapter(R.layout.list_item_search, itemList);
-                recyclerView = dialog.findViewById(R.id.item_list);
-                recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setAdapter(itemArrayAdapter);
-                Button btn_proceed = dialog.findViewById(R.id.btn_proceed);
-                Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
-                btn_proceed.setTag(json);
-                btn_proceed.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String json = (String) v.getTag();
-                        try {
-                            if (json != null && !json.isEmpty()) {
-                                JSONObject mJson = new JSONObject(json);
-                                navigateActivity(mJson);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                final Dialog finalDialog = dialog;
-                btn_cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        finalDialog.dismiss();
-                    }
-                });
-
-                // Populating list items
-
-                break;
-        }
-        return dialog;
-    }
-
-    @Override
-    protected void onPrepareDialog(int id, Dialog dialog, Bundle bundle) {
-        // TODO Auto-generated method stub
-        super.onPrepareDialog(id, dialog, bundle);
-
-        switch (id) {
-            case CUSTOM_DIALOG_ID:
-                //
-                break;
-        }
-
+        final Dialog finalDialog = dialog;
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finalDialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     private void navigateActivity(JSONObject mJsonObject) {
         Intent mIntent = new Intent(FilterActivity.this, MainActivity.class);
         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         mIntent.putExtra(Common.Constant_Class.QUERY_STRING, mJsonObject.toString());
-        mEditor.putString("adv_search", mJsonObject.toString());
-        mEditor.apply();
+
         startActivity(mIntent);
         finish();
         overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
@@ -532,19 +498,40 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         });
 
         MenuItem export = menu.findItem(R.id.action_export);
-        export.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        export.setVisible(false);
+        MenuItem action_scan = menu.findItem(R.id.action_scan);
+        action_scan.setVisible(false);
+        MenuItem action_scan_image = menu.findItem(R.id.action_scan_image);
+        action_scan_image.setVisible(false);
+
+        /*export.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Common.ExportSearchData(FilterActivity.this);
                 return false;
             }
-        });
+        });*/
 
         MenuItem voiceItem = menu.findItem(R.id.action_voice);
         voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Common.promptSpeechInput(FilterActivity.this);
+                return false;
+            }
+        });
+
+        MenuItem csearch = menu.findItem(R.id.action_clear_search);
+        csearch.setVisible(true);
+        csearch.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                mEditor.clear();
+                mEditor.apply();
+                Toast.makeText(FilterActivity.this,"Clear search data",Toast.LENGTH_SHORT).show();
+                Intent mIntent=new Intent(FilterActivity.this,FilterActivity.class);
+                startActivity(mIntent);
+                finish();
                 return false;
             }
         });
@@ -556,25 +543,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
     }
 
-
-    public class Item {
-
-        private String name;
-
-        public Item(String n) {
-            name = n;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
-
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+  class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 

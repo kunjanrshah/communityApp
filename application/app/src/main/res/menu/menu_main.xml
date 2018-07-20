@@ -52,6 +52,7 @@
     <item
         android:id="@+id/action_block_users"
         android:title="@string/action_block_users"
+        android:visible="false"
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
@@ -87,6 +88,12 @@
     <item
         android:id="@+id/action_add"
         android:title="@string/action_add"
+        android:visible="false"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/action_clear_search"
+        android:title="@string/action_clear_search"
         android:visible="false"
         app:showAsAction="ifRoom|collapseActionView" />
 

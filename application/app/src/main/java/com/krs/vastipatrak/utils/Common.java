@@ -1424,7 +1424,7 @@ public class Common {
         public static final String FROM_BIRTH_DATE= "from_birth_date";
         public static final String TO_BIRTH_DATE = "to_birth_date";
         public static final String BIRTH_TIME = "birth_time";
-        public static final String BIRTH_DATE= "from_birth_date";
+        public static final String BIRTH_DATE= "birth_date";
         public static final String BIRTH_PLACE = "birth_place";
         public static final String BLOOD_GROUP = "blood_group";
         public static final String PHONE = "phone";

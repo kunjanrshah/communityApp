@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -33,12 +35,14 @@ import java.util.Objects;
 public class FamilyFilter extends Fragment {
 
     @NonNull
-    public String gender = "male";
+    public String gender = "";
     public EditText edt_childbdate, edtSpouseName, edtSpouseFName, edtSpouseMName, edtchild_name, edtcedu, edtchild_work, edtchildbtime, edtchildbplace;
     public EditText edt_mdate_from, edt_mdate_to;
+    RadioButton radioM, radioF, radioB;
     private FloatingActionButton floatingActionButton;
     private ObservableScrollView scroll_fdetails;
     private RadioGroup rgroupid;
+    private ImageView imgClock;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -175,11 +179,12 @@ public class FamilyFilter extends Fragment {
         rgroupid.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
                 if (checkedId == R.id.radioM) {
                     gender = "male";
-                } else {
+                } else if (checkedId == R.id.radioF) {
                     gender = "female";
+                } else {
+                    gender = "both";
                 }
             }
         });
@@ -191,42 +196,32 @@ public class FamilyFilter extends Fragment {
             }
         });
 
-        edtchildbtime.setOnTouchListener(new View.OnTouchListener() {
+        imgClock.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, @NonNull MotionEvent event) {
-
-                final int DRAWABLE_RIGHT = 2;
-
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (edtchildbtime.getRight() - edtchildbtime.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-
-                        Calendar now = Calendar.getInstance();
-                        TimePickerDialog tpd = TimePickerDialog.newInstance((TimePickerDialog.OnTimeSetListener) getContext(), now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), false);
-                        tpd.setThemeDark(true);
-                        tpd.vibrate(true);
-                        tpd.dismissOnPause(false);
-                        tpd.enableSeconds(false);
-                        tpd.setTitle("Birth Time");
-                        tpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialogInterface) {
-                                Log.d("TimePicker", "Dialog was cancelled");
-                            }
-                        });
-                        tpd.setOnTimeSetListener(new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                                String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
-                                String minuteString = minute < 10 ? "0" + minute : "" + minute;
-                                String time = hourString + ":" + minuteString;
-                                edtchildbtime.setText(time);
-                            }
-                        });
-                        tpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Timepickerdialog");
-                        return true;
+            public void onClick(View v) {
+                Calendar now = Calendar.getInstance();
+                TimePickerDialog tpd = TimePickerDialog.newInstance((TimePickerDialog.OnTimeSetListener) getContext(), now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), false);
+                tpd.setThemeDark(true);
+                tpd.vibrate(true);
+                tpd.dismissOnPause(false);
+                tpd.enableSeconds(false);
+                tpd.setTitle("Birth Time");
+                tpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        Log.d("TimePicker", "Dialog was cancelled");
                     }
-                }
-                return false;
+                });
+                tpd.setOnTimeSetListener(new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                        String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+                        String minuteString = minute < 10 ? "0" + minute : "" + minute;
+                        String time = hourString + ":" + minuteString;
+                        edtchildbtime.setText(time);
+                    }
+                });
+                tpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Timepickerdialog");
             }
         });
         return rootView;
@@ -243,11 +238,14 @@ public class FamilyFilter extends Fragment {
         edtchild_name = rootView.findViewById(R.id.edtchild_name);
         edtcedu = rootView.findViewById(R.id.edtcedu);
         edtchild_work = rootView.findViewById(R.id.edtchild_work);
-
         edt_childbdate = rootView.findViewById(R.id.edt_cdate);
         edtchildbtime = rootView.findViewById(R.id.edtchildbtime);
         edtchildbplace = rootView.findViewById(R.id.edtchildbplace);
         rgroupid = rootView.findViewById(R.id.rgroupid);
+        radioM = rootView.findViewById(R.id.radioM);
+        radioF = rootView.findViewById(R.id.radioF);
+        radioB = rootView.findViewById(R.id.radioB);
+        imgClock = rootView.findViewById(R.id.imgClock);
     }
 
     private void setPreferenceData() {
@@ -255,7 +253,7 @@ public class FamilyFilter extends Fragment {
         String json = mSharedPreferences.getString("adv_search", "");
         JSONObject mjsonObject = null;
         try {
-             mjsonObject= new JSONObject(json);
+            mjsonObject = new JSONObject(json);
             if (mjsonObject.has(Common.Constant_Class.MARRIAGE_DATE)) {
                 edt_mdate_from.setText(mjsonObject.getString(Common.Constant_Class.MARRIAGE_DATE));
             }
@@ -285,6 +283,25 @@ public class FamilyFilter extends Fragment {
             }
             if (mjsonObject.has(Common.Constant_Class.CHILD_BPLACE)) {
                 edtchildbplace.setText(mjsonObject.getString(Common.Constant_Class.CHILD_BPLACE));
+            }
+            if (mjsonObject.has(Common.Constant_Class.GENDER)) {
+                String gender = mjsonObject.getString(Common.Constant_Class.GENDER);
+                if (gender.equals("both")) {
+                    radioM.setChecked(false);
+                    radioF.setChecked(false);
+                    radioB.setChecked(true);
+                    this.gender="both";
+                } else if (gender.equals("male")) {
+                    radioB.setChecked(false);
+                    radioF.setChecked(false);
+                    radioM.setChecked(true);
+                    this.gender="male";
+                } else if (gender.equals("female")) {
+                    radioB.setChecked(false);
+                    radioM.setChecked(false);
+                    radioF.setChecked(true);
+                    this.gender="female";
+                }
             }
 
         } catch (Exception e) {

@@ -538,7 +538,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
             Objects.requireNonNull(listDataChild).clear();
             int total = 0;
             if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-
                 lvCustomList.setVisibility(View.VISIBLE);
                 try {
                     total = Integer.parseInt(total_records);

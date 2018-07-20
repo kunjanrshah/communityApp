@@ -401,6 +401,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         });
 
         MenuItem action_scan = menu.findItem(R.id.action_scan);
+        action_scan.setVisible(true);
         action_scan.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -411,6 +412,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         });
 
         MenuItem action_scan_image = menu.findItem(R.id.action_scan_image);
+        action_scan_image.setVisible(true);
         action_scan_image.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -429,11 +431,28 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         MenuItem deactiveItem = menu.findItem(R.id.action_deactive);
         MenuItem deleteItem = menu.findItem(R.id.action_delete);
         MenuItem activeItem = menu.findItem(R.id.action_activate);
+
+        nonActives.setVisible(false);
+        change_role.setVisible(false);
+        activeAdd.setVisible(false);
+        activeItem.setVisible(false);
+        deactiveItem.setVisible(false);
+        deleteItem.setVisible(false);
+        export.setVisible(false);
+
+        /*if () {
+            export.setVisible(true);
+        }*/
+
         if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
             if (Common.isOnline(this)) {
                 nonActives.setVisible(true);
-                change_role.setVisible(true);
                 activeAdd.setVisible(true);
+
+                /*if () {
+                    change_role.setVisible(true);
+                }*/
+
                 if (MOVE_TO_SEARCH == 1) {
                     activeItem.setVisible(true);
                     deactiveItem.setVisible(true);
@@ -520,7 +539,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = searchFragment;
                 IAdminControl = (IAdminControl) fragment;
                 try {
-                    ((SearchFragment) fragment).callNonActivesWS();
+                    if (fragment != null) {
+                        ((SearchFragment) fragment).callNonActivesWS();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -52,7 +52,7 @@ public class PersonalFilter extends Fragment {
     public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtCity;
     public EditText edtbdateFrom,edtbdateTo,edtbtime;
 
-    public String gender = "";
+   // public String gender = "";
     //private ObservableScrollView scroll_pdetails;
     ArrayAdapter<String> dataAdapter;
     private RadioButton rbtnB;
@@ -75,7 +75,7 @@ public class PersonalFilter extends Fragment {
                 if (isChecked) {
                     rbtnF.setChecked(false);
                     rbtnB.setChecked(false);
-                    gender = "1";
+                //    gender = "1";
                 }
             }
         });
@@ -87,7 +87,7 @@ public class PersonalFilter extends Fragment {
                 if (isChecked) {
                     rbtnM.setChecked(false);
                     rbtnB.setChecked(false);
-                    gender = "0";
+                  //  gender = "0";
                 }
             }
         });
@@ -99,7 +99,7 @@ public class PersonalFilter extends Fragment {
                 if (isChecked) {
                     rbtnM.setChecked(false);
                     rbtnF.setChecked(false);
-                    gender = "";
+                //    gender = "";
                 }
             }
         });
@@ -277,7 +277,7 @@ public class PersonalFilter extends Fragment {
 
     private void MemoryAllocation(@NonNull View rootView) {
 
-        gender = "";
+       // gender = "";
         //  scroll_pdetails = rootView.findViewById(R.id.scroll_pdetails);
         floatingActionButton = rootView.findViewById(R.id.fab_psave);
         spinnerBlood = rootView.findViewById(R.id.spinnerBlood);
@@ -318,15 +318,18 @@ public class PersonalFilter extends Fragment {
             }
             if (mjsonObject.has(Common.Constant_Class.GENDER)) {
                 String gender = mjsonObject.getString(Common.Constant_Class.GENDER);
-                if (gender.isEmpty()) {
+                if (gender.equals("both")) {
                     rbtnM.setChecked(false);
                     rbtnF.setChecked(false);
-                } else if (gender.equals("1")) {
+                    rbtnB.setChecked(true);
+                } else if (gender.equals("male")) {
                     rbtnB.setChecked(false);
                     rbtnF.setChecked(false);
-                } else if (gender.equals("0")) {
+                    rbtnM.setChecked(true);
+                } else if (gender.equals("female")) {
                     rbtnB.setChecked(false);
-                    rbtnF.setChecked(false);
+                    rbtnM.setChecked(false);
+                    rbtnF.setChecked(true);
                 }
             }
             if (mjsonObject.has(Common.Constant_Class.BIRTH_DATE)) {
