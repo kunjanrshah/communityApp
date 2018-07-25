@@ -240,7 +240,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 String phone = Objects.requireNonNull(((PersonalFragment) personal).edt_phone).getText().toString().trim();
                 String bdate = Objects.requireNonNull(((PersonalFragment) personal).edtbdate).getText().toString().trim();
                 if (!bdate.equalsIgnoreCase("")) {
-                    if (Common.isThisDateValid(bdate, "yyyy-mm-dd")) {
+                    if (!Common.isThisDateValid(bdate, "yyyy-mm-dd")) {
                         valid = "Birth Date is not valid Format";
                     }
                 }
@@ -275,7 +275,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     MSpouseName = ((FamilyFragment) family).edtMSpouseName.getText().toString().trim();
                     mdate = ((FamilyFragment) family).edt_mdate.getText().toString().trim();
                     if (!mdate.equalsIgnoreCase("")) {
-                        if (Common.isThisDateValid(mdate, "yyyy-mm-dd")) {
+                        if (!Common.isThisDateValid(mdate, "yyyy-mm-dd")) {
                             valid = "Marriage Date is not valid Format";
                         }
                     }
@@ -421,7 +421,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_NAME, Objects.requireNonNull(mViewholder.edtchild_name).getText());
                     String child_bday = Objects.requireNonNull(mViewholder.edtchild_bdate).getText().toString();
                     if (!child_bday.equalsIgnoreCase("")) {
-                        if (Common.isThisDateValid(child_bday, "yyyy-mm-dd")) {
+                        if (!Common.isThisDateValid(child_bday, "yyyy-mm-dd")) {
                             valid = "Child Birth Date is not valid Format";
                         }
                     }
@@ -436,9 +436,9 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mJsonObject_Child.put(Common.Constant_Class.BLOOD_GROUP, child_blood);
                     mJsonObject_Child.put(Common.Constant_Class.MOBILE, child_mobile);
                     mJsonObject_Child.put(Common.Constant_Class.IS_INTERESTED, child_interest);
-                    mJsonObject_Child.put(Common.Constant_Class.CHILD_GENDER, child_gender);
-                    mJsonObject_Child.put(Common.Constant_Class.CHILD_BTIME, child_btime);
-                    mJsonObject_Child.put(Common.Constant_Class.CHILD_BPLACE, child_bplace);
+                    mJsonObject_Child.put(Common.Constant_Class.GENDER, child_gender);
+                    mJsonObject_Child.put(Common.Constant_Class.BIRTH_TIME, child_btime);
+                    mJsonObject_Child.put(Common.Constant_Class.BIRTH_PLACE, child_bplace);
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_BDAY, child_bday);
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_EDU, Objects.requireNonNull(mViewholder.edtchild_edu).getText());
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_WORK, Objects.requireNonNull(mViewholder.edtchild_work).getText());

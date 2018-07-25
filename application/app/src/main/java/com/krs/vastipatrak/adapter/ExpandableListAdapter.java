@@ -312,8 +312,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 builder.setMessage("Do you want to request for update ?");
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                     public void onClick(@NonNull DialogInterface dialog, int which) {
-
-
                         Common.SendWhatsappMessage(_context, mobile, _context.getResources().getString(R.string.nice_html));
                         dialog.dismiss();
                     }
@@ -413,6 +411,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
+        if (_listDataChild.get(this._listDataHeader.get(groupPosition)) == null) {
+            return 0;
+        }
         return this._listDataChild.get(this._listDataHeader.get(groupPosition)).size();
     }
 
@@ -513,7 +514,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.txt_distance.setVisibility(View.GONE);
         }
 
-        if (mListParentData.getStatus()!=null&& mListParentData.getStatus().equalsIgnoreCase("0")) {
+        if (mListParentData.getStatus() != null && mListParentData.getStatus().equalsIgnoreCase("0")) {
             groupViewHolder.imgShare.setVisibility(View.GONE);
         } else {
             groupViewHolder.imgShare.setVisibility(View.VISIBLE);

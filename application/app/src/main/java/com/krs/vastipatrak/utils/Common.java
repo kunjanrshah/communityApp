@@ -844,14 +844,14 @@ public class Common {
                         mListChildrendata.setBlood_group(mJsonObj.getString(Common.Constant_Class.BLOOD_GROUP));
                     }
 
-                    if (mJsonObj.has(Constant_Class.CHILD_GENDER)) {
-                        mListChildrendata.setGender(mJsonObj.getString(Common.Constant_Class.CHILD_GENDER));
+                    if (mJsonObj.has(Constant_Class.GENDER)) {
+                        mListChildrendata.setGender(mJsonObj.getString(Common.Constant_Class.GENDER));
                     }
-                    if (mJsonObj.has(Constant_Class.CHILD_BPLACE)) {
-                        mListChildrendata.setBirth_place(mJsonObj.getString(Common.Constant_Class.CHILD_BPLACE));
+                    if (mJsonObj.has(Constant_Class.BIRTH_PLACE)) {
+                        mListChildrendata.setBirth_place(mJsonObj.getString(Constant_Class.BIRTH_PLACE));
                     }
-                    if (mJsonObj.has(Constant_Class.CHILD_BTIME)) {
-                        mListChildrendata.setBirth_time(mJsonObj.getString(Common.Constant_Class.CHILD_BTIME));
+                    if (mJsonObj.has(Constant_Class.BIRTH_TIME)) {
+                        mListChildrendata.setBirth_time(mJsonObj.getString(Constant_Class.BIRTH_TIME));
                     }
                     if (mJsonObj.has(Constant_Class.IS_INTERESTED)) {
                         String isInterest = mJsonObj.getString(Common.Constant_Class.IS_INTERESTED);
@@ -941,7 +941,7 @@ public class Common {
 
     public static void hideProgressDialog() {
         try {
-            if (pDialog.isShowing()) pDialog.cancel();
+            if (pDialog!=null && pDialog.isShowing()) pDialog.cancel();
             pDialog = null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -1429,6 +1429,7 @@ public class Common {
         public static final String BLOOD_GROUP = "blood_group";
         public static final String PHONE = "phone";
         public static final String GENDER = "gender";
+        public static final String CHILD_GENDER = "child_gender";
         public static final String GOTRA = "gotra";
         public static final String IS_LOCATION_ENABLE = "is_location_enable";
         public static final String UPDATED_TIME = "updated_time";
@@ -1461,9 +1462,9 @@ public class Common {
         public static final String CHILD_ID = "id";
         public static final String CHILD_NAME = "child_name";
         public static final String CHILD_BDAY = "child_bday";
-        public static final String CHILD_GENDER = "gender";
         public static final String CHILD_BTIME = "birth_time";
-        public static final String CHILD_BPLACE = "birth_place";
+        public static final String CHILD_BPLACE = "child_birth_place";
+
         public static final String IS_INTERESTED = "is_interested";
         public static final String CHILD_EDU = "child_edu";
         public static final String CHILD_WORK = "child_work";

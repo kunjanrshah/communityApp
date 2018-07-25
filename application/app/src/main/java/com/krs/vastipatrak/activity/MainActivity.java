@@ -89,7 +89,7 @@ import java.util.Objects;
 import static com.krs.vastipatrak.utils.Common.Constant_Class.LOCATION_INTERVAL;
 
 
-public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
+public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener,SearchFragment.ISearchCallback
 
 {
 
@@ -133,7 +133,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private SearchView searchView;
     private IntentIntegrator qrScan;
     private IAdminControl IAdminControl;
-
+    private MenuItem export;
+    private MenuItem change_role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -381,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         });
 
-        MenuItem export = menu.findItem(R.id.action_export);
+        export = menu.findItem(R.id.action_export);
         export.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -424,34 +425,30 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 return false;
             }
         });
+
+
+
         MenuItem activeAdd = menu.findItem(R.id.action_add);
         MenuItem nonActives = menu.findItem(R.id.action_nonActives);
         MenuItem block_users = menu.findItem(R.id.action_block_users);
-        MenuItem change_role = menu.findItem(R.id.action_change_role);
+        change_role = menu.findItem(R.id.action_change_role);
         MenuItem deactiveItem = menu.findItem(R.id.action_deactive);
         MenuItem deleteItem = menu.findItem(R.id.action_delete);
         MenuItem activeItem = menu.findItem(R.id.action_activate);
 
         nonActives.setVisible(false);
-        change_role.setVisible(false);
         activeAdd.setVisible(false);
         activeItem.setVisible(false);
         deactiveItem.setVisible(false);
         deleteItem.setVisible(false);
         export.setVisible(false);
+        change_role.setVisible(false);
 
-        /*if () {
-            export.setVisible(true);
-        }*/
 
         if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
             if (Common.isOnline(this)) {
                 nonActives.setVisible(true);
                 activeAdd.setVisible(true);
-
-                /*if () {
-                    change_role.setVisible(true);
-                }*/
 
                 if (MOVE_TO_SEARCH == 1) {
                     activeItem.setVisible(true);
@@ -545,6 +542,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
                 mBundle.putInt(Common.Constant_Class.AdminControl, Common.Constant_Class.NonActive);
                 fragment.setArguments(mBundle);
                 fragmentTransaction.replace(R.id.container_body, fragment).commit();
@@ -936,5 +934,15 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         buildGoogleApiClient();
+    }
+
+    @Override
+    public void setIsSearch(boolean isSearch) {
+        if (export!=null) {
+            export.setVisible(true);
+        }
+        if (change_role!=null && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+            change_role.setVisible(true);
+        }
     }
 }

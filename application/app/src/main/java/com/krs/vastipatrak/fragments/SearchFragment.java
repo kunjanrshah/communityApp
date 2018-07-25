@@ -106,7 +106,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
     private String search = "";
     private String search_url = "";
     private FloatingActionButton mFloatingActionButton;
-
+    private ISearchCallback iSearchCallback;
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -143,7 +143,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
             query_string = args.getString(Common.Constant_Class.QUERY_STRING, "");
             adminControl = args.getInt(Common.Constant_Class.AdminControl, -1);
         }
-
         Memory_Allocation(rootView);
 
         if (query != null && !query.equalsIgnoreCase("")) {
@@ -389,6 +388,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     showProgressDialog(getActivity());
                 }
                 mSwipyRefreshLayout.setRefreshing(true);
+
                 JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, search_url, mJsonObject, new Response.Listener<JSONObject>() {
 
                     @Override
@@ -397,8 +397,11 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
                         try {
                             hideProgressDialog();
+                            iSearchCallback= (ISearchCallback) getActivity();
+                            iSearchCallback.setIsSearch(true);
                             mSwipyRefreshLayout.setRefreshing(false);
                             displayData(response, 1);
+
                           /*  boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
 
@@ -433,6 +436,12 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         return params;
                     }
                 };
+
+                jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                        50000,
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
                 // Adding request to request queue
                 AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
@@ -534,10 +543,10 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 total_records = response.getString(Common.Constant_Class.TOTAL_RECORDS);
             }
 
-            Objects.requireNonNull(listDataHeader).clear();
-            Objects.requireNonNull(listDataChild).clear();
-            int total = 0;
             if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                Objects.requireNonNull(listDataHeader).clear();
+                Objects.requireNonNull(listDataChild).clear();
+                int total = 0;
                 lvCustomList.setVisibility(View.VISIBLE);
                 try {
                     total = Integer.parseInt(total_records);
@@ -566,16 +575,16 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
                     boolean is_location_enable = Boolean.parseBoolean(mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE));
                     ListParentData lpd = new ListParentData();
+                    lpd.setName(first_name + " " + last_name);
+                    lpd.setFatherName(father_name);
+                    lpd.setMotherName(mother_name);
+                    lpd.setProfilePicUrl(profile_pic_url);
+                    lpd.setStatus(status);
+                    lpd.setId(profile_id);
+                    lpd.setCity(city);
+                    lpd.setUpdated_time(updated_time);
+                    lpd.setIs_location_enable(is_location_enable);
                     if (status.equalsIgnoreCase(Common.Constant_Class.MARRIED)) {
-                        lpd.setName(first_name + " " + last_name);
-                        lpd.setFatherName(father_name);
-                        lpd.setMotherName(mother_name);
-                        lpd.setProfilePicUrl(profile_pic_url);
-                        lpd.setStatus(status);
-                        lpd.setId(profile_id);
-                        lpd.setCity(city);
-                        lpd.setUpdated_time(updated_time);
-                        lpd.setIs_location_enable(is_location_enable);
 
                         String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
                         String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
@@ -988,5 +997,9 @@ public class SearchFragment extends Fragment implements IAdminControl {
         } else {
             Toast.makeText(getActivity(), "Please select profile !", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public interface ISearchCallback{
+        void setIsSearch(boolean isSearch);
     }
 }

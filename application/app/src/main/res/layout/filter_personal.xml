@@ -15,6 +15,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
@@ -27,7 +29,6 @@
                     android:id="@+id/edtFName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dip"
                     android:hint="@string/hint_name"
                     android:inputType="textCapSentences"
                     android:nextFocusDown="@+id/edtLName"
@@ -43,7 +44,7 @@
                     android:id="@+id/edtLName"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dip"
+
                     android:hint="@string/hint_surname"
                     android:inputType="textCapSentences"
                     android:nextFocusDown="@+id/edtFatherName"
@@ -60,8 +61,7 @@
                     android:id="@+id/edtFatherName"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
+
                     android:hint="@string/hint_father_name"
                     android:inputType="textCapSentences"
                     android:nextFocusDown="@+id/edtMotherName"
@@ -79,8 +79,7 @@
                     android:id="@+id/edtMotherName"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
+
                     android:hint="@string/hint_mother_name"
                     android:inputType="textCapSentences"
                     android:nextFocusDown="@+id/edtbdate_from"
@@ -96,7 +95,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
+
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -160,9 +159,16 @@
                 </LinearLayout>
             </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_btime"
                 android:layout_width="match_parent"
+                android:layout_weight="1"
                 android:layout_height="wrap_content">
 
                 <EditText
@@ -177,6 +183,24 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_birth_place"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/edtBPlace"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dip"
+                    android:hint="@string/hint_birth_place"
+                    android:inputType="textCapSentences"
+                    android:nextFocusDown="@+id/edtNPlace"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
 
 
             <LinearLayout
@@ -185,23 +209,6 @@
                 android:layout_marginTop="5dip"
                 android:baselineAligned="false"
                 android:orientation="horizontal">
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/input_layout_birth_place"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <EditText
-                        android:id="@+id/edtBPlace"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dip"
-                        android:hint="@string/hint_birth_place"
-                        android:inputType="textCapSentences"
-                        android:nextFocusDown="@+id/edtNPlace"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/input_layout_native_place"
@@ -219,25 +226,28 @@
                         android:nextFocusDown="@+id/edtEducation"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_education"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/edtEducation"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+
+                        android:hint="@string/hint_education"
+                        android:inputType="textCapSentences"
+                        android:nextFocusDown="@+id/input_layout_phone"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+
             </LinearLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_education"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
 
-                <EditText
-                    android:id="@+id/edtEducation"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
-                    android:hint="@string/hint_education"
-                    android:inputType="textCapSentences"
-                    android:nextFocusDown="@+id/input_layout_phone"
-                    android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -255,8 +265,7 @@
                         android:id="@+id/edt_phone"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dip"
-                        android:layout_marginRight="10dip"
+
                         android:layout_weight="1"
                         android:hint="@string/hint_land_line"
                         android:inputType="phone"
@@ -264,6 +273,29 @@
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_mobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/edtMobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/icon_contacts"
+                        android:hint="@string/hint_mobile"
+                        android:inputType="phone"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/input_layout_gotra"
@@ -279,30 +311,6 @@
                         android:hint="@string/hint_gotra"
                         android:inputType="textCapSentences"
                         android:nextFocusDown="@+id/edtMobile"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/input_layout_mobile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <EditText
-                        android:id="@+id/edtMobile"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dip"
-                        android:drawableEnd="@drawable/icon_contacts"
-                        android:hint="@string/hint_mobile"
-                        android:inputType="phone"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 

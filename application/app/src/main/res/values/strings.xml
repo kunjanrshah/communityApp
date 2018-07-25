@@ -48,7 +48,7 @@
     <string name="action_deActivate">DeActivate</string>
     <string name="action_delete">Delete</string>
     <string name="action_add">Add New</string>
-    <string name="action_clear_search">Clear Search</string>
+    <string name="action_clear_search">Clear</string>
     <string name="action_voice">Voice</string>
     <string name="action_advsearch">Advance Search</string>
     <string name="action_export">Export Search</string>

@@ -284,24 +284,26 @@ public class FamilyFilter extends Fragment {
             if (mjsonObject.has(Common.Constant_Class.CHILD_BPLACE)) {
                 edtchildbplace.setText(mjsonObject.getString(Common.Constant_Class.CHILD_BPLACE));
             }
-            if (mjsonObject.has(Common.Constant_Class.GENDER)) {
-                String gender = mjsonObject.getString(Common.Constant_Class.GENDER);
+            if (mjsonObject.has(Common.Constant_Class.CHILD_GENDER)) {
+                String gender = mjsonObject.getString(Common.Constant_Class.CHILD_GENDER);
                 if (gender.equals("both")) {
                     radioM.setChecked(false);
                     radioF.setChecked(false);
                     radioB.setChecked(true);
-                    this.gender="both";
+                    this.gender = "both";
                 } else if (gender.equals("male")) {
                     radioB.setChecked(false);
                     radioF.setChecked(false);
                     radioM.setChecked(true);
-                    this.gender="male";
+                    this.gender = "male";
                 } else if (gender.equals("female")) {
                     radioB.setChecked(false);
                     radioM.setChecked(false);
                     radioF.setChecked(true);
-                    this.gender="female";
+                    this.gender = "female";
                 }
+            } else {
+                radioB.setChecked(true);
             }
 
         } catch (Exception e) {

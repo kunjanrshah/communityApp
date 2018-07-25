@@ -31,7 +31,6 @@ import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.ItemArrayAdapter;
 import com.krs.vastipatrak.fragments.BusinessFilter;
 import com.krs.vastipatrak.fragments.FamilyFilter;
-import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.PersonalFilter;
 import com.krs.vastipatrak.utils.Common;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -90,7 +89,6 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
             //If permission is granted
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                 //Displaying a toast
                 Toast.makeText(this, "Permission granted now you can read the storage", Toast.LENGTH_LONG).show();
             } else {
@@ -120,11 +118,11 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
     }
 
     private void backNavigation() {
-        Fragment fragment = new FragmentDrawer();
+        /*Fragment fragment = new FragmentDrawer();
         getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
         Intent mIntent = new Intent(FilterActivity.this, MainActivity.class);
         mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(mIntent);
+        startActivity(mIntent);*/
         finish();
         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
@@ -287,11 +285,12 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     lstProceed.add("BloodGroup: " + bgroup);
                 }
                 if (!gender.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.GENDER, gender);
                     if (gender.equalsIgnoreCase("male")) {
                         lstProceed.add("Gender: " + "Male");
+                        mJsonObject.put(Common.Constant_Class.GENDER, gender);
                     } else if (gender.equalsIgnoreCase("female")) {
                         lstProceed.add("Gender: " + "Female");
+                        mJsonObject.put(Common.Constant_Class.GENDER, gender);
                     } else {
                         lstProceed.add("Gender: " + "Both");
                     }
@@ -349,7 +348,9 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 }
 
                 if (!childGender.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.CHILD_GENDER, childGender);
+                    if (!childGender.equalsIgnoreCase("both")) {
+                        mJsonObject.put(Common.Constant_Class.CHILD_GENDER, childGender);
+                    }
                     lstProceed.add("Child Gender: " + childGender);
                 }
 
@@ -457,7 +458,13 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 finalDialog.dismiss();
             }
         });
-        dialog.show();
+        try {
+            if (!dialog.isShowing()) {
+                dialog.show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void navigateActivity(JSONObject mJsonObject) {
@@ -528,8 +535,8 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
             public boolean onMenuItemClick(MenuItem item) {
                 mEditor.clear();
                 mEditor.apply();
-                Toast.makeText(FilterActivity.this,"Clear search data",Toast.LENGTH_SHORT).show();
-                Intent mIntent=new Intent(FilterActivity.this,FilterActivity.class);
+                Toast.makeText(FilterActivity.this, "Clear search data", Toast.LENGTH_SHORT).show();
+                Intent mIntent = new Intent(FilterActivity.this, FilterActivity.class);
                 startActivity(mIntent);
                 finish();
                 return false;
@@ -543,7 +550,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
     }
 
-  class ViewPagerAdapter extends FragmentPagerAdapter {
+    class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 

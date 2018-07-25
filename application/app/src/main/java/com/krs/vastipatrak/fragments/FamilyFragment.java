@@ -345,7 +345,7 @@ String role="";
 
                         if (mObjChild.getGender().equalsIgnoreCase("male")) {
                             Objects.requireNonNull(mViewholder.radioGroupId).check(R.id.radioM);
-                        } else {
+                        } else if (mObjChild.getGender().equalsIgnoreCase("female")){
                             Objects.requireNonNull(mViewholder.radioGroupId).check(R.id.radioF);
                         }
 
