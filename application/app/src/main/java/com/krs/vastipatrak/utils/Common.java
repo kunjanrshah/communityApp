@@ -709,7 +709,7 @@ public class Common {
                 mListProfileData.setMother_name(mJsonObject.getString(Common.Constant_Class.MOTHER_NAME));
             }
             if (mJsonObject.has(Common.Constant_Class.BIRTH_DATE)) {
-                mListProfileData.setBirth_date(mJsonObject.getString(Common.Constant_Class.BIRTH_DATE));
+                mListProfileData.setBirth_date(ChangedateFormat(mJsonObject.getString(Common.Constant_Class.BIRTH_DATE)));
             }
             if (mJsonObject.has(Common.Constant_Class.BIRTH_TIME)) {
                 mListProfileData.setBirth_time(mJsonObject.getString(Common.Constant_Class.BIRTH_TIME));
@@ -757,7 +757,7 @@ public class Common {
                 mListProfileData.setOffice_address(mJsonObject.getString(Common.Constant_Class.OCCUPATION));
             }
             if (mJsonObject.has(Common.Constant_Class.MARRIAGE_DATE)) {
-                mListProfileData.setMarriage_date(mJsonObject.getString(Constant_Class.MARRIAGE_DATE));
+                mListProfileData.setMarriage_date(ChangedateFormat(mJsonObject.getString(Constant_Class.MARRIAGE_DATE)));
             }
             if (mJsonObject.has(Common.Constant_Class.SPOUSE_NAME)) {
                 mListProfileData.setSpouse_name(mJsonObject.getString(Common.Constant_Class.SPOUSE_NAME));
@@ -862,7 +862,7 @@ public class Common {
                         }
                     }
                     if (mJsonObj.has(Common.Constant_Class.CHILD_BDAY)) {
-                        mListChildrendata.setChild_bday(mJsonObj.getString(Common.Constant_Class.CHILD_BDAY));
+                        mListChildrendata.setChild_bday(ChangedateFormat(mJsonObj.getString(Common.Constant_Class.CHILD_BDAY)));
                     }
                     if (mJsonObj.has(Common.Constant_Class.CHILD_EDU)) {
                         mListChildrendata.setChild_edu(mJsonObj.getString(Common.Constant_Class.CHILD_EDU));
@@ -905,6 +905,27 @@ public class Common {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String ChangedateFormat(String strDate)
+    {
+        //String mStringDate = "25-Nov-15 14:23:34";
+        String oldFormat= "yyyy-MM-dd";
+        String newFormat= "dd/MM/yyyy";
+
+        String formatedDate = "";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(oldFormat);
+        Date myDate = null;
+        try {
+            myDate = dateFormat.parse(strDate);
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat timeFormat = new SimpleDateFormat(newFormat);
+        formatedDate = timeFormat.format(myDate);
+
+        return formatedDate;
     }
 
     public static void getDeviceId(Context mContext) {
@@ -1430,6 +1451,7 @@ public class Common {
         public static final String PHONE = "phone";
         public static final String GENDER = "gender";
         public static final String CHILD_GENDER = "child_gender";
+        public static final String CHILD_MOBILE = "child_mobile";
         public static final String GOTRA = "gotra";
         public static final String IS_LOCATION_ENABLE = "is_location_enable";
         public static final String UPDATED_TIME = "updated_time";
@@ -1450,6 +1472,8 @@ public class Common {
         public static final String IMG_FATHER = "img_father";
         public static final String SPOUSE_NAME = "spouse_name";
         public static final String MARRIAGE_DATE = "marriage_date";
+        public static final String FROM_MARRIAGE_DATE = "from_marriage_date";
+        public static final String TO_MARRIAGE_DATE = "to_marriage_date";
         public static final String MARRIED = "1";
         public static final String UNMARRIED = "0";
         public static final String SPOUSE_FATHER_NAME = "spouse_father_name";
@@ -1462,6 +1486,8 @@ public class Common {
         public static final String CHILD_ID = "id";
         public static final String CHILD_NAME = "child_name";
         public static final String CHILD_BDAY = "child_bday";
+        public static final String FROM_CHILD_BDAY = "from_child_bday";
+        public static final String TO_CHILD_BDAY = "to_child_bday";
         public static final String CHILD_BTIME = "birth_time";
         public static final String CHILD_BPLACE = "child_birth_place";
 

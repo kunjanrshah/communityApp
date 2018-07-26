@@ -67,7 +67,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
 
     private final String TAG = "PersonalFragment";
-    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbdate = null, edtbTime = null, edtCity = null;
+    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbTime = null, edtCity = null;
+    private EditText edtbdate = null;
+    public String bdate="";
     public String str_profile_hash = "", str_father_hash = "", str_mother_hash = "";
     public String gender = "";
     public Spinner spinnerBlood;
@@ -265,8 +267,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 if (str_day.length() == 1) {
                                     str_day = "0" + str_day;
                                 }
-                                // String date = str_day + "/" + str_month + "/" + year;
-                                String date = year + "-" + str_month + "-" + str_day;
+                                String date = str_day + "/" + str_month + "/" + year;
+                                bdate=year + "-" + str_month + "-" + str_day;
                                 edtbdate.setText(date);
                             }
                         });

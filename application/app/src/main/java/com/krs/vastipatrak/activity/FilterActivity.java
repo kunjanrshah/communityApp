@@ -323,19 +323,24 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 }
             }
 
-            if (((FamilyFilter) family).edt_mdate_from != null) {
+            if (((FamilyFilter) family).edtSpouseName != null) {
 
-                String strmdate = ((FamilyFilter) family).edt_mdate_from.getText().toString().trim();
+                String strmdate_from = ((FamilyFilter) family).from_mdate.trim();
+                String strmdate_to = ((FamilyFilter) family).to_mdate.trim();
                 String strSpouseName = ((FamilyFilter) family).edtSpouseName.getText().toString().trim();
                 String strSpouseFName = ((FamilyFilter) family).edtSpouseFName.getText().toString().trim();
                 String strSpouseMName = ((FamilyFilter) family).edtSpouseMName.getText().toString().trim();
                 String strchild_name = ((FamilyFilter) family).edtchild_name.getText().toString().trim();
                 String strcedu = ((FamilyFilter) family).edtcedu.getText().toString().trim();
                 String strchild_work = ((FamilyFilter) family).edtchild_work.getText().toString().trim();
-                String childBdate = ((FamilyFilter) family).edt_childbdate.getText().toString().trim();
+                String childBdateFrom = ((FamilyFilter) family).from_cdate.trim();
+                String childBdateTo = ((FamilyFilter) family).to_cdate.trim();
+                String childMobile = ((FamilyFilter) family).edtcmobile.getText().toString().trim();
                 String childBtime = ((FamilyFilter) family).edtchildbtime.getText().toString().trim();
                 String childBplace = ((FamilyFilter) family).edtchildbplace.getText().toString().trim();
                 String childGender = ((FamilyFilter) family).gender;
+
+
 
                 if (!childBtime.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.CHILD_BTIME, childBtime);
@@ -354,13 +359,23 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     lstProceed.add("Child Gender: " + childGender);
                 }
 
-                if (!strmdate.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.MARRIAGE_DATE, strmdate);
-                    lstProceed.add("Marriage Date: " + strmdate);
+                if (!strmdate_from.equalsIgnoreCase("")) {
+                    mJsonObject.put(Common.Constant_Class.FROM_MARRIAGE_DATE, strmdate_from);
+                    lstProceed.add("Marriage From: " + ((FamilyFilter) family).edt_mdate_from.getText().toString());
                 }
-                if (!childBdate.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.CHILD_BDAY, childBdate);
-                    lstProceed.add("Child BirthDate: " + childBdate);
+
+                if (!strmdate_to.equalsIgnoreCase("")) {
+                    mJsonObject.put(Common.Constant_Class.TO_MARRIAGE_DATE, strmdate_to);
+                    lstProceed.add("Marriage To: " + ((FamilyFilter) family).edt_mdate_to.getText().toString());
+                }
+
+                if (!childBdateFrom.equalsIgnoreCase("")) {
+                    mJsonObject.put(Common.Constant_Class.FROM_CHILD_BDAY, childBdateFrom);
+                    lstProceed.add("Child BDay From: " + ((FamilyFilter) family).edt_cdate_from.getText().toString());
+                }
+                if (!childBdateTo.equalsIgnoreCase("")) {
+                    mJsonObject.put(Common.Constant_Class.TO_CHILD_BDAY, childBdateTo);
+                    lstProceed.add("Child BDay To: " + ((FamilyFilter) family).edt_cdate_to.getText().toString());
                 }
                 if (!strSpouseName.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.SPOUSE_NAME, strSpouseName);
@@ -385,6 +400,11 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 if (!strchild_work.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.CHILD_WORK, strchild_work);
                     lstProceed.add("Child Work: " + strchild_work);
+                }
+
+                if (!childMobile.equalsIgnoreCase("")) {
+                    mJsonObject.put(Common.Constant_Class.CHILD_MOBILE, childMobile);
+                    lstProceed.add("Child Mobile: " + childMobile);
                 }
             }
 

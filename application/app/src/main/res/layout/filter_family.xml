@@ -138,17 +138,17 @@
                     android:orientation="vertical">
 
                     <android.support.design.widget.TextInputLayout
-                        android:id="@+id/input_layout_cdate"
+                        android:id="@+id/input_layout_cdate_from"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
                         <EditText
-                            android:id="@+id/edt_cdate"
+                            android:id="@+id/edt_cdate_from"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dip"
                             android:drawableEnd="@drawable/calendar"
-                            android:hint="Child Birth Date"
+                            android:hint="Child BDay From"
                             android:inputType="date"
                             android:singleLine="true" />
                     </android.support.design.widget.TextInputLayout>
@@ -158,53 +158,52 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:text="DD/MM or DD/MM/YYYY"
+                        android:text="DD/MM/YYYY"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/input_layout_cdate_to"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/edt_cdate_to"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dip"
+                            android:drawableEnd="@drawable/calendar"
+                            android:hint="Child BDay To"
+                            android:inputType="date"
+                            android:singleLine="true" />
+                    </android.support.design.widget.TextInputLayout>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:text="DD/MM/YYYY"
                         android:textSize="10sp" />
 
                 </LinearLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/input_layout_ctime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <EditText
-                            android:id="@+id/edtchildbtime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:hint="Child Birth Time"
-                            android:inputType="date"
-                            android:singleLine="true" />
-
-                        <ImageView
-                            android:id="@+id/imgClock"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/clock" />
-                    </LinearLayout>
-
-                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+
+
 
                 <RadioGroup
                     android:id="@+id/rgroupid"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
                     android:layout_gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -231,22 +230,80 @@
 
                 </RadioGroup>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/input_layout_cbplace"
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_cbplace"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edtchildbplace"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dip"
+                    android:hint="Child Birth Place"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_ctime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <EditText
-                        android:id="@+id/edtchildbplace"
-                        android:layout_width="match_parent"
+                        android:id="@+id/edtchildbtime"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dip"
-                        android:hint="Child Birth Place"
+                        android:layout_marginStart="10dp"
+                        android:hint="Child Birth Time"
+                        android:inputType="date"
                         android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/imgClock"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/clock" />
+                </LinearLayout>
+
+            </android.support.design.widget.TextInputLayout>
 
 
-            </LinearLayout>
+
+        </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_cmobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edtcmobile"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dip"
+                    android:hint="Child Mobile"
+                    android:inputType="textCapSentences"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_cedu"

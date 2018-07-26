@@ -238,7 +238,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 }
 
                 String phone = Objects.requireNonNull(((PersonalFragment) personal).edt_phone).getText().toString().trim();
-                String bdate = Objects.requireNonNull(((PersonalFragment) personal).edtbdate).getText().toString().trim();
+                String bdate = Objects.requireNonNull(((PersonalFragment) personal).bdate).trim();
                 if (!bdate.equalsIgnoreCase("")) {
                     if (!Common.isThisDateValid(bdate, "yyyy-mm-dd")) {
                         valid = "Birth Date is not valid Format";
@@ -273,7 +273,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     spouseName = ((FamilyFragment) family).edtSpouseName.getText().toString().trim();
                     SpouseFName = ((FamilyFragment) family).edtSpouseFName.getText().toString().trim();
                     MSpouseName = ((FamilyFragment) family).edtMSpouseName.getText().toString().trim();
-                    mdate = ((FamilyFragment) family).edt_mdate.getText().toString().trim();
+                    mdate = ((FamilyFragment) family).mdate.trim();
                     if (!mdate.equalsIgnoreCase("")) {
                         if (!Common.isThisDateValid(mdate, "yyyy-mm-dd")) {
                             valid = "Marriage Date is not valid Format";
@@ -419,7 +419,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                         mJsonObject_Child.put(Common.Constant_Class.CHILD_DELETE, "true");
                     }
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_NAME, Objects.requireNonNull(mViewholder.edtchild_name).getText());
-                    String child_bday = Objects.requireNonNull(mViewholder.edtchild_bdate).getText().toString();
+                    String child_bday = Objects.requireNonNull(mViewholder.cbdate);
                     if (!child_bday.equalsIgnoreCase("")) {
                         if (!Common.isThisDateValid(child_bday, "yyyy-mm-dd")) {
                             valid = "Child Birth Date is not valid Format";

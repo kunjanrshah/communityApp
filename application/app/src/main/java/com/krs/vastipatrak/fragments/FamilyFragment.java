@@ -38,7 +38,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
-import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
@@ -53,14 +52,17 @@ import java.util.Objects;
 
 import io.realm.RealmList;
 
-public class FamilyFragment extends Fragment implements Serializable,AdapterView.OnItemSelectedListener {
+public class FamilyFragment extends Fragment implements Serializable, AdapterView.OnItemSelectedListener {
 
 
-    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName, edt_mdate;
+    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName;
+    public String mdate = "";
     public String str_spouse_hash = "", str_fspouse_hash = "", str_mspouse_hash = "";
     public LinearLayout child_container = null;
     public ArrayList<Integer> lst_delID = null;
     public RadioButton rbtnChildNo;
+    String role = "";
+    private EditText edt_mdate;
     private RadioButton rbtnChildYes;
     private String spouse_url = "";
     private String fspouse_url = "";
@@ -122,8 +124,8 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
                                 if (str_day.length() == 1) {
                                     str_day = "0" + str_day;
                                 }
-                                // String date = str_day + "/" + str_month + "/" + year;
-                                String date = year + "-" + str_month + "-" + str_day;
+                                String date = str_day + "/" + str_month + "/" + year;
+                                mdate = year + "-" + str_month + "-" + str_day;
                                 edt_mdate.setText(date);
                             }
                         });
@@ -224,13 +226,13 @@ public class FamilyFragment extends Fragment implements Serializable,AdapterView
 
         return rootView;
     }
-String role="";
+
     private void Memory_Allocation(View root) {
 
         mActivity = Objects.requireNonNull(getActivity());
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
-        role=mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER);
+        role = mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER);
         edt_mdate = root.findViewById(R.id.edt_mdate);
         edtSpouseName = root.findViewById(R.id.edtSpouseName);
         edtSpouseFName = root.findViewById(R.id.edtSpouseFName);
@@ -321,9 +323,8 @@ String role="";
                         Objects.requireNonNull(mViewholder.edtchild_name).setText(mObjChild.getChild_name());
                         Objects.requireNonNull(mViewholder.edtchild_bdate).setText(mObjChild.getChild_bday());
                         Objects.requireNonNull(mViewholder.edtMobile).setText(mObjChild.getMobile());
-                        String blood=mObjChild.getBlood_group();
-                        if (blood != null && !blood.isEmpty())
-                        {
+                        String blood = mObjChild.getBlood_group();
+                        if (blood != null && !blood.isEmpty()) {
                             if (blood.equalsIgnoreCase(Common.Constant_Class.A_POSITIVE)) {
                                 Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(1);
                             } else if (blood.equalsIgnoreCase(Common.Constant_Class.A_NAGATIVE)) {
@@ -345,7 +346,7 @@ String role="";
 
                         if (mObjChild.getGender().equalsIgnoreCase("male")) {
                             Objects.requireNonNull(mViewholder.radioGroupId).check(R.id.radioM);
-                        } else if (mObjChild.getGender().equalsIgnoreCase("female")){
+                        } else if (mObjChild.getGender().equalsIgnoreCase("female")) {
                             Objects.requireNonNull(mViewholder.radioGroupId).check(R.id.radioF);
                         }
 
@@ -538,7 +539,8 @@ String role="";
                                 if (str_day.length() == 1) {
                                     str_day = "0" + str_day;
                                 }
-                                String date = year + "-" + str_month + "-" + str_day;
+                                String date = str_day + "/" + str_month + "/" + year;
+                                mViewholder.cbdate = year + "-" + str_month + "-" + str_day;
                                 mViewholder.edtchild_bdate.setText(date);
                             }
                         });
@@ -725,23 +727,19 @@ String role="";
     }
 
     public static class Viewholder {
-        @Nullable
-        ImageView img_child = null;
         public int child_id;
         @Nullable
         public EditText edtchild_name = null;
         @Nullable
-        public EditText edtMobile=null;
+        public EditText edtMobile = null;
         @Nullable
-        public Spinner spinnerBlood=null;
+        public Spinner spinnerBlood = null;
         @Nullable
-        public EditText edtchild_bdate = null;
+        private EditText edtchild_bdate = null;
         @Nullable
         public EditText edtchild_btime = null;
         @Nullable
         public EditText edtchild_bplace = null;
-        @Nullable
-        RadioGroup radioGroupId = null;
         @NonNull
         public String gender = "male";
         @Nullable
@@ -750,9 +748,14 @@ String role="";
         public EditText edtchild_edu = null;
         @Nullable
         public EditText edtchild_work = null;
+        public String ImgHash = "";
+        public String cbdate = "";
+        @Nullable
+        ImageView img_child = null;
+        @Nullable
+        RadioGroup radioGroupId = null;
         @Nullable
         Button btn_remove = null;
-        public String ImgHash = "";
         boolean setClickBDate = false;
     }
 }

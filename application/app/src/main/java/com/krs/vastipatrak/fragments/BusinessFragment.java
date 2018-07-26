@@ -112,7 +112,6 @@ public class BusinessFragment extends Fragment implements Serializable {
                                 }
                             }
                         }
-
                         return true;
                     }
                 }
@@ -127,22 +126,16 @@ public class BusinessFragment extends Fragment implements Serializable {
         return rootView;
     }
 
-
-
-
     private void showDirections(double latitude, double longitude) {
         String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", latitude, longitude, "", office_lat, office_lng, edtOAddress.getText().toString().trim());
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         startActivity(intent);
-
     }
 
     private void officeLocUpdateWS() {
-
         if (Common.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
-
             try {
                 mJsonObject = new JSONObject();
                 double lat = Double.parseDouble(MainActivity.lat);

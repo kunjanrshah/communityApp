@@ -36,8 +36,10 @@ public class FamilyFilter extends Fragment {
 
     @NonNull
     public String gender = "";
-    public EditText edt_childbdate, edtSpouseName, edtSpouseFName, edtSpouseMName, edtchild_name, edtcedu, edtchild_work, edtchildbtime, edtchildbplace;
-    public EditText edt_mdate_from, edt_mdate_to;
+    public EditText  edtSpouseName, edtSpouseFName, edtSpouseMName;
+    public EditText edtchild_name, edtcedu, edtchild_work, edtchildbtime, edtchildbplace,edtcmobile;
+    public EditText edt_mdate_from, edt_mdate_to,edt_cdate_from,edt_cdate_to;
+    public String from_mdate="",to_mdate="",from_cdate="",to_cdate="";
     RadioButton radioM, radioF, radioB;
     private FloatingActionButton floatingActionButton;
     private ObservableScrollView scroll_fdetails;
@@ -78,6 +80,8 @@ public class FamilyFilter extends Fragment {
                                     str_day = "0" + str_day;
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
+                                from_mdate= year+ "/" + str_month + "/" + str_day;
+                                to_mdate=from_mdate;
                                 edt_mdate_from.setText(date);
                                 edt_mdate_to.setText(date);
                             }
@@ -120,6 +124,7 @@ public class FamilyFilter extends Fragment {
                                 String date = str_day + "/" + str_month + "/" + year;
                                 try {
                                     if (Common.CompareTwoDates(edt_mdate_from.getText().toString(), date)) {
+                                        to_mdate=year+ "/" + str_month + "/" + str_day;
                                         edt_mdate_to.setText(date);
                                     } else {
                                         Toast.makeText(getActivity(), "Invalid date", Toast.LENGTH_SHORT).show();
@@ -137,13 +142,55 @@ public class FamilyFilter extends Fragment {
             }
         });
 
-        edt_childbdate.setOnTouchListener(new View.OnTouchListener() {
+        edt_cdate_from.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, @NonNull MotionEvent event) {
 
                 final int DRAWABLE_RIGHT = 2;
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (edt_childbdate.getRight() - edt_childbdate.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if (event.getRawX() >= (edt_cdate_from.getRight() - edt_cdate_from.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        Calendar now = Calendar.getInstance();
+                        DatePickerDialog dpd = DatePickerDialog.newInstance((DatePickerDialog.OnDateSetListener) getContext(), now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+                        dpd.setThemeDark(true);
+                        dpd.vibrate(true);
+                        dpd.dismissOnPause(false);
+                        dpd.showYearPickerFirst(false);
+                        dpd.setTitle("Child Birth Date");
+                        dpd.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+
+                                String str_month = String.valueOf(monthOfYear);
+                                String str_day = String.valueOf(dayOfMonth);
+                                if (str_month.length() == 1) {
+                                    str_month = "0" + str_month;
+                                }
+                                if (str_day.length() == 1) {
+                                    str_day = "0" + str_day;
+                                }
+                                String date = str_day + "/" + str_month + "/" + year;
+                                from_cdate=  year+ "/" + str_month + "/" + str_day;
+                                to_cdate=from_cdate;
+                                edt_cdate_from.setText(date);
+                                edt_cdate_to.setText(date);
+                            }
+                        });
+                        dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+
+        edt_cdate_to.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
+
+                final int DRAWABLE_RIGHT = 2;
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (edt_cdate_to.getRight() - edt_cdate_to.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         Calendar now = Calendar.getInstance();
                         DatePickerDialog dpd = DatePickerDialog.newInstance((DatePickerDialog.OnDateSetListener) getContext(), now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
                         dpd.setThemeDark(true);
@@ -165,7 +212,16 @@ public class FamilyFilter extends Fragment {
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
 
-                                edt_childbdate.setText(date);
+                                try {
+                                    if (Common.CompareTwoDates(edt_cdate_from.getText().toString(), date)) {
+                                        edt_cdate_to.setText(date);
+                                        to_cdate= year+ "/" + str_month + "/" + str_day;
+                                    } else {
+                                        Toast.makeText(getActivity(), "Invalid date", Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         });
                         dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
@@ -238,9 +294,11 @@ public class FamilyFilter extends Fragment {
         edtchild_name = rootView.findViewById(R.id.edtchild_name);
         edtcedu = rootView.findViewById(R.id.edtcedu);
         edtchild_work = rootView.findViewById(R.id.edtchild_work);
-        edt_childbdate = rootView.findViewById(R.id.edt_cdate);
+        edt_cdate_from = rootView.findViewById(R.id.edt_cdate_from);
+        edt_cdate_to = rootView.findViewById(R.id.edt_cdate_to);
         edtchildbtime = rootView.findViewById(R.id.edtchildbtime);
         edtchildbplace = rootView.findViewById(R.id.edtchildbplace);
+        edtcmobile= rootView.findViewById(R.id.edtcmobile);
         rgroupid = rootView.findViewById(R.id.rgroupid);
         radioM = rootView.findViewById(R.id.radioM);
         radioF = rootView.findViewById(R.id.radioF);
@@ -254,9 +312,16 @@ public class FamilyFilter extends Fragment {
         JSONObject mjsonObject = null;
         try {
             mjsonObject = new JSONObject(json);
-            if (mjsonObject.has(Common.Constant_Class.MARRIAGE_DATE)) {
-                edt_mdate_from.setText(mjsonObject.getString(Common.Constant_Class.MARRIAGE_DATE));
+            if (mjsonObject.has(Common.Constant_Class.FROM_MARRIAGE_DATE)) {
+                edt_mdate_from.setText(mjsonObject.getString(Common.Constant_Class.FROM_MARRIAGE_DATE));
             }
+            if (mjsonObject.has(Common.Constant_Class.TO_MARRIAGE_DATE)) {
+                edt_mdate_to.setText(mjsonObject.getString(Common.Constant_Class.TO_MARRIAGE_DATE));
+            }
+            if (mjsonObject.has(Common.Constant_Class.CHILD_MOBILE)) {
+                edtcmobile.setText(mjsonObject.getString(Common.Constant_Class.CHILD_MOBILE));
+            }
+
             if (mjsonObject.has(Common.Constant_Class.SPOUSE_NAME)) {
                 edtSpouseName.setText(mjsonObject.getString(Common.Constant_Class.SPOUSE_NAME));
             }
@@ -275,8 +340,14 @@ public class FamilyFilter extends Fragment {
             if (mjsonObject.has(Common.Constant_Class.CHILD_WORK)) {
                 edtchild_work.setText(mjsonObject.getString(Common.Constant_Class.CHILD_WORK));
             }
-            if (mjsonObject.has(Common.Constant_Class.CHILD_BDAY)) {
-                edt_childbdate.setText(mjsonObject.getString(Common.Constant_Class.CHILD_BDAY));
+            if (mjsonObject.has(Common.Constant_Class.FROM_CHILD_BDAY)) {
+                edt_cdate_from.setText(mjsonObject.getString(Common.Constant_Class.FROM_CHILD_BDAY));
+            }
+            if (mjsonObject.has(Common.Constant_Class.TO_CHILD_BDAY)) {
+                edt_cdate_to.setText(mjsonObject.getString(Common.Constant_Class.TO_CHILD_BDAY));
+            }
+            if (mjsonObject.has(Common.Constant_Class.TO_CHILD_BDAY)) {
+                edt_cdate_to.setText(mjsonObject.getString(Common.Constant_Class.TO_CHILD_BDAY));
             }
             if (mjsonObject.has(Common.Constant_Class.CHILD_BTIME)) {
                 edtchildbtime.setText(mjsonObject.getString(Common.Constant_Class.CHILD_BTIME));
