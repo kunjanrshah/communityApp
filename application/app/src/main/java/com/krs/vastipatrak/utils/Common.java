@@ -21,7 +21,9 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
@@ -897,6 +899,10 @@ public class Common {
         return "";
     }
 
+
+
+
+
     public static Date StringToDate(String dtStart) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -906,6 +912,9 @@ public class Common {
         }
         return null;
     }
+
+
+
 
     public static String ChangedateFormat(String strDate)
     {

@@ -4,6 +4,7 @@ package com.krs.vastipatrak.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -41,6 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -241,7 +243,12 @@ public class HomeFragment extends Fragment {
         mWaveSwipeRefreshLayout.setRefreshing(false);
     }
 
-
+    private void showDirections(double src_lat, double src_lng,double dst_lat, double dst_lng, String address) {
+        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", src_lat,src_lng, "",dst_lat,dst_lng , address);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+        startActivity(intent);
+    }
 
     public class EventAdapter extends RecyclerView.Adapter<EventAdapter.MyViewHolder> {
 
@@ -264,19 +271,33 @@ public class HomeFragment extends Fragment {
                     listener.onItemClick(v, holder.getPosition());
                 }
             });
+
+
+
             return holder;
         }
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-            ListEventData data = eventData.get(position);
+            final ListEventData data = eventData.get(position);
             assert data != null;
             holder.txtTitle.setText(data.getTitle());
             holder.txtDesc.setText(data.getDescription());
             holder.txtLocation.setText(data.getLocation());
+
+
             holder.txtEventDate.setText(parseDateToddMMyyyy(DatetoString(data.getEventDate())));
             getRandomColor(Objects.requireNonNull(getActivity()), position, holder.ll_event);
+
+            holder.txtLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(),"get location",Toast.LENGTH_SHORT).show();
+                   // showDirections(Double.parseDouble(data.getLat()) ,Double.parseDouble(data.getLng()) ,data.getLocation());
+                }
+            });
+
         }
 
         @Override

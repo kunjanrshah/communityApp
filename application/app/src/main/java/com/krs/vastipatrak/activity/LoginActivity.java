@@ -80,7 +80,7 @@ public class LoginActivity extends Activity {
     private final String TAG = MainActivity.class.getSimpleName();
     @Nullable
     private JSONObject json = null;
-    private ImageView img_profile,img_cancel;
+    private ImageView img_profile, img_cancel;
     private String str_profile_hash = "";
     private MaterialBetterSpinner spinnerSubcast;
     private MaterialBetterSpinner spinnerEkdo;
@@ -108,7 +108,7 @@ public class LoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Memory_Allocation();
         setListner();
@@ -217,7 +217,13 @@ public class LoginActivity extends Activity {
             }
         });
         Common.getDeviceId(this);
-        super.onCreate(savedInstanceState);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})

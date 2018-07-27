@@ -89,7 +89,7 @@ import java.util.Objects;
 import static com.krs.vastipatrak.utils.Common.Constant_Class.LOCATION_INTERVAL;
 
 
-public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener,SearchFragment.ISearchCallback
+public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, SearchFragment.ISearchCallback
 
 {
 
@@ -252,9 +252,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
+
         // register GCM registration complete receiver
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(Config.REGISTRATION_COMPLETE));
 
@@ -425,7 +427,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 return false;
             }
         });
-
 
 
         MenuItem activeAdd = menu.findItem(R.id.action_add);
@@ -938,10 +939,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     @Override
     public void setIsSearch(boolean isSearch) {
-        if (export!=null) {
+        if (export != null) {
             export.setVisible(true);
         }
-        if (change_role!=null && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+        if (change_role != null && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
             change_role.setVisible(true);
         }
     }

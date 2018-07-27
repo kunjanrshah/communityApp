@@ -49,9 +49,9 @@ public class PersonalFilter extends Fragment {
     public Spinner spinnerBlood;
     public RadioButton rbtnM;
     public RadioButton rbtnF;
-    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtCity;
-    public EditText edtbdateFrom,edtbdateTo,edtbtime;
-
+    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtCity,edtbtime;
+    public EditText edtbdateFrom,edtbdateTo;
+    public String bdateFrom="",bdateTo="";
    // public String gender = "";
     //private ObservableScrollView scroll_pdetails;
     ArrayAdapter<String> dataAdapter;
@@ -134,15 +134,15 @@ public class PersonalFilter extends Fragment {
                                 String date = str_day + "/" + str_month + "/" + year;
                                 edtbdateFrom.setText(date);
                                 edtbdateTo.setText(date);
+                                date= year+ "-" + str_month + "-" + str_day;
+                                bdateFrom=date;
+                                bdateTo=date;
                             }
                         });
                         dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
-
-
                         return true;
                     }
                 }
-
                 return false;
             }
         });
@@ -175,9 +175,12 @@ public class PersonalFilter extends Fragment {
                                     str_day = "0" + str_day;
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
+
                                 try {
                                     if (Common.CompareTwoDates(edtbdateFrom.getText().toString(), date)) {
                                         edtbdateTo.setText(date);
+                                        date= year + "-" + str_month + "-" +str_day;
+                                        bdateTo=date;
                                     } else {
                                         Toast.makeText(getActivity(), "Invalid date", Toast.LENGTH_SHORT).show();
                                     }
@@ -332,9 +335,12 @@ public class PersonalFilter extends Fragment {
                     rbtnF.setChecked(true);
                 }
             }
-            if (mjsonObject.has(Common.Constant_Class.BIRTH_DATE)) {
-                String bdate = mjsonObject.getString(Common.Constant_Class.BIRTH_DATE);
+            if (mjsonObject.has(Common.Constant_Class.FROM_BIRTH_DATE)) {
+                String bdate = mjsonObject.getString(Common.Constant_Class.FROM_BIRTH_DATE);
                 edtbdateFrom.setText(bdate);
+            }
+            if (mjsonObject.has(Common.Constant_Class.TO_BIRTH_DATE)) {
+                String bdate = mjsonObject.getString(Common.Constant_Class.TO_BIRTH_DATE);
                 edtbdateTo.setText(bdate);
             }
             if (mjsonObject.has(Common.Constant_Class.BIRTH_TIME)) {

@@ -80,7 +80,7 @@ public class FamilyFilter extends Fragment {
                                     str_day = "0" + str_day;
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
-                                from_mdate= year+ "/" + str_month + "/" + str_day;
+                                from_mdate= year+ "-" + str_month + "-" + str_day;
                                 to_mdate=from_mdate;
                                 edt_mdate_from.setText(date);
                                 edt_mdate_to.setText(date);
@@ -124,7 +124,7 @@ public class FamilyFilter extends Fragment {
                                 String date = str_day + "/" + str_month + "/" + year;
                                 try {
                                     if (Common.CompareTwoDates(edt_mdate_from.getText().toString(), date)) {
-                                        to_mdate=year+ "/" + str_month + "/" + str_day;
+                                        to_mdate=year+ "-" + str_month + "-" + str_day;
                                         edt_mdate_to.setText(date);
                                     } else {
                                         Toast.makeText(getActivity(), "Invalid date", Toast.LENGTH_SHORT).show();
@@ -169,7 +169,7 @@ public class FamilyFilter extends Fragment {
                                     str_day = "0" + str_day;
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
-                                from_cdate=  year+ "/" + str_month + "/" + str_day;
+                                from_cdate=  year+ "-" + str_month + "-" + str_day;
                                 to_cdate=from_cdate;
                                 edt_cdate_from.setText(date);
                                 edt_cdate_to.setText(date);

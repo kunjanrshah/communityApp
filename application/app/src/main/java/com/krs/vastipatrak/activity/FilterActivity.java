@@ -168,8 +168,8 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String strMobile = ((PersonalFilter) personal).edtMobile.getText().toString().trim();
                 String strAddress = ((PersonalFilter) personal).edtAddress.getText().toString().trim();
                 String strphone = ((PersonalFilter) personal).edt_phone.getText().toString().trim();
-                String strbdateFrom = ((PersonalFilter) personal).edtbdateFrom.getText().toString().trim();
-                String strbdateTo = ((PersonalFilter) personal).edtbdateTo.getText().toString().trim();
+                String strbdateFrom = ((PersonalFilter) personal).bdateFrom.trim();
+                String strbdateTo = ((PersonalFilter) personal).bdateTo.trim();
                 String strbtime = ((PersonalFilter) personal).edtbtime.getText().toString().trim();
 
                 String strEaddress = ((PersonalFilter) personal).edt_Eaddress.getText().toString().trim();
@@ -196,11 +196,11 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     lstProceed.add("Email: " + strEaddress);
                 }
                 if (!strbdateFrom.equalsIgnoreCase("")) {
-                    if (!Common.isThisDateValid(strbdateFrom, "dd/MM/yyyy")) {
+                    if (!Common.isThisDateValid(strbdateFrom, "yyyy-MM-dd")) {
                         valid = "Birth Date From is not valid Format";
                     }
                     if (!strbdateTo.equalsIgnoreCase("")) {
-                        if (!Common.isThisDateValid(strbdateTo, "dd/MM/yyyy")) {
+                        if (!Common.isThisDateValid(strbdateTo, "yyyy-MM-dd")) {
                             valid = "Birth Date To is not valid Format";
                         }
                     } else {
@@ -237,8 +237,8 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     } else {
                         valid = "Enter birth date To";
                     }
-                    lstProceed.add("Birthdate From: " + strbdateFrom);
-                    lstProceed.add("Birthdate To: " + strbdateTo);
+                    lstProceed.add("Birthdate From: " + ((PersonalFilter) personal).edtbdateFrom.getText().toString());
+                    lstProceed.add("Birthdate To: " + ((PersonalFilter) personal).edtbdateTo.getText().toString());
                 }
                 if (!strBPlace.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.BIRTH_PLACE, strBPlace);
