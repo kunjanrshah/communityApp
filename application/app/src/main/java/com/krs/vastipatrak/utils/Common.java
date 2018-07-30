@@ -21,9 +21,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
-import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
@@ -43,6 +41,7 @@ import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListProfileData;
+import com.krs.vastipatrak.model.ListProfiles;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -57,7 +56,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -879,6 +877,7 @@ public class Common {
             }
 
             AppController.getInstance().realm.beginTransaction();
+           // AppController.getInstance().realm.copyFromRealm(mListProfileData);
             AppController.getInstance().realm.copyToRealmOrUpdate(mListProfileData);
             AppController.getInstance().realm.commitTransaction();
 
@@ -900,9 +899,6 @@ public class Common {
     }
 
 
-
-
-
     public static Date StringToDate(String dtStart) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -914,13 +910,10 @@ public class Common {
     }
 
 
-
-
-    public static String ChangedateFormat(String strDate)
-    {
+    public static String ChangedateFormat(String strDate) {
         //String mStringDate = "25-Nov-15 14:23:34";
-        String oldFormat= "yyyy-MM-dd";
-        String newFormat= "dd/MM/yyyy";
+        String oldFormat = "yyyy-MM-dd";
+        String newFormat = "dd/MM/yyyy";
 
         String formatedDate = "";
         SimpleDateFormat dateFormat = new SimpleDateFormat(oldFormat);
@@ -971,7 +964,7 @@ public class Common {
 
     public static void hideProgressDialog() {
         try {
-            if (pDialog!=null && pDialog.isShowing()) pDialog.cancel();
+            if (pDialog != null && pDialog.isShowing()) pDialog.cancel();
             pDialog = null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -993,7 +986,8 @@ public class Common {
     }*/
 
     public static void ExportSearchData(@NonNull Activity mActiviy) {
-        List<ListProfileData> mListProfileResult = AppController.getInstance().mListSearchList;
+
+        RealmResults<ListProfileData> mListProfileResult = AppController.getInstance().realm.where(ListProfileData.class).findAll();
 
         if (mListProfileResult != null && mListProfileResult.size() > 0) {
 
@@ -1130,17 +1124,17 @@ public class Common {
 
                 Intent intentShareFile = new Intent(Intent.ACTION_SEND);
                 //  File fileWithinMyDir = new File(myFilePath);
+                intentShareFile.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                 if (file.exists()) {
                     intentShareFile.setType("application/xls");
                     intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
                     intentShareFile.putExtra(Intent.EXTRA_SUBJECT, "Sharing File...");
                     intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...");
-
                     mActivity.startActivity(Intent.createChooser(intentShareFile, "Share File"));
                 }
-
                 dialog.dismiss();
+
             }
         });
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -1362,13 +1356,13 @@ public class Common {
             Date date1 = sdf.parse(time);
             Date date2 = sdf.parse(endtime);
 
-            if(date1.before(date2)) {
+            if (date1.before(date2)) {
                 return true;
             } else {
 
                 return false;
             }
-        } catch (ParseException e){
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         return false;
@@ -1451,10 +1445,10 @@ public class Common {
         public static final String FATHER_NAME = "father_name";
         public static final String MOTHER_NAME = "mother_name";
         public static final String NATIVE_PLACE = "native_place";
-        public static final String FROM_BIRTH_DATE= "from_birth_date";
+        public static final String FROM_BIRTH_DATE = "from_birth_date";
         public static final String TO_BIRTH_DATE = "to_birth_date";
         public static final String BIRTH_TIME = "birth_time";
-        public static final String BIRTH_DATE= "birth_date";
+        public static final String BIRTH_DATE = "birth_date";
         public static final String BIRTH_PLACE = "birth_place";
         public static final String BLOOD_GROUP = "blood_group";
         public static final String PHONE = "phone";

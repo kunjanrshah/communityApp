@@ -1,6 +1,7 @@
 package com.krs.vastipatrak.app;
 
 import android.app.Application;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
@@ -44,7 +45,8 @@ public class AppController extends Application {
         mInstance = this;
         initRealm();
         initFirebaseAnalytics();
-
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
     }
 
     private void initFirebaseAnalytics()

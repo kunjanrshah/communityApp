@@ -364,8 +364,7 @@ public class LoginActivity extends Activity {
             pDialog.setCancelable(true);
         }
 
-        if (!pDialog.isShowing())
-            pDialog.show();
+        if (!pDialog.isShowing()) pDialog.show();
     }
 
     private void hideProgressDialog() {
@@ -719,8 +718,7 @@ public class LoginActivity extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                ListProfileData mListProfileDatas = realm.where(ListProfileData.class).equalTo(Common.Constant_Class.EMAIL_ADDRESS, email)
-                        .equalTo(Common.Constant_Class.PASSWORD, password).findFirst();
+                ListProfileData mListProfileDatas = realm.where(ListProfileData.class).equalTo(Common.Constant_Class.EMAIL_ADDRESS, email).equalTo(Common.Constant_Class.PASSWORD, password).findFirst();
 
 
                 if (mListProfileDatas != null) {
@@ -745,8 +743,6 @@ public class LoginActivity extends Activity {
 
     private void SignupWS() {
         if (Common.isOnline(this)) {
-
-
             final String name = inputName.getText().toString();
             final String email = inputEmail.getText().toString();
             final String mobile = inputMobile.getText().toString();
@@ -797,9 +793,29 @@ public class LoginActivity extends Activity {
                                     hideProgressDialog();
                                     boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                                     String message = response.getString(Common.Constant_Class.MESSAGE);
-
                                     if (success) {
-                                        String user_id = response.getString(Common.Constant_Class.USER_ID);
+                                        if (message.contains("admin")) {
+                                            inputName.setText("");
+                                            inputEmail.setText("");
+                                            inputMobile.setText("");
+                                            inputPassword.setText("");
+                                            inputConformPassword.setText("");
+                                            inputPassword.setText("");
+                                            togglePage();
+                                        }
+
+
+                                        /*if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                                            Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
+                                            if (mSharedPreferences != null) {
+                                                mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                                            }
+                                            startActivity(mIntent);
+                                            finish();
+                                        }*/
+
+
+/*                                        String user_id = response.getString(Common.Constant_Class.USER_ID);
                                         if (!message.contains("admin")) {
 
                                             String profile_url = response.getString(Common.Constant_Class.PROFILE_PIC_URL);
@@ -814,13 +830,8 @@ public class LoginActivity extends Activity {
                                             mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, profile_url);
                                             mEditor.apply();
 
-                                            Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
-                                            if (mSharedPreferences != null) {
-                                                mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                                            }
-                                            startActivity(mIntent);
-                                            finish();
-                                        } else {
+
+                                        } else{
 
                                             ListProfileData mListProfileData = new ListProfileData();
                                             mListProfileData.setProfile_id(user_id);
@@ -838,10 +849,10 @@ public class LoginActivity extends Activity {
                                             realm.copyToRealm(mListProfileData);
                                             realm.commitTransaction();
 
-                                        }
+                                        }*/
                                     }
                                     Common.alert(LoginActivity.this, message);
-
+                                    //Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_SHORT).show();
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
