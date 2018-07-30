@@ -33,6 +33,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.EventlistActivity;
+import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.interfaces.OnItemClickListener;
 import com.krs.vastipatrak.model.ListEventData;
@@ -294,7 +295,13 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getActivity(),"get location",Toast.LENGTH_SHORT).show();
-                   // showDirections(Double.parseDouble(data.getLat()) ,Double.parseDouble(data.getLng()) ,data.getLocation());
+                    String lat=data.getLat();
+                    String lng=data.getLng();
+                    if (MainActivity.lat != null && MainActivity.lon != null && !lat.isEmpty() && !lng.isEmpty()) {
+                        showDirections(Double.parseDouble(MainActivity.lat),Double.parseDouble(MainActivity.lon),Double.parseDouble(data.getLat()) ,Double.parseDouble(data.getLng()) ,data.getLocation());
+                    } else {
+                        Toast.makeText(getActivity(), "Location not found!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 

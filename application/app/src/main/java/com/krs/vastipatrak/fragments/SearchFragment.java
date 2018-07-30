@@ -107,6 +107,16 @@ public class SearchFragment extends Fragment implements IAdminControl {
     private String search_url = "";
     private FloatingActionButton mFloatingActionButton;
     private ISearchCallback iSearchCallback;
+
+    public Context getmContext() {
+        return mContext;
+    }
+
+    public void setmContext(Context mContext) {
+        this.mContext = mContext;
+    }
+
+    private Context mContext;
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -376,7 +386,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     this.search_url = search_url;
                     if (search_url.equalsIgnoreCase(Common.Constant_Class.GLOBAL_SEARCH_URL)) {
                         JSONObject globalObj = new JSONObject();
-                        globalObj.put("search_str", search);
+                        globalObj.put("search_str", search.toLowerCase().trim());
                         search = globalObj.toString();
                     }
                     mJsonObject = new JSONObject(search);
@@ -397,10 +407,10 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
                         try {
                             hideProgressDialog();
-                            iSearchCallback= (ISearchCallback) getActivity();
+                            iSearchCallback= (ISearchCallback)getmContext();
                             iSearchCallback.setIsSearch(true);
                             mSwipyRefreshLayout.setRefreshing(false);
-                            displayData(response, 1);
+                            displayData(response, false);
 
                           /*  boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
@@ -534,7 +544,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
         }
     }
 
-    private void displayData(@NonNull JSONObject response, int active) {
+    private void displayData(@NonNull JSONObject response, boolean isNonActive) {
         try {
             String success = response.getString(Common.Constant_Class.SUCCESS);
             String message = response.getString(Common.Constant_Class.MESSAGE);
@@ -617,13 +627,13 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         listDataHeader.add(lpd);
                     }
                 }
-                mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
+                mExpandableListAdapter = new ExpandableListAdapter(getmContext(), listDataHeader, listDataChild);
                 lvCustomList.setAdapter(mExpandableListAdapter);
-                Toast.makeText(getActivity(), "" + message + " Page " + page, Toast.LENGTH_LONG).show();
+                Toast.makeText(getmContext(), "" + message + " Page " + page, Toast.LENGTH_LONG).show();
                 hideProgressDialog();
             } else {
                 hideProgressDialog();
-                if (active == 0) {
+                if (isNonActive) {
                     lvCustomList.setVisibility(View.GONE);
                     Objects.requireNonNull(txtLable).setVisibility(View.VISIBLE);
                     Common.alert(Objects.requireNonNull(getActivity()), message);
@@ -653,7 +663,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
-                    displayData(response, 0);
+                    displayData(response, true);
                 }
             }, new Response.ErrorListener() {
 

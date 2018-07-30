@@ -202,6 +202,19 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         };
         Common.getDeviceId(this);
+
+        Bundle mBundle = getIntent().getExtras();
+        if (mBundle != null) {
+            query = mBundle.getString(Common.Constant_Class.QUERY);
+            query_string = mBundle.getString(Common.Constant_Class.QUERY_STRING);
+        }
+        if (query == null && query_string == null && push_message == null) {
+            displayView(0);
+        } else if (query_string != null && query != null && query.isEmpty() && query_string.isEmpty()) {
+            displayView(0);
+        } else {
+            displayView(-1);
+        }
     }
 
 
@@ -267,18 +280,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         // clear the notification area when the app is opened
         NotificationUtils.clearNotifications(getApplicationContext());
 
-        Bundle mBundle = getIntent().getExtras();
-        if (mBundle != null) {
-            query = mBundle.getString(Common.Constant_Class.QUERY);
-            query_string = mBundle.getString(Common.Constant_Class.QUERY_STRING);
-        }
-        if (query == null && query_string == null && push_message == null) {
-            displayView(0);
-        } else if (query_string != null && query != null && query.isEmpty() && query_string.isEmpty()) {
-            displayView(0);
-        } else {
-            displayView(-1);
-        }
+
     }
 
     @Override
@@ -369,13 +371,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-
+                searchFragment=new SearchFragment();
                 IAdminControl = (IAdminControl) searchFragment;
+                ((SearchFragment) searchFragment).setmContext(MainActivity.this);
                 mBundle.putString(Common.Constant_Class.QUERY, query);
                 searchFragment.setArguments(mBundle);
                 fragmentTransaction.replace(R.id.container_body, searchFragment).commit();
 
-                return false;
+                return true;
             }
 
             @Override
@@ -543,7 +546,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
+                ((SearchFragment) searchFragment).setmContext(MainActivity.this);
                 mBundle.putInt(Common.Constant_Class.AdminControl, Common.Constant_Class.NonActive);
                 fragment.setArguments(mBundle);
                 fragmentTransaction.replace(R.id.container_body, fragment).commit();
@@ -621,6 +624,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         switch (position) {
             case -1:
                 fragment = searchFragment;
+                ((SearchFragment) searchFragment).setmContext(MainActivity.this);
                 Bundle mBundle = new Bundle();
                 if (query != null) {
                     mBundle.putString(Common.Constant_Class.QUERY, query);

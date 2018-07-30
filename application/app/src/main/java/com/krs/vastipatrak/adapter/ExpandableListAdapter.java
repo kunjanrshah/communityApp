@@ -522,29 +522,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         groupViewHolder.imgShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String name = "";
                 Bitmap bitmap = null;
                 ImageView imageView = new ImageView(_context);
-                RealmList<ListProfileData> mListProfileData1 = Common.getDataFromParentTable(id, 3);
-                if (mListProfileData1.size() > 0) {
-                    ListProfileData mListProfileData = mListProfileData1.get(0);
-                    String first_name = Objects.requireNonNull(mListProfileData).getFirst_name();
-                    String last_name = mListProfileData.getLast_name();
-                    name = first_name + " " + last_name;
-                    String id = mListParentData.getId();
-                    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-                    try {
-                        BitMatrix bitMatrix = multiFormatWriter.encode(id, BarcodeFormat.QR_CODE, 200, 200);
-                        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                        bitmap = barcodeEncoder.createBitmap(bitMatrix);
-                        imageView.setImageBitmap(bitmap);
-                    } catch (WriterException e) {
-                        e.printStackTrace();
-                    }
+                MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+                try {
+                    BitMatrix bitMatrix = multiFormatWriter.encode(id, BarcodeFormat.QR_CODE, 200, 200);
+                    BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                    bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                    imageView.setImageBitmap(bitmap);
+                } catch (WriterException e) {
+                    e.printStackTrace();
                 }
-                shareImage(bitmap, name);
-
+                shareImage(bitmap, Name);
             }
         });
         return convertView;
