@@ -39,10 +39,10 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/tvMotherName"
+                android:id="@+id/tvMobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mother Name "
+                android:text="Mobile "
                 android:textSize="14sp" />
 
             <TextView

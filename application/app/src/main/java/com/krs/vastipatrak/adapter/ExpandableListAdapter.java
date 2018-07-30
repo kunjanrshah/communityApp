@@ -151,7 +151,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             childViewHolder.txt_bplace = convertView.findViewById(R.id.txt_bplace);
             childViewHolder.txt_address = convertView.findViewById(R.id.txt_address);
             childViewHolder.txt_native = convertView.findViewById(R.id.txt_native);
-            childViewHolder.txt_mobile = convertView.findViewById(R.id.txt_mobile);
+            childViewHolder.txt_mother = convertView.findViewById(R.id.txt_mother);
             childViewHolder.txt_phone = convertView.findViewById(R.id.txt_phone);
 
             childViewHolder.imgSync = convertView.findViewById(R.id.imgSync);
@@ -175,6 +175,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String blood_group = mListChildData.getBlood_Group();
         String gender = mListChildData.getGender();
         String gotra = mListChildData.getGotra();
+        String Mother = mListChildData.getMother_name();
         final String mobile = mListChildData.getMobile().trim().replaceAll("\\?", "").replaceAll("\\+", "");
         String str_native = mListChildData.getNative();
         String phone = mListChildData.getPhone().trim().replaceAll("\\?", "").replaceAll("\\+", "");
@@ -183,30 +184,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String user_lat = mListChildData.getUser_lat();
         final String user_lng = mListChildData.getUser_lng();
         final String name = mListChildData.getName();
-
-        childViewHolder.txt_mobile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                try {
-                    boolean flag = true;
-                    if (Build.VERSION.SDK_INT >= 23) {
-                        if (Common.canCallPhone(_context)) {
-                            flag = false;
-                        }
-                    }
-                    if (flag) {
-                        String mobile = childViewHolder.txt_mobile.getText().toString().replaceAll("-", "");
-                        Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:+" + mobile.trim()));
-                        Activity activity = (Activity) _context;
-                        activity.startActivity(callIntent);
-                    }
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 
         childViewHolder.txt_phone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,13 +212,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         childViewHolder.txt_address.setText(Common.camelCase(address));
         childViewHolder.txt_native.setText(Common.camelCase(str_native));
-        childViewHolder.txt_mobile.setText(mobile);
-
-        String styledText = "<u><font color='blue'>" + mobile + "</font></u>";
-        childViewHolder.txt_mobile.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
+        childViewHolder.txt_mother.setText(Mother);
 
         childViewHolder.txt_phone.setText(phone);
-        styledText = "<u><font color='blue'>" + phone + "</font></u>";
+        String styledText = "<u><font color='blue'>" + phone + "</font></u>";
         childViewHolder.txt_phone.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
         childViewHolder.txt_blood.setText(blood_group);
         if (gender.equalsIgnoreCase("male") || gender.equalsIgnoreCase("")) {
@@ -309,7 +283,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 AlertDialog.Builder builder = new AlertDialog.Builder(_context, R.style.AppCompatAlertDialogStyle);
                 builder.setTitle(_context.getString(R.string.app_name));
 
-                builder.setMessage("Do you want to request for update ?");
+                builder.setMessage("Do you want to request on WhatsApp ?");
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                     public void onClick(@NonNull DialogInterface dialog, int which) {
                         Common.SendWhatsappMessage(_context, mobile, _context.getResources().getString(R.string.nice_html));
@@ -438,7 +412,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public View getGroupView(int groupPosition, boolean isExpanded, @Nullable View convertView, ViewGroup parent) {
         final ListParentData mListParentData = (ListParentData) getGroup(groupPosition);
 
-        GroupViewHolder groupViewHolder;
+        final GroupViewHolder groupViewHolder;
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = Objects.requireNonNull(infalInflater).inflate(R.layout.list_group, null);
@@ -448,7 +422,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.tvName = convertView.findViewById(R.id.tvName);
             groupViewHolder.imgShare = convertView.findViewById(R.id.imgShare);
             groupViewHolder.tvFatherName = convertView.findViewById(R.id.tvFatherName);
-            groupViewHolder.tvMotherName = convertView.findViewById(R.id.tvMotherName);
+            groupViewHolder.tvMobile = convertView.findViewById(R.id.tvMobile);
             groupViewHolder.checkbox = convertView.findViewById(R.id.cbx1);
             groupViewHolder.tvUpdatedTime = convertView.findViewById(R.id.tvUpdatedTime);
             groupViewHolder.txt_distance = convertView.findViewById(R.id.txt_distance);
@@ -469,7 +443,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String imgURL = mListParentData.getProfilePicUrl();
         final String Name = mListParentData.getName();
         String FatherName = mListParentData.getFatherName();
-        String MotherName = mListParentData.getMotherName();
+        String Mobile = mListParentData.getMobile();
         String city = mListParentData.getCity();
 
         // Rounded corners
@@ -478,7 +452,36 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         groupViewHolder.tvCity.setText(Common.camelCase(city));
         groupViewHolder.tvName.setText(Common.camelCase(Name));
         groupViewHolder.tvFatherName.setText(Common.camelCase(FatherName));
-        groupViewHolder.tvMotherName.setText(Common.camelCase(MotherName));
+        groupViewHolder.tvMobile.setText(""+Mobile);
+
+
+        groupViewHolder.tvMobile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try {
+                    boolean flag = true;
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (Common.canCallPhone(_context)) {
+                            flag = false;
+                        }
+                    }
+                    if (flag) {
+                        String mobile =  groupViewHolder.tvMobile.getText().toString().replaceAll("-", "");
+                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                        callIntent.setData(Uri.parse("tel:+" + mobile.trim()));
+                        Activity activity = (Activity) _context;
+                        activity.startActivity(callIntent);
+                    }
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        String styledText = "<u><font color='blue'>" + Mobile + "</font></u>";
+        groupViewHolder.tvMobile.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
+
+
         getParentRandomColor(_context, groupPosition, groupViewHolder.ll_parent);
 
         int group_id = (int) getGroupId(groupPosition);
@@ -643,7 +646,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView txt_bplace;
         TextView txt_address;
         TextView txt_native;
-        TextView txt_mobile;
+        TextView txt_mother;
         TextView txt_phone;
         LinearLayout ll_child;
         ImageView imgSync;
@@ -660,7 +663,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         ImageView imgShare;
         TextView tvName;
         TextView tvFatherName;
-        TextView tvMotherName;
+        TextView tvMobile;
         TextView tvCity;
         TextView txt_distance;
         TextView tvUpdatedTime;

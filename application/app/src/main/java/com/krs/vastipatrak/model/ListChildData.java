@@ -16,6 +16,15 @@ public class ListChildData {
     private String home_lat;
     private String home_lng;
 
+    public String getMother_name() {
+        return mother_name;
+    }
+
+    public void setMother_name(String mother_name) {
+        this.mother_name = mother_name;
+    }
+
+    private String mother_name;
     private String user_lat;
     private String user_lng;
 

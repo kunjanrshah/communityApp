@@ -108,6 +108,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private final int INIT_REQUEST = 1;
     private final int CALL_REQUEST = 2;
     private final int LOCATION_REQUEST = 3;
+    MenuItem deactiveItem;
+    MenuItem deleteItem;
+    MenuItem activeItem;
     private String query = "";
     private String push_message = null;
     private String query_string = "";
@@ -436,9 +439,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         MenuItem nonActives = menu.findItem(R.id.action_nonActives);
         MenuItem block_users = menu.findItem(R.id.action_block_users);
         change_role = menu.findItem(R.id.action_change_role);
-        MenuItem deactiveItem = menu.findItem(R.id.action_deactive);
-        MenuItem deleteItem = menu.findItem(R.id.action_delete);
-        MenuItem activeItem = menu.findItem(R.id.action_activate);
+        deactiveItem = menu.findItem(R.id.action_deactive);
+        deleteItem = menu.findItem(R.id.action_delete);
+        activeItem = menu.findItem(R.id.action_activate);
 
         nonActives.setVisible(false);
         activeAdd.setVisible(false);
@@ -658,13 +661,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             case 2:
                 fragment = new ChangePasswordFragment();
                 break;
-            case 3:
+            /*case 3:
                 fragment = new RelativeFragment();
-                break;
-            case 4:
+                break;*/
+            case 3:
                 fragment = new MatrimonyFragment();
                 break;
-            case 5:
+            case 4:
                 /*Intent mIntent = new Intent(MainActivity.this, PDFActivity.class);
                 startActivity(mIntent);
                 this.overridePendingTransition(0, 0);*/
@@ -673,10 +676,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 startActivity(mIntent2);
                 this.overridePendingTransition(0, 0);
                 break;
-            case 6:
+            case 5:
                 fragment = new AboutFragment();
                 break;
-            case 7:
+            case 6:
                 ExitAlert();
                 break;
             /*case 8:
@@ -746,14 +749,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                       // if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
 
                             try {
-                                //   mEditor.clear();
-                                //  mEditor.apply();
-                                   /* AppController.getInstance().realm.beginTransaction();
-                                    AppController.getInstance().realm.deleteAll();
-                                    AppController.getInstance().realm.commitTransaction();*/
+                                mEditor.clear();
+                                mEditor.apply();
+                                AppController.getInstance().realm.beginTransaction();
+                                AppController.getInstance().realm.deleteAll();
+                                AppController.getInstance().realm.commitTransaction();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -762,7 +765,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                             startActivity(mIntent);
                             finish();
                             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-                        }
+                       // }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -943,11 +946,19 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     @Override
     public void setIsSearch(boolean isSearch) {
-        if (export != null) {
-            export.setVisible(true);
-        }
-        if (change_role != null && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
-            change_role.setVisible(true);
+        if (isSearch) {
+            if (export != null) {
+                export.setVisible(true);
+            }
+            if (change_role != null && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                change_role.setVisible(true);
+            }
+        } else {
+            export.setVisible(false);
+            change_role.setVisible(false);
+            deactiveItem.setVisible(false);
+            deleteItem.setVisible(false);
+            activeItem.setVisible(false);
         }
     }
 }

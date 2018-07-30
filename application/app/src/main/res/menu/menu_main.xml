@@ -95,7 +95,6 @@
         android:id="@+id/action_clear_search"
         android:title="@string/action_clear_search"
         android:visible="false"
-        android:icon="@drawable/clear"
         app:showAsAction="ifRoom|collapseActionView" />
 
 </menu>

@@ -107,6 +107,11 @@ public class SearchFragment extends Fragment implements IAdminControl {
     private String search_url = "";
     private FloatingActionButton mFloatingActionButton;
     private ISearchCallback iSearchCallback;
+    private Context mContext;
+
+    public SearchFragment() {
+        // Required empty public constructor
+    }
 
     public Context getmContext() {
         return mContext;
@@ -114,11 +119,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
     public void setmContext(Context mContext) {
         this.mContext = mContext;
-    }
-
-    private Context mContext;
-    public SearchFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -242,7 +242,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         } else {
                             Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 });
                 dialog.show();
@@ -385,6 +384,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     this.search = search;
                     this.search_url = search_url;
                     if (search_url.equalsIgnoreCase(Common.Constant_Class.GLOBAL_SEARCH_URL)) {
+                        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(search);
                         JSONObject globalObj = new JSONObject();
                         globalObj.put("search_str", search.toLowerCase().trim());
                         search = globalObj.toString();
@@ -407,14 +407,14 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
                         try {
                             hideProgressDialog();
-                            iSearchCallback= (ISearchCallback)getmContext();
+                            iSearchCallback = (ISearchCallback) getmContext();
                             iSearchCallback.setIsSearch(true);
+
                             mSwipyRefreshLayout.setRefreshing(false);
                             displayData(response, false);
 
-                          /*  boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
+                            boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
-
                             if (success) {
                                 JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                                 for (int i = 0; i < mJsonArray.length(); i++) {
@@ -422,8 +422,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                                     Common.SaveProfile(mJsondata);
                                 }
                             }
-                            Common.alert(getActivity(), message);*/
-
+                            //Common.alert(getActivity(), message);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -492,7 +491,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
         // mProfilelist = AppController.getInstance().realm.copyToRealm(mProfilelist);
         RealmResults<ListProfileData> mSortedProfiles = mProfilelist.realmlist.sort(Common.Constant_Class.CITY);
         AppController.getInstance().realm.commitTransaction();
-
         AppController.getInstance().mListSearchList = mSortedProfiles;
 
         for (int i = 0; i < mSortedProfiles.size(); i++) {
@@ -512,6 +510,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             lpd.setUser_lat(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lat());
             lpd.setMobile(Objects.requireNonNull(mSortedProfiles.get(i)).getMobile());
             ListChildData lcd = new ListChildData();
+            lcd.setMother_name(Objects.requireNonNull(mSortedProfiles.get(i)).getMother_name());
             lcd.setID(Objects.requireNonNull(mSortedProfiles.get(i)).getProfile_id());
             lcd.setNative(Objects.requireNonNull(mSortedProfiles.get(i)).getNative_place());
             lcd.setAddress(Objects.requireNonNull(mSortedProfiles.get(i)).getAddress());
@@ -546,6 +545,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
     private void displayData(@NonNull JSONObject response, boolean isNonActive) {
         try {
+            iSearchCallback = (ISearchCallback) getActivity();
             String success = response.getString(Common.Constant_Class.SUCCESS);
             String message = response.getString(Common.Constant_Class.MESSAGE);
             String total_records = "0";
@@ -582,56 +582,60 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     String mother_name = mJsondata.getString(Common.Constant_Class.MOTHER_NAME);
                     String status = mJsondata.getString(Common.Constant_Class.STATUS);
                     String city = mJsondata.getString(Common.Constant_Class.CITY);
+                    String mobile = mJsondata.getString(Common.Constant_Class.MOBILE);
                     String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
                     boolean is_location_enable = Boolean.parseBoolean(mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE));
                     ListParentData lpd = new ListParentData();
                     lpd.setName(first_name + " " + last_name);
                     lpd.setFatherName(father_name);
                     lpd.setMotherName(mother_name);
+                    lpd.setMobile(mobile);
                     lpd.setProfilePicUrl(profile_pic_url);
                     lpd.setStatus(status);
                     lpd.setId(profile_id);
                     lpd.setCity(city);
                     lpd.setUpdated_time(updated_time);
                     lpd.setIs_location_enable(is_location_enable);
-                    if (status.equalsIgnoreCase(Common.Constant_Class.MARRIED)) {
 
-                        String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
-                        String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
-                        String birth_date = mJsondata.getString(Common.Constant_Class.BIRTH_DATE);
-                        String birth_time = mJsondata.getString(Common.Constant_Class.BIRTH_TIME);
-                        String birth_place = mJsondata.getString(Common.Constant_Class.BIRTH_PLACE);
-                        String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
-                        String mobile = mJsondata.getString(Common.Constant_Class.MOBILE);
-                        String phone = mJsondata.getString(Common.Constant_Class.PHONE);
-                        String gender = mJsondata.getString(Common.Constant_Class.GENDER);
-                        String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
+                    String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
+                    String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
+                    String birth_date = mJsondata.getString(Common.Constant_Class.BIRTH_DATE);
+                    String birth_time = mJsondata.getString(Common.Constant_Class.BIRTH_TIME);
+                    String birth_place = mJsondata.getString(Common.Constant_Class.BIRTH_PLACE);
+                    String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
 
-                        ListChildData lcd = new ListChildData();
-                        lcd.setID(profile_id);
-                        lcd.setNative(native_place);
-                        lcd.setAddress(address);
-                        lcd.setbirth_date(birth_date);
-                        lcd.setbirth_time(birth_time);
-                        lcd.setBirth_place(birth_place);
-                        lcd.setBlood_Group(blood_group);
-                        lcd.setMobile(mobile);
-                        lcd.setPhone(phone);
-                        lcd.setGender(gender);
-                        lcd.setGotra(gotra);
-                        ArrayList<ListChildData> mlstChildData = new ArrayList<>();
-                        mlstChildData.add(lcd);
-                        listDataHeader.add(lpd);
-                        listDataChild.put(lpd, mlstChildData);
-                    } else {
-                        listDataHeader.add(lpd);
-                    }
+                    String phone = mJsondata.getString(Common.Constant_Class.PHONE);
+                    String gender = mJsondata.getString(Common.Constant_Class.GENDER);
+                    String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
+
+                    ListChildData lcd = new ListChildData();
+                    lcd.setID(profile_id);
+                    lcd.setNative(native_place);
+                    lcd.setAddress(address);
+                    lcd.setbirth_date(birth_date);
+                    lcd.setbirth_time(birth_time);
+                    lcd.setBirth_place(birth_place);
+                    lcd.setBlood_Group(blood_group);
+                    lcd.setMobile(mobile);
+                    lcd.setMother_name(mother_name);
+                    lcd.setPhone(phone);
+                    lcd.setGender(gender);
+                    lcd.setGotra(gotra);
+                    ArrayList<ListChildData> mlstChildData = new ArrayList<>();
+                    mlstChildData.add(lcd);
+                    listDataHeader.add(lpd);
+                    listDataChild.put(lpd, mlstChildData);
+
                 }
                 mExpandableListAdapter = new ExpandableListAdapter(getmContext(), listDataHeader, listDataChild);
                 lvCustomList.setAdapter(mExpandableListAdapter);
                 Toast.makeText(getmContext(), "" + message + " Page " + page, Toast.LENGTH_LONG).show();
                 hideProgressDialog();
+
+                iSearchCallback.setIsSearch(true);
             } else {
+
+                iSearchCallback.setIsSearch(false);
                 hideProgressDialog();
                 if (isNonActive) {
                     lvCustomList.setVisibility(View.GONE);
@@ -663,6 +667,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
+                    mSwipyRefreshLayout.setRefreshing(false);
+
                     displayData(response, true);
                 }
             }, new Response.ErrorListener() {
@@ -1009,7 +1015,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
         }
     }
 
-    public interface ISearchCallback{
+    public interface ISearchCallback {
         void setIsSearch(boolean isSearch);
     }
 }
