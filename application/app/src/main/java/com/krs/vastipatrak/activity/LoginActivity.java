@@ -50,7 +50,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.firebase.analytics.FirebaseAnalytics;
+
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListProfileData;
@@ -643,11 +643,11 @@ public class LoginActivity extends Activity {
                                     mEditor.putString(Common.Constant_Class.ROLE, role);
                                     mEditor.apply();
 
-                                    Bundle fb_bundle = new Bundle();
+                                    /*Bundle fb_bundle = new Bundle();
                                     fb_bundle.putInt(FirebaseAnalytics.Param.ITEM_ID, Integer.parseInt(user_id));
                                     fb_bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, first_name + " " + last_name);
                                     AppController.getInstance().firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, fb_bundle);
-
+*/
 
                                    /* if (user_id.equalsIgnoreCase(Common.Constant_Class.ADMIN_1) || user_id.equalsIgnoreCase(Common.Constant_Class.ADMIN_2)) {
                                         AppController.isAdmin = true;

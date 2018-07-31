@@ -452,7 +452,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         groupViewHolder.tvCity.setText(Common.camelCase(city));
         groupViewHolder.tvName.setText(Common.camelCase(Name));
         groupViewHolder.tvFatherName.setText(Common.camelCase(FatherName));
-        groupViewHolder.tvMobile.setText(""+Mobile);
+        groupViewHolder.tvMobile.setText("" + Mobile);
 
 
         groupViewHolder.tvMobile.setOnClickListener(new View.OnClickListener() {
@@ -467,11 +467,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         }
                     }
                     if (flag) {
-                        String mobile =  groupViewHolder.tvMobile.getText().toString().replaceAll("-", "");
-                        Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:+" + mobile.trim()));
-                        Activity activity = (Activity) _context;
-                        activity.startActivity(callIntent);
+                        String mobile = groupViewHolder.tvMobile.getText().toString().replaceAll("-", "");
+                        if (!mobile.isEmpty()) {
+                            Intent callIntent = new Intent(Intent.ACTION_CALL);
+                            callIntent.setData(Uri.parse("tel:+" + mobile.trim()));
+                            Activity activity = (Activity) _context;
+                            activity.startActivity(callIntent);
+                        }
                     }
                 } catch (SecurityException e) {
                     e.printStackTrace();

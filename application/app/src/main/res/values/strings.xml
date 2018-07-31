@@ -120,5 +120,6 @@ https://play.google.com/store/apps/details?id=com.king.candycrushsaga&hl=en
     <string name="_0">0</string>
     <string name="every">Every</string>
     <string name="todo">TODO</string>
+    <string name="search">Search</string>
 
 </resources>

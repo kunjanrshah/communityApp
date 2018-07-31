@@ -173,13 +173,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         });
 
         MenuItem export = menu.findItem(R.id.action_export);
-        export.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Common.ExportSearchData(MyProfileActivity.this);
-                return false;
-            }
-        });
+        export.setVisible(false);
 
         MenuItem filterItem = menu.findItem(R.id.action_filter);
         filterItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
