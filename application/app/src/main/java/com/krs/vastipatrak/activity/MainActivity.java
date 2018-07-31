@@ -752,6 +752,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                                 AppController.getInstance().realm.beginTransaction();
                                 AppController.getInstance().realm.deleteAll();
                                 AppController.getInstance().realm.commitTransaction();
+                                AppController.getInstance().realm.close();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

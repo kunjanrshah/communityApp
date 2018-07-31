@@ -691,7 +691,7 @@ public class Common {
     public static void SaveProfile(@NonNull JSONObject mJsonObject) {
         try {
 
-            ListProfileData mListProfileData = new ListProfileData();
+            final ListProfileData mListProfileData = new ListProfileData();
             if (mJsonObject.has(Constant_Class.ID)) {
                 mListProfileData.setProfile_id(mJsonObject.getString(Constant_Class.ID));
             }
@@ -879,10 +879,14 @@ public class Common {
                 mListProfileData.setmListChildrenData(mlistchilds);
             }
 
-            AppController.getInstance().realm.beginTransaction();
-           // AppController.getInstance().realm.copyFromRealm(mListProfileData);
-            AppController.getInstance().realm.copyToRealmOrUpdate(mListProfileData);
-            AppController.getInstance().realm.commitTransaction();
+            AppController.getInstance().realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    // AppController.getInstance().realm.copyFromRealm(mListProfileData);
+                    AppController.getInstance().realm.copyToRealmOrUpdate(mListProfileData);
+                }
+            });
+
 
         } catch (Exception e) {
             e.printStackTrace();

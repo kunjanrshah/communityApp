@@ -26,6 +26,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -502,7 +503,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                         Common.hideProgressDialog();
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             String data = response.getString(Common.Constant_Class.DATA);
 
                             JSONObject mData = new JSONObject(data);
@@ -550,7 +551,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     return params;
                 }
             };
-
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(50000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         } else {
             Toast.makeText(MyProfileActivity.this, "" + Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
