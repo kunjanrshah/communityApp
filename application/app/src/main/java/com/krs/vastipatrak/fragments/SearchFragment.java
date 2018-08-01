@@ -1,13 +1,17 @@
 package com.krs.vastipatrak.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -46,6 +50,7 @@ import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.adapter.ExpandableListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.interfaces.IAdminControl;
+import com.krs.vastipatrak.model.ExportProfileData;
 import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
 import com.krs.vastipatrak.model.ListProfileData;
@@ -56,16 +61,24 @@ import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutD
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import jxl.Workbook;
+import jxl.WorkbookSettings;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
 
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 import static com.krs.vastipatrak.utils.Common.showProgressDialog;
@@ -84,7 +97,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
     int page_count = 0;
     @Nullable
     private ArrayList<String> lstSelectedIDs = null;
-    private SearchView searchView;
     @Nullable
     private ArrayList<ListParentData> listDataHeader = null;
     @Nullable
@@ -108,6 +120,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
     private FloatingActionButton mFloatingActionButton;
     private ISearchCallback iSearchCallback;
     private Context mContext;
+    private String SearchString = "";
 
     public SearchFragment() {
         // Required empty public constructor
@@ -119,6 +132,37 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
     public void setmContext(Context mContext) {
         this.mContext = mContext;
+    }
+
+    private static void ExportAlert(@NonNull final Activity mActivity, @NonNull final File file) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+        builder.setTitle(mActivity.getString(R.string.app_name));
+
+        builder.setMessage("Data Exported in a Excel Sheet");
+        builder.setNegativeButton("Share", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(@NonNull DialogInterface dialog, int which) {
+
+                Intent intentShareFile = new Intent(Intent.ACTION_SEND);
+                //  File fileWithinMyDir = new File(myFilePath);
+                intentShareFile.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                if (file.exists()) {
+                    intentShareFile.setType("application/xls");
+                    intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
+                    intentShareFile.putExtra(Intent.EXTRA_SUBJECT, "Sharing File...");
+                    intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...");
+                    mActivity.startActivity(Intent.createChooser(intentShareFile, "Share File"));
+                }
+                dialog.dismiss();
+
+            }
+        });
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
     }
 
     @Override
@@ -242,6 +286,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         } else {
                             Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
                         }
+
                     }
                 });
                 dialog.show();
@@ -273,7 +318,17 @@ public class SearchFragment extends Fragment implements IAdminControl {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) searchItem.getActionView();
+        MenuItem exportItem = menu.findItem(R.id.action_export);
+        exportItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //Toast.makeText(getActivity(), "Export", Toast.LENGTH_SHORT).show();
+                ExportSearch();
+
+                return false;
+            }
+        });
+        SearchView searchView = (SearchView) searchItem.getActionView();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -297,6 +352,35 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
         super.onCreateOptionsMenu(menu, inflater);
     }
+
+   /* private void callSearchWS(String str_search,String url) {
+        if (str_search.length() > 3) {
+
+            Objects.requireNonNull(txtLable).setVisibility(View.GONE);
+            lvCustomList.setVisibility(View.VISIBLE);
+
+            if (query_string != null && !query_string.equalsIgnoreCase("")) {
+                Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(Common.Title);
+                //  OfflineSearch(str_search, 2);
+                OnlineSearch(str_search,url);
+            } else {
+                if (query != null) {
+                    Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(str_search);
+                    OfflineSearch(str_search, 1);
+                }
+            }
+        }
+    }
+*/
+
+
+   /* private void OnlineSearch(String query_string) {
+        saveRecordsFromServerWS(query_string);
+       *//* ListProfiles mProfilelist = new ListProfiles(new RealmList<ListProfileData>());
+        RealmResults<ListProfileData> realmList=AppController.getInstance().realm.where(ListProfileData.class).findAll();
+        mProfilelist.realmlist.addAll(realmList);
+        setAdapter(mProfilelist);*//*
+    }*/
 
     @NonNull
     private String getSelectedName() {
@@ -345,25 +429,72 @@ public class SearchFragment extends Fragment implements IAdminControl {
         }).show();
     }
 
-   /* private void callSearchWS(String str_search,String url) {
-        if (str_search.length() > 3) {
-
-            Objects.requireNonNull(txtLable).setVisibility(View.GONE);
-            lvCustomList.setVisibility(View.VISIBLE);
-
-            if (query_string != null && !query_string.equalsIgnoreCase("")) {
-                Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(Common.Title);
-                //  OfflineSearch(str_search, 2);
-                OnlineSearch(str_search,url);
-            } else {
-                if (query != null) {
-                    Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(str_search);
-                    OfflineSearch(str_search, 1);
-                }
+    private void ExportSearch() {
+        JSONObject mJsonObject = null;
+        if (!SearchString.isEmpty()) {
+            try {
+                mJsonObject = new JSONObject(SearchString);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            showProgressDialog(getActivity());
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, search_url, mJsonObject, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    Log.d(TAG, response.toString());
+
+                    try {
+
+
+                        mSwipyRefreshLayout.setRefreshing(false);
+
+                        boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
+                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        if (success) {
+                            AppController.getInstance().realm.beginTransaction();
+                            RealmResults<ExportProfileData> mlistData = AppController.getInstance().realm.where(ExportProfileData.class).findAll();
+                            mlistData.deleteAllFromRealm();
+                            AppController.getInstance().realm.commitTransaction();
+
+                            JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                            for (int i = 0; i < mJsonArray.length(); i++) {
+                                JSONObject mJsondata = mJsonArray.getJSONObject(i);
+                                Common.ExportProfile(mJsondata);
+                            }
+                            ExportSearchData();
+                        }
+                        hideProgressDialog();
+                        //Common.alert(getActivity(), message);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    hideProgressDialog();
+                    mSwipyRefreshLayout.setRefreshing(false);
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    return params;
+                }
+            };
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(60000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+        } else {
+            Toast.makeText(getActivity(), "Please search result!", Toast.LENGTH_SHORT).show();
         }
     }
-*/
+
 
 
    /* private void OnlineSearch(String query_string) {
@@ -389,6 +520,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         globalObj.put("search_str", search.toLowerCase().trim());
                         search = globalObj.toString();
                     }
+                    SearchString = search;
                     mJsonObject = new JSONObject(search);
                     mJsonObject.put("page", String.valueOf(page));
                 } catch (Exception e) {
@@ -413,7 +545,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                             mSwipyRefreshLayout.setRefreshing(false);
                             displayData(response, false);
 
-                            boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
+                     /*       boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
                             if (success) {
                                 JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
@@ -421,7 +553,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                                     JSONObject mJsondata = mJsonArray.getJSONObject(i);
                                     Common.SaveProfile(mJsondata);
                                 }
-                            }
+                            }*/
                             //Common.alert(getActivity(), message);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -446,10 +578,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     }
                 };
 
-                jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
-                        50000,
-                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(50000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
                 // Adding request to request queue
                 AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
@@ -995,6 +1124,134 @@ public class SearchFragment extends Fragment implements IAdminControl {
             }
         });
         role_dialog.show();
+    }
+
+    private void ExportSearchData() {
+
+        RealmResults<ExportProfileData> mListProfileResult = AppController.getInstance().realm.where(ExportProfileData.class).findAll();
+
+        if (mListProfileResult != null && mListProfileResult.size() > 0) {
+
+            try {
+                File sd = Environment.getExternalStorageDirectory();
+                String csvFile = "Vastipatrak.xls";
+
+                File directory = new File(sd.getAbsolutePath());
+                //create directory if not exist
+                if (!directory.isDirectory()) directory.mkdirs();
+
+                showProgressDialog(getActivity());
+
+                //file path
+                File file = new File(directory, csvFile);
+                WorkbookSettings wbSettings = new WorkbookSettings();
+                wbSettings.setLocale(new Locale("en", "EN"));
+                WritableWorkbook workbook;
+                workbook = Workbook.createWorkbook(file, wbSettings);
+                //Excel sheet name. 0 represents first sheet
+                WritableSheet sheet = workbook.createSheet("profileList", 0);
+
+                sheet.addCell(new Label(0, 0, "ID"));
+                sheet.addCell(new Label(1, 0, "FirstName"));
+                sheet.addCell(new Label(2, 0, "LastName"));
+                sheet.addCell(new Label(3, 0, "Address"));
+                sheet.addCell(new Label(4, 0, "City"));
+                sheet.addCell(new Label(5, 0, "Father"));
+                sheet.addCell(new Label(6, 0, "Mother"));
+                sheet.addCell(new Label(7, 0, "Email"));
+                sheet.addCell(new Label(8, 0, "Mobile"));
+                sheet.addCell(new Label(9, 0, "Phone"));
+                sheet.addCell(new Label(10, 0, "Blood"));
+                sheet.addCell(new Label(11, 0, "Gotra"));
+                sheet.addCell(new Label(12, 0, "Native"));
+                sheet.addCell(new Label(13, 0, "Birth Place"));
+                sheet.addCell(new Label(14, 0, "Birth date"));
+                sheet.addCell(new Label(15, 0, "Birth time"));
+                sheet.addCell(new Label(16, 0, "Education"));
+                sheet.addCell(new Label(17, 0, "Occupation"));
+                sheet.addCell(new Label(18, 0, "Work"));
+                sheet.addCell(new Label(19, 0, "Office Address"));
+                sheet.addCell(new Label(20, 0, "Office Mobile"));
+                sheet.addCell(new Label(21, 0, "Spouse"));
+                sheet.addCell(new Label(22, 0, "Marriage date"));
+                sheet.addCell(new Label(23, 0, "Father in law"));
+                sheet.addCell(new Label(24, 0, "Mother in law"));
+                sheet.addCell(new Label(25, 0, "Updated"));
+                sheet.addCell(new Label(26, 0, "Sync"));
+
+                for (int i = 0; i < mListProfileResult.size(); i++) {
+                    int k = i + 1;
+
+                    sheet.addCell(new Label(0, k, Objects.requireNonNull(mListProfileResult.get(i)).getProfile_id()));
+                    sheet.addCell(new Label(1, k, Objects.requireNonNull(mListProfileResult.get(i)).getFirst_name()));
+                    sheet.addCell(new Label(2, k, Objects.requireNonNull(mListProfileResult.get(i)).getLast_name()));
+                    sheet.addCell(new Label(3, k, Objects.requireNonNull(mListProfileResult.get(i)).getAddress()));
+                    sheet.addCell(new Label(4, k, Objects.requireNonNull(mListProfileResult.get(i)).getCity()));
+                    sheet.addCell(new Label(5, k, Objects.requireNonNull(mListProfileResult.get(i)).getFather_name()));
+                    sheet.addCell(new Label(6, k, Objects.requireNonNull(mListProfileResult.get(i)).getMother_name()));
+                    sheet.addCell(new Label(7, k, Objects.requireNonNull(mListProfileResult.get(i)).getEmail_address())); // column and row
+                    sheet.addCell(new Label(8, k, Objects.requireNonNull(mListProfileResult.get(i)).getMobile()));
+                    sheet.addCell(new Label(9, k, Objects.requireNonNull(mListProfileResult.get(i)).getPhone()));
+                    sheet.addCell(new Label(10, k, Objects.requireNonNull(mListProfileResult.get(i)).getBlood_group()));
+                    sheet.addCell(new Label(11, k, Objects.requireNonNull(mListProfileResult.get(i)).getGotra()));
+                    sheet.addCell(new Label(12, k, Objects.requireNonNull(mListProfileResult.get(i)).getNative_place()));
+                    sheet.addCell(new Label(13, k, Objects.requireNonNull(mListProfileResult.get(i)).getBirth_place()));
+                    sheet.addCell(new Label(14, k, Objects.requireNonNull(mListProfileResult.get(i)).getBirth_date()));
+                    sheet.addCell(new Label(15, k, Objects.requireNonNull(mListProfileResult.get(i)).getBirth_time()));
+                    sheet.addCell(new Label(16, k, Objects.requireNonNull(mListProfileResult.get(i)).getEducation()));
+                    sheet.addCell(new Label(17, k, Objects.requireNonNull(mListProfileResult.get(i)).getOccupation()));
+                    sheet.addCell(new Label(18, k, Objects.requireNonNull(mListProfileResult.get(i)).getWork()));
+                    sheet.addCell(new Label(19, k, Objects.requireNonNull(mListProfileResult.get(i)).getOffice_address()));
+                    sheet.addCell(new Label(20, k, Objects.requireNonNull(mListProfileResult.get(i)).getOffice_mobile()));
+                    sheet.addCell(new Label(21, k, Objects.requireNonNull(mListProfileResult.get(i)).getSpouse_name()));
+                    sheet.addCell(new Label(22, k, Objects.requireNonNull(mListProfileResult.get(i)).getMarriage_date()));
+                    sheet.addCell(new Label(23, k, Objects.requireNonNull(mListProfileResult.get(i)).getSfather_name()));
+                    sheet.addCell(new Label(24, k, Objects.requireNonNull(mListProfileResult.get(i)).getSmother_name()));
+                    sheet.addCell(new Label(25, k, Objects.requireNonNull(mListProfileResult.get(i)).getUpdated_time()));
+                    sheet.addCell(new Label(26, k, Objects.requireNonNull(mListProfileResult.get(i)).getSync_time()));
+                    int counter = 26;
+                    for (int j = 0; j < Objects.requireNonNull(mListProfileResult.get(i)).getmListChildrenData().size(); j++) {
+
+                        sheet.addCell(new Label(++counter, 0, "Child Id"));
+                        sheet.addCell(new Label(counter, k, Objects.requireNonNull(Objects.requireNonNull(mListProfileResult.get(i)).getmListChildrenData().get(j)).getChild_id()));
+
+                        sheet.addCell(new Label(++counter, 0, "Child Name"));
+                        sheet.addCell(new Label(counter, k, Objects.requireNonNull(Objects.requireNonNull(mListProfileResult.get(i)).getmListChildrenData().get(j)).getChild_name()));
+
+                        sheet.addCell(new Label(++counter, 0, "Child Gender"));
+                        sheet.addCell(new Label(counter, k, Objects.requireNonNull(Objects.requireNonNull(mListProfileResult.get(i)).getmListChildrenData().get(j)).getGender()));
+
+                        sheet.addCell(new Label(++counter, 0, "Child Bdate"));
+                        sheet.addCell(new Label(counter, k, Objects.requireNonNull(Objects.requireNonNull(mListProfileResult.get(i)).getmListChildrenData().get(j)).getChild_bday()));
+
+                        sheet.addCell(new Label(++counter, 0, "Child Btime"));
+                        sheet.addCell(new Label(counter, k, Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(mListProfileResult.get(i)).getmListChildrenData().get(j))).getBirth_time()));
+
+                        sheet.addCell(new Label(++counter, 0, "Child Bplace"));
+                        sheet.addCell(new Label(counter, k, Objects.requireNonNull(Objects.requireNonNull(mListProfileResult.get(i)).getmListChildrenData().get(j)).getBirth_place()));
+
+                        sheet.addCell(new Label(++counter, 0, "Interested"));
+                        sheet.addCell(new Label(counter, k, Objects.requireNonNull(Objects.requireNonNull(mListProfileResult.get(i)).getmListChildrenData().get(j)).isInterest() + ""));
+
+                        sheet.addCell(new Label(++counter, 0, "Child Edu"));
+                        sheet.addCell(new Label(counter, k, Objects.requireNonNull(Objects.requireNonNull(mListProfileResult.get(i)).getmListChildrenData().get(j)).getChild_edu()));
+
+                        sheet.addCell(new Label(++counter, 0, "Child Work"));
+                        sheet.addCell(new Label(counter, k, Objects.requireNonNull(Objects.requireNonNull(mListProfileResult.get(i)).getmListChildrenData().get(j)).getChild_work()));
+                    }
+                }
+                workbook.write();
+                workbook.close();
+                ExportAlert(getActivity(), file);
+                //Toast.makeText(mActiviy, "Data Exported in a Excel Sheet", Toast.LENGTH_SHORT).show();
+
+                hideProgressDialog();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            Common.alert(getActivity(), "No Search records found!");
+        }
     }
 
     @Override

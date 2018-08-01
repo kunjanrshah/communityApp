@@ -651,7 +651,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 mEditor.putString(Common.Constant_Class.LAST_NAME, mListProfileData.getLast_name());
                 mEditor.apply();
 
-                tbtn_share.setVisibility(View.VISIBLE);
+               // tbtn_share.setVisibility(View.VISIBLE);
                 tbtn_share.setText(null);
                 tbtn_share.setTextOn(null);
                 tbtn_share.setTextOff(null);
@@ -659,12 +659,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 tbtn_share.setChecked(bool);
 
 
-                AppController.getInstance().firebaseAnalytics.setUserProperty("Name", edtFName.getText().toString());
+               /* AppController.getInstance().firebaseAnalytics.setUserProperty("Name", edtFName.getText().toString());
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Father Name", edtFatherName.getText().toString());
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Mother Name", edtMotherName.getText().toString());
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Mobile", edtMobile.getText().toString());
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Email Address", edt_Eaddress.getText().toString());
-                AppController.getInstance().firebaseAnalytics.setUserProperty("Home Address", edtAddress.getText().toString());
+                AppController.getInstance().firebaseAnalytics.setUserProperty("Home Address", edtAddress.getText().toString());*/
 
             } else {
                 if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {

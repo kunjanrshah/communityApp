@@ -189,12 +189,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     gender = "both";
                 }
 
-                if (!strEaddress.equalsIgnoreCase("")) {
-                    if (Common.isValidEmail(strEaddress)) {
-                        valid = "Email is not valid Format";
-                    }
-                    lstProceed.add("Email: " + strEaddress);
-                }
+
                 if (!strbdateFrom.equalsIgnoreCase("")) {
                     if (!Common.isThisDateValid(strbdateFrom, "yyyy-MM-dd")) {
                         valid = "Birth Date From is not valid Format";
@@ -273,8 +268,12 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     lstProceed.add("Education: " + strEducation);
                 }
                 if (!strEaddress.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.EMAIL_ADDRESS, strEaddress);
-                    lstProceed.add("Email: " + strEaddress);
+                    if (Common.isValidEmail(strEaddress)) {
+                        valid = "Email is not valid Format";
+                    } else {
+                        mJsonObject.put(Common.Constant_Class.EMAIL_ADDRESS, strEaddress);
+                        lstProceed.add("Email: " + strEaddress);
+                    }
                 }
                 if (!strAddress.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.ADDRESS, strAddress);
@@ -339,7 +338,6 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String childBtime = ((FamilyFilter) family).edtchildbtime.getText().toString().trim();
                 String childBplace = ((FamilyFilter) family).edtchildbplace.getText().toString().trim();
                 String childGender = ((FamilyFilter) family).gender;
-
 
 
                 if (!childBtime.equalsIgnoreCase("")) {

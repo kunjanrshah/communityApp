@@ -64,7 +64,7 @@ repositories {
 
 ext{
     supportLibraryVersion = '26.1.1'
-    playServicesVersion = '15.0.+'
+   // playServicesVersion = '15.0.+'
 }
 
 dependencies {
@@ -80,8 +80,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
-    implementation "com.google.android.gms:play-services-location:$playServicesVersion"
-    implementation "com.google.firebase:firebase-messaging:$playServicesVersion"
+    implementation "com.google.android.gms:play-services-location:15.0.1"
+    implementation "com.google.firebase:firebase-messaging:17.1.0"
 /*
     implementation 'com.google.android.gms:play-services-ads:15.0.1'
 */

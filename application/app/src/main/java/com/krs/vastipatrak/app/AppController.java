@@ -10,7 +10,7 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.google.firebase.analytics.FirebaseAnalytics;
+
 import com.krs.vastipatrak.model.ListProfileData;
 
 import io.realm.Realm;
@@ -26,7 +26,7 @@ public class AppController extends Application {
     private static AppController mInstance;
     public Realm realm;
     public boolean isUpdate = false;
-    public FirebaseAnalytics firebaseAnalytics;
+    //public FirebaseAnalytics firebaseAnalytics;
     @Nullable
     public RealmResults<ListProfileData> mListSearchList = null;
     private RequestQueue mRequestQueue;
@@ -51,7 +51,7 @@ public class AppController extends Application {
 
     private void initFirebaseAnalytics()
     {
-        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+       /* firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         //Set whether analytics collection is enabled for this app on this device.
         firebaseAnalytics.setAnalyticsCollectionEnabled(true);
@@ -60,7 +60,7 @@ public class AppController extends Application {
         firebaseAnalytics.setMinimumSessionDuration(2000);
 
         //Set the duration of inactivity that terminates the current session. The default value is 1800000 (30 minutes).
-        firebaseAnalytics.setSessionTimeoutDuration(300000);
+        firebaseAnalytics.setSessionTimeoutDuration(300000);*/
     }
 
     private void initRealm() {
