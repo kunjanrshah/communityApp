@@ -40,8 +40,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-import io.realm.RealmList;
-
 public class BusinessFragment extends Fragment implements Serializable {
 
 
@@ -67,7 +65,7 @@ public class BusinessFragment extends Fragment implements Serializable {
         Memory_Allocation(rootView);
 
         try {
-            RealmList<ListProfileData> mListProfileData = ((MyProfileActivity) mActivity).getMyData();
+            ListProfileData mListProfileData = ((MyProfileActivity) mActivity).getMyData();
             if (mListProfileData != null) {
                 SetOfflineData(mListProfileData);
             }
@@ -239,35 +237,31 @@ public class BusinessFragment extends Fragment implements Serializable {
     }
 
     @SuppressLint("SetTextI18n")
-    private void SetOfflineData(RealmList<ListProfileData> mListProfileDatas) {
+    private void SetOfflineData(ListProfileData mListProfileData) {
+        edtOccupation.setText(Objects.requireNonNull(mListProfileData).getOccupation());
+        edtWork.setText(mListProfileData.getWork());
+        edtOMobile.setText(mListProfileData.getOffice_mobile());
+        edtOAddress.setText(mListProfileData.getOffice_address());
 
-        if (mListProfileDatas.size() > 0) {
-            ListProfileData mListProfileData = mListProfileDatas.get(0);
-
-            edtOccupation.setText(Objects.requireNonNull(mListProfileData).getOccupation());
-            edtWork.setText(mListProfileData.getWork());
-            edtOMobile.setText(mListProfileData.getOffice_mobile());
-            edtOAddress.setText(mListProfileData.getOffice_address());
-
-            if (!mListProfileData.getOffice_lat().equalsIgnoreCase("null") && !mListProfileData.getOffice_lat().equalsIgnoreCase("")) {
-                office_lat = Double.parseDouble(mListProfileData.getOffice_lat());
-            }
-            if (!mListProfileData.getOffice_lng().equalsIgnoreCase("null") && !mListProfileData.getOffice_lng().equalsIgnoreCase("")) {
-                office_lng = Double.parseDouble(mListProfileData.getOffice_lng());
-            }
-            if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-                if (office_lat != 0 && office_lng != 0) {
-                    int distance = (int) Common.getDistance(mActivity, office_lat, office_lng);
-                    if (distance == -1) {
-                        txt_office.setText(R.string.enable_location);
-                    } else {
-                        txt_office.setText("" + (distance / 1000) + getString(R.string.km));
-                    }
+        if (!mListProfileData.getOffice_lat().equalsIgnoreCase("null") && !mListProfileData.getOffice_lat().equalsIgnoreCase("")) {
+            office_lat = Double.parseDouble(mListProfileData.getOffice_lat());
+        }
+        if (!mListProfileData.getOffice_lng().equalsIgnoreCase("null") && !mListProfileData.getOffice_lng().equalsIgnoreCase("")) {
+            office_lng = Double.parseDouble(mListProfileData.getOffice_lng());
+        }
+        if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
+            if (office_lat != 0 && office_lng != 0) {
+                int distance = (int) Common.getDistance(mActivity, office_lat, office_lng);
+                if (distance == -1) {
+                    txt_office.setText(R.string.enable_location);
                 } else {
-                    txt_office.setText(R.string.no_set_location);
+                    txt_office.setText("" + (distance / 1000) + getString(R.string.km));
                 }
+            } else {
+                txt_office.setText(R.string.no_set_location);
             }
         }
+
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {
             EnableAll();
         } else {

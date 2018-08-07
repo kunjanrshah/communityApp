@@ -1,9 +1,11 @@
 package com.krs.vastipatrak.fragments;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +19,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +42,8 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.interfaces.OnItemClickListener;
 import com.krs.vastipatrak.model.ListEventData;
 import com.krs.vastipatrak.utils.Common;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,23 +57,27 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
 import static com.krs.vastipatrak.utils.Common.DatetoString;
 import static com.krs.vastipatrak.utils.Common.getRandomColor;
 import static com.krs.vastipatrak.utils.Common.parseDateToddMMyyyy;
+import static com.krs.vastipatrak.utils.Common.textAsBitmap;
 
 
 public class HomeFragment extends Fragment {
 
     @NonNull
     private final String TAG = "HomeFragment";
+    int page_count = 0;
     private RecyclerView mRecycleView;
     private Realm realm;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
-    private WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
     private RealmResults<ListEventData> eventData;
+    private int page = 1;
+    private SwipyRefreshLayout mSwipyRefreshLayout;
+    private FloatingActionButton mFloatingActionButton;
+    ;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,16 +87,88 @@ public class HomeFragment extends Fragment {
 
         MemoryAllocation(rootView);
 
-        mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
+        mSwipyRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh() {
-                getEvents();
+            public void onRefresh(SwipyRefreshLayoutDirection direction) {
+                Log.d("MainActivity", "Refresh triggered at " + (direction == SwipyRefreshLayoutDirection.TOP ? "top" : "bottom"));
+
+                if (direction == SwipyRefreshLayoutDirection.TOP) {
+                    page--;
+                } else {
+                    page++;
+                }
+                if (page > 0) {
+                    getEvents();
+                } else {
+                    mSwipyRefreshLayout.setRefreshing(false);
+                    Toast.makeText(getActivity(), "No record found!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        mRecycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                Log.d(TAG, "step dx: " + dx);
+                Log.d(TAG, "step dy: " + dy);
+            }
+        });
+       /* recycler_view.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int lastItem = firstVisibleItem + visibleItemCount;
+                if (lastItem == totalItemCount) {
+
+                    mFloatingActionButton.setVisibility(View.INVISIBLE);
+                } else {
+                    mFloatingActionButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });*/
+
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(getActivity());
+                dialog.setContentView(R.layout.dialog_page_count);
+                dialog.setTitle(R.string.app_name);
+                dialog.setCancelable(false);
+                final EditText input_page = dialog.findViewById(R.id.input_page);
+
+                Button btn_send = dialog.findViewById(R.id.btn_send);
+                Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                btn_send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int page1 = Integer.parseInt(input_page.getText().toString());
+                        if (page1 > 0 && page1 <= page_count) {
+                            page = page1;
+                            getEvents();
+                        } else {
+                            Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+                dialog.show();
             }
         });
 
         getEvents();
-
-
 
 
         return rootView;
@@ -94,9 +176,8 @@ public class HomeFragment extends Fragment {
 
     private void MemoryAllocation(View rootView) {
         mRecycleView = rootView.findViewById(R.id.recycler_view);
-
-        mWaveSwipeRefreshLayout = rootView.findViewById(R.id.main_swipe);
-        mWaveSwipeRefreshLayout.setWaveColor(getResources().getColor(R.color.colorPrimary));
+        mFloatingActionButton = rootView.findViewById(R.id.floating_action_button);
+        mSwipyRefreshLayout = rootView.findViewById(R.id.swipyrefreshlayout);
         realm = AppController.getInstance().realm;
         eventData = realm.where(ListEventData.class).findAll();
         mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
@@ -105,12 +186,10 @@ public class HomeFragment extends Fragment {
         mEditor.apply();
     }
 
-
-
     private void getEvents() {
 
         if (Common.isOnline(Objects.requireNonNull(getActivity()))) {
-            mWaveSwipeRefreshLayout.setRefreshing(true);
+            mSwipyRefreshLayout.setRefreshing(true);
             JSONObject mJsonObject = new JSONObject();
 
 
@@ -121,11 +200,11 @@ public class HomeFragment extends Fragment {
                     mJsonObject.put(Common.Constant_Class.EVENT_DATE, date);
                 }
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-
+                mJsonObject.put(Common.Constant_Class.PAGE, String.valueOf(page));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
+            Common.showProgressDialog(getActivity());
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.EVENTS_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
@@ -133,8 +212,11 @@ public class HomeFragment extends Fragment {
                     Log.d(TAG, response.toString());
 
                     try {
+                        String total_records = "0";
                         boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
-
+                        if (response.has(Common.Constant_Class.TOTAL_RECORDS)) {
+                            total_records = response.getString(Common.Constant_Class.TOTAL_RECORDS);
+                        }
                         if (success) {
                             JSONArray mJsonArray = response.getJSONArray("data");
                             RealmList<String> YoutubeUrls, ImagesUrls;
@@ -173,9 +255,20 @@ public class HomeFragment extends Fragment {
                                 realm.copyToRealmOrUpdate(mEventdata);
                                 realm.commitTransaction();
                             }
+                            try {
+                                int total = Integer.parseInt(total_records);
+                                page_count = total / 25;
+                                int mod = total % 25;
+                                if (mod != 0) {
+                                    page_count = page_count + 1;
+                                }
+                                mFloatingActionButton.setImageBitmap(textAsBitmap(String.valueOf(page) + "/" + String.valueOf(page_count), 40, Color.WHITE));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                         setEventAdapter();
-
+                        Common.hideProgressDialog();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -241,11 +334,11 @@ public class HomeFragment extends Fragment {
         mRecycleView.setLayoutManager(mLayoutManager);
         mRecycleView.setItemAnimator(new DefaultItemAnimator());
         mRecycleView.setAdapter(mEventListAdapter);
-        mWaveSwipeRefreshLayout.setRefreshing(false);
+        mSwipyRefreshLayout.setRefreshing(false);
     }
 
-    private void showDirections(double src_lat, double src_lng,double dst_lat, double dst_lng, String address) {
-        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", src_lat,src_lng, "",dst_lat,dst_lng , address);
+    private void showDirections(double src_lat, double src_lng, double dst_lat, double dst_lng, String address) {
+        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", src_lat, src_lng, "", dst_lat, dst_lng, address);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         startActivity(intent);
@@ -274,7 +367,6 @@ public class HomeFragment extends Fragment {
             });
 
 
-
             return holder;
         }
 
@@ -294,11 +386,11 @@ public class HomeFragment extends Fragment {
             holder.txtLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(),"get location",Toast.LENGTH_SHORT).show();
-                    String lat=data.getLat();
-                    String lng=data.getLng();
+                    Toast.makeText(getActivity(), "get location", Toast.LENGTH_SHORT).show();
+                    String lat = data.getLat();
+                    String lng = data.getLng();
                     if (MainActivity.lat != null && MainActivity.lon != null && !lat.isEmpty() && !lng.isEmpty()) {
-                        showDirections(Double.parseDouble(MainActivity.lat),Double.parseDouble(MainActivity.lon),Double.parseDouble(data.getLat()) ,Double.parseDouble(data.getLng()) ,data.getLocation());
+                        showDirections(Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon), Double.parseDouble(data.getLat()), Double.parseDouble(data.getLng()), data.getLocation());
                     } else {
                         Toast.makeText(getActivity(), "Location not found!", Toast.LENGTH_SHORT).show();
                     }

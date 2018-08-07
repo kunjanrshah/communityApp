@@ -18,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,8 +53,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import io.realm.RealmList;
-
 
 public class MyProfileActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
@@ -66,7 +65,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private Toolbar toolbar;
-    private RealmList<ListProfileData> mListSearchProfile = null;
+    private ListProfileData mListProfileData = null;
     private Fragment personal;
     private Fragment business;
     private Fragment family;
@@ -77,23 +76,21 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_profile);
-
         MemoryAllocation();
         ToolbarSetup();
-
-        assert mSharedPreferences != null;
+        String id = "";
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-            mListSearchProfile = Common.getDataFromParentTable(mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""), 3);
+            id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
         } else {
-            mListSearchProfile = Common.getDataFromParentTable(mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""), 3);
+            id = mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, "");
         }
-        setupViewPager(viewPager);
-        tabLayout.setupWithViewPager(viewPager);
+        SyncUser(id);
+        //call_profile_ws(new JSONObject(), "0");
     }
 
     @Nullable
-    public RealmList<ListProfileData> getMyData() {
-        return mListSearchProfile;
+    public ListProfileData getMyData() {
+        return mListProfileData;
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -200,7 +197,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         });
 
         MenuItem saveItem = menu.findItem(R.id.action_save);
-        if (Objects.requireNonNull(mSharedPreferences).getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+        if (Objects.requireNonNull(mSharedPreferences).getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) { //|| mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)
             saveItem.setVisible(true);
         } else {
             saveItem.setVisible(false);
@@ -258,7 +255,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 String Work = ((BusinessFragment) business).edtWork.getText().toString().trim();
                 String OMobile = ((BusinessFragment) business).edtOMobile.getText().toString().trim();
                 String OAddress = ((BusinessFragment) business).edtOAddress.getText().toString().trim();
-
 
                 // Familty Details
                 String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
@@ -326,8 +322,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 return false;
             }
         });
-
-
         return true;
     }
 
@@ -463,20 +457,23 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         }
 
         if (valid.equalsIgnoreCase("")) {
-            call_profile_ws(mJsonObject);
+            call_profile_ws(mJsonObject, "1");
         } else {
             Toast.makeText(MyProfileActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
             valid = "";
         }
     }
 
-    private void call_profile_ws(@Nullable JSONObject mJsonObject) {
+    private void call_profile_ws(@Nullable JSONObject mJsonObject, final String is_update) {
         if (Common.isOnline(this) && mSharedPreferences != null) {
             try {
-                if (mJsonObject == null) {
-                    mJsonObject = new JSONObject();
+
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
                     mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                    mJsonObject.put(Common.Constant_Class.IS_UPDATE, "0");
+                    mJsonObject.put(Common.Constant_Class.IS_UPDATE, is_update);
+                } else {
+                    mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""));
+                    mJsonObject.put(Common.Constant_Class.IS_UPDATE, is_update);
                 }
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
 
@@ -503,17 +500,21 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                         Common.hideProgressDialog();
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
-                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             String data = response.getString(Common.Constant_Class.DATA);
-
                             JSONObject mData = new JSONObject(data);
-                            mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, mData.getString(Common.Constant_Class.PROFILE_PIC_URL));
-                            mEditor.putString(Common.Constant_Class.FIRST_NAME, mData.getString(Common.Constant_Class.FIRST_NAME));
-                            mEditor.putString(Common.Constant_Class.LAST_NAME, mData.getString(Common.Constant_Class.LAST_NAME));
-                            mEditor.apply();
-                            Common.SaveProfile(mData);
-                            AppController.getInstance().isUpdate = true;
-                            alert(message);
+                            mListProfileData = Common.SaveProfile(mData);
+                            if (is_update.equalsIgnoreCase("1")) {
+                                mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, mData.getString(Common.Constant_Class.PROFILE_PIC_URL));
+                                mEditor.putString(Common.Constant_Class.FIRST_NAME, mData.getString(Common.Constant_Class.FIRST_NAME));
+                                mEditor.putString(Common.Constant_Class.LAST_NAME, mData.getString(Common.Constant_Class.LAST_NAME));
+                                mEditor.apply();
+                                AppController.getInstance().isUpdate = true;
+                                alert(message);
+                            } else {
+                                setupViewPager(viewPager);
+                                tabLayout.setupWithViewPager(viewPager);
+                            }
                         } else {
                             try {
 
@@ -523,7 +524,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                                 } else if (mData.has(mData.getString(Common.Constant_Class.MOBILE))) {
                                     message = mData.getString(Common.Constant_Class.MOBILE);
                                 }
-
                                 Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -555,6 +555,67 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         } else {
             Toast.makeText(MyProfileActivity.this, "" + Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private void SyncUser(String profile_id) {
+        if (Common.isOnline(this)) {
+            Common.showProgressDialog(this);
+
+            JSONObject mJsonObject = null;
+            try {
+                mJsonObject = new JSONObject();
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(Common.Constant_Class.PROFILE_ID, profile_id);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            String sync_url = Common.Constant_Class.SYNC_URL;
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, sync_url, mJsonObject, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    Log.d(TAG, "response: " + response.toString());
+                    Common.hideProgressDialog();
+                    try {
+                        String success = response.getString(Common.Constant_Class.SUCCESS);
+                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                            JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                            for (int i = 0; i < mJsonArray.length(); i++) {
+                                JSONObject mJsondata = mJsonArray.getJSONObject(i);
+                                mListProfileData = Common.SaveProfile(mJsondata);
+                            }
+                            setupViewPager(viewPager);
+                            tabLayout.setupWithViewPager(viewPager);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    Common.hideProgressDialog();
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }
     }
 

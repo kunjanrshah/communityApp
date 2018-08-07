@@ -169,7 +169,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                 AlertDialog.Builder builder = new AlertDialog.Builder(_context, R.style.AppCompatAlertDialogStyle);
                 builder.setTitle(_context.getString(R.string.app_name));
 
-                builder.setMessage("Do you want to request for update ?");
+                builder.setMessage("Do you want to request on WhatsApp ?");
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                     public void onClick(@NonNull DialogInterface dialog, int which) {
 

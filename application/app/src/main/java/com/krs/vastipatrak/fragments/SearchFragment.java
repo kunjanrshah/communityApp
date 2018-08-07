@@ -445,10 +445,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     Log.d(TAG, response.toString());
 
                     try {
-
-
                         mSwipyRefreshLayout.setRefreshing(false);
-
                         boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success) {
@@ -522,7 +519,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     }
                     SearchString = search;
                     mJsonObject = new JSONObject(search);
-                    mJsonObject.put("page", String.valueOf(page));
+                    mJsonObject.put(Common.Constant_Class.PAGE, String.valueOf(page));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -6,11 +6,11 @@
     android:background="@drawable/bg_drawer"
     android:orientation="vertical">
 
-    <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
-        android:id="@+id/main_swipe"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:hapticFeedbackEnabled="true">
+    <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
+        android:id="@+id/swipyrefreshlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srl_direction="both">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
@@ -18,10 +18,15 @@
             android:layout_height="wrap_content"
             android:scrollbars="none" />
 
+    </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
 
-    </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
-
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        app:fabSize="normal" />
 
     <TextView
         android:id="@+id/txtLable"
@@ -31,9 +36,9 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:gravity="center"
-        android:visibility="gone"
         android:text="Events not found!"
         android:textColor="@android:color/black"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:visibility="gone" />
 
 </android.support.design.widget.CoordinatorLayout>

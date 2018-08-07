@@ -114,7 +114,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         MemoryAllocation(rootView);
 
         try {
-            RealmList<ListProfileData> mListProfileData = ((MyProfileActivity) mActivity).getMyData();
+            ListProfileData mListProfileData = ((MyProfileActivity) mActivity).getMyData();
             if (mListProfileData != null) {
                 setOfflineData(mListProfileData);
             }
@@ -577,12 +577,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     @SuppressLint("SetTextI18n")
-    private void setOfflineData(RealmList<ListProfileData> mListProfileDatas) {
+    private void setOfflineData(ListProfileData mListProfileData) {
 
-        if (mListProfileDatas.size() > 0) {
-            ListProfileData mListProfileData = mListProfileDatas.get(0);
-
-            assert mListProfileData != null;
+        if (mListProfileData!=null) {
             String name = mListProfileData.getFirst_name() + " " + mListProfileData.getLast_name();
             Objects.requireNonNull(edtFName).setText(mListProfileData.getFirst_name());
             Objects.requireNonNull(edtLName).setText(mListProfileData.getLast_name());

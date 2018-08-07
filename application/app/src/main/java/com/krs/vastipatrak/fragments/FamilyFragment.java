@@ -50,8 +50,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
-import io.realm.RealmList;
-
 public class FamilyFragment extends Fragment implements Serializable, AdapterView.OnItemSelectedListener {
 
 
@@ -87,7 +85,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         Memory_Allocation(rootView);
 
         try {
-            RealmList<ListProfileData> mListProfileData = ((MyProfileActivity) Objects.requireNonNull(getActivity())).getMyData();
+            ListProfileData mListProfileData = ((MyProfileActivity) Objects.requireNonNull(getActivity())).getMyData();
             if (mListProfileData != null) {
                 SetOfflineData(mListProfileData);
             }
@@ -278,123 +276,119 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtMSpouseName.setEnabled(true);
     }
 
-    private void SetOfflineData(RealmList<ListProfileData> mListProfileDatas) {
+    private void SetOfflineData(ListProfileData mListProfileData) {
 
-        if (mListProfileDatas.size() > 0) {
+        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
+            EnableAll();
+        } else {
+            DisableAll();
+        }
 
-            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
-                EnableAll();
-            } else {
-                DisableAll();
-            }
+        edtSpouseName.setText(Objects.requireNonNull(mListProfileData).getSpouse_name());
+        edt_mdate.setText(mListProfileData.getMarriage_date());
+        edtSpouseFName.setText(mListProfileData.getSfather_name());
+        edtMSpouseName.setText(mListProfileData.getSmother_name());
 
-            ListProfileData mListProfileData = mListProfileDatas.get(0);
+        spouse_url = mListProfileData.getImg_spouse_url();
+        fspouse_url = mListProfileData.getImg_sfather_url();
+        mspouse_url = mListProfileData.getImg_smother_url();
+        Glide.with(mActivity).load(spouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_spouse);
+        Glide.with(mActivity).load(fspouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_fspouse);
+        Glide.with(mActivity).load(mspouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mspouse);
 
-            edtSpouseName.setText(Objects.requireNonNull(mListProfileData).getSpouse_name());
-            edt_mdate.setText(mListProfileData.getMarriage_date());
-            edtSpouseFName.setText(mListProfileData.getSfather_name());
-            edtMSpouseName.setText(mListProfileData.getSmother_name());
+        if (mListProfileData.getmListChildrenData() != null) {
+            if (mListProfileData.getmListChildrenData().size() > 0) {
 
-            spouse_url = mListProfileData.getImg_spouse_url();
-            fspouse_url = mListProfileData.getImg_sfather_url();
-            mspouse_url = mListProfileData.getImg_smother_url();
-            Glide.with(mActivity).load(spouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_spouse);
-            Glide.with(mActivity).load(fspouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_fspouse);
-            Glide.with(mActivity).load(mspouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mspouse);
+                for (int i = 0; i < mListProfileData.getmListChildrenData().size(); i++) {
 
-            if (mListProfileData.getmListChildrenData() != null) {
-                if (mListProfileData.getmListChildrenData().size() > 0) {
-
-                    for (int i = 0; i < mListProfileData.getmListChildrenData().size(); i++) {
-
-                        if (i == 0) {
-                            rbtnChildYes.setChecked(true);
-                            rbtnChildNo.setChecked(false);
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
-                                btn_add.setVisibility(View.VISIBLE);
-                            } else {
-                                btn_add.setVisibility(View.GONE);
-                            }
-                        }
-                        add_child_layout();
-                        final Viewholder mViewholder = (Viewholder) child_container.getChildAt(i).getTag();
-                        ListChildrenData mObjChild = mListProfileData.getmListChildrenData().get(i);
-                        mViewholder.child_id = Integer.parseInt(Objects.requireNonNull(mObjChild).getChild_id());
-                        Objects.requireNonNull(mViewholder.edtchild_name).setText(mObjChild.getChild_name());
-                        Objects.requireNonNull(mViewholder.edtchild_bdate).setText(mObjChild.getChild_bday());
-                        Objects.requireNonNull(mViewholder.edtMobile).setText(mObjChild.getMobile());
-                        String blood = mObjChild.getBlood_group();
-                        if (blood != null && !blood.isEmpty()) {
-                            if (blood.equalsIgnoreCase(Common.Constant_Class.A_POSITIVE)) {
-                                Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(1);
-                            } else if (blood.equalsIgnoreCase(Common.Constant_Class.A_NAGATIVE)) {
-                                Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(2);
-                            } else if (blood.equalsIgnoreCase(Common.Constant_Class.B_POSITIVE)) {
-                                Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(3);
-                            } else if (blood.equalsIgnoreCase(Common.Constant_Class.B_NAGATIVE)) {
-                                Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(4);
-                            } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_POSITIVE)) {
-                                Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(5);
-                            } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_NAGATIVE)) {
-                                Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(6);
-                            }
-                        }
-
-                        Objects.requireNonNull(mViewholder.edtchild_btime).setText(mObjChild.getBirth_time());
-                        Objects.requireNonNull(mViewholder.edtchild_bplace).setText(mObjChild.getBirth_place());
-                        Objects.requireNonNull(mViewholder.tbtn_interest).setChecked(mObjChild.isInterest());
-
-                        if (mObjChild.getGender().equalsIgnoreCase("male")) {
-                            Objects.requireNonNull(mViewholder.radioGroupId).check(R.id.radioM);
-                        } else if (mObjChild.getGender().equalsIgnoreCase("female")) {
-                            Objects.requireNonNull(mViewholder.radioGroupId).check(R.id.radioF);
-                        }
-
-                        Objects.requireNonNull(mViewholder.edtchild_edu).setText(mObjChild.getChild_edu());
-                        Objects.requireNonNull(mViewholder.edtchild_work).setText(mObjChild.getChild_work());
-
-
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
-                            mViewholder.edtchild_name.setEnabled(true);
-                            mViewholder.edtchild_bdate.setEnabled(true);
-                            mViewholder.edtchild_edu.setEnabled(true);
-                            mViewholder.edtchild_work.setEnabled(true);
-                            Objects.requireNonNull(mViewholder.img_child).setEnabled(true);
-                            mViewholder.img_child.setClickable(true);
+                    if (i == 0) {
+                        rbtnChildYes.setChecked(true);
+                        rbtnChildNo.setChecked(false);
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
+                            btn_add.setVisibility(View.VISIBLE);
                         } else {
-                            mViewholder.edtchild_name.setKeyListener(null);
-                            mViewholder.edtchild_name.setCursorVisible(false);
-
-                            mViewholder.edtchild_bdate.setKeyListener(null);
-                            mViewholder.edtchild_bdate.setCursorVisible(false);
-
-                            mViewholder.edtchild_edu.setKeyListener(null);
-                            mViewholder.edtchild_edu.setCursorVisible(false);
-
-                            mViewholder.edtchild_work.setKeyListener(null);
-                            mViewholder.edtchild_work.setCursorVisible(false);
-                            Objects.requireNonNull(mViewholder.img_child).setEnabled(false);
-                            mViewholder.img_child.setClickable(false);
+                            btn_add.setVisibility(View.GONE);
                         }
-                        final String child_url = mObjChild.getChild_img_url();
-                        Glide.with(mActivity).load(child_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(mViewholder.img_child);
-                        mViewholder.img_child.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || role.equals(Common.Constant_Class.ADMIN)) {
-                                    mViewholder.ImgHash = "selectImage";
-                                    selectImage();
-                                } else {
-                                    String Name = mViewholder.edtchild_name.getText().toString();
-                                    openImageDialog(Name, child_url);
-                                }
-                            }
-                        });
                     }
+                    add_child_layout();
+                    final Viewholder mViewholder = (Viewholder) child_container.getChildAt(i).getTag();
+                    ListChildrenData mObjChild = mListProfileData.getmListChildrenData().get(i);
+                    mViewholder.child_id = Integer.parseInt(Objects.requireNonNull(mObjChild).getChild_id());
+                    Objects.requireNonNull(mViewholder.edtchild_name).setText(mObjChild.getChild_name());
+                    Objects.requireNonNull(mViewholder.edtchild_bdate).setText(mObjChild.getChild_bday());
+                    Objects.requireNonNull(mViewholder.edtMobile).setText(mObjChild.getMobile());
+                    String blood = mObjChild.getBlood_group();
+                    if (blood != null && !blood.isEmpty()) {
+                        if (blood.equalsIgnoreCase(Common.Constant_Class.A_POSITIVE)) {
+                            Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(1);
+                        } else if (blood.equalsIgnoreCase(Common.Constant_Class.A_NAGATIVE)) {
+                            Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(2);
+                        } else if (blood.equalsIgnoreCase(Common.Constant_Class.B_POSITIVE)) {
+                            Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(3);
+                        } else if (blood.equalsIgnoreCase(Common.Constant_Class.B_NAGATIVE)) {
+                            Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(4);
+                        } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_POSITIVE)) {
+                            Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(5);
+                        } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_NAGATIVE)) {
+                            Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(6);
+                        }
+                    }
+
+                    Objects.requireNonNull(mViewholder.edtchild_btime).setText(mObjChild.getBirth_time());
+                    Objects.requireNonNull(mViewholder.edtchild_bplace).setText(mObjChild.getBirth_place());
+                    Objects.requireNonNull(mViewholder.tbtn_interest).setChecked(mObjChild.isInterest());
+
+                    if (mObjChild.getGender().equalsIgnoreCase("male")) {
+                        Objects.requireNonNull(mViewholder.radioGroupId).check(R.id.radioM);
+                    } else if (mObjChild.getGender().equalsIgnoreCase("female")) {
+                        Objects.requireNonNull(mViewholder.radioGroupId).check(R.id.radioF);
+                    }
+
+                    Objects.requireNonNull(mViewholder.edtchild_edu).setText(mObjChild.getChild_edu());
+                    Objects.requireNonNull(mViewholder.edtchild_work).setText(mObjChild.getChild_work());
+
+
+                    if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
+                        mViewholder.edtchild_name.setEnabled(true);
+                        mViewholder.edtchild_bdate.setEnabled(true);
+                        mViewholder.edtchild_edu.setEnabled(true);
+                        mViewholder.edtchild_work.setEnabled(true);
+                        Objects.requireNonNull(mViewholder.img_child).setEnabled(true);
+                        mViewholder.img_child.setClickable(true);
+                    } else {
+                        mViewholder.edtchild_name.setKeyListener(null);
+                        mViewholder.edtchild_name.setCursorVisible(false);
+
+                        mViewholder.edtchild_bdate.setKeyListener(null);
+                        mViewholder.edtchild_bdate.setCursorVisible(false);
+
+                        mViewholder.edtchild_edu.setKeyListener(null);
+                        mViewholder.edtchild_edu.setCursorVisible(false);
+
+                        mViewholder.edtchild_work.setKeyListener(null);
+                        mViewholder.edtchild_work.setCursorVisible(false);
+                        Objects.requireNonNull(mViewholder.img_child).setEnabled(false);
+                        mViewholder.img_child.setClickable(false);
+                    }
+                    final String child_url = mObjChild.getChild_img_url();
+                    Glide.with(mActivity).load(child_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(mViewholder.img_child);
+                    mViewholder.img_child.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || role.equals(Common.Constant_Class.ADMIN)) {
+                                mViewholder.ImgHash = "selectImage";
+                                selectImage();
+                            } else {
+                                String Name = mViewholder.edtchild_name.getText().toString();
+                                openImageDialog(Name, child_url);
+                            }
+                        }
+                    });
                 }
             }
         }
+
     }
 
 
@@ -735,8 +729,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         @Nullable
         public Spinner spinnerBlood = null;
         @Nullable
-        private EditText edtchild_bdate = null;
-        @Nullable
         public EditText edtchild_btime = null;
         @Nullable
         public EditText edtchild_bplace = null;
@@ -757,5 +749,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         @Nullable
         Button btn_remove = null;
         boolean setClickBDate = false;
+        @Nullable
+        private EditText edtchild_bdate = null;
     }
 }

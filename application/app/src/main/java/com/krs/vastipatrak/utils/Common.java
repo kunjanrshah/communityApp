@@ -687,7 +687,7 @@ public class Common {
         }
     }
 
-    public static void SaveProfile(@NonNull JSONObject mJsonObject) {
+    public static ListProfileData SaveProfile(@NonNull JSONObject mJsonObject) {
         try {
 
             final ListProfileData mListProfileData = new ListProfileData();
@@ -886,10 +886,11 @@ public class Common {
                 }
             });
 
-
+        return mListProfileData;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public static void ExportProfile(@NonNull JSONObject mJsonObject) {
@@ -1805,7 +1806,7 @@ public class Common {
         public static final String DEVICE_TOKEN = "device_token";
         public static final String DEVICE_ID = "int_udid";
         public static final String ACCESS_TOKEN = "access_token";
-
+        public static final String PAGE = "page";
         public static final String API_KEY_VALUE = "q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
         public static final String DEVICE_TYPE_VALUE = "Android";
         public static final String PREF_NAME = "Vastipatrak";
