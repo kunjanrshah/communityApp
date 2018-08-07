@@ -13,20 +13,22 @@
 
         <ToggleButton
             android:id="@+id/tbtn_interest"
-            android:layout_width="50dp"
+            android:layout_width="60dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
+            android:checked="true"
             android:layout_marginTop="5dp"
-            android:background="@drawable/toggle_gender" />
+            android:background="@drawable/toggle_selector" />
 
         <ToggleButton
             android:id="@+id/tbtn_gender"
-            android:layout_width="40dp"
-            android:layout_height="25dp"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
+            android:checked="true"
             android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/toggle_selector" />
+            android:background="@drawable/toggle_gender" />
 
         <Button
             android:id="@+id/btnSearch"

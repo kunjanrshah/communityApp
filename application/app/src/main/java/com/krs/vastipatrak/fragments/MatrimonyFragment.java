@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -64,40 +65,50 @@ public class MatrimonyFragment extends Fragment {
         Objects.requireNonNull(((AppCompatActivity) mActivity).getSupportActionBar()).setSubtitle(R.string.title_matrimony);
         setHasOptionsMenu(true);
         MemoryAllocation(rootView);
-        getChildRecords();
 
-        ExpandableMarimonyListAdapter mExpandableMatrimonyListAdapter = new ExpandableMarimonyListAdapter(getActivity(), listDataHeader, listDataChild);
-        lvMatrimonyList.setAdapter(mExpandableMatrimonyListAdapter);
+        getChildRecords();
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getChildRecords();
+            }
+        });
         return rootView;
     }
 
     private void MemoryAllocation(View rootView) {
         lvMatrimonyList = rootView.findViewById(R.id.lvMatrimonyList);
         tbtn_interest = rootView.findViewById(R.id.tbtn_interest);
+        tbtn_interest.setTextOn(null);
+        tbtn_interest.setTextOff(null);
         tbtn_gender = rootView.findViewById(R.id.tbtn_gender);
+        tbtn_gender.setTextOff(null);
+        tbtn_gender.setTextOn(null);
         btnSearch = rootView.findViewById(R.id.btnSearch);
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
         realm = AppController.getInstance().realm;
+
+
     }
 
     private void getChildRecords() {
-        String is_interested, gender;
-        if (tbtn_interest.isActivated()) {
+        final String is_interested, gender;
+        if (tbtn_interest.isChecked()) {
             is_interested = "1";
         } else {
             is_interested = "0";
         }
-        if (tbtn_gender.isActivated()) {
-            gender = "1";
+        if (tbtn_gender.isChecked()) {
+            gender = "male";
         } else {
-            gender = "0";
+            gender = "female";
         }
         if (Common.isOnline(getActivity())) {
             JSONObject mjsonObject = new JSONObject();
             try {
                 mjsonObject.put(Common.Constant_Class.IS_INTERESTED, is_interested);
-                mjsonObject.put(Common.Constant_Class.GENDER, gender);
+                mjsonObject.put(Common.Constant_Class.CHILD_GENDER, gender);
                 showProgressDialog(getActivity());
                 JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.ADVANCE_SEARCH_URL, mjsonObject, new Response.Listener<JSONObject>() {
 
@@ -109,15 +120,26 @@ public class MatrimonyFragment extends Fragment {
                             boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
                             if (success) {
+                                RealmResults<MatrimonyProfileData> profileData = realm.where(MatrimonyProfileData.class).findAll();
+
+                                realm.beginTransaction();
+                                profileData.deleteAllFromRealm();
+                                realm.delete(MatrimonyProfileData.class);
+                                realm.delete(ListChildrenData.class);
+                                realm.commitTransaction();
+
                                 JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                                 for (int i = 0; i < mJsonArray.length(); i++) {
                                     JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                    Common.MatrimonyProfile(mJsondata);
+                                    Common.MatrimonyProfile(mJsondata, gender, is_interested);
                                 }
                             }
                             getChildRecords1();
+                            ExpandableMarimonyListAdapter mExpandableMatrimonyListAdapter = new ExpandableMarimonyListAdapter(getActivity(), listDataHeader, listDataChild);
+                            lvMatrimonyList.setAdapter(mExpandableMatrimonyListAdapter);
                             hideProgressDialog();
-                            Common.alert(getActivity(), message);
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

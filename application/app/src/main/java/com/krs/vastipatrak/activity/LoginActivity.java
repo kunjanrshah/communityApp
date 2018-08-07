@@ -776,8 +776,8 @@ public class LoginActivity extends Activity {
                                 json.put(Common.Constant_Class.STATUS, "0");
                             }
                             if (!str_profile_hash.isEmpty()) {
-                                json.put(Common.Constant_Class.PROFILE_PIC, "profile.png");
-                                json.put(Common.Constant_Class.PROFILE_PIC_HASH, str_profile_hash);
+                                json.put(Common.Constant_Class.PROFILE_PIC, str_profile_hash);
+                               // json.put(Common.Constant_Class.PROFILE_PIC_HASH, str_profile_hash);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

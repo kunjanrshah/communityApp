@@ -42,7 +42,6 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ExportProfileData;
 import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListProfileData;
-import com.krs.vastipatrak.model.ListProfiles;
 import com.krs.vastipatrak.model.MatrimonyProfileData;
 
 import org.json.JSONArray;
@@ -1094,7 +1093,7 @@ public class Common {
         }
     }
 
-    public static void MatrimonyProfile(@NonNull JSONObject mJsonObject) {
+    public static void MatrimonyProfile(@NonNull JSONObject mJsonObject, String child_gender, String is_interested) {
         try {
 
             MatrimonyProfileData mListProfileData = new MatrimonyProfileData();
@@ -1232,6 +1231,8 @@ public class Common {
                 RealmList<ListChildrenData> mlistchilds = new RealmList<>();
 
                 for (int i = 0; i < mJsonArray.length(); i++) {
+                    String isInterest = "";
+                    String childgender = "";
                     JSONObject mJsonObj = mJsonArray.getJSONObject(i);
                     ListChildrenData mListChildrendata = new ListChildrenData();
 
@@ -1254,6 +1255,8 @@ public class Common {
                     }
 
                     if (mJsonObj.has(Constant_Class.GENDER)) {
+
+                        childgender = mJsonObj.getString(Common.Constant_Class.GENDER);
                         mListChildrendata.setGender(mJsonObj.getString(Common.Constant_Class.GENDER));
                     }
                     if (mJsonObj.has(Constant_Class.BIRTH_PLACE)) {
@@ -1262,8 +1265,9 @@ public class Common {
                     if (mJsonObj.has(Constant_Class.BIRTH_TIME)) {
                         mListChildrendata.setBirth_time(mJsonObj.getString(Constant_Class.BIRTH_TIME));
                     }
+
                     if (mJsonObj.has(Constant_Class.IS_INTERESTED)) {
-                        String isInterest = mJsonObj.getString(Common.Constant_Class.IS_INTERESTED);
+                        isInterest = mJsonObj.getString(Common.Constant_Class.IS_INTERESTED);
                         if (isInterest.equals("1")) {
                             mListChildrendata.setInterest(true);
                         } else {
@@ -1279,17 +1283,16 @@ public class Common {
                     if (mJsonObj.has(Common.Constant_Class.CHILD_WORK)) {
                         mListChildrendata.setChild_work(mJsonObj.getString(Common.Constant_Class.CHILD_WORK));
                     }
-                    mListChildrendata.setProfile_id(mJsonObject.getString(Constant_Class.ID));
-                    mlistchilds.add(mListChildrendata);
+                    if (child_gender.equalsIgnoreCase(childgender) && is_interested.equalsIgnoreCase(isInterest)) {
+                        mListChildrendata.setProfile_id(mJsonObject.getString(Constant_Class.ID));
+                        mlistchilds.add(mListChildrendata);
+                    }
                 }
                 mListProfileData.setmListChildrenData(mlistchilds);
             }
-
             AppController.getInstance().realm.beginTransaction();
-            // AppController.getInstance().realm.copyFromRealm(mListProfileData);
             AppController.getInstance().realm.copyToRealmOrUpdate(mListProfileData);
             AppController.getInstance().realm.commitTransaction();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
