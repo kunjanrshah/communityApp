@@ -59,9 +59,11 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 
 import static com.krs.vastipatrak.utils.Common.DatetoString;
+import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
 import static com.krs.vastipatrak.utils.Common.getRandomColor;
 import static com.krs.vastipatrak.utils.Common.parseDateToddMMyyyy;
 import static com.krs.vastipatrak.utils.Common.textAsBitmap;
+import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
 
 public class HomeFragment extends Fragment {
@@ -179,6 +181,9 @@ public class HomeFragment extends Fragment {
         mFloatingActionButton = rootView.findViewById(R.id.floating_action_button);
         mSwipyRefreshLayout = rootView.findViewById(R.id.swipyrefreshlayout);
         realm = AppController.getInstance().realm;
+        if (realm.isClosed()) {
+            AppController.getInstance().initRealm();
+        }
         eventData = realm.where(ListEventData.class).findAll();
         mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
@@ -191,8 +196,6 @@ public class HomeFragment extends Fragment {
         if (Common.isOnline(Objects.requireNonNull(getActivity()))) {
             mSwipyRefreshLayout.setRefreshing(true);
             JSONObject mJsonObject = new JSONObject();
-
-
             try {
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 if (eventData.size() > 1) {
@@ -380,7 +383,7 @@ public class HomeFragment extends Fragment {
             holder.txtLocation.setText(data.getLocation());
 
 
-            holder.txtEventDate.setText(parseDateToddMMyyyy(DatetoString(data.getEventDate())));
+            holder.txtEventDate.setText(parseDateToddMMyyyy(DatetoString(data.getEventDate()),yyyy_MM_dd,dd_MMM_yyyy));
             getRandomColor(Objects.requireNonNull(getActivity()), position, holder.ll_event);
 
             holder.txtLocation.setOnClickListener(new View.OnClickListener() {

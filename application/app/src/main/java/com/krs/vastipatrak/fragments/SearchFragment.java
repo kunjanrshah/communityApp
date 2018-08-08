@@ -635,6 +635,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             lpd.setUser_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lng());
             lpd.setUser_lat(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lat());
             lpd.setMobile(Objects.requireNonNull(mSortedProfiles.get(i)).getMobile());
+            lpd.setMail(Objects.requireNonNull(mSortedProfiles.get(i)).getEmail_address());
             ListChildData lcd = new ListChildData();
             lcd.setMother_name(Objects.requireNonNull(mSortedProfiles.get(i)).getMother_name());
             lcd.setID(Objects.requireNonNull(mSortedProfiles.get(i)).getProfile_id());

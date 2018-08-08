@@ -87,7 +87,7 @@ public class BusinessFilter extends Fragment {
     }
 
     private void setPreferenceData() {
-        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_FILTER, Context.MODE_PRIVATE);
         String json = mSharedPreferences.getString("adv_search", "");
         JSONObject mjsonObject = null;
         try {

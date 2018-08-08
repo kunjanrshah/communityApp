@@ -162,6 +162,7 @@
                         android:textSize="10sp" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -197,128 +198,106 @@
             </LinearLayout>
 
 
-
-
-                <RadioGroup
-                    android:id="@+id/rgroupid"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/radioM"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="M" />
-
-                    <RadioButton
-                        android:id="@+id/radioF"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="F" />
-
-                    <RadioButton
-                        android:id="@+id/radioB"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:checked="true"
-                        android:text="B" />
-
-                </RadioGroup>
-
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_cbplace"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/edtchildbplace"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dip"
-                    android:hint="Child Birth Place"
-                    android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
-
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_ctime"
+            <RadioGroup
+                android:id="@+id/rgroupid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
-                <LinearLayout
+                <RadioButton
+                    android:id="@+id/radioM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="M" />
+
+                <RadioButton
+                    android:id="@+id/radioF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="F" />
+
+                <RadioButton
+                    android:id="@+id/radioB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:checked="true"
+                    android:text="B" />
+
+            </RadioGroup>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_cbplace"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_weight="1">
 
                     <EditText
-                        android:id="@+id/edtchildbtime"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/edtchildbplace"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:hint="Child Birth Time"
-                        android:inputType="date"
+                        android:layout_marginStart="10dip"
+                        android:hint="Child Birth Place"
                         android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
 
-                    <ImageView
-                        android:id="@+id/imgClock"
-                        android:layout_width="wrap_content"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_cmobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/edtcmobile"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/clock" />
-                </LinearLayout>
+                        android:layout_marginStart="10dip"
+                        android:hint="Child Mobile"
+                        android:inputType="phone"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
 
-            </android.support.design.widget.TextInputLayout>
-
-
-
-        </LinearLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_cmobile"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/edtcmobile"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_cedu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/edtcedu"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dip"
+                        android:hint="Child Education"
+                        android:inputType="textCapSentences"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+                <Spinner
+                    android:id="@+id/spinnerBlood"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dip"
-                    android:hint="Child Mobile"
-                    android:inputType="textCapSentences"
-                    android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_cedu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/edtcedu"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dip"
-                    android:hint="Child Education"
-                    android:inputType="textCapSentences"
-                    android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
+                    android:layout_weight="1"
+                    android:paddingTop="10dp"
+                    android:prompt="@string/spinner_blood" />
+            </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_cwork"

@@ -37,19 +37,24 @@
                 android:layout_height="wrap_content"
                 android:text="Father Name"
                 android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tvMobile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Mobile "
-                android:textSize="14sp" />
-
             <TextView
                 android:id="@+id/tvCity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="City: "
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tvMobile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mobile "
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvMail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mail "
                 android:textSize="14sp" />
 
         </LinearLayout>

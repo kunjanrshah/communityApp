@@ -79,7 +79,9 @@ public class Common {
     public static final int REQ_CODE_SPEECH_INPUT = 100;
     public static String Title = "";
     private static ProgressDialog pDialog;
-
+    public static String yyyy_MM_dd = "yyyy-MM-dd";
+    public static String dd_MMM_yyyy = "dd-MMM-yyyy";
+    public static String ddMMMyyyy = "dd/MM/yyyy";
    /* public static Bitmap scaleDown(Bitmap realImage, float maxImageSize, boolean filter) {
         float ratio = Math.min(maxImageSize / realImage.getWidth(), maxImageSize / realImage.getHeight());
         int width = Math.round(ratio * realImage.getWidth());
@@ -1732,16 +1734,16 @@ public class Common {
     }
 
 
+
     @Nullable
-    public static String parseDateToddMMyyyy(String time) {
-        String inputPattern = "yyyy-MM-dd";
-        String outputPattern = "dd-MMM-yyyy";
+    public static String parseDateToddMMyyyy(String mydate,String inputPattern,String outputPattern) {
+
         @SuppressLint("SimpleDateFormat") SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
         @SuppressLint("SimpleDateFormat") SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
 
         String str = null;
         try {
-            Date date = inputFormat.parse(time);
+            Date date = inputFormat.parse(mydate);
             str = outputFormat.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -1810,6 +1812,7 @@ public class Common {
         public static final String API_KEY_VALUE = "q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
         public static final String DEVICE_TYPE_VALUE = "Android";
         public static final String PREF_NAME = "Vastipatrak";
+        public static final String PREF_FILTER = "Vastipatrak_Filter";
         public static final String PREF_TOKEN = "Pref_Token";
         public static final String SCREEN = "screen";
         public static final String SEARCH_FRAGMENT = "SearchFragment";
@@ -1864,6 +1867,7 @@ public class Common {
         public static final String BIRTH_DATE = "birth_date";
         public static final String BIRTH_PLACE = "birth_place";
         public static final String BLOOD_GROUP = "blood_group";
+        public static final String CHILD_BLOOD_GROUP = "child_blood_group";
         public static final String PHONE = "phone";
         public static final String GENDER = "gender";
         public static final String CHILD_GENDER = "child_gender";
@@ -1875,6 +1879,7 @@ public class Common {
         public static final String SYNC_TIME = "sync_time";
         public static final String CITY = "city";
         public static final String TITLE_BLOOD_GROUP = "Blood Group";
+        public static final String TITLE_CHILD_BLOOD_GROUP = "Child BG";
         public static final String A_POSITIVE = "A +VE";
         public static final String A_NAGATIVE = "A -VE";
         public static final String B_POSITIVE = "B +VE";

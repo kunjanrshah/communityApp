@@ -63,7 +63,7 @@ public class AppController extends Application {
         firebaseAnalytics.setSessionTimeoutDuration(300000);*/
     }
 
-    private void initRealm() {
+    public void initRealm() {
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .name("vastipatrak.realm")

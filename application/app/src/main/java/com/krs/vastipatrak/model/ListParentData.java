@@ -18,6 +18,16 @@ public class ListParentData {
     private String user_lng;
     private String str_name;
 
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    private String mail;
+
     public String getMobile() {
         return mobile;
     }

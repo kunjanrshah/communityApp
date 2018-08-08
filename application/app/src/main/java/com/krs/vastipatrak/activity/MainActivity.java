@@ -754,10 +754,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                             try {
                                 mEditor.clear();
                                 mEditor.apply();
+                                mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_FILTER, MODE_PRIVATE);
+                                mEditor = mSharedPreferences.edit();
+                                mEditor.clear();
+                                mEditor.apply();
+
                                 AppController.getInstance().realm.beginTransaction();
                                 AppController.getInstance().realm.deleteAll();
                                 AppController.getInstance().realm.commitTransaction();
-                                AppController.getInstance().realm.close();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

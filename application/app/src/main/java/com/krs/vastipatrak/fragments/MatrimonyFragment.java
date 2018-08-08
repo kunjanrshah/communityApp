@@ -160,11 +160,11 @@ public class MatrimonyFragment extends Fragment {
         mSwipyRefreshLayout = rootView.findViewById(R.id.swipyrefreshlayout);
         mFloatingActionButton = rootView.findViewById(R.id.floating_action_button);
         tbtn_interest = rootView.findViewById(R.id.tbtn_interest);
-        tbtn_interest.setTextOn("I am Interested");
-        tbtn_interest.setTextOff("I am not Interested");
+        tbtn_interest.setTextOn(getResources().getString(R.string.i_am_interested));
+        tbtn_interest.setTextOff(getResources().getString(R.string.i_am_not_interested));
         tbtn_gender = rootView.findViewById(R.id.tbtn_gender);
-        tbtn_gender.setTextOff("Female");
-        tbtn_gender.setTextOn("Male");
+        tbtn_gender.setTextOff(getResources().getString(R.string.female));
+        tbtn_gender.setTextOn(getResources().getString(R.string.male));
         Button btnSearch = rootView.findViewById(R.id.btnSearch);
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override

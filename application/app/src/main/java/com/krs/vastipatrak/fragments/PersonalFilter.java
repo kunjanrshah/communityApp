@@ -42,6 +42,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
+import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
+import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
+import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
+
 public class PersonalFilter extends Fragment {
 
 
@@ -49,7 +53,7 @@ public class PersonalFilter extends Fragment {
     public Spinner spinnerBlood;
     public RadioButton rbtnM;
     public RadioButton rbtnF;
-    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtCity,edtbtime;
+    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtCity;
     public EditText edtbdateFrom,edtbdateTo;
     public String bdateFrom="",bdateTo="";
    // public String gender = "";
@@ -154,7 +158,7 @@ public class PersonalFilter extends Fragment {
                 final int DRAWABLE_RIGHT = 2;
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (edtbdateTo.getRight() - edtbdateTo.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if ((event.getRawX()-400) >= (edtbdateTo.getRight() - edtbdateTo.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         Calendar now = Calendar.getInstance();
                         DatePickerDialog dpd = DatePickerDialog.newInstance((DatePickerDialog.OnDateSetListener) getActivity(), now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
                         dpd.setThemeDark(true);
@@ -185,6 +189,7 @@ public class PersonalFilter extends Fragment {
                                         Toast.makeText(getActivity(), "Invalid date", Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (ParseException e) {
+                                    Toast.makeText(getActivity(), "Enter birthdate from", Toast.LENGTH_SHORT).show();
                                     e.printStackTrace();
                                 }
 
@@ -200,47 +205,7 @@ public class PersonalFilter extends Fragment {
                 return false;
             }
         });
-        edtbtime.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, @NonNull MotionEvent event) {
 
-                final int DRAWABLE_RIGHT = 2;
-
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (edtbtime.getRight() - edtbtime.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-
-                        Calendar now = Calendar.getInstance();
-                        TimePickerDialog tpd = TimePickerDialog.newInstance((TimePickerDialog.OnTimeSetListener) getContext(), now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), false);
-                        tpd.setThemeDark(true);
-                        tpd.vibrate(true);
-                        tpd.dismissOnPause(false);
-                        tpd.enableSeconds(false);
-                        tpd.setTitle("Birth Time");
-                        tpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialogInterface) {
-                                Log.d("TimePicker", "Dialog was cancelled");
-                            }
-                        });
-                        tpd.setOnTimeSetListener(new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                                String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
-                                String minuteString = minute < 10 ? "0" + minute : "" + minute;
-                                String time = hourString + ":" + minuteString;
-                                edtbtime.setText(time);
-
-                            }
-                        });
-                        tpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Timepickerdialog");
-
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-        });
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -289,7 +254,6 @@ public class PersonalFilter extends Fragment {
         rbtnB = rootView.findViewById(R.id.rbtnB);
         edtbdateFrom = rootView.findViewById(R.id.edtbdate_from);
         edtbdateTo = rootView.findViewById(R.id.edtbdate_to);
-        edtbtime = rootView.findViewById(R.id.edtbtime);
         edtFName = rootView.findViewById(R.id.edtFName);
         edtLName = rootView.findViewById(R.id.edtLName);
         edtFatherName = rootView.findViewById(R.id.edtFatherName);
@@ -307,7 +271,7 @@ public class PersonalFilter extends Fragment {
     }
 
     private void setPreferenceData() {
-        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_FILTER, Context.MODE_PRIVATE);
         String json = mSharedPreferences.getString("adv_search", "");
         JSONObject mjsonObject = null;
         try {
@@ -337,16 +301,15 @@ public class PersonalFilter extends Fragment {
             }
             if (mjsonObject.has(Common.Constant_Class.FROM_BIRTH_DATE)) {
                 String bdate = mjsonObject.getString(Common.Constant_Class.FROM_BIRTH_DATE);
+                bdate=Common.parseDateToddMMyyyy(bdate,yyyy_MM_dd,ddMMMyyyy);
                 edtbdateFrom.setText(bdate);
             }
             if (mjsonObject.has(Common.Constant_Class.TO_BIRTH_DATE)) {
                 String bdate = mjsonObject.getString(Common.Constant_Class.TO_BIRTH_DATE);
+                bdate=Common.parseDateToddMMyyyy(bdate,yyyy_MM_dd,ddMMMyyyy);
                 edtbdateTo.setText(bdate);
             }
-            if (mjsonObject.has(Common.Constant_Class.BIRTH_TIME)) {
-                String btime = mjsonObject.getString(Common.Constant_Class.BIRTH_TIME);
-                edtbtime.setText(btime);
-            }
+
             if (mjsonObject.has(Common.Constant_Class.FIRST_NAME)) {
                 String fname = mjsonObject.getString(Common.Constant_Class.FIRST_NAME);
                 edtFName.setText(fname);
@@ -406,7 +369,6 @@ public class PersonalFilter extends Fragment {
         dataAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, blood_cate);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerBlood.setAdapter(dataAdapter);
-
     }
 
 

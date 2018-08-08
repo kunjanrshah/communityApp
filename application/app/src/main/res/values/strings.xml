@@ -121,5 +121,9 @@ https://play.google.com/store/apps/details?id=com.king.candycrushsaga&hl=en
     <string name="every">Every</string>
     <string name="todo">TODO</string>
     <string name="search">Search</string>
+    <string name="i_am_interested">I am Interested</string>
+    <string name="i_am_not_interested">I am not Interested</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
 
 </resources>

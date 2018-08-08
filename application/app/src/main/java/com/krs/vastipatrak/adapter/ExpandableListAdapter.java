@@ -49,7 +49,6 @@ import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
-import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.RoundedCornersTransformation;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
@@ -63,10 +62,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import io.realm.RealmList;
-
+import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
 import static com.krs.vastipatrak.utils.Common.getChildRandomColor;
 import static com.krs.vastipatrak.utils.Common.getParentRandomColor;
+import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -170,6 +169,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String id = mListChildData.getID();
         String address = mListChildData.getAddress();
         String birth_date = mListChildData.getbirth_date();
+        birth_date=Common.parseDateToddMMyyyy(birth_date,yyyy_MM_dd,dd_MMM_yyyy);
         String birth_place = mListChildData.getBirth_place();
         String birth_time = mListChildData.getbirth_time();
         String blood_group = mListChildData.getBlood_Group();
@@ -427,6 +427,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.tvUpdatedTime = convertView.findViewById(R.id.tvUpdatedTime);
             groupViewHolder.txt_distance = convertView.findViewById(R.id.txt_distance);
             groupViewHolder.tvCity = convertView.findViewById(R.id.tvCity);
+            groupViewHolder.tvMail = convertView.findViewById(R.id.tvMail);
 
 
             if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
@@ -445,7 +446,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String FatherName = mListParentData.getFatherName();
         String Mobile = mListParentData.getMobile();
         String city = mListParentData.getCity();
-
+        String mail = mListParentData.getMail();
         // Rounded corners
         Glide.with(_context).load(imgURL).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).into(groupViewHolder.ivIcon);
 
@@ -453,6 +454,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         groupViewHolder.tvName.setText(Common.camelCase(Name));
         groupViewHolder.tvFatherName.setText(Common.camelCase(FatherName));
         groupViewHolder.tvMobile.setText("" + Mobile);
+        if (mail == null || mail.equalsIgnoreCase("null")) {
+            groupViewHolder.tvMail.setVisibility(View.GONE);
+        } else {
+            groupViewHolder.tvMail.setText("" + mail);
+        }
 
 
         groupViewHolder.tvMobile.setOnClickListener(new View.OnClickListener() {
@@ -667,6 +673,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView tvFatherName;
         TextView tvMobile;
         TextView tvCity;
+        TextView tvMail;
         TextView txt_distance;
         TextView tvUpdatedTime;
         CheckBox checkbox;

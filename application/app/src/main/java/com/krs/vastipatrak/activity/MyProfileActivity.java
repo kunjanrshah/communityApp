@@ -197,7 +197,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         });
 
         MenuItem saveItem = menu.findItem(R.id.action_save);
-        if (Objects.requireNonNull(mSharedPreferences).getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) { //|| mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)
+        if (Objects.requireNonNull(mSharedPreferences).getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
             saveItem.setVisible(true);
         } else {
             saveItem.setVisible(false);
@@ -517,7 +517,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                             }
                         } else {
                             try {
-
                                 JSONObject mData = new JSONObject(message);
                                 if (mData.has(mData.getString(Common.Constant_Class.EMAIL_ADDRESS))) {
                                     message = mData.getString(Common.Constant_Class.EMAIL_ADDRESS);
@@ -526,6 +525,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                                 }
                                 Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
                             } catch (Exception e) {
+                                Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
                         }
@@ -577,11 +577,11 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
-                    Common.hideProgressDialog();
+
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
-                        Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                             for (int i = 0; i < mJsonArray.length(); i++) {
@@ -590,7 +590,10 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                             }
                             setupViewPager(viewPager);
                             tabLayout.setupWithViewPager(viewPager);
+                        } else {
+                            Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
+                        Common.hideProgressDialog();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

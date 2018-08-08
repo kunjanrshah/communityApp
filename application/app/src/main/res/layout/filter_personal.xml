@@ -61,7 +61,6 @@
                     android:id="@+id/edtFatherName"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-
                     android:hint="@string/hint_father_name"
                     android:inputType="textCapSentences"
                     android:nextFocusDown="@+id/edtMotherName"
@@ -79,7 +78,6 @@
                     android:id="@+id/edtMotherName"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-
                     android:hint="@string/hint_mother_name"
                     android:inputType="textCapSentences"
                     android:nextFocusDown="@+id/edtbdate_from"
@@ -95,7 +93,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -166,21 +163,20 @@
             android:baselineAligned="false"
             android:orientation="horizontal">
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_btime"
+                android:id="@+id/input_layout_native_place"
                 android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
                 <EditText
-                    android:id="@+id/edtbtime"
-                    android:layout_width="match_parent"
+                    android:id="@+id/edtNPlace"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:drawableEnd="@drawable/clock"
-                    android:hint="@string/hint_birth_time"
-                    android:inputType="time"
+                    android:layout_marginEnd="10dip"
+                    android:hint="@string/hint_native_place"
+                    android:inputType="textCapSentences"
+                    android:nextFocusDown="@+id/edtEducation"
                     android:singleLine="true" />
-
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -210,22 +206,7 @@
                 android:baselineAligned="false"
                 android:orientation="horizontal">
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/input_layout_native_place"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
 
-                    <EditText
-                        android:id="@+id/edtNPlace"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dip"
-                        android:hint="@string/hint_native_place"
-                        android:inputType="textCapSentences"
-                        android:nextFocusDown="@+id/edtEducation"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/input_layout_education"

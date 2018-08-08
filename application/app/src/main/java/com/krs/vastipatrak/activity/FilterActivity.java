@@ -42,6 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_CHILD_BLOOD_GROUP;
+
 public class FilterActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener {
 
@@ -78,7 +80,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         viewPager = findViewById(R.id.viewpager);
         toolbar = findViewById(R.id.toolbar);
         tabLayout = findViewById(R.id.tabs);
-        SharedPreferences mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_FILTER, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
     }
@@ -170,7 +172,6 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String strphone = ((PersonalFilter) personal).edt_phone.getText().toString().trim();
                 String strbdateFrom = ((PersonalFilter) personal).bdateFrom.trim();
                 String strbdateTo = ((PersonalFilter) personal).bdateTo.trim();
-                String strbtime = ((PersonalFilter) personal).edtbtime.getText().toString().trim();
 
                 String strEaddress = ((PersonalFilter) personal).edt_Eaddress.getText().toString().trim();
                 String strCity = ((PersonalFilter) personal).edtCity.getText().toString().trim();
@@ -203,12 +204,6 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     }
                 }
 
-                if (!strbtime.equalsIgnoreCase("")) {
-                    if (Common.IsValidate(strbtime)) {
-                        valid = "Birth Time From is not valid 24 Hours";
-                    }
-                    lstProceed.add("BirthTime: " + strbtime);
-                }
                 if (!strFName.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.FIRST_NAME, strFName);
                     lstProceed.add("FirstName: " + strFName);
@@ -239,10 +234,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     mJsonObject.put(Common.Constant_Class.BIRTH_PLACE, strBPlace);
                     lstProceed.add("BirthPalace: " + strBPlace);
                 }
-                if (!strbtime.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.BIRTH_TIME, strbtime);
-                    lstProceed.add("BirthTime: " + strbtime);
-                }
+
                 if (!strMobile.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.MOBILE, strMobile);
                     lstProceed.add("Mobile: " + strMobile);
@@ -335,14 +327,13 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String childBdateFrom = ((FamilyFilter) family).from_cdate.trim();
                 String childBdateTo = ((FamilyFilter) family).to_cdate.trim();
                 String childMobile = ((FamilyFilter) family).edtcmobile.getText().toString().trim();
-                String childBtime = ((FamilyFilter) family).edtchildbtime.getText().toString().trim();
                 String childBplace = ((FamilyFilter) family).edtchildbplace.getText().toString().trim();
+                String bgroup = ((FamilyFilter) family).spinnerBlood.getSelectedItem().toString().trim();
                 String childGender = ((FamilyFilter) family).gender;
 
-
-                if (!childBtime.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.CHILD_BTIME, childBtime);
-                    lstProceed.add("Child BitrhTime: " + childBtime);
+                if (!bgroup.equalsIgnoreCase("") && !bgroup.equalsIgnoreCase(TITLE_CHILD_BLOOD_GROUP)) {
+                    mJsonObject.put(Common.Constant_Class.CHILD_BLOOD_GROUP, bgroup);
+                    lstProceed.add("Child BloodGroup: " + bgroup);
                 }
 
                 if (!childBplace.equalsIgnoreCase("")) {
@@ -431,16 +422,14 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                // TODO Auto-generated method stub
-                Toast.makeText(FilterActivity.this, "OnCancelListener", Toast.LENGTH_LONG).show();
+
             }
         });
 
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                // TODO Auto-generated method stub
-                Toast.makeText(FilterActivity.this, "OnDismissListener", Toast.LENGTH_LONG).show();
+
             }
         });
 

@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textOn="I am Interested"
+            android:textOn="@string/i_am_interested"
             android:checked="true" />
 
         <ToggleButton
@@ -58,8 +58,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textOn="Male"
-            android:checked="true" />
+            android:textOn="@string/male"
+            android:textOff="@string/female"
+            android:checked="false" />
 
         <Button
             android:id="@+id/btnSearch"
