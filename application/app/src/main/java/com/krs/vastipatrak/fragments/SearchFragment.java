@@ -282,6 +282,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         int page1 = Integer.parseInt(input_page.getText().toString());
                         if (page1 > 0 && page1 <= page_count) {
                             page = page1;
+                            dialog.dismiss();
+
                             OnlineSearch(search, search_url);
                         } else {
                             Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();

@@ -55,7 +55,7 @@ public class PersonalFilter extends Fragment {
     public RadioButton rbtnF;
     public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtCity;
     public EditText edtbdateFrom,edtbdateTo;
-    public String bdateFrom="",bdateTo="";
+    //public String bdateFrom="",bdateTo="";
    // public String gender = "";
     //private ObservableScrollView scroll_pdetails;
     ArrayAdapter<String> dataAdapter;
@@ -138,9 +138,9 @@ public class PersonalFilter extends Fragment {
                                 String date = str_day + "/" + str_month + "/" + year;
                                 edtbdateFrom.setText(date);
                                 edtbdateTo.setText(date);
-                                date= year+ "-" + str_month + "-" + str_day;
-                                bdateFrom=date;
-                                bdateTo=date;
+                              //  date= year+ "-" + str_month + "-" + str_day;
+                               // bdateFrom=date;
+                               // bdateTo=date;
                             }
                         });
                         dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
@@ -183,8 +183,8 @@ public class PersonalFilter extends Fragment {
                                 try {
                                     if (Common.CompareTwoDates(edtbdateFrom.getText().toString(), date)) {
                                         edtbdateTo.setText(date);
-                                        date= year + "-" + str_month + "-" +str_day;
-                                        bdateTo=date;
+                                        //date= year + "-" + str_month + "-" +str_day;
+                                      //  bdateTo=date;
                                     } else {
                                         Toast.makeText(getActivity(), "Invalid date", Toast.LENGTH_SHORT).show();
                                     }
@@ -221,7 +221,7 @@ public class PersonalFilter extends Fragment {
             public boolean onTouch(View v, @NonNull MotionEvent event) {
                 final int DRAWABLE_RIGHT = 2;
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (edtMobile.getRight() - edtMobile.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if ((event.getRawX()-500) >= (edtMobile.getRight() - edtMobile.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         if (Build.VERSION.SDK_INT >= 23) {
                             if (Common.canReadContacts(Objects.requireNonNull(getActivity()))) {
                                 Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
@@ -301,11 +301,13 @@ public class PersonalFilter extends Fragment {
             }
             if (mjsonObject.has(Common.Constant_Class.FROM_BIRTH_DATE)) {
                 String bdate = mjsonObject.getString(Common.Constant_Class.FROM_BIRTH_DATE);
+              //  bdateFrom=bdate;
                 bdate=Common.parseDateToddMMyyyy(bdate,yyyy_MM_dd,ddMMMyyyy);
                 edtbdateFrom.setText(bdate);
             }
             if (mjsonObject.has(Common.Constant_Class.TO_BIRTH_DATE)) {
                 String bdate = mjsonObject.getString(Common.Constant_Class.TO_BIRTH_DATE);
+               // bdateTo=bdate;
                 bdate=Common.parseDateToddMMyyyy(bdate,yyyy_MM_dd,ddMMMyyyy);
                 edtbdateTo.setText(bdate);
             }

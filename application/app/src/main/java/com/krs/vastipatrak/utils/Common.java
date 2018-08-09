@@ -1741,7 +1741,7 @@ public class Common {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
         @SuppressLint("SimpleDateFormat") SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
 
-        String str = null;
+        String str = "";
         try {
             Date date = inputFormat.parse(mydate);
             str = outputFormat.format(date);

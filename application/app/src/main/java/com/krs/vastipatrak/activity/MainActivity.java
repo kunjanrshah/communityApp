@@ -73,7 +73,6 @@ import com.krs.vastipatrak.fragments.ChangePasswordFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.HomeFragment;
 import com.krs.vastipatrak.fragments.MatrimonyFragment;
-import com.krs.vastipatrak.fragments.RelativeFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
 import com.krs.vastipatrak.interfaces.IAdminControl;
 import com.krs.vastipatrak.utils.Common;
@@ -374,7 +373,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                searchFragment=new SearchFragment();
+                searchFragment = new SearchFragment();
                 IAdminControl = (IAdminControl) searchFragment;
                 ((SearchFragment) searchFragment).setmContext(MainActivity.this);
                 mBundle.putString(Common.Constant_Class.QUERY, query);
@@ -749,28 +748,28 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-                       // if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                        // if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
 
-                            try {
-                                mEditor.clear();
-                                mEditor.apply();
-                                mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_FILTER, MODE_PRIVATE);
-                                mEditor = mSharedPreferences.edit();
-                                mEditor.clear();
-                                mEditor.apply();
+                        try {
+                            mEditor.clear();
+                            mEditor.apply();
+                            mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_FILTER, MODE_PRIVATE);
+                            mEditor = mSharedPreferences.edit();
+                            mEditor.clear();
+                            mEditor.apply();
 
-                                AppController.getInstance().realm.beginTransaction();
-                                AppController.getInstance().realm.deleteAll();
-                                AppController.getInstance().realm.commitTransaction();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
-                            mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(mIntent);
-                            finish();
-                            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-                       // }
+                            AppController.getInstance().realm.beginTransaction();
+                            AppController.getInstance().realm.deleteAll();
+                            AppController.getInstance().realm.commitTransaction();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mIntent);
+                        finish();
+                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                        // }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -958,12 +957,15 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             if (change_role != null && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
                 change_role.setVisible(true);
             }
+            if (deleteItem != null) {
+                deleteItem.setVisible(true);
+            }
         } else {
             export.setVisible(false);
-            change_role.setVisible(false);
-            deactiveItem.setVisible(false);
-            deleteItem.setVisible(false);
             activeItem.setVisible(false);
+            deactiveItem.setVisible(false);
+            change_role.setVisible(true);
+            deleteItem.setVisible(true);
         }
     }
 }

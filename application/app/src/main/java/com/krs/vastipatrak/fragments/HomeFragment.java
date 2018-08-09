@@ -159,9 +159,10 @@ public class HomeFragment extends Fragment {
                         int page1 = Integer.parseInt(input_page.getText().toString());
                         if (page1 > 0 && page1 <= page_count) {
                             page = page1;
+                            dialog.dismiss();
                             getEvents();
                         } else {
-                            Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "invalid number", Toast.LENGTH_SHORT).show();
                         }
 
                     }

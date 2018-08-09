@@ -251,7 +251,7 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/ic_ror"
+                android:background="@drawable/whatsapp"
                 android:padding="10dp"
                 android:contentDescription="TODO"
                 android:textSize="16sp" />

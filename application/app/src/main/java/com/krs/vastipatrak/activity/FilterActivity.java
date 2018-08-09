@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_CHILD_BLOOD_GROUP;
+import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
+import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
 public class FilterActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener {
@@ -170,8 +172,10 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String strMobile = ((PersonalFilter) personal).edtMobile.getText().toString().trim();
                 String strAddress = ((PersonalFilter) personal).edtAddress.getText().toString().trim();
                 String strphone = ((PersonalFilter) personal).edt_phone.getText().toString().trim();
-                String strbdateFrom = ((PersonalFilter) personal).bdateFrom.trim();
-                String strbdateTo = ((PersonalFilter) personal).bdateTo.trim();
+                String strbdateFrom = ((PersonalFilter) personal).edtbdateFrom.getText().toString().trim();
+                strbdateFrom=Common.parseDateToddMMyyyy(strbdateFrom,ddMMMyyyy,yyyy_MM_dd);
+                String strbdateTo = ((PersonalFilter) personal).edtbdateTo.getText().toString().trim();
+                strbdateTo=Common.parseDateToddMMyyyy(strbdateTo,ddMMMyyyy,yyyy_MM_dd);
 
                 String strEaddress = ((PersonalFilter) personal).edt_Eaddress.getText().toString().trim();
                 String strCity = ((PersonalFilter) personal).edtCity.getText().toString().trim();
@@ -316,16 +320,24 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
             if (((FamilyFilter) family).edtSpouseName != null) {
 
-                String strmdate_from = ((FamilyFilter) family).from_mdate.trim();
-                String strmdate_to = ((FamilyFilter) family).to_mdate.trim();
+                String strmdate_from = ((FamilyFilter) family).edt_mdate_from.getText().toString().trim();
+                strmdate_from=Common.parseDateToddMMyyyy(strmdate_from,ddMMMyyyy,yyyy_MM_dd);
+
+                String strmdate_to = ((FamilyFilter) family).edt_mdate_to.getText().toString().trim();
+                strmdate_to=Common.parseDateToddMMyyyy(strmdate_to,ddMMMyyyy,yyyy_MM_dd);
+
+                String childBdateFrom = ((FamilyFilter) family).edt_cdate_from.getText().toString().trim();
+                childBdateFrom=Common.parseDateToddMMyyyy(childBdateFrom,ddMMMyyyy,yyyy_MM_dd);
+
+                String childBdateTo = ((FamilyFilter) family).edt_cdate_to.getText().toString().trim();
+                childBdateTo=Common.parseDateToddMMyyyy(childBdateTo,ddMMMyyyy,yyyy_MM_dd);
+
                 String strSpouseName = ((FamilyFilter) family).edtSpouseName.getText().toString().trim();
                 String strSpouseFName = ((FamilyFilter) family).edtSpouseFName.getText().toString().trim();
                 String strSpouseMName = ((FamilyFilter) family).edtSpouseMName.getText().toString().trim();
                 String strchild_name = ((FamilyFilter) family).edtchild_name.getText().toString().trim();
                 String strcedu = ((FamilyFilter) family).edtcedu.getText().toString().trim();
                 String strchild_work = ((FamilyFilter) family).edtchild_work.getText().toString().trim();
-                String childBdateFrom = ((FamilyFilter) family).from_cdate.trim();
-                String childBdateTo = ((FamilyFilter) family).to_cdate.trim();
                 String childMobile = ((FamilyFilter) family).edtcmobile.getText().toString().trim();
                 String childBplace = ((FamilyFilter) family).edtchildbplace.getText().toString().trim();
                 String bgroup = ((FamilyFilter) family).spinnerBlood.getSelectedItem().toString().trim();
