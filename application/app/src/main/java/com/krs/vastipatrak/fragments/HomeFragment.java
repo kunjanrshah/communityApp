@@ -216,8 +216,10 @@ public class HomeFragment extends Fragment {
                     Log.d(TAG, response.toString());
 
                     try {
+                        mSwipyRefreshLayout.setRefreshing(false);
                         String total_records = "0";
                         boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
+                        String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (response.has(Common.Constant_Class.TOTAL_RECORDS)) {
                             total_records = response.getString(Common.Constant_Class.TOTAL_RECORDS);
                         }
@@ -270,9 +272,10 @@ public class HomeFragment extends Fragment {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                            setEventAdapter();
                         }
-                        setEventAdapter();
                         Common.hideProgressDialog();
+                        Toast.makeText(getActivity(),""+message+" page"+page,Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -196,17 +196,12 @@ public class PersonalFilter extends Fragment {
                             }
                         });
                         dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
-
-
                         return true;
                     }
                 }
-
                 return false;
             }
         });
-
-
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -214,7 +209,6 @@ public class PersonalFilter extends Fragment {
                 ((FilterActivity) Objects.requireNonNull(getActivity())).callAdvanceSearchWS();
             }
         });
-
 
         edtMobile.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -238,8 +232,6 @@ public class PersonalFilter extends Fragment {
                 return false;
             }
         });
-
-
         return rootView;
     }
 
@@ -372,6 +364,7 @@ public class PersonalFilter extends Fragment {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerBlood.setAdapter(dataAdapter);
     }
+
 
 
     @Override
