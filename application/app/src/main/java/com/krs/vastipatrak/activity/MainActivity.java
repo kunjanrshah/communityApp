@@ -217,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         } else {
             displayView(-1);
         }
+        Log.d(TAG,"MainActivity123");
     }
 
 

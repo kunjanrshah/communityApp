@@ -13,8 +13,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_margin="5dp"
             android:orientation="vertical">
 
 
@@ -81,36 +80,6 @@
                     android:inputType="textCapSentences"
                     android:nextFocusDown="@+id/edtbdate_from"
                     android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_city"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/edtCity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_city"
-                    android:inputType="textCapSentences"
-                    android:nextFocusDown="@+id/input_layout_address" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <EditText
-                    android:id="@+id/edtAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_address"
-                    android:inputType="textCapSentences"
-                    android:lines="2"
-                    android:nextFocusDown="@+id/input_layout_bdate_from" />
             </android.support.design.widget.TextInputLayout>
 
 
@@ -255,7 +224,6 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:baselineAligned="false"
                 android:orientation="horizontal">
 
                 <android.support.design.widget.TextInputLayout
@@ -266,9 +234,8 @@
 
                     <EditText
                         android:id="@+id/edt_phone"
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:hint="@string/hint_land_line"
                         android:inputType="phone"
                         android:nextFocusDown="@+id/input_layout_mobile"
@@ -295,45 +262,39 @@
             </LinearLayout>
 
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/input_layout_gotra"
+                <EditText
+                    android:id="@+id/edtAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:hint="@string/hint_address"
+                    android:inputType="textCapSentences"
+                    android:lines="2"
+                    android:nextFocusDown="@+id/input_layout_bdate_from" />
+            </android.support.design.widget.TextInputLayout>
 
-                    <EditText
-                        android:id="@+id/edtGotra"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dip"
-                        android:hint="@string/hint_gotra"
-                        android:inputType="textCapSentences"
-                        android:nextFocusDown="@+id/spinnerBlood"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-
-                <Spinner
-                    android:id="@+id/spinnerBlood"
-                    android:layout_width="fill_parent"
+                <EditText
+                    android:id="@+id/edtCity"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dip"
-                    android:layout_weight="1"
-                    android:paddingTop="10dp"
-                    android:prompt="@string/spinner_blood" />
-
-            </LinearLayout>
+                    android:hint="@string/hint_city"
+                    android:inputType="textCapSentences"
+                    android:nextFocusDown="@+id/input_layout_address" />
+            </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_Eaddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
 
                 <EditText
                     android:id="@+id/edt_Eaddress"
@@ -348,10 +309,10 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dip"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
-
 
                 <RadioButton
                     android:id="@+id/rbtnM"
@@ -376,6 +337,51 @@
                     android:text="Both " />
 
             </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal"
+                android:paddingTop="10dp">
+
+                <!--<android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_gotra"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/edtGotra"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dip"
+                        android:hint="@string/hint_gotra"
+                        android:inputType="textCapSentences"
+                        android:nextFocusDown="@+id/spinnerBlood"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>-->
+
+                <Spinner
+                    android:id="@+id/spinnerGotra"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dip"
+                    android:layout_weight="1"
+                    android:prompt="@string/spinner_gotra" />
+
+                <Spinner
+                    android:id="@+id/spinnerBlood"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dip"
+                    android:layout_weight="1"
+                    android:prompt="@string/spinner_blood" />
+
+            </LinearLayout>
+
+
         </LinearLayout>
     </com.melnykov.fab.ObservableScrollView>
 

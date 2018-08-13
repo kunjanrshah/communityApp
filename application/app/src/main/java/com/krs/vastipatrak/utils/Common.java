@@ -16,11 +16,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
@@ -46,11 +47,16 @@ import com.krs.vastipatrak.model.MatrimonyProfileData;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -61,6 +67,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import PiyushBase64.Base64;
 import io.realm.Realm;
@@ -78,10 +87,10 @@ public class Common {
 
     public static final int REQ_CODE_SPEECH_INPUT = 100;
     public static String Title = "";
-    private static ProgressDialog pDialog;
     public static String yyyy_MM_dd = "yyyy-MM-dd";
     public static String dd_MMM_yyyy = "dd-MMM-yyyy";
     public static String ddMMMyyyy = "dd/MM/yyyy";
+    private static ProgressDialog pDialog;
    /* public static Bitmap scaleDown(Bitmap realImage, float maxImageSize, boolean filter) {
         float ratio = Math.min(maxImageSize / realImage.getWidth(), maxImageSize / realImage.getHeight());
         int width = Math.round(ratio * realImage.getWidth());
@@ -149,7 +158,60 @@ public class Common {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
     }
 
-    public static float getDistance(@NonNull Activity mActivity, double lat, double lon) {
+    private static String getDistanceOnRoad(double latitude, double longitude, double prelatitute, double prelongitude) {
+        String result_in_kms = "";
+        String strurl = "http://maps.google.com/maps/api/directions/xml?origin=" + latitude + "," + longitude + "&destination=" + prelatitute + "," + prelongitude + "&sensor=false&units=metric";
+        String tag[] = {"text"};
+        //  HttpResponse response = null;
+        HttpURLConnection urlConnection = null;
+
+        try {
+            URL url = new URL(strurl);
+            // Create the request to OpenWeatherMap, and open the connection
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            // Read the input stream into a String
+            InputStream is = urlConnection.getInputStream();
+
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document doc = builder.parse(is);
+            if (doc != null) {
+                NodeList nl;
+                ArrayList args = new ArrayList();
+                for (String s : tag) {
+                    nl = doc.getElementsByTagName(s);
+                    if (nl.getLength() > 0) {
+                        Node node = nl.item(nl.getLength() - 1);
+                        args.add(node.getTextContent());
+                    } else {
+                        args.add(" - ");
+                    }
+                }
+                result_in_kms = String.format("%s", args.get(0));
+                Log.d("getDistanceOnRoad", "step result_in_kms :" + result_in_kms);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result_in_kms;
+    }
+
+    public static boolean CheckGpsStatus(Context mcontext) {
+        LocationManager locationManager;
+        boolean GpsStatus;
+
+        locationManager = (LocationManager) mcontext.getSystemService(Context.LOCATION_SERVICE);
+
+        GpsStatus = Objects.requireNonNull(locationManager).isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        return !GpsStatus;
+
+    }
+
+
+    /*ublic static float getDistance(@NonNull Activity mActivity, double lat, double lon) {
 
         double curr_lat, curr_lng;
         float rvalue = -1.0f;
@@ -158,6 +220,7 @@ public class Common {
                 if (MainActivity.lat != null && MainActivity.lon != null) {
                     curr_lat = Double.parseDouble(MainActivity.lat);
                     curr_lng = Double.parseDouble(MainActivity.lon);
+                    Log.d("Common","step curr_lat: "+curr_lat +"curr_lng: "+curr_lng);
                     Location loc1 = new Location("");
                     loc1.setLatitude(curr_lat);
                     loc1.setLongitude(curr_lng);
@@ -183,24 +246,33 @@ public class Common {
             e.printStackTrace();
         }
         return rvalue;
-       /* if (gpsTracker.IsGetLocation()) {
+       *//* if (gpsTracker.IsGetLocation()) {
             curr_lat = gpsTracker.getLatitude();
             curr_lng = gpsTracker.getLongitude();
-        }*/
+        }*//*
 
     }
 
-    public static boolean CheckGpsStatus(Context mcontext) {
-        LocationManager locationManager;
-        boolean GpsStatus;
-
-        locationManager = (LocationManager) mcontext.getSystemService(Context.LOCATION_SERVICE);
-
-        GpsStatus = Objects.requireNonNull(locationManager).isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-        return !GpsStatus;
-
+    public static double distance(double lat1, double lon1, double lat2, double lon2) {
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1))
+                * Math.sin(deg2rad(lat2))
+                + Math.cos(deg2rad(lat1))
+                * Math.cos(deg2rad(lat2))
+                * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+        return (dist);
     }
+
+    private static double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private static double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
+    }*/
 
     public static void showDirections(@NonNull Activity mActivity, double latitude, double longitude, String address) {
 
@@ -330,6 +402,19 @@ public class Common {
         return cursor.getInt(0);
     }
 
+    public static void promptSpeechInput(Activity mActivity) {
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say Something!");
+        try {
+            mActivity.startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(mActivity, "Sorry! Your device doesn\\'t support speech input", Toast.LENGTH_SHORT).show();
+        }
+    }
+
   /*  public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
@@ -360,19 +445,6 @@ public class Common {
     public static Bitmap getPhoto(@NonNull byte[] image) {
         return BitmapFactory.decodeByteArray(image, 100, image.length);
     }*/
-
-    public static void promptSpeechInput(Activity mActivity) {
-
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say Something!");
-        try {
-            mActivity.startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
-        } catch (ActivityNotFoundException a) {
-            Toast.makeText(mActivity, "Sorry! Your device doesn\\'t support speech input", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     public static String camelCase(@Nullable String stringToConvert) {
         if (stringToConvert == null || TextUtils.isEmpty(stringToConvert)) return "";
@@ -888,7 +960,7 @@ public class Common {
                 }
             });
 
-        return mListProfileData;
+            return mListProfileData;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1313,7 +1385,6 @@ public class Common {
         return "";
     }
 
-
     public static Date StringToDate(String dtStart) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -1323,7 +1394,6 @@ public class Common {
         }
         return null;
     }
-
 
     public static String ChangedateFormat(String strDate) {
         //String mStringDate = "25-Nov-15 14:23:34";
@@ -1396,9 +1466,6 @@ public class Common {
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
-    /*public static void ExportMatrimonyData(@NonNull Activity mActiviy) {
-
-    }*/
 
     public static void ExportSearchData(@NonNull Activity mActiviy) {
 
@@ -1527,6 +1594,9 @@ public class Common {
             alert(mActiviy, "No Search records found!");
         }
     }
+    /*public static void ExportMatrimonyData(@NonNull Activity mActiviy) {
+
+    }*/
 
     private static void ExportAlert(@NonNull final Activity mActivity, @NonNull final File file) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
@@ -1558,7 +1628,6 @@ public class Common {
             }
         }).show();
     }
-
 
     public static void alert(@NonNull Activity mActivity, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
@@ -1604,7 +1673,6 @@ public class Common {
         }
     }
 
-
     public static void getChildRandomColor(@NonNull Context context, int position, LinearLayout ll_event) {
         int i = position % 10;
         Log.v("color number:", "" + i);
@@ -1646,7 +1714,6 @@ public class Common {
         }
 
     }
-
 
     public static void getParentRandomColor(@NonNull Context context, int position, LinearLayout ll_event) {
         int i = position % 10;
@@ -1690,7 +1757,6 @@ public class Common {
 
     }
 
-
     public static void getRandomColor(@NonNull Context context, int position, LinearLayout ll_event) {
         int i = position % 10;
         Log.v("color number:", "" + i);
@@ -1733,10 +1799,8 @@ public class Common {
 
     }
 
-
-
     @Nullable
-    public static String parseDateToddMMyyyy(String mydate,String inputPattern,String outputPattern) {
+    public static String parseDateToddMMyyyy(String mydate, String inputPattern, String outputPattern) {
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
         @SuppressLint("SimpleDateFormat") SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
@@ -1783,6 +1847,25 @@ public class Common {
         return false;
     }
 
+    public static class getDistance extends AsyncTask<Double, String, String> {
+        TextView txtDistance;
+
+        public getDistance(TextView txtDistance) {
+            this.txtDistance = txtDistance;
+        }
+
+        @Override
+        protected String doInBackground(Double... strings) {
+            String result_in_kms = getDistanceOnRoad(strings[0], strings[1], strings[2], strings[3]);
+            return result_in_kms;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            txtDistance.setText("Approx "+s);
+        }
+    }
 
     public static class Constant_Class {
 
@@ -1879,6 +1962,7 @@ public class Common {
         public static final String SYNC_TIME = "sync_time";
         public static final String CITY = "city";
         public static final String TITLE_BLOOD_GROUP = "Blood Group";
+        public static final String TITLE_GOTRA = "Gotra";
         public static final String TITLE_CHILD_BLOOD_GROUP = "Child BG";
         public static final String A_POSITIVE = "A +VE";
         public static final String A_NAGATIVE = "A -VE";
@@ -1946,6 +2030,7 @@ public class Common {
         public static final String EVENTS_URL = BASE_URL + "/API/getEvents";
         public static final String GET_CITIES_URL = BASE_URL + "/API/getCities";
         public static final String CHANGE_ROLE_URL = BASE_URL + "/API/changeRole";
+        public static final String GET_GOTRA_URL = BASE_URL + "/API/getGotra";
         public static final String BLOCK_USERS_URL = BASE_URL + "/API/blockUsers";
         public static String DEVICE_ID_VALUE = "";
     }

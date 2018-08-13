@@ -158,7 +158,7 @@ public class BusinessFragment extends Fragment implements Serializable {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
 
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            alert("Home location updated!");
+                            alert("Office location updated!");
                         } else {
                             alert("Something went wrong!");
                         }
@@ -251,12 +251,14 @@ public class BusinessFragment extends Fragment implements Serializable {
         }
         if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             if (office_lat != 0 && office_lng != 0) {
-                int distance = (int) Common.getDistance(mActivity, office_lat, office_lng);
+                new Common.getDistance(txt_office).execute(office_lat, office_lng,Double.parseDouble(MainActivity.lat),Double.parseDouble(MainActivity.lon));
+
+               /* int distance = (int) Common.getDistance(mActivity, office_lat, office_lng);
                 if (distance == -1) {
                     txt_office.setText(R.string.enable_location);
                 } else {
-                    txt_office.setText("" + (distance / 1000) + getString(R.string.km));
-                }
+                    txt_office.setText("Approx " + (distance + 3) + getString(R.string.km)); //distance / 1000
+                }*/
             } else {
                 txt_office.setText(R.string.no_set_location);
             }

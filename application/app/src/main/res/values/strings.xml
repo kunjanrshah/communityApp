@@ -92,11 +92,11 @@
     <string name="title_relatives">Relatives</string>
     <string name="title_sync">Sync</string>
     <string name="spinner_blood">Select BloodGroup</string>
-
+    <string name="spinner_gotra">Select Gotra</string>
     <string name="start">Start</string>
 
-    <string name="home_location">ARE YOU AT YOUR HOME ? </string>
-    <string name="office_location">ARE YOU AT YOUR OFFICE ? </string>
+    <string name="home_location">Are you at your home ?\nMobile will set this location for your home.</string>
+    <string name="office_location">Are you at your office ?\nMobile will set this location for your office.</string>
 
     <string name="player_error">Error initializing YouTube player: %s</string>
 

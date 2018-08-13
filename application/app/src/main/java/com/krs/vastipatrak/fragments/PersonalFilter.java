@@ -26,20 +26,30 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.FilterActivity;
+import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
 import com.melnykov.fab.FloatingActionButton;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
@@ -50,11 +60,12 @@ public class PersonalFilter extends Fragment {
 
 
     private static final int CONTACT_PICKER_RESULT = 1001;
-    public Spinner spinnerBlood;
+    public Spinner spinnerBlood,spinnerGotra;
     public RadioButton rbtnM;
     public RadioButton rbtnF;
-    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtCity;
+    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtCity;
     public EditText edtbdateFrom,edtbdateTo;
+    private SharedPreferences mSharedPreferences;
     //public String bdateFrom="",bdateTo="";
    // public String gender = "";
     //private ObservableScrollView scroll_pdetails;
@@ -79,7 +90,6 @@ public class PersonalFilter extends Fragment {
                 if (isChecked) {
                     rbtnF.setChecked(false);
                     rbtnB.setChecked(false);
-                //    gender = "1";
                 }
             }
         });
@@ -91,7 +101,6 @@ public class PersonalFilter extends Fragment {
                 if (isChecked) {
                     rbtnM.setChecked(false);
                     rbtnB.setChecked(false);
-                  //  gender = "0";
                 }
             }
         });
@@ -103,7 +112,6 @@ public class PersonalFilter extends Fragment {
                 if (isChecked) {
                     rbtnM.setChecked(false);
                     rbtnF.setChecked(false);
-                //    gender = "";
                 }
             }
         });
@@ -232,13 +240,69 @@ public class PersonalFilter extends Fragment {
                 return false;
             }
         });
+        getGotraWS();
         return rootView;
+    }
+
+    private void getGotraWS() {
+        if (Common.isOnline(getActivity())) {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, Common.Constant_Class.GET_GOTRA_URL, null, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    try {
+                        String success = response.getString(Common.Constant_Class.SUCCESS);
+                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                            JSONArray mJsonArray = response.getJSONArray("data");
+                            List<String> lstgotra = new ArrayList<>();
+
+                            for (int i = 0; i < mJsonArray.length(); i++) {
+                                lstgotra.add(mJsonArray.getString(i));
+                            }
+                            Collections.sort(lstgotra);
+                            lstgotra.add(0,Common.Constant_Class.TITLE_GOTRA);
+                            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, lstgotra);
+                            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinnerGotra.setAdapter(dataAdapter);
+
+
+                        } else {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d("PersonalFilter", "Error: " + error.getMessage());
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
+        }
     }
 
     private void MemoryAllocation(@NonNull View rootView) {
 
        // gender = "";
         //  scroll_pdetails = rootView.findViewById(R.id.scroll_pdetails);
+        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         floatingActionButton = rootView.findViewById(R.id.fab_psave);
         spinnerBlood = rootView.findViewById(R.id.spinnerBlood);
         rbtnM = rootView.findViewById(R.id.rbtnM);
@@ -254,7 +318,7 @@ public class PersonalFilter extends Fragment {
         edtBPlace = rootView.findViewById(R.id.edtBPlace);
         edtNPlace = rootView.findViewById(R.id.edtNPlace);
         edtCity = rootView.findViewById(R.id.edtCity);
-        edtGotra = rootView.findViewById(R.id.edtGotra);
+        spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
         edtMobile = rootView.findViewById(R.id.edtMobile);
         edtAddress = rootView.findViewById(R.id.edtAddress);
         edt_Eaddress = rootView.findViewById(R.id.edt_Eaddress);
@@ -331,7 +395,7 @@ public class PersonalFilter extends Fragment {
                 edtCity.setText(mjsonObject.getString(Common.Constant_Class.CITY));
             }
             if (mjsonObject.has(Common.Constant_Class.GOTRA)) {
-                edtGotra.setText(mjsonObject.getString(Common.Constant_Class.GOTRA));
+               // edtGotra.setText(mjsonObject.getString(Common.Constant_Class.GOTRA));
             }
             if (mjsonObject.has(Common.Constant_Class.MOBILE)) {
                 edtMobile.setText(mjsonObject.getString(Common.Constant_Class.MOBILE));

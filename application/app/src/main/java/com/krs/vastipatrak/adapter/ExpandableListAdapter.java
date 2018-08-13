@@ -514,7 +514,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 
         if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
-            groupViewHolder.txt_distance.setText("" + Common.getDistance((Activity) _context, Double.parseDouble(user_lat), Double.parseDouble(user_lng)) + " Km");
+           // groupViewHolder.txt_distance.setText("" + Common.getDistance((Activity) _context, Double.parseDouble(user_lat), Double.parseDouble(user_lng)) + " Km");
             groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
             if (mListParentData.isIs_location_enable()) {
                 groupViewHolder.txt_distance.setTextColor(_context.getResources().getColor(R.color.colorPrimary));

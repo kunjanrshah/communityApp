@@ -174,7 +174,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String strEducation = ((PersonalFilter) personal).edtEducation.getText().toString().trim();
                 String strBPlace = ((PersonalFilter) personal).edtBPlace.getText().toString().trim();
                 String strNPlace = ((PersonalFilter) personal).edtNPlace.getText().toString().trim();
-                String strGotra = ((PersonalFilter) personal).edtGotra.getText().toString().trim();
+               // String strGotra = ((PersonalFilter) personal).edtGotra.getText().toString().trim();
                 String strMobile = ((PersonalFilter) personal).edtMobile.getText().toString().trim();
                 String strAddress = ((PersonalFilter) personal).edtAddress.getText().toString().trim();
                 String strphone = ((PersonalFilter) personal).edt_phone.getText().toString().trim();
@@ -253,10 +253,10 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     mJsonObject.put(Common.Constant_Class.PHONE, strphone);
                     lstProceed.add("Phone: " + strphone);
                 }
-                if (!strGotra.equalsIgnoreCase("")) {
+                /*if (!strGotra.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.GOTRA, strGotra);
                     lstProceed.add("Gotra: " + strGotra);
-                }
+                }*/
                 if (!strNPlace.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.NATIVE_PLACE, strNPlace);
                     lstProceed.add("Native Place: " + strNPlace);

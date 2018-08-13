@@ -50,29 +50,30 @@ import com.krs.vastipatrak.utils.Common;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-import io.realm.RealmList;
-
 
 public class PersonalFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
 
     private final String TAG = "PersonalFragment";
-    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtGotra, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbTime = null, edtCity = null;
-    private EditText edtbdate = null;
-    public String bdate="";
+    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbTime = null, edtCity = null;
+    public String bdate = "";
     public String str_profile_hash = "", str_father_hash = "", str_mother_hash = "";
     public String gender = "";
-    public Spinner spinnerBlood;
+    public Spinner spinnerBlood, spinnerGotra;
+    private EditText edtbdate = null;
     private ToggleButton tbtn_share;
     private RadioButton rbtnM;
     private RadioButton rbtnF;
@@ -268,7 +269,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                     str_day = "0" + str_day;
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
-                                bdate=year + "-" + str_month + "-" + str_day;
+                                bdate = year + "-" + str_month + "-" + str_day;
                                 edtbdate.setText(date);
                             }
                         });
@@ -394,9 +395,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             EnableAll();
+            getGotraWS();
         } else {
             if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {
                 DisableAll();
+            } else {
+                getGotraWS();
             }
         }
 
@@ -464,7 +468,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtEducation = rootView.findViewById(R.id.edtEducation);
         edtBPlace = rootView.findViewById(R.id.edtBPlace);
         edtNPlace = rootView.findViewById(R.id.edtNPlace);
-        edtGotra = rootView.findViewById(R.id.edtGotra);
         edtMobile = rootView.findViewById(R.id.edtMobile);
         edt_Eaddress = rootView.findViewById(R.id.edt_Eaddress);
         edtCity = rootView.findViewById(R.id.edt_City);
@@ -480,6 +483,10 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         rbtnM = rootView.findViewById(R.id.rbtnM);
         rbtnM.setChecked(true);
         rbtnF = rootView.findViewById(R.id.rbtnF);
+
+        spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
+        spinnerGotra.setOnItemSelectedListener(this);
+
 
         spinnerBlood = rootView.findViewById(R.id.spinnerBlood);
         spinnerBlood.setOnItemSelectedListener(this);
@@ -507,7 +514,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtEducation.setEnabled(true);
         edtBPlace.setEnabled(true);
         edtNPlace.setEnabled(true);
-        edtGotra.setEnabled(true);
+        spinnerGotra.setEnabled(true);
         edtCity.setEnabled(true);
         edt_Eaddress.setEnabled(true);
         edtMobile.setEnabled(true);
@@ -544,9 +551,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtNPlace.setKeyListener(null);
         edtNPlace.setCursorVisible(false);
 
-        edtGotra.setKeyListener(null);
-        edtGotra.setCursorVisible(false);
-
         edtMobile.setKeyListener(null);
         edtMobile.setCursorVisible(false);
 
@@ -574,12 +578,14 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         rbtnF.setKeyListener(null);
 
         spinnerBlood.setEnabled(false);
+        spinnerGotra.setEnabled(false);
     }
+
 
     @SuppressLint("SetTextI18n")
     private void setOfflineData(ListProfileData mListProfileData) {
 
-        if (mListProfileData!=null) {
+        if (mListProfileData != null) {
             String name = mListProfileData.getFirst_name() + " " + mListProfileData.getLast_name();
             Objects.requireNonNull(edtFName).setText(mListProfileData.getFirst_name());
             Objects.requireNonNull(edtLName).setText(mListProfileData.getLast_name());
@@ -595,7 +601,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             Objects.requireNonNull(edtMobile).setText(mListProfileData.getMobile());
             Objects.requireNonNull(edt_phone).setText(mListProfileData.getPhone());
             Objects.requireNonNull(edtCity).setText(mListProfileData.getCity());
-            Objects.requireNonNull(edtGotra).setText(mListProfileData.getGotra());
+            // Objects.requireNonNull(edtGotra).setText(mListProfileData.getGotra());
             Objects.requireNonNull(edtNPlace).setText(mListProfileData.getNative_place());
             Objects.requireNonNull(edtEducation).setText(mListProfileData.getEducation());
             Objects.requireNonNull(edt_Eaddress).setText(mListProfileData.getEmail_address());
@@ -648,7 +654,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 mEditor.putString(Common.Constant_Class.LAST_NAME, mListProfileData.getLast_name());
                 mEditor.apply();
 
-               // tbtn_share.setVisibility(View.VISIBLE);
+                // tbtn_share.setVisibility(View.VISIBLE);
                 tbtn_share.setText(null);
                 tbtn_share.setTextOn(null);
                 tbtn_share.setTextOff(null);
@@ -670,12 +676,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                 Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(mActivity)).getSupportActionBar()).setSubtitle(name + " Profile");
                 if (home_lat != 0 && home_lng != 0) {
-                    int distance = (int) Common.getDistance(mActivity, home_lat, home_lng);
-                    if (distance == -1) {
-                        txt_home.setText("Need to enable location");
-                    } else {
-                        txt_home.setText("" + (distance / 1000) + " Km");
-                    }
+                    Log.d(TAG, "step home_lat: " + home_lat + "home_lng: " + home_lng);
+                    new Common.getDistance(txt_home).execute(home_lat, home_lng, Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+
                 } else {
                     txt_home.setText("User has not set location");
                 }
@@ -752,6 +755,115 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         }
     }
+
+    private void getGotraWS() {
+        if (Common.isOnline(mActivity)) {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, Common.Constant_Class.GET_GOTRA_URL, null, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    try {
+                        String success = response.getString(Common.Constant_Class.SUCCESS);
+                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                            JSONArray mJsonArray = response.getJSONArray("data");
+                            List<String> lstgotra = new ArrayList<>();
+
+                            for (int i = 0; i < mJsonArray.length(); i++) {
+                                lstgotra.add(mJsonArray.getString(i));
+                            }
+                            Collections.sort(lstgotra);
+                            lstgotra.add(0,Common.Constant_Class.TITLE_GOTRA);
+                            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, lstgotra);
+                            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinnerGotra.setAdapter(dataAdapter);
+
+
+                        } else {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
+        }
+    }
+
+
+   /* private void getDistanceOnRoad(double latitude, double longitude,
+                                     double prelatitute, double prelongitude) {
+        String result_in_kms = "";
+        String url = "http://maps.google.com/maps/api/directions/xml?origin="
+                + latitude + "," + longitude + "&destination=" + prelatitute
+                + "," + prelongitude + "&sensor=false&units=metric";
+       final String tag[] = { "text" };
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(@NonNull JSONObject response) {
+                try
+                {
+                    //  String str = json.getJSONObject("data").toString();
+                    InputStream is = new ByteArrayInputStream(response.toString().getBytes());
+                    //  InputStream is = response.getEntity().getContent();
+                    DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                    Document doc = builder.parse(is);
+                    if (doc != null) {
+                        NodeList nl;
+                        ArrayList args = new ArrayList();
+                        for (String s : tag) {
+                            nl = doc.getElementsByTagName(s);
+                            if (nl.getLength() > 0) {
+                                Node node = nl.item(nl.getLength() - 1);
+                                args.add(node.getTextContent());
+                            } else {
+                                args.add(" - ");
+                            }
+                        }
+                     String   result_in_kms = String.format("%s", args.get(0));
+                    }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(@NonNull VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+            }
+        });
+
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
+    }*/
+
 
     private void alert(String message) {
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);

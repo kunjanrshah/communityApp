@@ -217,7 +217,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 String Education = Objects.requireNonNull(((PersonalFragment) personal).edtEducation).getText().toString().trim();
                 String BPlace = Objects.requireNonNull(((PersonalFragment) personal).edtBPlace).getText().toString().trim();
                 String NPlace = Objects.requireNonNull(((PersonalFragment) personal).edtNPlace).getText().toString().trim();
-                String Gotra = Objects.requireNonNull(((PersonalFragment) personal).edtGotra).getText().toString().trim();
+                //String Gotra = Objects.requireNonNull(((PersonalFragment) personal).edtGotra).getText().toString().trim();
                 String Mobile = Objects.requireNonNull(((PersonalFragment) personal).edtMobile).getText().toString().trim();
                 String Address = Objects.requireNonNull(((PersonalFragment) personal).edtAddress).getText().toString().trim();
                 String Eaddress = Objects.requireNonNull(((PersonalFragment) personal).edt_Eaddress).getText().toString().trim();
@@ -289,7 +289,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mListProfileData.setEducation(Education);
                     mListProfileData.setBirth_place(BPlace);
                     mListProfileData.setNative_place(NPlace);
-                    mListProfileData.setGotra(Gotra);
+                   // mListProfileData.setGotra(Gotra);
                     mListProfileData.setMobile(Mobile);
                     mListProfileData.setAddress(Address);
                     mListProfileData.setEmail_address(Eaddress);
