@@ -1863,7 +1863,7 @@ public class Common {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            txtDistance.setText("Approx "+s);
+            txtDistance.setText(""+s);
         }
     }
 

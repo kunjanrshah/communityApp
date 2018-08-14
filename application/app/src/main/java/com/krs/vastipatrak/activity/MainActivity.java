@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -78,10 +79,13 @@ import com.krs.vastipatrak.interfaces.IAdminControl;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -137,6 +141,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private IAdminControl IAdminControl;
     private MenuItem export;
     private MenuItem change_role;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,9 +223,64 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         } else {
             displayView(-1);
         }
-        Log.d(TAG,"MainActivity123");
+
+
+            getGotraWS();
+
     }
 
+
+    private void getGotraWS() {
+        if (Common.isOnline(this)) {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, Common.Constant_Class.GET_GOTRA_URL, null, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    try {
+                        String success = response.getString(Common.Constant_Class.SUCCESS);
+                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                            JSONArray mJsonArray = response.getJSONArray("data");
+                            AppController.getInstance().lstgotra = new ArrayList<>();
+
+                            for (int i = 0; i < mJsonArray.length(); i++) {
+                                AppController.getInstance().lstgotra.add(mJsonArray.getString(i));
+                            }
+                            Collections.sort(AppController.getInstance().lstgotra);
+                            AppController.getInstance().lstgotra.add(0, Common.Constant_Class.TITLE_GOTRA);
+                            AppController.getInstance().dataAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, AppController.getInstance().lstgotra);
+                            AppController.getInstance().dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                        } else {
+                            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
+        }
+    }
 
     private void displayLocationSettingsRequest(@NonNull Context context) {
         if (this.googleApiClient == null) {
@@ -537,11 +598,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         Bundle mBundle = new Bundle();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragment = searchFragment;
+        IAdminControl = (IAdminControl) fragment;
 
         switch (menu) {
             case 1:
-                fragment = searchFragment;
-                IAdminControl = (IAdminControl) fragment;
                 try {
                     if (fragment != null) {
                         ((SearchFragment) fragment).callNonActivesWS();

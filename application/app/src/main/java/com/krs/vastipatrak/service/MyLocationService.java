@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -128,11 +129,20 @@ public class MyLocationService extends Service {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         //  String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            if (isUpdate.equals("1")) {
-                                Toast.makeText(MyLocationService.this, "Vastipatrak is sharing your location!", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(MyLocationService.this, "Stop Sharing location successfully!", Toast.LENGTH_SHORT).show();
-                            }
+                            Handler mHandler=new Handler();
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (isUpdate.equals("1")) {
+                                        Log.d(TAG,"step yes");
+                                        Toast.makeText(MyLocationService.this, "Vastipatrak is sharing your location!", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Log.d(TAG,"step no");
+                                        Toast.makeText(MyLocationService.this, "Stop Sharing location successfully!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
+
                             //String data = response.getString(Common.Constant_Class.DATA);
 
                         }

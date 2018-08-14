@@ -50,12 +50,10 @@ import com.krs.vastipatrak.utils.Common;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -89,10 +87,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private boolean toggle = true;
     private double home_lat;
     private double home_lng;
-    /* private double user_lat;
-     private double user_lng;*/
+    private boolean iscall = true;
+    private TextView txt_distance;
+     private double user_lat;
+     private double user_lng;
     private Activity mActivity;
-    List<String> lstgotra;
+
     public PersonalFragment() {
 
     }
@@ -112,7 +112,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         mActivity = getActivity();
 
         MemoryAllocation(rootView);
-
 
 
         img_profile.setOnClickListener(new View.OnClickListener() {
@@ -332,67 +331,68 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                 android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
                 builder.setTitle(mActivity.getString(R.string.app_name));
-                if (Common.isOnline(mActivity)) {
-                    if (toggle) {
-                        if (isChecked) {
-                            String message = "Do you want to Share your Location ?";
-                            builder.setMessage(message);
-                            builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                                public void onClick(@NonNull DialogInterface dialog, int which) {
-                                    mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, true);
-                                    mEditor.apply();
-                                    mActivity.startService(new Intent(mActivity, MyLocationService.class));
-                                    toggle = true;
-                                    dialog.dismiss();
-                                }
-                            });
-                            builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(@NonNull DialogInterface dialog, int which) {
-                                    toggle = false;
-                                    tbtn_share.setChecked(false);
-                                    dialog.dismiss();
-                                }
-                            }).show();
+                if (iscall) {
+                    if (Common.isOnline(mActivity)) {
+                        if (toggle) {
+                            if (isChecked) {
+                                String message = "Do you want to Share your Location ?";
+                                builder.setMessage(message);
+                                builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                                    public void onClick(@NonNull DialogInterface dialog, int which) {
+                                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, true);
+                                        mEditor.apply();
+                                        mActivity.startService(new Intent(mActivity, MyLocationService.class));
+                                        toggle = true;
+                                        dialog.dismiss();
+                                    }
+                                });
+                                builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(@NonNull DialogInterface dialog, int which) {
+                                        toggle = false;
+                                        tbtn_share.setChecked(false);
+                                        dialog.dismiss();
+                                    }
+                                }).show();
+                            } else {
+                                String message = "Do you want to Stop sharing your Location ?";
+                                builder.setMessage(message);
+                                builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                                    public void onClick(@NonNull DialogInterface dialog, int which) {
+                                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, false);
+                                        mEditor.apply();
+                                        mActivity.stopService(new Intent(mActivity, MyLocationService.class));
+                                        toggle = true;
+                                        dialog.dismiss();
+                                    }
+                                });
+                                builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(@NonNull DialogInterface dialog, int which) {
+                                        toggle = false;
+                                        tbtn_share.setChecked(true);
+                                        dialog.dismiss();
+                                    }
+                                }).show();
+                            }
                         } else {
-                            String message = "Do you want to Stop sharing your Location ?";
-                            builder.setMessage(message);
-                            builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                                public void onClick(@NonNull DialogInterface dialog, int which) {
-                                    mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, false);
-                                    mEditor.apply();
-                                    mActivity.stopService(new Intent(mActivity, MyLocationService.class));
-                                    toggle = true;
-                                    dialog.dismiss();
-                                }
-                            });
-                            builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(@NonNull DialogInterface dialog, int which) {
-                                    toggle = false;
-                                    tbtn_share.setChecked(true);
-                                    dialog.dismiss();
-                                }
-                            }).show();
+                            toggle = true;
                         }
                     } else {
-                        toggle = true;
+                        Toast.makeText(mActivity, Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+                        tbtn_share.setChecked(!isChecked);
                     }
                 } else {
-                    Toast.makeText(mActivity, Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
-                    tbtn_share.setChecked(!isChecked);
+                    iscall = true;
                 }
             }
         });
 
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             EnableAll();
-            getGotraWS();
         } else {
             if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {
                 DisableAll();
-            } else {
-                getGotraWS();
             }
         }
 
@@ -480,6 +480,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         img_father = rootView.findViewById(R.id.img_father);
         img_mother = rootView.findViewById(R.id.img_mother);
         tbtn_share = rootView.findViewById(R.id.tbtn_share);
+        txt_distance = rootView.findViewById(R.id.txt_distance);
 
         rbtnM = rootView.findViewById(R.id.rbtnM);
         rbtnM.setChecked(true);
@@ -487,7 +488,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
         spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
         spinnerGotra.setOnItemSelectedListener(this);
-
+        spinnerGotra.setAdapter(AppController.getInstance().dataAdapter);
 
         spinnerBlood = rootView.findViewById(R.id.spinnerBlood);
         spinnerBlood.setOnItemSelectedListener(this);
@@ -602,10 +603,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             Objects.requireNonNull(edtMobile).setText(mListProfileData.getMobile());
             Objects.requireNonNull(edt_phone).setText(mListProfileData.getPhone());
             Objects.requireNonNull(edtCity).setText(mListProfileData.getCity());
-            String gotra=mListProfileData.getGotra();
-            if(lstgotra!=null)
-            {
-                int i= lstgotra.indexOf(gotra);
+            String gotra = mListProfileData.getGotra();
+            if (AppController.getInstance().lstgotra != null) {
+                int i = AppController.getInstance().lstgotra.indexOf(gotra);
                 spinnerGotra.setSelection(i);
             }
 
@@ -640,12 +640,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 gender = "Female";
             }
 
-          /*  if (!mListProfileData.getUser_lat().equalsIgnoreCase("null") && !mListProfileData.getUser_lat().equalsIgnoreCase("")) {
+            if (!mListProfileData.getUser_lat().equalsIgnoreCase("null") && !mListProfileData.getUser_lat().equalsIgnoreCase("")) {
                 user_lat = Double.parseDouble(mListProfileData.getUser_lat());
             }
             if (!mListProfileData.getUser_lng().equalsIgnoreCase("null") && !mListProfileData.getUser_lng().equalsIgnoreCase("")) {
                 user_lng = Double.parseDouble(mListProfileData.getUser_lng());
-            }*/
+            }
             if (!mListProfileData.getHome_lat().equalsIgnoreCase("null") && !mListProfileData.getHome_lat().equalsIgnoreCase("")) {
                 home_lat = Double.parseDouble(mListProfileData.getHome_lat());
             }
@@ -661,14 +661,14 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 mEditor.putString(Common.Constant_Class.FIRST_NAME, mListProfileData.getFirst_name());
                 mEditor.putString(Common.Constant_Class.LAST_NAME, mListProfileData.getLast_name());
                 mEditor.apply();
-
-                // tbtn_share.setVisibility(View.VISIBLE);
+                txt_distance.setVisibility(View.GONE);
+                tbtn_share.setVisibility(View.VISIBLE);
                 tbtn_share.setText(null);
                 tbtn_share.setTextOn(null);
                 tbtn_share.setTextOff(null);
+                iscall = false;
                 boolean bool = mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false);
                 tbtn_share.setChecked(bool);
-
 
                /* AppController.getInstance().firebaseAnalytics.setUserProperty("Name", edtFName.getText().toString());
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Father Name", edtFatherName.getText().toString());
@@ -686,11 +686,14 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 if (home_lat != 0 && home_lng != 0) {
                     Log.d(TAG, "step home_lat: " + home_lat + "home_lng: " + home_lng);
                     new Common.getDistance(txt_home).execute(home_lat, home_lng, Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
-
                 } else {
                     txt_home.setText("User has not set location");
                 }
                 tbtn_share.setVisibility(View.GONE);
+                txt_distance.setVisibility(View.VISIBLE);
+                if (user_lat != 0 && user_lng != 0) {
+                    new Common.getDistance(txt_distance).execute(user_lat, user_lng, Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+                }
             }
 
             profile_url = mListProfileData.getProfile_pic_url();
@@ -764,59 +767,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
-    private void getGotraWS() {
-        if (Common.isOnline(mActivity)) {
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, Common.Constant_Class.GET_GOTRA_URL, null, new Response.Listener<JSONObject>() {
 
-                @Override
-                public void onResponse(@NonNull JSONObject response) {
-                    try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            JSONArray mJsonArray = response.getJSONArray("data");
-                           lstgotra = new ArrayList<>();
-
-                            for (int i = 0; i < mJsonArray.length(); i++) {
-                                lstgotra.add(mJsonArray.getString(i));
-                            }
-                            Collections.sort(lstgotra);
-                            lstgotra.add(0,Common.Constant_Class.TITLE_GOTRA);
-                            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, lstgotra);
-                            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spinnerGotra.setAdapter(dataAdapter);
-
-
-                        } else {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(@NonNull VolleyError error) {
-                    VolleyLog.d(TAG, "Error: " + error.getMessage());
-                }
-            }) {
-                @NonNull
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
-                    return params;
-                }
-            };
-
-            // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
-        }
-    }
 
 
    /* private void getDistanceOnRoad(double latitude, double longitude,

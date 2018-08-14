@@ -240,63 +240,9 @@ public class PersonalFilter extends Fragment {
                 return false;
             }
         });
-        getGotraWS();
         return rootView;
     }
 
-    private void getGotraWS() {
-        if (Common.isOnline(getActivity())) {
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, Common.Constant_Class.GET_GOTRA_URL, null, new Response.Listener<JSONObject>() {
-
-                @Override
-                public void onResponse(@NonNull JSONObject response) {
-                    try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            JSONArray mJsonArray = response.getJSONArray("data");
-                            List<String> lstgotra = new ArrayList<>();
-
-                            for (int i = 0; i < mJsonArray.length(); i++) {
-                                lstgotra.add(mJsonArray.getString(i));
-                            }
-                            Collections.sort(lstgotra);
-                            lstgotra.add(0,Common.Constant_Class.TITLE_GOTRA);
-                            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, lstgotra);
-                            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spinnerGotra.setAdapter(dataAdapter);
-
-
-                        } else {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(@NonNull VolleyError error) {
-                    VolleyLog.d("PersonalFilter", "Error: " + error.getMessage());
-                }
-            }) {
-                @NonNull
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
-                    return params;
-                }
-            };
-
-            // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
-        }
-    }
 
     private void MemoryAllocation(@NonNull View rootView) {
 
@@ -305,6 +251,8 @@ public class PersonalFilter extends Fragment {
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         floatingActionButton = rootView.findViewById(R.id.fab_psave);
         spinnerBlood = rootView.findViewById(R.id.spinnerBlood);
+        spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
+        spinnerGotra.setAdapter(AppController.getInstance().dataAdapter);
         rbtnM = rootView.findViewById(R.id.rbtnM);
         rbtnF = rootView.findViewById(R.id.rbtnF);
         rbtnB = rootView.findViewById(R.id.rbtnB);
@@ -318,7 +266,7 @@ public class PersonalFilter extends Fragment {
         edtBPlace = rootView.findViewById(R.id.edtBPlace);
         edtNPlace = rootView.findViewById(R.id.edtNPlace);
         edtCity = rootView.findViewById(R.id.edtCity);
-        spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
+
         edtMobile = rootView.findViewById(R.id.edtMobile);
         edtAddress = rootView.findViewById(R.id.edtAddress);
         edt_Eaddress = rootView.findViewById(R.id.edt_Eaddress);
@@ -395,7 +343,11 @@ public class PersonalFilter extends Fragment {
                 edtCity.setText(mjsonObject.getString(Common.Constant_Class.CITY));
             }
             if (mjsonObject.has(Common.Constant_Class.GOTRA)) {
-               // edtGotra.setText(mjsonObject.getString(Common.Constant_Class.GOTRA));
+                 String gotra=mjsonObject.getString(Common.Constant_Class.GOTRA);
+                if (AppController.getInstance().lstgotra != null) {
+                    int i = AppController.getInstance().lstgotra.indexOf(gotra);
+                    spinnerGotra.setSelection(i);
+                }
             }
             if (mjsonObject.has(Common.Constant_Class.MOBILE)) {
                 edtMobile.setText(mjsonObject.getString(Common.Constant_Class.MOBILE));

@@ -6,12 +6,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
+import android.widget.ArrayAdapter;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 import com.krs.vastipatrak.model.ListProfileData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -30,8 +34,8 @@ public class AppController extends Application {
     @Nullable
     public RealmResults<ListProfileData> mListSearchList = null;
     private RequestQueue mRequestQueue;
-
-
+    public ArrayAdapter<String> dataAdapter;
+    public List<String> lstgotra;
     public static synchronized AppController getInstance() {
         return mInstance;
     }
@@ -93,5 +97,7 @@ public class AppController extends Application {
         req.setTag(TAG);
         getRequestQueue().add(req);
     }
+
+
 
 }
