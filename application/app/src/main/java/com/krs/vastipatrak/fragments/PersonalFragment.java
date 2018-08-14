@@ -55,7 +55,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -93,7 +92,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     /* private double user_lat;
      private double user_lng;*/
     private Activity mActivity;
-
+    List<String> lstgotra;
     public PersonalFragment() {
 
     }
@@ -114,14 +113,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
         MemoryAllocation(rootView);
 
-        try {
-            ListProfileData mListProfileData = ((MyProfileActivity) mActivity).getMyData();
-            if (mListProfileData != null) {
-                setOfflineData(mListProfileData);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
         img_profile.setOnClickListener(new View.OnClickListener() {
 
@@ -404,6 +396,15 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             }
         }
 
+        try {
+            ListProfileData mListProfileData = ((MyProfileActivity) mActivity).getMyData();
+            if (mListProfileData != null) {
+                setOfflineData(mListProfileData);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return rootView;
     }
 
@@ -601,6 +602,13 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             Objects.requireNonNull(edtMobile).setText(mListProfileData.getMobile());
             Objects.requireNonNull(edt_phone).setText(mListProfileData.getPhone());
             Objects.requireNonNull(edtCity).setText(mListProfileData.getCity());
+            String gotra=mListProfileData.getGotra();
+            if(lstgotra!=null)
+            {
+                int i= lstgotra.indexOf(gotra);
+                spinnerGotra.setSelection(i);
+            }
+
             // Objects.requireNonNull(edtGotra).setText(mListProfileData.getGotra());
             Objects.requireNonNull(edtNPlace).setText(mListProfileData.getNative_place());
             Objects.requireNonNull(edtEducation).setText(mListProfileData.getEducation());
@@ -767,7 +775,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             JSONArray mJsonArray = response.getJSONArray("data");
-                            List<String> lstgotra = new ArrayList<>();
+                           lstgotra = new ArrayList<>();
 
                             for (int i = 0; i < mJsonArray.length(); i++) {
                                 lstgotra.add(mJsonArray.getString(i));
