@@ -21,15 +21,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -51,7 +50,6 @@ import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.RoundedCornersTransformation;
-import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -153,11 +151,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             childViewHolder.txt_mother = convertView.findViewById(R.id.txt_mother);
             childViewHolder.txt_phone = convertView.findViewById(R.id.txt_phone);
 
-            childViewHolder.imgSync = convertView.findViewById(R.id.imgSync);
+            childViewHolder.tbtn_share = convertView.findViewById(R.id.tbtn_share);
             childViewHolder.imgNudge = convertView.findViewById(R.id.imgNudge);
-            childViewHolder.imgROR = convertView.findViewById(R.id.imgROR);
-            childViewHolder.img_home_loc = convertView.findViewById(R.id.img_home_loc);
-            childViewHolder.img_user_loc = convertView.findViewById(R.id.img_user_loc);
             childViewHolder.img_details = convertView.findViewById(R.id.img_details);
 
             convertView.setTag(childViewHolder);
@@ -169,21 +164,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String id = mListChildData.getID();
         String address = mListChildData.getAddress();
         String birth_date = mListChildData.getbirth_date();
-        birth_date=Common.parseDateToddMMyyyy(birth_date,yyyy_MM_dd,dd_MMM_yyyy);
+        birth_date = Common.parseDateToddMMyyyy(birth_date, yyyy_MM_dd, dd_MMM_yyyy);
         String birth_place = mListChildData.getBirth_place();
         String birth_time = mListChildData.getbirth_time();
         String blood_group = mListChildData.getBlood_Group();
         String gender = mListChildData.getGender();
         String gotra = mListChildData.getGotra();
         String Mother = mListChildData.getMother_name();
+        final String profile_id = mListChildData.getProfile_id();
         final String mobile = mListChildData.getMobile().trim().replaceAll("\\?", "").replaceAll("\\+", "");
         String str_native = mListChildData.getNative();
         String phone = mListChildData.getPhone().trim().replaceAll("\\?", "").replaceAll("\\+", "");
-        final String home_lat = mListChildData.getHome_lat();
-        final String home_lng = mListChildData.getHome_lng();
-        final String user_lat = mListChildData.getUser_lat();
-        final String user_lng = mListChildData.getUser_lng();
-        final String name = mListChildData.getName();
 
         childViewHolder.txt_phone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,6 +200,31 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
             }
         });
+
+        childViewHolder.tbtn_share.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    userLocationShareWS(profile_id, "1");
+                } else {
+                    userLocationShareWS(profile_id, "0");
+                }
+            }
+        });
+
+        childViewHolder.tbtn_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+        boolean bool = mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false);
+        if (bool) {
+            childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
+        } else {
+            childViewHolder.tbtn_share.setVisibility(View.GONE);
+        }
 
         childViewHolder.txt_address.setText(Common.camelCase(address));
         childViewHolder.txt_native.setText(Common.camelCase(str_native));
@@ -242,40 +258,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        if (home_lat != null && home_lng != null && !home_lat.isEmpty() && !home_lng.isEmpty() && !home_lat.equalsIgnoreCase("null") && !home_lng.equalsIgnoreCase("null")) {
-            childViewHolder.img_home_loc.setVisibility(View.VISIBLE);
-        } else {
-            childViewHolder.img_home_loc.setVisibility(View.GONE);
-        }
-
-        if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
-            childViewHolder.img_user_loc.setVisibility(View.VISIBLE);
-        } else {
-            childViewHolder.img_user_loc.setVisibility(View.GONE);
-        }
-
-        childViewHolder.imgROR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                final Dialog relation_dialog = new Dialog(_context);
-                relation_dialog.setTitle("Request of relation");
-                relation_dialog.setContentView(R.layout.custom_relation_dialog);
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(_context, android.R.layout.simple_dropdown_item_1line, SPINNERLIST);
-                MaterialBetterSpinner relation_spinner = relation_dialog.findViewById(R.id.relation_spinner);
-                relation_spinner.setAdapter(arrayAdapter);
-                Button btnSend = relation_dialog.findViewById(R.id.btnSend);
-                btnSend.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(_context, "Request Sent Successfully!", Toast.LENGTH_SHORT).show();
-                        relation_dialog.cancel();
-                    }
-                });
-                relation_dialog.show();
-            }
-        });
-
         childViewHolder.imgNudge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -287,87 +269,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                     public void onClick(@NonNull DialogInterface dialog, int which) {
                         Common.SendWhatsappMessage(_context, mobile, _context.getResources().getString(R.string.nice_html));
-                        dialog.dismiss();
-                    }
-                });
-                builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-            }
-        });
-
-
-        childViewHolder.imgSync.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String message = "Do you want to Sync ?";
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(_context, R.style.AppCompatAlertDialogStyle);
-                builder.setTitle(_context.getString(R.string.app_name));
-
-                builder.setMessage(message);
-                builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                        SyncUser(id);
-                        dialog.dismiss();
-                    }
-                });
-                builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-            }
-        });
-
-        childViewHolder.img_user_loc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(_context, R.style.AppCompatAlertDialogStyle);
-                builder.setTitle(_context.getString(R.string.app_name));
-
-                builder.setMessage("Do you want to navigate " + name + " location ?");
-                builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                        if (MainActivity.lat != null && MainActivity.lon != null) {
-                            Common.showDirections((Activity) _context, Double.parseDouble(user_lat), Double.parseDouble(user_lng), "");
-                            Toast.makeText(_context, "distance between you and " + name, Toast.LENGTH_LONG).show();
-                        }
-                        dialog.dismiss();
-                    }
-                });
-                builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-
-            }
-        });
-
-        childViewHolder.img_home_loc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(_context, R.style.AppCompatAlertDialogStyle);
-                builder.setTitle(_context.getString(R.string.app_name));
-
-                builder.setMessage("Do you want to navigate " + name + " home location ?");
-                builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                        if (MainActivity.lat != null && MainActivity.lon != null) {
-                            Common.showDirections((Activity) _context, Double.parseDouble(home_lat), Double.parseDouble(home_lng), "");
-                            Toast.makeText(_context, "distance between your home and " + name + " home", Toast.LENGTH_SHORT).show();
-                        }
                         dialog.dismiss();
                     }
                 });
@@ -447,6 +348,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String Mobile = mListParentData.getMobile();
         String city = mListParentData.getCity();
         String mail = mListParentData.getMail();
+        String is_block = mListParentData.getIs_block();
+
         // Rounded corners
         Glide.with(_context).load(imgURL).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).into(groupViewHolder.ivIcon);
 
@@ -512,18 +415,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String user_lat = mListParentData.getUser_lat();
         final String user_lng = mListParentData.getUser_lng();
 
-
-        if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
-           // groupViewHolder.txt_distance.setText("" + Common.getDistance((Activity) _context, Double.parseDouble(user_lat), Double.parseDouble(user_lng)) + " Km");
+        if (is_block.equalsIgnoreCase("1") && mListParentData.isIs_location_enable()) {
             groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
-            if (mListParentData.isIs_location_enable()) {
-                groupViewHolder.txt_distance.setTextColor(_context.getResources().getColor(R.color.colorPrimary));
-            } else {
-                groupViewHolder.txt_distance.setTextColor(_context.getResources().getColor(R.color.navigationBarColor));
+            if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
+                new Common.getDistance(groupViewHolder.txt_distance).execute(Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
             }
         } else {
             groupViewHolder.txt_distance.setVisibility(View.GONE);
         }
+
 
         if (mListParentData.getStatus() != null && mListParentData.getStatus().equalsIgnoreCase("0")) {
             groupViewHolder.imgShare.setVisibility(View.GONE);
@@ -549,6 +449,63 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         });
         return convertView;
     }
+
+    private void userLocationShareWS(String block_id, String is_block) {
+        if (Common.isOnline(_context)) {
+            JSONObject mJsonObject = null;
+            try {
+                double lat = Double.valueOf(MainActivity.lat);
+                double lng = Double.valueOf(MainActivity.lon);
+                mJsonObject = new JSONObject();
+                if (lat != 0 && lng != 0) {
+                    mJsonObject.put(Common.Constant_Class.BLOCK_USER_IDS, block_id);
+                    mJsonObject.put(Common.Constant_Class.IS_BLOCK, is_block);
+                    mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                    mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    try {
+                        String success = response.getString(Common.Constant_Class.SUCCESS);
+
+                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                            Common.alert((Activity) _context, "Your location Shared");
+                        } else {
+                            Common.alert((Activity) _context, "Something went wrong!");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
+        }
+    }
+
 
     private void shareImage(Bitmap bitmap, String text) {
         String pathofBmp = MediaStore.Images.Media.insertImage(_context.getContentResolver(), bitmap, "title", null);
@@ -657,11 +614,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView txt_mother;
         TextView txt_phone;
         LinearLayout ll_child;
-        ImageView imgSync;
-        ImageView img_user_loc;
-        ImageView img_home_loc;
+        ToggleButton tbtn_share;
         ImageView imgNudge;
-        ImageView imgROR;
         ImageView img_details;
     }
 

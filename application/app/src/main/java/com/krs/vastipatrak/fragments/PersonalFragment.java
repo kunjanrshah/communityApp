@@ -89,8 +89,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private double home_lng;
     private boolean iscall = true;
     private TextView txt_distance;
-     private double user_lat;
-     private double user_lng;
+    private double user_lat;
+    private double user_lng;
     private Activity mActivity;
 
     public PersonalFragment() {
@@ -596,6 +596,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             Objects.requireNonNull(edtbdate).setText(mListProfileData.getBirth_date());
             Objects.requireNonNull(edtBPlace).setText(mListProfileData.getBirth_place());
             String str_time = mListProfileData.getBirth_time();
+            String is_block = mListProfileData.getIs_block();
             if (str_time.length() > 5) {
                 str_time = mListProfileData.getBirth_time().substring(0, 5);
             }
@@ -615,6 +616,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             Objects.requireNonNull(edt_Eaddress).setText(mListProfileData.getEmail_address());
             Objects.requireNonNull(edtAddress).setText(mListProfileData.getAddress());
             String blood = mListProfileData.getBlood_group();
+            boolean is_loc_enable = mListProfileData.isIs_location_enable();
 
             if (blood.equalsIgnoreCase(Common.Constant_Class.A_POSITIVE)) {
                 spinnerBlood.setSelection(1);
@@ -690,10 +692,21 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     txt_home.setText("User has not set location");
                 }
                 tbtn_share.setVisibility(View.GONE);
-                txt_distance.setVisibility(View.VISIBLE);
-                if (user_lat != 0 && user_lng != 0) {
-                    new Common.getDistance(txt_distance).execute(user_lat, user_lng, Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+
+
+
+
+                if(is_block.equalsIgnoreCase("1") && is_loc_enable)
+                {
+                    txt_distance.setVisibility(View.VISIBLE);
+                    if (user_lat != 0 && user_lng != 0) {
+                        new Common.getDistance(txt_distance).execute(user_lat, user_lng, Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+                    }
+                }else
+                {
+                    txt_distance.setVisibility(View.GONE);
                 }
+
             }
 
             profile_url = mListProfileData.getProfile_pic_url();

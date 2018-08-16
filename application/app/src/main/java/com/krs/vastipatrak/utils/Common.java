@@ -1886,6 +1886,8 @@ public class Common {
         public static final String AdminControl = "AdminControl";
 
 
+        public static final String BLOCK_USER_IDS = "block_user_ids";
+        public static final String IS_BLOCK = "is_block";
         public static final String API_KEY = "api_key";
         public static final String DEVICE_TYPE = "device_type";
         public static final String DEVICE_TOKEN = "device_token";

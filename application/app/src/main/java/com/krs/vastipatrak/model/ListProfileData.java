@@ -47,6 +47,10 @@ public class ListProfileData extends RealmObject{
     private String spouse_father_name = "";
     private String spouse_mother_name = "";
     private String ekdo = "";
+    private String is_block="";
+
+
+
 
     public String getEkdo() {
         return ekdo;
@@ -67,6 +71,15 @@ public class ListProfileData extends RealmObject{
     private String str_spouse_hash;
     private String password;
     private RealmList<ListChildrenData> mListChildrenData;
+
+
+    public String getIs_block() {
+        return is_block;
+    }
+
+    public void setIs_block(String is_block) {
+        this.is_block = is_block;
+    }
 
     public boolean isIs_location_enable() {
         return is_location_enable;

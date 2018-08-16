@@ -15,6 +15,17 @@ public class ListChildData {
     private String str_id;
     private String home_lat;
     private String home_lng;
+    private String profile_id;
+
+    public String getProfile_id() {
+        return profile_id;
+    }
+
+    public void setProfile_id(String profile_id) {
+        this.profile_id = profile_id;
+    }
+
+
 
     public String getMother_name() {
         return mother_name;

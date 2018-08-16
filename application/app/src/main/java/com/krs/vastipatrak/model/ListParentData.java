@@ -8,8 +8,7 @@ public class ListParentData {
     private String str_profile_pic_url;
     private String status;
     private String id;
-
-
+    private String is_block="0";
     private String city;
     private boolean is_location_enable;
     private String updated_time;
@@ -18,6 +17,13 @@ public class ListParentData {
     private String user_lng;
     private String str_name;
 
+    public String getIs_block() {
+        return is_block;
+    }
+
+    public void setIs_block(String is_block) {
+        this.is_block = is_block;
+    }
     public String getMail() {
         return mail;
     }

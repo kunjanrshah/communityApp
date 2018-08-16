@@ -2,6 +2,8 @@ package com.krs.vastipatrak.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -67,6 +69,7 @@ public class MatrimonyFragment extends Fragment {
     private int page = 1;
     private FloatingActionButton mFloatingActionButton;
     private SwipyRefreshLayout mSwipyRefreshLayout;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -155,6 +158,7 @@ public class MatrimonyFragment extends Fragment {
 
     private void MemoryAllocation(View rootView) {
         lvMatrimonyList = rootView.findViewById(R.id.lvMatrimonyList);
+        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
         realm = AppController.getInstance().realm;
@@ -195,6 +199,8 @@ public class MatrimonyFragment extends Fragment {
                 mjsonObject.put(Common.Constant_Class.IS_INTERESTED, is_interested);
                 mjsonObject.put(Common.Constant_Class.CHILD_GENDER, gender);
                 mjsonObject.put(Common.Constant_Class.PAGE, String.valueOf(page));
+                mjsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mjsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
                 showProgressDialog(getActivity());
                 mSwipyRefreshLayout.setRefreshing(true);
                 JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.ADVANCE_SEARCH_URL, mjsonObject, new Response.Listener<JSONObject>() {

@@ -522,6 +522,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     SearchString = search;
                     mJsonObject = new JSONObject(search);
                     mJsonObject.put(Common.Constant_Class.PAGE, String.valueOf(page));
+                    mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                    mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -628,6 +630,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             lpd.setMotherName(Objects.requireNonNull(mSortedProfiles.get(i)).getMother_name());
             lpd.setStatus(Objects.requireNonNull(mSortedProfiles.get(i)).getStatus());
             lpd.setId(Objects.requireNonNull(mSortedProfiles.get(i)).getProfile_id());
+            lpd.setIs_block(Objects.requireNonNull(mSortedProfiles.get(i)).getIs_block());
             lpd.setProfilePicUrl(Objects.requireNonNull(mSortedProfiles.get(i)).getProfile_pic_url());
             lpd.setUser_lat(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lat());
             lpd.setUser_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lng());
@@ -655,6 +658,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             lcd.setHome_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getHome_lng());
             lcd.setUser_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lng());
             lcd.setUser_lat(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lat());
+            lcd.setProfile_id(Objects.requireNonNull(mSortedProfiles.get(i)).getProfile_id());
             lcd.setName(Objects.requireNonNull(mSortedProfiles.get(i)).getFirst_name() + " " + Objects.requireNonNull(mSortedProfiles.get(i)).getLast_name());
             ArrayList<ListChildData> mlstChildData = new ArrayList<>();
             mlstChildData.add(lcd);
@@ -1026,6 +1030,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     json = new JSONObject();
                     json.put(Common.Constant_Class.ID, ids);
                     json.put(Common.Constant_Class.ROLE, role);
+                    json.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                    json.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
