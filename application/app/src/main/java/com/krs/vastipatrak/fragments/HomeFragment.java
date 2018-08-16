@@ -114,8 +114,7 @@ public class HomeFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                Log.d(TAG, "step dx: " + dx);
-                Log.d(TAG, "step dy: " + dy);
+
             }
         });
        /* recycler_view.setOnScrollListener(new AbsListView.OnScrollListener() {

@@ -25,9 +25,11 @@
                 android:id="@+id/txt_distance"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:text="50 Km"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone" />
 
         </LinearLayout>
 

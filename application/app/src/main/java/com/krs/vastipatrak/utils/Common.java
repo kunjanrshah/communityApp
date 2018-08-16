@@ -777,6 +777,12 @@ public class Common {
             if (mJsonObject.has(Constant_Class.CITY)) {
                 mListProfileData.setCity(mJsonObject.getString(Constant_Class.CITY));
             }
+            if (mJsonObject.has(Constant_Class.IS_BLOCK)) {
+                mListProfileData.setIs_block(mJsonObject.getString(Constant_Class.IS_BLOCK));
+            }
+            if (mJsonObject.has(Constant_Class.IS_LOCATION_ENABLE)) {
+                mListProfileData.setIs_location_enable(mJsonObject.getString(Constant_Class.IS_LOCATION_ENABLE));
+            }
 
             if (mJsonObject.has(Common.Constant_Class.FATHER_NAME)) {
                 mListProfileData.setFather_name(mJsonObject.getString(Common.Constant_Class.FATHER_NAME));

@@ -126,14 +126,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
         // Required empty public constructor
     }
 
-    public Context getmContext() {
-        return mContext;
-    }
-
-    public void setmContext(Context mContext) {
-        this.mContext = mContext;
-    }
-
     private static void ExportAlert(@NonNull final Activity mActivity, @NonNull final File file) {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(mActivity.getString(R.string.app_name));
@@ -163,6 +155,14 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 dialog.dismiss();
             }
         }).show();
+    }
+
+    public Context getmContext() {
+        return mContext;
+    }
+
+    public void setmContext(Context mContext) {
+        this.mContext = mContext;
     }
 
     @Override
@@ -592,7 +592,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
         }
     }
 
-    private void OfflineSearch(String str_search, int search) {
+    /*private void OfflineSearch(String str_search, int search) {
         ListProfiles mProfilelist = new ListProfiles(new RealmList<ListProfileData>());
         RealmList<ListProfileData> mListParentData = Common.getDataFromParentTable(str_search, search);
         mProfilelist.realmlist.addAll(mListParentData);
@@ -611,8 +611,9 @@ public class SearchFragment extends Fragment implements IAdminControl {
             }
         }
         setAdapter(mProfilelist);
-    }
+    }*/
 
+/*
     private void setAdapter(ListProfiles mProfilelist) {
         Objects.requireNonNull(listDataHeader).clear();
         Objects.requireNonNull(listDataChild).clear();
@@ -634,7 +635,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             lpd.setProfilePicUrl(Objects.requireNonNull(mSortedProfiles.get(i)).getProfile_pic_url());
             lpd.setUser_lat(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lat());
             lpd.setUser_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lng());
-            lpd.setIs_location_enable(Objects.requireNonNull(mSortedProfiles.get(i)).isIs_location_enable());
+            lpd.setIs_location_enable(mSortedProfiles.get(i).isIs_location_enable());
             lpd.setUpdated_time(Objects.requireNonNull(mSortedProfiles.get(i)).getUpdated_time());
             lpd.setCity(Objects.requireNonNull(mSortedProfiles.get(i)).getCity());
             lpd.setUser_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lng());
@@ -659,6 +660,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             lcd.setUser_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lng());
             lcd.setUser_lat(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lat());
             lcd.setProfile_id(Objects.requireNonNull(mSortedProfiles.get(i)).getProfile_id());
+            lcd.setIs_block(Objects.requireNonNull(mSortedProfiles.get(i)).getIs_block());
             lcd.setName(Objects.requireNonNull(mSortedProfiles.get(i)).getFirst_name() + " " + Objects.requireNonNull(mSortedProfiles.get(i)).getLast_name());
             ArrayList<ListChildData> mlstChildData = new ArrayList<>();
             mlstChildData.add(lcd);
@@ -675,6 +677,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             }
         }
     }
+*/
 
     private void displayData(@NonNull JSONObject response, boolean isNonActive) {
         try {
@@ -708,6 +711,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
                     JSONObject mJsondata = mJsonArray.getJSONObject(i);
                     String profile_id = mJsondata.getString(Common.Constant_Class.ID);
+                    String email = mJsondata.getString(Common.Constant_Class.EMAIL_ADDRESS);
                     String profile_pic_url = mJsondata.getString(Common.Constant_Class.PROFILE_PIC_URL);
                     String first_name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
                     String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
@@ -717,7 +721,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     String city = mJsondata.getString(Common.Constant_Class.CITY);
                     String mobile = mJsondata.getString(Common.Constant_Class.MOBILE);
                     String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
-                    boolean is_location_enable = Boolean.parseBoolean(mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE));
+                    String is_location_enable = mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE);
                     ListParentData lpd = new ListParentData();
                     lpd.setName(first_name + " " + last_name);
                     lpd.setFatherName(father_name);
@@ -727,6 +731,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     lpd.setStatus(status);
                     lpd.setId(profile_id);
                     lpd.setCity(city);
+                    lpd.setMail(email);
                     lpd.setUpdated_time(updated_time);
                     lpd.setIs_location_enable(is_location_enable);
 
@@ -736,7 +741,11 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     String birth_time = mJsondata.getString(Common.Constant_Class.BIRTH_TIME);
                     String birth_place = mJsondata.getString(Common.Constant_Class.BIRTH_PLACE);
                     String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
-
+                    String is_block = "0";
+                    if (mJsondata.has(Common.Constant_Class.IS_BLOCK)) {
+                        is_block = mJsondata.getString(Common.Constant_Class.IS_BLOCK);
+                    }
+                    lpd.setIs_block(is_block);
                     String phone = mJsondata.getString(Common.Constant_Class.PHONE);
                     String gender = mJsondata.getString(Common.Constant_Class.GENDER);
                     String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
@@ -754,6 +763,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     lcd.setPhone(phone);
                     lcd.setGender(gender);
                     lcd.setGotra(gotra);
+                    lcd.setIs_block(is_block);
+                    lcd.setName(first_name+" "+last_name);
                     ArrayList<ListChildData> mlstChildData = new ArrayList<>();
                     mlstChildData.add(lcd);
                     listDataHeader.add(lpd);

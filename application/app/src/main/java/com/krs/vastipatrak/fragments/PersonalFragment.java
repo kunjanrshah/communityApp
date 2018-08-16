@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -87,7 +88,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private boolean toggle = true;
     private double home_lat;
     private double home_lng;
-    private boolean iscall = true;
+    private boolean setChecked = false;
     private TextView txt_distance;
     private double user_lat;
     private double user_lng;
@@ -331,7 +332,20 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                 android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
                 builder.setTitle(mActivity.getString(R.string.app_name));
-                if (iscall) {
+                if (setChecked) {
+                    setChecked = false;
+                    if (isChecked) {
+                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, true);
+                        mEditor.apply();
+                        mActivity.startService(new Intent(mActivity, MyLocationService.class));
+                        toggle = true;
+                    } else {
+                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, false);
+                        mEditor.apply();
+                        mActivity.stopService(new Intent(mActivity, MyLocationService.class));
+                        toggle = true;
+                    }
+                } else {
                     if (Common.isOnline(mActivity)) {
                         if (toggle) {
                             if (isChecked) {
@@ -382,9 +396,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         Toast.makeText(mActivity, Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
                         tbtn_share.setChecked(!isChecked);
                     }
-                } else {
-                    iscall = true;
                 }
+
+
             }
         });
 
@@ -597,6 +611,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             Objects.requireNonNull(edtBPlace).setText(mListProfileData.getBirth_place());
             String str_time = mListProfileData.getBirth_time();
             String is_block = mListProfileData.getIs_block();
+            String is_loc_enable = mListProfileData.isIs_location_enable();
+
             if (str_time.length() > 5) {
                 str_time = mListProfileData.getBirth_time().substring(0, 5);
             }
@@ -616,7 +632,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             Objects.requireNonNull(edt_Eaddress).setText(mListProfileData.getEmail_address());
             Objects.requireNonNull(edtAddress).setText(mListProfileData.getAddress());
             String blood = mListProfileData.getBlood_group();
-            boolean is_loc_enable = mListProfileData.isIs_location_enable();
+
 
             if (blood.equalsIgnoreCase(Common.Constant_Class.A_POSITIVE)) {
                 spinnerBlood.setSelection(1);
@@ -668,7 +684,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 tbtn_share.setText(null);
                 tbtn_share.setTextOn(null);
                 tbtn_share.setTextOff(null);
-                iscall = false;
+                setChecked = true;
                 boolean bool = mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false);
                 tbtn_share.setChecked(bool);
 
@@ -694,16 +710,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 tbtn_share.setVisibility(View.GONE);
 
 
-
-
-                if(is_block.equalsIgnoreCase("1") && is_loc_enable)
-                {
+                if (is_block.equalsIgnoreCase("1") && is_loc_enable.equalsIgnoreCase("1")) {
                     txt_distance.setVisibility(View.VISIBLE);
                     if (user_lat != 0 && user_lng != 0) {
-                        new Common.getDistance(txt_distance).execute(user_lat, user_lng, Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+                        new Common.getDistance(txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,user_lat, user_lng, Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
                     }
-                }else
-                {
+                } else {
                     txt_distance.setVisibility(View.GONE);
                 }
 

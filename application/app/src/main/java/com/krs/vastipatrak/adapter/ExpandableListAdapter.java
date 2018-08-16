@@ -22,8 +22,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,6 +59,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -76,6 +79,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private final SharedPreferences.Editor mEditor;
     @NonNull
     private final String[] SPINNERLIST = {"Father", "Son", "Daughter", "Brother", "Sister", "Grandfather", "Grandson", "Uncle", "Uncle's Son", "Uncle in law", "Uncle's Son"};
+    boolean isCall = true;
     @Nullable
     private ProgressDialog pDialog;
     private ChildViewHolder childViewHolder;
@@ -162,6 +166,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         getChildRandomColor(_context, childPosition, childViewHolder.ll_child);
         final String id = mListChildData.getID();
+        final String name = mListChildData.getName();
         String address = mListChildData.getAddress();
         String birth_date = mListChildData.getbirth_date();
         birth_date = Common.parseDateToddMMyyyy(birth_date, yyyy_MM_dd, dd_MMM_yyyy);
@@ -171,7 +176,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String gender = mListChildData.getGender();
         String gotra = mListChildData.getGotra();
         String Mother = mListChildData.getMother_name();
-        final String profile_id = mListChildData.getProfile_id();
+        final String is_block = mListChildData.getIs_block();
+        final String profile_id = mListChildData.getID();
         final String mobile = mListChildData.getMobile().trim().replaceAll("\\?", "").replaceAll("\\+", "");
         String str_native = mListChildData.getNative();
         String phone = mListChildData.getPhone().trim().replaceAll("\\?", "").replaceAll("\\+", "");
@@ -201,30 +207,34 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        childViewHolder.tbtn_share.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    userLocationShareWS(profile_id, "1");
-                } else {
-                    userLocationShareWS(profile_id, "0");
-                }
-            }
-        });
 
-        childViewHolder.tbtn_share.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-            }
-        });
         boolean bool = mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false);
         if (bool) {
+            isCall = false;
             childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
+            if (is_block.equalsIgnoreCase("1")) {
+                childViewHolder.tbtn_share.setChecked(true);
+            } else {
+                childViewHolder.tbtn_share.setChecked(false);
+            }
         } else {
             childViewHolder.tbtn_share.setVisibility(View.GONE);
         }
+
+        childViewHolder.tbtn_share.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isCall) {
+                    if (isChecked) {
+                        userLocationShareWS(profile_id, name, "1");
+                    } else {
+                        userLocationShareWS(profile_id, name, "0");
+                    }
+                } else {
+                    isCall = true;
+                }
+            }
+        });
 
         childViewHolder.txt_address.setText(Common.camelCase(address));
         childViewHolder.txt_native.setText(Common.camelCase(str_native));
@@ -414,16 +424,91 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         final String user_lat = mListParentData.getUser_lat();
         final String user_lng = mListParentData.getUser_lng();
-
-        if (is_block.equalsIgnoreCase("1") && mListParentData.isIs_location_enable()) {
-            groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
+        groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
+        /*if (is_block.equalsIgnoreCase("1") && mListParentData.isIs_location_enable().equalsIgnoreCase("1")) {
             if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
-                new Common.getDistance(groupViewHolder.txt_distance).execute(Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+                groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
+                new Common.getDistance(groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+            } else {
+                groupViewHolder.txt_distance.setVisibility(View.GONE);
             }
         } else {
             groupViewHolder.txt_distance.setVisibility(View.GONE);
-        }
+        }*/
 
+        groupViewHolder.txt_distance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final Dialog dialog = new Dialog(_context);
+                dialog.setContentView(R.layout.dialog_alert);
+                dialog.setTitle(_context.getResources().getString(R.string.app_name));
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
+
+                Button btn_map = dialog.findViewById(R.id.btn_map);
+                ImageView img_cancel = dialog.findViewById(R.id.img_cancel);
+                final Button btnsave = dialog.findViewById(R.id.btnsave);
+                ToggleButton tbtn_alert = dialog.findViewById(R.id.btn_alert);
+                final EditText edtAlertTime = dialog.findViewById(R.id.edtAlertTime);
+                if (tbtn_alert.isChecked()) {
+                    edtAlertTime.setVisibility(View.VISIBLE);
+                    btnsave.setVisibility(View.VISIBLE);
+                } else {
+                    edtAlertTime.setVisibility(View.GONE);
+                    btnsave.setVisibility(View.GONE);
+                }
+
+                img_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                tbtn_alert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            edtAlertTime.setVisibility(View.VISIBLE);
+                            btnsave.setVisibility(View.VISIBLE);
+                        } else {
+                            edtAlertTime.setVisibility(View.GONE);
+                            btnsave.setVisibility(View.GONE);
+                        }
+                    }
+                });
+                btnsave.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!edtAlertTime.getText().toString().isEmpty()) {
+
+                        }
+                    }
+                });
+
+                btn_map.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!MainActivity.lat.isEmpty() && !MainActivity.lon.isEmpty() && !user_lat.isEmpty() && !user_lng.isEmpty()) {
+                            showDirections(Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon), Double.parseDouble(user_lat), Double.parseDouble(user_lng), "");
+                        } else {
+                            Toast.makeText(_context, "Something went wrong", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                try {
+                    if (!dialog.isShowing()) {
+                        dialog.show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
 
         if (mListParentData.getStatus() != null && mListParentData.getStatus().equalsIgnoreCase("0")) {
             groupViewHolder.imgShare.setVisibility(View.GONE);
@@ -450,7 +535,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
-    private void userLocationShareWS(String block_id, String is_block) {
+    private void showDirections(double clat, double clng, double dlat, double dlng, String address) {
+        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", clat, clng, "", dlat, dlng, address);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+        _context.startActivity(intent);
+    }
+
+    private void userLocationShareWS(String block_id, final String name, final String is_block) {
         if (Common.isOnline(_context)) {
             JSONObject mJsonObject = null;
             try {
@@ -466,7 +558,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.BLOCK_USERS_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
@@ -474,7 +566,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
 
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            Common.alert((Activity) _context, "Your location Shared");
+                            if (is_block.equalsIgnoreCase("1")) {
+                                Common.alert((Activity) _context, "You have shared your location to " + name);
+                            } else {
+                                Common.alert((Activity) _context, "You have not shared your location to " + name);
+                            }
                         } else {
                             Common.alert((Activity) _context, "Something went wrong!");
                         }

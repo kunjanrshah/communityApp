@@ -433,23 +433,11 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         Dialog dialog = null;
         dialog = new Dialog(FilterActivity.this);
         dialog.setContentView(R.layout.dialog_layout);
-        dialog.setTitle("Custom Dialog");
+        dialog.setTitle("Vastipatrak");
 
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
 
-            }
-        });
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-
-            }
-        });
 
         ItemArrayAdapter itemArrayAdapter = new ItemArrayAdapter(R.layout.list_item_search, lstProceed);
         recyclerView = dialog.findViewById(R.id.item_list);

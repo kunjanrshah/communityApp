@@ -8,15 +8,16 @@ public class ListParentData {
     private String str_profile_pic_url;
     private String status;
     private String id;
-    private String is_block="0";
+
     private String city;
-    private boolean is_location_enable;
+    private String is_location_enable;
     private String updated_time;
     private String mobile;
     private String user_lat;
     private String user_lng;
     private String str_name;
 
+    private String is_block="0";
     public String getIs_block() {
         return is_block;
     }
@@ -50,11 +51,11 @@ public class ListParentData {
         this.city = city;
     }
 
-    public boolean isIs_location_enable() {
+    public String isIs_location_enable() {
         return is_location_enable;
     }
 
-    public void setIs_location_enable(boolean is_location_enable) {
+    public void setIs_location_enable(String is_location_enable) {
         this.is_location_enable = is_location_enable;
     }
 

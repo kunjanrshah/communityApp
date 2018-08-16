@@ -48,18 +48,7 @@ public class ListProfileData extends RealmObject{
     private String spouse_mother_name = "";
     private String ekdo = "";
     private String is_block="";
-
-
-
-
-    public String getEkdo() {
-        return ekdo;
-    }
-
-    public void setEkdo(String ekdo) {
-        this.ekdo = ekdo;
-    }
-    private boolean is_location_enable;
+    private String is_location_enable;
     private String updated_time;
     private String sync_time;
     private String city;
@@ -70,6 +59,15 @@ public class ListProfileData extends RealmObject{
     private String str_mspouse_hash;
     private String str_spouse_hash;
     private String password;
+
+    public String getEkdo() {
+        return ekdo;
+    }
+
+    public void setEkdo(String ekdo) {
+        this.ekdo = ekdo;
+    }
+
     private RealmList<ListChildrenData> mListChildrenData;
 
 
@@ -81,11 +79,11 @@ public class ListProfileData extends RealmObject{
         this.is_block = is_block;
     }
 
-    public boolean isIs_location_enable() {
+    public String isIs_location_enable() {
         return is_location_enable;
     }
 
-    public void setIs_location_enable(boolean is_location_enable) {
+    public void setIs_location_enable(String is_location_enable) {
         this.is_location_enable = is_location_enable;
     }
 
