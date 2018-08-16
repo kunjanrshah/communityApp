@@ -75,6 +75,7 @@ import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.HomeFragment;
 import com.krs.vastipatrak.fragments.MatrimonyFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
+import com.krs.vastipatrak.fragments.SharedUsersFragment;
 import com.krs.vastipatrak.interfaces.IAdminControl;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NotificationUtils;
@@ -223,10 +224,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         } else {
             displayView(-1);
         }
-
-
             getGotraWS();
-
     }
 
 
@@ -424,6 +422,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 return false;
             }
         });
+
+
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchItem.getActionView();
@@ -720,15 +720,18 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 this.overridePendingTransition(0, 0);
                 break;
             case 2:
+                fragment = new SharedUsersFragment();
+                break;
+            case 3:
                 fragment = new ChangePasswordFragment();
                 break;
             /*case 3:
                 fragment = new RelativeFragment();
                 break;*/
-            case 3:
+            case 4:
                 fragment = new MatrimonyFragment();
                 break;
-            case 4:
+            case 5:
                 /*Intent mIntent = new Intent(MainActivity.this, PDFActivity.class);
                 startActivity(mIntent);
                 this.overridePendingTransition(0, 0);*/
@@ -737,10 +740,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 startActivity(mIntent2);
                 this.overridePendingTransition(0, 0);
                 break;
-            case 5:
+            case 6:
                 fragment = new AboutFragment();
                 break;
-            case 6:
+            case 7:
                 ExitAlert();
                 break;
             /*case 8:

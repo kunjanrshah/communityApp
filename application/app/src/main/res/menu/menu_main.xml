@@ -61,7 +61,7 @@
         android:visible="false"
         app:showAsAction="ifRoom|collapseActionView" />
 
-    <item
+   <item
         android:id="@+id/action_nonActives"
         android:title="@string/action_nonActives"
         android:visible="false"
