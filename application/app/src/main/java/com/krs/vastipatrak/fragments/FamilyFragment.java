@@ -348,7 +348,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     Objects.requireNonNull(mViewholder.edtchild_work).setText(mObjChild.getChild_work());
 
 
-                    if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
+                    if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)|| role.equals(Common.Constant_Class.ADMIN)) {
                         mViewholder.edtchild_name.setEnabled(true);
                         mViewholder.edtchild_bdate.setEnabled(true);
                         mViewholder.edtchild_edu.setEnabled(true);
@@ -376,7 +376,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         @Override
                         public void onClick(View v) {
 
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || role.equals(Common.Constant_Class.ADMIN)) {
+                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
                                 mViewholder.ImgHash = "selectImage";
                                 selectImage();
                             } else {
@@ -440,7 +440,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mViewholder.spinnerBlood.setAdapter(dataAdapter);
 
-
         mViewholder.btn_remove = addView.findViewById(R.id.btn_remove);
         mViewholder.ImgHash = "";
         mViewholder.setClickBDate = false;
@@ -463,9 +462,13 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             @Override
             public void onClick(View v) {
 
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || role.equals(Common.Constant_Class.ADMIN)) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
                     mViewholder.ImgHash = "selectImage";
                     selectImage();
+                }else
+                {
+                    String Name =  mViewholder.edtchild_name.getText().toString();
+                  //  openImageDialog(Name, child_url);
                 }
             }
         });

@@ -1,40 +1,21 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_drawer"
     android:orientation="vertical">
 
-    <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
-        android:id="@+id/swipyrefreshlayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srl_direction="both">
-
-        <ExpandableListView
-            android:id="@+id/lvCustomList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:layout_weight="0.05"
-            android:childDivider="#00000000"
-            android:divider="#00000000"
-            android:groupIndicator="@null"
-            android:visibility="gone" />
-
-
-    </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_action_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
-        app:fabSize="normal" />
-
+    <ExpandableListView
+        android:id="@+id/lvCustomList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_weight="0.05"
+        android:childDivider="#00000000"
+        android:divider="#00000000"
+        android:groupIndicator="@null"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/txtLable"
@@ -49,7 +30,5 @@
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:visibility="gone" />
-
-
 
 </android.support.design.widget.CoordinatorLayout>

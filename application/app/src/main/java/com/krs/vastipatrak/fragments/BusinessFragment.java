@@ -83,7 +83,7 @@ public class BusinessFragment extends Fragment implements Serializable {
                         if (MainActivity.lat == null && MainActivity.lon == null) {
                             Common.showSettingsAlert(mActivity);
                         } else {
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
+                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                 builder.setTitle(getString(R.string.app_name));
