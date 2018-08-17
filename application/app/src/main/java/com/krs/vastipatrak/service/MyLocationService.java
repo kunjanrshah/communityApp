@@ -96,7 +96,7 @@ public class MyLocationService extends Service {
                 }
             }
         }
-        userLocationUpdateWS("0");
+        userLocationUpdateWS();
     }
 
     private void initializeLocationManager() {
@@ -106,7 +106,7 @@ public class MyLocationService extends Service {
         }
     }
 
-    private void userLocationUpdateWS(@NonNull final String isUpdate) {
+    private void userLocationUpdateWS() {
 
         if (Common.isOnline(MyLocationService.this)) {
             JSONObject mJsonObject = null;
@@ -116,7 +116,7 @@ public class MyLocationService extends Service {
                 mJsonObject.put(Common.Constant_Class.USER_LNG, mLastLocation.getLongitude());
                 mJsonObject.put(Common.Constant_Class.IS_LOCATION_ENABLE, mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false));
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.IS_UPDATE, isUpdate);
+                mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -127,24 +127,14 @@ public class MyLocationService extends Service {
                 public void onResponse(@NonNull JSONObject response) {
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
-                        //  String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            Handler mHandler=new Handler();
-                            mHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (isUpdate.equals("1")) {
-                                        Log.d(TAG,"step yes");
-                                        Toast.makeText(MyLocationService.this, "Vastipatrak is sharing your location!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Log.d(TAG,"step no");
-                                        Toast.makeText(MyLocationService.this, "Stop Sharing location successfully!", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            },1000);
-
-                            //String data = response.getString(Common.Constant_Class.DATA);
-
+                            if (mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false)) {
+                                Log.d(TAG,"step yes");
+                                Toast.makeText(MyLocationService.this, "Vastipatrak is sharing your location!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Log.d(TAG,"step no");
+                                Toast.makeText(MyLocationService.this, "Stop Sharing location successfully!", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -188,7 +178,7 @@ public class MyLocationService extends Service {
             /*mEditor.putString(Common.Constant_Class.MY_LATITUDE, String.valueOf(location.getLatitude()));
             mEditor.putString(Common.Constant_Class.MY_LONGITUDE, String.valueOf(location.getLongitude()));
             mEditor.apply();*/
-            userLocationUpdateWS("1");
+            userLocationUpdateWS();
 
            /* new Handler().postDelayed(new Runnable() {
                 @Override

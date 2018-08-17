@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -424,8 +425,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         final String user_lat = mListParentData.getUser_lat();
         final String user_lng = mListParentData.getUser_lng();
-        groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
-        /*if (is_block.equalsIgnoreCase("1") && mListParentData.isIs_location_enable().equalsIgnoreCase("1")) {
+
+        if (is_block.equalsIgnoreCase("1") && mListParentData.isIs_location_enable().equalsIgnoreCase("1")) {
             if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
                 groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
                 new Common.getDistance(groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
@@ -434,7 +435,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
         } else {
             groupViewHolder.txt_distance.setVisibility(View.GONE);
-        }*/
+        }
 
         groupViewHolder.txt_distance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -546,15 +547,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if (Common.isOnline(_context)) {
             JSONObject mJsonObject = null;
             try {
-                double lat = Double.valueOf(MainActivity.lat);
-                double lng = Double.valueOf(MainActivity.lon);
+
                 mJsonObject = new JSONObject();
-                if (lat != 0 && lng != 0) {
-                    mJsonObject.put(Common.Constant_Class.BLOCK_USER_IDS, block_id);
-                    mJsonObject.put(Common.Constant_Class.IS_BLOCK, is_block);
-                    mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                    mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-                }
+                mJsonObject.put(Common.Constant_Class.BLOCK_USER_IDS, block_id);
+                mJsonObject.put(Common.Constant_Class.IS_BLOCK, is_block);
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

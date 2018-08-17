@@ -722,6 +722,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     String mobile = mJsondata.getString(Common.Constant_Class.MOBILE);
                     String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
                     String is_location_enable = mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE);
+                    String user_lat = mJsondata.getString(Common.Constant_Class.USER_LAT);
+                    String user_lng = mJsondata.getString(Common.Constant_Class.USER_LNG);
                     ListParentData lpd = new ListParentData();
                     lpd.setName(first_name + " " + last_name);
                     lpd.setFatherName(father_name);
@@ -734,6 +736,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     lpd.setMail(email);
                     lpd.setUpdated_time(updated_time);
                     lpd.setIs_location_enable(is_location_enable);
+                    lpd.setUser_lat(user_lat);
+                    lpd.setUser_lng(user_lng);
 
                     String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
                     String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
