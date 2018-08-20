@@ -4,6 +4,6 @@
     android:id="@+id/img_dialog"
     android:layout_width="200dp"
     android:layout_height="200dp"
-    android:background="@drawable/ic_launcher"
+    android:background="@drawable/user_profile"
     android:contentDescription="TODO" />
 

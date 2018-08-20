@@ -259,6 +259,13 @@ public class SearchFragment extends Fragment implements IAdminControl {
             }
         });
 
+        lvCustomList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+
+                return false;
+            }
+        });
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -591,93 +598,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
             Toast.makeText(getActivity(), Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
         }
     }
-
-    /*private void OfflineSearch(String str_search, int search) {
-        ListProfiles mProfilelist = new ListProfiles(new RealmList<ListProfileData>());
-        RealmList<ListProfileData> mListParentData = Common.getDataFromParentTable(str_search, search);
-        mProfilelist.realmlist.addAll(mListParentData);
-
-        RealmList<ListProfileData> mListChildData = Common.getDataFromChildTable(str_search, search);
-        for (int j = 0; j < mListChildData.size(); j++) {
-            boolean flag = true;
-            for (int k = 0; k < mProfilelist.realmlist.size(); k++) {
-                if (Objects.equals(Objects.requireNonNull(mProfilelist.realmlist.get(k)).getProfile_id(), Objects.requireNonNull(mListChildData.get(j)).getProfile_id())) {
-                    flag = false;
-                    break;
-                }
-            }
-            if (flag) {
-                mProfilelist.realmlist.add(mListChildData.get(j));
-            }
-        }
-        setAdapter(mProfilelist);
-    }*/
-
-/*
-    private void setAdapter(ListProfiles mProfilelist) {
-        Objects.requireNonNull(listDataHeader).clear();
-        Objects.requireNonNull(listDataChild).clear();
-
-        AppController.getInstance().realm.beginTransaction();
-        // mProfilelist = AppController.getInstance().realm.copyToRealm(mProfilelist);
-        RealmResults<ListProfileData> mSortedProfiles = mProfilelist.realmlist.sort(Common.Constant_Class.CITY);
-        AppController.getInstance().realm.commitTransaction();
-        AppController.getInstance().mListSearchList = mSortedProfiles;
-
-        for (int i = 0; i < mSortedProfiles.size(); i++) {
-            ListParentData lpd = new ListParentData();
-            lpd.setName(Objects.requireNonNull(mSortedProfiles.get(i)).getFirst_name() + " " + Objects.requireNonNull(mSortedProfiles.get(i)).getLast_name());
-            lpd.setFatherName(Objects.requireNonNull(mSortedProfiles.get(i)).getFather_name());
-            lpd.setMotherName(Objects.requireNonNull(mSortedProfiles.get(i)).getMother_name());
-            lpd.setStatus(Objects.requireNonNull(mSortedProfiles.get(i)).getStatus());
-            lpd.setId(Objects.requireNonNull(mSortedProfiles.get(i)).getProfile_id());
-            lpd.setIs_block(Objects.requireNonNull(mSortedProfiles.get(i)).getIs_block());
-            lpd.setProfilePicUrl(Objects.requireNonNull(mSortedProfiles.get(i)).getProfile_pic_url());
-            lpd.setUser_lat(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lat());
-            lpd.setUser_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lng());
-            lpd.setIs_location_enable(mSortedProfiles.get(i).isIs_location_enable());
-            lpd.setUpdated_time(Objects.requireNonNull(mSortedProfiles.get(i)).getUpdated_time());
-            lpd.setCity(Objects.requireNonNull(mSortedProfiles.get(i)).getCity());
-            lpd.setUser_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lng());
-            lpd.setUser_lat(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lat());
-            lpd.setMobile(Objects.requireNonNull(mSortedProfiles.get(i)).getMobile());
-            lpd.setMail(Objects.requireNonNull(mSortedProfiles.get(i)).getEmail_address());
-            ListChildData lcd = new ListChildData();
-            lcd.setMother_name(Objects.requireNonNull(mSortedProfiles.get(i)).getMother_name());
-            lcd.setID(Objects.requireNonNull(mSortedProfiles.get(i)).getProfile_id());
-            lcd.setNative(Objects.requireNonNull(mSortedProfiles.get(i)).getNative_place());
-            lcd.setAddress(Objects.requireNonNull(mSortedProfiles.get(i)).getAddress());
-            lcd.setbirth_date(Objects.requireNonNull(mSortedProfiles.get(i)).getBirth_date());
-            lcd.setbirth_time(Objects.requireNonNull(mSortedProfiles.get(i)).getBirth_time());
-            lcd.setBirth_place(Objects.requireNonNull(mSortedProfiles.get(i)).getBirth_place());
-            lcd.setBlood_Group(Objects.requireNonNull(mSortedProfiles.get(i)).getBlood_group());
-            lcd.setMobile(Objects.requireNonNull(mSortedProfiles.get(i)).getMobile());
-            lcd.setPhone(Objects.requireNonNull(mSortedProfiles.get(i)).getPhone());
-            lcd.setGender(Objects.requireNonNull(mSortedProfiles.get(i)).getGender());
-            lcd.setGotra(Objects.requireNonNull(mSortedProfiles.get(i)).getGotra());
-            lcd.setHome_lat(Objects.requireNonNull(mSortedProfiles.get(i)).getHome_lat());
-            lcd.setHome_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getHome_lng());
-            lcd.setUser_lng(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lng());
-            lcd.setUser_lat(Objects.requireNonNull(mSortedProfiles.get(i)).getUser_lat());
-            lcd.setProfile_id(Objects.requireNonNull(mSortedProfiles.get(i)).getProfile_id());
-            lcd.setIs_block(Objects.requireNonNull(mSortedProfiles.get(i)).getIs_block());
-            lcd.setName(Objects.requireNonNull(mSortedProfiles.get(i)).getFirst_name() + " " + Objects.requireNonNull(mSortedProfiles.get(i)).getLast_name());
-            ArrayList<ListChildData> mlstChildData = new ArrayList<>();
-            mlstChildData.add(lcd);
-            listDataHeader.add(lpd);
-            listDataChild.put(lpd, mlstChildData);
-        }
-        if (listDataHeader.size() > 0) {
-            mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
-            lvCustomList.setAdapter(mExpandableListAdapter);
-        } else {
-            lvCustomList.setVisibility(View.GONE);
-            if (txtLable != null) {
-                txtLable.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-*/
 
     private void displayData(@NonNull JSONObject response, boolean isNonActive) {
         try {

@@ -237,7 +237,7 @@ public class MatrimonyFragment extends Fragment {
                                 JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                                 for (int i = 0; i < mJsonArray.length(); i++) {
                                     JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                    Common.MatrimonyProfile(mJsondata, gender, is_interested);
+                                    Common.MatrimonyProfile(mJsondata, gender, is_interested,false);
                                 }
                                 getChildRecords1();
                                 ExpandableMarimonyListAdapter mExpandableMatrimonyListAdapter = new ExpandableMarimonyListAdapter(getActivity(), listDataHeader, listDataChild);

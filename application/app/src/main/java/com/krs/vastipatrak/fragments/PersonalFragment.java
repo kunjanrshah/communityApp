@@ -289,7 +289,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                         } else {
 
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)  || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                 builder.setTitle(getString(R.string.app_name));
@@ -685,8 +685,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 tbtn_share.setTextOn(null);
                 tbtn_share.setTextOff(null);
                 setChecked = true;
-                boolean bool = mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false);
-                tbtn_share.setChecked(bool);
+                if (is_loc_enable.equalsIgnoreCase("1")) {
+                    tbtn_share.setChecked(true);
+                } else {
+                    tbtn_share.setChecked(false);
+                }
 
                /* AppController.getInstance().firebaseAnalytics.setUserProperty("Name", edtFName.getText().toString());
                 AppController.getInstance().firebaseAnalytics.setUserProperty("Father Name", edtFatherName.getText().toString());
@@ -710,14 +713,14 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 tbtn_share.setVisibility(View.GONE);
 
 
-                if (is_block.equalsIgnoreCase("1") && is_loc_enable.equalsIgnoreCase("1")) {
+                /*if (is_block.equalsIgnoreCase("1")) { //&&*/
                     txt_distance.setVisibility(View.VISIBLE);
                     if (user_lat != 0 && user_lng != 0) {
-                        new Common.getDistance(txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,user_lat, user_lng, Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+                        new Common.getDistance(txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user_lat, user_lng, Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
                     }
-                } else {
+               /* } else {
                     txt_distance.setVisibility(View.GONE);
-                }
+                }*/
 
             }
 

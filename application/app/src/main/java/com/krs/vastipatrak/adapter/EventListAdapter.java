@@ -72,7 +72,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
         int viewType = holder.getItemViewType();
         if (viewType == 1) {
-            Glide.with(context).load(listUrls.get(position)).apply(new RequestOptions().override(1200, 1000).placeholder(R.drawable.ic_launcher).error(R.drawable.ic_launcher)).into(holder.eventImage);
+            Glide.with(context).load(listUrls.get(position)).apply(new RequestOptions().override(1200, 1000).placeholder(R.drawable.user_profile).error(R.drawable.user_profile)).into(holder.eventImage);
         } else {
             setYoutubeUrl(listUrls.get(position));
             ViewHolder.youTubeView.initialize(Common.Constant_Class.YOUTUBE_API_KEY, (YouTubePlayer.OnInitializedListener) context);

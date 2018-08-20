@@ -16,6 +16,7 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
@@ -59,10 +60,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
 import static com.krs.vastipatrak.utils.Common.getChildRandomColor;
@@ -80,7 +83,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private final SharedPreferences.Editor mEditor;
     @NonNull
     private final String[] SPINNERLIST = {"Father", "Son", "Daughter", "Brother", "Sister", "Grandfather", "Grandson", "Uncle", "Uncle's Son", "Uncle in law", "Uncle's Son"};
-    boolean isCall = true;
+
     @Nullable
     private ProgressDialog pDialog;
     private ChildViewHolder childViewHolder;
@@ -211,7 +214,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         boolean bool = mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false);
         if (bool) {
-            isCall = false;
             childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
             if (is_block.equalsIgnoreCase("1")) {
                 childViewHolder.tbtn_share.setChecked(true);
@@ -225,15 +227,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         childViewHolder.tbtn_share.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isCall) {
-                    if (isChecked) {
-                        userLocationShareWS(profile_id, name, "1");
-                    } else {
-                        userLocationShareWS(profile_id, name, "0");
-                    }
+
+                if (isChecked) {
+                    userLocationShareWS(profile_id, name, "1");
                 } else {
-                    isCall = true;
+                    userLocationShareWS(profile_id, name, "0");
                 }
+
             }
         });
 
@@ -426,16 +426,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String user_lat = mListParentData.getUser_lat();
         final String user_lng = mListParentData.getUser_lng();
 
-        if (is_block.equalsIgnoreCase("1") && mListParentData.isIs_location_enable().equalsIgnoreCase("1")) {
-            if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
-                groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
-                new Common.getDistance(groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
-            } else {
-                groupViewHolder.txt_distance.setVisibility(View.GONE);
-            }
+        //if (is_block.equalsIgnoreCase("1") ) {  //&& mListParentData.isIs_location_enable().equalsIgnoreCase("1")
+        if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
+            groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
+            new Common.getDistance(groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
         } else {
             groupViewHolder.txt_distance.setVisibility(View.GONE);
         }
+        /*} else {
+            groupViewHolder.txt_distance.setVisibility(View.GONE);
+        }*/
 
         groupViewHolder.txt_distance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -452,11 +452,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 final Button btnsave = dialog.findViewById(R.id.btnsave);
                 ToggleButton tbtn_alert = dialog.findViewById(R.id.btn_alert);
                 final EditText edtAlertTime = dialog.findViewById(R.id.edtAlertTime);
+                final TextInputLayout tlalert = dialog.findViewById(R.id.tlalert);
                 if (tbtn_alert.isChecked()) {
-                    edtAlertTime.setVisibility(View.VISIBLE);
+                    tlalert.setVisibility(View.VISIBLE);
                     btnsave.setVisibility(View.VISIBLE);
                 } else {
-                    edtAlertTime.setVisibility(View.GONE);
+                    tlalert.setVisibility(View.GONE);
                     btnsave.setVisibility(View.GONE);
                 }
 
@@ -471,10 +472,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
-                            edtAlertTime.setVisibility(View.VISIBLE);
+                            tlalert.setVisibility(View.VISIBLE);
                             btnsave.setVisibility(View.VISIBLE);
                         } else {
-                            edtAlertTime.setVisibility(View.GONE);
+                            tlalert.setVisibility(View.GONE);
                             btnsave.setVisibility(View.GONE);
                         }
                     }
@@ -484,6 +485,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     public void onClick(View v) {
                         if (!edtAlertTime.getText().toString().isEmpty()) {
 
+                            //Set the values
+                            HashMap<String, String> hMap = new HashMap<String, String>();
+                            hMap.put(id, edtAlertTime.getText().toString().trim());
+                            Set st = hMap.keySet();
+                            mEditor.putStringSet("key", st);
+                            mEditor.commit();
                         }
                     }
                 });
@@ -566,12 +573,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             if (is_block.equalsIgnoreCase("1")) {
-                                Common.alert((Activity) _context, "You have shared your location to " + name);
+                                Toast.makeText(_context, "You have shared your location to " + name, Toast.LENGTH_LONG).show();
                             } else {
-                                Common.alert((Activity) _context, "You have not shared your location to " + name);
+                                Toast.makeText(_context, "You have not shared your location to " + name, Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Common.alert((Activity) _context, "Something went wrong!");
+                            Toast.makeText(_context, "Something went wrong!", Toast.LENGTH_LONG).show();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -635,6 +642,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
     }
 
+/*
     private void SyncUser(String profile_id) {
         if (Common.isOnline(_context)) {
             showProgressDialog();
@@ -696,6 +704,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
     }
+*/
 
     private class ChildViewHolder {
         TextView txt_blood;
