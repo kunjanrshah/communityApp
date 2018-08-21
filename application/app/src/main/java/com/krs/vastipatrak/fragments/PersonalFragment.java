@@ -684,8 +684,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 tbtn_share.setText(null);
                 tbtn_share.setTextOn(null);
                 tbtn_share.setTextOff(null);
-                setChecked = true;
+
                 if (is_loc_enable.equalsIgnoreCase("1")) {
+                    setChecked = true;
                     tbtn_share.setChecked(true);
                 } else {
                     tbtn_share.setChecked(false);

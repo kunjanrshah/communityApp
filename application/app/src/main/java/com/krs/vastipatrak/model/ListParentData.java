@@ -17,13 +17,13 @@ public class ListParentData {
     private String user_lng;
     private String str_name;
 
-    private String is_block="0";
-    public String getIs_block() {
-        return is_block;
+    private String is_share ="0";
+    public String getIs_share() {
+        return is_share;
     }
 
-    public void setIs_block(String is_block) {
-        this.is_block = is_block;
+    public void setIs_share(String is_share) {
+        this.is_share = is_share;
     }
     public String getMail() {
         return mail;

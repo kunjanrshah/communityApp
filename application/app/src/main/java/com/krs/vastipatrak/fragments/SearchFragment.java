@@ -666,7 +666,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     if (mJsondata.has(Common.Constant_Class.IS_SHARE)) {
                         is_block = mJsondata.getString(Common.Constant_Class.IS_SHARE);
                     }
-                    lpd.setIs_block(is_block);
+                    lpd.setIs_share(is_block);
                     String phone = mJsondata.getString(Common.Constant_Class.PHONE);
                     String gender = mJsondata.getString(Common.Constant_Class.GENDER);
                     String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);

@@ -1174,7 +1174,7 @@ public class Common {
         }
     }
 
-    public static void MatrimonyProfile(@NonNull JSONObject mJsonObject, String child_gender, String is_interested,boolean isShared) {
+    public static void MatrimonyProfile(@NonNull JSONObject mJsonObject, String child_gender, String is_interested, boolean isShared) {
         try {
 
             MatrimonyProfileData mListProfileData = new MatrimonyProfileData();
@@ -1364,8 +1364,7 @@ public class Common {
                     if (mJsonObj.has(Common.Constant_Class.CHILD_WORK)) {
                         mListChildrendata.setChild_work(mJsonObj.getString(Common.Constant_Class.CHILD_WORK));
                     }
-                    if(!isShared)
-                    {
+                    if (!isShared) {
                         if (child_gender.equalsIgnoreCase(childgender) && is_interested.equalsIgnoreCase(isInterest)) {
                             mListChildrendata.setProfile_id(mJsonObject.getString(Constant_Class.ID));
                             mlistchilds.add(mListChildrendata);
@@ -1873,7 +1872,9 @@ public class Common {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            txtDistance.setText(""+s);
+            if (txtDistance != null) {
+                txtDistance.setText("" + s);
+            }
         }
     }
 

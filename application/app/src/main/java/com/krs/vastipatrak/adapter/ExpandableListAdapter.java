@@ -41,6 +41,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -63,7 +65,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
 import static com.krs.vastipatrak.utils.Common.getChildRandomColor;
@@ -214,10 +215,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if (bool) {
             childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
             //if (is_share.equalsIgnoreCase("1")) {
-                childViewHolder.tbtn_share.setChecked(true);
+            childViewHolder.tbtn_share.setChecked(true);
             //} else {
-                childViewHolder.tbtn_share.setChecked(false);
-           // }
+            childViewHolder.tbtn_share.setChecked(false);
+            // }
         } else {
             childViewHolder.tbtn_share.setVisibility(View.GONE);
         }
@@ -356,7 +357,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String Mobile = mListParentData.getMobile();
         String city = mListParentData.getCity();
         String mail = mListParentData.getMail();
-        String is_block = mListParentData.getIs_block();
+        String is_share = mListParentData.getIs_share();
 
         // Rounded corners
         Glide.with(_context).load(imgURL).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).into(groupViewHolder.ivIcon);
@@ -423,13 +424,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String user_lat = mListParentData.getUser_lat();
         final String user_lng = mListParentData.getUser_lng();
 
-        if (is_block.equalsIgnoreCase("1") ) {  //&& mListParentData.isIs_location_enable().equalsIgnoreCase("1")
-        if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
-            groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
-            new Common.getDistance(groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
-        } else {
-            groupViewHolder.txt_distance.setVisibility(View.GONE);
-        }
+        if (is_share.equalsIgnoreCase("1")) {  //&& mListParentData.isIs_location_enable().equalsIgnoreCase("1")
+            if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
+                groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
+                new Common.getDistance(groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+            } else {
+                groupViewHolder.txt_distance.setVisibility(View.GONE);
+            }
         } else {
             groupViewHolder.txt_distance.setVisibility(View.GONE);
         }
@@ -481,18 +482,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     @Override
                     public void onClick(View v) {
                         if (!edtAlertTime.getText().toString().isEmpty()) {
-                            Set st=mSharedPreferences.getStringSet("key",null);
-                            if(st==null)
-                            {
-                                HashMap<String, String> hMap = new HashMap<String, String>();
-                                hMap.put(id, edtAlertTime.getText().toString().trim());
-                                st = hMap.keySet();
-                            }else
-                            {
-
+                            Gson gson = new Gson();
+                            HashMap<String, String> testHashMap2;
+                            String storedHashMapString = mSharedPreferences.getString("hashString", null);
+                            if (storedHashMapString != null) {
+                                java.lang.reflect.Type type = new TypeToken<HashMap<String, String>>() {
+                                }.getType();
+                                testHashMap2 = gson.fromJson(storedHashMapString, type);
+                            } else {
+                                testHashMap2 = new HashMap<>();
                             }
-                            //Set the values
-                            mEditor.putStringSet("key", st);
+                            testHashMap2.put(id, edtAlertTime.getText().toString().trim());
+                            String hashMapString = gson.toJson(testHashMap2);
+                            mEditor.putString("hashString", hashMapString);
                             mEditor.commit();
                         }
                     }
