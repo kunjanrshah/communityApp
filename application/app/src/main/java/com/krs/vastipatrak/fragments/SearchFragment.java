@@ -625,7 +625,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 Objects.requireNonNull(txtLable).setVisibility(View.GONE);
                 JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                 for (int i = 0; i < mJsonArray.length(); i++) {
-
                     JSONObject mJsondata = mJsonArray.getJSONObject(i);
                     String profile_id = mJsondata.getString(Common.Constant_Class.ID);
                     String email = mJsondata.getString(Common.Constant_Class.EMAIL_ADDRESS);
@@ -641,6 +640,10 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     String is_location_enable = mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE);
                     String user_lat = mJsondata.getString(Common.Constant_Class.USER_LAT);
                     String user_lng = mJsondata.getString(Common.Constant_Class.USER_LNG);
+                    String can_share = "0";
+                    if (mJsondata.has(Common.Constant_Class.CAN_SHARE)) {
+                        can_share = mJsondata.getString(Common.Constant_Class.CAN_SHARE);
+                    }
                     ListParentData lpd = new ListParentData();
                     lpd.setName(first_name + " " + last_name);
                     lpd.setFatherName(father_name);
@@ -662,17 +665,19 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     String birth_time = mJsondata.getString(Common.Constant_Class.BIRTH_TIME);
                     String birth_place = mJsondata.getString(Common.Constant_Class.BIRTH_PLACE);
                     String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
-                    String is_block = "0";
+                    String is_share = "0";
                     if (mJsondata.has(Common.Constant_Class.IS_SHARE)) {
-                        is_block = mJsondata.getString(Common.Constant_Class.IS_SHARE);
+                        is_share = mJsondata.getString(Common.Constant_Class.IS_SHARE);
                     }
-                    lpd.setIs_share(is_block);
+                    lpd.setIs_share(is_share);
+
                     String phone = mJsondata.getString(Common.Constant_Class.PHONE);
                     String gender = mJsondata.getString(Common.Constant_Class.GENDER);
                     String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
 
                     ListChildData lcd = new ListChildData();
                     lcd.setID(profile_id);
+                    lcd.setCan_share(can_share);
                     lcd.setNative(native_place);
                     lcd.setAddress(address);
                     lcd.setbirth_date(birth_date);
@@ -684,7 +689,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     lcd.setPhone(phone);
                     lcd.setGender(gender);
                     lcd.setGotra(gotra);
-                    lcd.setIs_share(is_block);
                     lcd.setName(first_name+" "+last_name);
                     ArrayList<ListChildData> mlstChildData = new ArrayList<>();
                     mlstChildData.add(lcd);

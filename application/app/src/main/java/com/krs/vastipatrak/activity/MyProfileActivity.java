@@ -85,7 +85,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             id = mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, "");
         }
         SyncUser(id);
-        //call_profile_ws(new JSONObject(), "0");
+       // call_profile_ws(new JSONObject(), "0");
     }
 
     @Nullable
@@ -467,7 +467,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private void call_profile_ws(@Nullable JSONObject mJsonObject, final String is_update) {
         if (Common.isOnline(this) && mSharedPreferences != null) {
             try {
-
                 if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
                     mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                     mJsonObject.put(Common.Constant_Class.IS_UPDATE, is_update);

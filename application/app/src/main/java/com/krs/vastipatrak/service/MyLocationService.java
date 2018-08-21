@@ -112,7 +112,7 @@ public class MyLocationService extends Service {
                 mJsonObject.put(Common.Constant_Class.USER_LAT, mLastLocation.getLatitude());
                 mJsonObject.put(Common.Constant_Class.USER_LNG, mLastLocation.getLongitude());
                 String is_loc = "0";
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false)) {
+                if (mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0").equalsIgnoreCase("1")) {
                     is_loc = "1";
                 } else {
                     is_loc = "0";
@@ -131,7 +131,7 @@ public class MyLocationService extends Service {
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false)) {
+                            if (mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0").equalsIgnoreCase("1")) {
                                 Log.d(TAG, "step yes");
                                 Toast.makeText(MyLocationService.this, "Vastipatrak is sharing your location!", Toast.LENGTH_SHORT).show();
                             } else {
@@ -178,18 +178,7 @@ public class MyLocationService extends Service {
         public void onLocationChanged(Location location) {
             Log.e(TAG, "onLocationChanged: " + location);
             mLastLocation.set(location);
-            /*mEditor.putString(Common.Constant_Class.MY_LATITUDE, String.valueOf(location.getLatitude()));
-            mEditor.putString(Common.Constant_Class.MY_LONGITUDE, String.valueOf(location.getLongitude()));
-            mEditor.apply();*/
             userLocationUpdateWS();
-
-           /* new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-
-                }
-            }, 2000);*/
-
         }
 
         @Override

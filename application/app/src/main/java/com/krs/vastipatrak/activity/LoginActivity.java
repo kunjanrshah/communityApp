@@ -631,6 +631,7 @@ public class LoginActivity extends Activity {
                                     String access_token = mjson_data.getString(Common.Constant_Class.ACCESS_TOKEN);
                                     String updated_time = mjson_data.getString(Common.Constant_Class.UPDATED_TIME);
                                     String role = mjson_data.getString(Common.Constant_Class.ROLE);
+                                    String is_location_enable = mjson_data.getString(Common.Constant_Class.IS_LOCATION_ENABLE);
 
                                     mEditor.putString(Common.Constant_Class.EMAIL, email);
                                     mEditor.putString(Common.Constant_Class.PASSWORD, password);
@@ -641,6 +642,7 @@ public class LoginActivity extends Activity {
                                     mEditor.putString(Common.Constant_Class.ACCESS_TOKEN, access_token);
                                     mEditor.putString(Common.Constant_Class.UPDATED_TIME, updated_time);
                                     mEditor.putString(Common.Constant_Class.ROLE, role);
+                                    mEditor.putString(Common.Constant_Class.TBTN_SHARE, is_location_enable);
                                     mEditor.apply();
 
                                     /*Bundle fb_bundle = new Bundle();

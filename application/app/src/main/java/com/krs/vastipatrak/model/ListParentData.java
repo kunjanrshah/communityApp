@@ -17,7 +17,11 @@ public class ListParentData {
     private String user_lng;
     private String str_name;
 
-    private String is_share ="0";
+    private String is_share = "0";
+
+    private String mail;
+
+
     public String getIs_share() {
         return is_share;
     }
@@ -25,6 +29,7 @@ public class ListParentData {
     public void setIs_share(String is_share) {
         this.is_share = is_share;
     }
+
     public String getMail() {
         return mail;
     }
@@ -32,8 +37,6 @@ public class ListParentData {
     public void setMail(String mail) {
         this.mail = mail;
     }
-
-    private String mail;
 
     public String getMobile() {
         return mobile;
@@ -131,7 +134,6 @@ public class ListParentData {
     public void setStatus(String str_status) {
         this.status = str_status;
     }
-
 
 
 }

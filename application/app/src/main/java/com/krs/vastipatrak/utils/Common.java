@@ -1899,6 +1899,7 @@ public class Common {
 
         public static final String SHARE_USER_IDS = "share_user_ids";
         public static final String IS_SHARE = "is_share";
+        public static final String CAN_SHARE = "can_share";
         public static final String API_KEY = "api_key";
         public static final String DEVICE_TYPE = "device_type";
         public static final String DEVICE_TOKEN = "device_token";

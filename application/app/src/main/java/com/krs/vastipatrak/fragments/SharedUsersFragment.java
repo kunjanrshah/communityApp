@@ -154,7 +154,6 @@ public class SharedUsersFragment extends Fragment {
                             lcd.setPhone(phone);
                             lcd.setGender(gender);
                             lcd.setGotra(gotra);
-                            lcd.setIs_share(is_block);
                             lcd.setName(first_name + " " + last_name);
                             ArrayList<ListChildData> mlstChildData = new ArrayList<>();
                             mlstChildData.add(lcd);

@@ -179,7 +179,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String gender = mListChildData.getGender();
         String gotra = mListChildData.getGotra();
         String Mother = mListChildData.getMother_name();
-        final String is_share = mListChildData.getIs_share();
+        final String can_share = mListChildData.getCan_share();
         final String profile_id = mListChildData.getID();
         final String mobile = mListChildData.getMobile().trim().replaceAll("\\?", "").replaceAll("\\+", "");
         String str_native = mListChildData.getNative();
@@ -188,7 +188,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         childViewHolder.txt_phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 try {
                     boolean flag = true;
                     if (Build.VERSION.SDK_INT >= 23) {
@@ -206,32 +205,43 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 } catch (SecurityException e) {
                     e.printStackTrace();
                 }
-
             }
         });
 
-
-        boolean bool = mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false);
-        if (bool) {
+        final boolean[] isChecked1 = {true};
+        String bool = mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0");
+        if (bool.equalsIgnoreCase("1")) {
             childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
-            //if (is_share.equalsIgnoreCase("1")) {
-            childViewHolder.tbtn_share.setChecked(true);
-            //} else {
-            childViewHolder.tbtn_share.setChecked(false);
-            // }
+
+            if (can_share.equalsIgnoreCase("1")) {
+                isChecked1[0] = false;
+                childViewHolder.tbtn_share.setChecked(true);
+            } else {
+                childViewHolder.tbtn_share.setChecked(false);
+            }
         } else {
             childViewHolder.tbtn_share.setVisibility(View.GONE);
         }
+
 
         childViewHolder.tbtn_share.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if (isChecked) {
-                    userLocationShareWS(profile_id, name, "1");
+                if (isChecked1[0]) {
+                    if (isChecked) {
+                        mListChildData.setCan_share("1");
+                        Log.d(TAG, "isChecked: " + isChecked + " profile_id: " + profile_id);
+                        userLocationShareWS(profile_id, name, "1");
+                    } else {
+                        mListChildData.setCan_share("0");
+                        Log.d(TAG, "isChecked: " + isChecked + " profile_id: " + profile_id);
+                        userLocationShareWS(profile_id, name, "0");
+                    }
                 } else {
-                    userLocationShareWS(profile_id, name, "0");
+                    isChecked1[0] = true;
                 }
+
 
             }
         });

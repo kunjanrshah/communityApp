@@ -16,13 +16,18 @@ public class ListChildData {
     private String home_lat;
     private String home_lng;
     private String profile_id;
-    private String is_share ="0";
-    public String getIs_share() {
-        return is_share;
+    private String can_share = "0";
+    private String mother_name;
+    private String user_lat;
+    private String user_lng;
+    private String str_name;
+
+    public String getCan_share() {
+        return can_share;
     }
 
-    public void setIs_share(String is_share) {
-        this.is_share = is_share;
+    public void setCan_share(String can_share) {
+        this.can_share = can_share;
     }
 
     public String getProfile_id() {
@@ -32,23 +37,12 @@ public class ListChildData {
     public void setProfile_id(String profile_id) {
         this.profile_id = profile_id;
     }
-
-
-
     public String getMother_name() {
         return mother_name;
     }
-
     public void setMother_name(String mother_name) {
         this.mother_name = mother_name;
     }
-
-    private String mother_name;
-    private String user_lat;
-    private String user_lng;
-
-
-    private String str_name;
 
     public String getName() {
         return str_name;

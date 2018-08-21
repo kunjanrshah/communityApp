@@ -335,12 +335,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 if (setChecked) {
                     setChecked = false;
                     if (isChecked) {
-                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, true);
+                        mEditor.putString(Common.Constant_Class.TBTN_SHARE, "1");
                         mEditor.apply();
                         mActivity.startService(new Intent(mActivity, MyLocationService.class));
                         toggle = true;
                     } else {
-                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, false);
+                        mEditor.putString(Common.Constant_Class.TBTN_SHARE, "0");
                         mEditor.apply();
                         mActivity.stopService(new Intent(mActivity, MyLocationService.class));
                         toggle = true;
@@ -353,7 +353,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 builder.setMessage(message);
                                 builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                                     public void onClick(@NonNull DialogInterface dialog, int which) {
-                                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, true);
+                                        mEditor.putString(Common.Constant_Class.TBTN_SHARE, "1");
                                         mEditor.apply();
                                         mActivity.startService(new Intent(mActivity, MyLocationService.class));
                                         toggle = true;
@@ -373,7 +373,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 builder.setMessage(message);
                                 builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                                     public void onClick(@NonNull DialogInterface dialog, int which) {
-                                        mEditor.putBoolean(Common.Constant_Class.TBTN_SHARE, false);
+                                        mEditor.putString(Common.Constant_Class.TBTN_SHARE, "0");
                                         mEditor.apply();
                                         mActivity.stopService(new Intent(mActivity, MyLocationService.class));
                                         toggle = true;
