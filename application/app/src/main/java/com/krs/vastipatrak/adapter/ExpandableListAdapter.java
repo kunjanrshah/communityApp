@@ -55,12 +55,10 @@ import com.krs.vastipatrak.model.ListParentData;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.RoundedCornersTransformation;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -180,7 +178,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String gender = mListChildData.getGender();
         String gotra = mListChildData.getGotra();
         String Mother = mListChildData.getMother_name();
-        final String is_block = mListChildData.getIs_block();
+        final String is_share = mListChildData.getIs_share();
         final String profile_id = mListChildData.getID();
         final String mobile = mListChildData.getMobile().trim().replaceAll("\\?", "").replaceAll("\\+", "");
         String str_native = mListChildData.getNative();
@@ -215,11 +213,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         boolean bool = mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false);
         if (bool) {
             childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
-            if (is_block.equalsIgnoreCase("1")) {
+            //if (is_share.equalsIgnoreCase("1")) {
                 childViewHolder.tbtn_share.setChecked(true);
-            } else {
+            //} else {
                 childViewHolder.tbtn_share.setChecked(false);
-            }
+           // }
         } else {
             childViewHolder.tbtn_share.setVisibility(View.GONE);
         }
@@ -265,7 +263,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 mEditor.apply();
                 Intent mIntent = new Intent(_context, MyProfileActivity.class);
                 _context.startActivity(mIntent);
-
             }
         });
 
@@ -426,16 +423,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String user_lat = mListParentData.getUser_lat();
         final String user_lng = mListParentData.getUser_lng();
 
-        //if (is_block.equalsIgnoreCase("1") ) {  //&& mListParentData.isIs_location_enable().equalsIgnoreCase("1")
+        if (is_block.equalsIgnoreCase("1") ) {  //&& mListParentData.isIs_location_enable().equalsIgnoreCase("1")
         if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
             groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
             new Common.getDistance(groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
         } else {
             groupViewHolder.txt_distance.setVisibility(View.GONE);
         }
-        /*} else {
+        } else {
             groupViewHolder.txt_distance.setVisibility(View.GONE);
-        }*/
+        }
 
         groupViewHolder.txt_distance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -484,11 +481,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     @Override
                     public void onClick(View v) {
                         if (!edtAlertTime.getText().toString().isEmpty()) {
+                            Set st=mSharedPreferences.getStringSet("key",null);
+                            if(st==null)
+                            {
+                                HashMap<String, String> hMap = new HashMap<String, String>();
+                                hMap.put(id, edtAlertTime.getText().toString().trim());
+                                st = hMap.keySet();
+                            }else
+                            {
 
+                            }
                             //Set the values
-                            HashMap<String, String> hMap = new HashMap<String, String>();
-                            hMap.put(id, edtAlertTime.getText().toString().trim());
-                            Set st = hMap.keySet();
                             mEditor.putStringSet("key", st);
                             mEditor.commit();
                         }
@@ -550,21 +553,21 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         _context.startActivity(intent);
     }
 
-    private void userLocationShareWS(String block_id, final String name, final String is_block) {
+    private void userLocationShareWS(String share_id, final String name, final String is_share) {
         if (Common.isOnline(_context)) {
             JSONObject mJsonObject = null;
             try {
 
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.BLOCK_USER_IDS, block_id);
-                mJsonObject.put(Common.Constant_Class.IS_BLOCK, is_block);
+                mJsonObject.put(Common.Constant_Class.SHARE_USER_IDS, share_id);
+                mJsonObject.put(Common.Constant_Class.IS_SHARE, is_share);
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.BLOCK_USERS_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SHARED_USERS_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
@@ -572,7 +575,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
 
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            if (is_block.equalsIgnoreCase("1")) {
+                            if (is_share.equalsIgnoreCase("1")) {
                                 Toast.makeText(_context, "You have shared your location to " + name, Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(_context, "You have not shared your location to " + name, Toast.LENGTH_LONG).show();

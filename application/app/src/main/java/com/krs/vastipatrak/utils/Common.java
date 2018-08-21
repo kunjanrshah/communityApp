@@ -777,8 +777,8 @@ public class Common {
             if (mJsonObject.has(Constant_Class.CITY)) {
                 mListProfileData.setCity(mJsonObject.getString(Constant_Class.CITY));
             }
-            if (mJsonObject.has(Constant_Class.IS_BLOCK)) {
-                mListProfileData.setIs_block(mJsonObject.getString(Constant_Class.IS_BLOCK));
+            if (mJsonObject.has(Constant_Class.IS_SHARE)) {
+                mListProfileData.setIs_block(mJsonObject.getString(Constant_Class.IS_SHARE));
             }
             if (mJsonObject.has(Constant_Class.IS_LOCATION_ENABLE)) {
                 mListProfileData.setIs_location_enable(mJsonObject.getString(Constant_Class.IS_LOCATION_ENABLE));
@@ -1896,8 +1896,8 @@ public class Common {
         public static final String AdminControl = "AdminControl";
 
 
-        public static final String BLOCK_USER_IDS = "block_user_ids";
-        public static final String IS_BLOCK = "is_block";
+        public static final String SHARE_USER_IDS = "share_user_ids";
+        public static final String IS_SHARE = "is_share";
         public static final String API_KEY = "api_key";
         public static final String DEVICE_TYPE = "device_type";
         public static final String DEVICE_TOKEN = "device_token";
@@ -2043,7 +2043,7 @@ public class Common {
         public static final String GET_CITIES_URL = BASE_URL + "/API/getCities";
         public static final String CHANGE_ROLE_URL = BASE_URL + "/API/changeRole";
         public static final String GET_GOTRA_URL = BASE_URL + "/API/getGotra";
-        public static final String BLOCK_USERS_URL = BASE_URL + "/API/blockUsers";
+        public static final String SHARED_USERS_URL = BASE_URL + "/API/shareUsers";
         public static String DEVICE_ID_VALUE = "";
     }
 }

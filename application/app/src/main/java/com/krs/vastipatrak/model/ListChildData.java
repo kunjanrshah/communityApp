@@ -16,13 +16,13 @@ public class ListChildData {
     private String home_lat;
     private String home_lng;
     private String profile_id;
-    private String is_block="0";
-    public String getIs_block() {
-        return is_block;
+    private String is_share ="0";
+    public String getIs_share() {
+        return is_share;
     }
 
-    public void setIs_block(String is_block) {
-        this.is_block = is_block;
+    public void setIs_share(String is_share) {
+        this.is_share = is_share;
     }
 
     public String getProfile_id() {

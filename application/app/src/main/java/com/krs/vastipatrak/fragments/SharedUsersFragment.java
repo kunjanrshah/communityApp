@@ -87,7 +87,7 @@ public class SharedUsersFragment extends Fragment {
                 e.printStackTrace();
             }
             showProgressDialog(getActivity());
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.BLOCK_USERS_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SHARED_USERS_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
@@ -133,8 +133,8 @@ public class SharedUsersFragment extends Fragment {
                             String birth_place = mJsondata.getString(Common.Constant_Class.BIRTH_PLACE);
                             String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
                             String is_block = "0";
-                            if (mJsondata.has(Common.Constant_Class.IS_BLOCK)) {
-                                is_block = mJsondata.getString(Common.Constant_Class.IS_BLOCK);
+                            if (mJsondata.has(Common.Constant_Class.IS_SHARE)) {
+                                is_block = mJsondata.getString(Common.Constant_Class.IS_SHARE);
                             }
                             lpd.setIs_block(is_block);
                             String phone = mJsondata.getString(Common.Constant_Class.PHONE);
@@ -154,7 +154,7 @@ public class SharedUsersFragment extends Fragment {
                             lcd.setPhone(phone);
                             lcd.setGender(gender);
                             lcd.setGotra(gotra);
-                            lcd.setIs_block(is_block);
+                            lcd.setIs_share(is_block);
                             lcd.setName(first_name + " " + last_name);
                             ArrayList<ListChildData> mlstChildData = new ArrayList<>();
                             mlstChildData.add(lcd);

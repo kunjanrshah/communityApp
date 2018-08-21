@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -114,7 +113,13 @@ public class MyLocationService extends Service {
                 mJsonObject = new JSONObject();
                 mJsonObject.put(Common.Constant_Class.USER_LAT, mLastLocation.getLatitude());
                 mJsonObject.put(Common.Constant_Class.USER_LNG, mLastLocation.getLongitude());
-                mJsonObject.put(Common.Constant_Class.IS_LOCATION_ENABLE, mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false));
+                String is_loc = "0";
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false)) {
+                    is_loc = "1";
+                } else {
+                    is_loc = "0";
+                }
+                mJsonObject.put(Common.Constant_Class.IS_LOCATION_ENABLE, is_loc);
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
@@ -129,10 +134,10 @@ public class MyLocationService extends Service {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             if (mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SHARE, false)) {
-                                Log.d(TAG,"step yes");
+                                Log.d(TAG, "step yes");
                                 Toast.makeText(MyLocationService.this, "Vastipatrak is sharing your location!", Toast.LENGTH_SHORT).show();
                             } else {
-                                Log.d(TAG,"step no");
+                                Log.d(TAG, "step no");
                                 Toast.makeText(MyLocationService.this, "Stop Sharing location successfully!", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -146,7 +151,7 @@ public class MyLocationService extends Service {
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d("TimeService", "Error: " + error.getMessage());
                 }
-            }){
+            }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
@@ -154,7 +159,7 @@ public class MyLocationService extends Service {
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
                     params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
                     return params;
                 }
             };

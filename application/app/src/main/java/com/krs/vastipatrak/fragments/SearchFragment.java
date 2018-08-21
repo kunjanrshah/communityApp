@@ -53,8 +53,6 @@ import com.krs.vastipatrak.interfaces.IAdminControl;
 import com.krs.vastipatrak.model.ExportProfileData;
 import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
-import com.krs.vastipatrak.model.ListProfileData;
-import com.krs.vastipatrak.model.ListProfiles;
 import com.krs.vastipatrak.utils.Common;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
@@ -72,7 +70,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-import io.realm.RealmList;
 import io.realm.RealmResults;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
@@ -666,8 +663,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     String birth_place = mJsondata.getString(Common.Constant_Class.BIRTH_PLACE);
                     String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
                     String is_block = "0";
-                    if (mJsondata.has(Common.Constant_Class.IS_BLOCK)) {
-                        is_block = mJsondata.getString(Common.Constant_Class.IS_BLOCK);
+                    if (mJsondata.has(Common.Constant_Class.IS_SHARE)) {
+                        is_block = mJsondata.getString(Common.Constant_Class.IS_SHARE);
                     }
                     lpd.setIs_block(is_block);
                     String phone = mJsondata.getString(Common.Constant_Class.PHONE);
@@ -687,7 +684,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     lcd.setPhone(phone);
                     lcd.setGender(gender);
                     lcd.setGotra(gotra);
-                    lcd.setIs_block(is_block);
+                    lcd.setIs_share(is_block);
                     lcd.setName(first_name+" "+last_name);
                     ArrayList<ListChildData> mlstChildData = new ArrayList<>();
                     mlstChildData.add(lcd);
