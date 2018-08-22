@@ -208,13 +208,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        final boolean[] isChecked1 = {true};
         String bool = mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0");
         if (bool.equalsIgnoreCase("1")) {
             childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
-
             if (can_share.equalsIgnoreCase("1")) {
-                isChecked1[0] = false;
                 childViewHolder.tbtn_share.setChecked(true);
             } else {
                 childViewHolder.tbtn_share.setChecked(false);
@@ -222,27 +219,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         } else {
             childViewHolder.tbtn_share.setVisibility(View.GONE);
         }
-
-
-        childViewHolder.tbtn_share.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        childViewHolder.tbtn_share.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (isChecked1[0]) {
-                    if (isChecked) {
-                        mListChildData.setCan_share("1");
-                        Log.d(TAG, "isChecked: " + isChecked + " profile_id: " + profile_id);
-                        userLocationShareWS(profile_id, name, "1");
-                    } else {
-                        mListChildData.setCan_share("0");
-                        Log.d(TAG, "isChecked: " + isChecked + " profile_id: " + profile_id);
-                        userLocationShareWS(profile_id, name, "0");
-                    }
+            public void onClick(View v) {
+                if (childViewHolder.tbtn_share.isChecked()) {
+                    mListChildData.setCan_share("1");
+                    userLocationShareWS(profile_id, name, "1");
                 } else {
-                    isChecked1[0] = true;
+                    mListChildData.setCan_share("0");
+                    userLocationShareWS(profile_id, name, "0");
                 }
-
-
             }
         });
 

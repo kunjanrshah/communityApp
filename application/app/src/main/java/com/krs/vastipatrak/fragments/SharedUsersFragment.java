@@ -132,11 +132,11 @@ public class SharedUsersFragment extends Fragment {
                             String birth_time = mJsondata.getString(Common.Constant_Class.BIRTH_TIME);
                             String birth_place = mJsondata.getString(Common.Constant_Class.BIRTH_PLACE);
                             String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
-                            String is_block = "0";
+                            String is_share = "0";
                             if (mJsondata.has(Common.Constant_Class.IS_SHARE)) {
-                                is_block = mJsondata.getString(Common.Constant_Class.IS_SHARE);
+                                is_share = mJsondata.getString(Common.Constant_Class.IS_SHARE);
                             }
-                            lpd.setIs_share(is_block);
+                            lpd.setIs_share(is_share);
                             String phone = mJsondata.getString(Common.Constant_Class.PHONE);
                             String gender = mJsondata.getString(Common.Constant_Class.GENDER);
                             String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
@@ -155,6 +155,7 @@ public class SharedUsersFragment extends Fragment {
                             lcd.setGender(gender);
                             lcd.setGotra(gotra);
                             lcd.setName(first_name + " " + last_name);
+                            lcd.setCan_share("1");
                             ArrayList<ListChildData> mlstChildData = new ArrayList<>();
                             mlstChildData.add(lcd);
                             listDataHeader.add(lpd);
