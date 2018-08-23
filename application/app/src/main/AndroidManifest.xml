@@ -79,7 +79,7 @@
         <activity android:name=".activity.PDFActivity" />
 
         <service android:name=".service.MyLocationService" />
-        <service android:name=".service.SyncService" />
+        <service android:name=".service.LocationAlertService" />
 
         <!-- Firebase Notifications -->
         <service

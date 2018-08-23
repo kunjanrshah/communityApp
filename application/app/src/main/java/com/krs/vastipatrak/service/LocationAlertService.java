@@ -28,6 +28,7 @@ import com.krs.vastipatrak.utils.Common;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,15 +38,21 @@ public class LocationAlertService extends Service {
 
     private SharedPreferences mSharedPreferences;
     private String TAG = LocationAlertService.class.getSimpleName();
-
+    private HashMap<String,String>  lstLocation=null;
+    private ArrayList<Handler> mlstHandler=null;
     @Override
     public void onCreate() {
         super.onCreate();
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mlstHandler=new ArrayList<>();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+    //  String id=  intent.getStringExtra("id");
+    //  String time=  intent.getStringExtra("time");
+     // boolean status= intent.getBooleanExtra("status",false);
 
         String storedHashMapString = mSharedPreferences.getString("hashString", null);
         Gson gson = new Gson();
@@ -55,16 +62,22 @@ public class LocationAlertService extends Service {
             }.getType();
             testHashMap2 = gson.fromJson(storedHashMapString, type);
             List<String> l = new ArrayList<>(testHashMap2.keySet());
+            mlstHandler.clear();
             for (int i = 0; i < l.size(); i++) {
                 final String profile_id = l.get(i);
-                String alert_time = testHashMap2.get(profile_id);
+                final String alert_time = testHashMap2.get(profile_id);
+                Log.d(TAG,"profile_id: "+profile_id);
+                Log.d(TAG,"alert_time: "+alert_time);
+
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        Log.d(TAG,"handler profile_id :"+profile_id+" alert_time: "+alert_time);
                         SyncUser(profile_id);
                     }
                 }, 60 * 1000 * Integer.parseInt(alert_time));
+                mlstHandler.add(handler);
             }
         } // If we get killed, after returning from here, restart
         return START_STICKY;

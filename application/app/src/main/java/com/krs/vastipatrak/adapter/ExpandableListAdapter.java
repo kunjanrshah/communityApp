@@ -54,6 +54,7 @@ import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
+import com.krs.vastipatrak.service.LocationAlertService;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.RoundedCornersTransformation;
 
@@ -444,7 +445,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 Button btn_map = dialog.findViewById(R.id.btn_map);
                 ImageView img_cancel = dialog.findViewById(R.id.img_cancel);
                 final Button btnsave = dialog.findViewById(R.id.btnsave);
-                ToggleButton tbtn_alert = dialog.findViewById(R.id.btn_alert);
+                final ToggleButton tbtn_alert = dialog.findViewById(R.id.btn_alert);
                 final EditText edtAlertTime = dialog.findViewById(R.id.edtAlertTime);
                 final TextInputLayout tlalert = dialog.findViewById(R.id.tlalert);
                 if (tbtn_alert.isChecked()) {
@@ -492,6 +493,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             String hashMapString = gson.toJson(testHashMap2);
                             mEditor.putString("hashString", hashMapString);
                             mEditor.commit();
+                            Intent mIntent=new Intent(_context,LocationAlertService.class);
+                         //   mIntent.putExtra("id",id);
+                         //   mIntent.putExtra("time",edtAlertTime.getText().toString().trim());
+                         //   mIntent.putExtra("status",tbtn_alert.isChecked());
+                            _context.startService(mIntent);
                         }
                     }
                 });
