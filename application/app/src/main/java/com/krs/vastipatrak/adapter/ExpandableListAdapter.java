@@ -498,6 +498,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                          //   mIntent.putExtra("time",edtAlertTime.getText().toString().trim());
                          //   mIntent.putExtra("status",tbtn_alert.isChecked());
                             _context.startService(mIntent);
+                            dialog.dismiss();
                         }
                     }
                 });
