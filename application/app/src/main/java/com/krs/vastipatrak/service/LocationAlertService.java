@@ -33,26 +33,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class LocationAlertService extends Service {
 
     private SharedPreferences mSharedPreferences;
     private String TAG = LocationAlertService.class.getSimpleName();
-    private HashMap<String,String>  lstLocation=null;
-    private ArrayList<Handler> mlstHandler=null;
+    HashMap<String,Timer> mlstMapTimer=null;
+    private long NOTIFY_INTERVAL=60 * 1000;
     @Override
     public void onCreate() {
         super.onCreate();
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
-        mlstHandler=new ArrayList<>();
+        mlstMapTimer=new HashMap<>();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-    //  String id=  intent.getStringExtra("id");
-    //  String time=  intent.getStringExtra("time");
-     // boolean status= intent.getBooleanExtra("status",false);
 
         String storedHashMapString = mSharedPreferences.getString("hashString", null);
         Gson gson = new Gson();
@@ -62,26 +60,48 @@ public class LocationAlertService extends Service {
             }.getType();
             testHashMap2 = gson.fromJson(storedHashMapString, type);
             List<String> l = new ArrayList<>(testHashMap2.keySet());
-            mlstHandler.clear();
+
             for (int i = 0; i < l.size(); i++) {
                 final String profile_id = l.get(i);
                 final String alert_time = testHashMap2.get(profile_id);
-                Log.d(TAG,"profile_id: "+profile_id);
-                Log.d(TAG,"alert_time: "+alert_time);
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG,"handler profile_id :"+profile_id+" alert_time: "+alert_time);
-                        SyncUser(profile_id);
-                    }
-                }, 60 * 1000 * Integer.parseInt(alert_time));
-                mlstHandler.add(handler);
+                Log.d(TAG,"Timer profile_id: "+profile_id+" alert_time: "+alert_time);
+                Timer mTimer = null;
+                if(mTimer != null) {
+                    mTimer.cancel();
+                } else {
+                    mTimer = new Timer();
+                }
+                mTimer.scheduleAtFixedRate(new TimeDisplayTimerTask(profile_id), NOTIFY_INTERVAL*Integer.parseInt(alert_time), NOTIFY_INTERVAL*Integer.parseInt(alert_time));
+                mlstMapTimer.put(profile_id,mTimer);
             }
         } // If we get killed, after returning from here, restart
         return START_STICKY;
     }
+
+    class TimeDisplayTimerTask extends TimerTask {
+
+        String profile_id="";
+        TimeDisplayTimerTask(String profile_id)
+        {
+            this.profile_id=profile_id;
+        }
+        @Override
+        public void run() {
+            // run on another thread
+            Log.d(TAG,"TimeDisplayTimerTask profile_id: "+profile_id);
+            SyncUser(profile_id);
+            /*Handler mHandler = new Handler();
+            mHandler.post(new Runnable() {
+
+                @Override
+                public void run() {
+
+                }
+
+            });*/
+        }
+    }
+
 
     private void SyncUser(String profile_id) {
         if (Common.isOnline(this)) {

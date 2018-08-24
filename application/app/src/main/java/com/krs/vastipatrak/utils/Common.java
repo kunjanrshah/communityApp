@@ -1872,6 +1872,7 @@ public class Common {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Log.d("getDistance", "distance: " + s);
             if (txtDistance != null) {
                 txtDistance.setText("" + s);
             }
