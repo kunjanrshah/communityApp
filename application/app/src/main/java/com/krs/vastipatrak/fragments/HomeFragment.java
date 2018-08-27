@@ -385,7 +385,6 @@ public class HomeFragment extends Fragment {
             holder.txtDesc.setText(data.getDescription());
             holder.txtLocation.setText(data.getLocation());
 
-
             holder.txtEventDate.setText(parseDateToddMMyyyy(DatetoString(data.getEventDate()),yyyy_MM_dd,dd_MMM_yyyy));
             getRandomColor(Objects.requireNonNull(getActivity()), position, holder.ll_event);
 
@@ -395,8 +394,12 @@ public class HomeFragment extends Fragment {
                     Toast.makeText(getActivity(), "get location", Toast.LENGTH_SHORT).show();
                     String lat = data.getLat();
                     String lng = data.getLng();
-                    if (MainActivity.lat != null && MainActivity.lon != null && !lat.isEmpty() && !lng.isEmpty()) {
-                        showDirections(Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon), Double.parseDouble(data.getLat()), Double.parseDouble(data.getLng()), data.getLocation());
+                    String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                    String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                    final double clat = Double.valueOf(curr_lat);
+                    final double clng = Double.valueOf(curr_lng);
+                    if (clat != 0 && clng != 0 && !lat.isEmpty() && !lng.isEmpty()) {
+                        showDirections(clat, clng, Double.parseDouble(data.getLat()), Double.parseDouble(data.getLng()), data.getLocation());
                     } else {
                         Toast.makeText(getActivity(), "Location not found!", Toast.LENGTH_SHORT).show();
                     }

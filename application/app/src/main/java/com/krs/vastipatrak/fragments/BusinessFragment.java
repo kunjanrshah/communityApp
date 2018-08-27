@@ -80,7 +80,13 @@ public class BusinessFragment extends Fragment implements Serializable {
                 final int DRAWABLE_RIGHT = 2;
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (edtOAddress.getRight() - edtOAddress.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        if (MainActivity.lat == null && MainActivity.lon == null) {
+
+                         String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                         String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                        final double lat = Double.valueOf(curr_lat);
+                        final double lng = Double.valueOf(curr_lng);
+
+                        if (lat == 0 && lng == 0) {
                             Common.showSettingsAlert(mActivity);
                         } else {
                             if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
@@ -91,7 +97,7 @@ public class BusinessFragment extends Fragment implements Serializable {
                                 builder.setMessage(getString(R.string.office_location));
                                 builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        if (MainActivity.lat != null && MainActivity.lon != null) {
+                                        if (lat != 0 && lng != 0) {
                                             /*office_loc_flag = true;*/
                                             officeLocUpdateWS();
                                         }
@@ -103,8 +109,8 @@ public class BusinessFragment extends Fragment implements Serializable {
                                 }).show();
 
                             } else {
-                                if (MainActivity.lat != null && MainActivity.lon != null && office_lat != 0 && office_lng != 0) {
-                                    showDirections(Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+                                if (lat != 0 && lng != 0 && office_lat != 0 && office_lng != 0) {
+                                    showDirections(lat, lng);
                                 } else {
                                     Toast.makeText(mActivity, "Something wrong went!", Toast.LENGTH_SHORT).show();
                                 }
@@ -136,8 +142,12 @@ public class BusinessFragment extends Fragment implements Serializable {
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
-                double lat = Double.parseDouble(MainActivity.lat);
-                double lng = Double.parseDouble(MainActivity.lon);
+                final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                double lat = Double.valueOf(curr_lat);
+                double lng = Double.valueOf(curr_lng);
+
+
                 if (lat != 0 && lng != 0) {
                     mJsonObject.put(Common.Constant_Class.OFFICE_LAT, lat);
                     mJsonObject.put(Common.Constant_Class.OFFICE_LNG, lng);
@@ -251,7 +261,12 @@ public class BusinessFragment extends Fragment implements Serializable {
         }
         if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             if (office_lat != 0 && office_lng != 0) {
-                new Common.getDistance(txt_office).execute(office_lat, office_lng,Double.parseDouble(MainActivity.lat),Double.parseDouble(MainActivity.lon));
+                final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                double lat = Double.valueOf(curr_lat);
+                double lng = Double.valueOf(curr_lng);
+
+                new Common.getDistance(txt_office).execute(office_lat, office_lng,lat,lng);
 
                /* int distance = (int) Common.getDistance(mActivity, office_lat, office_lng);
                 if (distance == -1) {

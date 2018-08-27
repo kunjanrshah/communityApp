@@ -284,7 +284,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (edtAddress.getRight() - edtAddress.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        if (MainActivity.lat == null && MainActivity.lon == null) {
+                       final  String curr_lat= mSharedPreferences.getString(Common.Constant_Class.CURR_LAT,"");
+                       final  String curr_lng= mSharedPreferences.getString(Common.Constant_Class.CURR_LNG,"");
+                        if (curr_lat.isEmpty() && curr_lng.isEmpty()) {
                             Common.showSettingsAlert(mActivity);
 
                         } else {
@@ -298,7 +300,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
 
-                                        if (MainActivity.lat != null && MainActivity.lon != null) {
+                                        if (!curr_lat.isEmpty() && !curr_lng.isEmpty()) {
                                             homeLocationUpdateWS();
                                         } else {
                                             Toast.makeText(mActivity, "You need to give permission to access location ! ", Toast.LENGTH_SHORT).show();
@@ -312,8 +314,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 }).show();
 
                             } else {
-                                double lat = Double.valueOf(MainActivity.lat);
-                                double lng = Double.valueOf(MainActivity.lon);
+                                double lat = Double.valueOf(curr_lat);
+                                double lng = Double.valueOf(curr_lng);
                                 if (lat != 0 && lng != 0) {
                                     showDirections(lat, lng, edtAddress.getText().toString());
                                 }
@@ -397,8 +399,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         tbtn_share.setChecked(!isChecked);
                     }
                 }
-
-
             }
         });
 
@@ -692,22 +692,19 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     tbtn_share.setChecked(false);
                 }
 
-               /* AppController.getInstance().firebaseAnalytics.setUserProperty("Name", edtFName.getText().toString());
-                AppController.getInstance().firebaseAnalytics.setUserProperty("Father Name", edtFatherName.getText().toString());
-                AppController.getInstance().firebaseAnalytics.setUserProperty("Mother Name", edtMotherName.getText().toString());
-                AppController.getInstance().firebaseAnalytics.setUserProperty("Mobile", edtMobile.getText().toString());
-                AppController.getInstance().firebaseAnalytics.setUserProperty("Email Address", edt_Eaddress.getText().toString());
-                AppController.getInstance().firebaseAnalytics.setUserProperty("Home Address", edtAddress.getText().toString());*/
-
             } else {
                 if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {
                     DisableAll();
                 }
+                final  String curr_lat= mSharedPreferences.getString(Common.Constant_Class.CURR_LAT,"");
+                final  String curr_lng= mSharedPreferences.getString(Common.Constant_Class.CURR_LNG,"");
+                double lat = Double.valueOf(curr_lat);
+                double lng = Double.valueOf(curr_lng);
 
                 Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(mActivity)).getSupportActionBar()).setSubtitle(name + " Profile");
                 if (home_lat != 0 && home_lng != 0) {
                     Log.d(TAG, "step home_lat: " + home_lat + "home_lng: " + home_lng);
-                    new Common.getDistance(txt_home).execute(home_lat, home_lng, Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+                    new Common.getDistance(txt_home).execute(home_lat, home_lng, lat, lng);
                 } else {
                     txt_home.setText("User has not set location");
                 }
@@ -717,7 +714,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 /*if (is_block.equalsIgnoreCase("1")) { //&&*/
                     txt_distance.setVisibility(View.VISIBLE);
                     if (user_lat != 0 && user_lng != 0) {
-                        new Common.getDistance(txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user_lat, user_lng, Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+                        new Common.getDistance(txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user_lat, user_lng, lat, lng);
                     }
                /* } else {
                     txt_distance.setVisibility(View.GONE);
@@ -743,8 +740,10 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         if (Common.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
             try {
-                double lat = Double.valueOf(MainActivity.lat);
-                double lng = Double.valueOf(MainActivity.lon);
+                final  String curr_lat= mSharedPreferences.getString(Common.Constant_Class.CURR_LAT,"");
+                final  String curr_lng= mSharedPreferences.getString(Common.Constant_Class.CURR_LNG,"");
+                double lat = Double.valueOf(curr_lat);
+                double lng = Double.valueOf(curr_lng);
                 mJsonObject = new JSONObject();
                 if (lat != 0 && lng != 0) {
                     mJsonObject.put(Common.Constant_Class.HOME_LAT, lat);

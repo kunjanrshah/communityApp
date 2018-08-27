@@ -86,7 +86,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     public static final int CAMARA_REQUEST = 4;
     private static final String TAG = MainActivity.class.getSimpleName();
     public static GoogleApiClient mGoogleApiClient;
-    public static String lat, lon;
+    // public static String lat, lon;
     public static int MOVE_TO_SEARCH = 0;
     private static Location mLastLocation;
     private final int REQUEST_CHECK_SETTINGS = 199;
@@ -142,8 +141,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private IAdminControl IAdminControl;
     private MenuItem export;
     private MenuItem change_role;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         } else {
             displayView(-1);
         }
-            getGotraWS();
+        getGotraWS();
     }
 
 
@@ -422,7 +419,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 return false;
             }
         });
-
 
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -992,8 +988,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             e.printStackTrace();
         }
         if (mLastLocation != null) {
-            lat = String.valueOf(mLastLocation.getLatitude());
-            lon = String.valueOf(mLastLocation.getLongitude());
+            String lat = String.valueOf(mLastLocation.getLatitude());
+            String lon = String.valueOf(mLastLocation.getLongitude());
         }
     }
 
@@ -1004,8 +1000,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        lat = String.valueOf(location.getLatitude());
-        lon = String.valueOf(location.getLongitude());
+        String lat = String.valueOf(location.getLatitude());
+        String lon = String.valueOf(location.getLongitude());
     }
 
     @Override

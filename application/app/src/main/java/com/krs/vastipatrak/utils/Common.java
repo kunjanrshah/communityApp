@@ -274,15 +274,12 @@ public class Common {
         return (rad * 180.0 / Math.PI);
     }*/
 
-    public static void showDirections(@NonNull Activity mActivity, double latitude, double longitude, String address) {
+    public static void showDirections(@NonNull Activity mActivity,double slatitude, double slongitude, double dlatitude, double dlongitude, String address) {
 
-
-        if (MainActivity.lat != null && MainActivity.lon != null) {
-            String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon), "", latitude, longitude, address);
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-            mActivity.startActivity(intent);
-        }
+        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", slatitude, slongitude, "", dlatitude, dlongitude, address);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+        mActivity.startActivity(intent);
     }
 
     public static boolean isOnline(Context mContext) {
@@ -1857,8 +1854,9 @@ public class Common {
     }
 
     public static class getDistance extends AsyncTask<Double, String, String> {
+        public String strDisctance = "";
         TextView txtDistance;
-        public String strDisctance="";
+
         public getDistance(TextView txtDistance) {
             this.txtDistance = txtDistance;
         }
@@ -1875,9 +1873,8 @@ public class Common {
             Log.d("getDistance", "distance: " + s);
             if (txtDistance != null) {
                 txtDistance.setText("" + s);
-            }else
-            {
-                strDisctance=s;
+            } else {
+                strDisctance = s;
             }
         }
     }
@@ -1938,6 +1935,8 @@ public class Common {
         public static final String DATA = "data";
         public static final String USER_LAT = "user_lat";
         public static final String USER_LNG = "user_lng";
+        public static final String CURR_LAT = "curr_lat";
+        public static final String CURR_LNG = "curr_lng";
         public static final String HOME_LAT = "home_lat";
         public static final String HOME_LNG = "home_lng";
         public static final String OFFICE_LAT = "office_lat";

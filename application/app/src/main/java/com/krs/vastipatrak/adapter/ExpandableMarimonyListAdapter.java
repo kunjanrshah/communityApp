@@ -40,7 +40,6 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildrenData;
@@ -69,8 +68,6 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
      * Display detail view in Expandable list
      */
     private final HashMap<ListMatrimonyParentData, List<ListMatrimonyChildData>> _listDataChild;
-    @Nullable
-    private ProgressDialog pDialog;
     @NonNull
     private final String TAG = ExpandableMarimonyListAdapter.class.getSimpleName();
     /**
@@ -79,6 +76,8 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
     private final SharedPreferences mSharedPreferences;
     @Nullable
     private final SharedPreferences.Editor mEditor;
+    @Nullable
+    private ProgressDialog pDialog;
     private ChildViewHolder childViewHolder;
 
     public ExpandableMarimonyListAdapter(Context context, ArrayList<ListMatrimonyParentData> listDataHeader, HashMap<ListMatrimonyParentData, List<ListMatrimonyChildData>> listDataChild) {
@@ -223,10 +222,13 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                 builder.setMessage(message);
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                     public void onClick(@NonNull DialogInterface dialog, int which) {
-                        if (MainActivity.lat != null && MainActivity.lon != null) {
-                            Common.showDirections((Activity) _context, Double.parseDouble(home_lat), Double.parseDouble(home_lng), "");
-                            Toast.makeText(_context, "distance between you and " + name + "'s home", Toast.LENGTH_SHORT).show();
-                        }
+
+                        final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                        final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                        double lat = Double.valueOf(curr_lat);
+                        double lng = Double.valueOf(curr_lng);
+                        Common.showDirections((Activity) _context, lat, lng, Double.parseDouble(home_lat), Double.parseDouble(home_lng), "");
+                        Toast.makeText(_context, "distance between you and " + name + "'s home", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 });
@@ -296,8 +298,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this._listDataChild.get(this._listDataHeader.get(groupPosition))
-                .size();
+        return this._listDataChild.get(this._listDataHeader.get(groupPosition)).size();
     }
 
     @Override
@@ -375,11 +376,11 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
             public void onClick(View v) {
 
                 ListChildrenData childData = realm.where(ListChildrenData.class).equalTo(Common.Constant_Class.CHILD_ID, child_id).findFirst();
-                String name="";
-                Bitmap bitmap=null;
+                String name = "";
+                Bitmap bitmap = null;
                 if (childData != null) {
                     name = childData.getChild_name();
-                    String id=childData.getProfile_id();
+                    String id = childData.getProfile_id();
                     MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                     try {
                         BitMatrix bitMatrix = multiFormatWriter.encode(id, BarcodeFormat.QR_CODE, 200, 200);
@@ -390,7 +391,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                         e.printStackTrace();
                     }
                 }
-                shareImage(bitmap,name);
+                shareImage(bitmap, name);
             }
         });
         return convertView;
@@ -398,12 +399,12 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
 
 
     private void shareImage(Bitmap bitmap, String text) {
-        String pathofBmp= MediaStore.Images.Media.insertImage(_context.getContentResolver(), bitmap,"title", null);
+        String pathofBmp = MediaStore.Images.Media.insertImage(_context.getContentResolver(), bitmap, "title", null);
         Uri uri = Uri.parse(pathofBmp);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("image/*");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, text+"'s Father Profile QR Code");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, text+"'s Father Profile QR Code");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, text + "'s Father Profile QR Code");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, text + "'s Father Profile QR Code");
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         _context.startActivity(Intent.createChooser(shareIntent, "Vastipatrak"));
     }
@@ -419,8 +420,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
     }
 
     private void showProgressDialog() {
-        if (pDialog != null && !pDialog.isShowing())
-            pDialog.show();
+        if (pDialog != null && !pDialog.isShowing()) pDialog.show();
     }
 
     private void hideProgressDialog() {
@@ -481,7 +481,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                     params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                     params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
                     params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
                     return params;
                 }
             };

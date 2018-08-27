@@ -6,21 +6,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
@@ -35,7 +34,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,6 +44,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class LocationAlertService extends Service {
 
     HashMap<String, Timer> mlstMapTimer = null;
+    boolean isStop;
+    String id = "";
+    String time = "";
     private SharedPreferences mSharedPreferences;
     private String TAG = LocationAlertService.class.getSimpleName();
 
@@ -58,28 +59,35 @@ public class LocationAlertService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Bundle mBundle = intent.getExtras();
-        boolean isStop;
-        String id = "";
-        String time = "";
-        if (mBundle != null) {
-            isStop = mBundle.getBoolean("isStop");
-            id = mBundle.getString("id");
-            time = mBundle.getString("time");
-            Log.d(TAG, "Timer profile_id: " + id + " alert_time: " + time);
-            if (!isStop) {
-                Timer mTimer = new Timer();
-                mlstMapTimer.put(id, mTimer);
-                long NOTIFY_INTERVAL = 60 * 1000;
-                mTimer.scheduleAtFixedRate(new TimeDisplayTimerTask(id), NOTIFY_INTERVAL * Integer.parseInt(time), NOTIFY_INTERVAL * Integer.parseInt(time));
-            } else if (isStop) {
-                if (mlstMapTimer.get(id) != null) {
-                    mlstMapTimer.get(id).cancel();
+        if (intent == null) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(LocationAlertService.this, "Intent null", Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            Bundle mBundle = intent.getExtras();
+            if (mBundle != null) {
+                isStop = mBundle.getBoolean("isStop");
+                id = mBundle.getString("id");
+                time = mBundle.getString("time");
+                Log.d(TAG, "Timer profile_id: " + id + " alert_time: " + time);
+                if (!isStop) {
+                    Timer mTimer = new Timer();
+                    mlstMapTimer.put(id, mTimer);
+                    long NOTIFY_INTERVAL = 60 * 1000;
+                    mTimer.scheduleAtFixedRate(new TimeDisplayTimerTask(id), NOTIFY_INTERVAL * Integer.parseInt(time), NOTIFY_INTERVAL * Integer.parseInt(time));
+                } else if (isStop) {
+                    if (mlstMapTimer.get(id) != null) {
+                        mlstMapTimer.get(id).cancel();
+                    }
                 }
             }
         }
+
         // If we get killed, after returning from here, restart
-        return START_STICKY;
+        return Service.START_REDELIVER_INTENT;
     }
 
     private void SyncUser(String profile_id) {
@@ -107,15 +115,25 @@ public class LocationAlertService extends Service {
                             JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                             for (int i = 0; i < mJsonArray.length(); i++) {
                                 JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                String user_lat = "", user_lng = "";
+                                String user_lat = "", user_lng = "", name = "";
                                 if (mJsondata.has(Common.Constant_Class.USER_LAT)) {
                                     user_lat = mJsondata.getString(Common.Constant_Class.USER_LAT);
                                 }
                                 if (mJsondata.has(Common.Constant_Class.USER_LNG)) {
                                     user_lng = mJsondata.getString(Common.Constant_Class.USER_LNG);
                                 }
-                                if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty()) {
-                                    new getDistance().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+                                if (mJsondata.has(Common.Constant_Class.FIRST_NAME)) {
+                                    name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
+                                }
+                                if (mJsondata.has(Common.Constant_Class.LAST_NAME)) {
+                                    name = name + " " + mJsondata.getString(Common.Constant_Class.LAST_NAME);
+                                }
+
+                                String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                                String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+
+                                if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !curr_lat.isEmpty() && !curr_lng.isEmpty()) {
+                                    new getDistance(name).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(curr_lat), Double.parseDouble(curr_lng));
                                 }
                             }
                         }
@@ -144,6 +162,15 @@ public class LocationAlertService extends Service {
             };
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
+        } else {
+
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(LocationAlertService.this, "Please connect your internet", Toast.LENGTH_LONG).show();
+                }
+            });
+
         }
     }
 
@@ -200,6 +227,12 @@ public class LocationAlertService extends Service {
 
     public class getDistance extends AsyncTask<Double, String, String> {
 
+        String name = "";
+
+        getDistance(String name) {
+            this.name = name;
+        }
+
         @Override
         protected String doInBackground(Double... strings) {
             String result_in_kms = getDistanceOnRoad(strings[0], strings[1], strings[2], strings[3]);
@@ -210,10 +243,10 @@ public class LocationAlertService extends Service {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("getDistance", "distance: " + s);
-            String notification = s, title = "MEDK Vastipatrak", timestamp = "";
+            String notification = "Distance from " + name + " is " + s, title = "MEDK Vastipatrak", timestamp = "";
             Long tsLong = System.currentTimeMillis() / 1000;
             timestamp = tsLong.toString();
-            if (NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+         /*   if (NotificationUtils.isAppIsInBackground(getApplicationContext())) {
                 // app is in foreground, broadcast the push message
                 Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
                 pushNotification.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
@@ -222,13 +255,13 @@ public class LocationAlertService extends Service {
                 // play notification sound
                 NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
                 notificationUtils.playNotificationSound();
-            } else {
-                // app is in background, show the notification in notification tray
-                Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-                resultIntent.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
-                resultIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                showNotificationMessage(getApplicationContext(), title, notification, timestamp, resultIntent);
-            }
+            } else {*/
+            // app is in background, show the notification in notification tray
+            Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+            resultIntent.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
+            resultIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+            showNotificationMessage(getApplicationContext(), title, notification, timestamp, resultIntent);
+            // }
         }
     }
 

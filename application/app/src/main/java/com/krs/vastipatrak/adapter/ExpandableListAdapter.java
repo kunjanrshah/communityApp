@@ -433,9 +433,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String user_lng = mListParentData.getUser_lng();
 
         if (is_share.equalsIgnoreCase("1")) {  //&& mListParentData.isIs_location_enable().equalsIgnoreCase("1")
-            if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
+
+            String curr_lat= mSharedPreferences.getString(Common.Constant_Class.CURR_LAT,"");
+            String curr_lng= mSharedPreferences.getString(Common.Constant_Class.CURR_LNG,"");
+            if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
                 groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
-                new Common.getDistance(groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon));
+                new Common.getDistance(groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(curr_lat), Double.parseDouble(curr_lng));
             } else {
                 groupViewHolder.txt_distance.setVisibility(View.GONE);
             }
@@ -520,8 +523,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 btn_map.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!MainActivity.lat.isEmpty() && !MainActivity.lon.isEmpty() && !user_lat.isEmpty() && !user_lng.isEmpty()) {
-                            showDirections(Double.parseDouble(MainActivity.lat), Double.parseDouble(MainActivity.lon), Double.parseDouble(user_lat), Double.parseDouble(user_lng), "");
+                        String curr_lat= mSharedPreferences.getString(Common.Constant_Class.CURR_LAT,"");
+                        String curr_lng= mSharedPreferences.getString(Common.Constant_Class.CURR_LNG,"");
+                        if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !user_lat.isEmpty() && !user_lng.isEmpty()) {
+                            showDirections(Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(user_lat), Double.parseDouble(user_lng), "");
                         } else {
                             Toast.makeText(_context, "Something went wrong", Toast.LENGTH_SHORT).show();
                         }

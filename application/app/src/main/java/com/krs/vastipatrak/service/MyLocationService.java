@@ -178,6 +178,9 @@ public class MyLocationService extends Service {
         public void onLocationChanged(Location location) {
             Log.e(TAG, "onLocationChanged: " + location);
             mLastLocation.set(location);
+            mEditor.putString(Common.Constant_Class.CURR_LAT, String.valueOf(mLastLocation.getLatitude()));
+            mEditor.putString(Common.Constant_Class.CURR_LAT, String.valueOf(mLastLocation.getLongitude()));
+            mEditor.apply();
             userLocationUpdateWS();
         }
 

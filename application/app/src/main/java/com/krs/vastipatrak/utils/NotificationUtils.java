@@ -3,6 +3,7 @@ package com.krs.vastipatrak.utils;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -34,6 +35,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
 
 public class NotificationUtils {
 
@@ -99,7 +102,6 @@ public class NotificationUtils {
         if (TextUtils.isEmpty(message))
             return;
 
-
         // notification icon
         final int icon = R.drawable.app_icon;
 
@@ -130,9 +132,36 @@ public class NotificationUtils {
                 }
             }
         } else {
-            showSmallNotification(mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
+           // showSmallNotification(mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
+            showNotification(icon, message, timeStamp, resultPendingIntent, alarmSound);
             playNotificationSound();
         }
+    }
+
+    private void showNotification(int icon,  String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound)
+    {
+
+        Notification.Builder builder = new Notification.Builder(mContext);
+
+        Notification notification = builder.setContentTitle(message)
+                /*.setContentText(message)*/
+               /* .setTicker("New Message Alert!")*/
+                .setSmallIcon(icon)
+                .setAutoCancel(false)
+                .setSound(alarmSound)
+                .setWhen(getTimeMilliSec(timeStamp))
+                .setContentIntent(resultPendingIntent).build();
+        String CHANNEL_ID = "channelId";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder.setChannelId(CHANNEL_ID);
+        }
+
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,"NotificationDemo",IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
+        notificationManager.notify(0, notification);
     }
 
     private void showSmallNotification(NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {
