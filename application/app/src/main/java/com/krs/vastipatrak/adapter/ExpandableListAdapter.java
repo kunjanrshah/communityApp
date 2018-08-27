@@ -83,7 +83,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private final SharedPreferences.Editor mEditor;
     @NonNull
     private final String[] SPINNERLIST = {"Father", "Son", "Daughter", "Brother", "Sister", "Grandfather", "Grandson", "Uncle", "Uncle's Son", "Uncle in law", "Uncle's Son"};
-
+    HashMap<String, String> testHashMap2;
+    Gson gson;
     @Nullable
     private ProgressDialog pDialog;
     private ChildViewHolder childViewHolder;
@@ -106,6 +107,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         mEditor.apply();
         checkboxMap = new HashMap<>();
         popolaCheckMap(_listDataHeader.size());
+
+        gson = new Gson();
+        String storedHashMapString = mSharedPreferences.getString("hashString", null);
+        if (storedHashMapString != null) {
+            java.lang.reflect.Type type = new TypeToken<HashMap<String, String>>() {
+            }.getType();
+            testHashMap2 = gson.fromJson(storedHashMapString, type);
+        } else {
+            testHashMap2 = new HashMap<>();
+        }
     }
 
 
@@ -448,9 +459,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 final ToggleButton tbtn_alert = dialog.findViewById(R.id.btn_alert);
                 final EditText edtAlertTime = dialog.findViewById(R.id.edtAlertTime);
                 final TextInputLayout tlalert = dialog.findViewById(R.id.tlalert);
-                if (tbtn_alert.isChecked()) {
+
+                if (testHashMap2.get(id) != null) {
                     tlalert.setVisibility(View.VISIBLE);
                     btnsave.setVisibility(View.VISIBLE);
+                    tbtn_alert.setChecked(true);
+                    edtAlertTime.setText("" + testHashMap2.get(id));
                 } else {
                     tlalert.setVisibility(View.GONE);
                     btnsave.setVisibility(View.GONE);
@@ -463,42 +477,42 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     }
                 });
 
-                tbtn_alert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                tbtn_alert.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
+                    public void onClick(View v) {
+                        if (tbtn_alert.isChecked()) {
                             tlalert.setVisibility(View.VISIBLE);
                             btnsave.setVisibility(View.VISIBLE);
                         } else {
                             tlalert.setVisibility(View.GONE);
                             btnsave.setVisibility(View.GONE);
+                            if (testHashMap2.get(id) != null) {
+                                Intent mIntent = new Intent(_context, LocationAlertService.class);
+                                mIntent.putExtra("isStop", true);
+                                mIntent.putExtra("id", id);
+                                _context.startService(mIntent);
+                            }
                         }
                     }
                 });
+
                 btnsave.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!edtAlertTime.getText().toString().isEmpty()) {
-                            Gson gson = new Gson();
-                            HashMap<String, String> testHashMap2;
-                            String storedHashMapString = mSharedPreferences.getString("hashString", null);
-                            if (storedHashMapString != null) {
-                                java.lang.reflect.Type type = new TypeToken<HashMap<String, String>>() {
-                                }.getType();
-                                testHashMap2 = gson.fromJson(storedHashMapString, type);
-                            } else {
-                                testHashMap2 = new HashMap<>();
-                            }
+
                             testHashMap2.put(id, edtAlertTime.getText().toString().trim());
                             String hashMapString = gson.toJson(testHashMap2);
                             mEditor.putString("hashString", hashMapString);
                             mEditor.commit();
-                            Intent mIntent=new Intent(_context,LocationAlertService.class);
-                         //   mIntent.putExtra("id",id);
-                         //   mIntent.putExtra("time",edtAlertTime.getText().toString().trim());
-                         //   mIntent.putExtra("status",tbtn_alert.isChecked());
+                            Intent mIntent = new Intent(_context, LocationAlertService.class);
+                            mIntent.putExtra("isStop", false);
+                            mIntent.putExtra("id", id);
+                            mIntent.putExtra("time", edtAlertTime.getText().toString().trim());
                             _context.startService(mIntent);
                             dialog.dismiss();
+                        } else {
+                            Toast.makeText(_context, "Enter Alert Time", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

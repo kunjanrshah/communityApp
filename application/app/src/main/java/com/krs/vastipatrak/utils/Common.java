@@ -1858,7 +1858,7 @@ public class Common {
 
     public static class getDistance extends AsyncTask<Double, String, String> {
         TextView txtDistance;
-
+        public String strDisctance="";
         public getDistance(TextView txtDistance) {
             this.txtDistance = txtDistance;
         }
@@ -1872,8 +1872,12 @@ public class Common {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Log.d("getDistance", "distance: " + s);
             if (txtDistance != null) {
                 txtDistance.setText("" + s);
+            }else
+            {
+                strDisctance=s;
             }
         }
     }
