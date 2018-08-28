@@ -336,15 +336,17 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 builder.setTitle(mActivity.getString(R.string.app_name));
                 if (setChecked) {
                     setChecked = false;
+                    Intent mIntent=new Intent(mActivity, MyLocationService.class);
+                    mIntent.putExtra(Common.Constant_Class.TBTN_SHARE,true);
                     if (isChecked) {
                         mEditor.putString(Common.Constant_Class.TBTN_SHARE, "1");
                         mEditor.apply();
-                        mActivity.startService(new Intent(mActivity, MyLocationService.class));
+                        mActivity.startService(mIntent);
                         toggle = true;
                     } else {
                         mEditor.putString(Common.Constant_Class.TBTN_SHARE, "0");
                         mEditor.apply();
-                        mActivity.startService(new Intent(mActivity, MyLocationService.class));
+                        mActivity.startService(mIntent);
                         toggle = true;
                     }
                 } else {

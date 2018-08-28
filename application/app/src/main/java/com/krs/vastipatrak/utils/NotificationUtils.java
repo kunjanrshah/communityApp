@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 
 import com.krs.vastipatrak.R;
@@ -97,7 +98,11 @@ public class NotificationUtils {
         showNotificationMessage(title, message, timeStamp, intent, null);
     }
 
-    public void showNotificationMessage(final String title, final String message, final String timeStamp, @NonNull Intent intent, @Nullable String imageUrl) {
+    public void showNotificationMessage(String title, String message, String timeStamp, @NonNull Intent intent,String id) {
+        showNotificationMessage(title, message, timeStamp, intent, null,id);
+    }
+
+    public void showNotificationMessage(final String title, final String message, final String timeStamp, @NonNull Intent intent, @Nullable String imageUrl,String id) {
         // Check for empty push message
         if (TextUtils.isEmpty(message))
             return;
@@ -133,12 +138,12 @@ public class NotificationUtils {
             }
         } else {
            // showSmallNotification(mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
-            showNotification(icon, message, timeStamp, resultPendingIntent, alarmSound);
+            showNotification(icon, message, timeStamp, resultPendingIntent, alarmSound,id);
             playNotificationSound();
         }
     }
 
-    private void showNotification(int icon,  String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound)
+    private void showNotification(int icon,  String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound,String id)
     {
 
         Notification.Builder builder = new Notification.Builder(mContext);
@@ -161,7 +166,8 @@ public class NotificationUtils {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,"NotificationDemo",IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
         }
-        notificationManager.notify(0, notification);
+        Log.d("NotificationUtils","NotificationUtils:"+Integer.parseInt(id));
+        notificationManager.notify(Integer.parseInt(id), notification);
     }
 
     private void showSmallNotification(NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {

@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
@@ -42,12 +40,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -69,15 +65,14 @@ import com.google.zxing.integration.android.IntentResult;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.Config;
-import com.krs.vastipatrak.fragments.AboutFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
+import com.krs.vastipatrak.fragments.HelpFragment;
 import com.krs.vastipatrak.fragments.HomeFragment;
 import com.krs.vastipatrak.fragments.MatrimonyFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
 import com.krs.vastipatrak.fragments.SharedUsersFragment;
 import com.krs.vastipatrak.interfaces.IAdminControl;
-import com.krs.vastipatrak.service.LocationAlertService;
 import com.krs.vastipatrak.service.MyLocationService;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NotificationUtils;
@@ -108,6 +103,21 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private final int INIT_REQUEST = 1;
     private final int CALL_REQUEST = 2;
     private final int LOCATION_REQUEST = 3;
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(action)) {
+                if (!Common.CheckGpsStatus(MainActivity.this)) {
+                    Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+                    startService(mIntent);
+                } else {
+                    Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+                    stopService(mIntent);
+                }
+            }
+        }
+    };
     MenuItem deactiveItem;
     MenuItem deleteItem;
     MenuItem activeItem;
@@ -116,25 +126,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private String query_string = "";
     private boolean doubleBackToExitPressedOnce = false;
     private GoogleApiClient googleApiClient;
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(action)) {
-                if (!Common.CheckGpsStatus(MainActivity.this)) {
-                    mEditor.putString(Common.Constant_Class.TBTN_SHARE, "");
-                    mEditor.apply();
-                    Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
-                    startService(mIntent);
-                }else
-                {
-                    Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
-                    stopService(mIntent);
-                    //MainActivity.this.displayLocationSettingsRequest(MainActivity.this);
-                }
-            }
-        }
-    };
     @Nullable
     private Fragment fragment = null;
     private Fragment searchFragment = null;
@@ -191,10 +182,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         if (Common.CheckGpsStatus(this)) {
             displayLocationSettingsRequest(MainActivity.this);
-        }else
-        {
-            mEditor.putString(Common.Constant_Class.TBTN_SHARE, "");
-            mEditor.apply();
+        } else {
             Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
             startService(mIntent);
         }
@@ -389,8 +377,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     Toast.makeText(this, "You need to give permission to access location ! ", Toast.LENGTH_SHORT).show();
                 } else if (Common.canAccessLocation(this)) {
-                    mEditor.putString(Common.Constant_Class.TBTN_SHARE, "");
-                    mEditor.apply();
                     Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
                     startService(mIntent);
                 }
@@ -408,8 +394,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 if (Common.canCallPhone(this) && !Common.canAccessLocation(this)) {
                     Toast.makeText(this, "You need to give permission to access phone and location ! ", Toast.LENGTH_SHORT).show();
                 } else if (Common.canAccessLocation(this)) {
-                    mEditor.putString(Common.Constant_Class.TBTN_SHARE, "");
-                    mEditor.apply();
                     Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
                     startService(mIntent);
                 }
@@ -753,7 +737,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 this.overridePendingTransition(0, 0);
                 break;
             case 6:
-                fragment = new AboutFragment();
+                fragment = new HelpFragment();
                 break;
             case 7:
                 ExitAlert();
@@ -838,6 +822,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                             AppController.getInstance().realm.beginTransaction();
                             AppController.getInstance().realm.deleteAll();
                             AppController.getInstance().realm.commitTransaction();
+
+                            Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+                            stopService(mIntent);
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

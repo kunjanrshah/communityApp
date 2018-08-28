@@ -32,7 +32,9 @@ import org.w3c.dom.NodeList;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -77,7 +79,7 @@ public class LocationAlertService extends Service {
                     Timer mTimer = new Timer();
                     mlstMapTimer.put(id, mTimer);
                     long NOTIFY_INTERVAL = 60 * 1000;
-                    mTimer.scheduleAtFixedRate(new TimeDisplayTimerTask(id), NOTIFY_INTERVAL * Integer.parseInt(time), NOTIFY_INTERVAL * Integer.parseInt(time));
+                    mTimer.scheduleAtFixedRate(new TimeDisplayTimerTask(id), 0, NOTIFY_INTERVAL * Integer.parseInt(time));
                 } else if (isStop) {
                     if (mlstMapTimer.get(id) != null) {
                         mlstMapTimer.get(id).cancel();
@@ -90,7 +92,7 @@ public class LocationAlertService extends Service {
         return Service.START_REDELIVER_INTENT;
     }
 
-    private void SyncUser(String profile_id) {
+    private void SyncUser(final String profile_id) {
         if (Common.isOnline(this)) {
             JSONObject mJsonObject = null;
             try {
@@ -133,7 +135,7 @@ public class LocationAlertService extends Service {
                                 String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
 
                                 if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !curr_lat.isEmpty() && !curr_lng.isEmpty()) {
-                                    new getDistance(name).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(curr_lat), Double.parseDouble(curr_lng));
+                                    new getDistance(profile_id, name).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(curr_lat), Double.parseDouble(curr_lng));
                                 }
                             }
                         }
@@ -214,10 +216,10 @@ public class LocationAlertService extends Service {
         return result_in_kms;
     }
 
-    private void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent) {
+    private void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent, String id) {
         NotificationUtils notificationUtils = new NotificationUtils(context);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        notificationUtils.showNotificationMessage(title, message, timeStamp, intent);
+        notificationUtils.showNotificationMessage(title, message, timeStamp, intent, "", id);
     }
 
     @Override
@@ -227,10 +229,11 @@ public class LocationAlertService extends Service {
 
     public class getDistance extends AsyncTask<Double, String, String> {
 
-        String name = "";
+        String name = "", id = "";
 
-        getDistance(String name) {
+        getDistance(String id, String name) {
             this.name = name;
+            this.id = id;
         }
 
         @Override
@@ -242,10 +245,17 @@ public class LocationAlertService extends Service {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
+            Date today = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss dd-MM-yyyy");
+            String dateToStr = format.format(today);
+            System.out.println(dateToStr);
+
             Log.d("getDistance", "distance: " + s);
-            String notification = "Distance from " + name + " is " + s, title = "MEDK Vastipatrak", timestamp = "";
+            String notification = "Distance from " + name + " is " + s + " at " + dateToStr, title = "MEDK Vastipatrak", timestamp = "";
             Long tsLong = System.currentTimeMillis() / 1000;
             timestamp = tsLong.toString();
+            Log.d(TAG, "notification: " + notification);
          /*   if (NotificationUtils.isAppIsInBackground(getApplicationContext())) {
                 // app is in foreground, broadcast the push message
                 Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
@@ -260,7 +270,7 @@ public class LocationAlertService extends Service {
             Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
             resultIntent.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
             resultIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-            showNotificationMessage(getApplicationContext(), title, notification, timestamp, resultIntent);
+            showNotificationMessage(getApplicationContext(), title, notification, timestamp, resultIntent, id);
             // }
         }
     }

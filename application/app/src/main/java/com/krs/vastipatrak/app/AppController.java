@@ -1,6 +1,10 @@
 package com.krs.vastipatrak.app;
 
 import android.app.Application;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +16,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import com.crashlytics.android.Crashlytics;
 import com.krs.vastipatrak.model.ListProfileData;
 
 import java.util.ArrayList;
@@ -51,6 +56,9 @@ public class AppController extends Application {
         initFirebaseAnalytics();
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
+
+
+
     }
 
     private void initFirebaseAnalytics()

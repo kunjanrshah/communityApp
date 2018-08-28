@@ -66,7 +66,7 @@
     <string name="nav_item_my_profile">My Profile</string>
     <string name="nav_item_shared_users">Shared Users</string>
     <string name="nav_item_change_password">Change Password</string>
-    <string name="nav_item_about">About</string>
+    <string name="nav_item_help">Help</string>
     <!--<string name="nav_item_relatives">Relatives</string>-->
     <string name="nav_item_matrimony">Matrimony</string>
     <!--<string name="nav_item_pdf">Matrimony PDF</string>
@@ -85,13 +85,13 @@
         <!--<item>@string/nav_item_pdf</item>
         <item>@string/nav_item_sync</item>
 -->        <item>@string/nav_item_intro</item>
-        <item>@string/nav_item_about</item>
+        <item>@string/nav_item_help</item>
         <item>@string/nav_item_logout</item>
 
     </string-array>
     <string name="marquee_text">Technical help: 9427051418 Kunjan R. Shah (Limbadiya) Admin help: 9426419124 Kunjbihari P. Shah (Radodara) </string>
     <string name="title_filter">Advance Search</string>
-    <string name="title_about">About</string>
+    <string name="title_help">Help</string>
     <string name="title_shared_users">Shared Users</string>
     <string name="title_matrimony">Matrimony</string>
     <string name="title_events">Events</string>
