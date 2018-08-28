@@ -77,6 +77,8 @@ import com.krs.vastipatrak.fragments.MatrimonyFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
 import com.krs.vastipatrak.fragments.SharedUsersFragment;
 import com.krs.vastipatrak.interfaces.IAdminControl;
+import com.krs.vastipatrak.service.LocationAlertService;
+import com.krs.vastipatrak.service.MyLocationService;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
@@ -89,20 +91,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.krs.vastipatrak.utils.Common.Constant_Class.LOCATION_INTERVAL;
-
-
-public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, SearchFragment.ISearchCallback
-
+public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback//, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
-
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
     public static final int CAMARA_REQUEST = 4;
     private static final String TAG = MainActivity.class.getSimpleName();
-    public static GoogleApiClient mGoogleApiClient;
+    //private GoogleApiClient mGoogleApiClient;
     // public static String lat, lon;
     public static int MOVE_TO_SEARCH = 0;
-    private static Location mLastLocation;
+    //private static Location mLastLocation;
     private final int REQUEST_CHECK_SETTINGS = 199;
     private final int IMAGEREQUESTCODE = 1;
     private final String[] INIT_PERMS = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS};
@@ -124,8 +121,16 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(action)) {
-                if (Common.CheckGpsStatus(MainActivity.this)) {
-                    MainActivity.this.displayLocationSettingsRequest(MainActivity.this);
+                if (!Common.CheckGpsStatus(MainActivity.this)) {
+                    mEditor.putString(Common.Constant_Class.TBTN_SHARE, "");
+                    mEditor.apply();
+                    Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+                    startService(mIntent);
+                }else
+                {
+                    Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+                    stopService(mIntent);
+                    //MainActivity.this.displayLocationSettingsRequest(MainActivity.this);
                 }
             }
         }
@@ -172,13 +177,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 requestPermissions(CALL_CAMARA, CAMARA_REQUEST);
             }
         }
-        if (Build.VERSION.SDK_INT >= 23) {
+        /*if (Build.VERSION.SDK_INT >= 23) {
             if (Common.canAccessLocation(this)) {
                 buildGoogleApiClient();
             }
         } else {
             buildGoogleApiClient();
-        }
+        }*/
         /*String id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
         if (id.equalsIgnoreCase(Common.Constant_Class.ADMIN_1) || id.equalsIgnoreCase(Common.Constant_Class.ADMIN_2)) {
             AppController.isAdmin = true;
@@ -186,6 +191,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         if (Common.CheckGpsStatus(this)) {
             displayLocationSettingsRequest(MainActivity.this);
+        }else
+        {
+            mEditor.putString(Common.Constant_Class.TBTN_SHARE, "");
+            mEditor.apply();
+            Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+            startService(mIntent);
         }
 
 
@@ -356,18 +367,18 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
         filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY - 1);
         this.registerReceiver(this.mReceiver, filter);
-        if (mGoogleApiClient != null) {
+        /*if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
-        }
+        }*/
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         this.unregisterReceiver(this.mReceiver);
-        if (mGoogleApiClient != null) {
+        /*if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
-        }
+        }*/
     }
 
     @Override
@@ -375,11 +386,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         switch (requestCode) {
             case LOCATION_REQUEST:
 
-                // Should we show an explanation?
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     Toast.makeText(this, "You need to give permission to access location ! ", Toast.LENGTH_SHORT).show();
                 } else if (Common.canAccessLocation(this)) {
-                    buildGoogleApiClient();
+                    mEditor.putString(Common.Constant_Class.TBTN_SHARE, "");
+                    mEditor.apply();
+                    Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+                    startService(mIntent);
                 }
 
                 break;
@@ -395,7 +408,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 if (Common.canCallPhone(this) && !Common.canAccessLocation(this)) {
                     Toast.makeText(this, "You need to give permission to access phone and location ! ", Toast.LENGTH_SHORT).show();
                 } else if (Common.canAccessLocation(this)) {
-                    buildGoogleApiClient();
+                    mEditor.putString(Common.Constant_Class.TBTN_SHARE, "");
+                    mEditor.apply();
+                    Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+                    startService(mIntent);
                 }
                 break;
             case CAMARA_REQUEST:
@@ -966,11 +982,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
 
-    private synchronized void buildGoogleApiClient() {
+    /*private synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onConnected(Bundle bundle) {
         LocationRequest mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -1007,7 +1023,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         buildGoogleApiClient();
-    }
+    }*/
 
     @Override
     public void setIsSearch(boolean isSearch) {

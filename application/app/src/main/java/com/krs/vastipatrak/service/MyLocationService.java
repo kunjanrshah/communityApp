@@ -26,13 +26,11 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.krs.vastipatrak.utils.Common.Constant_Class.LOCATION_INTERVAL;
-
 
 public class MyLocationService extends Service {
 
     private static final String TAG = "MyLocationService";
-    //private static final int LOCATION_INTERVAL = 1000 * 3 * 60;
+    private static final int LOCATION_INTERVAL = 1000 * 3 * 60;
     private static final float LOCATION_DISTANCE = 1f;
     @NonNull
     private final String tag_json_obj = "jobj_req";
@@ -69,7 +67,7 @@ public class MyLocationService extends Service {
         } catch (IllegalArgumentException ex) {
             Log.d(TAG, "gps provider does not exist " + ex.getMessage());
         }
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override
@@ -93,7 +91,9 @@ public class MyLocationService extends Service {
                 }
             }
         }
-        userLocationUpdateWS();
+        /*if (!mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0").equalsIgnoreCase("")) {
+            userLocationUpdateWS();
+        }*/
     }
 
     private void initializeLocationManager() {
@@ -136,6 +136,8 @@ public class MyLocationService extends Service {
                                 Toast.makeText(MyLocationService.this, "Vastipatrak is sharing your location!", Toast.LENGTH_SHORT).show();
                             } else {
                                 Log.d(TAG, "step no");
+                                mEditor.putString(Common.Constant_Class.TBTN_SHARE, "");
+                                mEditor.apply();
                                 Toast.makeText(MyLocationService.this, "Stop Sharing location successfully!", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -181,7 +183,9 @@ public class MyLocationService extends Service {
             mEditor.putString(Common.Constant_Class.CURR_LAT, String.valueOf(mLastLocation.getLatitude()));
             mEditor.putString(Common.Constant_Class.CURR_LAT, String.valueOf(mLastLocation.getLongitude()));
             mEditor.apply();
-            userLocationUpdateWS();
+            if (!mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0").equalsIgnoreCase("")) {
+                userLocationUpdateWS();
+            }
         }
 
         @Override

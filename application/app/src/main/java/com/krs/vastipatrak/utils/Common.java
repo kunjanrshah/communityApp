@@ -2002,7 +2002,7 @@ public class Common {
         public static final String SPOUSE_MOTHER_NAME = "spouse_mother_name";
         public static final int sBorder = 5;
         public static final String sColor = "#FFC0CB";
-        public static final long LOCATION_INTERVAL = 1000 * 30;
+        //public static final long LOCATION_INTERVAL = 1000 * 30;
         public static final String CHILDS = "childs";
         public static final String CHILD_DELETE = "delete";
         public static final String CHILD_ID = "id";

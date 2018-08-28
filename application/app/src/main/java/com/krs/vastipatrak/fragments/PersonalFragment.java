@@ -101,9 +101,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onResume() {
         super.onResume();
-        if (MainActivity.mGoogleApiClient != null) {
+        /*if (MainActivity.mGoogleApiClient != null) {
             MainActivity.mGoogleApiClient.connect();
-        }
+        }*/
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -344,7 +344,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     } else {
                         mEditor.putString(Common.Constant_Class.TBTN_SHARE, "0");
                         mEditor.apply();
-                        mActivity.stopService(new Intent(mActivity, MyLocationService.class));
+                        mActivity.startService(new Intent(mActivity, MyLocationService.class));
                         toggle = true;
                     }
                 } else {
@@ -377,7 +377,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                     public void onClick(@NonNull DialogInterface dialog, int which) {
                                         mEditor.putString(Common.Constant_Class.TBTN_SHARE, "0");
                                         mEditor.apply();
-                                        mActivity.stopService(new Intent(mActivity, MyLocationService.class));
+                                        mActivity.startService(new Intent(mActivity, MyLocationService.class));
                                         toggle = true;
                                         dialog.dismiss();
                                     }
