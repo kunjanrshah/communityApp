@@ -57,13 +57,13 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
 
     public EditText edtSpouseName, edtSpouseFName, edtMSpouseName,edtsponse_mobile,edtsponse_nplace;
-    public String mdate = "",sdate="";
+    //public String mdate = "",sdate="";
     public String str_spouse_hash = "", str_fspouse_hash = "", str_mspouse_hash = "";
     public LinearLayout child_container = null;
     public ArrayList<Integer> lst_delID = null;
     public RadioButton rbtnChildNo;
     String role = "";
-    private EditText edt_mdate,edtsponse_bdate;
+    public EditText edt_mdate,edtsponse_bdate;
     private RadioButton rbtnChildYes;
     private String spouse_url = "";
     private String fspouse_url = "";
@@ -126,7 +126,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                     str_day = "0" + str_day;
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
-                                sdate = year + "-" + str_month + "-" + str_day;
+                                //sdate = year + "-" + str_month + "-" + str_day;
                                 edtsponse_bdate.setText(date);
                             }
                         });
@@ -170,7 +170,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                     str_day = "0" + str_day;
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
-                                mdate = year + "-" + str_month + "-" + str_day;
+                               // mdate = year + "-" + str_month + "-" + str_day;
                                 edt_mdate.setText(date);
                             }
                         });
@@ -607,7 +607,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                     str_day = "0" + str_day;
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
-                                mViewholder.cbdate = year + "-" + str_month + "-" + str_day;
+                              //  mViewholder.cbdate = year + "-" + str_month + "-" + str_day;
                                 mViewholder.edtchild_bdate.setText(date);
                             }
                         });
@@ -845,7 +845,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         @Nullable
         public EditText edtchild_work = null;
         public String ImgHash = "";
-        public String cbdate = "";
+        //public String cbdate = "";
         @Nullable
         ImageView img_child = null;
         @Nullable
@@ -854,6 +854,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         Button btn_remove = null;
         boolean setClickBDate = false;
         @Nullable
-        private EditText edtchild_bdate = null;
+        public EditText edtchild_bdate = null;
     }
 }

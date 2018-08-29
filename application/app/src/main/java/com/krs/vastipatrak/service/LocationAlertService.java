@@ -56,7 +56,7 @@ public class LocationAlertService extends Service {
     public void onCreate() {
         super.onCreate();
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
-        mlstMapTimer = new HashMap<>();
+         mlstMapTimer = new HashMap<>();
     }
 
     @Override
@@ -125,7 +125,7 @@ public class LocationAlertService extends Service {
                                     user_lng = mJsondata.getString(Common.Constant_Class.USER_LNG);
                                 }
                                 if (mJsondata.has(Common.Constant_Class.FIRST_NAME)) {
-                                    name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
+                                      name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
                                 }
                                 if (mJsondata.has(Common.Constant_Class.LAST_NAME)) {
                                     name = name + " " + mJsondata.getString(Common.Constant_Class.LAST_NAME);

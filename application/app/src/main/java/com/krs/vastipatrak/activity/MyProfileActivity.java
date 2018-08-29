@@ -85,7 +85,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             id = mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, "");
         }
         SyncUser(id);
-       // call_profile_ws(new JSONObject(), "0");
+        // call_profile_ws(new JSONObject(), "0");
     }
 
     @Nullable
@@ -230,7 +230,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 }
 
                 String phone = Objects.requireNonNull(((PersonalFragment) personal).edt_phone).getText().toString().trim();
-                String bdate = Objects.requireNonNull(((PersonalFragment) personal).bdate).trim();
+                String bdate = Objects.requireNonNull(((PersonalFragment) personal).edtbdate).getText().toString().trim();
+                bdate = Common.parseDateToddMMyyyy(bdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
                 if (!bdate.equalsIgnoreCase("")) {
                     if (!Common.isThisDateValid(bdate, "yyyy-mm-dd")) {
                         valid = "Birth Date is not valid Format";
@@ -257,21 +258,23 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 String OAddress = ((BusinessFragment) business).edtOAddress.getText().toString().trim();
 
                 // Familty Details
-                String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "",sdate="", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
+                String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "", sdate = "", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
                 LinearLayout child_container = null;
                 ArrayList<Integer> lst_delID = null;
                 try {
                     spouseName = ((FamilyFragment) family).edtSpouseName.getText().toString().trim();
                     SpouseFName = ((FamilyFragment) family).edtSpouseFName.getText().toString().trim();
                     MSpouseName = ((FamilyFragment) family).edtMSpouseName.getText().toString().trim();
-                    mdate = ((FamilyFragment) family).mdate.trim();
+                    mdate = ((FamilyFragment) family).edt_mdate.getText().toString().trim();
+                    mdate = Common.parseDateToddMMyyyy(mdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
                     if (!mdate.equalsIgnoreCase("")) {
                         if (!Common.isThisDateValid(mdate, "yyyy-mm-dd")) {
                             valid = "Marriage Date is not valid Format";
                         }
                     }
 
-                    sdate = ((FamilyFragment) family).sdate.trim();
+                    sdate = ((FamilyFragment) family).edtsponse_bdate.getText().toString().trim();
+                    sdate = Common.parseDateToddMMyyyy(sdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
                     if (!sdate.equalsIgnoreCase("")) {
                         if (!Common.isThisDateValid(sdate, "yyyy-mm-dd")) {
                             valid = "Sponse Birth Date is not valid Format";
@@ -415,7 +418,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                         mJsonObject_Child.put(Common.Constant_Class.CHILD_DELETE, "true");
                     }
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_NAME, Objects.requireNonNull(mViewholder.edtchild_name).getText());
-                    String child_bday = Objects.requireNonNull(mViewholder.cbdate);
+                    String child_bday = Objects.requireNonNull(mViewholder.edtchild_bdate.getText().toString().trim());
+                    child_bday = Common.parseDateToddMMyyyy(child_bday, Common.ddMMMyyyy, Common.yyyy_MM_dd);
                     if (!child_bday.equalsIgnoreCase("")) {
                         if (!Common.isThisDateValid(child_bday, "yyyy-mm-dd")) {
                             valid = "Child Birth Date is not valid Format";
@@ -478,7 +482,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                     mJsonObject.put(Common.Constant_Class.IS_UPDATE, is_update);
                 } else {
-                    mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""));
+                    mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                    mJsonObject.put(Common.Constant_Class.UPDATE_USER_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""));
                     mJsonObject.put(Common.Constant_Class.IS_UPDATE, is_update);
                 }
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
@@ -511,11 +516,13 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                             JSONObject mData = new JSONObject(data);
                             mListProfileData = Common.SaveProfile(mData);
                             if (is_update.equalsIgnoreCase("1")) {
-                                mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, mData.getString(Common.Constant_Class.PROFILE_PIC_URL));
-                                mEditor.putString(Common.Constant_Class.FIRST_NAME, mData.getString(Common.Constant_Class.FIRST_NAME));
-                                mEditor.putString(Common.Constant_Class.LAST_NAME, mData.getString(Common.Constant_Class.LAST_NAME));
-                                mEditor.apply();
-                                AppController.getInstance().isUpdate = true;
+                                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
+                                    mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, mData.getString(Common.Constant_Class.PROFILE_PIC_URL));
+                                    mEditor.putString(Common.Constant_Class.FIRST_NAME, mData.getString(Common.Constant_Class.FIRST_NAME));
+                                    mEditor.putString(Common.Constant_Class.LAST_NAME, mData.getString(Common.Constant_Class.LAST_NAME));
+                                    mEditor.apply();
+                                    AppController.getInstance().isUpdate = true;
+                                }
                                 alert(message);
                             } else {
                                 setupViewPager(viewPager);

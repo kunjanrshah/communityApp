@@ -279,7 +279,7 @@ public class BusinessFragment extends Fragment implements Serializable {
             }
         }
 
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {
+        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
             EnableAll();
         } else {
             DisableAll();
