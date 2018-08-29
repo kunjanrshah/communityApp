@@ -328,7 +328,61 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
 
-        tbtn_share.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        tbtn_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+                builder.setTitle(mActivity.getString(R.string.app_name));
+               if(tbtn_share.isChecked())
+               {
+                   String message = "Do you want to Share your Location ?";
+                   builder.setMessage(message);
+                   builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                       public void onClick(@NonNull DialogInterface dialog, int which) {
+                           mEditor.putString(Common.Constant_Class.TBTN_SHARE, "1");
+                           mEditor.apply();
+                           mActivity.startService(new Intent(mActivity, MyLocationService.class));
+                           toggle = true;
+                           dialog.dismiss();
+                           userLocationUpdateWS("1");
+                       }
+                   });
+                   builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(@NonNull DialogInterface dialog, int which) {
+                           toggle = false;
+                           tbtn_share.setChecked(false);
+                           dialog.dismiss();
+                       }
+                   }).show();
+               }else
+               {
+                   String message = "Do you want to Stop sharing your Location ?";
+                   builder.setMessage(message);
+                   builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                       public void onClick(@NonNull DialogInterface dialog, int which) {
+                           mEditor.putString(Common.Constant_Class.TBTN_SHARE, "0");
+                           mEditor.apply();
+                           mActivity.startService(new Intent(mActivity, MyLocationService.class));
+                           toggle = true;
+                           dialog.dismiss();
+                           userLocationUpdateWS("0");
+                       }
+                   });
+                   builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(@NonNull DialogInterface dialog, int which) {
+                           toggle = false;
+                           tbtn_share.setChecked(true);
+                           dialog.dismiss();
+                       }
+                   }).show();
+               }
+            }
+        });
+
+
+       /* tbtn_share.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
@@ -362,6 +416,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                         mActivity.startService(new Intent(mActivity, MyLocationService.class));
                                         toggle = true;
                                         dialog.dismiss();
+                                        userLocationUpdateWS("1");
                                     }
                                 });
                                 builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -370,6 +425,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                         toggle = false;
                                         tbtn_share.setChecked(false);
                                         dialog.dismiss();
+                                        userLocationUpdateWS("0");
                                     }
                                 }).show();
                             } else {
@@ -402,7 +458,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     }
                 }
             }
-        });
+        });*/
 
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             EnableAll();
@@ -800,7 +856,68 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
+    private void userLocationUpdateWS(String is_location_enable) {
+        if (Common.isOnline(mActivity)) {
+            JSONObject mJsonObject = null;
+            try {
+                final  String curr_lat= mSharedPreferences.getString(Common.Constant_Class.CURR_LAT,"");
+                final  String curr_lng= mSharedPreferences.getString(Common.Constant_Class.CURR_LNG,"");
+                double lat = Double.valueOf(curr_lat);
+                double lng = Double.valueOf(curr_lng);
+                mJsonObject = new JSONObject();
+                if (lat != 0 && lng != 0) {
+                    mJsonObject.put(Common.Constant_Class.USER_LAT, lat);
+                    mJsonObject.put(Common.Constant_Class.USER_LNG, lng);
+                    mJsonObject.put(Common.Constant_Class.IS_LOCATION_ENABLE, is_location_enable);
+                    mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                    mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
+                    mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Common.showProgressDialog(getActivity());
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    try {
+                        Common.hideProgressDialog();
+                        String success = response.getString(Common.Constant_Class.SUCCESS);
+
+                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                            alert("Your location updated!");
+                        } else {
+                            alert("Something went wrong!");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    Common.hideProgressDialog();
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
+        }
+    }
 
 
    /* private void getDistanceOnRoad(double latitude, double longitude,

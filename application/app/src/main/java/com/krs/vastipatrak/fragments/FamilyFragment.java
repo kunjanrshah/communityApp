@@ -8,10 +8,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -53,14 +56,14 @@ import java.util.Objects;
 public class FamilyFragment extends Fragment implements Serializable, AdapterView.OnItemSelectedListener {
 
 
-    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName;
-    public String mdate = "";
+    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName,edtsponse_mobile,edtsponse_nplace;
+    public String mdate = "",sdate="";
     public String str_spouse_hash = "", str_fspouse_hash = "", str_mspouse_hash = "";
     public LinearLayout child_container = null;
     public ArrayList<Integer> lst_delID = null;
     public RadioButton rbtnChildNo;
     String role = "";
-    private EditText edt_mdate;
+    private EditText edt_mdate,edtsponse_bdate;
     private RadioButton rbtnChildYes;
     private String spouse_url = "";
     private String fspouse_url = "";
@@ -71,7 +74,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private ImageView img_mspouse;
     private String img_selection = "";
     private SharedPreferences mSharedPreferences;
-    private String user_id = "";
+    //private String user_id = "";
+    private static final int CONTACT_PICKER_RESULT = 1001;
     private Activity mActivity;
 
     public FamilyFragment() {
@@ -92,6 +96,49 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        edtsponse_bdate.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
+
+                final int DRAWABLE_RIGHT = 2;
+
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (edtsponse_bdate.getRight() - edtsponse_bdate.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        Calendar now = Calendar.getInstance();
+                        DatePickerDialog dpd = DatePickerDialog.newInstance((DatePickerDialog.OnDateSetListener) getContext(), now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+                        dpd.setThemeDark(true);
+                        dpd.vibrate(true);
+                        dpd.dismissOnPause(false);
+                        dpd.showYearPickerFirst(false);
+                        dpd.setTitle("Sponse Birth Date");
+                        dpd.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+
+                                monthOfYear = (++monthOfYear);
+                                String str_month = String.valueOf(monthOfYear);
+                                String str_day = String.valueOf(dayOfMonth);
+                                if (str_month.length() == 1) {
+                                    str_month = "0" + str_month;
+                                }
+                                if (str_day.length() == 1) {
+                                    str_day = "0" + str_day;
+                                }
+                                String date = str_day + "/" + str_month + "/" + year;
+                                sdate = year + "-" + str_month + "-" + str_day;
+                                edtsponse_bdate.setText(date);
+                            }
+                        });
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
+                            dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+                        }
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
 
         edt_mdate.setOnTouchListener(new View.OnTouchListener() {
@@ -130,12 +177,32 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
                             dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         }
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
+        edtsponse_mobile.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if ((event.getRawX()) >= (edtsponse_mobile.getRight() - edtsponse_mobile.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            if (Common.canReadContacts(Objects.requireNonNull(getActivity()))) {
+                                Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                                startActivityForResult(it, CONTACT_PICKER_RESULT);
+                            }
+                        } else {
+                            Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                            startActivityForResult(it, CONTACT_PICKER_RESULT);
+                        }
 
                         return true;
                     }
                 }
-
                 return false;
             }
         });
@@ -229,9 +296,12 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
         mActivity = Objects.requireNonNull(getActivity());
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
-        user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+       // user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
         role = mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER);
         edt_mdate = root.findViewById(R.id.edt_mdate);
+        edtsponse_bdate=root.findViewById(R.id.edtsponse_bdate);
+        edtsponse_mobile=root.findViewById(R.id.edtsponse_mobile);
+        edtsponse_nplace=root.findViewById(R.id.edtsponse_nplace);
         edtSpouseName = root.findViewById(R.id.edtSpouseName);
         edtSpouseFName = root.findViewById(R.id.edtSpouseFName);
         edtMSpouseName = root.findViewById(R.id.edtMSpouseName);
@@ -654,6 +724,37 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CONTACT_PICKER_RESULT && resultCode == Activity.RESULT_OK && null != data) {
+            Uri contactUri = data.getData();
+            Cursor contactCursor = Objects.requireNonNull(getActivity()).getContentResolver().query(Objects.requireNonNull(contactUri),
+                    new String[]{ContactsContract.Contacts._ID}, null, null,
+                    null);
+            String id = null;
+            if (Objects.requireNonNull(contactCursor).moveToFirst()) {
+                id = contactCursor.getString(contactCursor
+                        .getColumnIndex(ContactsContract.Contacts._ID));
+            }
+            contactCursor.close();
+            String phoneNumber;
+            Cursor phoneCursor = getActivity().getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
+                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "= ? ",
+                    new String[]{id}, null);
+            if (Objects.requireNonNull(phoneCursor).moveToFirst()) {
+                phoneNumber = phoneCursor
+                        .getString(phoneCursor
+                                .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                Log.v("phoneNumber :", "" + phoneNumber);
+                if (phoneNumber != null) {
+                    edtsponse_mobile.setText(phoneNumber.replace("+", ""));
+                }
+            }
+            phoneCursor.close();
+
+        }
+
 
         Bitmap bmp = null;
         if (data != null) {

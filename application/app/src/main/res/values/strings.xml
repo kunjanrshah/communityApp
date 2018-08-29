@@ -18,6 +18,7 @@
     <string name="hint_mother_name">Mother Name</string>
     <string name="hint_birth_date">Birth Date</string>
     <string name="hint_sponse_birth">Sponse Birth</string>
+    <string name="hint_sponse_mobile">Sponse Mobile</string>
     <string name="hint_birth_date_from">Birth Date From</string>
     <string name="hint_birth_time">Birth Time</string>
     <string name="hint_birth_date_to">Birth Date To</string>

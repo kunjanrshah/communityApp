@@ -209,8 +209,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     }
                     if (flag) {
                         String phone_no = childViewHolder.txt_phone.getText().toString().replaceAll("-", "");
-                        Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:+" + phone_no.trim()));
+                        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                        callIntent.setData(Uri.parse("tel:" + phone_no.trim()));
                         Activity activity = (Activity) _context;
                         activity.startActivity(callIntent);
                     }
@@ -395,8 +395,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     if (flag) {
                         String mobile = groupViewHolder.tvMobile.getText().toString().replaceAll("-", "");
                         if (!mobile.isEmpty()) {
-                            Intent callIntent = new Intent(Intent.ACTION_CALL);
-                            callIntent.setData(Uri.parse("tel:+" + mobile.trim()));
+                            Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                            callIntent.setData(Uri.parse("tel:" + mobile.trim()));
                             Activity activity = (Activity) _context;
                             activity.startActivity(callIntent);
                         }
@@ -432,8 +432,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String user_lat = mListParentData.getUser_lat();
         final String user_lng = mListParentData.getUser_lng();
 
-        if (is_share.equalsIgnoreCase("1")) {  //&& mListParentData.isIs_location_enable().equalsIgnoreCase("1")
-
+        if (is_share.equalsIgnoreCase("1")&& mListParentData.isIs_location_enable().equalsIgnoreCase("1")) {
             String curr_lat= mSharedPreferences.getString(Common.Constant_Class.CURR_LAT,"");
             String curr_lng= mSharedPreferences.getString(Common.Constant_Class.CURR_LNG,"");
             if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {

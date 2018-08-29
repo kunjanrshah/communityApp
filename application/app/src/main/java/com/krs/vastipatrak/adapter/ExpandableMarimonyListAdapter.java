@@ -256,8 +256,8 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                     }
                     if (flag) {
                         String mobile = childViewHolder.txt_mobile.getText().toString().replaceAll("-", "");
-                        Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:+" + mobile.trim()));
+                        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                        callIntent.setData(Uri.parse("tel:" + mobile.trim()));
                         Activity activity = (Activity) _context;
                         activity.startActivity(callIntent);
                     }

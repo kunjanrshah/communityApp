@@ -257,7 +257,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 String OAddress = ((BusinessFragment) business).edtOAddress.getText().toString().trim();
 
                 // Familty Details
-                String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
+                String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "",sdate="", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
                 LinearLayout child_container = null;
                 ArrayList<Integer> lst_delID = null;
                 try {
@@ -268,6 +268,13 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     if (!mdate.equalsIgnoreCase("")) {
                         if (!Common.isThisDateValid(mdate, "yyyy-mm-dd")) {
                             valid = "Marriage Date is not valid Format";
+                        }
+                    }
+
+                    sdate = ((FamilyFragment) family).sdate.trim();
+                    if (!sdate.equalsIgnoreCase("")) {
+                        if (!Common.isThisDateValid(sdate, "yyyy-mm-dd")) {
+                            valid = "Sponse Birth Date is not valid Format";
                         }
                     }
 

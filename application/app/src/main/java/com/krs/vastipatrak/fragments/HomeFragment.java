@@ -37,7 +37,6 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.EventlistActivity;
-import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.interfaces.OnItemClickListener;
 import com.krs.vastipatrak.model.ListEventData;
@@ -143,7 +142,6 @@ public class HomeFragment extends Fragment {
                 dialog.setTitle(R.string.app_name);
                 dialog.setCancelable(false);
                 final EditText input_page = dialog.findViewById(R.id.input_page);
-
                 Button btn_send = dialog.findViewById(R.id.btn_send);
                 Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -155,15 +153,23 @@ public class HomeFragment extends Fragment {
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int page1 = Integer.parseInt(input_page.getText().toString());
-                        if (page1 > 0 && page1 <= page_count) {
-                            page = page1;
-                            dialog.dismiss();
-                            getEvents();
+                        if (!input_page.getText().toString().isEmpty()) {
+                            try {
+                                int page1 = Integer.parseInt(input_page.getText().toString());
+                                if (page1 > 0 && page1 <= page_count) {
+                                    page = page1;
+                                    dialog.dismiss();
+                                    getEvents();
+                                } else {
+                                    Toast.makeText(getActivity(), "Invalid page number", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                Toast.makeText(getActivity(), "Invalid page number", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
                         } else {
-                            Toast.makeText(getActivity(), "invalid number", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Enter page number", Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 });
                 dialog.show();
@@ -274,7 +280,7 @@ public class HomeFragment extends Fragment {
                             setEventAdapter();
                         }
                         Common.hideProgressDialog();
-                        Toast.makeText(getActivity(),""+message+" page"+page,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "" + message + " page" + page, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -385,7 +391,7 @@ public class HomeFragment extends Fragment {
             holder.txtDesc.setText(data.getDescription());
             holder.txtLocation.setText(data.getLocation());
 
-            holder.txtEventDate.setText(parseDateToddMMyyyy(DatetoString(data.getEventDate()),yyyy_MM_dd,dd_MMM_yyyy));
+            holder.txtEventDate.setText(parseDateToddMMyyyy(DatetoString(data.getEventDate()), yyyy_MM_dd, dd_MMM_yyyy));
             getRandomColor(Objects.requireNonNull(getActivity()), position, holder.ll_event);
 
             holder.txtLocation.setOnClickListener(new View.OnClickListener() {

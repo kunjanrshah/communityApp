@@ -27,7 +27,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="50 Km"
                 android:textSize="14sp"
                 android:visibility="gone" />
 

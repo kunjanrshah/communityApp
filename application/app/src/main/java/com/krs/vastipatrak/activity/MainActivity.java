@@ -1021,10 +1021,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
             if (change_role != null && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
                 change_role.setVisible(true);
+                if (deleteItem != null) {
+                    deleteItem.setVisible(true);
+                }
             }
-            if (deleteItem != null) {
-                deleteItem.setVisible(true);
-            }
+
         } else {
             export.setVisible(false);
             activeItem.setVisible(false);
