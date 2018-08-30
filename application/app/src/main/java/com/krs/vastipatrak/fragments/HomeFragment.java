@@ -425,10 +425,9 @@ public class HomeFragment extends Fragment {
             holder.txtEventDate.setText(strDate + "\n" + goal);
             getRandomColor(Objects.requireNonNull(getActivity()), position, holder.ll_event);
 
-            holder.txtLocation.setOnClickListener(new View.OnClickListener() {
+            holder.txt_distance.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     String lat = data.getLat();
                     String lng = data.getLng();
                     String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
@@ -442,6 +441,7 @@ public class HomeFragment extends Fragment {
                     }
                 }
             });
+
 
             String lat = data.getLat();
             String lng = data.getLng();
