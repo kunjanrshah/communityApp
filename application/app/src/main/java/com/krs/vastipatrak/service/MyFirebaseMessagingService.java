@@ -132,7 +132,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 resultIntent.putExtra(Common.Constant_Class.USER_ID, user_id);
                 // check for image attachment
                 if (TextUtils.isEmpty(imageUrl)) {
-                    showNotificationMessage(getApplicationContext(), title, notification, timestamp, resultIntent);
+                    showNotificationMessage(getApplicationContext(), title, notification, timestamp, resultIntent,user_id);
                 } else {
                     // image is present, show notification with image
                     showNotificationMessageWithBigImage(getApplicationContext(), title, notification, timestamp, resultIntent, imageUrl);
@@ -148,10 +148,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     /**
      * Showing notification with text only
      */
-    private void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent) {
+    private void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent,String user_id) {
         notificationUtils = new NotificationUtils(context);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        notificationUtils.showNotificationMessage(title, message, timeStamp, intent);
+        notificationUtils.showNotificationMessage(title, message, timeStamp, intent,user_id);
     }
 
     /**
