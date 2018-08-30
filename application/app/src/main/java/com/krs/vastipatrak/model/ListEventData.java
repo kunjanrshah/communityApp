@@ -16,7 +16,7 @@ public class ListEventData extends RealmObject{
     private String title;
     private String description;
     private String location;
-    private Date event_date;
+    private String event_date;
     private String lat;
     private String lng;
     @Nullable
@@ -91,11 +91,11 @@ public class ListEventData extends RealmObject{
         this.images = images;
     }
 
-    public Date getEventDate() {
+    public String getEventDate() {
         return event_date;
     }
 
-    public void setEventDate(Date event_date) {
+    public void setEventDate(String event_date) {
         this.event_date = event_date;
     }
 

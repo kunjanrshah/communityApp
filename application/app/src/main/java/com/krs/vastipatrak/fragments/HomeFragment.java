@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +49,9 @@ import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutD
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -57,7 +62,6 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-import static com.krs.vastipatrak.utils.Common.DatetoString;
 import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
 import static com.krs.vastipatrak.utils.Common.getRandomColor;
 import static com.krs.vastipatrak.utils.Common.parseDateToddMMyyyy;
@@ -205,7 +209,7 @@ public class HomeFragment extends Fragment {
             try {
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 if (eventData.size() > 1) {
-                    String date = DatetoString(Objects.requireNonNull(eventData.get(eventData.size() - 1)).getEventDate());
+                    String date = eventData.get(eventData.size() - 1).getEventDate();
                     mJsonObject.put(Common.Constant_Class.EVENT_DATE, date);
                 }
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
@@ -239,7 +243,7 @@ public class HomeFragment extends Fragment {
                                 mEventdata.setTitle(mjson.getString("title"));
                                 mEventdata.setDescription(mjson.getString("description"));
                                 mEventdata.setLocation(mjson.getString("location"));
-                                mEventdata.setEventDate(Common.StringToDate(mjson.getString("event_date")));
+                                mEventdata.setEventDate(mjson.getString("event_date"));
                                 mEventdata.setLat(mjson.getString("lat"));
                                 mEventdata.setLng(mjson.getString("lng"));
 
@@ -280,7 +284,7 @@ public class HomeFragment extends Fragment {
                             setEventAdapter();
                         }
                         Common.hideProgressDialog();
-                        Toast.makeText(getActivity(), "" + message + " page" + page, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -333,7 +337,13 @@ public class HomeFragment extends Fragment {
                 int j = Objects.requireNonNull(Objects.requireNonNull(eventData.get(position)).getYoutubeUrl()).size();
                 if (i > 0 || j > 0) {
                     Intent mIntent = new Intent(getActivity(), EventlistActivity.class);
-                    mIntent.putExtra("eventId", Objects.requireNonNull(eventData.get(position)).getId());
+                    mIntent.putExtra("id", Objects.requireNonNull(eventData.get(position)).getId());
+                    mIntent.putExtra("desc", Objects.requireNonNull(eventData.get(position)).getDescription());
+                    mIntent.putExtra("date", Objects.requireNonNull(eventData.get(position)).getEventDate());
+                    mIntent.putExtra("title", Objects.requireNonNull(eventData.get(position)).getTitle());
+                    mIntent.putExtra("location", Objects.requireNonNull(eventData.get(position)).getLocation());
+                    mIntent.putExtra("lat", Objects.requireNonNull(eventData.get(position)).getLat());
+                    mIntent.putExtra("lng", Objects.requireNonNull(eventData.get(position)).getLng());
                     startActivity(mIntent);
 
                 } else {
@@ -390,14 +400,36 @@ public class HomeFragment extends Fragment {
             holder.txtTitle.setText(data.getTitle());
             holder.txtDesc.setText(data.getDescription());
             holder.txtLocation.setText(data.getLocation());
+            Date mdate = Common.StringToDate(data.getEventDate());
 
-            holder.txtEventDate.setText(parseDateToddMMyyyy(DatetoString(data.getEventDate()), yyyy_MM_dd, dd_MMM_yyyy));
+
+            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = null;
+            try {
+                date = inFormat.parse(data.getEventDate().toString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            SimpleDateFormat outFormat = new SimpleDateFormat("EEEE");
+            String goal = outFormat.format(date);
+
+            String strDate = "";
+            if (DateUtils.isToday(mdate.getTime()))
+                strDate = "Today";
+            else if (DateUtils.isToday(mdate.getTime() + DateUtils.DAY_IN_MILLIS))
+                strDate = "Yesterday";
+            else if (DateUtils.isToday(mdate.getTime() - DateUtils.DAY_IN_MILLIS))
+                strDate = "Tommorrow";
+            else
+                strDate = parseDateToddMMyyyy(data.getEventDate(), yyyy_MM_dd, dd_MMM_yyyy);
+
+            holder.txtEventDate.setText(strDate + "\n" + goal);
             getRandomColor(Objects.requireNonNull(getActivity()), position, holder.ll_event);
 
             holder.txtLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(), "get location", Toast.LENGTH_SHORT).show();
+
                     String lat = data.getLat();
                     String lng = data.getLng();
                     String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
@@ -412,6 +444,13 @@ public class HomeFragment extends Fragment {
                 }
             });
 
+            String lat = data.getLat();
+            String lng = data.getLng();
+            String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+            String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+            if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !lat.isEmpty() && !lng.isEmpty()) {
+                new Common.getDistance(holder.txtLocation).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(lat), Double.parseDouble(lng));
+            }
         }
 
         @Override

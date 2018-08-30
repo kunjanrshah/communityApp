@@ -28,6 +28,7 @@ import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -1872,7 +1873,15 @@ public class Common {
             super.onPostExecute(s);
             Log.d("getDistance", "distance: " + s);
             if (txtDistance != null) {
-                txtDistance.setText("" + s);
+                if(txtDistance.getText().toString().isEmpty())
+                {
+                    txtDistance.setText("" + s);
+                }else
+                {
+                    String next = "<font color='#EE0000'>"+s+"</font>";
+                    txtDistance.setText(Html.fromHtml(txtDistance.getText().toString()+" " + next));
+                }
+
             } else {
                 strDisctance = s;
             }

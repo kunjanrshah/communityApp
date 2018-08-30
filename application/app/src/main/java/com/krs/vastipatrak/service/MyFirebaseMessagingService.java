@@ -116,7 +116,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.e(TAG, "timestamp: " + timestamp);
 
 
-            if (NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+            /*if (NotificationUtils.isAppIsInBackground(getApplicationContext())) {
                 // app is in foreground, broadcast the push message
                 Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
                 pushNotification.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
@@ -125,7 +125,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 // play notification sound
                 NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
                 notificationUtils.playNotificationSound();
-            } else {
+            } else {*/
                 // app is in background, show the notification in notification tray
                 Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
                 resultIntent.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
@@ -137,7 +137,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     // image is present, show notification with image
                     showNotificationMessageWithBigImage(getApplicationContext(), title, notification, timestamp, resultIntent, imageUrl);
                 }
-            }
+         //   }
         } catch (JSONException e) {
             Log.e(TAG, "Json Exception: " + e.getMessage());
         } catch (Exception e) {

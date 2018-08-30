@@ -689,7 +689,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     lcd.setPhone(phone);
                     lcd.setGender(gender);
                     lcd.setGotra(gotra);
-                    lcd.setName(first_name+" "+last_name);
+                    lcd.setName(first_name + " " + last_name);
                     ArrayList<ListChildData> mlstChildData = new ArrayList<>();
                     mlstChildData.add(lcd);
                     listDataHeader.add(lpd);
@@ -703,7 +703,9 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
                 iSearchCallback.setIsSearch(true);
             } else {
-
+                if (lstSelectedIDs != null) {
+                    lstSelectedIDs.clear();
+                }
                 iSearchCallback.setIsSearch(false);
                 hideProgressDialog();
                 if (isNonActive) {
