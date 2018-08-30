@@ -808,7 +808,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
-                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        if (success.equalsIgnoreCase("false")) {
+                            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
                         // if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
 
                         try {

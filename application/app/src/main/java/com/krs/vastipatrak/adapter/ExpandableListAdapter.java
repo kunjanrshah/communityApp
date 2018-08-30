@@ -86,7 +86,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     HashMap<String, String> testHashMap2;
     Gson gson;
     @Nullable
-    private ProgressDialog pDialog;
+   // private ProgressDialog pDialog;
     private ChildViewHolder childViewHolder;
 
     @SuppressLint("UseSparseArrays")
@@ -94,13 +94,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listDataChild;
-        try {
-            pDialog = new ProgressDialog(_context);
-            pDialog.setMessage(Common.Constant_Class.LOADING);
-            pDialog.setCancelable(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
         mSharedPreferences = _context.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
@@ -657,7 +651,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    private void showProgressDialog() {
+   /* private void showProgressDialog() {
         if (pDialog != null && !pDialog.isShowing()) pDialog.show();
     }
 
@@ -666,7 +660,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             pDialog.dismiss();
             pDialog = null;
         }
-    }
+    }*/
 
 /*
     private void SyncUser(String profile_id) {

@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import io.realm.Realm;
 
@@ -41,7 +43,7 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
 
     private static final int RECOVERY_REQUEST = 1;
     private RecyclerView listEvents;
-    private TextView txt_title, txt_desc, tvEventLocation, tvEventDate;
+    private TextView txt_title, txt_desc, tvEventLocation, tvEventDate,txt_distance;
     @Nullable
     private String eventId = "";
     private String eventDesc = "";
@@ -49,6 +51,7 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
     private String eventTitle = "";
     private String eventLocation = "";
     private String lat = "", lng = "";
+    private ImageView img_back;
     @Nullable
     private EventListAdapter adapter;
     private SharedPreferences mSharedPreferences;
@@ -98,11 +101,11 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
         String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
         String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
         if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !lat.isEmpty() && !lng.isEmpty()) {
-            new Common.getDistance(tvEventLocation).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(lat), Double.parseDouble(lng));
-
+            new Common.getDistance(txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(lat), Double.parseDouble(lng));
         }
-
     }
+
+
 
     private void showDirections(double src_lat, double src_lng, double dst_lat, double dst_lng, String address) {
         String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", src_lat, src_lng, "", dst_lat, dst_lng, address);
@@ -141,12 +144,21 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
         txt_desc = findViewById(R.id.txt_desc);
         tvEventLocation = findViewById(R.id.tvEventLocation);
         tvEventDate = findViewById(R.id.tvEventDate);
+        img_back= findViewById(R.id.img_back);
+        txt_distance= findViewById(R.id.txt_distance);
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
 
         Realm realm = AppController.getInstance().realm;
         ListEventData eventData = realm.where(ListEventData.class).endsWith("id", eventId).findFirst();
         assert eventData != null;
         adapter = new EventListAdapter(this, eventData);
+
+        img_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override

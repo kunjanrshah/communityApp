@@ -96,5 +96,10 @@
         android:title="@string/action_clear_search"
         android:visible="false"
         app:showAsAction="ifRoom|collapseActionView" />
+    <item
+        android:id="@+id/action_toggle"
+        android:title="@string/action_toggle"
+        android:visible="false"
+        app:showAsAction="ifRoom|collapseActionView" />
 
 </menu>

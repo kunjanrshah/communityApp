@@ -56,14 +56,13 @@ import java.util.Objects;
 public class FamilyFragment extends Fragment implements Serializable, AdapterView.OnItemSelectedListener {
 
 
-    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName,edtsponse_mobile,edtsponse_nplace;
-    //public String mdate = "",sdate="";
+    private static final int CONTACT_PICKER_RESULT = 1001;
+    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName, edtsponse_mobile, edtsponse_nplace;
     public String str_spouse_hash = "", str_fspouse_hash = "", str_mspouse_hash = "";
     public LinearLayout child_container = null;
     public ArrayList<Integer> lst_delID = null;
     public RadioButton rbtnChildNo;
-    String role = "";
-    public EditText edt_mdate,edtsponse_bdate;
+    public EditText edt_mdate, edtsponse_bdate;
     private RadioButton rbtnChildYes;
     private String spouse_url = "";
     private String fspouse_url = "";
@@ -74,8 +73,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private ImageView img_mspouse;
     private String img_selection = "";
     private SharedPreferences mSharedPreferences;
-    //private String user_id = "";
-    private static final int CONTACT_PICKER_RESULT = 1001;
     private Activity mActivity;
 
     public FamilyFragment() {
@@ -130,7 +127,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                 edtsponse_bdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
                             dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
@@ -170,11 +167,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                     str_day = "0" + str_day;
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
-                               // mdate = year + "-" + str_month + "-" + str_day;
+                                // mdate = year + "-" + str_month + "-" + str_day;
                                 edt_mdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
                             dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
@@ -210,7 +207,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         img_spouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || role.equals(Common.Constant_Class.ADMIN)) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
                     img_selection = "spouse";
                     selectImage();
                 } else {
@@ -224,7 +221,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         img_fspouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || role.equals(Common.Constant_Class.ADMIN)) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
                     img_selection = "fspouse";
                     selectImage();
                 } else {
@@ -238,7 +235,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         img_mspouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || role.equals(Common.Constant_Class.ADMIN)) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
                     img_selection = "mspouse";
                     selectImage();
                 } else {
@@ -279,12 +276,17 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             @Override
             public void onClick(View v) {
 
-                add_child_layout();
+                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) && !MyProfileActivity.isEnable) {
+
+                } else {
+                    add_child_layout();
+                }
+
             }
         });
 
         if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-            if (role.equals(Common.Constant_Class.USER)) {
+            if (!MyProfileActivity.isEnable) {
                 DisableAll();
             }
         }
@@ -296,12 +298,10 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
         mActivity = Objects.requireNonNull(getActivity());
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
-       // user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
-        role = mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER);
         edt_mdate = root.findViewById(R.id.edt_mdate);
-        edtsponse_bdate=root.findViewById(R.id.edtsponse_bdate);
-        edtsponse_mobile=root.findViewById(R.id.edtsponse_mobile);
-        edtsponse_nplace=root.findViewById(R.id.edtsponse_nplace);
+        edtsponse_bdate = root.findViewById(R.id.edtsponse_bdate);
+        edtsponse_mobile = root.findViewById(R.id.edtsponse_mobile);
+        edtsponse_nplace = root.findViewById(R.id.edtsponse_nplace);
         edtSpouseName = root.findViewById(R.id.edtSpouseName);
         edtSpouseFName = root.findViewById(R.id.edtSpouseFName);
         edtMSpouseName = root.findViewById(R.id.edtMSpouseName);
@@ -320,6 +320,15 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private void DisableAll() {
         edt_mdate.setKeyListener(null);
         edt_mdate.setCursorVisible(false);
+
+        edtsponse_bdate.setKeyListener(null);
+        edtsponse_bdate.setCursorVisible(false);
+        edtsponse_mobile.setKeyListener(null);
+        edtsponse_mobile.setEnabled(false);
+        edtsponse_mobile.setClickable(false);
+        edtsponse_mobile.setCursorVisible(false);
+        edtsponse_nplace.setKeyListener(null);
+        edtsponse_nplace.setCursorVisible(false);
 
         edtSpouseName.setKeyListener(null);
         edtSpouseName.setCursorVisible(false);
@@ -344,11 +353,16 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtSpouseName.setEnabled(true);
         edtSpouseFName.setEnabled(true);
         edtMSpouseName.setEnabled(true);
+        edtsponse_bdate.setEnabled(true);
+        edtsponse_mobile.setEnabled(true);
+        edtsponse_mobile.setEnabled(true);
+        edtsponse_mobile.setClickable(true);
+        edtsponse_nplace.setEnabled(true);
     }
 
     private void SetOfflineData(ListProfileData mListProfileData) {
 
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
+        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
             EnableAll();
         } else {
             DisableAll();
@@ -374,7 +388,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     if (i == 0) {
                         rbtnChildYes.setChecked(true);
                         rbtnChildNo.setChecked(false);
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
                             btn_add.setVisibility(View.VISIBLE);
                         } else {
                             btn_add.setVisibility(View.GONE);
@@ -418,7 +432,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     Objects.requireNonNull(mViewholder.edtchild_work).setText(mObjChild.getChild_work());
 
 
-                    if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)|| role.equals(Common.Constant_Class.ADMIN)) {
+                    if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
                         mViewholder.edtchild_name.setEnabled(true);
                         mViewholder.edtchild_bdate.setEnabled(true);
                         mViewholder.edtchild_edu.setEnabled(true);
@@ -446,7 +460,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         @Override
                         public void onClick(View v) {
 
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
+                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
                                 mViewholder.ImgHash = "selectImage";
                                 selectImage();
                             } else {
@@ -532,20 +546,19 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             @Override
             public void onClick(View v) {
 
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
                     mViewholder.ImgHash = "selectImage";
                     selectImage();
-                }else
-                {
-                    String Name =  mViewholder.edtchild_name.getText().toString();
-                  //  openImageDialog(Name, child_url);
+                } else {
+                    String Name = mViewholder.edtchild_name.getText().toString();
+                    //  openImageDialog(Name, child_url);
                 }
             }
         });
 
         if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
 
-            if (role.equals(Common.Constant_Class.USER)) {
+            if (!MyProfileActivity.isEnable) {
 
                 Objects.requireNonNull(mViewholder.btn_remove).setVisibility(View.GONE);
                 Objects.requireNonNull(mViewholder.edtchild_name).setKeyListener(null);
@@ -607,11 +620,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                     str_day = "0" + str_day;
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
-                              //  mViewholder.cbdate = year + "-" + str_month + "-" + str_day;
+                                //  mViewholder.cbdate = year + "-" + str_month + "-" + str_day;
                                 mViewholder.edtchild_bdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
                             dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
@@ -652,7 +665,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                 mViewholder.edtchild_btime.setText(time);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || role.equals(Common.Constant_Class.ADMIN)) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
                             tpd.show(mActivity.getFragmentManager(), "Timepickerdialog");
                         }
                         return true;
@@ -727,25 +740,16 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
         if (requestCode == CONTACT_PICKER_RESULT && resultCode == Activity.RESULT_OK && null != data) {
             Uri contactUri = data.getData();
-            Cursor contactCursor = Objects.requireNonNull(getActivity()).getContentResolver().query(Objects.requireNonNull(contactUri),
-                    new String[]{ContactsContract.Contacts._ID}, null, null,
-                    null);
+            Cursor contactCursor = Objects.requireNonNull(getActivity()).getContentResolver().query(Objects.requireNonNull(contactUri), new String[]{ContactsContract.Contacts._ID}, null, null, null);
             String id = null;
             if (Objects.requireNonNull(contactCursor).moveToFirst()) {
-                id = contactCursor.getString(contactCursor
-                        .getColumnIndex(ContactsContract.Contacts._ID));
+                id = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.Contacts._ID));
             }
             contactCursor.close();
             String phoneNumber;
-            Cursor phoneCursor = getActivity().getContentResolver().query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "= ? ",
-                    new String[]{id}, null);
+            Cursor phoneCursor = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER}, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "= ? ", new String[]{id}, null);
             if (Objects.requireNonNull(phoneCursor).moveToFirst()) {
-                phoneNumber = phoneCursor
-                        .getString(phoneCursor
-                                .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 Log.v("phoneNumber :", "" + phoneNumber);
                 if (phoneNumber != null) {
                     edtsponse_mobile.setText(phoneNumber.replace("+", ""));
@@ -845,6 +849,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         @Nullable
         public EditText edtchild_work = null;
         public String ImgHash = "";
+        @Nullable
+        public EditText edtchild_bdate = null;
         //public String cbdate = "";
         @Nullable
         ImageView img_child = null;
@@ -853,7 +859,5 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         @Nullable
         Button btn_remove = null;
         boolean setClickBDate = false;
-        @Nullable
-        public EditText edtchild_bdate = null;
     }
 }

@@ -63,6 +63,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
+
 public class SyncFragment extends Fragment {
 
     @SuppressLint("StaticFieldLeak")
@@ -109,7 +111,7 @@ public class SyncFragment extends Fragment {
     private SharedPreferences.Editor mEditor = null;
     //SearchView searchView;
     @Nullable
-    private ProgressDialog pDialog;
+    //private ProgressDialog pDialog;
     private CityAdapter mAdapter;
 
     @Override
@@ -230,7 +232,7 @@ public class SyncFragment extends Fragment {
         try {
             assert mSharedPreferences != null;
             json.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-            showProgressDialog();
+            Common.showProgressDialog(getActivity());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -293,7 +295,7 @@ public class SyncFragment extends Fragment {
         AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
     }
 
-    private void showProgressDialog() {
+   /* private void showProgressDialog() {
         assert pDialog != null;
         if (!pDialog.isShowing())
             pDialog.show();
@@ -303,7 +305,7 @@ public class SyncFragment extends Fragment {
         assert pDialog != null;
         if (pDialog.isShowing())
             pDialog.cancel();
-    }
+    }*/
 
     @SuppressLint("SetTextI18n")
     private void MemoryAllocation(View rootView) {
@@ -330,9 +332,9 @@ public class SyncFragment extends Fragment {
         //  edt_sync.setCursorVisible(false);
         String date = Common.getUpdatedTime(mSharedPreferences.getString(Common.Constant_Class.UPDATED_TIME, "0"));
         tvUpdatedTime.setText(date);
-        pDialog = new ProgressDialog(getActivity());
+       /* pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage("Fetching Cities...");
-        pDialog.setCancelable(false);
+        pDialog.setCancelable(false);*/
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));

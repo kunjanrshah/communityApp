@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.location.LocationManager;
@@ -35,11 +36,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ExportProfileData;
 import com.krs.vastipatrak.model.ListChildrenData;
@@ -275,7 +276,7 @@ public class Common {
         return (rad * 180.0 / Math.PI);
     }*/
 
-    public static void showDirections(@NonNull Activity mActivity,double slatitude, double slongitude, double dlatitude, double dlongitude, String address) {
+    public static void showDirections(@NonNull Activity mActivity, double slatitude, double slongitude, double dlatitude, double dlongitude, String address) {
 
         String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", slatitude, slongitude, "", dlatitude, dlongitude, address);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
@@ -286,7 +287,16 @@ public class Common {
     public static boolean isOnline(Context mContext) {
         ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = Objects.requireNonNull(cm).getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnected();
+        if (netInfo != null) {
+            if (netInfo.isConnected()) {
+                return true;
+            } else {
+                Toast.makeText(mContext, "Network is not connected!", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        Toast.makeText(mContext, "Network is not connected!", Toast.LENGTH_SHORT).show();
+        return false;
     }
 
     public static String getBase64(Bitmap bitmap) {
@@ -1449,6 +1459,8 @@ public class Common {
 
 
             if (!pDialog.isShowing()) pDialog.show();
+            ProgressBar progressbar = (ProgressBar) pDialog.findViewById(android.R.id.progress);
+            progressbar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#F50057"), android.graphics.PorterDuff.Mode.SRC_IN);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1872,16 +1884,10 @@ public class Common {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("getDistance", "distance: " + s);
-            if (txtDistance != null) {
-                if(txtDistance.getText().toString().isEmpty())
-                {
-                    txtDistance.setText("" + s);
-                }else
-                {
-                    String next = "<font color='#EE0000'>"+s+"</font>";
-                    txtDistance.setText(Html.fromHtml(txtDistance.getText().toString()+" " + next));
-                }
 
+            if (txtDistance != null) {
+                String next = "<font color='#EE0000'>" + s + "</font>";
+                txtDistance.setText(Html.fromHtml(next));
             } else {
                 strDisctance = s;
             }

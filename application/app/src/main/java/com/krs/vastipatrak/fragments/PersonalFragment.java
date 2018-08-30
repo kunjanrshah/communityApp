@@ -120,7 +120,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             @Override
             public void onClick(View v) {
 
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
                     img_selection = "profile";
                     selectImage();
                 } else {
@@ -136,7 +136,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             @Override
             public void onClick(View v) {
 
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
                     img_selection = "father";
                     selectImage();
                 } else {
@@ -150,7 +150,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
                     img_selection = "mother";
                     selectImage();
                 } else {
@@ -222,7 +222,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 edtbTime.setText(time);
                             }*/
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
                             tpd.show(mActivity.getFragmentManager(), "Timepickerdialog");
                         }
 
@@ -261,11 +261,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                     str_day = "0" + str_day;
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
-                              //  bdate = year + "-" + str_month + "-" + str_day;
+                                //  bdate = year + "-" + str_month + "-" + str_day;
                                 edtbdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
                             dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
                         }
 
@@ -284,14 +284,14 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (edtAddress.getRight() - edtAddress.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                       final  String curr_lat= mSharedPreferences.getString(Common.Constant_Class.CURR_LAT,"");
-                       final  String curr_lng= mSharedPreferences.getString(Common.Constant_Class.CURR_LNG,"");
+                        final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                        final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
                         if (curr_lat.isEmpty() && curr_lng.isEmpty()) {
                             Common.showSettingsAlert(mActivity);
 
                         } else {
 
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                 builder.setTitle(getString(R.string.app_name));
@@ -333,51 +333,49 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             public void onClick(View v) {
                 android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
                 builder.setTitle(mActivity.getString(R.string.app_name));
-               if(tbtn_share.isChecked())
-               {
-                   String message = "Do you want to Share your Location ?";
-                   builder.setMessage(message);
-                   builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                       public void onClick(@NonNull DialogInterface dialog, int which) {
-                           mEditor.putString(Common.Constant_Class.TBTN_SHARE, "1");
-                           mEditor.apply();
-                           mActivity.startService(new Intent(mActivity, MyLocationService.class));
-                           toggle = true;
-                           dialog.dismiss();
-                           userLocationUpdateWS("1");
-                       }
-                   });
-                   builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
-                       @Override
-                       public void onClick(@NonNull DialogInterface dialog, int which) {
-                           toggle = false;
-                           tbtn_share.setChecked(false);
-                           dialog.dismiss();
-                       }
-                   }).show();
-               }else
-               {
-                   String message = "Do you want to Stop sharing your Location ?";
-                   builder.setMessage(message);
-                   builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                       public void onClick(@NonNull DialogInterface dialog, int which) {
-                           mEditor.putString(Common.Constant_Class.TBTN_SHARE, "0");
-                           mEditor.apply();
-                           mActivity.startService(new Intent(mActivity, MyLocationService.class));
-                           toggle = true;
-                           dialog.dismiss();
-                           userLocationUpdateWS("0");
-                       }
-                   });
-                   builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
-                       @Override
-                       public void onClick(@NonNull DialogInterface dialog, int which) {
-                           toggle = false;
-                           tbtn_share.setChecked(true);
-                           dialog.dismiss();
-                       }
-                   }).show();
-               }
+                if (tbtn_share.isChecked()) {
+                    String message = "Do you want to Share your Location ?";
+                    builder.setMessage(message);
+                    builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                        public void onClick(@NonNull DialogInterface dialog, int which) {
+                            mEditor.putString(Common.Constant_Class.TBTN_SHARE, "1");
+                            mEditor.apply();
+                            mActivity.startService(new Intent(mActivity, MyLocationService.class));
+                            toggle = true;
+                            dialog.dismiss();
+                            userLocationUpdateWS("1");
+                        }
+                    });
+                    builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(@NonNull DialogInterface dialog, int which) {
+                            toggle = false;
+                            tbtn_share.setChecked(false);
+                            dialog.dismiss();
+                        }
+                    }).show();
+                } else {
+                    String message = "Do you want to Stop sharing your Location ?";
+                    builder.setMessage(message);
+                    builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                        public void onClick(@NonNull DialogInterface dialog, int which) {
+                            mEditor.putString(Common.Constant_Class.TBTN_SHARE, "0");
+                            mEditor.apply();
+                            mActivity.startService(new Intent(mActivity, MyLocationService.class));
+                            toggle = true;
+                            dialog.dismiss();
+                            userLocationUpdateWS("0");
+                        }
+                    });
+                    builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(@NonNull DialogInterface dialog, int which) {
+                            toggle = false;
+                            tbtn_share.setChecked(true);
+                            dialog.dismiss();
+                        }
+                    }).show();
+                }
             }
         });
 
@@ -463,7 +461,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             EnableAll();
         } else {
-            if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {
+            if (MyProfileActivity.isEnable) {
+                EnableAll();
+            } else {
                 DisableAll();
             }
         }
@@ -754,8 +754,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {
                     DisableAll();
                 }
-                final  String curr_lat= mSharedPreferences.getString(Common.Constant_Class.CURR_LAT,"");
-                final  String curr_lng= mSharedPreferences.getString(Common.Constant_Class.CURR_LNG,"");
+                final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
                 double lat = Double.valueOf(curr_lat);
                 double lng = Double.valueOf(curr_lng);
 
@@ -770,10 +770,10 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
 
                 /*if (is_block.equalsIgnoreCase("1")) { //&&*/
-                    txt_distance.setVisibility(View.VISIBLE);
-                    if (user_lat != 0 && user_lng != 0) {
-                        new Common.getDistance(txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user_lat, user_lng, lat, lng);
-                    }
+                txt_distance.setVisibility(View.VISIBLE);
+                if (user_lat != 0 && user_lng != 0) {
+                    new Common.getDistance(txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user_lat, user_lng, lat, lng);
+                }
                /* } else {
                     txt_distance.setVisibility(View.GONE);
                 }*/
@@ -798,8 +798,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         if (Common.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
             try {
-                final  String curr_lat= mSharedPreferences.getString(Common.Constant_Class.CURR_LAT,"");
-                final  String curr_lng= mSharedPreferences.getString(Common.Constant_Class.CURR_LNG,"");
+                final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
                 double lat = Double.valueOf(curr_lat);
                 double lng = Double.valueOf(curr_lng);
                 mJsonObject = new JSONObject();
@@ -860,8 +860,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         if (Common.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
             try {
-                final  String curr_lat= mSharedPreferences.getString(Common.Constant_Class.CURR_LAT,"");
-                final  String curr_lng= mSharedPreferences.getString(Common.Constant_Class.CURR_LNG,"");
+                final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
                 double lat = Double.valueOf(curr_lat);
                 double lng = Double.valueOf(curr_lng);
                 mJsonObject = new JSONObject();

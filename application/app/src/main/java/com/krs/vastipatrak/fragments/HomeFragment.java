@@ -333,9 +333,9 @@ public class HomeFragment extends Fragment {
         EventAdapter mEventListAdapter = new EventAdapter(new OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                int i = Objects.requireNonNull(Objects.requireNonNull(eventData.get(position)).getImages()).size();
+                /*int i = Objects.requireNonNull(Objects.requireNonNull(eventData.get(position)).getImages()).size();
                 int j = Objects.requireNonNull(Objects.requireNonNull(eventData.get(position)).getYoutubeUrl()).size();
-                if (i > 0 || j > 0) {
+                if (i > 0 || j > 0) {*/
                     Intent mIntent = new Intent(getActivity(), EventlistActivity.class);
                     mIntent.putExtra("id", Objects.requireNonNull(eventData.get(position)).getId());
                     mIntent.putExtra("desc", Objects.requireNonNull(eventData.get(position)).getDescription());
@@ -345,10 +345,9 @@ public class HomeFragment extends Fragment {
                     mIntent.putExtra("lat", Objects.requireNonNull(eventData.get(position)).getLat());
                     mIntent.putExtra("lng", Objects.requireNonNull(eventData.get(position)).getLng());
                     startActivity(mIntent);
-
-                } else {
+                /*} else {
                     Toast.makeText(getActivity(), "Event Details not found!", Toast.LENGTH_SHORT).show();
-                }
+                }*/
 
             }
         });
@@ -449,7 +448,7 @@ public class HomeFragment extends Fragment {
             String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
             String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
             if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !lat.isEmpty() && !lng.isEmpty()) {
-                new Common.getDistance(holder.txtLocation).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(lat), Double.parseDouble(lng));
+                new Common.getDistance(holder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(lat), Double.parseDouble(lng));
             }
         }
 
@@ -469,6 +468,7 @@ public class HomeFragment extends Fragment {
             final TextView txtDesc;
             final TextView txtLocation;
             final TextView txtEventDate;
+            final TextView txt_distance;
             final LinearLayout ll_event;
 
             MyViewHolder(@NonNull View view) {
@@ -476,6 +476,7 @@ public class HomeFragment extends Fragment {
                 txtTitle = view.findViewById(R.id.tvEventTitle);
                 txtDesc = view.findViewById(R.id.tvEventDesc);
                 txtLocation = view.findViewById(R.id.tvEventLocation);
+                txt_distance= view.findViewById(R.id.txt_distance);
                 txtEventDate = view.findViewById(R.id.tvEventDate);
                 ll_event = view.findViewById(R.id.ll_event);
             }

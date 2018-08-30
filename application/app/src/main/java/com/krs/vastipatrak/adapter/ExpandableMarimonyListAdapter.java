@@ -59,6 +59,8 @@ import java.util.Objects;
 
 import io.realm.Realm;
 
+import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
+
 public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
 
     private final Realm realm = AppController.getInstance().realm;
@@ -77,16 +79,14 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
     @Nullable
     private final SharedPreferences.Editor mEditor;
     @Nullable
-    private ProgressDialog pDialog;
+    //private ProgressDialog pDialog;
     private ChildViewHolder childViewHolder;
 
     public ExpandableMarimonyListAdapter(Context context, ArrayList<ListMatrimonyParentData> listDataHeader, HashMap<ListMatrimonyParentData, List<ListMatrimonyChildData>> listDataChild) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listDataChild;
-        pDialog = new ProgressDialog(_context);
-        pDialog.setMessage(Common.Constant_Class.LOADING);
-        pDialog.setCancelable(true);
+
         mSharedPreferences = _context.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
@@ -419,7 +419,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    private void showProgressDialog() {
+    /*private void showProgressDialog() {
         if (pDialog != null && !pDialog.isShowing()) pDialog.show();
     }
 
@@ -428,11 +428,11 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
             pDialog.dismiss();
             pDialog = null;
         }
-    }
+    }*/
 
     private void SyncUser(String profile_id) {
         if (Common.isOnline(_context)) {
-            showProgressDialog();
+            Common.showProgressDialog(_context);
 
             JSONObject mJsonObject = null;
             try {

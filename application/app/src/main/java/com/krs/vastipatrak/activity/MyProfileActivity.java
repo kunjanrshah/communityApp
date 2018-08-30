@@ -57,6 +57,7 @@ import java.util.Objects;
 public class MyProfileActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
 
+    public static boolean isEnable = false;
     private final String TAG = MainActivity.class.getSimpleName();
     private SharedPreferences.Editor mEditor;
     private SearchView searchView;
@@ -66,9 +67,9 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private ViewPager viewPager;
     private Toolbar toolbar;
     private ListProfileData mListProfileData = null;
-    private Fragment personal;
-    private Fragment business;
-    private Fragment family;
+    private Fragment personal = null;
+    private Fragment business = null;
+    private Fragment family = null;
     private SharedPreferences mSharedPreferences = null;
 
     @Override
@@ -196,12 +197,36 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             }
         });
 
-        MenuItem saveItem = menu.findItem(R.id.action_save);
-        if (Objects.requireNonNull(mSharedPreferences).getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+        final MenuItem saveItem = menu.findItem(R.id.action_save);
+        if (Objects.requireNonNull(mSharedPreferences).getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             saveItem.setVisible(true);
         } else {
             saveItem.setVisible(false);
         }
+
+
+        MenuItem action_toggle = menu.findItem(R.id.action_toggle);
+        if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+            action_toggle.setVisible(true);
+        } else {
+            action_toggle.setVisible(false);
+        }
+
+        action_toggle.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (isEnable) {
+                    saveItem.setVisible(false);
+                    isEnable = false;
+                } else {
+                    isEnable = true;
+                    saveItem.setVisible(true);
+                }
+                setupViewPager(viewPager);
+                tabLayout.setupWithViewPager(viewPager);
+                return false;
+            }
+        });
 
         saveItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -210,18 +235,18 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 ListProfileData mListProfileData = new ListProfileData();
 
                 // Personal Details
-                String fname = Objects.requireNonNull(((PersonalFragment) personal).edtFName).getText().toString().trim();
-                String lname = Objects.requireNonNull(((PersonalFragment) personal).edtLName).getText().toString().trim();
-                String FatherName = Objects.requireNonNull(((PersonalFragment) personal).edtFatherName).getText().toString().trim();
-                String MotherName = Objects.requireNonNull(((PersonalFragment) personal).edtMotherName).getText().toString().trim();
-                String Education = Objects.requireNonNull(((PersonalFragment) personal).edtEducation).getText().toString().trim();
-                String BPlace = Objects.requireNonNull(((PersonalFragment) personal).edtBPlace).getText().toString().trim();
-                String NPlace = Objects.requireNonNull(((PersonalFragment) personal).edtNPlace).getText().toString().trim();
-                String Gotra = Objects.requireNonNull(((PersonalFragment) personal).spinnerGotra).getSelectedItem().toString().trim();
-                String Mobile = Objects.requireNonNull(((PersonalFragment) personal).edtMobile).getText().toString().trim();
-                String Address = Objects.requireNonNull(((PersonalFragment) personal).edtAddress).getText().toString().trim();
-                String Eaddress = Objects.requireNonNull(((PersonalFragment) personal).edt_Eaddress).getText().toString().trim();
-                String city = Objects.requireNonNull(((PersonalFragment) personal).edtCity).getText().toString().trim();
+                String fname = ((PersonalFragment) personal).edtFName.getText().toString().trim();
+                String lname = ((PersonalFragment) personal).edtLName.getText().toString().trim();
+                String FatherName = ((PersonalFragment) personal).edtFatherName.getText().toString().trim();
+                String MotherName = ((PersonalFragment) personal).edtMotherName.getText().toString().trim();
+                String Education = ((PersonalFragment) personal).edtEducation.getText().toString().trim();
+                String BPlace = ((PersonalFragment) personal).edtBPlace.getText().toString().trim();
+                String NPlace = ((PersonalFragment) personal).edtNPlace.getText().toString().trim();
+                String Gotra = ((PersonalFragment) personal).spinnerGotra.getSelectedItem().toString().trim();
+                String Mobile = ((PersonalFragment) personal).edtMobile.getText().toString().trim();
+                String Address = ((PersonalFragment) personal).edtAddress.getText().toString().trim();
+                String Eaddress = ((PersonalFragment) personal).edt_Eaddress.getText().toString().trim();
+                String city = ((PersonalFragment) personal).edtCity.getText().toString().trim();
 
                 if (!Eaddress.equalsIgnoreCase("")) {
                     if (Common.isValidEmail(Eaddress)) {
@@ -696,13 +721,18 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        personal = new PersonalFragment();
+        if (personal == null) {
+            personal = new PersonalFragment();
+        }
         personal.setArguments(mBundle);
-
-        business = new BusinessFragment();
+        if (business == null) {
+            business = new BusinessFragment();
+        }
         business.setArguments(mBundle);
 
-        family = new FamilyFragment();
+        if (family == null) {
+            family = new FamilyFragment();
+        }
         family.setArguments(mBundle);
 
         adapter.addFrag(personal, Common.Constant_Class.PERSONAL);

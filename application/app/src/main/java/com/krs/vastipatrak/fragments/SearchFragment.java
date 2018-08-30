@@ -3,7 +3,6 @@ package com.krs.vastipatrak.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -102,7 +101,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
     private String query_string = "";
     private int adminControl = -1;
     @Nullable
-    private ProgressDialog pDialog;
+    //private ProgressDialog pDialog;
     private ExpandableListView lvCustomList;
     @Nullable
     private ExpandableListAdapter mExpandableListAdapter = null;
@@ -311,9 +310,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
         mSwipyRefreshLayout = root.findViewById(R.id.swipyrefreshlayout);
         TextView tv = root.findViewById(R.id.txt_marquee);
         tv.setSelected(true);
-        pDialog = new ProgressDialog(getActivity());
-        pDialog.setMessage(Common.Constant_Class.LOADING);
-        pDialog.setCancelable(true);
 
         lstSelectedIDs = new ArrayList<>();
         listDataHeader = new ArrayList<>();
@@ -545,7 +541,9 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         try {
                             hideProgressDialog();
                             iSearchCallback = (ISearchCallback) getmContext();
-                            iSearchCallback.setIsSearch(true);
+                            if (iSearchCallback != null) {
+                                iSearchCallback.setIsSearch(true);
+                            }
 
                             mSwipyRefreshLayout.setRefreshing(false);
                             displayData(response, false);
