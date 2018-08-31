@@ -208,10 +208,10 @@ public class HomeFragment extends Fragment {
             JSONObject mJsonObject = new JSONObject();
             try {
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                if (eventData.size() > 1) {
+                /*if (eventData.size() > 1) {
                     String date = eventData.get(eventData.size() - 1).getEventDate();
                     mJsonObject.put(Common.Constant_Class.EVENT_DATE, date);
-                }
+                }*/
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
                 mJsonObject.put(Common.Constant_Class.PAGE, String.valueOf(page));
             } catch (Exception e) {
@@ -232,7 +232,7 @@ public class HomeFragment extends Fragment {
                         if (response.has(Common.Constant_Class.TOTAL_RECORDS)) {
                             total_records = response.getString(Common.Constant_Class.TOTAL_RECORDS);
                         }
-                        if (success) {
+                       if (success) {
                             JSONArray mJsonArray = response.getJSONArray("data");
                             RealmList<String> YoutubeUrls, ImagesUrls;
                             ListEventData mEventdata = new ListEventData();

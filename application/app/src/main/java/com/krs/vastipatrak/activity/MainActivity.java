@@ -208,18 +208,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         };
         Common.getDeviceId(this);
 
-        Bundle mBundle = getIntent().getExtras();
-        if (mBundle != null) {
-            query = mBundle.getString(Common.Constant_Class.QUERY);
-            query_string = mBundle.getString(Common.Constant_Class.QUERY_STRING);
-        }
-        if (query == null && query_string == null && push_message == null) {
-            displayView(0);
-        } else if (query_string != null && query != null && query.isEmpty() && query_string.isEmpty()) {
-            displayView(0);
-        } else {
-            displayView(-1);
-        }
+
         getGotraWS();
     }
 
@@ -338,7 +327,18 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         // clear the notification area when the app is opened
         NotificationUtils.clearNotifications(getApplicationContext());
 
-
+        Bundle mBundle = getIntent().getExtras();
+        if (mBundle != null) {
+            query = mBundle.getString(Common.Constant_Class.QUERY);
+            query_string = mBundle.getString(Common.Constant_Class.QUERY_STRING);
+        }
+        if (query == null && query_string == null && push_message == null) {
+            displayView(0);
+        } else if (query_string != null && query != null && query.isEmpty() && query_string.isEmpty()) {
+            displayView(0);
+        } else {
+            displayView(-1);
+        }
     }
 
     @Override
