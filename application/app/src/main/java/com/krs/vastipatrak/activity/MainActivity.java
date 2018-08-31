@@ -65,6 +65,7 @@ import com.google.zxing.integration.android.IntentResult;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.Config;
+import com.krs.vastipatrak.fragments.AdminsFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.HelpFragment;
@@ -121,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     MenuItem deactiveItem;
     MenuItem deleteItem;
     MenuItem activeItem;
+    private int MOVE_TO_POSITION = 0;
     private String query = "";
     private String push_message = null;
     private String query_string = "";
@@ -210,6 +212,19 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
 
         getGotraWS();
+
+        Bundle mBundle = getIntent().getExtras();
+        if (mBundle != null) {
+            query = mBundle.getString(Common.Constant_Class.QUERY);
+            query_string = mBundle.getString(Common.Constant_Class.QUERY_STRING);
+        }
+        if (query == null && query_string == null && push_message == null) {
+            displayView(0);
+        } else if (query_string != null && query != null && query.isEmpty() && query_string.isEmpty()) {
+            displayView(0);
+        } else {
+            displayView(-1);
+        }
     }
 
 
@@ -327,18 +342,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         // clear the notification area when the app is opened
         NotificationUtils.clearNotifications(getApplicationContext());
 
-        Bundle mBundle = getIntent().getExtras();
-        if (mBundle != null) {
-            query = mBundle.getString(Common.Constant_Class.QUERY);
-            query_string = mBundle.getString(Common.Constant_Class.QUERY_STRING);
-        }
-        if (query == null && query_string == null && push_message == null) {
-            displayView(0);
-        } else if (query_string != null && query != null && query.isEmpty() && query_string.isEmpty()) {
-            displayView(0);
-        } else {
-            displayView(-1);
-        }
+
     }
 
     @Override
@@ -504,15 +508,21 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         activeAdd.setVisible(false);
         activeItem.setVisible(false);
         deactiveItem.setVisible(false);
-        deleteItem.setVisible(false);
         export.setVisible(false);
         change_role.setVisible(false);
-
+        deleteItem.setVisible(false);
 
         if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
             if (Common.isOnline(this)) {
                 nonActives.setVisible(true);
                 activeAdd.setVisible(true);
+                if (MOVE_TO_POSITION == 5) {
+                    change_role.setVisible(true);
+                    deleteItem.setVisible(true);
+                } else {
+                    change_role.setVisible(false);
+                    deleteItem.setVisible(false);
+                }
 
                 if (MOVE_TO_SEARCH == 1) {
                     activeItem.setVisible(true);
@@ -665,7 +675,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             query = "";
             query_string = "";
         }*/
-
+        MOVE_TO_POSITION = position;
         displayView(position);
     }
 
@@ -728,6 +738,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new MatrimonyFragment();
                 break;
             case 5:
+                change_role.setVisible(true);
+                deleteItem.setVisible(true);
+                fragment = new AdminsFragment();
+                break;
+            case 6:
                 /*Intent mIntent = new Intent(MainActivity.this, PDFActivity.class);
                 startActivity(mIntent);
                 this.overridePendingTransition(0, 0);*/
@@ -736,10 +751,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 startActivity(mIntent2);
                 this.overridePendingTransition(0, 0);
                 break;
-            case 6:
+            case 7:
                 fragment = new HelpFragment();
                 break;
-            case 7:
+            case 8:
                 ExitAlert();
                 break;
             /*case 8:

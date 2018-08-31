@@ -6,8 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -52,6 +55,7 @@ public class BusinessFragment extends Fragment implements Serializable {
     private double office_lng = 0;
     private String user_id = "";
     private Activity mActivity;
+    private static final int CONTACT_PICKER_RESULT = 1001;
 
     public BusinessFragment() {
         // Required empty public constructor
@@ -122,6 +126,30 @@ public class BusinessFragment extends Fragment implements Serializable {
                 return false;
             }
         });
+
+        edtOMobile.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if ((event.getRawX()) >= (edtOMobile.getRight() - edtOMobile.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            if (Common.canReadContacts(Objects.requireNonNull(getActivity()))) {
+                                Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                                startActivityForResult(it, CONTACT_PICKER_RESULT);
+                            }
+                        } else {
+                            Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                            startActivityForResult(it, CONTACT_PICKER_RESULT);
+                        }
+
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
         if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {
                 DisableAll();
@@ -213,6 +241,30 @@ public class BusinessFragment extends Fragment implements Serializable {
         txt_office = rootView.findViewById(R.id.txt_office);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CONTACT_PICKER_RESULT && resultCode == Activity.RESULT_OK && null != data) {
+            Uri contactUri = data.getData();
+            Cursor contactCursor = Objects.requireNonNull(getActivity()).getContentResolver().query(Objects.requireNonNull(contactUri), new String[]{ContactsContract.Contacts._ID}, null, null, null);
+            String id = null;
+            if (Objects.requireNonNull(contactCursor).moveToFirst()) {
+                id = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.Contacts._ID));
+            }
+            contactCursor.close();
+            String phoneNumber;
+            Cursor phoneCursor = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER}, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "= ? ", new String[]{id}, null);
+            if (Objects.requireNonNull(phoneCursor).moveToFirst()) {
+                phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                Log.v("phoneNumber :", "" + phoneNumber);
+                if (phoneNumber != null) {
+                    edtOMobile.setText(phoneNumber.replace("+", ""));
+                }
+            }
+            phoneCursor.close();
+        }
+    }
 
     private void alert(String message) {
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);

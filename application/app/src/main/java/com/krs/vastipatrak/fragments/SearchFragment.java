@@ -547,17 +547,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
                             mSwipyRefreshLayout.setRefreshing(false);
                             displayData(response, false);
-
-                     /*       boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
-                            String message = response.getString(Common.Constant_Class.MESSAGE);
-                            if (success) {
-                                JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
-                                for (int i = 0; i < mJsonArray.length(); i++) {
-                                    JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                    Common.SaveProfile(mJsondata);
-                                }
-                            }*/
-                            //Common.alert(getActivity(), message);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

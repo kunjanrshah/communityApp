@@ -57,12 +57,14 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
 
     private static final int CONTACT_PICKER_RESULT = 1001;
+    private static final int CONTACT_PICKER_RESULT_CHILD = 1002;
     public EditText edtSpouseName, edtSpouseFName, edtMSpouseName, edtsponse_mobile, edtsponse_nplace;
     public String str_spouse_hash = "", str_fspouse_hash = "", str_mspouse_hash = "";
     public LinearLayout child_container = null;
     public ArrayList<Integer> lst_delID = null;
     public RadioButton rbtnChildNo;
     public EditText edt_mdate, edtsponse_bdate;
+    Viewholder mViewholder = null;
     private RadioButton rbtnChildYes;
     private String spouse_url = "";
     private String fspouse_url = "";
@@ -475,7 +477,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
     }
 
-
     private void openImageDialog(String name, String url) {
         Dialog dialog = new Dialog(mActivity);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -490,7 +491,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private void add_child_layout() {
         LayoutInflater layoutInflater = (LayoutInflater) mActivity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") final View addView = Objects.requireNonNull(layoutInflater).inflate(R.layout.child_row, null);
-        final Viewholder mViewholder = new Viewholder();
+        mViewholder = new Viewholder();
         mViewholder.child_id = 0;
         mViewholder.img_child = addView.findViewById(R.id.img_child);
         mViewholder.edtchild_name = addView.findViewById(R.id.edtchild_name);
@@ -553,6 +554,29 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     String Name = mViewholder.edtchild_name.getText().toString();
                     //  openImageDialog(Name, child_url);
                 }
+            }
+        });
+
+
+        mViewholder.edtMobile.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if ((event.getRawX()) >= (mViewholder.edtMobile.getRight() - mViewholder.edtMobile.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            if (Common.canReadContacts(Objects.requireNonNull(getActivity()))) {
+                                Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                                startActivityForResult(it, CONTACT_PICKER_RESULT_CHILD);
+                            }
+                        } else {
+                            Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                            startActivityForResult(it, CONTACT_PICKER_RESULT_CHILD);
+                        }
+                        return true;
+                    }
+                }
+                return false;
             }
         });
 
@@ -738,7 +762,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CONTACT_PICKER_RESULT && resultCode == Activity.RESULT_OK && null != data) {
+        if ((requestCode == CONTACT_PICKER_RESULT || requestCode == CONTACT_PICKER_RESULT_CHILD) && resultCode == Activity.RESULT_OK && null != data) {
             Uri contactUri = data.getData();
             Cursor contactCursor = Objects.requireNonNull(getActivity()).getContentResolver().query(Objects.requireNonNull(contactUri), new String[]{ContactsContract.Contacts._ID}, null, null, null);
             String id = null;
@@ -752,11 +776,16 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 Log.v("phoneNumber :", "" + phoneNumber);
                 if (phoneNumber != null) {
-                    edtsponse_mobile.setText(phoneNumber.replace("+", ""));
+                    if (requestCode == CONTACT_PICKER_RESULT) {
+                        edtsponse_mobile.setText(phoneNumber.replace("+", ""));
+                    } else {
+                        if (mViewholder != null) {
+                            mViewholder.edtMobile.setText(phoneNumber.replace("+", ""));
+                        }
+                    }
                 }
             }
             phoneCursor.close();
-
         }
 
 
