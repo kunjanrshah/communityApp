@@ -102,4 +102,10 @@
         android:visible="false"
         app:showAsAction="ifRoom|collapseActionView" />
 
+    <item
+        android:id="@+id/action_admins"
+        android:title="@string/action_admin"
+        android:visible="false"
+        app:showAsAction="ifRoom|collapseActionView" />
+
 </menu>

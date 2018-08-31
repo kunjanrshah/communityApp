@@ -503,6 +503,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         deactiveItem = menu.findItem(R.id.action_deactive);
         deleteItem = menu.findItem(R.id.action_delete);
         activeItem = menu.findItem(R.id.action_activate);
+        MenuItem menu_admins = menu.findItem(R.id.action_admins);
 
         nonActives.setVisible(false);
         activeAdd.setVisible(false);
@@ -596,6 +597,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         });
 
+        menu_admins.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                MOVE_TO_SEARCH = 6;
+                moveToSearch(MOVE_TO_SEARCH);
+                return false;
+            }
+        });
         return true;
     }
 
@@ -652,6 +661,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                break;
+            case 6:
+
                 break;
         }
     }
