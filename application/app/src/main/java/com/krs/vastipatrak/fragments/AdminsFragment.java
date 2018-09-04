@@ -39,7 +39,7 @@ import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 
-public class AdminsFragment extends Fragment implements IAdminControl {
+public class AdminsFragment extends Fragment {
 
     private String TAG = "";
     private ExpandableListView lvCustomList;
@@ -219,23 +219,5 @@ public class AdminsFragment extends Fragment implements IAdminControl {
         }
     }
 
-    @Override
-    public void CallActivate() {
 
-    }
-
-    @Override
-    public void CallDelete() {
-
-    }
-
-    @Override
-    public void CallDeActivate() {
-
-    }
-
-    @Override
-    public void ChangeRole() {
-
-    }
 }

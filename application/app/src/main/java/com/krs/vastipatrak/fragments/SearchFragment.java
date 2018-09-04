@@ -77,6 +77,7 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
+import static com.krs.vastipatrak.utils.Common.isOnline;
 import static com.krs.vastipatrak.utils.Common.showProgressDialog;
 import static com.krs.vastipatrak.utils.Common.textAsBitmap;
 
@@ -506,7 +507,10 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
 
     private void OnlineSearch(String search, String search_url) {
-        if (Common.isOnline(getActivity())) {
+        if (getActivity() != null) {
+            setmContext(getActivity());
+        }
+        if (Common.isOnline(getmContext())) {
 
             if (!search.equalsIgnoreCase("")) {
                 JSONObject mJsonObject = null;
@@ -522,8 +526,10 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     SearchString = search;
                     mJsonObject = new JSONObject(search);
                     mJsonObject.put(Common.Constant_Class.PAGE, String.valueOf(page));
-                    mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                    mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                    if (mSharedPreferences != null) {
+                        mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                        mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -966,24 +972,17 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     @Override
                     public void onResponse(@NonNull JSONObject response) {
                         Log.d(TAG, response.toString());
-
                         try {
                             Common.hideProgressDialog();
                             boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
                             if (success) {
-                                // SearchFragment.this.notify();
                                 lvCustomList.setAdapter(mExpandableListAdapter);
-
-                                //   mExpandableListAdapter.notifyDataSetChanged();
-                                //  mExpandableListAdapter.notifyDataSetInvalidated();
                             }
                             Common.alert(getActivity(), message);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
-
                     }
                 }, new Response.ErrorListener() {
 
@@ -1200,6 +1199,22 @@ public class SearchFragment extends Fragment implements IAdminControl {
             changeRoleDialog(msg);
         } else {
             Toast.makeText(getActivity(), "Please select profile !", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void SearchAdmins() {
+        if (getActivity() != null) {
+            setmContext(getActivity());
+        }
+        if (isOnline(getmContext())) {
+            JSONObject mjson = new JSONObject();
+            try {
+                mjson.put(Common.Constant_Class.ROLE, "ADMIN");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            OnlineSearch(mjson.toString(), Common.Constant_Class.ADVANCE_SEARCH_URL);
         }
     }
 

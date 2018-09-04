@@ -1378,7 +1378,6 @@ public class Common {
                             mlistchilds.add(mListChildrendata);
                         }
                     }
-
                 }
                 mListProfileData.setmListChildrenData(mlistchilds);
             }
@@ -1509,7 +1508,7 @@ public class Common {
                 WritableWorkbook workbook;
                 workbook = Workbook.createWorkbook(file, wbSettings);
                 //Excel sheet name. 0 represents first sheet
-                WritableSheet sheet = workbook.createSheet("profileList", 0);
+                WritableSheet sheet = workbook.createSheet("ProfileList", 0);
 
                 sheet.addCell(new Label(0, 0, "ID"));
                 sheet.addCell(new Label(1, 0, "FirstName"));

@@ -610,30 +610,44 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     private void moveToSearch(int menu) {
 
-        Bundle mBundle = new Bundle();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragment = searchFragment;
         IAdminControl = (IAdminControl) fragment;
+        ((SearchFragment) searchFragment).setmContext(MainActivity.this);
+        Handler mhandler = new Handler();
+        if (menu == 1) {
+            Bundle mBundle = new Bundle();
+            mBundle.putInt(Common.Constant_Class.AdminControl, Common.Constant_Class.NonActive);
+            fragment.setArguments(mBundle);
+        }
+        fragmentTransaction.replace(R.id.container_body, fragment).commit();
 
         switch (menu) {
             case 1:
                 try {
                     if (fragment != null) {
-                        ((SearchFragment) fragment).callNonActivesWS();
+                        mhandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                ((SearchFragment) fragment).callNonActivesWS();
+                            }
+                        }, 500);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                ((SearchFragment) searchFragment).setmContext(MainActivity.this);
-                mBundle.putInt(Common.Constant_Class.AdminControl, Common.Constant_Class.NonActive);
-                fragment.setArguments(mBundle);
-                fragmentTransaction.replace(R.id.container_body, fragment).commit();
-
                 break;
             case 2:
                 try {
-                    IAdminControl.CallActivate();
+                    mhandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            IAdminControl.CallActivate();
+                        }
+                    }, 500);
+
                 } catch (Exception e) {
                     Toast.makeText(this, "Select Non-Actives First", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
@@ -641,7 +655,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 break;
             case 3:
                 try {
-                    IAdminControl.CallDeActivate();
+                    mhandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            IAdminControl.CallDeActivate();
+                        }
+                    }, 500);
+
+
                 } catch (Exception e) {
                     Toast.makeText(this, "Select Non-Actives First", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
@@ -649,7 +670,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 break;
             case 4:
                 try {
-                    IAdminControl.CallDelete();
+
+                    mhandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            IAdminControl.CallDelete();
+                        }
+                    }, 500);
+
                 } catch (Exception e) {
                     Toast.makeText(this, "Select Non-Actives First", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
@@ -657,13 +685,31 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 break;
             case 5:
                 try {
-                    IAdminControl.ChangeRole();
+
+                    mhandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            IAdminControl.ChangeRole();
+                        }
+                    }, 500);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
             case 6:
+                try {
 
+                    mhandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            IAdminControl.SearchAdmins();
+                        }
+                    }, 500);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }

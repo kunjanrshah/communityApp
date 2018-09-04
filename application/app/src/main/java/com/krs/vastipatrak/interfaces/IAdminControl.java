@@ -8,4 +8,6 @@ public interface IAdminControl {
     void CallDeActivate();
 
     void ChangeRole();
+
+    void SearchAdmins();
 }
