@@ -852,6 +852,19 @@ public class Common {
             if (mJsonObject.has(Common.Constant_Class.SPOUSE_NAME)) {
                 mListProfileData.setSpouse_name(mJsonObject.getString(Common.Constant_Class.SPOUSE_NAME));
             }
+
+            if (mJsonObject.has(Constant_Class.SPOUSE_MOBILE)) {
+                mListProfileData.setSponse_mobile(mJsonObject.getString(Common.Constant_Class.SPOUSE_MOBILE));
+            }
+
+            if (mJsonObject.has(Constant_Class.SPOUSE_NATIVE)) {
+                mListProfileData.setSponse_native(mJsonObject.getString(Common.Constant_Class.SPOUSE_NATIVE));
+            }
+
+            if (mJsonObject.has(Constant_Class.SPOUSE_BDATE)) {
+                mListProfileData.setSponse_bdate(mJsonObject.getString(Common.Constant_Class.SPOUSE_BDATE));
+            }
+
             if (mJsonObject.has(Common.Constant_Class.SPOUSE_FATHER_NAME)) {
                 mListProfileData.setSfather_name(mJsonObject.getString(Common.Constant_Class.SPOUSE_FATHER_NAME));
             }
@@ -1421,13 +1434,11 @@ public class Common {
         Date myDate = null;
         try {
             myDate = dateFormat.parse(strDate);
+            SimpleDateFormat timeFormat = new SimpleDateFormat(newFormat);
+            formatedDate = timeFormat.format(myDate);
         } catch (java.text.ParseException e) {
             e.printStackTrace();
         }
-
-        SimpleDateFormat timeFormat = new SimpleDateFormat(newFormat);
-        formatedDate = timeFormat.format(myDate);
-
         return formatedDate;
     }
 
@@ -2008,6 +2019,9 @@ public class Common {
         public static final String IMG_MOTHER = "img_mother";
         public static final String IMG_FATHER = "img_father";
         public static final String SPOUSE_NAME = "spouse_name";
+        public static final String SPOUSE_NATIVE = "spouse_native_place";
+        public static final String SPOUSE_BDATE = "spouse_birth_place";
+        public static final String SPOUSE_MOBILE = "spouse_mobile";
         public static final String MARRIAGE_DATE = "marriage_date";
         public static final String FROM_MARRIAGE_DATE = "from_marriage_date";
         public static final String TO_MARRIAGE_DATE = "to_marriage_date";

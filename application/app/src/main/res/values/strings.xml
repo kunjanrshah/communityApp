@@ -72,7 +72,7 @@
     <string name="nav_item_help">Help</string>
     <!--<string name="nav_item_relatives">Relatives</string>-->
     <string name="nav_item_matrimony">Matrimony</string>
-    <string name="nav_item_admin">Admins</string>
+    <!--<string name="nav_item_admin">Admins</string>-->
     <!--<string name="nav_item_pdf">Matrimony PDF</string>
     <string name="nav_item_sync">Sync</string>-->
     <string name="nav_item_intro">Tour Video</string>
@@ -89,7 +89,7 @@
         <!--<item>@string/nav_item_pdf</item>
         <item>@string/nav_item_sync</item>
 -->
-        <item>@string/nav_item_admin</item>
+        <!--<item>@string/nav_item_admin</item>-->
         <item>@string/nav_item_intro</item>
         <item>@string/nav_item_help</item>
         <item>@string/nav_item_logout</item>

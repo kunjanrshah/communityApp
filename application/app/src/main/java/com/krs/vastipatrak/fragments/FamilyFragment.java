@@ -371,6 +371,10 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         }
 
         edtSpouseName.setText(Objects.requireNonNull(mListProfileData).getSpouse_name());
+        edtsponse_nplace.setText(mListProfileData.getSponse_native());
+        edtsponse_bdate.setText(mListProfileData.getSponse_bdate());
+        edtsponse_mobile.setText(mListProfileData.getSponse_mobile());
+
         edt_mdate.setText(mListProfileData.getMarriage_date());
         edtSpouseFName.setText(mListProfileData.getSfather_name());
         edtMSpouseName.setText(mListProfileData.getSmother_name());
@@ -474,7 +478,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 }
             }
         }
-
     }
 
     private void openImageDialog(String name, String url) {
@@ -644,7 +647,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                     str_day = "0" + str_day;
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
-                                //  mViewholder.cbdate = year + "-" + str_month + "-" + str_day;
                                 mViewholder.edtchild_bdate.setText(date);
                             }
                         });

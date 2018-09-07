@@ -59,6 +59,35 @@ public class ListProfileData extends RealmObject{
     private String str_mspouse_hash;
     private String str_spouse_hash;
     private String password;
+    private String sponse_bdate;
+    private String sponse_native;
+    private String sponse_mobile;
+
+    public String getSponse_bdate() {
+        return sponse_bdate;
+    }
+
+    public void setSponse_bdate(String sponse_bdate) {
+        this.sponse_bdate = sponse_bdate;
+    }
+
+    public String getSponse_native() {
+        return sponse_native;
+    }
+
+    public void setSponse_native(String sponse_native) {
+        this.sponse_native = sponse_native;
+    }
+
+    public String getSponse_mobile() {
+        return sponse_mobile;
+    }
+
+    public void setSponse_mobile(String sponse_mobile) {
+        this.sponse_mobile = sponse_mobile;
+    }
+
+
 
     public String getEkdo() {
         return ekdo;

@@ -284,10 +284,14 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
                 // Familty Details
                 String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "", sdate = "", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
+                String sponseBdate="",sponseNative="",sponseMobile="";
                 LinearLayout child_container = null;
                 ArrayList<Integer> lst_delID = null;
                 try {
                     spouseName = ((FamilyFragment) family).edtSpouseName.getText().toString().trim();
+                    sponseMobile = ((FamilyFragment) family).edtsponse_mobile.getText().toString().trim();
+                    sponseBdate = ((FamilyFragment) family).edtsponse_bdate.getText().toString().trim();
+                    sponseNative = ((FamilyFragment) family).edtsponse_nplace.getText().toString().trim();
                     SpouseFName = ((FamilyFragment) family).edtSpouseFName.getText().toString().trim();
                     MSpouseName = ((FamilyFragment) family).edtMSpouseName.getText().toString().trim();
                     mdate = ((FamilyFragment) family).edt_mdate.getText().toString().trim();
@@ -339,6 +343,9 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mListProfileData.setOffice_mobile(OMobile);
                     mListProfileData.setOffice_address(OAddress);
                     mListProfileData.setSpouse_name(spouseName);
+                    mListProfileData.setSponse_bdate(sponseBdate);
+                    mListProfileData.setSponse_mobile(sponseMobile);
+                    mListProfileData.setSponse_native(sponseNative);
                     mListProfileData.setSfather_name(SpouseFName);
                     mListProfileData.setSmother_name(MSpouseName);
                     mListProfileData.setMarriage_date(mdate);
@@ -417,6 +424,10 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         try {
             Objects.requireNonNull(mJsonObject).put(Common.Constant_Class.MARRIAGE_DATE, mListProfileData.getMarriage_date());
             mJsonObject.put(Common.Constant_Class.SPOUSE_NAME, mListProfileData.getSpouse_name());
+            mJsonObject.put(Common.Constant_Class.SPOUSE_BDATE, mListProfileData.getSponse_bdate());
+            mJsonObject.put(Common.Constant_Class.SPOUSE_MOBILE, mListProfileData.getSponse_mobile());
+            mJsonObject.put(Common.Constant_Class.SPOUSE_NATIVE, mListProfileData.getSponse_native());
+
             mJsonObject.put(Common.Constant_Class.SPOUSE_FATHER_NAME, mListProfileData.getSfather_name());
             mJsonObject.put(Common.Constant_Class.SPOUSE_MOTHER_NAME, mListProfileData.getSmother_name());
 

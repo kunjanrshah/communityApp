@@ -796,29 +796,16 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new MatrimonyFragment();
                 break;
             case 5:
-                change_role.setVisible(true);
-                deleteItem.setVisible(true);
-                fragment = new AdminsFragment();
-                break;
-            case 6:
-                /*Intent mIntent = new Intent(MainActivity.this, PDFActivity.class);
-                startActivity(mIntent);
-                this.overridePendingTransition(0, 0);*/
-                // fragment = new SyncFragment();
                 Intent mIntent2 = new Intent(MainActivity.this, TourActivity.class);
                 startActivity(mIntent2);
                 this.overridePendingTransition(0, 0);
                 break;
-            case 7:
+            case 6:
                 fragment = new HelpFragment();
                 break;
-            case 8:
+            case 7:
                 ExitAlert();
                 break;
-            /*case 8:
-                break;*/
-            /*case 9:
-                break;*/
 
             default:
                 break;
