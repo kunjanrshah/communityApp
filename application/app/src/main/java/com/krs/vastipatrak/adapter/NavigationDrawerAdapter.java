@@ -15,7 +15,6 @@ import com.krs.vastipatrak.model.NavDrawerItem;
 import java.util.List;
 
 
-
 public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDrawerAdapter.MyViewHolder> {
     private final List<NavDrawerItem> data;
     private final LayoutInflater inflater;
@@ -37,8 +36,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
         NavDrawerItem current = data.get(position);
         holder.title.setText(current.getTitle());
 
-        switch (position)
-        {
+        switch (position) {
             case 0:
                 holder.imgDrawer.setBackgroundResource(R.drawable.home);
                 break;
@@ -46,30 +44,27 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
                 holder.imgDrawer.setBackgroundResource(R.drawable.user);
                 break;
             case 2:
-                holder.imgDrawer.setBackgroundResource(R.drawable.ico_share);
+                holder.imgDrawer.setBackgroundResource(R.drawable.nearby);
                 break;
             case 3:
-                holder.imgDrawer.setBackgroundResource(R.drawable.password);
+                holder.imgDrawer.setBackgroundResource(R.drawable.ico_share);
                 break;
-            /*case 3:
-                holder.imgDrawer.setBackgroundResource(R.drawable.relative);
-                break;*/
             case 4:
+                holder.imgDrawer.setBackgroundResource(R.drawable.relative);
+                break;
+            case 5:
                 holder.imgDrawer.setBackgroundResource(R.drawable.matrimony);
                 break;
-            /*case 5:
-                holder.imgDrawer.setBackgroundResource(R.drawable.pdf_icon);
-                break;
             case 6:
-                holder.imgDrawer.setBackgroundResource(R.drawable.sync);
-                break;*/
-            case 5:
-                holder.imgDrawer.setBackgroundResource(R.drawable.tour);
-                break;
-            case 6:
-                holder.imgDrawer.setBackgroundResource(R.drawable.about);
+                holder.imgDrawer.setBackgroundResource(R.drawable.password);
                 break;
             case 7:
+                holder.imgDrawer.setBackgroundResource(R.drawable.tour);
+                break;
+            case 8:
+                holder.imgDrawer.setBackgroundResource(R.drawable.help_icon);
+                break;
+            case 9:
                 holder.imgDrawer.setBackgroundResource(R.drawable.logout);
                 break;
         }

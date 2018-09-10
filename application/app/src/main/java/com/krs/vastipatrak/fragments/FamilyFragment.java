@@ -64,7 +64,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     public ArrayList<Integer> lst_delID = null;
     public RadioButton rbtnChildNo;
     public EditText edt_mdate, edtsponse_bdate;
-    Viewholder mViewholder = null;
+
     private RadioButton rbtnChildYes;
     private String spouse_url = "";
     private String fspouse_url = "";
@@ -125,7 +125,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                     str_day = "0" + str_day;
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
-                                //sdate = year + "-" + str_month + "-" + str_day;
                                 edtsponse_bdate.setText(date);
                             }
                         });
@@ -385,7 +384,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         Glide.with(mActivity).load(spouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_spouse);
         Glide.with(mActivity).load(fspouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_fspouse);
         Glide.with(mActivity).load(mspouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mspouse);
-
         if (mListProfileData.getmListChildrenData() != null) {
             if (mListProfileData.getmListChildrenData().size() > 0) {
 
@@ -494,7 +492,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private void add_child_layout() {
         LayoutInflater layoutInflater = (LayoutInflater) mActivity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") final View addView = Objects.requireNonNull(layoutInflater).inflate(R.layout.child_row, null);
-        mViewholder = new Viewholder();
+        final Viewholder mViewholder = new Viewholder();
         mViewholder.child_id = 0;
         mViewholder.img_child = addView.findViewById(R.id.img_child);
         mViewholder.edtchild_name = addView.findViewById(R.id.edtchild_name);
@@ -560,28 +558,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             }
         });
 
-
-        mViewholder.edtMobile.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, @NonNull MotionEvent event) {
-                final int DRAWABLE_RIGHT = 2;
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if ((event.getRawX()) >= (mViewholder.edtMobile.getRight() - mViewholder.edtMobile.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        if (Build.VERSION.SDK_INT >= 23) {
-                            if (Common.canReadContacts(Objects.requireNonNull(getActivity()))) {
-                                Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                                startActivityForResult(it, CONTACT_PICKER_RESULT_CHILD);
-                            }
-                        } else {
-                            Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                            startActivityForResult(it, CONTACT_PICKER_RESULT_CHILD);
-                        }
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
 
         if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
 
@@ -701,6 +677,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 return false;
             }
         });
+        mViewholder.btn_remove.setTag(child_container.getChildCount());
         mViewholder.btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -711,11 +688,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 builder.setMessage("Do you want to delete this child ?");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(@NonNull DialogInterface dialog, int which) {
-
-                        int cid = mViewholder.child_id;
-                        lst_delID.add(cid);
+                       int id=mViewholder.child_id;
+                        lst_delID.add(id);
                         ((LinearLayout) addView.getParent()).removeView(addView);
-
                         dialog.dismiss();
                     }
                 });
@@ -780,10 +755,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 if (phoneNumber != null) {
                     if (requestCode == CONTACT_PICKER_RESULT) {
                         edtsponse_mobile.setText(phoneNumber.replace("+", ""));
-                    } else {
-                        if (mViewholder != null) {
-                            mViewholder.edtMobile.setText(phoneNumber.replace("+", ""));
-                        }
                     }
                 }
             }
@@ -861,6 +832,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
     public static class Viewholder {
         public int child_id;
+        public String gender = "male";
         @Nullable
         public EditText edtchild_name = null;
         @Nullable
@@ -871,8 +843,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         public EditText edtchild_btime = null;
         @Nullable
         public EditText edtchild_bplace = null;
-        @NonNull
-        public String gender = "male";
+
         @Nullable
         public ToggleButton tbtn_interest = null;
         @Nullable

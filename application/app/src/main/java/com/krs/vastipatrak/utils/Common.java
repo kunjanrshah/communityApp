@@ -1931,6 +1931,9 @@ public class Common {
         public static final String DEVICE_TOKEN = "device_token";
         public static final String DEVICE_ID = "int_udid";
         public static final String ACCESS_TOKEN = "access_token";
+        public static final String NEAR_BY = "nearBy";
+        public static final String DISTANCE = "distance";
+
         public static final String PAGE = "page";
         public static final String API_KEY_VALUE = "q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
         public static final String DEVICE_TYPE_VALUE = "Android";
@@ -1959,6 +1962,9 @@ public class Common {
         public static final String USERNAME = "username";
         public static final String MOBILE = "mobile";
         public static final String DATA = "data";
+        public static final String LAT = "lat";
+        public static final String LNG = "lng";
+        public static final String KM = "km";
         public static final String USER_LAT = "user_lat";
         public static final String USER_LNG = "user_lng";
         public static final String CURR_LAT = "curr_lat";
@@ -1967,6 +1973,7 @@ public class Common {
         public static final String HOME_LNG = "home_lng";
         public static final String OFFICE_LAT = "office_lat";
         public static final String OFFICE_LNG = "office_lng";
+        public static final String LOCATION_TYPE = "location_type";
         public static final String MYPROFILE_SP = "myprofile";
         public static final String OFFICE_ADDRESS = "office_address";
         public static final String ADDRESS = "address";
@@ -2041,7 +2048,6 @@ public class Common {
         public static final String TO_CHILD_BDAY = "to_child_bday";
         public static final String CHILD_BTIME = "birth_time";
         public static final String CHILD_BPLACE = "child_birth_place";
-
         public static final String IS_INTERESTED = "is_interested";
         public static final String CHILD_EDU = "child_edu";
         public static final String CHILD_WORK = "child_work";
@@ -2059,8 +2065,7 @@ public class Common {
         static final String IMG_SFATHER_URL = "img_sfather_url";
         static final String IMG_SMOTHER_URL = "img_smother_url";
         static final String CHILD_IMAGE_URL = "child_image_url";
-        private static final String BASE_URL = "http://www.srbrothersinfotech.com/directory-dev";
-        //  private static final String BASE_URL= "http://www.geniusaccountancy.in/directory-dev";
+        private static final String BASE_URL = "http://www.superbinstruments.com/directory-dev";
         public static final String LOGIN_URL = BASE_URL + "/API/login";
         public static final String SIGNUP_URL = BASE_URL + "/API/register";
         public static final String FORGOT_PASSWORD_URL = BASE_URL + "/API/forgotPassword";
@@ -2078,6 +2083,8 @@ public class Common {
         public static final String CHANGE_ROLE_URL = BASE_URL + "/API/changeRole";
         public static final String GET_GOTRA_URL = BASE_URL + "/API/getGotra";
         public static final String SHARED_USERS_URL = BASE_URL + "/API/shareUsers";
+        public static final String NEAR_BY_USERS_URL = BASE_URL + "/API/getNearByUsers";
+
         public static String DEVICE_ID_VALUE = "";
     }
 }

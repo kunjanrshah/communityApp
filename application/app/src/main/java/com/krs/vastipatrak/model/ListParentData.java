@@ -15,8 +15,63 @@ public class ListParentData {
     private String mobile;
     private String user_lat;
     private String user_lng;
+    private String home_lat;
+    private String home_lng;
+    private String office_lat;
+    private String office_lng;
+    private String type;
     private String str_name;
+    public String getHome_lat() {
+        return home_lat;
+    }
 
+    public void setHome_lat(String home_lat) {
+        this.home_lat = home_lat;
+    }
+
+    public String getHome_lng() {
+        return home_lng;
+    }
+
+    public void setHome_lng(String home_lng) {
+        this.home_lng = home_lng;
+    }
+
+    public String getOffice_lat() {
+        return office_lat;
+    }
+
+    public void setOffice_lat(String office_lat) {
+        this.office_lat = office_lat;
+    }
+
+    public String getOffice_lng() {
+        return office_lng;
+    }
+
+    public void setOffice_lng(String office_lng) {
+        this.office_lng = office_lng;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+
+    String distance="";
     private String is_share = "0";
 
     private String mail;

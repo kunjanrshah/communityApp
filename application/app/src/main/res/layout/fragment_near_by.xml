@@ -1,0 +1,89 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_drawer"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <RadioButton
+            android:id="@+id/rdb_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/house" />
+
+        <RadioButton
+            android:id="@+id/rdb_office"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/office" />
+
+        <RadioButton
+            android:id="@+id/rdb_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/user_location" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Distance in Km: "
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edt_distance"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:inputType="number"
+            android:text="5" />
+
+        <Button
+            android:id="@+id/btnok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Okay" />
+
+    </LinearLayout>
+
+    <ExpandableListView
+        android:id="@+id/lvCustomList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_weight="0.05"
+        android:childDivider="#00000000"
+        android:divider="#00000000"
+        android:groupIndicator="@null"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txtLable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_weight="0.05"
+        android:gravity="center"
+        android:text="@string/no_records_found"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+</LinearLayout>

@@ -97,69 +97,74 @@ public class SharedUsersFragment extends Fragment {
                         JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                         for (int i = 0; i < mJsonArray.length(); i++) {
                             JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                            String profile_id = mJsondata.getString(Common.Constant_Class.ID);
-                            String email = mJsondata.getString(Common.Constant_Class.EMAIL_ADDRESS);
-                            String profile_pic_url = mJsondata.getString(Common.Constant_Class.PROFILE_PIC_URL);
-                            String first_name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
-                            String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
-                            String father_name = mJsondata.getString(Common.Constant_Class.FATHER_NAME);
-                            String mother_name = mJsondata.getString(Common.Constant_Class.MOTHER_NAME);
-                            String status = mJsondata.getString(Common.Constant_Class.STATUS);
-                            String city = mJsondata.getString(Common.Constant_Class.CITY);
-                            String mobile = mJsondata.getString(Common.Constant_Class.MOBILE);
-                            String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
-                            String is_location_enable = mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE);
-                            String user_lat = mJsondata.getString(Common.Constant_Class.USER_LAT);
-                            String user_lng = mJsondata.getString(Common.Constant_Class.USER_LNG);
-                            ListParentData lpd = new ListParentData();
-                            lpd.setName(first_name + " " + last_name);
-                            lpd.setFatherName(father_name);
-                            lpd.setMotherName(mother_name);
-                            lpd.setMobile(mobile);
-                            lpd.setProfilePicUrl(profile_pic_url);
-                            lpd.setStatus(status);
-                            lpd.setId(profile_id);
-                            lpd.setCity(city);
-                            lpd.setMail(email);
-                            lpd.setUpdated_time(updated_time);
-                            lpd.setIs_location_enable(is_location_enable);
-                            lpd.setUser_lat(user_lat);
-                            lpd.setUser_lng(user_lng);
+                            JSONArray mJsonarr=mJsondata.getJSONArray("sharedUsers");
 
-                            String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
-                            String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
-                            String birth_date = mJsondata.getString(Common.Constant_Class.BIRTH_DATE);
-                            String birth_time = mJsondata.getString(Common.Constant_Class.BIRTH_TIME);
-                            String birth_place = mJsondata.getString(Common.Constant_Class.BIRTH_PLACE);
-                            String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
-                            String is_share = "0";
-                            if (mJsondata.has(Common.Constant_Class.IS_SHARE)) {
-                                is_share = mJsondata.getString(Common.Constant_Class.IS_SHARE);
+                            for(int j=0; j<mJsonarr.length(); j++)
+                            {
+                                String profile_id = mJsondata.getString(Common.Constant_Class.ID);
+                                String email = mJsondata.getString(Common.Constant_Class.EMAIL_ADDRESS);
+                                String profile_pic_url = mJsondata.getString(Common.Constant_Class.PROFILE_PIC_URL);
+                                String first_name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
+                                String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
+                                String father_name = mJsondata.getString(Common.Constant_Class.FATHER_NAME);
+                                String mother_name = mJsondata.getString(Common.Constant_Class.MOTHER_NAME);
+                                String status = mJsondata.getString(Common.Constant_Class.STATUS);
+                                String city = mJsondata.getString(Common.Constant_Class.CITY);
+                                String mobile = mJsondata.getString(Common.Constant_Class.MOBILE);
+                                String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
+                                String is_location_enable = mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE);
+                                String user_lat = mJsondata.getString(Common.Constant_Class.USER_LAT);
+                                String user_lng = mJsondata.getString(Common.Constant_Class.USER_LNG);
+                                ListParentData lpd = new ListParentData();
+                                lpd.setName(first_name + " " + last_name);
+                                lpd.setFatherName(father_name);
+                                lpd.setMotherName(mother_name);
+                                lpd.setMobile(mobile);
+                                lpd.setProfilePicUrl(profile_pic_url);
+                                lpd.setStatus(status);
+                                lpd.setId(profile_id);
+                                lpd.setCity(city);
+                                lpd.setMail(email);
+                                lpd.setUpdated_time(updated_time);
+                                lpd.setIs_location_enable(is_location_enable);
+                                lpd.setUser_lat(user_lat);
+                                lpd.setUser_lng(user_lng);
+
+                                String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
+                                String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
+                                String birth_date = mJsondata.getString(Common.Constant_Class.BIRTH_DATE);
+                                String birth_time = mJsondata.getString(Common.Constant_Class.BIRTH_TIME);
+                                String birth_place = mJsondata.getString(Common.Constant_Class.BIRTH_PLACE);
+                                String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
+                                String is_share = "0";
+                                if (mJsondata.has(Common.Constant_Class.IS_SHARE)) {
+                                    is_share = mJsondata.getString(Common.Constant_Class.IS_SHARE);
+                                }
+                                lpd.setIs_share(is_share);
+                                String phone = mJsondata.getString(Common.Constant_Class.PHONE);
+                                String gender = mJsondata.getString(Common.Constant_Class.GENDER);
+                                String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
+
+                                ListChildData lcd = new ListChildData();
+                                lcd.setID(profile_id);
+                                lcd.setNative(native_place);
+                                lcd.setAddress(address);
+                                lcd.setbirth_date(birth_date);
+                                lcd.setbirth_time(birth_time);
+                                lcd.setBirth_place(birth_place);
+                                lcd.setBlood_Group(blood_group);
+                                lcd.setMobile(mobile);
+                                lcd.setMother_name(mother_name);
+                                lcd.setPhone(phone);
+                                lcd.setGender(gender);
+                                lcd.setGotra(gotra);
+                                lcd.setName(first_name + " " + last_name);
+                                lcd.setCan_share("1");
+                                ArrayList<ListChildData> mlstChildData = new ArrayList<>();
+                                mlstChildData.add(lcd);
+                                listDataHeader.add(lpd);
+                                listDataChild.put(lpd, mlstChildData);
                             }
-                            lpd.setIs_share(is_share);
-                            String phone = mJsondata.getString(Common.Constant_Class.PHONE);
-                            String gender = mJsondata.getString(Common.Constant_Class.GENDER);
-                            String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
-
-                            ListChildData lcd = new ListChildData();
-                            lcd.setID(profile_id);
-                            lcd.setNative(native_place);
-                            lcd.setAddress(address);
-                            lcd.setbirth_date(birth_date);
-                            lcd.setbirth_time(birth_time);
-                            lcd.setBirth_place(birth_place);
-                            lcd.setBlood_Group(blood_group);
-                            lcd.setMobile(mobile);
-                            lcd.setMother_name(mother_name);
-                            lcd.setPhone(phone);
-                            lcd.setGender(gender);
-                            lcd.setGotra(gotra);
-                            lcd.setName(first_name + " " + last_name);
-                            lcd.setCan_share("1");
-                            ArrayList<ListChildData> mlstChildData = new ArrayList<>();
-                            mlstChildData.add(lcd);
-                            listDataHeader.add(lpd);
-                            listDataChild.put(lpd, mlstChildData);
                         }
                         hideProgressDialog();
                         if (listDataHeader.size() > 0) {

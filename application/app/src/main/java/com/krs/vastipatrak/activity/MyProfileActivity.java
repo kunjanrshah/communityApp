@@ -556,6 +556,10 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                                     mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, mData.getString(Common.Constant_Class.PROFILE_PIC_URL));
                                     mEditor.putString(Common.Constant_Class.FIRST_NAME, mData.getString(Common.Constant_Class.FIRST_NAME));
                                     mEditor.putString(Common.Constant_Class.LAST_NAME, mData.getString(Common.Constant_Class.LAST_NAME));
+                                    mEditor.putString(Common.Constant_Class.OFFICE_LAT, mData.getString(Common.Constant_Class.OFFICE_LAT));
+                                    mEditor.putString(Common.Constant_Class.OFFICE_LNG, mData.getString(Common.Constant_Class.OFFICE_LNG));
+                                    mEditor.putString(Common.Constant_Class.HOME_LAT, mData.getString(Common.Constant_Class.HOME_LAT));
+                                    mEditor.putString(Common.Constant_Class.HOME_LNG, mData.getString(Common.Constant_Class.HOME_LNG));
                                     mEditor.apply();
                                     AppController.getInstance().isUpdate = true;
                                 }

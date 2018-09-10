@@ -71,6 +71,8 @@ import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.HelpFragment;
 import com.krs.vastipatrak.fragments.HomeFragment;
 import com.krs.vastipatrak.fragments.MatrimonyFragment;
+import com.krs.vastipatrak.fragments.NearByFragment;
+import com.krs.vastipatrak.fragments.RelativeFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
 import com.krs.vastipatrak.fragments.SharedUsersFragment;
 import com.krs.vastipatrak.interfaces.IAdminControl;
@@ -784,26 +786,30 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 this.overridePendingTransition(0, 0);
                 break;
             case 2:
-                fragment = new SharedUsersFragment();
+                fragment = new NearByFragment();
+
                 break;
             case 3:
-                fragment = new ChangePasswordFragment();
+                fragment = new SharedUsersFragment();
                 break;
-            /*case 3:
-                fragment = new RelativeFragment();
-                break;*/
             case 4:
-                fragment = new MatrimonyFragment();
+                fragment = new RelativeFragment();
                 break;
             case 5:
+                fragment = new MatrimonyFragment();
+                break;
+            case 6:
+                fragment = new ChangePasswordFragment();
+                break;
+            case 7:
                 Intent mIntent2 = new Intent(MainActivity.this, TourActivity.class);
                 startActivity(mIntent2);
                 this.overridePendingTransition(0, 0);
                 break;
-            case 6:
+            case 8:
                 fragment = new HelpFragment();
                 break;
-            case 7:
+            case 9:
                 ExitAlert();
                 break;
 

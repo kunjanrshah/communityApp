@@ -3,7 +3,6 @@ package com.krs.vastipatrak.adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -49,7 +48,6 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildData;
@@ -60,6 +58,7 @@ import com.krs.vastipatrak.utils.RoundedCornersTransformation;
 
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,7 +85,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     HashMap<String, String> testHashMap2;
     Gson gson;
     @Nullable
-   // private ProgressDialog pDialog;
+    // private ProgressDialog pDialog;
     private ChildViewHolder childViewHolder;
 
     @SuppressLint("UseSparseArrays")
@@ -113,6 +112,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
     }
 
+    private static double milesTokm(double distanceInMiles) {
+        return distanceInMiles * 1.60934;
+    }
 
     private void openImageDialog(String name, String url) {
         Dialog dialog = new Dialog(_context);
@@ -340,7 +342,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.txt_distance = convertView.findViewById(R.id.txt_distance);
             groupViewHolder.tvCity = convertView.findViewById(R.id.tvCity);
             groupViewHolder.tvMail = convertView.findViewById(R.id.tvMail);
-
+            groupViewHolder.txt_dist = convertView.findViewById(R.id.txt_dist);
 
             if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
                 groupViewHolder.checkbox.setVisibility(View.VISIBLE);
@@ -360,7 +362,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String city = mListParentData.getCity();
         String mail = mListParentData.getMail();
         String is_share = mListParentData.getIs_share();
-
+        String dist = mListParentData.getDistance();
+        if (!dist.isEmpty()) {
+            groupViewHolder.txt_dist.setVisibility(View.VISIBLE);
+            DecimalFormat df2 = new DecimalFormat("#.##");
+            groupViewHolder.txt_dist.setText(df2.format(milesTokm(Double.parseDouble(dist))) + " Km");
+        } else {
+            groupViewHolder.txt_dist.setVisibility(View.GONE);
+        }
         // Rounded corners
         Glide.with(_context).load(imgURL).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).into(groupViewHolder.ivIcon);
 
@@ -374,6 +383,29 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.tvMail.setText("" + mail);
         }
 
+        groupViewHolder.txt_dist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                String lat = "", lng = "";
+                if (mListParentData.getType().isEmpty() || mListParentData.getType().equalsIgnoreCase("home")) {
+                    lat = mListParentData.getHome_lat();
+                    lng = mListParentData.getHome_lng();
+                } else if (mListParentData.getType().equalsIgnoreCase("office")) {
+                    lat = mListParentData.getOffice_lat();
+                    lng = mListParentData.getOffice_lng();
+                } else if (mListParentData.getType().equalsIgnoreCase("user")) {
+                    lat = mListParentData.getUser_lat();
+                    lng = mListParentData.getUser_lng();
+                }
+                if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !lat.isEmpty() && !lng.isEmpty()) {
+                    showDirections(Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(lat), Double.parseDouble(lng), "");
+                } else {
+                    Toast.makeText(_context, "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         groupViewHolder.tvMobile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -426,9 +458,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String user_lat = mListParentData.getUser_lat();
         final String user_lng = mListParentData.getUser_lng();
 
-        if (is_share.equalsIgnoreCase("1")&& mListParentData.isIs_location_enable().equalsIgnoreCase("1")) {
-            String curr_lat= mSharedPreferences.getString(Common.Constant_Class.CURR_LAT,"");
-            String curr_lng= mSharedPreferences.getString(Common.Constant_Class.CURR_LNG,"");
+        if (is_share.equalsIgnoreCase("1") && mListParentData.isIs_location_enable().equalsIgnoreCase("1")) {
+            String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+            String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
             if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
                 groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
                 new Common.getDistance(groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(curr_lat), Double.parseDouble(curr_lng));
@@ -516,8 +548,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 btn_map.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String curr_lat= mSharedPreferences.getString(Common.Constant_Class.CURR_LAT,"");
-                        String curr_lng= mSharedPreferences.getString(Common.Constant_Class.CURR_LNG,"");
+                        String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                        String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
                         if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !user_lat.isEmpty() && !user_lng.isEmpty()) {
                             showDirections(Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(user_lat), Double.parseDouble(user_lng), "");
                         } else {
@@ -755,6 +787,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView txt_distance;
         TextView tvUpdatedTime;
         CheckBox checkbox;
+        TextView txt_dist;
     }
 
     class CheckListener implements CompoundButton.OnCheckedChangeListener {
