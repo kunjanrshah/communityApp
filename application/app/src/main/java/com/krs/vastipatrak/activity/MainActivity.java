@@ -75,6 +75,7 @@ import com.krs.vastipatrak.fragments.NearByFragment;
 import com.krs.vastipatrak.fragments.RelativeFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
 import com.krs.vastipatrak.fragments.SharedUsersFragment;
+import com.krs.vastipatrak.fragments.TodayFragment;
 import com.krs.vastipatrak.interfaces.IAdminControl;
 import com.krs.vastipatrak.service.MyLocationService;
 import com.krs.vastipatrak.utils.Common;
@@ -796,20 +797,23 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new RelativeFragment();
                 break;
             case 5:
-                fragment = new MatrimonyFragment();
+                fragment = new TodayFragment();
                 break;
             case 6:
-                fragment = new ChangePasswordFragment();
+                fragment = new MatrimonyFragment();
                 break;
             case 7:
+                fragment = new ChangePasswordFragment();
+                break;
+            case 8:
                 Intent mIntent2 = new Intent(MainActivity.this, TourActivity.class);
                 startActivity(mIntent2);
                 this.overridePendingTransition(0, 0);
                 break;
-            case 8:
+            case 9:
                 fragment = new HelpFragment();
                 break;
-            case 9:
+            case 10:
                 ExitAlert();
                 break;
 

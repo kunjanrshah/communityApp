@@ -42,8 +42,8 @@ public class SharedUsersFragment extends Fragment {
 
     private String TAG = "";
     private SharedPreferences mSharedPreferences;
-    private ExpandableListView lvCustomList;
-    private TextView txtLable;
+    private ExpandableListView lvSharedUsers, lvSharedFromUsers;
+    private TextView txt_sharedUsers, txt_sharedFromUsers;
 
     @Nullable
     private ArrayList<ListParentData> listDataHeader = null;
@@ -70,11 +70,13 @@ public class SharedUsersFragment extends Fragment {
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
-        lvCustomList = rootView.findViewById(R.id.lvCustomList);
-        txtLable = rootView.findViewById(R.id.txtLable);
+        txt_sharedUsers = rootView.findViewById(R.id.txt_sharedUsers);
+        txt_sharedFromUsers = rootView.findViewById(R.id.txt_sharedFromUsers);
+        lvSharedUsers = rootView.findViewById(R.id.lvSharedUsers);
+        lvSharedFromUsers = rootView.findViewById(R.id.lvSharedFromUsers);
     }
 
-    private void setAdapter(JSONArray mJsonarr) throws Exception {
+    private void setAdapter(JSONArray mJsonarr, ExpandableListView listView) throws Exception {
         for (int j = 0; j < mJsonarr.length(); j++) {
             JSONObject mjsondata = mJsonarr.getJSONObject(j);
             String profile_id = mjsondata.getString(Common.Constant_Class.ID);
@@ -116,7 +118,11 @@ public class SharedUsersFragment extends Fragment {
             if (mjsondata.has(Common.Constant_Class.IS_SHARE)) {
                 is_share = mjsondata.getString(Common.Constant_Class.IS_SHARE);
             }
-            lpd.setIs_share(is_share);
+            if (listView == lvSharedFromUsers) {
+                lpd.setIs_share("1");
+            } else {
+                lpd.setIs_share(is_share);
+            }
             String phone = mjsondata.getString(Common.Constant_Class.PHONE);
             String gender = mjsondata.getString(Common.Constant_Class.GENDER);
             String gotra = mjsondata.getString(Common.Constant_Class.GOTRA);
@@ -143,6 +149,34 @@ public class SharedUsersFragment extends Fragment {
         }
     }
 
+
+    private void setDataAdapter(JSONArray mJsonarr, ExpandableListView listView) throws Exception {
+        listDataHeader.clear();
+        listDataChild.clear();
+        setAdapter(mJsonarr, listView);
+        if (listDataHeader.size() > 0) {
+            if (listView == lvSharedUsers) {
+                ExpandableListAdapter mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, "1");
+                listView.setAdapter(mExpandableListAdapter);
+                txt_sharedUsers.setVisibility(View.VISIBLE);
+                txt_sharedUsers.setText("You have Shared Your Location");
+            } else {
+                ExpandableListAdapter mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, "2");
+                listView.setAdapter(mExpandableListAdapter);
+                txt_sharedFromUsers.setVisibility(View.VISIBLE);
+                txt_sharedFromUsers.setText("Users have shared their location");
+            }
+            listView.setVisibility(View.VISIBLE);
+        } else {
+            listView.setVisibility(View.GONE);
+            if (listView == lvSharedUsers) {
+                txt_sharedUsers.setVisibility(View.GONE);
+            } else {
+                txt_sharedFromUsers.setVisibility(View.GONE);
+            }
+        }
+    }
+
     private void SharedUsers() {
         if (Common.isOnline(getActivity())) {
             Common.showProgressDialog(getActivity());
@@ -161,24 +195,13 @@ public class SharedUsersFragment extends Fragment {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
-                        listDataHeader.clear();
-                        listDataChild.clear();
                         JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                         JSONObject mJsondata = mJsonArray.getJSONObject(0);
                         JSONArray mJsonarr1 = mJsondata.getJSONArray("sharedUsers");
                         JSONArray mJsonarr2 = mJsondata.getJSONArray("sharedFromUsers");
-                        setAdapter(mJsonarr1);
-                        setAdapter(mJsonarr2);
+                        setDataAdapter(mJsonarr1, lvSharedUsers);
+                        setDataAdapter(mJsonarr2, lvSharedFromUsers);
                         hideProgressDialog();
-                        if (listDataHeader.size() > 0) {
-                            ExpandableListAdapter mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
-                            lvCustomList.setAdapter(mExpandableListAdapter);
-                            lvCustomList.setVisibility(View.VISIBLE);
-                            txtLable.setVisibility(View.GONE);
-                        } else {
-                            lvCustomList.setVisibility(View.GONE);
-                            txtLable.setVisibility(View.VISIBLE);
-                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         Common.hideProgressDialog();

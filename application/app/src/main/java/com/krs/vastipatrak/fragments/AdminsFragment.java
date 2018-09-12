@@ -207,7 +207,7 @@ public class AdminsFragment extends Fragment {
                     listDataHeader.add(lpd);
                     listDataChild.put(lpd, mlstChildData);
                 }
-                lvCustomList.setAdapter(new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild));
+                lvCustomList.setAdapter(new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild,"0"));
             } else {
                 txtLable.setVisibility(View.VISIBLE);
                 lvCustomList.setVisibility(View.GONE);

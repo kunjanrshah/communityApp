@@ -689,7 +689,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     listDataChild.put(lpd, mlstChildData);
 
                 }
-                mExpandableListAdapter = new ExpandableListAdapter(getmContext(), listDataHeader, listDataChild);
+                mExpandableListAdapter = new ExpandableListAdapter(getmContext(), listDataHeader, listDataChild,"0");
                 lvCustomList.setAdapter(mExpandableListAdapter);
                 Toast.makeText(getmContext(), "" + message + " Page " + page, Toast.LENGTH_LONG).show();
                 hideProgressDialog();

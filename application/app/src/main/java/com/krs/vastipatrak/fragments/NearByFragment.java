@@ -282,7 +282,7 @@ public class NearByFragment extends Fragment {
 
                         hideProgressDialog();
                         if (listDataHeader.size() > 0) {
-                            ExpandableListAdapter mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
+                            ExpandableListAdapter mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild,"0");
                             lvCustomList.setAdapter(mExpandableListAdapter);
                             lvCustomList.setVisibility(View.VISIBLE);
                             txtLable.setVisibility(View.GONE);

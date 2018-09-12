@@ -17,18 +17,17 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
-public class RelativeFragment extends Fragment {
-
+public class TodayFragment extends Fragment {
 
     private SharedPreferences mSharedPreferences;
 
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_relative, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_today, container, false);
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(R.string.title_relatives);
         setHasOptionsMenu(true);
         MemoryAllocation();
-        call_relative_ws();
         return rootView;
     }
 
@@ -37,7 +36,7 @@ public class RelativeFragment extends Fragment {
 
     }
 
-    private void call_relative_ws()
+    private void TodayWS()
     {
         if (Common.isOnline(getActivity())) {
             Common.showProgressDialog(getActivity());
@@ -49,7 +48,7 @@ public class RelativeFragment extends Fragment {
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
                 mJsonObject.put(Common.Constant_Class.PASSWORD, input_password.getText());
                 mJsonObject.put(Common.Constant_Class.REPEAT_PASSWORD, input_repeat.getText());
-
+                mJsonObject.put("search_str", search.toLowerCase().trim());
             } catch (Exception e) {
                 e.printStackTrace();
             }

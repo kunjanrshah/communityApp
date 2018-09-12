@@ -87,13 +87,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Nullable
     // private ProgressDialog pDialog;
     private ChildViewHolder childViewHolder;
+    private String sharedUsers;
 
     @SuppressLint("UseSparseArrays")
-    public ExpandableListAdapter(Context context, ArrayList<ListParentData> listDataHeader, HashMap<ListParentData, List<ListChildData>> listDataChild) {
+    public ExpandableListAdapter(Context context, ArrayList<ListParentData> listDataHeader, HashMap<ListParentData, List<ListChildData>> listDataChild, String sharedUsers) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listDataChild;
-
+        this.sharedUsers = sharedUsers;
 
         mSharedPreferences = _context.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
@@ -218,12 +219,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         String bool = mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0");
         if (bool.equalsIgnoreCase("1")) {
-            childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
+            if (sharedUsers.equalsIgnoreCase("2")) {
+                childViewHolder.tbtn_share.setVisibility(View.GONE);
+            } else {
+                childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
+            }
             if (can_share.equalsIgnoreCase("1")) {
                 childViewHolder.tbtn_share.setChecked(true);
             } else {
                 childViewHolder.tbtn_share.setChecked(false);
             }
+
         } else {
             childViewHolder.tbtn_share.setVisibility(View.GONE);
         }
@@ -458,7 +464,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String user_lat = mListParentData.getUser_lat();
         final String user_lng = mListParentData.getUser_lng();
 
-        if (is_share.equalsIgnoreCase("1") && mListParentData.isIs_location_enable().equalsIgnoreCase("1")) {
+        if (is_share.equalsIgnoreCase("1") && mListParentData.isIs_location_enable().equalsIgnoreCase("1") && !sharedUsers.equalsIgnoreCase("1")) {
             String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
             String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
             if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
