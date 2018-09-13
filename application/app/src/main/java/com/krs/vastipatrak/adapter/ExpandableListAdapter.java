@@ -350,7 +350,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.tvMail = convertView.findViewById(R.id.tvMail);
             groupViewHolder.txt_dist = convertView.findViewById(R.id.txt_dist);
 
-            if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+            if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN) && !sharedUsers.equalsIgnoreCase("-1")) {
                 groupViewHolder.checkbox.setVisibility(View.VISIBLE);
             } else {
                 groupViewHolder.checkbox.setVisibility(View.GONE);

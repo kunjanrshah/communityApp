@@ -65,7 +65,6 @@ import com.google.zxing.integration.android.IntentResult;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.Config;
-import com.krs.vastipatrak.fragments.AdminsFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.HelpFragment;
@@ -75,7 +74,7 @@ import com.krs.vastipatrak.fragments.NearByFragment;
 import com.krs.vastipatrak.fragments.RelativeFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
 import com.krs.vastipatrak.fragments.SharedUsersFragment;
-import com.krs.vastipatrak.fragments.TodayFragment;
+import com.krs.vastipatrak.fragments.CalendarFragment;
 import com.krs.vastipatrak.interfaces.IAdminControl;
 import com.krs.vastipatrak.service.MyLocationService;
 import com.krs.vastipatrak.utils.Common;
@@ -784,7 +783,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 mEditor.apply();
                 Intent mIntent1 = new Intent(MainActivity.this, MyProfileActivity.class);
                 startActivity(mIntent1);
-                this.overridePendingTransition(0, 0);
+              //  this.overridePendingTransition(0, 0);
                 break;
             case 2:
                 fragment = new NearByFragment();
@@ -797,10 +796,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new RelativeFragment();
                 break;
             case 5:
-                fragment = new TodayFragment();
+                fragment = new MatrimonyFragment();
                 break;
             case 6:
-                fragment = new MatrimonyFragment();
+                fragment = new CalendarFragment();
                 break;
             case 7:
                 fragment = new ChangePasswordFragment();
@@ -808,7 +807,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             case 8:
                 Intent mIntent2 = new Intent(MainActivity.this, TourActivity.class);
                 startActivity(mIntent2);
-                this.overridePendingTransition(0, 0);
+               // this.overridePendingTransition(0, 0);
                 break;
             case 9:
                 fragment = new HelpFragment();
@@ -826,6 +825,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container_body, fragment);
             fragmentTransaction.commit();
+            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
         }
     }
 

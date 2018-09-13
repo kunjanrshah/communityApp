@@ -96,5 +96,6 @@ dependencies {
         transitive = true
     }
     implementation 'com.github.orangegangsters:swipy:1.2.3@aar'
+    compile project(':library')
 }
 apply plugin: 'com.google.gms.google-services'

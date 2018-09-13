@@ -102,7 +102,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
     private String query_string = "";
     private int adminControl = -1;
     @Nullable
-    //private ProgressDialog pDialog;
     private ExpandableListView lvCustomList;
     @Nullable
     private ExpandableListAdapter mExpandableListAdapter = null;

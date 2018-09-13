@@ -82,7 +82,7 @@ public class HomeFragment extends Fragment {
     private int page = 1;
     private SwipyRefreshLayout mSwipyRefreshLayout;
     private FloatingActionButton mFloatingActionButton;
-    ;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

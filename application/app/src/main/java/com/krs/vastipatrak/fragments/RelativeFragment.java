@@ -47,8 +47,8 @@ public class RelativeFragment extends Fragment {
                 mJsonObject = new JSONObject();
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-                mJsonObject.put(Common.Constant_Class.PASSWORD, input_password.getText());
-                mJsonObject.put(Common.Constant_Class.REPEAT_PASSWORD, input_repeat.getText());
+               // mJsonObject.put(Common.Constant_Class.PASSWORD, input_password.getText());
+              //  mJsonObject.put(Common.Constant_Class.REPEAT_PASSWORD, input_repeat.getText());
 
             } catch (Exception e) {
                 e.printStackTrace();

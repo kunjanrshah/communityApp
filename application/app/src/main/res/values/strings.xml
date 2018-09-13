@@ -72,7 +72,7 @@
     <string name="nav_item_change_password">Change Password</string>
     <string name="nav_item_help">Help</string>
     <string name="nav_item_matrimony">Matrimony</string>
-    <string name="nav_item_today">Today</string>
+    <string name="nav_item_calendar">Calendar</string>
     <string name="nav_item_relatives">My Relatives</string>
     <string name="nav_item_intro">Tour Video</string>
     <string name="nav_item_logout">Logout</string>
@@ -85,7 +85,7 @@
         <item>@string/nav_item_shared_users</item>
         <item>@string/nav_item_relatives</item>
         <item>@string/nav_item_matrimony</item>
-        <item>@string/nav_item_today</item>
+        <item>@string/nav_item_calendar</item>
         <item>@string/nav_item_change_password</item>
         <item>@string/nav_item_intro</item>
         <item>@string/nav_item_help</item>
@@ -99,6 +99,7 @@
     <string name="title_matrimony">Matrimony</string>
     <string name="title_events">Events</string>
     <string name="title_relatives">My Relatives</string>
+    <string name="title_calendar">Calendar</string>
     <string name="title_sync">Sync</string>
     <string name="spinner_blood">Select BloodGroup</string>
     <string name="spinner_gotra">Select Gotra</string>
