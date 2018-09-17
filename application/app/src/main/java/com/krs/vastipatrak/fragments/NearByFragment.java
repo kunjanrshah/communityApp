@@ -182,7 +182,7 @@ public class NearByFragment extends Fragment {
                 mJsonObject = new JSONObject();
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-                mJsonObject.put(Common.Constant_Class.NEAR_BY, type);
+                mJsonObject.put(Common.Constant_Class.NEAR_BY, type.toUpperCase());
                 mJsonObject.put(Common.Constant_Class.LAT, lat);
                 mJsonObject.put(Common.Constant_Class.LNG, lng);
                 mJsonObject.put(Common.Constant_Class.KM, edt_distance.getText().toString());
@@ -197,7 +197,7 @@ public class NearByFragment extends Fragment {
                     try {
                         listDataHeader.clear();
                         listDataChild.clear();
-                            JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                        JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                         for (int i = 0; i < mJsonArray.length(); i++) {
                             JSONObject mJsondata = mJsonArray.getJSONObject(i);
                             String profile_id = mJsondata.getString(Common.Constant_Class.ID);

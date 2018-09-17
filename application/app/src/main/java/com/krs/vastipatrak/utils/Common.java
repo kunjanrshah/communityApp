@@ -1911,9 +1911,10 @@ public class Common {
 
         public static final String YOUTUBE_API_KEY = "AIzaSyBOkoXTYsY32OQtLTxidxci5R3Zml84oUY";
 
-        public static final String PERSONAL = "     PERSONAL  ";
-        public static final String BUSINESS = "     BUSINESS  ";
-        public static final String FAMILY = "     FAMILY  ";
+        public static final String PERSONAL = " PERSONAL ";
+        public static final String BUSINESS = " BUSINESS ";
+        public static final String FAMILY = " FAMILY ";
+        public static final String RELATIVES = " RELATIVES ";
 
         public static final String GIRLS = "     GIRLS  ";
         public static final String BOYS_P1 = "  BOYS PART-1  ";
@@ -1933,6 +1934,10 @@ public class Common {
         public static final String ACCESS_TOKEN = "access_token";
         public static final String NEAR_BY = "nearBy";
         public static final String DISTANCE = "distance";
+
+        public static final String RELATION = "relation";
+        public static final String TO_USER_ID = "to_user_id";
+
 
         public static final String PAGE = "page";
         public static final String API_KEY_VALUE = "q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
@@ -2084,7 +2089,9 @@ public class Common {
         public static final String GET_GOTRA_URL = BASE_URL + "/API/getGotra";
         public static final String SHARED_USERS_URL = BASE_URL + "/API/shareUsers";
         public static final String NEAR_BY_USERS_URL = BASE_URL + "/API/getNearByUsers";
-
+        public static final String SEND_REQUEST_URL = BASE_URL + "/API/sendRequest";
+        public static final String REQUEST_ACTION_URL = BASE_URL + "/API/requestAction";
+        public static final String GET_RELATIONS_URL = BASE_URL + "/API/getRelations";
         public static String DEVICE_ID_VALUE = "";
     }
 }

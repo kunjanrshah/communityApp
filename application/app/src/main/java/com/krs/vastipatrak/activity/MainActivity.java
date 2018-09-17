@@ -793,26 +793,23 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new SharedUsersFragment();
                 break;
             case 4:
-                fragment = new RelativeFragment();
-                break;
-            case 5:
                 fragment = new MatrimonyFragment();
                 break;
-            case 6:
+            case 5:
                 fragment = new CalendarFragment();
                 break;
-            case 7:
+            case 6:
                 fragment = new ChangePasswordFragment();
                 break;
-            case 8:
+            case 7:
                 Intent mIntent2 = new Intent(MainActivity.this, TourActivity.class);
                 startActivity(mIntent2);
                // this.overridePendingTransition(0, 0);
                 break;
-            case 9:
+            case 8:
                 fragment = new HelpFragment();
                 break;
-            case 10:
+            case 9:
                 ExitAlert();
                 break;
 

@@ -254,6 +254,17 @@
                 />
 
             <ImageView
+                android:id="@+id/imgROR"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/relative"
+                android:contentDescription="TODO"
+                android:padding="10dp"
+                android:textSize="16sp" />
+
+            <ImageView
                 android:id="@+id/imgNudge"
                 android:layout_width="30dp"
                 android:layout_height="30dp"

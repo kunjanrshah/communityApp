@@ -170,7 +170,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             childViewHolder.tbtn_share = convertView.findViewById(R.id.tbtn_share);
             childViewHolder.imgNudge = convertView.findViewById(R.id.imgNudge);
             childViewHolder.img_details = convertView.findViewById(R.id.img_details);
-
+            childViewHolder.imgROR = convertView.findViewById(R.id.imgROR);
             convertView.setTag(childViewHolder);
         } else {
             childViewHolder = (ChildViewHolder) convertView.getTag();
@@ -274,6 +274,31 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 mEditor.apply();
                 Intent mIntent = new Intent(_context, MyProfileActivity.class);
                 _context.startActivity(mIntent);
+            }
+        });
+
+
+        childViewHolder.imgROR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final Dialog relation_dialog = new Dialog(_context);
+                relation_dialog.setTitle("Request of relation");
+                relation_dialog.setContentView(R.layout.custom_relation_dialog);
+                Button btnSend = relation_dialog.findViewById(R.id.btnSend);
+                final EditText edt_rel = relation_dialog.findViewById(R.id.edt_rel);
+
+                btnSend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String msg = edt_rel.getText().toString().trim();
+                        relation_dialog.cancel();
+                        if (!msg.isEmpty()) {
+                            requestOfRelationWS(msg, profile_id);
+                        }
+                    }
+                });
+                relation_dialog.show();
             }
         });
 
@@ -666,6 +691,53 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
     }
 
+    private void requestOfRelationWS(String relation, String to_user_id) {
+        if (Common.isOnline(_context)) {
+            JSONObject mJsonObject = null;
+            try {
+                mJsonObject = new JSONObject();
+                mJsonObject.put(Common.Constant_Class.TO_USER_ID, to_user_id);
+                mJsonObject.put(Common.Constant_Class.RELATION, relation);
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SEND_REQUEST_URL, mJsonObject, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    try {
+                        String success = response.getString(Common.Constant_Class.SUCCESS);
+                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        Toast.makeText(_context, message, Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
+        }
+    }
+
 
     private void shareImage(Bitmap bitmap, String text) {
         String pathofBmp = MediaStore.Images.Media.insertImage(_context.getContentResolver(), bitmap, "title", null);
@@ -779,6 +851,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         ToggleButton tbtn_share;
         ImageView imgNudge;
         ImageView img_details;
+        ImageView imgROR;
     }
 
     private class GroupViewHolder {

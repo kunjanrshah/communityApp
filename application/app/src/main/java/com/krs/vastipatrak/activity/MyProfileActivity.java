@@ -39,6 +39,7 @@ import com.krs.vastipatrak.fragments.BusinessFragment;
 import com.krs.vastipatrak.fragments.FamilyFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.PersonalFragment;
+import com.krs.vastipatrak.fragments.RelativeFragment;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -70,6 +71,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private Fragment personal = null;
     private Fragment business = null;
     private Fragment family = null;
+    private Fragment relative=null;
     private SharedPreferences mSharedPreferences = null;
 
     @Override
@@ -750,11 +752,17 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         }
         family.setArguments(mBundle);
 
+        if (relative == null) {
+            relative = new RelativeFragment();
+        }
+
+
         adapter.addFrag(personal, Common.Constant_Class.PERSONAL);
         adapter.addFrag(business, Common.Constant_Class.BUSINESS);
         adapter.addFrag(family, Common.Constant_Class.FAMILY);
+        adapter.addFrag(relative, Common.Constant_Class.RELATIVES);
 
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
 
     }
