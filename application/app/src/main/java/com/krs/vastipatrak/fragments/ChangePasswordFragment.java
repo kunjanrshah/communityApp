@@ -169,6 +169,7 @@ public class ChangePasswordFragment extends Fragment {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Common.hideProgressDialog();
                     }
                 }
             }, new Response.ErrorListener() {

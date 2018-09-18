@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:text="Request of Relation"
+        android:text="Request for Relation"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -20,12 +20,24 @@
         android:gravity="bottom|center"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edt_rel"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:hint="Relation" />
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edt_rel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Relation" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Example: Brother,Sister or any" />
+
+        </LinearLayout>
 
 
         <Button

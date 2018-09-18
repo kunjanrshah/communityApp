@@ -395,7 +395,6 @@ public class HomeFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
             final ListEventData data = eventData.get(position);
-            assert data != null;
             holder.txtTitle.setText(data.getTitle());
             holder.txtDesc.setText(data.getDescription());
             holder.txtLocation.setText(data.getLocation());

@@ -1937,8 +1937,8 @@ public class Common {
 
         public static final String RELATION = "relation";
         public static final String TO_USER_ID = "to_user_id";
-
-
+        public static final String RELATIONSHIP_STATUS = "relationship_status";
+        public static final String RELATIONSHIP_ID = "relationship_id";
         public static final String PAGE = "page";
         public static final String API_KEY_VALUE = "q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
         public static final String DEVICE_TYPE_VALUE = "Android";
@@ -1950,6 +1950,7 @@ public class Common {
         public static final String IS_UPDATE = "is_update";
         public static final String IS_RESET = "is_reset";
         public static final String USER_ID = "user_id";
+
         public static final String UPDATE_USER_ID = "update_user_id";
         public static final String EVENT_DATE = "event_date";
         public static final String LOADING = "Loading...";

@@ -2,12 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_drawer"
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:scrollbars="none" />
 
     <TextView
@@ -19,6 +20,7 @@
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_weight="0.05"
         android:gravity="center"
+        android:textStyle="bold"
         android:text="@string/no_records_found"
         android:textColor="@android:color/black"
         android:textSize="20sp"
