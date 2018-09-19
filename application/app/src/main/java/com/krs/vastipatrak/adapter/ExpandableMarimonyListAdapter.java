@@ -386,7 +386,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                         BitMatrix bitMatrix = multiFormatWriter.encode(id, BarcodeFormat.QR_CODE, 200, 200);
                         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                         bitmap = barcodeEncoder.createBitmap(bitMatrix);
-
+                        bitmap= Common.drawTextToBitmap(bitmap,Name);
                     } catch (WriterException e) {
                         e.printStackTrace();
                     }
@@ -404,7 +404,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("image/*");
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, text + "'s Father Profile QR Code");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, text + "'s Father Profile QR Code");
+       // shareIntent.putExtra(Intent.EXTRA_TEXT, text + "'s Father Profile QR Code");
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         _context.startActivity(Intent.createChooser(shareIntent, "Vastipatrak"));
     }

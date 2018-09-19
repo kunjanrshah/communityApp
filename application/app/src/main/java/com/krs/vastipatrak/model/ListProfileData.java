@@ -5,10 +5,10 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class ListProfileData extends RealmObject{
+public class ListProfileData extends RealmObject {
 
     @PrimaryKey
-    private String profile_id="";
+    private String profile_id = "";
     private String profile_pic_url = "";
     private String img_spouse_url = "";
     private String img_father_url = "";
@@ -47,7 +47,7 @@ public class ListProfileData extends RealmObject{
     private String spouse_father_name = "";
     private String spouse_mother_name = "";
     private String ekdo = "";
-    private String is_block="";
+    private String is_block = "";
     private String is_location_enable;
     private String updated_time;
     private String sync_time;
@@ -62,6 +62,35 @@ public class ListProfileData extends RealmObject{
     private String sponse_bdate;
     private String sponse_native;
     private String sponse_mobile;
+
+    public boolean isChk_profile_bdate_rem() {
+        return chk_profile_bdate_rem;
+    }
+
+    public void setChk_profile_bdate_rem(boolean chk_profile_bdate_rem) {
+        this.chk_profile_bdate_rem = chk_profile_bdate_rem;
+    }
+
+    private boolean chk_profile_bdate_rem;
+    private boolean chk_spouse_bdate_rem;
+    private boolean chk_m_bdate_rem;
+    private RealmList<ListChildrenData> mListChildrenData;
+
+    public boolean getChk_spouse_bdate_rem() {
+        return chk_spouse_bdate_rem;
+    }
+
+    public void setChk_spouse_bdate_rem(boolean chk_spouse_bdate_rem) {
+        this.chk_spouse_bdate_rem = chk_spouse_bdate_rem;
+    }
+
+    public boolean getChk_m_bdate_rem() {
+        return chk_m_bdate_rem;
+    }
+
+    public void setChk_m_bdate_rem(boolean chk_m_bdate_rem) {
+        this.chk_m_bdate_rem = chk_m_bdate_rem;
+    }
 
     public String getSponse_bdate() {
         return sponse_bdate;
@@ -87,8 +116,6 @@ public class ListProfileData extends RealmObject{
         this.sponse_mobile = sponse_mobile;
     }
 
-
-
     public String getEkdo() {
         return ekdo;
     }
@@ -96,9 +123,6 @@ public class ListProfileData extends RealmObject{
     public void setEkdo(String ekdo) {
         this.ekdo = ekdo;
     }
-
-    private RealmList<ListChildrenData> mListChildrenData;
-
 
     public String getIs_block() {
         return is_block;
@@ -147,6 +171,7 @@ public class ListProfileData extends RealmObject{
     public void setPassword(String password) {
         this.password = password;
     }
+
     public String getStr_mother_hash() {
         return str_mother_hash;
     }

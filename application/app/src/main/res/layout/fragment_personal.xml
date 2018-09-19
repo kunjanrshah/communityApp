@@ -185,7 +185,7 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <CheckBox
-                        android:id="@+id/chk_user_bdate"
+                        android:id="@+id/chk_profile_bdate_rem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Set Reminder" />

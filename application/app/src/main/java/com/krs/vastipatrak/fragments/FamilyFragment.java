@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -64,7 +65,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     public ArrayList<Integer> lst_delID = null;
     public RadioButton rbtnChildNo;
     public EditText edt_mdate, edtsponse_bdate;
-
+    public CheckBox chk_marriage_bdate_rem=null;
+    public CheckBox chk_spouse_bdate_rem=null;
     private RadioButton rbtnChildYes;
     private String spouse_url = "";
     private String fspouse_url = "";
@@ -309,6 +311,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         img_spouse = root.findViewById(R.id.img_spouse);
         img_fspouse = root.findViewById(R.id.img_fspouse);
         img_mspouse = root.findViewById(R.id.img_mspouse);
+        chk_marriage_bdate_rem=root.findViewById(R.id.chk_marriage_bdate_rem);
+        chk_spouse_bdate_rem=root.findViewById(R.id.chk_spouse_bdate_rem);
         btn_add = root.findViewById(R.id.btn_add);
         btn_add.setVisibility(View.GONE);
         rbtnChildYes = root.findViewById(R.id.rbtnChildYes);
@@ -377,7 +381,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edt_mdate.setText(mListProfileData.getMarriage_date());
         edtSpouseFName.setText(mListProfileData.getSfather_name());
         edtMSpouseName.setText(mListProfileData.getSmother_name());
-
+        //chk_marriage_bdate_rem.setChecked();
+        //chk_spouse_bdate_rem.setChecked();
         spouse_url = mListProfileData.getImg_spouse_url();
         fspouse_url = mListProfileData.getImg_sfather_url();
         mspouse_url = mListProfileData.getImg_smother_url();
@@ -405,6 +410,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     Objects.requireNonNull(mViewholder.edtchild_name).setText(mObjChild.getChild_name());
                     Objects.requireNonNull(mViewholder.edtchild_bdate).setText(mObjChild.getChild_bday());
                     Objects.requireNonNull(mViewholder.edtMobile).setText(mObjChild.getMobile());
+                    //mViewholder.chk_child_marriage.setChecked();
+                    //mViewholder.chk_child_bdate_rem.setChecked();
                     String blood = mObjChild.getBlood_group();
                     if (blood != null && !blood.isEmpty()) {
                         if (blood.equalsIgnoreCase(Common.Constant_Class.A_POSITIVE)) {
@@ -505,6 +512,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         mViewholder.edtchild_bplace = addView.findViewById(R.id.edtchild_bplace);
         mViewholder.edtchild_edu = addView.findViewById(R.id.edtchild_edu);
         mViewholder.edtchild_work = addView.findViewById(R.id.edtchild_work);
+        mViewholder.chk_child_bdate_rem = addView.findViewById(R.id.chk_child_bdate_rem);
+        mViewholder.chk_child_marriage = addView.findViewById(R.id.chk_child_marriage);
+
         mViewholder.edtchild_work.requestFocus();
         Objects.requireNonNull(mViewholder.tbtn_interest).setText(null);
         mViewholder.tbtn_interest.setTextOn(null);
@@ -852,8 +862,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         public EditText edtchild_work = null;
         public String ImgHash = "";
         @Nullable
+        public CheckBox chk_child_marriage=null;
+        public CheckBox chk_child_bdate_rem=null;
         public EditText edtchild_bdate = null;
-        //public String cbdate = "";
         @Nullable
         ImageView img_child = null;
         @Nullable

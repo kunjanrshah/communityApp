@@ -79,6 +79,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_profile);
+
         MemoryAllocation();
         ToolbarSetup();
         String id = "";
@@ -287,6 +288,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 // Familty Details
                 String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "", sdate = "", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
                 String sponseBdate="",sponseNative="",sponseMobile="";
+                boolean chk_spouse_bdate_rem=false,chk_m_bdate_rem=false;
                 LinearLayout child_container = null;
                 ArrayList<Integer> lst_delID = null;
                 try {
@@ -297,6 +299,10 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     SpouseFName = ((FamilyFragment) family).edtSpouseFName.getText().toString().trim();
                     MSpouseName = ((FamilyFragment) family).edtMSpouseName.getText().toString().trim();
                     mdate = ((FamilyFragment) family).edt_mdate.getText().toString().trim();
+
+                    chk_spouse_bdate_rem = ((FamilyFragment) family).chk_spouse_bdate_rem.isChecked();
+                    chk_m_bdate_rem = ((FamilyFragment) family).chk_marriage_bdate_rem.isChecked();
+
                     mdate = Common.parseDateToddMMyyyy(mdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
                     if (!mdate.equalsIgnoreCase("")) {
                         if (!Common.isThisDateValid(mdate, "yyyy-mm-dd")) {
@@ -357,7 +363,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mListProfileData.setStr_fspouse_hash(str_fspouse_hash);
                     mListProfileData.setStr_mspouse_hash(str_mspouse_hash);
                     mListProfileData.setStr_spouse_hash(str_spouse_hash);
-
+                    mListProfileData.setChk_m_bdate_rem(chk_m_bdate_rem);
+                    mListProfileData.setChk_spouse_bdate_rem(chk_spouse_bdate_rem);
                     setProfileJsonObject(mListProfileData, child_container, Objects.requireNonNull(lst_delID));
                 } else {
                     Toast.makeText(MyProfileActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
@@ -424,6 +431,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
         //Family Details
         try {
+           // mListProfileData.getch
             Objects.requireNonNull(mJsonObject).put(Common.Constant_Class.MARRIAGE_DATE, mListProfileData.getMarriage_date());
             mJsonObject.put(Common.Constant_Class.SPOUSE_NAME, mListProfileData.getSpouse_name());
             mJsonObject.put(Common.Constant_Class.SPOUSE_BDATE, mListProfileData.getSponse_bdate());
@@ -470,7 +478,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     String child_bplace = Objects.requireNonNull(mViewholder.edtchild_bplace).getText().toString();
                     String child_mobile = Objects.requireNonNull(mViewholder.edtMobile).getText().toString();
                     String child_blood = Objects.requireNonNull(mViewholder.spinnerBlood).getSelectedItem().toString();
-
+                    boolean chk_bdate_rem=mViewholder.chk_child_bdate_rem.isChecked();
+                    boolean chk_married=mViewholder.chk_child_marriage.isChecked();
                     mJsonObject_Child.put(Common.Constant_Class.BLOOD_GROUP, child_blood);
                     mJsonObject_Child.put(Common.Constant_Class.MOBILE, child_mobile);
                     mJsonObject_Child.put(Common.Constant_Class.IS_INTERESTED, child_interest);

@@ -2,6 +2,10 @@ package com.krs.vastipatrak.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -72,10 +76,28 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
         int viewType = holder.getItemViewType();
         if (viewType == 1) {
-            Glide.with(context).load(listUrls.get(position)).apply(new RequestOptions().override(1200, 1000).placeholder(R.drawable.user_profile).error(R.drawable.user_profile)).into(holder.eventImage);
+            Drawable dr = context.getResources().getDrawable(R.drawable.user_profile);
+            Bitmap bitmap =getBitmap(dr);
+            Drawable d = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, 500, 500, true));
+            Glide.with(context).load(listUrls.get(position)).apply(new RequestOptions().override(1200, 1000).placeholder(d).error(d)).into(holder.eventImage);
         } else {
             setYoutubeUrl(listUrls.get(position));
             ViewHolder.youTubeView.initialize(Common.Constant_Class.YOUTUBE_API_KEY, (YouTubePlayer.OnInitializedListener) context);
+        }
+    }
+
+
+    private Bitmap getBitmap(Drawable drawable)
+    {
+        try {
+            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+            return bitmap;
+        } catch (OutOfMemoryError e) {
+            // Handle the error
+            return null;
         }
     }
 

@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -89,6 +90,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private double home_lat;
     private double home_lng;
     private boolean setChecked = false;
+    private CheckBox chk_profile_bdate_rem=null;
     private TextView txt_distance;
     private double user_lat;
     private double user_lng;
@@ -558,6 +560,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         rbtnM.setChecked(true);
         rbtnF = rootView.findViewById(R.id.rbtnF);
 
+        chk_profile_bdate_rem=rootView.findViewById(R.id.chk_profile_bdate_rem);
         spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
         spinnerGotra.setOnItemSelectedListener(this);
         spinnerGotra.setAdapter(AppController.getInstance().dataAdapter);
@@ -670,6 +673,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             String str_time = mListProfileData.getBirth_time();
             String is_block = mListProfileData.getIs_block();
             String is_loc_enable = mListProfileData.isIs_location_enable();
+            boolean profile_bdate_rem= mListProfileData.isChk_profile_bdate_rem();
+            chk_profile_bdate_rem.setChecked(profile_bdate_rem);
 
             if (str_time.length() > 5) {
                 str_time = mListProfileData.getBirth_time().substring(0, 5);

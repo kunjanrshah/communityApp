@@ -388,6 +388,7 @@ public class LoginActivity extends Activity {
             spinnerEkdo.setVisibility(View.GONE);
             btn_signup.setText(getResources().getString(R.string.btn_sign_up));
             SignupToggle = false;
+            inputPassword.setText("");
             inputName.requestFocus();
         } else {
             txtSignup.setText(getResources().getString(R.string.btn_sign_up));

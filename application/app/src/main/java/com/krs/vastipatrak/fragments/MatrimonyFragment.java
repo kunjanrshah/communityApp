@@ -13,6 +13,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -31,6 +34,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.ExpandableMarimonyListAdapter;
 import com.krs.vastipatrak.app.AppController;
+import com.krs.vastipatrak.model.ExportProfileData;
 import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListMatrimonyChildData;
 import com.krs.vastipatrak.model.ListMatrimonyParentData;
@@ -51,6 +55,7 @@ import java.util.Objects;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static com.krs.vastipatrak.utils.Common.ExportProfile;
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 import static com.krs.vastipatrak.utils.Common.showProgressDialog;
 import static com.krs.vastipatrak.utils.Common.textAsBitmap;
@@ -60,6 +65,7 @@ public class MatrimonyFragment extends Fragment {
     private final String TAG = MatrimonyFragment.class.getSimpleName();
     ToggleButton tbtn_interest, tbtn_gender;
     int page_count = 0;
+    Button btnSearch;
     private ExpandableListView lvMatrimonyList;
     @Nullable
     private ArrayList<ListMatrimonyParentData> listDataHeader = null;
@@ -79,7 +85,7 @@ public class MatrimonyFragment extends Fragment {
         Objects.requireNonNull(((AppCompatActivity) mActivity).getSupportActionBar()).setSubtitle(R.string.title_matrimony);
         setHasOptionsMenu(true);
         MemoryAllocation(rootView);
-        getChildRecords();
+        getChildRecords(false);
 
         mSwipyRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
             @Override
@@ -87,12 +93,14 @@ public class MatrimonyFragment extends Fragment {
                 Log.d("MainActivity", "Refresh triggered at " + (direction == SwipyRefreshLayoutDirection.TOP ? "top" : "bottom"));
 
                 if (direction == SwipyRefreshLayoutDirection.TOP) {
-                    page--;
+                    if (page > 0) {
+                        page--;
+                    }
                 } else {
                     page++;
                 }
                 if (page > 0) {
-                    getChildRecords();
+                    getChildRecords(false);
                 } else {
                     mSwipyRefreshLayout.setRefreshing(false);
                     Toast.makeText(getActivity(), "No record found!", Toast.LENGTH_SHORT).show();
@@ -142,7 +150,7 @@ public class MatrimonyFragment extends Fragment {
                         if (page1 > 0 && page1 <= page_count) {
                             page = page1;
                             dialog.dismiss();
-                            getChildRecords();
+                            getChildRecords(false);
                         } else {
                             Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
                         }
@@ -170,17 +178,32 @@ public class MatrimonyFragment extends Fragment {
         tbtn_gender = rootView.findViewById(R.id.tbtn_gender);
         tbtn_gender.setTextOff(getResources().getString(R.string.female));
         tbtn_gender.setTextOn(getResources().getString(R.string.male));
-        Button btnSearch = rootView.findViewById(R.id.btnSearch);
+        btnSearch = rootView.findViewById(R.id.btnSearch);
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getChildRecords();
+                getChildRecords(false);
+            }
+        });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        MenuItem exportItem = menu.findItem(R.id.action_export);
+        exportItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                getChildRecords(true);
+                return false;
             }
         });
     }
 
 
-    private void getChildRecords() {
+    private void getChildRecords(final boolean isExport) {
         final String is_interested, gender;
         if (tbtn_interest != null && !tbtn_interest.isChecked()) {
             is_interested = "0";
@@ -194,13 +217,18 @@ public class MatrimonyFragment extends Fragment {
         }
 
         if (Common.isOnline(getActivity())) {
-            JSONObject mjsonObject = new JSONObject();
+            final JSONObject mjsonObject = new JSONObject();
             try {
                 mjsonObject.put(Common.Constant_Class.IS_INTERESTED, is_interested);
                 mjsonObject.put(Common.Constant_Class.CHILD_GENDER, gender);
-                mjsonObject.put(Common.Constant_Class.PAGE, String.valueOf(page));
                 mjsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mjsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                if (!isExport) {
+                    if (page < 1) {
+                        page = 1;
+                    }
+                    mjsonObject.put(Common.Constant_Class.PAGE, String.valueOf(page));
+                }
                 showProgressDialog(getActivity());
                 mSwipyRefreshLayout.setRefreshing(true);
                 JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.ADVANCE_SEARCH_URL, mjsonObject, new Response.Listener<JSONObject>() {
@@ -223,26 +251,48 @@ public class MatrimonyFragment extends Fragment {
                                 realm.beginTransaction();
                                 profileData.deleteAllFromRealm();
                                 realm.commitTransaction();
-                                try {
-                                    int total = Integer.parseInt(total_records);
-                                    page_count = total / 25;
-                                    int mod = total % 25;
-                                    if (mod != 0) {
-                                        page_count = page_count + 1;
+                                if (!isExport) {
+                                    try {
+                                        int total = Integer.parseInt(total_records);
+                                        page_count = total / 25;
+                                        int mod = total % 25;
+                                        if (mod != 0) {
+                                            page_count = page_count + 1;
+                                        }
+                                        mFloatingActionButton.setImageBitmap(textAsBitmap(String.valueOf(page) + "/" + String.valueOf(page_count), 40, Color.WHITE));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
-                                    mFloatingActionButton.setImageBitmap(textAsBitmap(String.valueOf(page) + "/" + String.valueOf(page_count), 40, Color.WHITE));
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+
+                                    JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                                    for (int i = 0; i < mJsonArray.length(); i++) {
+                                        JSONObject mJsondata = mJsonArray.getJSONObject(i);
+                                        Common.MatrimonyProfile(mJsondata, gender, is_interested, false);
+                                    }
+                                    if (!isExport) {
+                                        getChildRecords1();
+                                        ExpandableMarimonyListAdapter mExpandableMatrimonyListAdapter = new ExpandableMarimonyListAdapter(getActivity(), listDataHeader, listDataChild);
+                                        lvMatrimonyList.setAdapter(mExpandableMatrimonyListAdapter);
+                                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                                    Realm realm = AppController.getInstance().realm;
+                                    RealmResults<ExportProfileData> results = realm.where(ExportProfileData.class).findAll();
+                                    realm.beginTransaction();
+                                    results.deleteAllFromRealm();
+                                    realm.commitTransaction();
+
+                                    for (int i = 0; i < mJsonArray.length(); i++) {
+                                        JSONObject mJsondata = mJsonArray.getJSONObject(i);
+                                        Common.MatrimonyProfile(mJsondata, gender, is_interested, false);
+                                        if (isExport) {
+                                            ExportProfile(mJsondata, getActivity());
+                                        }
+                                    }
+                                    Common.ExportSearchData(getActivity());
+                                    btnSearch.performClick();
                                 }
-                                JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
-                                for (int i = 0; i < mJsonArray.length(); i++) {
-                                    JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                    Common.MatrimonyProfile(mJsondata, gender, is_interested,false);
-                                }
-                                getChildRecords1();
-                                ExpandableMarimonyListAdapter mExpandableMatrimonyListAdapter = new ExpandableMarimonyListAdapter(getActivity(), listDataHeader, listDataChild);
-                                lvMatrimonyList.setAdapter(mExpandableMatrimonyListAdapter);
-                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                             } else {
                                 Common.alert(getActivity(), message);
                             }

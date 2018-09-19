@@ -152,28 +152,42 @@
             </android.support.design.widget.TextInputLayout>
 
             <CheckBox
-                android:id="@+id/chk_child_bdate"
+                android:id="@+id/chk_child_bdate_rem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Set Reminder" />
 
         </LinearLayout>
 
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/edtchild_btime"
-                android:layout_width="fill_parent"
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dip"
-                android:drawableEnd="@drawable/clock"
-                android:hint="Birth time"
-                android:singleLine="true" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/edtchild_btime"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dip"
+                    android:drawableEnd="@drawable/clock"
+                    android:hint="Birth time"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <CheckBox
+                android:id="@+id/chk_child_marriage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Married" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout

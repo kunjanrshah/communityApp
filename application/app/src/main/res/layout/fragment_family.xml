@@ -45,7 +45,7 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <CheckBox
-                        android:id="@+id/chk_marriage_bdate"
+                        android:id="@+id/chk_marriage_bdate_rem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Set Reminder" />
@@ -74,7 +74,7 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <CheckBox
-                        android:id="@+id/chk_spouse_bdate"
+                        android:id="@+id/chk_spouse_bdate_rem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Set Reminder" />

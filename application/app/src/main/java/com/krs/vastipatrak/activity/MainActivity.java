@@ -65,16 +65,15 @@ import com.google.zxing.integration.android.IntentResult;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.Config;
+import com.krs.vastipatrak.fragments.CalendarFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.HelpFragment;
 import com.krs.vastipatrak.fragments.HomeFragment;
 import com.krs.vastipatrak.fragments.MatrimonyFragment;
 import com.krs.vastipatrak.fragments.NearByFragment;
-import com.krs.vastipatrak.fragments.RelativeFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
 import com.krs.vastipatrak.fragments.SharedUsersFragment;
-import com.krs.vastipatrak.fragments.CalendarFragment;
 import com.krs.vastipatrak.interfaces.IAdminControl;
 import com.krs.vastipatrak.service.MyLocationService;
 import com.krs.vastipatrak.utils.Common;
@@ -515,6 +514,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         change_role.setVisible(false);
         deleteItem.setVisible(false);
 
+        if (MOVE_TO_POSITION == 4) {
+            export.setVisible(true);
+        } else {
+            export.setVisible(false);
+        }
+
         if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
             if (Common.isOnline(this)) {
                 nonActives.setVisible(true);
@@ -610,7 +615,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         return true;
     }
 
-    private void moveToSearch(int menu) {
+    public void moveToSearch(int menu) {
 
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -783,7 +788,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 mEditor.apply();
                 Intent mIntent1 = new Intent(MainActivity.this, MyProfileActivity.class);
                 startActivity(mIntent1);
-              //  this.overridePendingTransition(0, 0);
+                //  this.overridePendingTransition(0, 0);
                 break;
             case 2:
                 fragment = new NearByFragment();
@@ -804,7 +809,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             case 7:
                 Intent mIntent2 = new Intent(MainActivity.this, TourActivity.class);
                 startActivity(mIntent2);
-               // this.overridePendingTransition(0, 0);
+                // this.overridePendingTransition(0, 0);
                 break;
             case 8:
                 fragment = new HelpFragment();

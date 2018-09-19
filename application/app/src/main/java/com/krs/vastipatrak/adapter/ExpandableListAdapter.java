@@ -8,7 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -84,6 +86,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private final String[] SPINNERLIST = {"Father", "Son", "Daughter", "Brother", "Sister", "Grandfather", "Grandson", "Uncle", "Uncle's Son", "Uncle in law", "Uncle's Son"};
     HashMap<String, String> testHashMap2;
     Gson gson;
+
+    public boolean isNearby() {
+        return isNearby;
+    }
+
+    public void setNearby(boolean nearby) {
+        isNearby = nearby;
+    }
+
+    private boolean isNearby=false;
+
     @Nullable
     // private ProgressDialog pDialog;
     private ChildViewHolder childViewHolder;
@@ -198,7 +211,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String phone = mListChildData.getPhone().trim().replaceAll("\\?", "").replaceAll("\\+", "");
 
         if (sharedUsers) {
-            if (Shared.equalsIgnoreCase("from")) {
+            if (Shared!=null && Shared.equalsIgnoreCase("from")) {
                 childViewHolder.ll_child.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape1));
             } else {
                 childViewHolder.ll_child.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape5));
@@ -232,7 +245,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         String bool = mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0");
         if (bool.equalsIgnoreCase("1")) {
-            if (Shared.equalsIgnoreCase("from")) {
+            if (Shared!=null && Shared.equalsIgnoreCase("from")) {
                 childViewHolder.tbtn_share.setVisibility(View.GONE);
             } else {
                 childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
@@ -388,7 +401,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.tvMail = convertView.findViewById(R.id.tvMail);
             groupViewHolder.txt_dist = convertView.findViewById(R.id.txt_dist);
 
-            if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN) && !sharedUsers) {
+            if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN) && !sharedUsers && !isNearby) {
                 groupViewHolder.checkbox.setVisibility(View.VISIBLE);
             } else {
                 groupViewHolder.checkbox.setVisibility(View.GONE);
@@ -481,7 +494,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         groupViewHolder.tvMobile.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
 
         if (sharedUsers) {
-            if (Shared.equalsIgnoreCase("from")) {
+            if (Shared!=null && Shared.equalsIgnoreCase("from")) {
                 groupViewHolder.ll_parent.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape1));
             } else {
                 groupViewHolder.ll_parent.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape5));
@@ -637,6 +650,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     BitMatrix bitMatrix = multiFormatWriter.encode(id, BarcodeFormat.QR_CODE, 200, 200);
                     BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                     bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                    bitmap= Common.drawTextToBitmap(bitmap,Name);
                     imageView.setImageBitmap(bitmap);
                 } catch (WriterException e) {
                     e.printStackTrace();
@@ -766,7 +780,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("image/*");
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, text + "'s Profile QR Code");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, text + "'s Profile");
+      //  shareIntent.putExtra(Intent.EXTRA_TEXT, text + "'s Profile");
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         _context.startActivity(Intent.createChooser(shareIntent, "Vastipatrak"));
     }

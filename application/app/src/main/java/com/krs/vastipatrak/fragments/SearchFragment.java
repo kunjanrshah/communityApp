@@ -117,7 +117,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
     private ISearchCallback iSearchCallback;
     private Context mContext;
     private String SearchString = "";
-
+    private boolean isAdmin=false;
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -194,7 +194,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             adminControl = args.getInt(Common.Constant_Class.AdminControl, -1);
         }
         Memory_Allocation(rootView);
-
+        isAdmin=false;
         if (query != null && !query.equalsIgnoreCase("")) {
             Common.Title = query;
             OnlineSearch(query, Common.Constant_Class.GLOBAL_SEARCH_URL);
@@ -228,6 +228,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     page++;
                 }
                 if (page > 0) {
+                    isAdmin=false;
                     OnlineSearch(search, search_url);
                 } else {
                     mSwipyRefreshLayout.setRefreshing(false);
@@ -286,7 +287,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         if (page1 > 0 && page1 <= page_count) {
                             page = page1;
                             dialog.dismiss();
-
+                            isAdmin=false;
                             OnlineSearch(search, search_url);
                         } else {
                             Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
@@ -338,6 +339,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 query_string = "";
                 query = str;
                 page = 1;
+                isAdmin=false;
                 OnlineSearch(str, Common.Constant_Class.GLOBAL_SEARCH_URL);
                 //callSearchWS(str, Common.Constant_Class.GLOBAL_SEARCH_URL);
                 return false;
@@ -459,9 +461,9 @@ public class SearchFragment extends Fragment implements IAdminControl {
                             JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                             for (int i = 0; i < mJsonArray.length(); i++) {
                                 JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                Common.ExportProfile(mJsondata);
+                                Common.ExportProfile(mJsondata,getActivity());
                             }
-                            ExportSearchData();
+                            Common.ExportSearchData(getActivity());
                         }
                         hideProgressDialog();
                         //Common.alert(getActivity(), message);
@@ -598,9 +600,9 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 total_records = response.getString(Common.Constant_Class.TOTAL_RECORDS);
             }
 
+            Objects.requireNonNull(listDataHeader).clear();
+            Objects.requireNonNull(listDataChild).clear();
             if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                Objects.requireNonNull(listDataHeader).clear();
-                Objects.requireNonNull(listDataChild).clear();
                 int total = 0;
                 lvCustomList.setVisibility(View.VISIBLE);
                 try {
@@ -688,11 +690,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     listDataChild.put(lpd, mlstChildData);
 
                 }
-                mExpandableListAdapter = new ExpandableListAdapter(getmContext(), listDataHeader, listDataChild,false);
-                lvCustomList.setAdapter(mExpandableListAdapter);
                 Toast.makeText(getmContext(), "" + message + " Page " + page, Toast.LENGTH_LONG).show();
                 hideProgressDialog();
-
                 iSearchCallback.setIsSearch(true);
             } else {
                 if (lstSelectedIDs != null) {
@@ -708,6 +707,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
                 }
             }
+            mExpandableListAdapter = new ExpandableListAdapter(getmContext(), listDataHeader, listDataChild, false);
+            lvCustomList.setAdapter(mExpandableListAdapter);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -891,6 +892,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     callNonActivesWS();
                 } else {
                     page = 1;
+                    isAdmin=false;
                     OnlineSearch(Common.Title, Common.Constant_Class.GLOBAL_SEARCH_URL);
                     // callSearchWS(Common.Title, Common.Constant_Class.GLOBAL_SEARCH_URL);
                 }
@@ -976,7 +978,11 @@ public class SearchFragment extends Fragment implements IAdminControl {
                             boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
                             if (success) {
-                                lvCustomList.setAdapter(mExpandableListAdapter);
+                                if(isAdmin)
+                                {
+                                    ((MainActivity)getActivity()).moveToSearch(6);
+                                }
+                              //  lvCustomList.setAdapter(mExpandableListAdapter);
                             }
                             Common.alert(getActivity(), message);
                         } catch (Exception e) {
@@ -1055,7 +1061,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
         role_dialog.show();
     }
 
-    private void ExportSearchData() {
+/*    private void ExportSearchData() {
 
         RealmResults<ExportProfileData> mListProfileResult = AppController.getInstance().realm.where(ExportProfileData.class).findAll();
 
@@ -1181,7 +1187,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
         } else {
             Common.alert(getActivity(), "No Search records found!");
         }
-    }
+    }*/
 
     @Override
     public void onDestroy() {
@@ -1206,6 +1212,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
         if (getActivity() != null) {
             setmContext(getActivity());
         }
+
         if (isOnline(getmContext())) {
             JSONObject mjson = new JSONObject();
             try {
@@ -1213,6 +1220,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            isAdmin=true;
             OnlineSearch(mjson.toString(), Common.Constant_Class.ADVANCE_SEARCH_URL);
         }
     }

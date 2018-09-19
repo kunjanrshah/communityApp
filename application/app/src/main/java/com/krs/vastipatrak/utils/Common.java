@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +18,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -164,6 +168,7 @@ public class Common {
         String result_in_kms = "";
         String strurl = "http://maps.google.com/maps/api/directions/xml?origin=" + latitude + "," + longitude + "&destination=" + prelatitute + "," + prelongitude + "&sensor=false&units=metric";
         String tag[] = {"text"};
+        Log.d("getDistanceOnRoad","step "+strurl);
         //  HttpResponse response = null;
         HttpURLConnection urlConnection = null;
 
@@ -994,7 +999,7 @@ public class Common {
         return null;
     }
 
-    public static void ExportProfile(@NonNull JSONObject mJsonObject) {
+    public static void ExportProfile(JSONObject mJsonObject,Activity mActivity) {
         try {
 
             ExportProfileData mListProfileData = new ExportProfileData();
@@ -1498,7 +1503,7 @@ public class Common {
 
     public static void ExportSearchData(@NonNull Activity mActiviy) {
 
-        RealmResults<ListProfileData> mListProfileResult = AppController.getInstance().realm.where(ListProfileData.class).findAll();
+        RealmResults<ExportProfileData> mListProfileResult = AppController.getInstance().realm.where(ExportProfileData.class).findAll();
 
         if (mListProfileResult != null && mListProfileResult.size() > 0) {
 
@@ -1651,8 +1656,13 @@ public class Common {
 
             }
         });
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("View", new DialogInterface.OnClickListener() {
             public void onClick(@NonNull DialogInterface dialog, int which) {
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
+                mActivity.startActivity(intent);
+
                 dialog.dismiss();
             }
         }).show();
@@ -1670,6 +1680,65 @@ public class Common {
             }
         }).show();
     }
+
+    public static Bitmap drawableToBitmap (Drawable drawable) {
+        Bitmap bitmap = null;
+
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if(bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
+        }
+
+        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
+    public static Bitmap drawTextToBitmap(Bitmap bitmap,String gText) {
+      //  Resources resources = mcontext.getResources();
+       // float scale = resources.getDisplayMetrics().density;
+
+        android.graphics.Bitmap.Config bitmapConfig =bitmap.getConfig();
+        // set default bitmap config if none
+        if(bitmapConfig == null) {
+            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+        // resource bitmaps are imutable,
+        // so we need to convert it to mutable one
+        bitmap = bitmap.copy(bitmapConfig, true);
+
+        Canvas canvas = new Canvas(bitmap);
+        // new antialised Paint
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        // text color - #3D3D3D
+        paint.setColor(Color.rgb(61, 61, 61));
+        // text size in pixels
+        paint.setTextSize((int) (24));
+
+        // text shadow
+        paint.setShadowLayer(1f, 0f, 1f, Color.WHITE);
+
+        // draw text to the Canvas center
+        Rect bounds = new Rect();
+        paint.getTextBounds(gText, 0, gText.length(), bounds);
+        int x = (bitmap.getWidth() - bounds.width())/2;
+        int y = (bitmap.getHeight() + bounds.height())/2;
+
+        canvas.drawText(gText, 10, 20, paint);
+
+        return bitmap;
+    }
+
+
 
     //method to convert your text to image
     public static Bitmap textAsBitmap(String text, float textSize, int textColor) {
