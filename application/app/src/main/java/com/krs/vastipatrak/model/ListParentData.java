@@ -21,6 +21,16 @@ public class ListParentData {
     private String office_lng;
     private String type;
     private String str_name;
+    private String Shared;
+
+    public String getShared() {
+        return Shared;
+    }
+
+    public void setShared(String isShared) {
+        this.Shared = isShared;
+    }
+
     public String getHome_lat() {
         return home_lat;
     }

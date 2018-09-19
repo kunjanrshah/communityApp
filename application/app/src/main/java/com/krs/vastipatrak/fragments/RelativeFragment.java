@@ -156,8 +156,40 @@ public class RelativeFragment extends Fragment {
                 public void onResponse(@NonNull JSONObject response) {
                     try {
                         String message = response.getString(Common.Constant_Class.MESSAGE);
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                        getRelationsWS();
+                        try {
+                            JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                            if (mJsonArray.length() > 0) {
+                                lstRelative = new ArrayList<>();
+                            }
+                            for (int i = 0; i < mJsonArray.length(); i++) {
+                                JSONObject mJsondata = mJsonArray.getJSONObject(i);
+                                String to_user_id = mJsondata.getString(Common.Constant_Class.TO_USER_ID);
+                                String relation = mJsondata.getString(Common.Constant_Class.RELATION);
+                                String status = mJsondata.getString(Common.Constant_Class.RELATIONSHIP_STATUS);
+                                String first_name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
+                                String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
+                                Relative mRelative = new Relative();
+                                mRelative.setFirst_name(first_name);
+                                mRelative.setLast_name(last_name);
+                                mRelative.setRelation(relation);
+                                mRelative.setStatus(status);
+                                mRelative.setTo_user_id(to_user_id);
+                                lstRelative.add(mRelative);
+                            }
+
+                            if (mJsonArray.length() > 0) {
+                                recycler_view.setVisibility(View.VISIBLE);
+                                txtLable.setVisibility(View.GONE);
+                                setAdapter();
+                            } else {
+                                recycler_view.setVisibility(View.GONE);
+                                txtLable.setVisibility(View.VISIBLE);
+                            }
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            hideProgressDialog();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         hideProgressDialog();
@@ -200,6 +232,7 @@ public class RelativeFragment extends Fragment {
         recycler_view.setLayoutManager(mLayoutManager);
         recycler_view.setItemAnimator(new DefaultItemAnimator());
         recycler_view.setAdapter(mRelativeAdapter);
+
     }
 
     private class Relative {
@@ -296,19 +329,23 @@ public class RelativeFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     String message = "";
+                    String status = "";
                     if (data.getStatus().equalsIgnoreCase("ACCEPTED")) {
                         message = "Do you want to REJECT relation ?";
+                        status = "REJECTED";
                     } else {
                         message = "Do you want to ACCEPT relation ?";
+                        status = "ACCEPTED";
                     }
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
                     builder.setTitle(getActivity().getString(R.string.app_name));
                     builder.setCancelable(false);
                     builder.setMessage(message);
+                    final String finalStatus = status;
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(@NonNull DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            setActionWS(data.getTo_user_id(), data.getStatus());
+                            setActionWS(data.getTo_user_id(), finalStatus);
                         }
                     });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -329,7 +366,7 @@ public class RelativeFragment extends Fragment {
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(@NonNull DialogInterface dialog, int which) {
                             dialog.dismiss();
-
+                            setActionWS(data.getTo_user_id(), "DELETE");
                         }
                     });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

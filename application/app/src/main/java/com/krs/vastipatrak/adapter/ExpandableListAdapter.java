@@ -87,10 +87,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Nullable
     // private ProgressDialog pDialog;
     private ChildViewHolder childViewHolder;
-    private String sharedUsers;
+    private boolean sharedUsers = false;
 
     @SuppressLint("UseSparseArrays")
-    public ExpandableListAdapter(Context context, ArrayList<ListParentData> listDataHeader, HashMap<ListParentData, List<ListChildData>> listDataChild, String sharedUsers) {
+    public ExpandableListAdapter(Context context, ArrayList<ListParentData> listDataHeader, HashMap<ListParentData, List<ListChildData>> listDataChild, boolean sharedUsers) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listDataChild;
@@ -176,7 +176,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             childViewHolder = (ChildViewHolder) convertView.getTag();
         }
 
-        getChildRandomColor(_context, childPosition, childViewHolder.ll_child);
+
+
+
         final String id = mListChildData.getID();
         final String name = mListChildData.getName();
         String address = mListChildData.getAddress();
@@ -187,12 +189,23 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String blood_group = mListChildData.getBlood_Group();
         String gender = mListChildData.getGender();
         String gotra = mListChildData.getGotra();
+        String Shared = mListChildData.getShared();
         String Mother = mListChildData.getMother_name();
         final String can_share = mListChildData.getCan_share();
         final String profile_id = mListChildData.getID();
         final String mobile = mListChildData.getMobile().trim().replaceAll("\\?", "").replaceAll("\\+", "");
         String str_native = mListChildData.getNative();
         String phone = mListChildData.getPhone().trim().replaceAll("\\?", "").replaceAll("\\+", "");
+
+        if (sharedUsers) {
+            if (Shared.equalsIgnoreCase("from")) {
+                childViewHolder.ll_child.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape1));
+            } else {
+                childViewHolder.ll_child.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape5));
+            }
+        } else {
+            getChildRandomColor(_context, childPosition, childViewHolder.ll_child);
+        }
 
         childViewHolder.txt_phone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,7 +232,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         String bool = mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0");
         if (bool.equalsIgnoreCase("1")) {
-            if (sharedUsers.equalsIgnoreCase("2")) {
+            if (Shared.equalsIgnoreCase("from")) {
                 childViewHolder.tbtn_share.setVisibility(View.GONE);
             } else {
                 childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
@@ -375,7 +388,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.tvMail = convertView.findViewById(R.id.tvMail);
             groupViewHolder.txt_dist = convertView.findViewById(R.id.txt_dist);
 
-            if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN) && !sharedUsers.equalsIgnoreCase("-1")) {
+            if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN) && !sharedUsers) {
                 groupViewHolder.checkbox.setVisibility(View.VISIBLE);
             } else {
                 groupViewHolder.checkbox.setVisibility(View.GONE);
@@ -394,6 +407,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String mail = mListParentData.getMail();
         String is_share = mListParentData.getIs_share();
         String dist = mListParentData.getDistance();
+        String Shared = mListParentData.getShared();
         if (!dist.isEmpty()) {
             groupViewHolder.txt_dist.setVisibility(View.VISIBLE);
             DecimalFormat df2 = new DecimalFormat("#.##");
@@ -466,8 +480,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String styledText = "<u><font color='blue'>" + Mobile + "</font></u>";
         groupViewHolder.tvMobile.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
 
-
-        getParentRandomColor(_context, groupPosition, groupViewHolder.ll_parent);
+        if (sharedUsers) {
+            if (Shared.equalsIgnoreCase("from")) {
+                groupViewHolder.ll_parent.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape1));
+            } else {
+                groupViewHolder.ll_parent.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape5));
+            }
+        } else {
+            getParentRandomColor(_context, groupPosition, groupViewHolder.ll_parent);
+        }
 
         int group_id = (int) getGroupId(groupPosition);
         CheckListener checkL = new CheckListener();
@@ -489,7 +510,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String user_lat = mListParentData.getUser_lat();
         final String user_lng = mListParentData.getUser_lng();
 
-        if (is_share.equalsIgnoreCase("1") && mListParentData.isIs_location_enable().equalsIgnoreCase("1") && !sharedUsers.equalsIgnoreCase("1")) {
+        if (is_share.equalsIgnoreCase("1") && mListParentData.isIs_location_enable().equalsIgnoreCase("1") && !sharedUsers) {
             String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
             String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
             if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {

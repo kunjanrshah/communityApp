@@ -71,7 +71,7 @@ public class NearByFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_near_by, container, false);
-        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(R.string.title_shared_users);
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(R.string.title_near_by_users);
         MemoryAllocation(rootView);
         callNearby();
         return rootView;
@@ -282,7 +282,7 @@ public class NearByFragment extends Fragment {
 
                         hideProgressDialog();
                         if (listDataHeader.size() > 0) {
-                            ExpandableListAdapter mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild,"0");
+                            ExpandableListAdapter mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild,false);
                             lvCustomList.setAdapter(mExpandableListAdapter);
                             lvCustomList.setVisibility(View.VISIBLE);
                             txtLable.setVisibility(View.GONE);

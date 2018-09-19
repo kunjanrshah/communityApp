@@ -21,6 +21,16 @@ public class ListChildData {
     private String user_lat;
     private String user_lng;
     private String str_name;
+    private String Shared;
+
+    public String getShared() {
+        return Shared;
+    }
+
+    public void setShared(String isShared) {
+        this.Shared = isShared;
+    }
+
 
     public String getCan_share() {
         return can_share;

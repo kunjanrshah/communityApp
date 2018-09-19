@@ -262,7 +262,7 @@ public class CalendarFragment extends Fragment {
                     listDataChild.put(lpd, mlstChildData);
 
                 }
-                mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, "-1");
+                mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, false);
                 lvCustomList.setAdapter(mExpandableListAdapter);
             }
             Toast.makeText(getActivity(), "" + message, Toast.LENGTH_LONG).show();

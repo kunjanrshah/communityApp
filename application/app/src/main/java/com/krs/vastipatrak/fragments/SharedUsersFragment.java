@@ -76,7 +76,7 @@ public class SharedUsersFragment extends Fragment {
         lvSharedFromUsers = rootView.findViewById(R.id.lvSharedFromUsers);
     }
 
-    private void setAdapter(JSONArray mJsonarr, ExpandableListView listView) throws Exception {
+    private void setAdapter(JSONArray mJsonarr, String shared) throws Exception {
         for (int j = 0; j < mJsonarr.length(); j++) {
             JSONObject mjsondata = mJsonarr.getJSONObject(j);
             String profile_id = mjsondata.getString(Common.Constant_Class.ID);
@@ -107,7 +107,7 @@ public class SharedUsersFragment extends Fragment {
             lpd.setIs_location_enable(is_location_enable);
             lpd.setUser_lat(user_lat);
             lpd.setUser_lng(user_lng);
-
+            lpd.setShared(shared);
             String native_place = mjsondata.getString(Common.Constant_Class.NATIVE_PLACE);
             String address = mjsondata.getString(Common.Constant_Class.ADDRESS);
             String birth_date = mjsondata.getString(Common.Constant_Class.BIRTH_DATE);
@@ -118,7 +118,7 @@ public class SharedUsersFragment extends Fragment {
             if (mjsondata.has(Common.Constant_Class.IS_SHARE)) {
                 is_share = mjsondata.getString(Common.Constant_Class.IS_SHARE);
             }
-            if (listView == lvSharedFromUsers) {
+            if (shared.equalsIgnoreCase("from")) {
                 lpd.setIs_share("1");
             } else {
                 lpd.setIs_share(is_share);
@@ -140,6 +140,7 @@ public class SharedUsersFragment extends Fragment {
             lcd.setPhone(phone);
             lcd.setGender(gender);
             lcd.setGotra(gotra);
+            lcd.setShared(shared);
             lcd.setName(first_name + " " + last_name);
             lcd.setCan_share("1");
             ArrayList<ListChildData> mlstChildData = new ArrayList<>();
@@ -150,22 +151,21 @@ public class SharedUsersFragment extends Fragment {
     }
 
 
-    private void setDataAdapter(JSONArray mJsonarr, ExpandableListView listView) throws Exception {
-        listDataHeader.clear();
-        listDataChild.clear();
-        setAdapter(mJsonarr, listView);
+    private void setDataAdapter(JSONArray mJsonarr, ExpandableListView listView, String shared) throws Exception {
+
+        setAdapter(mJsonarr, shared);
         if (listDataHeader.size() > 0) {
-            if (listView == lvSharedUsers) {
-                ExpandableListAdapter mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, "1");
-                listView.setAdapter(mExpandableListAdapter);
-                txt_sharedUsers.setVisibility(View.VISIBLE);
-                txt_sharedUsers.setText("You have Shared Your Location");
-            } else {
+            //if (listView == lvSharedUsers) {
+            ExpandableListAdapter mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, true);
+            listView.setAdapter(mExpandableListAdapter);
+            // txt_sharedUsers.setVisibility(View.VISIBLE);
+            //  txt_sharedUsers.setText("You have Shared Your Location");
+            /*} else {
                 ExpandableListAdapter mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, "2");
                 listView.setAdapter(mExpandableListAdapter);
                 txt_sharedFromUsers.setVisibility(View.VISIBLE);
                 txt_sharedFromUsers.setText("Users have shared their location");
-            }
+            }*/
             listView.setVisibility(View.VISIBLE);
         } else {
             listView.setVisibility(View.GONE);
@@ -199,8 +199,10 @@ public class SharedUsersFragment extends Fragment {
                         JSONObject mJsondata = mJsonArray.getJSONObject(0);
                         JSONArray mJsonarr1 = mJsondata.getJSONArray("sharedUsers");
                         JSONArray mJsonarr2 = mJsondata.getJSONArray("sharedFromUsers");
-                        setDataAdapter(mJsonarr1, lvSharedUsers);
-                        setDataAdapter(mJsonarr2, lvSharedFromUsers);
+                        listDataHeader.clear();
+                        listDataChild.clear();
+                        setDataAdapter(mJsonarr1, lvSharedUsers, "to");
+                        setDataAdapter(mJsonarr2, lvSharedUsers, "from");
                         hideProgressDialog();
                     } catch (Exception e) {
                         e.printStackTrace();
