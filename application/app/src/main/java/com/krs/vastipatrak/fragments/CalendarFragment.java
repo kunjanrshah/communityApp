@@ -147,12 +147,13 @@ public class CalendarFragment extends Fragment {
             try {
                 mJsonObject = new JSONObject();
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.DATE,date);
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-                mJsonObject.put("search_str", "kunjan");//date.trim()
+               // mJsonObject.put("search_str", "kunjan");//date.trim()
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.GLOBAL_SEARCH_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.GET_USERS_BY_DATE_URL, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     displayData(response);

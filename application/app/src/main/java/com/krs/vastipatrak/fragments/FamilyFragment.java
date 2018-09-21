@@ -37,22 +37,35 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
+import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+
+import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
+import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
 public class FamilyFragment extends Fragment implements Serializable, AdapterView.OnItemSelectedListener {
 
@@ -65,8 +78,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     public ArrayList<Integer> lst_delID = null;
     public RadioButton rbtnChildNo;
     public EditText edt_mdate, edtsponse_bdate;
-    public CheckBox chk_marriage_bdate_rem=null;
-    public CheckBox chk_spouse_bdate_rem=null;
+    public CheckBox chk_marriage_bdate_rem = null;
+    public CheckBox chk_spouse_bdate_rem = null;
     private RadioButton rbtnChildYes;
     private String spouse_url = "";
     private String fspouse_url = "";
@@ -78,6 +91,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private String img_selection = "";
     private SharedPreferences mSharedPreferences;
     private Activity mActivity;
+    private String profile_id = "";
 
     public FamilyFragment() {
         // Required empty public constructor
@@ -284,7 +298,31 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 } else {
                     add_child_layout();
                 }
+            }
+        });
 
+
+        chk_marriage_bdate_rem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String date = Common.parseDateToddMMyyyy(edt_mdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
+                if (chk_marriage_bdate_rem.isChecked()) {
+                    setReminder(date, Common.Constant_Class.MARRIAGE_DATE, "1","0");
+                } else {
+                    setReminder(date, Common.Constant_Class.MARRIAGE_DATE, "0","0");
+                }
+            }
+        });
+
+        chk_spouse_bdate_rem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String date = Common.parseDateToddMMyyyy(edtsponse_bdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
+                if (chk_spouse_bdate_rem.isChecked()) {
+                    setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, "1","0");
+                } else {
+                    setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, "0","0");
+                }
             }
         });
 
@@ -311,8 +349,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         img_spouse = root.findViewById(R.id.img_spouse);
         img_fspouse = root.findViewById(R.id.img_fspouse);
         img_mspouse = root.findViewById(R.id.img_mspouse);
-        chk_marriage_bdate_rem=root.findViewById(R.id.chk_marriage_bdate_rem);
-        chk_spouse_bdate_rem=root.findViewById(R.id.chk_spouse_bdate_rem);
+        chk_marriage_bdate_rem = root.findViewById(R.id.chk_marriage_bdate_rem);
+        chk_spouse_bdate_rem = root.findViewById(R.id.chk_spouse_bdate_rem);
         btn_add = root.findViewById(R.id.btn_add);
         btn_add.setVisibility(View.GONE);
         rbtnChildYes = root.findViewById(R.id.rbtnChildYes);
@@ -368,6 +406,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         chk_spouse_bdate_rem.setEnabled(true);
     }
 
+
     private void SetOfflineData(ListProfileData mListProfileData) {
 
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
@@ -375,7 +414,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         } else {
             DisableAll();
         }
-
+        profile_id = mListProfileData.getProfile_id();
         edtSpouseName.setText(Objects.requireNonNull(mListProfileData).getSpouse_name());
         edtsponse_nplace.setText(mListProfileData.getSponse_native());
         edtsponse_bdate.setText(mListProfileData.getSponse_bdate());
@@ -406,9 +445,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                             btn_add.setVisibility(View.GONE);
                         }
                     }
+                    ListChildrenData mObjChild = mListProfileData.getmListChildrenData().get(i);
                     add_child_layout();
                     final Viewholder mViewholder = (Viewholder) child_container.getChildAt(i).getTag();
-                    ListChildrenData mObjChild = mListProfileData.getmListChildrenData().get(i);
                     mViewholder.child_id = Integer.parseInt(Objects.requireNonNull(mObjChild).getChild_id());
                     Objects.requireNonNull(mViewholder.edtchild_name).setText(mObjChild.getChild_name());
                     Objects.requireNonNull(mViewholder.edtchild_bdate).setText(mObjChild.getChild_bday());
@@ -542,6 +581,26 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         mViewholder.btn_remove = addView.findViewById(R.id.btn_remove);
         mViewholder.ImgHash = "";
         mViewholder.setClickBDate = false;
+
+        mViewholder.chk_child_bdate_rem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String date = Common.parseDateToddMMyyyy(mViewholder.edtchild_bdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
+                if (mViewholder.chk_child_bdate_rem.isChecked()) {
+                    setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, "1","");
+                } else {
+                    setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, "0","");
+                }
+            }
+        });
+
+        mViewholder.chk_child_marriage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
         assert mViewholder.radioGroupId != null;
         mViewholder.radioGroupId.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -702,7 +761,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 builder.setMessage("Do you want to delete this child ?");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(@NonNull DialogInterface dialog, int which) {
-                       int id=mViewholder.child_id;
+                        int id = mViewholder.child_id;
                         lst_delID.add(id);
                         ((LinearLayout) addView.getParent()).removeView(addView);
                         dialog.dismiss();
@@ -748,6 +807,64 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         });
         builder.show();
     }
+
+    private void setReminder(String rem_date, String rem_type, String rem_value,String child_id) {
+        if (Common.isOnline(mActivity)) {
+            JSONObject mJsonObject = null;
+            try {
+                mJsonObject = new JSONObject();
+                mJsonObject.put(Common.Constant_Class.PROFILE_ID, profile_id);
+                mJsonObject.put(Common.Constant_Class.REMINDER_DATE, rem_date);
+                mJsonObject.put(Common.Constant_Class.REMINDER_TYPE, rem_type);
+                mJsonObject.put(Common.Constant_Class.REMINDER_VALUE, rem_value);
+                mJsonObject.put(Common.Constant_Class._CHILD_ID, child_id);
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Common.showProgressDialog(getActivity());
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SET_REMINDER_URL, mJsonObject, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    try {
+                        Common.hideProgressDialog();
+                        String success = response.getString(Common.Constant_Class.SUCCESS);
+
+                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+
+                        } else {
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(FamilyFragment.class.getSimpleName(), "Error: " + error.getMessage());
+                    Common.hideProgressDialog();
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -866,8 +983,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         public EditText edtchild_work = null;
         public String ImgHash = "";
         @Nullable
-        public CheckBox chk_child_marriage=null;
-        public CheckBox chk_child_bdate_rem=null;
+        public CheckBox chk_child_marriage = null;
+        public CheckBox chk_child_bdate_rem = null;
         public EditText edtchild_bdate = null;
         @Nullable
         ImageView img_child = null;

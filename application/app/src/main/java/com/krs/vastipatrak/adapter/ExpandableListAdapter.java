@@ -425,7 +425,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if (!dist.isEmpty()) {
             groupViewHolder.txt_dist.setVisibility(View.VISIBLE);
             DecimalFormat df2 = new DecimalFormat("#.##");
-            groupViewHolder.txt_dist.setText(df2.format(milesTokm(Double.parseDouble(dist))) + " Km");
+            groupViewHolder.txt_dist.setText(df2.format(milesTokm(Double.parseDouble(dist))) + "> Km");
         } else {
             groupViewHolder.txt_dist.setVisibility(View.GONE);
         }

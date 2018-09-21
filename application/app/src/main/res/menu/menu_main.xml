@@ -61,7 +61,7 @@
         android:visible="false"
         app:showAsAction="ifRoom|collapseActionView" />
 
-   <item
+    <item
         android:id="@+id/action_nonActives"
         android:title="@string/action_nonActives"
         android:visible="false"
@@ -105,6 +105,13 @@
     <item
         android:id="@+id/action_admins"
         android:title="@string/action_admin"
+        android:visible="false"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/action_event"
+        android:title="@string/action_share_event"
+        android:visible="false"
         app:showAsAction="ifRoom|collapseActionView" />
 
 </menu>

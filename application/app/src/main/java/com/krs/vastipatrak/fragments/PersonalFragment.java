@@ -62,6 +62,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.krs.vastipatrak.utils.Common.Constant_Class.BIRTH_DATE;
+import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
+import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
+
 
 public class PersonalFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -90,11 +94,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private double home_lat;
     private double home_lng;
     private boolean setChecked = false;
-    private CheckBox chk_profile_bdate_rem=null;
+    private CheckBox chk_profile_bdate_rem = null;
     private TextView txt_distance;
     private double user_lat;
     private double user_lng;
     private Activity mActivity;
+    private String profile_id = "";
 
     public PersonalFragment() {
 
@@ -382,6 +387,18 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         });
 
 
+        chk_profile_bdate_rem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String date = Common.parseDateToddMMyyyy(edtbdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
+                if (chk_profile_bdate_rem.isChecked()) {
+                    setReminder(date, BIRTH_DATE, 1);
+                } else {
+                    setReminder(date, BIRTH_DATE, 0);
+                }
+            }
+        });
+
        /* tbtn_share.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -482,6 +499,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         return rootView;
     }
 
+
     private void openImageDialog(String name, String url) {
         Dialog dialog = new Dialog(mActivity);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -560,7 +578,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         rbtnM.setChecked(true);
         rbtnF = rootView.findViewById(R.id.rbtnF);
 
-        chk_profile_bdate_rem=rootView.findViewById(R.id.chk_profile_bdate_rem);
+        chk_profile_bdate_rem = rootView.findViewById(R.id.chk_profile_bdate_rem);
         spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
         spinnerGotra.setOnItemSelectedListener(this);
         spinnerGotra.setAdapter(AppController.getInstance().dataAdapter);
@@ -667,6 +685,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private void setOfflineData(ListProfileData mListProfileData) {
 
         if (mListProfileData != null) {
+            profile_id = mListProfileData.getProfile_id();
             String name = mListProfileData.getFirst_name() + " " + mListProfileData.getLast_name();
             Objects.requireNonNull(edtFName).setText(mListProfileData.getFirst_name());
             Objects.requireNonNull(edtLName).setText(mListProfileData.getLast_name());
@@ -677,7 +696,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             String str_time = mListProfileData.getBirth_time();
             String is_block = mListProfileData.getIs_block();
             String is_loc_enable = mListProfileData.isIs_location_enable();
-            boolean profile_bdate_rem= mListProfileData.isChk_profile_bdate_rem();
+            boolean profile_bdate_rem = mListProfileData.isChk_profile_bdate_rem();
             chk_profile_bdate_rem.setChecked(profile_bdate_rem);
 
             if (str_time.length() > 5) {
@@ -765,13 +784,13 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 }
                 final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
                 final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
-               // double lat = Double.valueOf(curr_lat);
-               // double lng = Double.valueOf(curr_lng);
+                // double lat = Double.valueOf(curr_lat);
+                // double lng = Double.valueOf(curr_lng);
 
                 Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(mActivity)).getSupportActionBar()).setSubtitle(name + " Profile");
                 if (home_lat != 0 && home_lng != 0) {
                     Log.d(TAG, "step home_lat: " + home_lat + "home_lng: " + home_lng);
-                    new Common.getDistance(getActivity(),txt_home).execute(String.valueOf(home_lat),String.valueOf(home_lng), curr_lat, curr_lng);
+                    new Common.getDistance(getActivity(), txt_home).execute(String.valueOf(home_lat), String.valueOf(home_lng), curr_lat, curr_lng);
                 } else {
                     txt_home.setText("User has not set location");
                 }
@@ -781,7 +800,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 /*if (is_block.equalsIgnoreCase("1")) { //&&*/
                 txt_distance.setVisibility(View.VISIBLE);
                 if (user_lat != 0 && user_lng != 0) {
-                    new Common.getDistance(getActivity(),txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, String.valueOf(user_lat), String.valueOf(user_lng), curr_lat, curr_lng);
+                    new Common.getDistance(getActivity(), txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, String.valueOf(user_lat), String.valueOf(user_lng), curr_lat, curr_lng);
                 }
                /* } else {
                     txt_distance.setVisibility(View.GONE);
@@ -800,6 +819,63 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
         } else {
             Toast.makeText(mActivity, "No Record Found !!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setReminder(String rem_date, String rem_type, int rem_value) {
+        if (Common.isOnline(mActivity)) {
+            JSONObject mJsonObject = null;
+            try {
+                mJsonObject = new JSONObject();
+                mJsonObject.put(Common.Constant_Class.PROFILE_ID, profile_id);
+                mJsonObject.put(Common.Constant_Class.REMINDER_DATE, rem_date);
+                mJsonObject.put(Common.Constant_Class.REMINDER_TYPE, rem_type);
+                mJsonObject.put(Common.Constant_Class.REMINDER_VALUE, rem_value);
+                mJsonObject.put(Common.Constant_Class._CHILD_ID, "0");
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Common.showProgressDialog(getActivity());
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SET_REMINDER_URL, mJsonObject, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    try {
+                        Common.hideProgressDialog();
+                        String success = response.getString(Common.Constant_Class.SUCCESS);
+
+                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+
+                        } else {
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    Common.hideProgressDialog();
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         }
     }
 

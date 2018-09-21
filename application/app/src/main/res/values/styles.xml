@@ -10,7 +10,9 @@
         <item name="android:fastScrollOverlayPosition">atThumb</item>
         <item name="android:fastScrollTextColor">@color/colorPrimary</item>
         <item name="android:fastScrollTrackDrawable">@drawable/fastscroll_thumb_pressed_holo</item>
-        <item name="android:fastScrollPreviewBackgroundRight">@drawable/bg_default_focused_holo_light</item>
+        <item name="android:fastScrollPreviewBackgroundRight">
+            @drawable/bg_default_focused_holo_light
+        </item>
     </style>
 
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -35,6 +37,10 @@
     <style name="ToolbarSearchView" parent="Base.ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="searchViewStyle">@style/CustomSearchView</item>
     </style>
+
+    <style name="MyMaterialTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="MyMaterialTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 </resources>

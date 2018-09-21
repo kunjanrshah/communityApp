@@ -54,6 +54,7 @@
     <string name="action_clear_search">Clear</string>
     <string name="action_toggle">Toggle</string>
     <string name="action_admin">Admins</string>
+    <string name="action_share_event">Share Event</string>
     <string name="action_voice">Voice</string>
     <string name="action_advsearch">Advance Search</string>
     <string name="action_export">Export Search</string>
@@ -64,7 +65,6 @@
     <string name="action_scan_img">QRCode Image</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
-
     <string name="nav_item_home">Home</string>
     <string name="nav_item_my_profile">My Profile</string>
     <string name="nav_item_near_by">Near by</string>
@@ -75,6 +75,9 @@
     <string name="nav_item_calendar">Calendar</string>
     <string name="nav_item_intro">Tour Video</string>
     <string name="nav_item_logout">Logout</string>
+
+    <string name="event_url">http://www.superbinstruments.com/directory-dev/admin/events</string>
+
 
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">
@@ -99,6 +102,7 @@
     <string name="title_events">Events</string>
     <string name="title_relatives">My Relatives</string>
     <string name="title_calendar">Calendar</string>
+    <string name="title_share_event">Share Event</string>
     <string name="title_sync">Sync</string>
     <string name="spinner_blood">Select BloodGroup</string>
     <string name="spinner_gotra">Select Gotra</string>
@@ -135,5 +139,6 @@ https://play.google.com/store/apps/details?id=com.king.candycrushsaga&hl=en
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="no_records_found">No records found!</string>
+    <string name="title_activity_share_event">ShareEventActivity</string>
 
 </resources>

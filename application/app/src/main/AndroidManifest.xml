@@ -15,22 +15,18 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
-
     <application
         android:name=".app.AppController"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:hardwareAccelerated="false"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:fullBackupContent="@xml/backup_descriptor"
         android:theme="@style/MyMaterialTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="cd2b567af7b407b2736293035d07a280439e584e"
-            />
-
+            android:value="cd2b567af7b407b2736293035d07a280439e584e" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -39,44 +35,35 @@
             android:name=".activity.LoginActivity"
             android:label="@string/theme_app_name"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/theme_app_name"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </activity>
-
-
         <activity
             android:name=".activity.TourActivity"
             android:label="@string/theme_app_name"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.EventlistActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/theme_app_name" />
-
-
         <activity
             android:name=".activity.MyProfileActivity"
             android:label="@string/theme_app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
         <activity
             android:name=".activity.FilterActivity"
             android:label="@string/theme_app_name"
@@ -94,7 +81,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service
             android:name=".service.MyFirebaseInstanceIDService"
             tools:ignore="ExportedService">
@@ -104,10 +90,14 @@
         </service>
         <!-- ./Firebase Notifications -->
 
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="cd2b567af7b407b2736293035d07a280439e584e" />
+
+        <activity
+            android:name=".activity.ShareEventActivity"
+            android:label="@string/title_activity_share_event"
+            android:theme="@style/MyMaterialTheme"></activity>
     </application>
 
 </manifest>

@@ -229,9 +229,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         } else {
             displayView(-1);
         }
-        Fabric.with(this, new Crashlytics());
+        //Fabric.with(this, new Crashlytics());
         // TODO: Move this to where you establish a user session
-        logUser();
+       // logUser();
 
     }
 
@@ -428,6 +428,17 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
+        MenuItem event = menu.findItem(R.id.action_event);
+        event.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent mIntent = new Intent(MainActivity.this, ShareEventActivity.class);
+                startActivity(mIntent);
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                return false;
+            }
+        });
+
         MenuItem filter = menu.findItem(R.id.action_filter);
         filter.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -537,6 +548,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
             if (Common.isOnline(this)) {
                 nonActives.setVisible(true);
+                event.setVisible(true);
                 activeAdd.setVisible(true);
                 if (MOVE_TO_POSITION == 5) {
                     change_role.setVisible(true);

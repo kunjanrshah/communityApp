@@ -20,6 +20,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -43,13 +44,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ExportProfileData;
 import com.krs.vastipatrak.model.ListChildrenData;
@@ -63,7 +59,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -204,6 +202,7 @@ public class Common {
     }
 */
 
+/*
     public static void getDistanceOnRoad(Context mcontext, String slat, String slng, String dlat, String dlng) {
         JSONObject locationJsonObject = new JSONObject();
         try {
@@ -253,6 +252,7 @@ public class Common {
             e.printStackTrace();
         }
     }
+*/
 
 
     public static boolean CheckGpsStatus(Context mcontext) {
@@ -267,69 +267,6 @@ public class Common {
 
     }
 
-
-    /*ublic static float getDistance(@NonNull Activity mActivity, double lat, double lon) {
-
-        double curr_lat, curr_lng;
-        float rvalue = -1.0f;
-        try {
-            if (Common.canAccessLocation(mActivity)) {
-                if (MainActivity.lat != null && MainActivity.lon != null) {
-                    curr_lat = Double.parseDouble(MainActivity.lat);
-                    curr_lng = Double.parseDouble(MainActivity.lon);
-                    Log.d("Common","step curr_lat: "+curr_lat +"curr_lng: "+curr_lng);
-                    Location loc1 = new Location("");
-                    loc1.setLatitude(curr_lat);
-                    loc1.setLongitude(curr_lng);
-                    Location loc2 = new Location("");
-                    loc2.setLatitude(lat);
-                    loc2.setLongitude(lon);
-                    float distanceInMeters = loc1.distanceTo(loc2);
-                    int distanceInKm = 0;
-                    if (distanceInMeters != 0) {
-                        distanceInKm = (int) (distanceInMeters / 1000);
-                    }
-
-                    return distanceInKm;
-                } else {
-                    return rvalue;
-                }
-
-            } else {
-                Toast.makeText(mActivity, "You need to give permission to access location ! ", Toast.LENGTH_SHORT).show();
-                return rvalue;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return rvalue;
-       *//* if (gpsTracker.IsGetLocation()) {
-            curr_lat = gpsTracker.getLatitude();
-            curr_lng = gpsTracker.getLongitude();
-        }*//*
-
-    }
-
-    public static double distance(double lat1, double lon1, double lat2, double lon2) {
-        double theta = lon1 - lon2;
-        double dist = Math.sin(deg2rad(lat1))
-                * Math.sin(deg2rad(lat2))
-                + Math.cos(deg2rad(lat1))
-                * Math.cos(deg2rad(lat2))
-                * Math.cos(deg2rad(theta));
-        dist = Math.acos(dist);
-        dist = rad2deg(dist);
-        dist = dist * 60 * 1.1515;
-        return (dist);
-    }
-
-    private static double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-
-    private static double rad2deg(double rad) {
-        return (rad * 180.0 / Math.PI);
-    }*/
 
     public static void showDirections(@NonNull Activity mActivity, double slatitude, double slongitude, double dlatitude, double dlongitude, String address) {
 
@@ -1973,6 +1910,56 @@ public class Common {
         }
     }
 
+    public static double CalculationByDistance(double lat1, double lon1, double lat2, double lon2) {
+
+        int Radius = 6371;// radius of earth in Km
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double valueResult = Radius * c;
+        double km = valueResult / 1;
+        DecimalFormat newFormat = new DecimalFormat("####");
+        int kmInDec = Integer.valueOf(newFormat.format(km));
+        // double meter = valueResult % 1000;
+        //  int meterInDec = Integer.valueOf(newFormat.format(meter));
+        Log.d("Radius Value", "lat1: " + lat1 + " lon1: " + lon1 + " lat2: " + lat2 + " lon2: " + lon2 + " KM " + kmInDec);
+
+        return Radius * c;
+    }
+
+    public static double round(double value, int numberOfDigitsAfterDecimalPoint) {
+        BigDecimal bigDecimal = new BigDecimal(value);
+        bigDecimal = bigDecimal.setScale(numberOfDigitsAfterDecimalPoint, BigDecimal.ROUND_HALF_UP);
+        return bigDecimal.doubleValue();
+    }
+
+    private static double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private static double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
+    }
+
+   /* public static double distance(double lat1, double lon1, double lat2, double lon2) {
+
+        Location loc1 = new Location("");
+        loc1.setLatitude(lat1);
+        loc1.setLongitude(lon1);
+        Location loc2 = new Location("");
+        loc2.setLatitude(lat2);
+        loc2.setLongitude(lon2);
+        float distanceInMeters = loc1.distanceTo(loc2);
+        int distanceInKm = 0;
+        if (distanceInMeters != 0) {
+            distanceInKm = (int) (distanceInMeters / 1000);
+        }
+
+        return (distanceInKm);
+    }*/
+
+
     private boolean checktimings(String time, String endtime) {
 
         String pattern = "HH:mm";
@@ -2006,14 +1993,15 @@ public class Common {
 
         @Override
         protected String doInBackground(String... strings) {
-            getDistanceOnRoad(mActivity, strings[0], strings[1], strings[2], strings[3]);
-            //String result_in_kms = getDistanceOnRoad(strings[0], strings[1], strings[2], strings[3]);
-            return "";
+            double result_in_kms = CalculationByDistance(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]), Double.parseDouble(strings[2]), Double.parseDouble(strings[3]));
+            result_in_kms = round(result_in_kms, 2);
+            return String.valueOf(result_in_kms);
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            s=s+">";
             Log.d("getDistance", "distance: " + s);
 
             if (txtDistance != null) {
@@ -2056,6 +2044,11 @@ public class Common {
         public static final String NEAR_BY = "nearBy";
         public static final String DISTANCE = "distance";
 
+        public static final String DATE = "date";
+        public static final String BIRTH_DATE = "birth_date";
+        public static final String CHILD_BIRTH_DATE = "child_birth_date";
+        public static final String WIFE_BIRTH_DATE = "wife_birth_date";
+        public static final String MARRIAGE_DATE = "marriage_date";
         public static final String RELATION = "relation";
         public static final String TO_USER_ID = "to_user_id";
         public static final String RELATIONSHIP_STATUS = "relationship_status";
@@ -2124,7 +2117,6 @@ public class Common {
         public static final String FROM_BIRTH_DATE = "from_birth_date";
         public static final String TO_BIRTH_DATE = "to_birth_date";
         public static final String BIRTH_TIME = "birth_time";
-        public static final String BIRTH_DATE = "birth_date";
         public static final String BIRTH_PLACE = "birth_place";
         public static final String BLOOD_GROUP = "blood_group";
         public static final String CHILD_BLOOD_GROUP = "child_blood_group";
@@ -2156,7 +2148,6 @@ public class Common {
         public static final String SPOUSE_NATIVE = "spouse_native_place";
         public static final String SPOUSE_BDATE = "spouse_birth_place";
         public static final String SPOUSE_MOBILE = "spouse_mobile";
-        public static final String MARRIAGE_DATE = "marriage_date";
         public static final String FROM_MARRIAGE_DATE = "from_marriage_date";
         public static final String TO_MARRIAGE_DATE = "to_marriage_date";
         public static final String MARRIED = "1";
@@ -2169,6 +2160,7 @@ public class Common {
         public static final String CHILDS = "childs";
         public static final String CHILD_DELETE = "delete";
         public static final String CHILD_ID = "id";
+        public static final String _CHILD_ID = "child_id";
         public static final String CHILD_NAME = "child_name";
         public static final String CHILD_BDAY = "child_bday";
         public static final String FROM_CHILD_BDAY = "from_child_bday";
@@ -2184,6 +2176,9 @@ public class Common {
         public static final String IMG_SMOTHER = "img_smother";
         public static final String IMG_SFATHER = "img_sfather";
         public static final String PROFILE_ID = "profile_id";
+        public static final String REMINDER_DATE = "reminder_date";
+        public static final String REMINDER_TYPE = "reminder_type";
+        public static final String REMINDER_VALUE = "reminder_value";
         public static final String TBTN_SHARE = "tbtn_share";
         public static final String TBTN_SYNC = "tbtn_sync";
         static final String IMG_FATHER_URL = "img_father_url";
@@ -2214,6 +2209,9 @@ public class Common {
         public static final String SEND_REQUEST_URL = BASE_URL + "/API/sendRequest";
         public static final String REQUEST_ACTION_URL = BASE_URL + "/API/requestAction";
         public static final String GET_RELATIONS_URL = BASE_URL + "/API/getRelations";
+        public static final String SET_REMINDER_URL = BASE_URL + "/API/setReminder";
+        public static final String GET_USERS_BY_DATE_URL = BASE_URL + "/API/getUsersByDate";
+
         public static String DEVICE_ID_VALUE = "";
     }
 }
