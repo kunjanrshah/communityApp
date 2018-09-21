@@ -38,7 +38,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
+import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
+import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
 public class CalendarFragment extends Fragment {
 
@@ -145,6 +148,8 @@ public class CalendarFragment extends Fragment {
             Common.showProgressDialog(getActivity());
             JSONObject mJsonObject = null;
             try {
+
+               // date=Common.parseDateToddMMyyyy(date,ddMMMyyyy,yyyy_MM_dd);
                 mJsonObject = new JSONObject();
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.DATE,date);
