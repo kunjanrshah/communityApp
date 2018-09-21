@@ -276,6 +276,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
+                MyProfileActivity.isEnable=false;
                 Intent mIntent = new Intent(_context, MyProfileActivity.class);
                 _context.startActivity(mIntent);
             }

@@ -1,16 +1,10 @@
-buildscript {
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
-
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
-}
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
 
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
 android {
     compileSdkVersion 27
     useLibrary 'org.apache.http.legacy'
@@ -92,7 +86,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.6.1'
     implementation files('libs/jxl.jar')
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.2@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
         transitive = true
     }
     implementation 'com.github.orangegangsters:swipy:1.2.3@aar'

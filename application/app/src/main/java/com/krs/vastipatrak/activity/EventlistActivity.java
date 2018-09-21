@@ -101,7 +101,7 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
         String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
         String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
         if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !lat.isEmpty() && !lng.isEmpty()) {
-            new Common.getDistance(txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(lat), Double.parseDouble(lng));
+            new Common.getDistance(this,txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, curr_lat, curr_lng, lat, lng);
         }
     }
 

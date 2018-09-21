@@ -603,6 +603,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         rbtnM.setEnabled(true);
         rbtnF.setEnabled(true);
         spinnerBlood.setEnabled(true);
+        chk_profile_bdate_rem.setEnabled(true);
     }
 
     private void DisableAll() {
@@ -656,6 +657,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
         spinnerBlood.setEnabled(false);
         spinnerGotra.setEnabled(false);
+
+        chk_profile_bdate_rem.setEnabled(false);
+
     }
 
 
@@ -761,13 +765,13 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 }
                 final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
                 final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
-                double lat = Double.valueOf(curr_lat);
-                double lng = Double.valueOf(curr_lng);
+               // double lat = Double.valueOf(curr_lat);
+               // double lng = Double.valueOf(curr_lng);
 
                 Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(mActivity)).getSupportActionBar()).setSubtitle(name + " Profile");
                 if (home_lat != 0 && home_lng != 0) {
                     Log.d(TAG, "step home_lat: " + home_lat + "home_lng: " + home_lng);
-                    new Common.getDistance(txt_home).execute(home_lat, home_lng, lat, lng);
+                    new Common.getDistance(getActivity(),txt_home).execute(String.valueOf(home_lat),String.valueOf(home_lng), curr_lat, curr_lng);
                 } else {
                     txt_home.setText("User has not set location");
                 }
@@ -777,7 +781,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 /*if (is_block.equalsIgnoreCase("1")) { //&&*/
                 txt_distance.setVisibility(View.VISIBLE);
                 if (user_lat != 0 && user_lng != 0) {
-                    new Common.getDistance(txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user_lat, user_lng, lat, lng);
+                    new Common.getDistance(getActivity(),txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, String.valueOf(user_lat), String.valueOf(user_lng), curr_lat, curr_lng);
                 }
                /* } else {
                     txt_distance.setVisibility(View.GONE);

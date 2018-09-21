@@ -257,6 +257,11 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     }
                 }
 
+                if(!Gotra.equalsIgnoreCase("Gotra"))
+                {
+
+                }
+
                 String phone = Objects.requireNonNull(((PersonalFragment) personal).edt_phone).getText().toString().trim();
                 String bdate = Objects.requireNonNull(((PersonalFragment) personal).edtbdate).getText().toString().trim();
                 bdate = Common.parseDateToddMMyyyy(bdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);

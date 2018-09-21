@@ -84,12 +84,14 @@ public class RelativeFragment extends Fragment {
                         }
                         for (int i = 0; i < mJsonArray.length(); i++) {
                             JSONObject mJsondata = mJsonArray.getJSONObject(i);
+                            String id = mJsondata.getString(Common.Constant_Class.ID);
                             String to_user_id = mJsondata.getString(Common.Constant_Class.TO_USER_ID);
                             String relation = mJsondata.getString(Common.Constant_Class.RELATION);
                             String status = mJsondata.getString(Common.Constant_Class.RELATIONSHIP_STATUS);
                             String first_name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
                             String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
                             Relative mRelative = new Relative();
+                            mRelative.setId(id);
                             mRelative.setFirst_name(first_name);
                             mRelative.setLast_name(last_name);
                             mRelative.setRelation(relation);
@@ -162,12 +164,14 @@ public class RelativeFragment extends Fragment {
                             }
                             for (int i = 0; i < mJsonArray.length(); i++) {
                                 JSONObject mJsondata = mJsonArray.getJSONObject(i);
+                                String id = mJsondata.getString(Common.Constant_Class.ID);
                                 String to_user_id = mJsondata.getString(Common.Constant_Class.TO_USER_ID);
                                 String relation = mJsondata.getString(Common.Constant_Class.RELATION);
                                 String status = mJsondata.getString(Common.Constant_Class.RELATIONSHIP_STATUS);
                                 String first_name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
                                 String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
                                 Relative mRelative = new Relative();
+                                mRelative.setId(id);
                                 mRelative.setFirst_name(first_name);
                                 mRelative.setLast_name(last_name);
                                 mRelative.setRelation(relation);
@@ -235,6 +239,15 @@ public class RelativeFragment extends Fragment {
     }
 
     private class Relative {
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        String id;
         String to_user_id;
         String relation;
         String status;
@@ -310,7 +323,7 @@ public class RelativeFragment extends Fragment {
             final Relative data = lstRelative.get(position);
             String name = data.getFirst_name() + " " + data.getLast_name();
             String status = data.getStatus();
-
+            final String id=data.getId();
             if (status.contains("ACCEPTED")) {
                 holder.txt_name.setText(name);
                 holder.txt_status.setText(" request Approved");
@@ -344,7 +357,7 @@ public class RelativeFragment extends Fragment {
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(@NonNull DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            setActionWS(data.getTo_user_id(), finalStatus);
+                            setActionWS(id, finalStatus);
                         }
                     });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -365,7 +378,7 @@ public class RelativeFragment extends Fragment {
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(@NonNull DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            setActionWS(data.getTo_user_id(), "DELETE");
+                            setActionWS(id, "DELETE");
                         }
                     });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

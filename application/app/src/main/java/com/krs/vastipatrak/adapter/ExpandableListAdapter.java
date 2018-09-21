@@ -298,6 +298,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
+                MyProfileActivity.isEnable=false;
                 Intent mIntent = new Intent(_context, MyProfileActivity.class);
                 _context.startActivity(mIntent);
             }
@@ -528,7 +529,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
             if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
                 groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
-                new Common.getDistance(groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(curr_lat), Double.parseDouble(curr_lng));
+                new Common.getDistance((Activity) _context,groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,curr_lat,curr_lng,user_lat, user_lng);
             } else {
                 groupViewHolder.txt_distance.setVisibility(View.GONE);
             }

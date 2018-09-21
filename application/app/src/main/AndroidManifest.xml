@@ -27,6 +27,11 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
         <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="cd2b567af7b407b2736293035d07a280439e584e"
+            />
+
+        <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 

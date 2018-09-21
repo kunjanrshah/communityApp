@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -44,6 +43,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ExportProfileData;
@@ -53,16 +58,11 @@ import com.krs.vastipatrak.model.MatrimonyProfileData;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,9 +73,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import PiyushBase64.Base64;
 import io.realm.Realm;
@@ -164,6 +161,7 @@ public class Common {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
     }
 
+/*
     private static String getDistanceOnRoad(double latitude, double longitude, double prelatitute, double prelongitude) {
         String result_in_kms = "";
         String strurl = "http://maps.google.com/maps/api/directions/xml?origin=" + latitude + "," + longitude + "&destination=" + prelatitute + "," + prelongitude + "&sensor=false&units=metric";
@@ -204,6 +202,58 @@ public class Common {
         }
         return result_in_kms;
     }
+*/
+
+    public static void getDistanceOnRoad(Context mcontext, String slat, String slng, String dlat, String dlng) {
+        JSONObject locationJsonObject = new JSONObject();
+        try {
+            String sloc = slat + "," + slng;
+            String dloc = dlat + "," + dlng;
+            locationJsonObject.put("origin", sloc);
+            locationJsonObject.put("destination", dloc);
+            RequestQueue queue = Volley.newRequestQueue(mcontext);
+            String url = "http://maps.googleapis.com/maps/api/distancematrix/" +
+                    "json?origins=" + locationJsonObject.getString("origin") + "&destinations=" + locationJsonObject.getString("destination") + "&mode=driving&" +
+                    "language=en-EN&sensor=false";
+
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject mjson = new JSONObject(response);
+                                if (mjson.has("rows")) {
+                                    JSONArray jsonArray = mjson.getJSONArray("rows");
+                                    JSONObject object = jsonArray.getJSONObject(0);
+                                    if (object.has("elements")) {
+                                        JSONArray jsonElements = mjson.getJSONArray("elements");
+                                        JSONObject object1 = jsonElements.getJSONObject(0);
+                                        JSONObject mobject1 = object1.getJSONObject("distance");
+                                        String distance = mobject1.getString("text");
+                                        JSONObject mobject2 = object1.getJSONObject("duration");
+                                        String time = mobject2.getString("text");
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
+                            Log.d("distance: ", "Response is: " + response);
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("distance: ", "That didn't work!");
+                }
+            });
+            queue.add(stringRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static boolean CheckGpsStatus(Context mcontext) {
         LocationManager locationManager;
@@ -999,7 +1049,7 @@ public class Common {
         return null;
     }
 
-    public static void ExportProfile(JSONObject mJsonObject,Activity mActivity) {
+    public static void ExportProfile(JSONObject mJsonObject, Activity mActivity) {
         try {
 
             ExportProfileData mListProfileData = new ExportProfileData();
@@ -1681,17 +1731,17 @@ public class Common {
         }).show();
     }
 
-    public static Bitmap drawableToBitmap (Drawable drawable) {
+    public static Bitmap drawableToBitmap(Drawable drawable) {
         Bitmap bitmap = null;
 
         if (drawable instanceof BitmapDrawable) {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if(bitmapDrawable.getBitmap() != null) {
+            if (bitmapDrawable.getBitmap() != null) {
                 return bitmapDrawable.getBitmap();
             }
         }
 
-        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
             bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
         } else {
             bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
@@ -1703,13 +1753,13 @@ public class Common {
         return bitmap;
     }
 
-    public static Bitmap drawTextToBitmap(Bitmap bitmap,String gText) {
-      //  Resources resources = mcontext.getResources();
-       // float scale = resources.getDisplayMetrics().density;
+    public static Bitmap drawTextToBitmap(Bitmap bitmap, String gText) {
+        //  Resources resources = mcontext.getResources();
+        // float scale = resources.getDisplayMetrics().density;
 
-        android.graphics.Bitmap.Config bitmapConfig =bitmap.getConfig();
+        android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
         // set default bitmap config if none
-        if(bitmapConfig == null) {
+        if (bitmapConfig == null) {
             bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
         }
         // resource bitmaps are imutable,
@@ -1730,14 +1780,13 @@ public class Common {
         // draw text to the Canvas center
         Rect bounds = new Rect();
         paint.getTextBounds(gText, 0, gText.length(), bounds);
-        int x = (bitmap.getWidth() - bounds.width())/2;
-        int y = (bitmap.getHeight() + bounds.height())/2;
+        int x = (bitmap.getWidth() - bounds.width()) / 2;
+        int y = (bitmap.getHeight() + bounds.height()) / 2;
 
         canvas.drawText(gText, 10, 20, paint);
 
         return bitmap;
     }
-
 
 
     //method to convert your text to image
@@ -1945,18 +1994,21 @@ public class Common {
         return false;
     }
 
-    public static class getDistance extends AsyncTask<Double, String, String> {
+    public static class getDistance extends AsyncTask<String, String, String> {
         public String strDisctance = "";
         TextView txtDistance;
+        Activity mActivity;
 
-        public getDistance(TextView txtDistance) {
+        public getDistance(Activity mActivity, TextView txtDistance) {
             this.txtDistance = txtDistance;
+            this.mActivity = mActivity;
         }
 
         @Override
-        protected String doInBackground(Double... strings) {
-            String result_in_kms = getDistanceOnRoad(strings[0], strings[1], strings[2], strings[3]);
-            return result_in_kms;
+        protected String doInBackground(String... strings) {
+            getDistanceOnRoad(mActivity, strings[0], strings[1], strings[2], strings[3]);
+            //String result_in_kms = getDistanceOnRoad(strings[0], strings[1], strings[2], strings[3]);
+            return "";
         }
 
         @Override

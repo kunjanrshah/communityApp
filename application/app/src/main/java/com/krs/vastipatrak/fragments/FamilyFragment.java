@@ -350,7 +350,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         btn_add.setVisibility(View.GONE);
         rbtnChildYes.setEnabled(false);
         rbtnChildNo.setEnabled(false);
-
+        chk_marriage_bdate_rem.setEnabled(false);
+        chk_spouse_bdate_rem.setEnabled(false);
     }
 
     private void EnableAll() {
@@ -363,6 +364,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtsponse_mobile.setEnabled(true);
         edtsponse_mobile.setClickable(true);
         edtsponse_nplace.setEnabled(true);
+        chk_marriage_bdate_rem.setEnabled(true);
+        chk_spouse_bdate_rem.setEnabled(true);
     }
 
     private void SetOfflineData(ListProfileData mListProfileData) {
@@ -597,7 +600,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
                 mViewholder.tbtn_interest.setEnabled(false);
                 mViewholder.radioGroupId.setEnabled(false);
-
+                mViewholder.chk_child_bdate_rem.setEnabled(false);
+                mViewholder.chk_child_marriage.setEnabled(false);
             }
         }
 

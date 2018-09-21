@@ -315,10 +315,10 @@ public class BusinessFragment extends Fragment implements Serializable {
             if (office_lat != 0 && office_lng != 0) {
                 final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
                 final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
-                double lat = Double.valueOf(curr_lat);
-                double lng = Double.valueOf(curr_lng);
+               // double lat = Double.valueOf(curr_lat);
+                //double lng = Double.valueOf(curr_lng);
 
-                new Common.getDistance(txt_office).execute(office_lat, office_lng,lat,lng);
+                new Common.getDistance(getActivity(),txt_office).execute(curr_lat,curr_lng,String.valueOf(office_lat),String.valueOf(office_lng));
 
                /* int distance = (int) Common.getDistance(mActivity, office_lat, office_lng);
                 if (distance == -1) {

@@ -40,6 +40,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -87,6 +88,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback//, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
@@ -226,8 +229,19 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         } else {
             displayView(-1);
         }
+        Fabric.with(this, new Crashlytics());
+        // TODO: Move this to where you establish a user session
+        logUser();
+
     }
 
+    private void logUser() {
+        // TODO: Use the current user's information
+        // You can call any combination of these three methods
+        Crashlytics.setUserIdentifier(mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+        Crashlytics.setUserEmail(mSharedPreferences.getString(Common.Constant_Class.EMAIL, ""));
+        Crashlytics.setUserName(mSharedPreferences.getString(Common.Constant_Class.USERNAME, ""));
+    }
 
     private void getGotraWS() {
         if (Common.isOnline(this)) {
@@ -975,6 +989,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
+                MyProfileActivity.isEnable=false;
                 Intent mIntent = new Intent(this, MyProfileActivity.class);
                 startActivity(mIntent);
             }
@@ -999,6 +1014,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
+                MyProfileActivity.isEnable=false;
                 Intent mIntent = new Intent(MainActivity.this, MyProfileActivity.class);
                 startActivity(mIntent);
             }

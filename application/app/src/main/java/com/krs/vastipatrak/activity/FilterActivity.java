@@ -253,7 +253,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     mJsonObject.put(Common.Constant_Class.PHONE, strphone);
                     lstProceed.add("Phone: " + strphone);
                 }
-                if (!strGotra.equalsIgnoreCase("")) {
+                if (!strGotra.equalsIgnoreCase("") && !strGotra.equalsIgnoreCase("Gotra")) {
                     mJsonObject.put(Common.Constant_Class.GOTRA, strGotra);
                     lstProceed.add("Gotra: " + strGotra);
                 }
