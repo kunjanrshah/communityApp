@@ -71,8 +71,9 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private Fragment personal = null;
     private Fragment business = null;
     private Fragment family = null;
-    private Fragment relative=null;
+    private Fragment relative = null;
     private SharedPreferences mSharedPreferences = null;
+    private boolean isBackPressed = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,38 +117,44 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "step setNavigationOnClickListener");
                 backNavigation();
             }
         });
     }
 
     private void backNavigation() {
-        Fragment fragment = new FragmentDrawer();
+       /* Fragment fragment = new FragmentDrawer();
         getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
         assert mSharedPreferences != null;
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
             Intent mIntent = new Intent(MyProfileActivity.this, MainActivity.class);
             mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(mIntent);
-        }
+        }*/
+        Common.hideKeyboard(this);
         finish();
         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
 
-    @Override
+   /* @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             onBackPressed();
             return true;
         }
         return super.onKeyUp(keyCode, event);
-    }
+    }*/
 
-    @Override
+   /* @Override
     public void onBackPressed() {
         super.onBackPressed();
-        backNavigation();
-    }
+        if (!isBackPressed) {
+            isBackPressed = true;
+            Log.d(TAG, "step onBackPressed :"+isBackPressed);
+            backNavigation();
+        }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
@@ -163,6 +170,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 mIntent.putExtra(Common.Constant_Class.QUERY, query);
                 startActivity(mIntent);
+                Log.d(TAG, "step onQueryTextSubmit");
                 finish();
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 return false;
@@ -184,6 +192,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
                 Intent mIntent = new Intent(MyProfileActivity.this, FilterActivity.class);
                 startActivity(mIntent);
+                Log.d(TAG, "step action_filter");
                 finish();
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 return false;
@@ -257,8 +266,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     }
                 }
 
-                if(!Gotra.equalsIgnoreCase("Gotra"))
-                {
+                if (!Gotra.equalsIgnoreCase("Gotra")) {
 
                 }
 
@@ -292,8 +300,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
                 // Familty Details
                 String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "", sdate = "", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
-                String sponseBdate="",sponseNative="",sponseMobile="";
-                boolean chk_spouse_bdate_rem=false,chk_m_bdate_rem=false;
+                String sponseBdate = "", sponseNative = "", sponseMobile = "";
+                boolean chk_spouse_bdate_rem = false, chk_m_bdate_rem = false;
                 LinearLayout child_container = null;
                 ArrayList<Integer> lst_delID = null;
                 try {
@@ -436,7 +444,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
         //Family Details
         try {
-           // mListProfileData.getch
+            // mListProfileData.getch
             Objects.requireNonNull(mJsonObject).put(Common.Constant_Class.MARRIAGE_DATE, mListProfileData.getMarriage_date());
             mJsonObject.put(Common.Constant_Class.SPOUSE_NAME, mListProfileData.getSpouse_name());
             mJsonObject.put(Common.Constant_Class.SPOUSE_BDATE, mListProfileData.getSponse_bdate());
@@ -483,8 +491,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     String child_bplace = Objects.requireNonNull(mViewholder.edtchild_bplace).getText().toString();
                     String child_mobile = Objects.requireNonNull(mViewholder.edtMobile).getText().toString();
                     String child_blood = Objects.requireNonNull(mViewholder.spinnerBlood).getSelectedItem().toString();
-                    boolean chk_bdate_rem=mViewholder.chk_child_bdate_rem.isChecked();
-                    boolean chk_married=mViewholder.chk_child_marriage.isChecked();
+                    boolean chk_bdate_rem = mViewholder.chk_child_bdate_rem.isChecked();
+                    boolean chk_married = mViewholder.chk_child_marriage.isChecked();
                     mJsonObject_Child.put(Common.Constant_Class.BLOOD_GROUP, child_blood);
                     mJsonObject_Child.put(Common.Constant_Class.MOBILE, child_mobile);
                     mJsonObject_Child.put(Common.Constant_Class.IS_INTERESTED, child_interest);
@@ -739,6 +747,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             //   mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             //   startActivity(mIntent);
             overridePendingTransition(0, 0);
+            Log.d(TAG, "step onKeyDown");
             finish();
 
 

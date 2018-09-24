@@ -43,7 +43,7 @@
     <string name="err_msg_native">Enter your native place</string>
     <string name="err_msg_address">Enter your address </string>
     <string name="err_msg_repeat_password">Password and Repeat password must be same</string>
-
+    <string name="go_to_whatsapp">Go to WhatsApp ?</string>
     <string name="action_search">Search</string>
     <string name="action_save">Save</string>
     <string name="action_nonActives">NonActives</string>
@@ -116,7 +116,7 @@
     <string name="nice_html">
 <![CDATA[
 https://play.google.com/store/apps/details?id=com.king.candycrushsaga&hl=en
-\n Download the community app and update your profile!.
+\nDownload the Vastiparak app and update your profile.\nHi, This is %s from Vastipatrak App. \nJay Shree Krishna
 ]]>
 </string>
     <string name="gotra">Gotra :</string>

@@ -60,7 +60,6 @@ public class ChangePasswordFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (!input_password.getText().toString().equalsIgnoreCase("") && !input_repeat.getText().toString().equalsIgnoreCase("")) {
                     if (input_password.getText().toString().equalsIgnoreCase(input_repeat.getText().toString())) {
                         if (Common.isOnline(mActivity)) {
@@ -71,7 +70,8 @@ public class ChangePasswordFragment extends Fragment {
                     } else {
                         Toast.makeText(mActivity, "Password does not match !!", Toast.LENGTH_SHORT).show();
                     }
-
+                } else {
+                    Toast.makeText(mActivity, "Enter your password !", Toast.LENGTH_SHORT).show();
                 }
             }
         });

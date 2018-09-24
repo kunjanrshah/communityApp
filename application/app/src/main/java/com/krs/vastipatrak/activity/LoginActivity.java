@@ -632,11 +632,10 @@ public class LoginActivity extends Activity {
                                     mEditor.putString(Common.Constant_Class.UPDATED_TIME, updated_time);
                                     mEditor.putString(Common.Constant_Class.ROLE, role);
                                     mEditor.putString(Common.Constant_Class.TBTN_SHARE, is_location_enable);
-                                    mEditor.putString(Common.Constant_Class.OFFICE_LAT,office_lat );
+                                    mEditor.putString(Common.Constant_Class.OFFICE_LAT,office_lat);
                                     mEditor.putString(Common.Constant_Class.OFFICE_LNG, office_lng);
                                     mEditor.putString(Common.Constant_Class.HOME_LAT, home_lat);
                                     mEditor.putString(Common.Constant_Class.HOME_LNG, home_lng);
-
                                     mEditor.apply();
 
                                     /*Bundle fb_bundle = new Bundle();

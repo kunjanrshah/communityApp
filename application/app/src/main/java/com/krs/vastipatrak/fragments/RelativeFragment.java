@@ -3,11 +3,11 @@ package com.krs.vastipatrak.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.interfaces.OnItemClickListener;
 import com.krs.vastipatrak.utils.Common;
@@ -35,9 +36,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
-import static com.krs.vastipatrak.utils.Common.getRandomColor;
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 import static com.krs.vastipatrak.utils.Common.showProgressDialog;
 
@@ -47,6 +46,7 @@ public class RelativeFragment extends Fragment {
     private RecyclerView recycler_view;
     private TextView txtLable;
     private ArrayList<Relative> lstRelative = null;
+    private SharedPreferences.Editor mEditor;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,6 +59,7 @@ public class RelativeFragment extends Fragment {
 
     private void MemoryAllocation(View rootView) {
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
         recycler_view = rootView.findViewById(R.id.recycler_view);
         txtLable = rootView.findViewById(R.id.txtLable);
     }
@@ -227,7 +228,10 @@ public class RelativeFragment extends Fragment {
         RelativeAdapter mRelativeAdapter = new RelativeAdapter(new OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                Toast.makeText(getActivity(), lstRelative.get(position).getTo_user_id() + "", Toast.LENGTH_SHORT).show();
+                mEditor.putString(Common.Constant_Class.PROFILE_ID, lstRelative.get(position).getTo_user_id());
+                mEditor.apply();
+                Intent mIntent = new Intent(getActivity(), MyProfileActivity.class);
+                getActivity().startActivity(mIntent);
             }
         });
 
@@ -235,10 +239,16 @@ public class RelativeFragment extends Fragment {
         recycler_view.setLayoutManager(mLayoutManager);
         recycler_view.setItemAnimator(new DefaultItemAnimator());
         recycler_view.setAdapter(mRelativeAdapter);
-
     }
 
     private class Relative {
+        String id;
+        String to_user_id;
+        String relation;
+        String status;
+        String first_name;
+        String last_name;
+
         public String getId() {
             return id;
         }
@@ -246,13 +256,6 @@ public class RelativeFragment extends Fragment {
         public void setId(String id) {
             this.id = id;
         }
-
-        String id;
-        String to_user_id;
-        String relation;
-        String status;
-        String first_name;
-        String last_name;
 
         public String getTo_user_id() {
             return to_user_id;
@@ -322,20 +325,33 @@ public class RelativeFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             final Relative data = lstRelative.get(position);
             String name = data.getFirst_name() + " " + data.getLast_name();
+            name=Common.camelCase(name);
             String status = data.getStatus();
-            final String id=data.getId();
+            final String id = data.getId();
             if (status.contains("ACCEPTED")) {
                 holder.txt_name.setText(name);
-                holder.txt_status.setText(" request Approved");
-                holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.approve));
+                holder.txt_status.setText(" request Approved.");
+                holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.ico_approve));
+                holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape1));
             } else {
                 holder.txt_name.setText(name);
-                holder.txt_status.setText(" has sent request");
+                holder.txt_status.setText(" has sent request.");
                 holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.cancel));
+                holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape10));
             }
 
-            holder.txtDesc.setText(data.getRelation());
-            getRandomColor(Objects.requireNonNull(getActivity()), position, holder.ll_relative);
+            String rel = data.getRelation();
+            holder.txtDesc.setText(Common.getCapsSentences(rel));
+
+            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
+                holder.img_status.setEnabled(true);
+                holder.img_status.setClickable(true);
+                holder.img_status.setLongClickable(true);
+            } else {
+                holder.img_status.setEnabled(false);
+                holder.img_status.setClickable(false);
+                holder.img_status.setLongClickable(false);
+            }
 
             holder.img_status.setOnClickListener(new View.OnClickListener() {
                 @Override

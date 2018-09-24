@@ -43,6 +43,9 @@ import java.util.TimerTask;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import static com.krs.vastipatrak.utils.Common.CalculationByDistance;
+import static com.krs.vastipatrak.utils.Common.round;
+
 public class LocationAlertService extends Service {
 
     HashMap<String, Timer> mlstMapTimer = null;
@@ -176,6 +179,7 @@ public class LocationAlertService extends Service {
         }
     }
 
+/*
     private String getDistanceOnRoad(double latitude, double longitude, double prelatitute, double prelongitude) {
         String result_in_kms = "";
         String strurl = "http://maps.google.com/maps/api/directions/xml?origin=" + latitude + "," + longitude + "&destination=" + prelatitute + "," + prelongitude + "&sensor=false&units=metric";
@@ -215,6 +219,7 @@ public class LocationAlertService extends Service {
         }
         return result_in_kms;
     }
+*/
 
     private void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent, String id) {
         NotificationUtils notificationUtils = new NotificationUtils(context);
@@ -238,8 +243,9 @@ public class LocationAlertService extends Service {
 
         @Override
         protected String doInBackground(Double... strings) {
-            String result_in_kms = getDistanceOnRoad(strings[0], strings[1], strings[2], strings[3]);
-            return result_in_kms;
+            double result_in_kms = CalculationByDistance(strings[0], strings[1], strings[2], strings[3]);
+            result_in_kms = round(result_in_kms, 2);
+            return String.valueOf(result_in_kms);
         }
 
         @Override

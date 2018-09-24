@@ -8,9 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -86,17 +84,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private final String[] SPINNERLIST = {"Father", "Son", "Daughter", "Brother", "Sister", "Grandfather", "Grandson", "Uncle", "Uncle's Son", "Uncle in law", "Uncle's Son"};
     HashMap<String, String> testHashMap2;
     Gson gson;
-
-    public boolean isNearby() {
-        return isNearby;
-    }
-
-    public void setNearby(boolean nearby) {
-        isNearby = nearby;
-    }
-
-    private boolean isNearby=false;
-
+    private boolean isNearby = false;
     @Nullable
     // private ProgressDialog pDialog;
     private ChildViewHolder childViewHolder;
@@ -128,6 +116,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private static double milesTokm(double distanceInMiles) {
         return distanceInMiles * 1.60934;
+    }
+
+    public boolean isNearby() {
+        return isNearby;
+    }
+
+    public void setNearby(boolean nearby) {
+        isNearby = nearby;
     }
 
     private void openImageDialog(String name, String url) {
@@ -189,9 +185,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             childViewHolder = (ChildViewHolder) convertView.getTag();
         }
 
-
-
-
         final String id = mListChildData.getID();
         final String name = mListChildData.getName();
         String address = mListChildData.getAddress();
@@ -211,7 +204,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String phone = mListChildData.getPhone().trim().replaceAll("\\?", "").replaceAll("\\+", "");
 
         if (sharedUsers) {
-            if (Shared!=null && Shared.equalsIgnoreCase("from")) {
+            if (Shared != null && Shared.equalsIgnoreCase("from")) {
                 childViewHolder.ll_child.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape1));
             } else {
                 childViewHolder.ll_child.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape5));
@@ -243,9 +236,22 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
         });
 
+
+        if (mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase(id)) {
+            childViewHolder.imgROR.setVisibility(View.GONE);
+            childViewHolder.img_details.setVisibility(View.GONE);
+            childViewHolder.imgNudge.setVisibility(View.GONE);
+            childViewHolder.tbtn_share.setVisibility(View.GONE);
+        } else {
+            childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
+            childViewHolder.img_details.setVisibility(View.VISIBLE);
+            childViewHolder.imgNudge.setVisibility(View.VISIBLE);
+            childViewHolder.imgROR.setVisibility(View.VISIBLE);
+        }
+
         String bool = mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0");
         if (bool.equalsIgnoreCase("1")) {
-            if (Shared!=null && Shared.equalsIgnoreCase("from")) {
+            if (Shared != null && Shared.equalsIgnoreCase("from")) {
                 childViewHolder.tbtn_share.setVisibility(View.GONE);
             } else {
                 childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
@@ -255,14 +261,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             } else {
                 childViewHolder.tbtn_share.setChecked(false);
             }
-
         } else {
             childViewHolder.tbtn_share.setVisibility(View.GONE);
         }
-        childViewHolder.tbtn_share.setOnClickListener(new View.OnClickListener() {
+
+        childViewHolder.tbtn_share.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                if (childViewHolder.tbtn_share.isChecked()) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
                     mListChildData.setCan_share("1");
                     userLocationShareWS(profile_id, name, "1");
                 } else {
@@ -298,7 +304,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
-                MyProfileActivity.isEnable=false;
+                MyProfileActivity.isEnable = false;
                 Intent mIntent = new Intent(_context, MyProfileActivity.class);
                 _context.startActivity(mIntent);
             }
@@ -336,10 +342,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 AlertDialog.Builder builder = new AlertDialog.Builder(_context, R.style.AppCompatAlertDialogStyle);
                 builder.setTitle(_context.getString(R.string.app_name));
 
-                builder.setMessage("Do you want to request on WhatsApp ?");
+                builder.setMessage(_context.getResources().getString(R.string.go_to_whatsapp));
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                     public void onClick(@NonNull DialogInterface dialog, int which) {
-                        Common.SendWhatsappMessage(_context, mobile, _context.getResources().getString(R.string.nice_html));
+                        Common.SendWhatsappMessage(_context, mobile, String.format(_context.getResources().getString(R.string.nice_html), name));
                         dialog.dismiss();
                     }
                 });
@@ -429,6 +435,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         } else {
             groupViewHolder.txt_dist.setVisibility(View.GONE);
         }
+
+
         // Rounded corners
         Glide.with(_context).load(imgURL).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).into(groupViewHolder.ivIcon);
 
@@ -445,9 +453,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         groupViewHolder.txt_dist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
-                String lat = "", lng = "";
+
+                String lat = "", lng = "", curr_lat = "", curr_lng = "";
+                curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
                 if (mListParentData.getType().isEmpty() || mListParentData.getType().equalsIgnoreCase("home")) {
                     lat = mListParentData.getHome_lat();
                     lng = mListParentData.getHome_lng();
@@ -495,8 +504,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         groupViewHolder.tvMobile.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
 
         if (sharedUsers) {
-            if (Shared!=null && Shared.equalsIgnoreCase("from")) {
+            if (Shared != null && Shared.equalsIgnoreCase("from")) {
                 groupViewHolder.ll_parent.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape1));
+
+
             } else {
                 groupViewHolder.ll_parent.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape5));
             }
@@ -524,12 +535,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String user_lat = mListParentData.getUser_lat();
         final String user_lng = mListParentData.getUser_lng();
 
-        if (is_share.equalsIgnoreCase("1") && mListParentData.isIs_location_enable().equalsIgnoreCase("1") && !sharedUsers) {
+        if (is_share.equalsIgnoreCase("1") && mListParentData.isIs_location_enable().equalsIgnoreCase("1")) {
             String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
             String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
             if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
                 groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
-                new Common.getDistance((Activity) _context,groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,curr_lat,curr_lng,user_lat, user_lng);
+                new Common.getDistance((Activity) _context, groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, curr_lat, curr_lng, user_lat, user_lng);
             } else {
                 groupViewHolder.txt_distance.setVisibility(View.GONE);
             }
@@ -651,7 +662,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     BitMatrix bitMatrix = multiFormatWriter.encode(id, BarcodeFormat.QR_CODE, 200, 200);
                     BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                     bitmap = barcodeEncoder.createBitmap(bitMatrix);
-                    bitmap= Common.drawTextToBitmap(bitmap,Name);
+                    bitmap = Common.drawTextToBitmap(bitmap, Name);
                     imageView.setImageBitmap(bitmap);
                 } catch (WriterException e) {
                     e.printStackTrace();
@@ -781,7 +792,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("image/*");
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, text + "'s Profile QR Code");
-      //  shareIntent.putExtra(Intent.EXTRA_TEXT, text + "'s Profile");
+        //  shareIntent.putExtra(Intent.EXTRA_TEXT, text + "'s Profile");
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         _context.startActivity(Intent.createChooser(shareIntent, "Vastipatrak"));
     }

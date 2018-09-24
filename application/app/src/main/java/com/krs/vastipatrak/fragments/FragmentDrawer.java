@@ -125,6 +125,7 @@ public class FragmentDrawer extends Fragment {
                     txt_name.setText(name);
                 }
                 getActivity().invalidateOptionsMenu();
+                Common.hideKeyboard(getActivity());
             }
 
             @Override

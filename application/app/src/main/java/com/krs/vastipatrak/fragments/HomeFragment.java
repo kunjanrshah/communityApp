@@ -89,25 +89,20 @@ public class HomeFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(R.string.title_events);
-
         MemoryAllocation(rootView);
-
         mSwipyRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(SwipyRefreshLayoutDirection direction) {
                 Log.d("MainActivity", "Refresh triggered at " + (direction == SwipyRefreshLayoutDirection.TOP ? "top" : "bottom"));
-
                 if (direction == SwipyRefreshLayoutDirection.TOP) {
                     page--;
                 } else {
                     page++;
                 }
-                if (page > 0) {
-                    getEvents();
-                } else {
-                    mSwipyRefreshLayout.setRefreshing(false);
-                    Toast.makeText(getActivity(), "No record found!", Toast.LENGTH_SHORT).show();
+                if (page < 1) {
+                    page = 1;
                 }
+                getEvents();
             }
         });
 
@@ -232,7 +227,7 @@ public class HomeFragment extends Fragment {
                         if (response.has(Common.Constant_Class.TOTAL_RECORDS)) {
                             total_records = response.getString(Common.Constant_Class.TOTAL_RECORDS);
                         }
-                       if (success) {
+                        if (success) {
                             JSONArray mJsonArray = response.getJSONArray("data");
                             RealmList<String> YoutubeUrls, ImagesUrls;
                             ListEventData mEventdata = new ListEventData();
@@ -336,15 +331,15 @@ public class HomeFragment extends Fragment {
                 /*int i = Objects.requireNonNull(Objects.requireNonNull(eventData.get(position)).getImages()).size();
                 int j = Objects.requireNonNull(Objects.requireNonNull(eventData.get(position)).getYoutubeUrl()).size();
                 if (i > 0 || j > 0) {*/
-                    Intent mIntent = new Intent(getActivity(), EventlistActivity.class);
-                    mIntent.putExtra("id", Objects.requireNonNull(eventData.get(position)).getId());
-                    mIntent.putExtra("desc", Objects.requireNonNull(eventData.get(position)).getDescription());
-                    mIntent.putExtra("date", Objects.requireNonNull(eventData.get(position)).getEventDate());
-                    mIntent.putExtra("title", Objects.requireNonNull(eventData.get(position)).getTitle());
-                    mIntent.putExtra("location", Objects.requireNonNull(eventData.get(position)).getLocation());
-                    mIntent.putExtra("lat", Objects.requireNonNull(eventData.get(position)).getLat());
-                    mIntent.putExtra("lng", Objects.requireNonNull(eventData.get(position)).getLng());
-                    startActivity(mIntent);
+                Intent mIntent = new Intent(getActivity(), EventlistActivity.class);
+                mIntent.putExtra("id", Objects.requireNonNull(eventData.get(position)).getId());
+                mIntent.putExtra("desc", Objects.requireNonNull(eventData.get(position)).getDescription());
+                mIntent.putExtra("date", Objects.requireNonNull(eventData.get(position)).getEventDate());
+                mIntent.putExtra("title", Objects.requireNonNull(eventData.get(position)).getTitle());
+                mIntent.putExtra("location", Objects.requireNonNull(eventData.get(position)).getLocation());
+                mIntent.putExtra("lat", Objects.requireNonNull(eventData.get(position)).getLat());
+                mIntent.putExtra("lng", Objects.requireNonNull(eventData.get(position)).getLng());
+                startActivity(mIntent);
                 /*} else {
                     Toast.makeText(getActivity(), "Event Details not found!", Toast.LENGTH_SHORT).show();
                 }*/
@@ -424,7 +419,7 @@ public class HomeFragment extends Fragment {
             holder.txtEventDate.setText(strDate + "\n" + goal);
             getRandomColor(Objects.requireNonNull(getActivity()), position, holder.ll_event);
 
-            holder.txt_distance.setOnClickListener(new View.OnClickListener() {
+            holder.txtLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String lat = data.getLat();
@@ -441,13 +436,12 @@ public class HomeFragment extends Fragment {
                 }
             });
 
-
             String lat = data.getLat();
             String lng = data.getLng();
             String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
             String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
             if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !lat.isEmpty() && !lng.isEmpty()) {
-                new Common.getDistance(getActivity(),holder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, curr_lat, curr_lng, lat, lng);
+                new Common.getDistance(getActivity(), holder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, curr_lat, curr_lng, lat, lng);
             }
         }
 
@@ -475,7 +469,7 @@ public class HomeFragment extends Fragment {
                 txtTitle = view.findViewById(R.id.tvEventTitle);
                 txtDesc = view.findViewById(R.id.tvEventDesc);
                 txtLocation = view.findViewById(R.id.tvEventLocation);
-                txt_distance= view.findViewById(R.id.txt_distance);
+                txt_distance = view.findViewById(R.id.txt_distance);
                 txtEventDate = view.findViewById(R.id.tvEventDate);
                 ll_event = view.findViewById(R.id.ll_event);
             }

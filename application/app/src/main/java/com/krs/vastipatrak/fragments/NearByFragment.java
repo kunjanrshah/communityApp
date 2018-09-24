@@ -46,7 +46,7 @@ import static com.krs.vastipatrak.utils.Common.showProgressDialog;
 
 public class NearByFragment extends Fragment {
 
-    String lat = "", lng = "";
+    //String lat = "", lng = "";
     private String TAG = "";
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
@@ -83,30 +83,20 @@ public class NearByFragment extends Fragment {
             rdb_home.setChecked(true);
             rdb_office.setChecked(false);
             rdb_user.setChecked(false);
-            lat = mSharedPreferences.getString(Common.Constant_Class.HOME_LAT, "");
-            lng = mSharedPreferences.getString(Common.Constant_Class.HOME_LNG, "");
         } else if (type.equalsIgnoreCase("office")) {
             rdb_home.setChecked(false);
             rdb_office.setChecked(true);
             rdb_user.setChecked(false);
-            lat = mSharedPreferences.getString(Common.Constant_Class.OFFICE_LAT, "");
-            lng = mSharedPreferences.getString(Common.Constant_Class.OFFICE_LNG, "");
         } else if (type.equalsIgnoreCase("user")) {
             rdb_home.setChecked(false);
             rdb_office.setChecked(false);
             rdb_user.setChecked(true);
-            lat = mSharedPreferences.getString(Common.Constant_Class.USER_LAT, "");
-            lng = mSharedPreferences.getString(Common.Constant_Class.USER_LNG, "");
         }
     }
 
     private void callNearby() {
         if (!edt_distance.getText().toString().isEmpty()) {
-            if (!lat.isEmpty() && !lng.isEmpty()) {
                 NearByUsers();
-            } else {
-                Toast.makeText(getActivity(), "Location not found!", Toast.LENGTH_SHORT).show();
-            }
         } else {
             Toast.makeText(getActivity(), "Enter distance", Toast.LENGTH_SHORT).show();
         }
@@ -176,15 +166,14 @@ public class NearByFragment extends Fragment {
     private void NearByUsers() {
         if (Common.isOnline(getActivity())) {
             Common.showProgressDialog(getActivity());
-
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
                 mJsonObject.put(Common.Constant_Class.NEAR_BY, type);
-                mJsonObject.put(Common.Constant_Class.LAT, lat);
-                mJsonObject.put(Common.Constant_Class.LNG, lng);
+                mJsonObject.put(Common.Constant_Class.LAT, mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, ""));
+                mJsonObject.put(Common.Constant_Class.LNG, mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, ""));
                 mJsonObject.put(Common.Constant_Class.KM, edt_distance.getText().toString());
             } catch (Exception e) {
                 e.printStackTrace();

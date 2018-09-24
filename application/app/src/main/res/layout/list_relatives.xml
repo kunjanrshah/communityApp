@@ -41,7 +41,8 @@
             android:id="@+id/txt_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Brother"
+            android:text="brother"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>

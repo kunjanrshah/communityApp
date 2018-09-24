@@ -29,7 +29,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListProfileData;
@@ -46,16 +45,17 @@ import java.util.Objects;
 public class BusinessFragment extends Fragment implements Serializable {
 
 
+    private static final int CONTACT_PICKER_RESULT = 1001;
     private final String tag_json_obj = "jobj_req";
     private final String TAG = BusinessFragment.class.getSimpleName();
     public EditText edtOccupation, edtWork, edtOMobile, edtOAddress;
     private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
     private TextView txt_office;
     private double office_lat = 0;
     private double office_lng = 0;
     private String user_id = "";
     private Activity mActivity;
-    private static final int CONTACT_PICKER_RESULT = 1001;
 
     public BusinessFragment() {
         // Required empty public constructor
@@ -85,8 +85,8 @@ public class BusinessFragment extends Fragment implements Serializable {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (edtOAddress.getRight() - edtOAddress.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
 
-                         String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                         String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                        String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                        String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
                         final double lat = Double.valueOf(curr_lat);
                         final double lng = Double.valueOf(curr_lng);
 
@@ -168,14 +168,12 @@ public class BusinessFragment extends Fragment implements Serializable {
     private void officeLocUpdateWS() {
         if (Common.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
+            String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+            String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+            final double lat = Double.valueOf(curr_lat);
+            final double lng = Double.valueOf(curr_lng);
             try {
                 mJsonObject = new JSONObject();
-                final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
-                double lat = Double.valueOf(curr_lat);
-                double lng = Double.valueOf(curr_lng);
-
-
                 if (lat != 0 && lng != 0) {
                     mJsonObject.put(Common.Constant_Class.OFFICE_LAT, lat);
                     mJsonObject.put(Common.Constant_Class.OFFICE_LNG, lng);
@@ -186,16 +184,16 @@ public class BusinessFragment extends Fragment implements Serializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
-
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
-
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                            mEditor.putString(Common.Constant_Class.OFFICE_LAT, String.valueOf(lat));
+                            mEditor.putString(Common.Constant_Class.OFFICE_LNG, String.valueOf(lng));
+                            mEditor.apply();
                             alert("Office location updated!");
                         } else {
                             alert("Something went wrong!");
@@ -237,6 +235,8 @@ public class BusinessFragment extends Fragment implements Serializable {
         edtOMobile = rootView.findViewById(R.id.edtOMobile);
         edtOAddress = rootView.findViewById(R.id.edtOAddress);
         mSharedPreferences = mActivity.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mEditor=mSharedPreferences.edit();
+        mEditor.apply();
         user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
         txt_office = rootView.findViewById(R.id.txt_office);
     }
@@ -315,10 +315,10 @@ public class BusinessFragment extends Fragment implements Serializable {
             if (office_lat != 0 && office_lng != 0) {
                 final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
                 final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
-               // double lat = Double.valueOf(curr_lat);
+                // double lat = Double.valueOf(curr_lat);
                 //double lng = Double.valueOf(curr_lng);
 
-                new Common.getDistance(getActivity(),txt_office).execute(curr_lat,curr_lng,String.valueOf(office_lat),String.valueOf(office_lng));
+                new Common.getDistance(getActivity(), txt_office).execute(curr_lat, curr_lng, String.valueOf(office_lat), String.valueOf(office_lng));
 
                /* int distance = (int) Common.getDistance(mActivity, office_lat, office_lng);
                 if (distance == -1) {

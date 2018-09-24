@@ -882,11 +882,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private void homeLocationUpdateWS() {
         if (Common.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
+            String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+            String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+            final double lat = Double.valueOf(curr_lat);
+            final double lng = Double.valueOf(curr_lng);
             try {
-                final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
-                double lat = Double.valueOf(curr_lat);
-                double lng = Double.valueOf(curr_lng);
                 mJsonObject = new JSONObject();
                 if (lat != 0 && lng != 0) {
                     mJsonObject.put(Common.Constant_Class.HOME_LAT, lat);
@@ -909,6 +909,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             alert("Home location updated!");
+                            mEditor.putString(Common.Constant_Class.HOME_LAT, String.valueOf(lat));
+                            mEditor.putString(Common.Constant_Class.HOME_LNG, String.valueOf(lng));
+                            mEditor.apply();
                         } else {
                             alert("Something went wrong!");
                         }
