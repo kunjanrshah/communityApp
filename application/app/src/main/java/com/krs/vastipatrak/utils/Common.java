@@ -2062,7 +2062,7 @@ public class Common {
         public static final String DATE = "date";
         public static final String BIRTH_DATE = "birth_date";
         public static final String CHILD_BIRTH_DATE = "child_birth_date";
-        public static final String WIFE_BIRTH_DATE = "wife_birth_date";
+        public static final String WIFE_BIRTH_DATE = "spouse_birth_date";
         public static final String MARRIAGE_DATE = "marriage_date";
         public static final String RELATION = "relation";
         public static final String TO_USER_ID = "to_user_id";

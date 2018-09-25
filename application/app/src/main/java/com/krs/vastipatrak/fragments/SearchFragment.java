@@ -546,7 +546,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         Log.d(TAG, response.toString());
 
                         try {
-                            hideProgressDialog();
+                           hideProgressDialog();
                             iSearchCallback = (ISearchCallback) getmContext();
                             if (iSearchCallback != null) {
                                 iSearchCallback.setIsSearch(true);
