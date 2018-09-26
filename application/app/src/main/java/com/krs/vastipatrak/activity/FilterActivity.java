@@ -146,9 +146,9 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         business = new BusinessFilter();
 
         family = new FamilyFilter();
-        adapter.addFrag(personal, Common.Constant_Class.PERSONAL);
-        adapter.addFrag(business, Common.Constant_Class.BUSINESS);
-        adapter.addFrag(family, Common.Constant_Class.FAMILY);
+        adapter.addFrag(personal, Common.Constant_Class._PERSONAL);
+        adapter.addFrag(business, Common.Constant_Class._BUSINESS);
+        adapter.addFrag(family, Common.Constant_Class._FAMILY);
 
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);

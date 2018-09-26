@@ -2045,10 +2045,14 @@ public class Common {
 
         public static final String YOUTUBE_API_KEY = "AIzaSyBOkoXTYsY32OQtLTxidxci5R3Zml84oUY";
 
-        public static final String PERSONAL = " PERSONAL ";
-        public static final String BUSINESS = " BUSINESS ";
-        public static final String FAMILY = " FAMILY ";
+        public static final String PERSONAL = "PERSONAL";
+        public static final String BUSINESS = " PROFESSIONAL ";
+        public static final String FAMILY = "FAMILY";
         public static final String RELATIVES = " RELATIVES ";
+
+        public static final String _PERSONAL = "     PERSONAL     ";
+        public static final String _BUSINESS = " PROFESSIONAL";
+        public static final String _FAMILY = "      FAMILY      ";
 
         public static final String GIRLS = "     GIRLS  ";
         public static final String BOYS_P1 = "  BOYS PART-1  ";
