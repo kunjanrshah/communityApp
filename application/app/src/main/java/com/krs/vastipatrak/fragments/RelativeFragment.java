@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,15 +87,21 @@ public class RelativeFragment extends Fragment {
                         for (int i = 0; i < mJsonArray.length(); i++) {
                             JSONObject mJsondata = mJsonArray.getJSONObject(i);
                             String id = mJsondata.getString(Common.Constant_Class.ID);
+                            String user_id = mJsondata.getString(Common.Constant_Class.USER_ID);
                             String to_user_id = mJsondata.getString(Common.Constant_Class.TO_USER_ID);
                             String relation = mJsondata.getString(Common.Constant_Class.RELATION);
                             String status = mJsondata.getString(Common.Constant_Class.RELATIONSHIP_STATUS);
-                            String first_name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
-                            String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
+                            String to_first_name = mJsondata.getString(Common.Constant_Class.TO_FIRST_NAME);
+                            String to_last_name = mJsondata.getString(Common.Constant_Class.TO_LAST_NAME);
+                            String from_first_name = mJsondata.getString(Common.Constant_Class.FROM_FIRST_NAME);
+                            String from_last_name = mJsondata.getString(Common.Constant_Class.FROM_LAST_NAME);
                             Relative mRelative = new Relative();
                             mRelative.setId(id);
-                            mRelative.setFirst_name(first_name);
-                            mRelative.setLast_name(last_name);
+                            mRelative.setUser_id(user_id);
+                            mRelative.setFrom_first_name(from_first_name);
+                            mRelative.setFrom_last_name(from_last_name);
+                            mRelative.setToFirst_name(to_first_name);
+                            mRelative.setToLast_name(to_last_name);
                             mRelative.setRelation(relation);
                             mRelative.setStatus(status);
                             mRelative.setTo_user_id(to_user_id);
@@ -166,15 +173,21 @@ public class RelativeFragment extends Fragment {
                             for (int i = 0; i < mJsonArray.length(); i++) {
                                 JSONObject mJsondata = mJsonArray.getJSONObject(i);
                                 String id = mJsondata.getString(Common.Constant_Class.ID);
+                                String user_id = mJsondata.getString(Common.Constant_Class.USER_ID);
                                 String to_user_id = mJsondata.getString(Common.Constant_Class.TO_USER_ID);
                                 String relation = mJsondata.getString(Common.Constant_Class.RELATION);
                                 String status = mJsondata.getString(Common.Constant_Class.RELATIONSHIP_STATUS);
-                                String first_name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
-                                String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
+                                String to_first_name = mJsondata.getString(Common.Constant_Class.TO_FIRST_NAME);
+                                String to_last_name = mJsondata.getString(Common.Constant_Class.TO_LAST_NAME);
+                                String from_first_name = mJsondata.getString(Common.Constant_Class.FROM_FIRST_NAME);
+                                String from_last_name = mJsondata.getString(Common.Constant_Class.FROM_LAST_NAME);
                                 Relative mRelative = new Relative();
                                 mRelative.setId(id);
-                                mRelative.setFirst_name(first_name);
-                                mRelative.setLast_name(last_name);
+                                mRelative.setUser_id(user_id);
+                                mRelative.setFrom_first_name(from_first_name);
+                                mRelative.setFrom_last_name(from_last_name);
+                                mRelative.setToFirst_name(to_first_name);
+                                mRelative.setToLast_name(to_last_name);
                                 mRelative.setRelation(relation);
                                 mRelative.setStatus(status);
                                 mRelative.setTo_user_id(to_user_id);
@@ -228,10 +241,12 @@ public class RelativeFragment extends Fragment {
         RelativeAdapter mRelativeAdapter = new RelativeAdapter(new OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                mEditor.putString(Common.Constant_Class.PROFILE_ID, lstRelative.get(position).getTo_user_id());
+                /*mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
+                mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
+                MyProfileActivity.isEnable = false;
                 Intent mIntent = new Intent(getActivity(), MyProfileActivity.class);
-                getActivity().startActivity(mIntent);
+                getActivity().startActivity(mIntent);*/
             }
         });
 
@@ -244,10 +259,37 @@ public class RelativeFragment extends Fragment {
     private class Relative {
         String id;
         String to_user_id;
+        String user_id;
         String relation;
         String status;
-        String first_name;
-        String last_name;
+        String to_first_name;
+        String to_last_name;
+        String from_first_name;
+        String from_last_name;
+
+        public String getUser_id() {
+            return user_id;
+        }
+
+        public void setUser_id(String user_id) {
+            this.user_id = user_id;
+        }
+
+        public String getFrom_first_name() {
+            return from_first_name;
+        }
+
+        public void setFrom_first_name(String from_first_name) {
+            this.from_first_name = from_first_name;
+        }
+
+        public String getFrom_last_name() {
+            return from_last_name;
+        }
+
+        public void setFrom_last_name(String from_last_name) {
+            this.from_last_name = from_last_name;
+        }
 
         public String getId() {
             return id;
@@ -281,20 +323,20 @@ public class RelativeFragment extends Fragment {
             this.status = status;
         }
 
-        public String getFirst_name() {
-            return first_name;
+        public String getToFirst_name() {
+            return to_first_name;
         }
 
-        public void setFirst_name(String first_name) {
-            this.first_name = first_name;
+        public void setToFirst_name(String first_name) {
+            this.to_first_name = first_name;
         }
 
-        public String getLast_name() {
-            return last_name;
+        public String getToLast_name() {
+            return to_last_name;
         }
 
-        public void setLast_name(String last_name) {
-            this.last_name = last_name;
+        public void setToLast_name(String last_name) {
+            this.to_last_name = last_name;
         }
     }
 
@@ -324,24 +366,30 @@ public class RelativeFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             final Relative data = lstRelative.get(position);
-            String name = data.getFirst_name() + " " + data.getLast_name();
-            name=Common.camelCase(name);
+            String from_name = data.getFrom_first_name() + " " + data.getFrom_last_name();
+            from_name = Common.camelCase(from_name);
+            String last_name = data.getToFirst_name() + " " + data.getToLast_name();
+            last_name = Common.camelCase(last_name);
             String status = data.getStatus();
-            final String id = data.getId();
-            if (status.contains("ACCEPTED")) {
-                holder.txt_name.setText(name);
-                holder.txt_status.setText(" request Approved.");
+            final String rel_id = data.getId();
+            final String user_id = data.getUser_id();
+            String relation = data.getRelation();
+            if (status.contains(Common.Constant_Class.ACCEPTED)) {
+                holder.txt_name1.setText(last_name);
+                holder.txt_name2.setText(from_name);
+                String txt = " is <b>" + Common.getCapsSentences(relation) + "</b> of ";
+                holder.txt_status.setText(Html.fromHtml(txt));
                 holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.ico_approve));
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape1));
-            } else {
-                holder.txt_name.setText(name);
-                holder.txt_status.setText(" has sent request.");
+            } else if (status.contains(Common.Constant_Class.REQUESTED)) {
+                holder.txt_name1.setText(from_name);
+                holder.txt_name2.setText(last_name);
+                String txt = " has requsted for <b>" + Common.getCapsSentences(relation) + "</b> to ";
+                holder.txt_status.setText(Html.fromHtml(txt));
                 holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.cancel));
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape10));
-            }
 
-            String rel = data.getRelation();
-            holder.txtDesc.setText(Common.getCapsSentences(rel));
+            }
 
             if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
                 holder.img_status.setEnabled(true);
@@ -353,34 +401,39 @@ public class RelativeFragment extends Fragment {
                 holder.img_status.setLongClickable(false);
             }
 
+            final String finalLast_name = last_name;
             holder.img_status.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String message = "";
                     String status = "";
-                    if (data.getStatus().equalsIgnoreCase("ACCEPTED")) {
-                        message = "Do you want to REJECT relation ?";
-                        status = "REJECTED";
+                    if (!mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase(user_id)) {
+                        if (data.getStatus().equalsIgnoreCase("ACCEPTED")) {
+                            message = "Do you want to REJECT relation ?";
+                            status = "REJECTED";
+                        } else {
+                            message = "Do you want to ACCEPT relation ?";
+                            status = "ACCEPTED";
+                        }
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+                        builder.setTitle(getActivity().getString(R.string.app_name));
+                        builder.setCancelable(false);
+                        builder.setMessage(message);
+                        final String finalStatus = status;
+                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                setActionWS(rel_id, finalStatus);
+                            }
+                        });
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
                     } else {
-                        message = "Do you want to ACCEPT relation ?";
-                        status = "ACCEPTED";
+                        Toast.makeText(getActivity(), "Ask " + finalLast_name + " to approve !", Toast.LENGTH_SHORT).show();
                     }
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
-                    builder.setTitle(getActivity().getString(R.string.app_name));
-                    builder.setCancelable(false);
-                    builder.setMessage(message);
-                    final String finalStatus = status;
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(@NonNull DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            setActionWS(id, finalStatus);
-                        }
-                    });
-                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(@NonNull DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
                 }
             });
 
@@ -394,7 +447,7 @@ public class RelativeFragment extends Fragment {
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(@NonNull DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            setActionWS(id, "DELETE");
+                            setActionWS(rel_id, "DELETE");
                         }
                     });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -404,6 +457,42 @@ public class RelativeFragment extends Fragment {
                         }
                     }).show();
                     return false;
+                }
+            });
+
+            holder.txt_name1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String id = "";
+                    if (data.getStatus().equalsIgnoreCase(Common.Constant_Class.ACCEPTED)) {
+                        id = data.getTo_user_id();
+                    } else {
+                        id = data.getUser_id();
+                    }
+                    mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
+                    mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+                    mEditor.apply();
+                    MyProfileActivity.isEnable = false;
+                    Intent mIntent = new Intent(getActivity(), MyProfileActivity.class);
+                    getActivity().startActivity(mIntent);
+                }
+            });
+
+            holder.txt_name2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String id = "";
+                    if (data.getStatus().equalsIgnoreCase(Common.Constant_Class.ACCEPTED)) {
+                        id = data.getTo_user_id();
+                    } else {
+                        id = data.getUser_id();
+                    }
+                    mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
+                    mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+                    mEditor.apply();
+                    MyProfileActivity.isEnable = false;
+                    Intent mIntent = new Intent(getActivity(), MyProfileActivity.class);
+                    getActivity().startActivity(mIntent);
                 }
             });
         }
@@ -420,17 +509,17 @@ public class RelativeFragment extends Fragment {
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {
-            final TextView txt_name;
             final TextView txt_status;
-            final TextView txtDesc;
+            final TextView txt_name1;
+            final TextView txt_name2;
             final LinearLayout ll_relative;
             final ImageView img_status;
 
             MyViewHolder(@NonNull View view) {
                 super(view);
                 txt_status = view.findViewById(R.id.txt_status);
-                txt_name = view.findViewById(R.id.txt_name);
-                txtDesc = view.findViewById(R.id.txt_desc);
+                txt_name1 = view.findViewById(R.id.txt_name1);
+                txt_name2 = view.findViewById(R.id.txt_name2);
                 ll_relative = view.findViewById(R.id.ll_relative);
                 img_status = view.findViewById(R.id.img_status);
             }

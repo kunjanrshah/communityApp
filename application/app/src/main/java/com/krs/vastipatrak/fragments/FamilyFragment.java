@@ -816,7 +816,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 mJsonObject.put(Common.Constant_Class.PROFILE_ID, profile_id);
                 mJsonObject.put(Common.Constant_Class.REMINDER_DATE, rem_date);
                 mJsonObject.put(Common.Constant_Class.REMINDER_TYPE, rem_type);
-                mJsonObject.put(Common.Constant_Class.REMINDER_VALUE, rem_value);
+                mJsonObject.put(Common.Constant_Class.REMINDER_ID, rem_value);
                 mJsonObject.put(Common.Constant_Class._CHILD_ID, child_id);
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));

@@ -2087,6 +2087,15 @@ public class Common {
         public static final String EMAIL = "email";
         public static final String FIRST_NAME = "first_name";
         public static final String LAST_NAME = "last_name";
+
+        public static final String TO_FIRST_NAME = "to_first_name";
+        public static final String TO_LAST_NAME = "to_last_name";
+        public static final String FROM_FIRST_NAME = "from_first_name";
+        public static final String FROM_LAST_NAME = "from_last_name";
+        public static final String REQUESTED = "REQUESTED";
+        public static final String ACCEPTED = "ACCEPTED";
+
+
         public static final String EMAIL_ADDRESS = "email_address";
         public static final String PASSWORD = "password";
         public static final String REPEAT_PASSWORD = "repeat_password";
@@ -2193,7 +2202,7 @@ public class Common {
         public static final String PROFILE_ID = "profile_id";
         public static final String REMINDER_DATE = "reminder_date";
         public static final String REMINDER_TYPE = "reminder_type";
-        public static final String REMINDER_VALUE = "reminder_value";
+        public static final String REMINDER_ID = "reminder_id";
         public static final String TBTN_SHARE = "tbtn_share";
         public static final String TBTN_SYNC = "tbtn_sync";
         static final String IMG_FATHER_URL = "img_father_url";
