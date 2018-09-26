@@ -9,6 +9,7 @@ public class ListChildrenData extends RealmObject{
     private String id;
     private String profile_id;
     private boolean is_interested;
+    private boolean is_married;
     private String child_name;
     private String child_bday;
     private String birth_place;
@@ -20,6 +21,14 @@ public class ListChildrenData extends RealmObject{
     private String child_img_url;
     private String gender;
     private byte[] ChildBytes;
+
+    public boolean isIs_married() {
+        return is_married;
+    }
+
+    public void setIs_married(boolean is_married) {
+        this.is_married = is_married;
+    }
 
     public boolean isIs_interested() {
         return is_interested;

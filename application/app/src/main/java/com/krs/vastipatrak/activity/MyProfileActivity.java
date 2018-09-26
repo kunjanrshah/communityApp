@@ -300,14 +300,13 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
                 // Familty Details
                 String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "", sdate = "", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
-                String sponseBdate = "", sponseNative = "", sponseMobile = "";
+                String sponseNative = "", sponseMobile = "";
                 boolean chk_spouse_bdate_rem = false, chk_m_bdate_rem = false;
                 LinearLayout child_container = null;
                 ArrayList<Integer> lst_delID = null;
                 try {
                     spouseName = ((FamilyFragment) family).edtSpouseName.getText().toString().trim();
                     sponseMobile = ((FamilyFragment) family).edtsponse_mobile.getText().toString().trim();
-                    sponseBdate = ((FamilyFragment) family).edtsponse_bdate.getText().toString().trim();
                     sponseNative = ((FamilyFragment) family).edtsponse_nplace.getText().toString().trim();
                     SpouseFName = ((FamilyFragment) family).edtSpouseFName.getText().toString().trim();
                     MSpouseName = ((FamilyFragment) family).edtMSpouseName.getText().toString().trim();
@@ -364,7 +363,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mListProfileData.setOffice_mobile(OMobile);
                     mListProfileData.setOffice_address(OAddress);
                     mListProfileData.setSpouse_name(spouseName);
-                    mListProfileData.setSponse_bdate(sponseBdate);
+                    mListProfileData.setSponse_bdate(sdate);
                     mListProfileData.setSponse_mobile(sponseMobile);
                     mListProfileData.setSponse_native(sponseNative);
                     mListProfileData.setSfather_name(SpouseFName);
@@ -493,6 +492,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     String child_blood = Objects.requireNonNull(mViewholder.spinnerBlood).getSelectedItem().toString();
                     boolean chk_bdate_rem = mViewholder.chk_child_bdate_rem.isChecked();
                     boolean chk_married = mViewholder.chk_child_marriage.isChecked();
+                    mJsonObject_Child.put(Common.Constant_Class.IS_MARRIED, chk_married);
                     mJsonObject_Child.put(Common.Constant_Class.BLOOD_GROUP, child_blood);
                     mJsonObject_Child.put(Common.Constant_Class.MOBILE, child_mobile);
                     mJsonObject_Child.put(Common.Constant_Class.IS_INTERESTED, child_interest);

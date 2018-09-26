@@ -854,7 +854,7 @@ public class Common {
             }
 
             if (mJsonObject.has(Constant_Class.SPOUSE_BDATE)) {
-                mListProfileData.setSponse_bdate(mJsonObject.getString(Common.Constant_Class.SPOUSE_BDATE));
+                mListProfileData.setSponse_bdate(ChangedateFormat(mJsonObject.getString(Common.Constant_Class.SPOUSE_BDATE)));
             }
 
             if (mJsonObject.has(Common.Constant_Class.SPOUSE_FATHER_NAME)) {
@@ -956,6 +956,16 @@ public class Common {
                             mListChildrendata.setInterest(false);
                         }
                     }
+
+                    if (mJsonObj.has(Constant_Class.IS_MARRIED)) {
+                        String isInterest = mJsonObj.getString(Common.Constant_Class.IS_MARRIED);
+                        if (isInterest.equals("1")) {
+                            mListChildrendata.setIs_married(true);
+                        } else {
+                            mListChildrendata.setIs_married(false);
+                        }
+                    }
+
                     if (mJsonObj.has(Common.Constant_Class.CHILD_BDAY)) {
                         mListChildrendata.setChild_bday(ChangedateFormat(mJsonObj.getString(Common.Constant_Class.CHILD_BDAY)));
                     }
@@ -2192,6 +2202,7 @@ public class Common {
         public static final String CHILD_BTIME = "birth_time";
         public static final String CHILD_BPLACE = "child_birth_place";
         public static final String IS_INTERESTED = "is_interested";
+        public static final String IS_MARRIED = "isMarried";
         public static final String CHILD_EDU = "child_edu";
         public static final String CHILD_WORK = "child_work";
         public static final String FragmentSp = "fragment";

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,16 +91,16 @@ public class RelativeFragment extends Fragment {
                             lstRelative = new ArrayList<>();
                         }
                         for (int i = 0; i < mJsonArray.length(); i++) {
-                            JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                            String id = mJsondata.getString(Common.Constant_Class.ID);
-                            String user_id = mJsondata.getString(Common.Constant_Class.USER_ID);
-                            String to_user_id = mJsondata.getString(Common.Constant_Class.TO_USER_ID);
-                            String relation = mJsondata.getString(Common.Constant_Class.RELATION);
-                            String status = mJsondata.getString(Common.Constant_Class.RELATIONSHIP_STATUS);
-                            String to_first_name = mJsondata.getString(Common.Constant_Class.TO_FIRST_NAME);
-                            String to_last_name = mJsondata.getString(Common.Constant_Class.TO_LAST_NAME);
-                            String from_first_name = mJsondata.getString(Common.Constant_Class.FROM_FIRST_NAME);
-                            String from_last_name = mJsondata.getString(Common.Constant_Class.FROM_LAST_NAME);
+                            JSONObject mJsonreldata = mJsonArray.getJSONObject(i);
+                            String id = mJsonreldata.getString(Common.Constant_Class.ID);
+                            String user_id = mJsonreldata.getString(Common.Constant_Class.USER_ID);
+                            String to_user_id = mJsonreldata.getString(Common.Constant_Class.TO_USER_ID);
+                            String relation = mJsonreldata.getString(Common.Constant_Class.RELATION);
+                            String status = mJsonreldata.getString(Common.Constant_Class.RELATIONSHIP_STATUS);
+                            String to_first_name = mJsonreldata.getString(Common.Constant_Class.TO_FIRST_NAME);
+                            String to_last_name = mJsonreldata.getString(Common.Constant_Class.TO_LAST_NAME);
+                            String from_first_name = mJsonreldata.getString(Common.Constant_Class.FROM_FIRST_NAME);
+                            String from_last_name = mJsonreldata.getString(Common.Constant_Class.FROM_LAST_NAME);
                             Relative mRelative = new Relative();
                             mRelative.setId(id);
                             mRelative.setUser_id(user_id);
@@ -171,16 +177,16 @@ public class RelativeFragment extends Fragment {
                                 lstRelative = new ArrayList<>();
                             }
                             for (int i = 0; i < mJsonArray.length(); i++) {
-                                JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                String id = mJsondata.getString(Common.Constant_Class.ID);
-                                String user_id = mJsondata.getString(Common.Constant_Class.USER_ID);
-                                String to_user_id = mJsondata.getString(Common.Constant_Class.TO_USER_ID);
-                                String relation = mJsondata.getString(Common.Constant_Class.RELATION);
-                                String status = mJsondata.getString(Common.Constant_Class.RELATIONSHIP_STATUS);
-                                String to_first_name = mJsondata.getString(Common.Constant_Class.TO_FIRST_NAME);
-                                String to_last_name = mJsondata.getString(Common.Constant_Class.TO_LAST_NAME);
-                                String from_first_name = mJsondata.getString(Common.Constant_Class.FROM_FIRST_NAME);
-                                String from_last_name = mJsondata.getString(Common.Constant_Class.FROM_LAST_NAME);
+                                JSONObject mJsonreldata = mJsonArray.getJSONObject(i);
+                                String id = mJsonreldata.getString(Common.Constant_Class.ID);
+                                String user_id = mJsonreldata.getString(Common.Constant_Class.USER_ID);
+                                String to_user_id = mJsonreldata.getString(Common.Constant_Class.TO_USER_ID);
+                                String relation = mJsonreldata.getString(Common.Constant_Class.RELATION);
+                                String status = mJsonreldata.getString(Common.Constant_Class.RELATIONSHIP_STATUS);
+                                String to_first_name = mJsonreldata.getString(Common.Constant_Class.TO_FIRST_NAME);
+                                String to_last_name = mJsonreldata.getString(Common.Constant_Class.TO_LAST_NAME);
+                                String from_first_name = mJsonreldata.getString(Common.Constant_Class.FROM_FIRST_NAME);
+                                String from_last_name = mJsonreldata.getString(Common.Constant_Class.FROM_LAST_NAME);
                                 Relative mRelative = new Relative();
                                 mRelative.setId(id);
                                 mRelative.setUser_id(user_id);
@@ -344,8 +350,23 @@ public class RelativeFragment extends Fragment {
 
         private final OnItemClickListener listener;
 
+
         RelativeAdapter(OnItemClickListener listener) {
             this.listener = listener;
+        }
+
+        public void makeLinks(TextView textView, String[] links, ClickableSpan[] clickableSpans) {
+            SpannableString spannableString = new SpannableString(textView.getText());
+            for (int i = 0; i < links.length; i++) {
+                ClickableSpan clickableSpan = clickableSpans[i];
+                String link = links[i];
+
+                int startIndexOfLink = textView.getText().toString().indexOf(link);
+                spannableString.setSpan(clickableSpan, startIndexOfLink, startIndexOfLink + link.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            textView.setHighlightColor(Color.TRANSPARENT); // prevent TextView change background when highlight
+            textView.setMovementMethod(LinkMovementMethod.getInstance());
+            textView.setText(spannableString, TextView.BufferType.SPANNABLE);
         }
 
         @NonNull
@@ -363,32 +384,81 @@ public class RelativeFragment extends Fragment {
             return holder;
         }
 
+        private void moveToprofile(String id) {
+            mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
+            mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+            mEditor.apply();
+            MyProfileActivity.isEnable = false;
+            Intent mIntent = new Intent(getActivity(), MyProfileActivity.class);
+            getActivity().startActivity(mIntent);
+        }
+
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            final Relative data = lstRelative.get(position);
-            String from_name = data.getFrom_first_name() + " " + data.getFrom_last_name();
+            final Relative reldata = lstRelative.get(position);
+            String from_name = reldata.getFrom_first_name() + " " + reldata.getFrom_last_name();
             from_name = Common.camelCase(from_name);
-            String last_name = data.getToFirst_name() + " " + data.getToLast_name();
+            String last_name = reldata.getToFirst_name() + " " + reldata.getToLast_name();
             last_name = Common.camelCase(last_name);
-            String status = data.getStatus();
-            final String rel_id = data.getId();
-            final String user_id = data.getUser_id();
-            String relation = data.getRelation();
+            String status = reldata.getStatus();
+            final String rel_id = reldata.getId();
+            final String user_id = reldata.getUser_id();
+            String relation = reldata.getRelation();
+
+            ClickableSpan clickableSpan1 = new ClickableSpan() {
+                @Override
+                public void onClick(View textView) {
+                    String str = ((TextView) textView).getText().toString().toLowerCase();
+                    int len = str.indexOf(reldata.getRelation().toLowerCase());
+                    String str1 = str.substring(0, len);
+                    String id = "";
+                    if (str1.contains(reldata.getFrom_first_name().toLowerCase())) {
+                        id = reldata.getUser_id();
+                    } else {
+                        id = reldata.getTo_user_id();
+                    }
+                    moveToprofile(id);
+                }
+
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setUnderlineText(false);
+                }
+            };
+
+            ClickableSpan clickableSpan2 = new ClickableSpan() {
+                @Override
+                public void onClick(View textView) {
+                    String str = ((TextView) textView).getText().toString().toLowerCase();
+                    int len = str.toLowerCase().indexOf(reldata.getRelation().toLowerCase());
+                    String str1 = str.substring(0, len);
+                    String id = "";
+                    if (str1.contains(reldata.getFrom_first_name().toLowerCase())) {
+                        id = reldata.getTo_user_id();
+                    } else {
+                        id = reldata.getUser_id();
+                    }
+                    moveToprofile(id);
+                }
+
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setUnderlineText(false);
+                }
+            };
+
             if (status.contains(Common.Constant_Class.ACCEPTED)) {
-                holder.txt_name1.setText(last_name);
-                holder.txt_name2.setText(from_name);
-                String txt = " is <b>" + Common.getCapsSentences(relation) + "</b> of ";
-                holder.txt_status.setText(Html.fromHtml(txt));
+                holder.txt_status.setText(Html.fromHtml(last_name + " is <b>" + Common.getCapsSentences(relation) + "</b> of " + from_name));
                 holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.ico_approve));
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape1));
+                makeLinks(holder.txt_status, new String[]{last_name, from_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
             } else if (status.contains(Common.Constant_Class.REQUESTED)) {
-                holder.txt_name1.setText(from_name);
-                holder.txt_name2.setText(last_name);
-                String txt = " has requsted for <b>" + Common.getCapsSentences(relation) + "</b> to ";
-                holder.txt_status.setText(Html.fromHtml(txt));
+                holder.txt_status.setText(Html.fromHtml(from_name + " has requested for <b>" + Common.getCapsSentences(relation) + "</b> to " + last_name));
                 holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.cancel));
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape10));
-
+                makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
             }
 
             if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
@@ -401,6 +471,7 @@ public class RelativeFragment extends Fragment {
                 holder.img_status.setLongClickable(false);
             }
 
+
             final String finalLast_name = last_name;
             holder.img_status.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -408,7 +479,7 @@ public class RelativeFragment extends Fragment {
                     String message = "";
                     String status = "";
                     if (!mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase(user_id)) {
-                        if (data.getStatus().equalsIgnoreCase("ACCEPTED")) {
+                        if (reldata.getStatus().equalsIgnoreCase("ACCEPTED")) {
                             message = "Do you want to REJECT relation ?";
                             status = "REJECTED";
                         } else {
@@ -460,41 +531,7 @@ public class RelativeFragment extends Fragment {
                 }
             });
 
-            holder.txt_name1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String id = "";
-                    if (data.getStatus().equalsIgnoreCase(Common.Constant_Class.ACCEPTED)) {
-                        id = data.getTo_user_id();
-                    } else {
-                        id = data.getUser_id();
-                    }
-                    mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
-                    mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
-                    mEditor.apply();
-                    MyProfileActivity.isEnable = false;
-                    Intent mIntent = new Intent(getActivity(), MyProfileActivity.class);
-                    getActivity().startActivity(mIntent);
-                }
-            });
 
-            holder.txt_name2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String id = "";
-                    if (data.getStatus().equalsIgnoreCase(Common.Constant_Class.ACCEPTED)) {
-                        id = data.getTo_user_id();
-                    } else {
-                        id = data.getUser_id();
-                    }
-                    mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
-                    mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
-                    mEditor.apply();
-                    MyProfileActivity.isEnable = false;
-                    Intent mIntent = new Intent(getActivity(), MyProfileActivity.class);
-                    getActivity().startActivity(mIntent);
-                }
-            });
         }
 
         @Override
@@ -510,16 +547,12 @@ public class RelativeFragment extends Fragment {
 
         class MyViewHolder extends RecyclerView.ViewHolder {
             final TextView txt_status;
-            final TextView txt_name1;
-            final TextView txt_name2;
             final LinearLayout ll_relative;
             final ImageView img_status;
 
             MyViewHolder(@NonNull View view) {
                 super(view);
                 txt_status = view.findViewById(R.id.txt_status);
-                txt_name1 = view.findViewById(R.id.txt_name1);
-                txt_name2 = view.findViewById(R.id.txt_name2);
                 ll_relative = view.findViewById(R.id.ll_relative);
                 img_status = view.findViewById(R.id.img_status);
             }

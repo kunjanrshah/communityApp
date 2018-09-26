@@ -392,7 +392,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             public void onClick(View v) {
                 String date = Common.parseDateToddMMyyyy(edtbdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
                 if (chk_profile_bdate_rem.isChecked()) {
-                    setReminder(date, BIRTH_DATE, 1);
+                    setReminder(date, BIRTH_DATE, 0);
                 } else {
                     setReminder(date, BIRTH_DATE, 0);
                 }

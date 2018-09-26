@@ -452,7 +452,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     Objects.requireNonNull(mViewholder.edtchild_name).setText(mObjChild.getChild_name());
                     Objects.requireNonNull(mViewholder.edtchild_bdate).setText(mObjChild.getChild_bday());
                     Objects.requireNonNull(mViewholder.edtMobile).setText(mObjChild.getMobile());
-                    //mViewholder.chk_child_marriage.setChecked();
+
+                    mViewholder.chk_child_marriage.setChecked(mObjChild.isIs_married());
                     //mViewholder.chk_child_bdate_rem.setChecked();
                     String blood = mObjChild.getBlood_group();
                     if (blood != null && !blood.isEmpty()) {
