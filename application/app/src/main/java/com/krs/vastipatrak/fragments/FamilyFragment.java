@@ -307,9 +307,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             public void onClick(View v) {
                 String date = Common.parseDateToddMMyyyy(edt_mdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
                 if (chk_marriage_bdate_rem.isChecked()) {
-                    setReminder(date, Common.Constant_Class.MARRIAGE_DATE, "1","0");
+                    setReminder(date, Common.Constant_Class.MARRIAGE_DATE, "1", "0");
                 } else {
-                    setReminder(date, Common.Constant_Class.MARRIAGE_DATE, "0","0");
+                    setReminder(date, Common.Constant_Class.MARRIAGE_DATE, "0", "0");
                 }
             }
         });
@@ -319,9 +319,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             public void onClick(View v) {
                 String date = Common.parseDateToddMMyyyy(edtsponse_bdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
                 if (chk_spouse_bdate_rem.isChecked()) {
-                    setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, "1","0");
+                    setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, "1", "0");
                 } else {
-                    setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, "0","0");
+                    setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, "0", "0");
                 }
             }
         });
@@ -388,8 +388,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         btn_add.setVisibility(View.GONE);
         rbtnChildYes.setEnabled(false);
         rbtnChildNo.setEnabled(false);
-        chk_marriage_bdate_rem.setEnabled(false);
-        chk_spouse_bdate_rem.setEnabled(false);
+        chk_marriage_bdate_rem.setEnabled(true);
+        chk_spouse_bdate_rem.setEnabled(true);
     }
 
     private void EnableAll() {
@@ -402,8 +402,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtsponse_mobile.setEnabled(true);
         edtsponse_mobile.setClickable(true);
         edtsponse_nplace.setEnabled(true);
-        chk_marriage_bdate_rem.setEnabled(true);
-        chk_spouse_bdate_rem.setEnabled(true);
+        chk_marriage_bdate_rem.setEnabled(false);
+        chk_spouse_bdate_rem.setEnabled(false);
     }
 
 
@@ -588,9 +588,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             public void onClick(View v) {
                 String date = Common.parseDateToddMMyyyy(mViewholder.edtchild_bdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
                 if (mViewholder.chk_child_bdate_rem.isChecked()) {
-                    setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, "1","");
+                    setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, "1", "");
                 } else {
-                    setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, "0","");
+                    setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, "0", "");
                 }
             }
         });
@@ -660,6 +660,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
                 mViewholder.tbtn_interest.setEnabled(false);
                 mViewholder.radioGroupId.setEnabled(false);
+                mViewholder.chk_child_bdate_rem.setEnabled(true);
+                mViewholder.chk_child_marriage.setEnabled(true);
+            } else {
                 mViewholder.chk_child_bdate_rem.setEnabled(false);
                 mViewholder.chk_child_marriage.setEnabled(false);
             }
@@ -809,7 +812,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         builder.show();
     }
 
-    private void setReminder(String rem_date, String rem_type, String rem_value,String child_id) {
+    private void setReminder(String rem_date, String rem_type, String rem_value, String child_id) {
         if (Common.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
             try {

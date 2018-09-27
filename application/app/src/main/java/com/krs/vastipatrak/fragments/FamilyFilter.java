@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -51,6 +52,7 @@ public class FamilyFilter extends Fragment {
     public EditText edtchild_name, edtcedu, edtchild_work, edtchildbplace, edtcmobile;
     public EditText edt_mdate_from, edt_mdate_to, edt_cdate_from, edt_cdate_to;
     public Spinner spinnerBlood;
+    public CheckBox chk_child_marriage;
     RadioButton radioM, radioF, radioB;
     ArrayAdapter<String> dataAdapter;
     private FloatingActionButton floatingActionButton;
@@ -287,6 +289,13 @@ public class FamilyFilter extends Fragment {
             }
         });
 
+        chk_child_marriage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         return rootView;
     }
 
@@ -310,6 +319,7 @@ public class FamilyFilter extends Fragment {
         radioM = rootView.findViewById(R.id.radioM);
         radioF = rootView.findViewById(R.id.radioF);
         radioB = rootView.findViewById(R.id.radioB);
+        chk_child_marriage= rootView.findViewById(R.id.chk_child_marriage);
     }
 
     private void setAdapterBGlist() {

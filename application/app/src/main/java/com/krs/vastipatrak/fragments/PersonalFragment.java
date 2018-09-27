@@ -621,7 +621,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         rbtnM.setEnabled(true);
         rbtnF.setEnabled(true);
         spinnerBlood.setEnabled(true);
-        chk_profile_bdate_rem.setEnabled(true);
+        chk_profile_bdate_rem.setEnabled(false);
     }
 
     private void DisableAll() {
@@ -676,7 +676,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         spinnerBlood.setEnabled(false);
         spinnerGotra.setEnabled(false);
 
-        chk_profile_bdate_rem.setEnabled(false);
+        chk_profile_bdate_rem.setEnabled(true);
 
     }
 

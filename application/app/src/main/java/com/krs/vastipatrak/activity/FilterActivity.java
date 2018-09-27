@@ -326,6 +326,8 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
             if (((FamilyFilter) family).edtSpouseName != null) {
 
+                boolean child_married = ((FamilyFilter) family).chk_child_marriage.isChecked();
+
                 String strmdate_from = ((FamilyFilter) family).edt_mdate_from.getText().toString().trim();
                 strmdate_from=Common.parseDateToddMMyyyy(strmdate_from,ddMMMyyyy,yyyy_MM_dd);
 
@@ -348,6 +350,11 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String childBplace = ((FamilyFilter) family).edtchildbplace.getText().toString().trim();
                 String bgroup = ((FamilyFilter) family).spinnerBlood.getSelectedItem().toString().trim();
                 String childGender = ((FamilyFilter) family).gender;
+
+                if (child_married) {
+                    mJsonObject.put(Common.Constant_Class.CHILD_MARRIAGE, child_married);
+                    lstProceed.add("Child Marriage: " + child_married);
+                }
 
                 if (!bgroup.equalsIgnoreCase("") && !bgroup.equalsIgnoreCase(TITLE_CHILD_BLOOD_GROUP)) {
                     mJsonObject.put(Common.Constant_Class.CHILD_BLOOD_GROUP, bgroup);
