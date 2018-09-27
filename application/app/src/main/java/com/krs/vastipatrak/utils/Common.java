@@ -2108,7 +2108,7 @@ public class Common {
         public static final String FROM_LAST_NAME = "from_last_name";
         public static final String REQUESTED = "REQUESTED";
         public static final String ACCEPTED = "ACCEPTED";
-
+        public static final String REJECTED = "REJECTED";
 
         public static final String EMAIL_ADDRESS = "email_address";
         public static final String PASSWORD = "password";

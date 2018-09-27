@@ -355,7 +355,7 @@ public class RelativeFragment extends Fragment {
             this.listener = listener;
         }
 
-        public void makeLinks(TextView textView, String[] links, ClickableSpan[] clickableSpans) {
+        /*public void makeLinks(TextView textView, String[] links, ClickableSpan[] clickableSpans) {
             SpannableString spannableString = new SpannableString(textView.getText());
             for (int i = 0; i < links.length; i++) {
                 ClickableSpan clickableSpan = clickableSpans[i];
@@ -367,7 +367,7 @@ public class RelativeFragment extends Fragment {
             textView.setHighlightColor(Color.TRANSPARENT); // prevent TextView change background when highlight
             textView.setMovementMethod(LinkMovementMethod.getInstance());
             textView.setText(spannableString, TextView.BufferType.SPANNABLE);
-        }
+        }*/
 
         @NonNull
         @Override
@@ -394,7 +394,7 @@ public class RelativeFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
             final Relative reldata = lstRelative.get(position);
             String from_name = reldata.getFrom_first_name() + " " + reldata.getFrom_last_name();
             from_name = Common.camelCase(from_name);
@@ -405,7 +405,7 @@ public class RelativeFragment extends Fragment {
             final String user_id = reldata.getUser_id();
             String relation = reldata.getRelation();
 
-            ClickableSpan clickableSpan1 = new ClickableSpan() {
+           /* ClickableSpan clickableSpan1 = new ClickableSpan() {
                 @Override
                 public void onClick(View textView) {
                     String str = ((TextView) textView).getText().toString().toLowerCase();
@@ -447,18 +447,38 @@ public class RelativeFragment extends Fragment {
                     super.updateDrawState(ds);
                     ds.setUnderlineText(false);
                 }
-            };
+            };*/
 
+            holder.txt_from.setText(from_name);
+            holder.txt_to.setText(last_name);
+            holder.txt_msg.setText(Common.getCapsSentences(relation));
             if (status.contains(Common.Constant_Class.ACCEPTED)) {
-                holder.txt_status.setText(Html.fromHtml(last_name + " is <b>" + Common.getCapsSentences(relation) + "</b> of " + from_name));
+                holder.txt_request.setText("Requested from ");
+                holder.txt_approve.setText("Approved from ");
+                holder.txt_from.setTextColor(getResources().getColor(R.color.primary_blue));
+                holder.txt_to.setTextColor(getResources().getColor(R.color.primary_blue));
                 holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.ico_approve));
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape1));
-                makeLinks(holder.txt_status, new String[]{last_name, from_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
+              // holder.txt_status.setText(Html.fromHtml(last_name + "  <b>" + Common.getCapsSentences(relation) + "</b> of " + from_name));
+               // makeLinks(holder.txt_status, new String[]{last_name, from_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
             } else if (status.contains(Common.Constant_Class.REQUESTED)) {
-                holder.txt_status.setText(Html.fromHtml(from_name + " has requested for <b>" + Common.getCapsSentences(relation) + "</b> to " + last_name));
+                holder.txt_request.setText("Requested from ");
+                holder.txt_approve.setText("To ");
+                holder.txt_from.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                holder.txt_to.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                //holder.txt_status.setText(Html.fromHtml(from_name + " requested <b>" + Common.getCapsSentences(relation) + "</b> to " + last_name));
                 holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.cancel));
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape10));
-                makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
+               // makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
+            }else if (status.contains(Common.Constant_Class.REJECTED)) {
+                holder.txt_request.setText("Requested from ");
+                holder.txt_approve.setText("Rejected from ");
+                holder.txt_from.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                holder.txt_to.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                //holder.txt_status.setText(Html.fromHtml(last_name + " rejected <b>" + Common.getCapsSentences(relation) + "</b> to " + from_name));
+                holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.cancel));
+                holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape9));
+               // makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
             }
 
             if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
@@ -503,7 +523,7 @@ public class RelativeFragment extends Fragment {
                             }
                         }).show();
                     } else {
-                        Toast.makeText(getActivity(), "Ask " + finalLast_name + " to approve !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Long Press to DELETE !", Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -531,7 +551,28 @@ public class RelativeFragment extends Fragment {
                 }
             });
 
+            holder.ll_from.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  /*  String str = ((TextView) textView).getText().toString().toLowerCase();
+                    int len = str.indexOf(reldata.getRelation().toLowerCase());
+                    String str1 = str.substring(0, len);*/
+                  /*  String id = "";
+                    if (holder.txt_from.getText().toString().toLowerCase().contains(reldata.getFrom_first_name().toLowerCase())) {
+                        id = reldata.getUser_id();
+                    } else {
+                        id = reldata.getTo_user_id();
+                    }*/
+                    moveToprofile(reldata.getUser_id());
+                }
+            });
 
+            holder.ll_to.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    moveToprofile(reldata.getTo_user_id());
+                }
+            });
         }
 
         @Override
@@ -546,14 +587,22 @@ public class RelativeFragment extends Fragment {
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {
-            final TextView txt_status;
-            final LinearLayout ll_relative;
+            final TextView txt_msg,txt_to,txt_from,txt_request,txt_approve;
+            final LinearLayout ll_relative,ll_from,ll_to;
             final ImageView img_status;
 
             MyViewHolder(@NonNull View view) {
                 super(view);
-                txt_status = view.findViewById(R.id.txt_status);
+                txt_msg = view.findViewById(R.id.txt_msg);
+                txt_to = view.findViewById(R.id.txt_to);
+
+                txt_request = view.findViewById(R.id.txt_request);
+                txt_approve = view.findViewById(R.id.txt_approve);
+
+                txt_from = view.findViewById(R.id.txt_from);
                 ll_relative = view.findViewById(R.id.ll_relative);
+                ll_from = view.findViewById(R.id.ll_from);
+                ll_to = view.findViewById(R.id.ll_to);
                 img_status = view.findViewById(R.id.img_status);
             }
         }
