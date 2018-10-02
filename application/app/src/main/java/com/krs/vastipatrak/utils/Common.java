@@ -20,7 +20,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -45,7 +44,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ExportProfileData;
 import com.krs.vastipatrak.model.ListChildrenData;
@@ -768,6 +766,17 @@ public class Common {
             if (mJsonObject.has(Constant_Class.ID)) {
                 mListProfileData.setProfile_id(mJsonObject.getString(Constant_Class.ID));
             }
+
+            if (mJsonObject.has(Constant_Class.BDATE_REMINDER_ID)) {
+                mListProfileData.setBdate_reminder_id(mJsonObject.getString(Constant_Class.BDATE_REMINDER_ID));
+            }
+            if (mJsonObject.has(Constant_Class.SPOUSE_BDATE_REMINDER_ID)) {
+                mListProfileData.setSpouse_bdate_reminder_id(mJsonObject.getString(Constant_Class.SPOUSE_BDATE_REMINDER_ID));
+            }
+            if (mJsonObject.has(Constant_Class.MDATE_REMINDER_ID)) {
+                mListProfileData.setMdate_reminder_id(mJsonObject.getString(Constant_Class.MDATE_REMINDER_ID));
+            }
+
             if (mJsonObject.has(Common.Constant_Class.FIRST_NAME)) {
                 mListProfileData.setFirst_name(mJsonObject.getString(Common.Constant_Class.FIRST_NAME));
             }
@@ -836,7 +845,7 @@ public class Common {
                 mListProfileData.setWork(mJsonObject.getString(Common.Constant_Class.WORK));
             }
             if (mJsonObject.has(Common.Constant_Class.OFFICE_ADDRESS)) {
-                mListProfileData.setOffice_address(mJsonObject.getString(Common.Constant_Class.OCCUPATION));
+                mListProfileData.setOffice_address(mJsonObject.getString(Constant_Class.OFFICE_ADDRESS));
             }
             if (mJsonObject.has(Common.Constant_Class.MARRIAGE_DATE)) {
                 mListProfileData.setMarriage_date(ChangedateFormat(mJsonObject.getString(Constant_Class.MARRIAGE_DATE)));
@@ -937,6 +946,10 @@ public class Common {
                     }
                     if (mJsonObj.has(Constant_Class.BLOOD_GROUP)) {
                         mListChildrendata.setBlood_group(mJsonObj.getString(Common.Constant_Class.BLOOD_GROUP));
+                    }
+
+                    if (mJsonObj.has(Constant_Class.CHILD_BDATE_REMINDER_ID)) {
+                        mListChildrendata.setChild_bdate_reminder_id(mJsonObj.getString(Common.Constant_Class.CHILD_BDATE_REMINDER_ID));
                     }
 
                     if (mJsonObj.has(Constant_Class.GENDER)) {
@@ -2026,7 +2039,7 @@ public class Common {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            s=s+">";
+            s = s + ">";
             Log.d("getDistance", "distance: " + s);
 
             if (txtDistance != null) {
@@ -2144,6 +2157,11 @@ public class Common {
         public static final String QUERY_STRING = "query_string";
         public static final String PUSH_MESSAGE = "push_message";
         public static final String ID = "id";
+
+        public static final String BDATE_REMINDER_ID = "bdate_reminder_id";
+        public static final String SPOUSE_BDATE_REMINDER_ID = "spouse_bdate_reminder_id";
+        public static final String MDATE_REMINDER_ID = "mdate_reminder_id";
+
         public static final String IDList = "idList";
         public static final String STATUS = "status";
         public static final String PROFILE_PIC_URL = "profile_pic_url";
@@ -2200,6 +2218,9 @@ public class Common {
         public static final String CHILD_ID = "id";
         public static final String _CHILD_ID = "child_id";
         public static final String CHILD_NAME = "child_name";
+
+        public static final String CHILD_BDATE_REMINDER_ID = "child_bdate_reminder_id";
+
         public static final String CHILD_BDAY = "child_bday";
         public static final String FROM_CHILD_BDAY = "from_child_bday";
         public static final String TO_CHILD_BDAY = "to_child_bday";
@@ -2246,7 +2267,7 @@ public class Common {
         public static final String GET_GOTRA_URL = BASE_URL + "/API/getGotra";
         public static final String SHARED_USERS_URL = BASE_URL + "/API/shareUsers";
         public static final String NEAR_BY_USERS_URL = BASE_URL + "/API/getNearByUsers";
-            public static final String SEND_REQUEST_URL = BASE_URL + "/API/sendRequest";
+        public static final String SEND_REQUEST_URL = BASE_URL + "/API/sendRequest";
         public static final String REQUEST_ACTION_URL = BASE_URL + "/API/requestAction";
         public static final String GET_RELATIONS_URL = BASE_URL + "/API/getRelations";
         public static final String SET_REMINDER_URL = BASE_URL + "/API/setReminder";

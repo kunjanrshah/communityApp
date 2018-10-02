@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -77,6 +78,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     public String gender = "";
     public Spinner spinnerBlood, spinnerGotra;
     public EditText edtbdate = null;
+    public CheckBox chk_profile_bdate_rem = null;
+    public String profile_bdate_rem = "0";
     private ToggleButton tbtn_share;
     private RadioButton rbtnM;
     private RadioButton rbtnF;
@@ -94,7 +97,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private double home_lat;
     private double home_lng;
     private boolean setChecked = false;
-    private CheckBox chk_profile_bdate_rem = null;
     private TextView txt_distance;
     private double user_lat;
     private double user_lng;
@@ -121,7 +123,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
         MemoryAllocation(rootView);
 
-
+        hideKeyboard(getActivity());
         img_profile.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -394,7 +396,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 if (chk_profile_bdate_rem.isChecked()) {
                     setReminder(date, BIRTH_DATE, 0);
                 } else {
-                    setReminder(date, BIRTH_DATE, 0);
+                       setReminder(date, BIRTH_DATE, Integer.parseInt(profile_bdate_rem));
                 }
             }
         });
@@ -680,7 +682,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
     }
 
-
     @SuppressLint("SetTextI18n")
     private void setOfflineData(ListProfileData mListProfileData) {
 
@@ -696,8 +697,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             String str_time = mListProfileData.getBirth_time();
             String is_block = mListProfileData.getIs_block();
             String is_loc_enable = mListProfileData.isIs_location_enable();
-            boolean profile_bdate_rem = mListProfileData.isChk_profile_bdate_rem();
-            chk_profile_bdate_rem.setChecked(profile_bdate_rem);
+            profile_bdate_rem = mListProfileData.getBdate_reminder_id();
+            if (profile_bdate_rem.equalsIgnoreCase("0")) {
+                chk_profile_bdate_rem.setChecked(false);
+            } else {
+                chk_profile_bdate_rem.setChecked(true);
+            }
 
             if (str_time.length() > 5) {
                 str_time = mListProfileData.getBirth_time().substring(0, 5);
@@ -848,7 +853,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         String success = response.getString(Common.Constant_Class.SUCCESS);
 
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-
+                            JSONObject mObject = response.getJSONObject(Common.Constant_Class.DATA);
+                            profile_bdate_rem = mObject.getString("reminder_id");
                         } else {
 
                         }
@@ -1008,6 +1014,16 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
    /* private void getDistanceOnRoad(double latitude, double longitude,
                                      double prelatitute, double prelongitude) {

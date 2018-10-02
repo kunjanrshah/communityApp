@@ -38,10 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
-import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
-import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
 public class CalendarFragment extends Fragment {
 
@@ -149,12 +146,12 @@ public class CalendarFragment extends Fragment {
             JSONObject mJsonObject = null;
             try {
 
-               // date=Common.parseDateToddMMyyyy(date,ddMMMyyyy,yyyy_MM_dd);
+                // date=Common.parseDateToddMMyyyy(date,ddMMMyyyy,yyyy_MM_dd);
                 mJsonObject = new JSONObject();
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.DATE,date);
+                mJsonObject.put(Common.Constant_Class.DATE, date);
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-               // mJsonObject.put("search_str", "kunjan");//date.trim()
+                // mJsonObject.put("search_str", "kunjan");//date.trim()
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -190,10 +187,10 @@ public class CalendarFragment extends Fragment {
         try {
             String success = response.getString(Common.Constant_Class.SUCCESS);
             String message = response.getString(Common.Constant_Class.MESSAGE);
-
+            listDataHeader.clear();
+            listDataChild.clear();
             if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                listDataHeader.clear();
-                listDataChild.clear();
+
                 lvCustomList.setVisibility(View.VISIBLE);
                 JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                 for (int i = 0; i < mJsonArray.length(); i++) {
@@ -266,11 +263,10 @@ public class CalendarFragment extends Fragment {
                     mlstChildData.add(lcd);
                     listDataHeader.add(lpd);
                     listDataChild.put(lpd, mlstChildData);
-
                 }
-                mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, false);
-                lvCustomList.setAdapter(mExpandableListAdapter);
             }
+            mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, false);
+            lvCustomList.setAdapter(mExpandableListAdapter);
             Toast.makeText(getActivity(), "" + message, Toast.LENGTH_LONG).show();
             hideProgressDialog();
         } catch (Exception e) {

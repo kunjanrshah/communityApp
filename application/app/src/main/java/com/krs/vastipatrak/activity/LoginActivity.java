@@ -67,6 +67,7 @@ import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 public class LoginActivity extends Activity {
 
 
+    final boolean[] isLogin = {false};
     private final String[] INIT_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS};
     private final int CAMARA_REQUEST = 4;
     private final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
@@ -97,8 +98,6 @@ public class LoginActivity extends Activity {
     private boolean SignupToggle = true;
     private Button btn_signup;
     private TextView txt_forgot, txtSignup;
-    final boolean[] isLogin = {false};
-
     @Nullable
     private TextView txtTour = null;
     private Realm realm;
@@ -632,7 +631,7 @@ public class LoginActivity extends Activity {
                                     mEditor.putString(Common.Constant_Class.UPDATED_TIME, updated_time);
                                     mEditor.putString(Common.Constant_Class.ROLE, role);
                                     mEditor.putString(Common.Constant_Class.TBTN_SHARE, is_location_enable);
-                                    mEditor.putString(Common.Constant_Class.OFFICE_LAT,office_lat);
+                                    mEditor.putString(Common.Constant_Class.OFFICE_LAT, office_lat);
                                     mEditor.putString(Common.Constant_Class.OFFICE_LNG, office_lng);
                                     mEditor.putString(Common.Constant_Class.HOME_LAT, home_lat);
                                     mEditor.putString(Common.Constant_Class.HOME_LNG, home_lng);
@@ -726,6 +725,12 @@ public class LoginActivity extends Activity {
             String subcast = spinnerSubcast.getText().toString();
             final String ekdo = spinnerEkdo.getText().toString();
 
+            if (!email.equalsIgnoreCase("")) {
+                if (Common.isValidEmail(email)) {
+                    Toast.makeText(LoginActivity.this, "Type Valid Email Address!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
 
             if (!email.equalsIgnoreCase("") && !name.equalsIgnoreCase("") && !mobile.equalsIgnoreCase("") && !password.equalsIgnoreCase("") && !cpassword.equalsIgnoreCase("")) {
                 if (password.equalsIgnoreCase(cpassword)) {

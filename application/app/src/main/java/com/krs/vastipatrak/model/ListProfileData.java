@@ -63,20 +63,48 @@ public class ListProfileData extends RealmObject {
     private String sponse_native;
     private String sponse_mobile;
 
-    public boolean isChk_profile_bdate_rem() {
+    private String bdate_reminder_id;
+    private String spouse_bdate_reminder_id;
+    private String mdate_reminder_id;
+    public String getBdate_reminder_id() {
+        return bdate_reminder_id;
+    }
+
+    public void setBdate_reminder_id(String bdate_reminder_id) {
+        this.bdate_reminder_id = bdate_reminder_id;
+    }
+
+    public String getSpouse_bdate_reminder_id() {
+        return spouse_bdate_reminder_id;
+    }
+
+    public void setSpouse_bdate_reminder_id(String spouse_bdate_reminder_id) {
+        this.spouse_bdate_reminder_id = spouse_bdate_reminder_id;
+    }
+
+    public String getMdate_reminder_id() {
+        return mdate_reminder_id;
+    }
+
+    public void setMdate_reminder_id(String mdate_reminder_id) {
+        this.mdate_reminder_id = mdate_reminder_id;
+    }
+
+
+   /* public boolean isChk_profile_bdate_rem() {
         return chk_profile_bdate_rem;
     }
 
     public void setChk_profile_bdate_rem(boolean chk_profile_bdate_rem) {
         this.chk_profile_bdate_rem = chk_profile_bdate_rem;
-    }
+    }*/
 
-    private boolean chk_profile_bdate_rem;
+   /* private boolean chk_profile_bdate_rem;
     private boolean chk_spouse_bdate_rem;
-    private boolean chk_m_bdate_rem;
+    private boolean chk_m_bdate_rem;*/
     private RealmList<ListChildrenData> mListChildrenData;
 
-    public boolean getChk_spouse_bdate_rem() {
+  /*  public boolean getChk_spouse_bdate_rem() {
         return chk_spouse_bdate_rem;
     }
 
@@ -90,7 +118,7 @@ public class ListProfileData extends RealmObject {
 
     public void setChk_m_bdate_rem(boolean chk_m_bdate_rem) {
         this.chk_m_bdate_rem = chk_m_bdate_rem;
-    }
+    }*/
 
     public String getSponse_bdate() {
         return sponse_bdate;

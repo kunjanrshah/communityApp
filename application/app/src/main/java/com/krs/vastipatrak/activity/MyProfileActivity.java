@@ -291,6 +291,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 String str_profile_hash = ((PersonalFragment) personal).str_profile_hash;
                 String str_father_hash = ((PersonalFragment) personal).str_father_hash;
                 String str_mother_hash = ((PersonalFragment) personal).str_mother_hash;
+                boolean bdate_rem = ((PersonalFragment) personal).chk_profile_bdate_rem.isChecked();
 
                 // Business Details
                 String occupation = ((BusinessFragment) business).edtOccupation.getText().toString().trim();
@@ -375,8 +376,9 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mListProfileData.setStr_fspouse_hash(str_fspouse_hash);
                     mListProfileData.setStr_mspouse_hash(str_mspouse_hash);
                     mListProfileData.setStr_spouse_hash(str_spouse_hash);
-                    mListProfileData.setChk_m_bdate_rem(chk_m_bdate_rem);
-                    mListProfileData.setChk_spouse_bdate_rem(chk_spouse_bdate_rem);
+
+                  //  mListProfileData.setMdate_reminder_id(chk_m_bdate_rem);
+                   // mListProfileData.setSpouse_bdate_reminder_id(chk_spouse_bdate_rem);
                     setProfileJsonObject(mListProfileData, child_container, Objects.requireNonNull(lst_delID));
                 } else {
                     Toast.makeText(MyProfileActivity.this, "" + valid, Toast.LENGTH_SHORT).show();

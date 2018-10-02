@@ -22,6 +22,15 @@ public class ListChildrenData extends RealmObject{
     private String gender;
     private byte[] ChildBytes;
 
+    public String getChild_bdate_reminder_id() {
+        return child_bdate_reminder_id;
+    }
+
+    public void setChild_bdate_reminder_id(String child_bdate_reminder_id) {
+        this.child_bdate_reminder_id = child_bdate_reminder_id;
+    }
+
+    private String child_bdate_reminder_id;
     public boolean isIs_married() {
         return is_married;
     }

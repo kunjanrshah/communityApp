@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.melnykov.fab.ObservableScrollView
+    <ScrollView
         android:id="@+id/scroll_pdetails"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -286,9 +286,8 @@
                     android:id="@+id/edtCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_city"
-                    android:inputType="textCapSentences"
-                    android:nextFocusDown="@+id/input_layout_address" />
+                    android:singleLine="true"
+                    android:hint="@string/hint_city"      />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -301,7 +300,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_email"
-                    android:nextFocusDown="@+id/input_layout_city"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
@@ -380,10 +378,8 @@
                     android:prompt="@string/spinner_blood" />
 
             </LinearLayout>
-
-
         </LinearLayout>
-    </com.melnykov.fab.ObservableScrollView>
+    </ScrollView>
 
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab_psave"

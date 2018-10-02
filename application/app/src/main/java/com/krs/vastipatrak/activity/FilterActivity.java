@@ -121,11 +121,11 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         });
     }
 
-    @Override
+   /* @Override
     public void onBackPressed() {
         super.onBackPressed();
         backNavigation();
-    }
+    }*/
 
     private void backNavigation() {
         /*Fragment fragment = new FragmentDrawer();

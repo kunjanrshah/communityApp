@@ -423,8 +423,18 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edt_mdate.setText(mListProfileData.getMarriage_date());
         edtSpouseFName.setText(mListProfileData.getSfather_name());
         edtMSpouseName.setText(mListProfileData.getSmother_name());
-        //chk_marriage_bdate_rem.setChecked();
-        //chk_spouse_bdate_rem.setChecked();
+        if (mListProfileData.getMdate_reminder_id().equalsIgnoreCase("0")) {
+            chk_marriage_bdate_rem.setChecked(false);
+        } else {
+            chk_marriage_bdate_rem.setChecked(true);
+        }
+
+        if (mListProfileData.getSpouse_bdate_reminder_id().equalsIgnoreCase("0")) {
+            chk_spouse_bdate_rem.setChecked(false);
+        } else {
+            chk_spouse_bdate_rem.setChecked(true);
+        }
+
         spouse_url = mListProfileData.getImg_spouse_url();
         fspouse_url = mListProfileData.getImg_sfather_url();
         mspouse_url = mListProfileData.getImg_smother_url();
@@ -454,7 +464,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     Objects.requireNonNull(mViewholder.edtMobile).setText(mObjChild.getMobile());
 
                     mViewholder.chk_child_marriage.setChecked(mObjChild.isIs_married());
-                    //mViewholder.chk_child_bdate_rem.setChecked();
+                    if (mObjChild.getChild_bdate_reminder_id().equalsIgnoreCase("0")) {
+                        mViewholder.chk_child_bdate_rem.setChecked(false);
+                    } else {
+                        mViewholder.chk_child_bdate_rem.setChecked(true);
+                    }
                     String blood = mObjChild.getBlood_group();
                     if (blood != null && !blood.isEmpty()) {
                         if (blood.equalsIgnoreCase(Common.Constant_Class.A_POSITIVE)) {
@@ -777,8 +791,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         dialog.dismiss();
                     }
                 }).show();
-
-
             }
         });
         child_container.addView(addView);
@@ -835,9 +847,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     try {
                         Common.hideProgressDialog();
                         String success = response.getString(Common.Constant_Class.SUCCESS);
-
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-
+                            JSONObject mObject = response.getJSONObject(Common.Constant_Class.DATA);
+                           // profile_bdate_rem = mObject.getString("reminder_id");
                         } else {
 
                         }
