@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -105,6 +106,17 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
     public PersonalFragment() {
 
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override
@@ -396,7 +408,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 if (chk_profile_bdate_rem.isChecked()) {
                     setReminder(date, BIRTH_DATE, 0);
                 } else {
-                       setReminder(date, BIRTH_DATE, Integer.parseInt(profile_bdate_rem));
+                    setReminder(date, BIRTH_DATE, Integer.parseInt(profile_bdate_rem));
                 }
             }
         });
@@ -498,9 +510,56 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             e.printStackTrace();
         }
 
+        edtMobile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !MyProfileActivity.isEnable) {
+                    try {
+                        boolean flag = true;
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            if (Common.canCallPhone(getActivity())) {
+                                flag = false;
+                            }
+                        }
+                        if (flag) {
+                            String phone_no = edtMobile.getText().toString().replaceAll("-", "");
+                            Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                            callIntent.setData(Uri.parse("tel:" + phone_no.trim()));
+                            getActivity().startActivity(callIntent);
+                        }
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        edt_phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !MyProfileActivity.isEnable) {
+                    try {
+                        boolean flag = true;
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            if (Common.canCallPhone(getActivity())) {
+                                flag = false;
+                            }
+                        }
+                        if (flag) {
+                            String phone_no = edt_phone.getText().toString().replaceAll("-", "");
+                            Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                            callIntent.setData(Uri.parse("tel:" + phone_no.trim()));
+                            getActivity().startActivity(callIntent);
+                        }
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
         return rootView;
     }
-
 
     private void openImageDialog(String name, String url) {
         Dialog dialog = new Dialog(mActivity);
@@ -659,8 +718,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtAddress.setCursorVisible(false);
 
         edt_phone.setKeyListener(null);
-
-
         edt_phone.setCursorVisible(false);
 
         edtbTime.setKeyListener(null);
@@ -1014,17 +1071,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
-        View view = activity.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
    /* private void getDistanceOnRoad(double latitude, double longitude,
                                      double prelatitute, double prelongitude) {
         String result_in_kms = "";
@@ -1077,7 +1123,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
     }*/
-
 
     private void alert(String message) {
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);

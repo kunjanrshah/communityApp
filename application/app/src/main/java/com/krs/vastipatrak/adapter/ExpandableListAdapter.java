@@ -343,7 +343,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 builder.setMessage(_context.getResources().getString(R.string.go_to_whatsapp));
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                     public void onClick(@NonNull DialogInterface dialog, int which) {
-                        Common.SendWhatsappMessage(_context, mobile, String.format(_context.getResources().getString(R.string.nice_html), name));
+                        String fname = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "");
+                        String lname = mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
+                        String uname = fname + " " + lname;
+                        Common.SendWhatsappMessage(_context, mobile, String.format(_context.getResources().getString(R.string.nice_html), uname, name));
                         dialog.dismiss();
                     }
                 });
@@ -501,18 +504,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String styledText = "<u><font color='blue'>" + Mobile + "</font></u>";
         groupViewHolder.tvMobile.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
 
-        if (sharedUsers) {
-            if (Shared != null && Shared.equalsIgnoreCase("from")) {
-                groupViewHolder.ll_parent.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape1));
-
-
-            } else {
-                groupViewHolder.ll_parent.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape5));
-            }
-        } else {
-            getParentRandomColor(_context, groupPosition, groupViewHolder.ll_parent);
-        }
-
         int group_id = (int) getGroupId(groupPosition);
         CheckListener checkL = new CheckListener();
         groupViewHolder.checkbox.setOnCheckedChangeListener(checkL);
@@ -540,10 +531,35 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
                 new Common.getDistance((Activity) _context, groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, curr_lat, curr_lng, user_lat, user_lng);
             } else {
-                groupViewHolder.txt_distance.setVisibility(View.GONE);
+                groupViewHolder.txt_distance.setText("Not found");
+                groupViewHolder.txt_distance.setClickable(false);
+                groupViewHolder.txt_distance.setEnabled(false);
+                groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
             }
+        } else if (is_share.equalsIgnoreCase("1") && mListParentData.isIs_location_enable().equalsIgnoreCase("0")) {
+
+            groupViewHolder.txt_distance.setText("OFF");
+            groupViewHolder.txt_distance.setClickable(false);
+            groupViewHolder.txt_distance.setEnabled(false);
+            groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
         } else {
             groupViewHolder.txt_distance.setVisibility(View.GONE);
+        }
+
+        if (sharedUsers) {
+            if (Shared != null && Shared.equalsIgnoreCase("from")) {
+                groupViewHolder.ll_parent.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape1));
+            } else {
+                groupViewHolder.txt_distance.setText("by you");
+                groupViewHolder.txt_distance.setClickable(false);
+                groupViewHolder.txt_distance.setEnabled(false);
+                groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
+                groupViewHolder.ll_parent.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape5));
+            }
+        } else {
+            groupViewHolder.txt_distance.setEnabled(true);
+            groupViewHolder.txt_distance.setClickable(true);
+            getParentRandomColor(_context, groupPosition, groupViewHolder.ll_parent);
         }
 
         groupViewHolder.txt_distance.setOnClickListener(new View.OnClickListener() {

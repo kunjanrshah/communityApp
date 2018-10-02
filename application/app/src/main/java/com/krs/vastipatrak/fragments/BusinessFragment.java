@@ -142,8 +142,26 @@ public class BusinessFragment extends Fragment implements Serializable {
                             Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                             startActivityForResult(it, CONTACT_PICKER_RESULT);
                         }
-
                         return true;
+                    } else {
+                        if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !MyProfileActivity.isEnable) {
+                            try {
+                                boolean flag = true;
+                                if (Build.VERSION.SDK_INT >= 23) {
+                                    if (Common.canCallPhone(getActivity())) {
+                                        flag = false;
+                                    }
+                                }
+                                if (flag) {
+                                    String phone_no = edtOMobile.getText().toString().replaceAll("-", "");
+                                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                                    callIntent.setData(Uri.parse("tel:" + phone_no.trim()));
+                                    getActivity().startActivity(callIntent);
+                                }
+                            } catch (SecurityException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
                 return false;
@@ -155,6 +173,7 @@ public class BusinessFragment extends Fragment implements Serializable {
                 DisableAll();
             }
         }
+
         return rootView;
     }
 
@@ -235,7 +254,7 @@ public class BusinessFragment extends Fragment implements Serializable {
         edtOMobile = rootView.findViewById(R.id.edtOMobile);
         edtOAddress = rootView.findViewById(R.id.edtOAddress);
         mSharedPreferences = mActivity.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
-        mEditor=mSharedPreferences.edit();
+        mEditor = mSharedPreferences.edit();
         mEditor.apply();
         user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
         txt_office = rootView.findViewById(R.id.txt_office);
@@ -294,7 +313,6 @@ public class BusinessFragment extends Fragment implements Serializable {
     private void EnableAll() {
         edtOccupation.setEnabled(true);
         edtWork.setEnabled(true);
-        edtOMobile.setEnabled(true);
         edtOAddress.setEnabled(true);
     }
 

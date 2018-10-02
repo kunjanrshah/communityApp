@@ -332,6 +332,30 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             }
         }
 
+        edtsponse_mobile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !MyProfileActivity.isEnable) {
+                    try {
+                        boolean flag = true;
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            if (Common.canCallPhone(getActivity())) {
+                                flag = false;
+                            }
+                        }
+                        if (flag) {
+                            String phone_no = edtsponse_mobile.getText().toString().replaceAll("-", "");
+                            Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                            callIntent.setData(Uri.parse("tel:" + phone_no.trim()));
+                            getActivity().startActivity(callIntent);
+                        }
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
         return rootView;
     }
 
@@ -366,10 +390,10 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
         edtsponse_bdate.setKeyListener(null);
         edtsponse_bdate.setCursorVisible(false);
+
         edtsponse_mobile.setKeyListener(null);
-        edtsponse_mobile.setEnabled(false);
-        edtsponse_mobile.setClickable(false);
         edtsponse_mobile.setCursorVisible(false);
+
         edtsponse_nplace.setKeyListener(null);
         edtsponse_nplace.setCursorVisible(false);
 
@@ -398,9 +422,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtSpouseFName.setEnabled(true);
         edtMSpouseName.setEnabled(true);
         edtsponse_bdate.setEnabled(true);
-        edtsponse_mobile.setEnabled(true);
-        edtsponse_mobile.setEnabled(true);
-        edtsponse_mobile.setClickable(true);
         edtsponse_nplace.setEnabled(true);
         chk_marriage_bdate_rem.setEnabled(false);
         chk_spouse_bdate_rem.setEnabled(false);
@@ -646,41 +667,57 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         });
 
 
-        if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
+        if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !MyProfileActivity.isEnable) {
+            Objects.requireNonNull(mViewholder.btn_remove).setVisibility(View.GONE);
+            Objects.requireNonNull(mViewholder.edtchild_name).setKeyListener(null);
+            mViewholder.edtchild_name.setCursorVisible(false);
 
-            if (!MyProfileActivity.isEnable) {
+            Objects.requireNonNull(mViewholder.edtMobile).setKeyListener(null);
+            mViewholder.edtMobile.setCursorVisible(false);
+            mViewholder.spinnerBlood.setEnabled(false);
+            Objects.requireNonNull(mViewholder.edtchild_bdate).setKeyListener(null);
+            mViewholder.edtchild_bdate.setCursorVisible(false);
 
-                Objects.requireNonNull(mViewholder.btn_remove).setVisibility(View.GONE);
-                Objects.requireNonNull(mViewholder.edtchild_name).setKeyListener(null);
-                mViewholder.edtchild_name.setCursorVisible(false);
+            Objects.requireNonNull(mViewholder.edtchild_edu).setKeyListener(null);
+            mViewholder.edtchild_edu.setCursorVisible(false);
 
-                Objects.requireNonNull(mViewholder.edtMobile).setKeyListener(null);
-                mViewholder.edtMobile.setCursorVisible(false);
-                mViewholder.spinnerBlood.setEnabled(false);
-                Objects.requireNonNull(mViewholder.edtchild_bdate).setKeyListener(null);
-                mViewholder.edtchild_bdate.setCursorVisible(false);
+            mViewholder.edtchild_work.setKeyListener(null);
+            mViewholder.edtchild_work.setCursorVisible(false);
 
-                Objects.requireNonNull(mViewholder.edtchild_edu).setKeyListener(null);
-                mViewholder.edtchild_edu.setCursorVisible(false);
+            Objects.requireNonNull(mViewholder.edtchild_bplace).setKeyListener(null);
+            mViewholder.edtchild_bplace.setCursorVisible(false);
 
-                mViewholder.edtchild_work.setKeyListener(null);
-                mViewholder.edtchild_work.setCursorVisible(false);
+            Objects.requireNonNull(mViewholder.edtchild_btime).setKeyListener(null);
+            mViewholder.edtchild_btime.setCursorVisible(false);
 
-                Objects.requireNonNull(mViewholder.edtchild_bplace).setKeyListener(null);
-                mViewholder.edtchild_bplace.setCursorVisible(false);
-
-                Objects.requireNonNull(mViewholder.edtchild_btime).setKeyListener(null);
-                mViewholder.edtchild_btime.setCursorVisible(false);
-
-                mViewholder.tbtn_interest.setEnabled(false);
-                mViewholder.radioGroupId.setEnabled(false);
-                mViewholder.chk_child_bdate_rem.setEnabled(true);
-                mViewholder.chk_child_marriage.setEnabled(true);
-            } else {
-                mViewholder.chk_child_bdate_rem.setEnabled(false);
-                mViewholder.chk_child_marriage.setEnabled(false);
-            }
+            mViewholder.tbtn_interest.setEnabled(false);
+            mViewholder.chk_child_bdate_rem.setEnabled(true);
+            mViewholder.chk_child_marriage.setClickable(false);
         }
+
+        mViewholder.edtMobile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !MyProfileActivity.isEnable) {
+                    try {
+                        boolean flag = true;
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            if (Common.canCallPhone(getActivity())) {
+                                flag = false;
+                            }
+                        }
+                        if (flag) {
+                            String phone_no = mViewholder.edtMobile.getText().toString().replaceAll("-", "");
+                            Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                            callIntent.setData(Uri.parse("tel:" + phone_no.trim()));
+                            getActivity().startActivity(callIntent);
+                        }
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
 
         mViewholder.edtchild_bdate.setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
@@ -849,7 +886,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             JSONObject mObject = response.getJSONObject(Common.Constant_Class.DATA);
-                           // profile_bdate_rem = mObject.getString("reminder_id");
+                            // profile_bdate_rem = mObject.getString("reminder_id");
                         } else {
 
                         }

@@ -27,41 +27,14 @@ public class ShareEventActivity extends AppCompatActivity implements AdvancedWeb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      //  getWindow().requestFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_share_event);
-        mWebView = (AdvancedWebView) findViewById(R.id.webview);
+        mWebView = findViewById(R.id.webview);
         mWebView.getSettings().setSupportMultipleWindows(true);
         mWebView.setGeolocationEnabled(true);
         mWebView.setListener(this, this);
        // mWebView.loadUrl(getResources().getString(R.string.event_url));
         startWebView(mWebView,getResources().getString(R.string.event_url));
-
-        // Makes Progress bar Visible
-       // getWindow().setFeatureInt( Window.FEATURE_PROGRESS, Window.PROGRESS_VISIBILITY_ON);
-/*
-
-        mWebView.setWebViewClient(new WebViewClient() {
-
-                                     @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                                         super.onPageStarted(view, url, favicon);
-                                         Common.showProgressDialog(ShareEventActivity.this);
-                                         mWebView.setVisibility(View.INVISIBLE);
-                                     }
-
-                                     @Override public void onPageCommitVisible(WebView view, String url) {
-                                         super.onPageCommitVisible(view, url);
-                                         Common.hideProgressDialog();
-                                         mWebView.setVisibility(View.VISIBLE);
-                                        // isWebViewLoadingFirstPage=false;
-                                     }
-                                 });
-
-
-        mWebView.setWebChromeClient(new WebChromeClient() {
-
-
-
-
+      /*  mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
                 AdvancedWebView newWebView = new AdvancedWebView(ShareEventActivity.this);
@@ -74,10 +47,11 @@ public class ShareEventActivity extends AppCompatActivity implements AdvancedWeb
         });*/
     }
 
-    private void startWebView(WebView webView,String url) {
+    @SuppressLint("SetJavaScriptEnabled")
+    private void startWebView(WebView webView, String url) {
         webView.setWebViewClient(new WebViewClient() {
             ProgressDialog progressDialog;
-
+            boolean isVisible=true;
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 return false;
@@ -90,7 +64,7 @@ public class ShareEventActivity extends AppCompatActivity implements AdvancedWeb
 
             public void onLoadResource (WebView view, String url) {
 
-                if (progressDialog == null) {
+                if (progressDialog == null && isVisible) {
                     progressDialog = new ProgressDialog(ShareEventActivity.this);
                     progressDialog.setMessage("Loading...");
                     progressDialog.show();
@@ -102,6 +76,7 @@ public class ShareEventActivity extends AppCompatActivity implements AdvancedWeb
                     if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
                         progressDialog = null;
+                        isVisible=false;
                     }
 
                 }catch(Exception exception){
