@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "900336668958-av3010hfeu6bpu3e6bcecl7v1v68qf3n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.krs.vastipatrak",
+            "certificate_hash": "de12b244f93c21617c5650694e13d0c78a3e9700"
+          }
+        },
+        {
           "client_id": "900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -35,7 +43,8 @@
         "ads_service": {
           "status": 2
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-8416782517840563~2944903715"
     }
   ],
   "configuration_version": "1"

@@ -89,17 +89,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import io.fabric.sdk.android.Fabric;
-
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback//, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
     public static final int CAMARA_REQUEST = 4;
     private static final String TAG = MainActivity.class.getSimpleName();
-    //private GoogleApiClient mGoogleApiClient;
-    // public static String lat, lon;
     public static int MOVE_TO_SEARCH = 0;
-    //private static Location mLastLocation;
     private final int REQUEST_CHECK_SETTINGS = 199;
     private final int IMAGEREQUESTCODE = 1;
     private final String[] INIT_PERMS = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS};
@@ -174,17 +169,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 requestPermissions(CALL_CAMARA, CAMARA_REQUEST);
             }
         }
-        /*if (Build.VERSION.SDK_INT >= 23) {
-            if (Common.canAccessLocation(this)) {
-                buildGoogleApiClient();
-            }
-        } else {
-            buildGoogleApiClient();
-        }*/
-        /*String id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
-        if (id.equalsIgnoreCase(Common.Constant_Class.ADMIN_1) || id.equalsIgnoreCase(Common.Constant_Class.ADMIN_2)) {
-            AppController.isAdmin = true;
-        }*/
 
         if (Common.CheckGpsStatus(this)) {
             displayLocationSettingsRequest(MainActivity.this);
@@ -229,18 +213,15 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         } else {
             displayView(-1);
         }
-        //Fabric.with(this, new Crashlytics());
-        // TODO: Move this to where you establish a user session
-       // logUser();
-
+        logUser();
     }
 
     private void logUser() {
-        // TODO: Use the current user's information
-        // You can call any combination of these three methods
         Crashlytics.setUserIdentifier(mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
         Crashlytics.setUserEmail(mSharedPreferences.getString(Common.Constant_Class.EMAIL, ""));
-        Crashlytics.setUserName(mSharedPreferences.getString(Common.Constant_Class.USERNAME, ""));
+        String fname = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "");
+        String lname = mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
+        Crashlytics.setUserName(fname + " " + lname);
     }
 
     private void getGotraWS() {
@@ -1001,7 +982,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
-                MyProfileActivity.isEnable=false;
+                MyProfileActivity.isEnable = false;
                 Intent mIntent = new Intent(this, MyProfileActivity.class);
                 startActivity(mIntent);
             }
@@ -1026,7 +1007,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
-                MyProfileActivity.isEnable=false;
+                MyProfileActivity.isEnable = false;
                 Intent mIntent = new Intent(MainActivity.this, MyProfileActivity.class);
                 startActivity(mIntent);
             }

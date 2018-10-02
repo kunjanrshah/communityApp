@@ -95,7 +95,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private String profile_id = "";
     private String mdate_rem = "0";
     private String sbdate_rem = "0";
-    private HashMap<Integer,String> lstchild=null;
+    private HashMap<Integer, String> lstchild = null;
 
     public FamilyFragment() {
         // Required empty public constructor
@@ -450,13 +450,17 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtMSpouseName.setText(mListProfileData.getSmother_name());
         if (mListProfileData.getMdate_reminder_id().equalsIgnoreCase("0")) {
             chk_marriage_bdate_rem.setChecked(false);
+            mdate_rem = "0";
         } else {
+            mdate_rem = mListProfileData.getMdate_reminder_id();
             chk_marriage_bdate_rem.setChecked(true);
         }
 
         if (mListProfileData.getSpouse_bdate_reminder_id().equalsIgnoreCase("0")) {
             chk_spouse_bdate_rem.setChecked(false);
+            sbdate_rem = "0";
         } else {
+            sbdate_rem = mListProfileData.getSpouse_bdate_reminder_id();
             chk_spouse_bdate_rem.setChecked(true);
         }
 
@@ -487,12 +491,14 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     Objects.requireNonNull(mViewholder.edtchild_name).setText(mObjChild.getChild_name());
                     Objects.requireNonNull(mViewholder.edtchild_bdate).setText(mObjChild.getChild_bday());
                     Objects.requireNonNull(mViewholder.edtMobile).setText(mObjChild.getMobile());
-                    lstchild.put(mViewholder.child_id,"0");
+
                     mViewholder.chk_child_marriage.setChecked(mObjChild.isIs_married());
                     if (mObjChild.getChild_bdate_reminder_id().equalsIgnoreCase("0")) {
                         mViewholder.chk_child_bdate_rem.setChecked(false);
+                        lstchild.put(mViewholder.child_id, "0");
                     } else {
                         mViewholder.chk_child_bdate_rem.setChecked(true);
+                        lstchild.put(mViewholder.child_id, mObjChild.getChild_bdate_reminder_id());
                     }
                     String blood = mObjChild.getBlood_group();
                     if (blood != null && !blood.isEmpty()) {
@@ -865,7 +871,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         builder.show();
     }
 
-    private void setReminder(String rem_date, final String rem_type, String rem_value,final int child_id) {
+    private void setReminder(String rem_date, final String rem_type, String rem_value, final int child_id) {
         if (Common.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
             try {
@@ -897,7 +903,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                             } else if (rem_type.equalsIgnoreCase(Common.Constant_Class.WIFE_BIRTH_DATE)) {
                                 sbdate_rem = rem;
                             } else if (rem_type.equalsIgnoreCase(Common.Constant_Class.CHILD_BIRTH_DATE)) {
-                                lstchild.put(child_id,rem);
+                                lstchild.put(child_id, rem);
                             }
                         }
                         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
