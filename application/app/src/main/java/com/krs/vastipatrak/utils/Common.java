@@ -2226,7 +2226,7 @@ public class Common {
         public static final String TO_CHILD_BDAY = "to_child_bday";
         public static final String CHILD_BTIME = "birth_time";
         public static final String CHILD_BPLACE = "child_birth_place";
-        public static final String CHILD_MARRIAGE = "married";
+        public static final String CHILD_MARRIAGE = "isMarried";
         public static final String IS_INTERESTED = "is_interested";
         public static final String IS_MARRIED = "isMarried";
         public static final String CHILD_EDU = "child_edu";

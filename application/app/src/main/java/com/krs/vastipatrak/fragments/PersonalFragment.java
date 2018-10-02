@@ -908,13 +908,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     try {
                         Common.hideProgressDialog();
                         String success = response.getString(Common.Constant_Class.SUCCESS);
-
+                        String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             JSONObject mObject = response.getJSONObject(Common.Constant_Class.DATA);
                             profile_bdate_rem = mObject.getString("reminder_id");
-                        } else {
-
                         }
+                        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

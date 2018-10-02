@@ -35,6 +35,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.android.volley.Request;
@@ -92,6 +93,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private SharedPreferences mSharedPreferences;
     private Activity mActivity;
     private String profile_id = "";
+    private String mdate_rem = "0";
+    private String sbdate_rem = "0";
+    private HashMap<Integer,String> lstchild=null;
 
     public FamilyFragment() {
         // Required empty public constructor
@@ -301,15 +305,14 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             }
         });
 
-
         chk_marriage_bdate_rem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String date = Common.parseDateToddMMyyyy(edt_mdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
                 if (chk_marriage_bdate_rem.isChecked()) {
-                    setReminder(date, Common.Constant_Class.MARRIAGE_DATE, "1", "0");
+                    setReminder(date, Common.Constant_Class.MARRIAGE_DATE, "0", 0);
                 } else {
-                    setReminder(date, Common.Constant_Class.MARRIAGE_DATE, "0", "0");
+                    setReminder(date, Common.Constant_Class.MARRIAGE_DATE, mdate_rem, 0);
                 }
             }
         });
@@ -319,9 +322,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             public void onClick(View v) {
                 String date = Common.parseDateToddMMyyyy(edtsponse_bdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
                 if (chk_spouse_bdate_rem.isChecked()) {
-                    setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, "1", "0");
+                    setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, "0", 0);
                 } else {
-                    setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, "0", "0");
+                    setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, sbdate_rem, 0);
                 }
             }
         });
@@ -382,6 +385,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         rbtnChildNo.setChecked(true);
         child_container = root.findViewById(R.id.child_container);
         lst_delID = new ArrayList<>();
+        lstchild = new HashMap<>();
     }
 
     private void DisableAll() {
@@ -483,7 +487,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     Objects.requireNonNull(mViewholder.edtchild_name).setText(mObjChild.getChild_name());
                     Objects.requireNonNull(mViewholder.edtchild_bdate).setText(mObjChild.getChild_bday());
                     Objects.requireNonNull(mViewholder.edtMobile).setText(mObjChild.getMobile());
-
+                    lstchild.put(mViewholder.child_id,"0");
                     mViewholder.chk_child_marriage.setChecked(mObjChild.isIs_married());
                     if (mObjChild.getChild_bdate_reminder_id().equalsIgnoreCase("0")) {
                         mViewholder.chk_child_bdate_rem.setChecked(false);
@@ -623,9 +627,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             public void onClick(View v) {
                 String date = Common.parseDateToddMMyyyy(mViewholder.edtchild_bdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
                 if (mViewholder.chk_child_bdate_rem.isChecked()) {
-                    setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, "1", "");
+                    setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, "0", mViewholder.child_id);
                 } else {
-                    setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, "0", "");
+                    setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, lstchild.get(mViewholder.child_id), mViewholder.child_id);
                 }
             }
         });
@@ -861,7 +865,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         builder.show();
     }
 
-    private void setReminder(String rem_date, String rem_type, String rem_value, String child_id) {
+    private void setReminder(String rem_date, final String rem_type, String rem_value,final int child_id) {
         if (Common.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
             try {
@@ -884,12 +888,19 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     try {
                         Common.hideProgressDialog();
                         String success = response.getString(Common.Constant_Class.SUCCESS);
+                        String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             JSONObject mObject = response.getJSONObject(Common.Constant_Class.DATA);
-                            // profile_bdate_rem = mObject.getString("reminder_id");
-                        } else {
-
+                            String rem = mObject.getString("reminder_id");
+                            if (rem_type.equalsIgnoreCase(Common.Constant_Class.MARRIAGE_DATE)) {
+                                mdate_rem = rem;
+                            } else if (rem_type.equalsIgnoreCase(Common.Constant_Class.WIFE_BIRTH_DATE)) {
+                                sbdate_rem = rem;
+                            } else if (rem_type.equalsIgnoreCase(Common.Constant_Class.CHILD_BIRTH_DATE)) {
+                                lstchild.put(child_id,rem);
+                            }
                         }
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
