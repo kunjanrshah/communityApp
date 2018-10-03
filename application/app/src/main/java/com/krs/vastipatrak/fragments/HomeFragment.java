@@ -264,6 +264,7 @@ public class HomeFragment extends Fragment {
                                 realm.beginTransaction();
                                 realm.copyToRealmOrUpdate(mEventdata);
                                 realm.commitTransaction();
+
                             }
                             try {
                                 int total = Integer.parseInt(total_records);
@@ -353,12 +354,12 @@ public class HomeFragment extends Fragment {
         mSwipyRefreshLayout.setRefreshing(false);
     }
 
-    private void showDirections(double src_lat, double src_lng, double dst_lat, double dst_lng, String address) {
+    /*private void showDirections(double src_lat, double src_lng, double dst_lat, double dst_lng, String address) {
         String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", src_lat, src_lng, "", dst_lat, dst_lng, address);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         startActivity(intent);
-    }
+    }*/
 
     public class EventAdapter extends RecyclerView.Adapter<EventAdapter.MyViewHolder> {
 
@@ -429,7 +430,7 @@ public class HomeFragment extends Fragment {
                     final double clat = Double.valueOf(curr_lat);
                     final double clng = Double.valueOf(curr_lng);
                     if (clat != 0 && clng != 0 && !lat.isEmpty() && !lng.isEmpty()) {
-                        showDirections(clat, clng, Double.parseDouble(data.getLat()), Double.parseDouble(data.getLng()), data.getLocation());
+                        Common.showDirections(getActivity(),clat, clng, Double.parseDouble(data.getLat()), Double.parseDouble(data.getLng()), data.getLocation());
                     } else {
                         Toast.makeText(getActivity(), "Location not found!", Toast.LENGTH_SHORT).show();
                     }

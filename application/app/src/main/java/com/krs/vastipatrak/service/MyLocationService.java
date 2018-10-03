@@ -30,17 +30,18 @@ import java.util.Map;
 public class MyLocationService extends Service {
 
     private static final String TAG = "MyLocationService";
-    private static final int LOCATION_INTERVAL = 1000 * 3 * 60;
-    private static final float LOCATION_DISTANCE = 1f;
+    private static final int LOCATION_INTERVAL = 1000 * 1 * 60;
+    private static final float LOCATION_DISTANCE = 10f;
     @NonNull
     private final String tag_json_obj = "jobj_req";
     @NonNull
     private final LocationListener[] mLocationListeners = new LocationListener[]{new LocationListener(LocationManager.GPS_PROVIDER), new LocationListener(LocationManager.NETWORK_PROVIDER)};
+    boolean checkGPS = false;
+    boolean checkNetwork = false;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
     private Location mLastLocation;
     private boolean tbtn_shre = false;
-
     @Nullable
     private LocationManager mLocationManager = null;
 
@@ -59,20 +60,43 @@ public class MyLocationService extends Service {
         }
 
         initializeLocationManager();
-        try {
-            assert mLocationManager != null;
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListeners[1]);
-        } catch (java.lang.SecurityException ex) {
-            Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
+        checkGPS = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        checkNetwork = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        Location loc = null;
+        if (checkGPS) {
+            try {
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListeners[0]);
+                if (mLocationManager != null) {
+                    loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    if (loc != null) {
+                        mEditor.putString(Common.Constant_Class.CURR_LAT, String.valueOf(loc.getLatitude()));
+                        mEditor.putString(Common.Constant_Class.CURR_LNG, String.valueOf(loc.getLongitude()));
+                        mEditor.apply();
+                    }
+                }
+            } catch (java.lang.SecurityException ex) {
+                Log.i(TAG, "fail to request location update, ignore", ex);
+            } catch (IllegalArgumentException ex) {
+                Log.d(TAG, "gps provider does not exist " + ex.getMessage());
+            }
         }
-        try {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListeners[0]);
-        } catch (java.lang.SecurityException ex) {
-            Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "gps provider does not exist " + ex.getMessage());
+        if (checkNetwork && loc == null) {
+            try {
+                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListeners[1]);
+                loc = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if (loc != null) {
+                    mEditor.putString(Common.Constant_Class.CURR_LAT, String.valueOf(loc.getLatitude()));
+                    mEditor.putString(Common.Constant_Class.CURR_LNG, String.valueOf(loc.getLongitude()));
+                    mEditor.apply();
+                }
+            } catch (java.lang.SecurityException ex) {
+                Log.i(TAG, "fail to request location update, ignore", ex);
+            } catch (IllegalArgumentException ex) {
+                Log.d(TAG, "network provider does not exist, " + ex.getMessage());
+            }
+        }
+        if (!checkNetwork && !checkGPS) {
+            Toast.makeText(this, "No Service Provider is available", Toast.LENGTH_SHORT).show();
         }
         return START_NOT_STICKY;
     }
@@ -97,6 +121,7 @@ public class MyLocationService extends Service {
                     Log.i(TAG, "fail to remove location listners, ignore", ex);
                 }
             }
+            mLocationManager = null;
         }
         /*if (!mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0").equalsIgnoreCase("")) {
           //  userLocationUpdateWS();

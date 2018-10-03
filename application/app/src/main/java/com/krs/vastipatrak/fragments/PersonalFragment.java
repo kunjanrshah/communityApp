@@ -60,7 +60,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -309,9 +308,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
                         if (curr_lat.isEmpty() && curr_lng.isEmpty()) {
                             Common.showSettingsAlert(mActivity);
-
                         } else {
-
                             if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
@@ -337,8 +334,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                             } else {
                                 double lat = Double.valueOf(curr_lat);
                                 double lng = Double.valueOf(curr_lng);
-                                if (lat != 0 && lng != 0) {
-                                    showDirections(lat, lng, edtAddress.getText().toString());
+                                if (lat != 0 && lng != 0 && home_lat != 0 && home_lng != 0) {
+                                    Common.showDirections(getActivity(), lat, lng, home_lat, home_lng, edtAddress.getText().toString());
                                 }
                             }
                         }
@@ -558,6 +555,17 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
 
+        txt_distance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
+                String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && user_lat != 0 && user_lng != 0) {
+                    Common.showDirections(getActivity(), Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), user_lat, user_lng, "");
+                }
+            }
+        });
+
         return rootView;
     }
 
@@ -599,13 +607,13 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         builder.show();
     }
 
-    private void showDirections(double latitude, double longitude, String address) {
-        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", latitude, longitude, "", home_lat, home_lng, address);
+    /*private void showDirections(double slat, double slng, double dlat, double dlng, String address) {
+        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f &daddr=%f,%f", slat, slng, dlat, dlng);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         startActivity(intent);
     }
-
+*/
     private void MemoryAllocation(View rootView) {
 
 
@@ -633,6 +641,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         img_father = rootView.findViewById(R.id.img_father);
         img_mother = rootView.findViewById(R.id.img_mother);
         tbtn_share = rootView.findViewById(R.id.tbtn_share);
+        tbtn_share.setTextOff(null);
+        tbtn_share.setText(null);
+        tbtn_share.setTextOn(null);
         txt_distance = rootView.findViewById(R.id.txt_distance);
 
         rbtnM = rootView.findViewById(R.id.rbtnM);
@@ -858,16 +869,14 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 }
                 tbtn_share.setVisibility(View.GONE);
 
-
-                /*if (is_block.equalsIgnoreCase("1")) { //&&*/
-                txt_distance.setVisibility(View.VISIBLE);
-                if (user_lat != 0 && user_lng != 0) {
-                    new Common.getDistance(getActivity(), txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, String.valueOf(user_lat), String.valueOf(user_lng), curr_lat, curr_lng);
-                }
-               /* } else {
+                if (is_loc_enable.equalsIgnoreCase("1")) {
+                    txt_distance.setVisibility(View.VISIBLE);
+                    if (user_lat != 0 && user_lng != 0) {
+                        new Common.getDistance(getActivity(), txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, String.valueOf(user_lat), String.valueOf(user_lng), curr_lat, curr_lng);
+                    }
+                } else {
                     txt_distance.setVisibility(View.GONE);
-                }*/
-
+                }
             }
 
             profile_url = mListProfileData.getProfile_pic_url();
@@ -913,7 +922,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                             JSONObject mObject = response.getJSONObject(Common.Constant_Class.DATA);
                             profile_bdate_rem = mObject.getString("reminder_id");
                         }
-                        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1013,6 +1022,10 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             try {
                 final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
                 final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                if (curr_lat.isEmpty() || curr_lng.isEmpty()) {
+                    Toast.makeText(getActivity(), "Vastipatrak could not found your location!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 double lat = Double.valueOf(curr_lat);
                 double lng = Double.valueOf(curr_lng);
                 mJsonObject = new JSONObject();

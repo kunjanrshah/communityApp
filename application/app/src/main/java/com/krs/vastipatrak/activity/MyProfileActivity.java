@@ -67,7 +67,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private Toolbar toolbar;
-    private ListProfileData mListProfileData = null;
+    private ListProfileData mListProfileData1 = null;
     private Fragment personal = null;
     private Fragment business = null;
     private Fragment family = null;
@@ -95,7 +95,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
     @Nullable
     public ListProfileData getMyData() {
-        return mListProfileData;
+        return mListProfileData1;
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -124,37 +124,11 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     }
 
     private void backNavigation() {
-       /* Fragment fragment = new FragmentDrawer();
-        getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
-        assert mSharedPreferences != null;
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
-            Intent mIntent = new Intent(MyProfileActivity.this, MainActivity.class);
-            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(mIntent);
-        }*/
         Common.hideKeyboard(this);
         finish();
         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
 
-   /* @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            onBackPressed();
-            return true;
-        }
-        return super.onKeyUp(keyCode, event);
-    }*/
-
-   /* @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if (!isBackPressed) {
-            isBackPressed = true;
-            Log.d(TAG, "step onBackPressed :"+isBackPressed);
-            backNavigation();
-        }
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
@@ -184,6 +158,9 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
         MenuItem export = menu.findItem(R.id.action_export);
         export.setVisible(false);
+
+        MenuItem admins = menu.findItem(R.id.action_admins);
+        admins.setVisible(false);
 
         MenuItem filterItem = menu.findItem(R.id.action_filter);
         filterItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -576,7 +553,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             String data = response.getString(Common.Constant_Class.DATA);
                             JSONObject mData = new JSONObject(data);
-                            mListProfileData = Common.SaveProfile(mData);
+                            mListProfileData1 = Common.SaveProfile(mData);
                             if (is_update.equalsIgnoreCase("1")) {
                                 if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
                                     mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, mData.getString(Common.Constant_Class.PROFILE_PIC_URL));
@@ -665,7 +642,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                             JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                             for (int i = 0; i < mJsonArray.length(); i++) {
                                 JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                mListProfileData = Common.SaveProfile(mJsondata);
+                                mListProfileData1 = Common.SaveProfile(mJsondata);
                             }
                             setupViewPager(viewPager);
                             tabLayout.setupWithViewPager(viewPager);

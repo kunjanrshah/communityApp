@@ -251,6 +251,7 @@ public class MatrimonyFragment extends Fragment {
                                 realm.beginTransaction();
                                 profileData.deleteAllFromRealm();
                                 realm.commitTransaction();
+
                                 if (!isExport) {
                                     try {
                                         int total = Integer.parseInt(total_records);

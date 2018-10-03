@@ -184,6 +184,14 @@
                             android:singleLine="true" />
                     </android.support.design.widget.TextInputLayout>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="DD/MM/YYYY"
+                        android:textSize="10sp" />
+
+
                     <CheckBox
                         android:id="@+id/chk_profile_bdate_rem"
                         android:layout_width="match_parent"

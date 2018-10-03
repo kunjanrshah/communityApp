@@ -91,7 +91,7 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
                 final double clat = Double.valueOf(curr_lat);
                 final double clng = Double.valueOf(curr_lng);
                 if (clat != 0 && clng != 0 && !lat.isEmpty() && !lng.isEmpty()) {
-                    showDirections(clat, clng, Double.parseDouble(lat), Double.parseDouble(lat), eventLocation);
+                    Common.showDirections(EventlistActivity.this,clat, clng, Double.parseDouble(lat), Double.parseDouble(lat), eventLocation);
                 } else {
                     Toast.makeText(EventlistActivity.this, "Location not found!", Toast.LENGTH_SHORT).show();
                 }
@@ -105,14 +105,12 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
         }
     }
 
-
-
-    private void showDirections(double src_lat, double src_lng, double dst_lat, double dst_lng, String address) {
+    /*private void showDirections(double src_lat, double src_lng, double dst_lat, double dst_lng, String address) {
         String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", src_lat, src_lng, "", dst_lat, dst_lng, address);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         startActivity(intent);
-    }
+    }*/
 
     private void setDate(TextView tvEventDate, String edate) {
         SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");

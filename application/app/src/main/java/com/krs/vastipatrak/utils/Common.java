@@ -266,9 +266,9 @@ public class Common {
     }
 
 
-    public static void showDirections(@NonNull Activity mActivity, double slatitude, double slongitude, double dlatitude, double dlongitude, String address) {
+    public static void showDirections(Activity mActivity, double slatitude, double slongitude, double dlatitude, double dlongitude, String address) {
 
-        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", slatitude, slongitude, "", dlatitude, dlongitude, address);
+        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f &daddr=%f,%f", slatitude, slongitude, dlatitude, dlongitude);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         mActivity.startActivity(intent);
@@ -733,6 +733,7 @@ public class Common {
         AppController.getInstance().realm.beginTransaction();
         Objects.requireNonNull(mListProfile).setPassword(password);
         AppController.getInstance().realm.commitTransaction();
+
     }
 
     public static void UpdateProfileStatus(@NonNull ArrayList<String> lstSelectedIDs, String status) {
@@ -743,6 +744,7 @@ public class Common {
                 realm.beginTransaction();
                 Objects.requireNonNull(mListProfile).setStatus(status);
                 realm.commitTransaction();
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -756,6 +758,7 @@ public class Common {
             realm.beginTransaction();
             results.deleteAllFromRealm();
             realm.commitTransaction();
+
         }
     }
 
@@ -994,13 +997,17 @@ public class Common {
                 mListProfileData.setmListChildrenData(mlistchilds);
             }
 
-            AppController.getInstance().realm.executeTransaction(new Realm.Transaction() {
+            AppController.getInstance().realm.beginTransaction();
+            AppController.getInstance().realm.copyToRealmOrUpdate(mListProfileData);
+            AppController.getInstance().realm.commitTransaction();
+
+            /*AppController.getInstance().realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
                     // AppController.getInstance().realm.copyFromRealm(mListProfileData);
                     AppController.getInstance().realm.copyToRealmOrUpdate(mListProfileData);
                 }
-            });
+            });*/
 
             return mListProfileData;
         } catch (Exception e) {
@@ -1204,6 +1211,7 @@ public class Common {
             // AppController.getInstance().realm.copyFromRealm(mListProfileData);
             AppController.getInstance().realm.copyToRealmOrUpdate(mListProfileData);
             AppController.getInstance().realm.commitTransaction();
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1412,6 +1420,7 @@ public class Common {
             AppController.getInstance().realm.beginTransaction();
             AppController.getInstance().realm.copyToRealmOrUpdate(mListProfileData);
             AppController.getInstance().realm.commitTransaction();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1448,9 +1457,11 @@ public class Common {
         SimpleDateFormat dateFormat = new SimpleDateFormat(oldFormat);
         Date myDate = null;
         try {
-            myDate = dateFormat.parse(strDate);
-            SimpleDateFormat timeFormat = new SimpleDateFormat(newFormat);
-            formatedDate = timeFormat.format(myDate);
+            if (!strDate.equalsIgnoreCase("0000-00-00")) {
+                myDate = dateFormat.parse(strDate);
+                SimpleDateFormat timeFormat = new SimpleDateFormat(newFormat);
+                formatedDate = timeFormat.format(myDate);
+            }
         } catch (java.text.ParseException e) {
             e.printStackTrace();
         }
@@ -1872,8 +1883,7 @@ public class Common {
             if (i > 0 && eachWord.length() > 0) {
                 sb.append(" ");
             }
-            String cap = eachWord.substring(0, 1).toUpperCase()
-                    + eachWord.substring(1);
+            String cap = eachWord.substring(0, 1).toUpperCase() + eachWord.substring(1);
             sb.append(cap);
         }
         return sb.toString();
@@ -2031,9 +2041,13 @@ public class Common {
 
         @Override
         protected String doInBackground(String... strings) {
-            double result_in_kms = CalculationByDistance(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]), Double.parseDouble(strings[2]), Double.parseDouble(strings[3]));
-            result_in_kms = round(result_in_kms, 2);
-            return String.valueOf(result_in_kms);
+            if (!strings[0].isEmpty() && !strings[1].isEmpty() && !strings[2].isEmpty() && !strings[3].isEmpty()) {
+                double result_in_kms = CalculationByDistance(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]), Double.parseDouble(strings[2]), Double.parseDouble(strings[3]));
+                result_in_kms = round(result_in_kms, 2);
+                return String.valueOf(result_in_kms);
+            } else {
+                return "";
+            }
         }
 
         @Override

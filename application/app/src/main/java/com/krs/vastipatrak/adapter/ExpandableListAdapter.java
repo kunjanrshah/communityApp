@@ -62,7 +62,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -177,6 +176,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             childViewHolder.txt_phone = convertView.findViewById(R.id.txt_phone);
 
             childViewHolder.tbtn_share = convertView.findViewById(R.id.tbtn_share);
+            childViewHolder.tbtn_share.setTextOn(null);
+            childViewHolder.tbtn_share.setText(null);
+            childViewHolder.tbtn_share.setTextOff(null);
             childViewHolder.imgNudge = convertView.findViewById(R.id.imgNudge);
             childViewHolder.img_details = convertView.findViewById(R.id.img_details);
             childViewHolder.imgROR = convertView.findViewById(R.id.imgROR);
@@ -469,7 +471,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     lng = mListParentData.getUser_lng();
                 }
                 if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !lat.isEmpty() && !lng.isEmpty()) {
-                    showDirections(Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(lat), Double.parseDouble(lng), "");
+                    Common.showDirections((Activity) _context, Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(lat), Double.parseDouble(lng), "");
                 } else {
                     Toast.makeText(_context, "Something went wrong", Toast.LENGTH_SHORT).show();
                 }
@@ -642,7 +644,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
                         String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
                         if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !user_lat.isEmpty() && !user_lng.isEmpty()) {
-                            showDirections(Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(user_lat), Double.parseDouble(user_lng), "");
+                            Common.showDirections((Activity) _context, Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(user_lat), Double.parseDouble(user_lng), "");
                         } else {
                             Toast.makeText(_context, "Something went wrong", Toast.LENGTH_SHORT).show();
                         }
@@ -687,12 +689,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
-    private void showDirections(double clat, double clng, double dlat, double dlng, String address) {
+   /* private void showDirections(double clat, double clng, double dlat, double dlng, String address) {
         String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", clat, clng, "", dlat, dlng, address);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         _context.startActivity(intent);
-    }
+    }*/
 
     private void userLocationShareWS(String share_id, final String name, final String is_share) {
         if (Common.isOnline(_context)) {
