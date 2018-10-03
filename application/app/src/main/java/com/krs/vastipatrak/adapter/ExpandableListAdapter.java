@@ -539,7 +539,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
             }
         } else if (is_share.equalsIgnoreCase("1") && mListParentData.isIs_location_enable().equalsIgnoreCase("0")) {
-
             groupViewHolder.txt_distance.setText("OFF");
             groupViewHolder.txt_distance.setClickable(false);
             groupViewHolder.txt_distance.setEnabled(false);
@@ -552,7 +551,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             if (Shared != null && Shared.equalsIgnoreCase("from")) {
                 groupViewHolder.ll_parent.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape1));
             } else {
-                groupViewHolder.txt_distance.setText("by you");
+                groupViewHolder.txt_distance.setText("Shared");
                 groupViewHolder.txt_distance.setClickable(false);
                 groupViewHolder.txt_distance.setEnabled(false);
                 groupViewHolder.txt_distance.setVisibility(View.VISIBLE);

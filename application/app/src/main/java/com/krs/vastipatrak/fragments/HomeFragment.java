@@ -176,8 +176,6 @@ public class HomeFragment extends Fragment {
         });
 
         getEvents();
-
-
         return rootView;
     }
 
@@ -194,6 +192,8 @@ public class HomeFragment extends Fragment {
         mEditor = mSharedPreferences.edit();
         mEditor.putString(Common.Constant_Class.FragmentSp, HomeFragment.class.getSimpleName());
         mEditor.apply();
+        TextView tv = rootView.findViewById(R.id.txt_marquee);
+        tv.setSelected(true);
     }
 
     private void getEvents() {

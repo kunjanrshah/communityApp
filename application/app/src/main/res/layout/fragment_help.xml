@@ -8,12 +8,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_height="80dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_weight="1"
+            android:textSize="16sp"
+            android:textStyle="bold"
             android:layout_height="wrap_content"
             android:text="1. If you have Xiomi,Vivo or Oppo Phone then please enable auto start option" />
 
@@ -25,5 +28,12 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:text="2. Technical help: 9427051418 Kunjan R. Shah (Limbadiya)"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

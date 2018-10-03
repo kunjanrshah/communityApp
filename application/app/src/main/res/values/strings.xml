@@ -93,7 +93,7 @@
         <item>@string/nav_item_logout</item>
 
     </string-array>
-    <string name="marquee_text">Technical help: 9427051418 Kunjan R. Shah (Limbadiya) Admin help: 9426419124 Kunjbihari P. Shah (Radodara) </string>
+    <string name="marquee_text">Technical help: 9427051418 Kunjan R. Shah (Limbadiya) </string>
     <string name="title_filter">Advance Search</string>
     <string name="title_help">Help</string>
     <string name="title_shared_users">Shared Users</string>

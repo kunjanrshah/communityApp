@@ -21,14 +21,13 @@ android {
     defaultConfig {
         applicationId "com.krs.vastipatrak"
         minSdkVersion 21
-        versionCode 6
-        versionName "1.6.0"
+        versionCode 8
+        versionName "1.8.0"
         multiDexEnabled true
     }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

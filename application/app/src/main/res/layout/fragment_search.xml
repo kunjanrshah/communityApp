@@ -61,8 +61,10 @@
         android:paddingBottom="-15dp"
         android:scrollHorizontally="true"
         android:singleLine="true"
+        android:gravity="bottom"
+        android:visibility="gone"
         android:text="@string/marquee_text"
         android:textSize="18sp"
-        android:visibility="gone" />
+         />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -308,7 +308,6 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:text="@string/marquee_text"
-            android:textSize="18sp"
-            android:visibility="gone" />
+            android:textSize="18sp"             />
     </LinearLayout>
 </LinearLayout>

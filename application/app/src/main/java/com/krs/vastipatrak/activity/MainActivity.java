@@ -23,6 +23,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -433,6 +434,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
+
         searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -814,8 +816,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new ChangePasswordFragment();
                 break;
             case 7:
-                Intent mIntent2 = new Intent(MainActivity.this, TourActivity.class);
-                startActivity(mIntent2);
+                Toast.makeText(MainActivity.this,"On the Way",Toast.LENGTH_SHORT).show();
+                /*Intent mIntent2 = new Intent(MainActivity.this, TourActivity.class);
+                startActivity(mIntent2);*/
                 // this.overridePendingTransition(0, 0);
                 break;
             case 8:

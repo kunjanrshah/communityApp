@@ -212,8 +212,10 @@ public class LoginActivity extends Activity {
         txtTour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mIntent = new Intent(LoginActivity.this, TourActivity.class);
-                startActivity(mIntent);
+                Toast.makeText(LoginActivity.this,"On the Way",Toast.LENGTH_SHORT).show();
+
+                /*Intent mIntent = new Intent(LoginActivity.this, TourActivity.class);
+                startActivity(mIntent);*/
             }
         });
         Common.getDeviceId(this);
