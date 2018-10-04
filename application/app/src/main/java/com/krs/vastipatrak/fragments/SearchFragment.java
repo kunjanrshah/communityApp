@@ -200,7 +200,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             OnlineSearch(query, Common.Constant_Class.GLOBAL_SEARCH_URL);
         } else if (query_string != null && !query_string.equalsIgnoreCase("")) {
             OnlineSearch(query_string, Common.Constant_Class.ADVANCE_SEARCH_URL);
-        } else if (adminControl == Common.Constant_Class.NonActive) {
+        } else if (adminControl == Common.Constant_Class.NonActive && query.isEmpty() && query_string.isEmpty()) {
             callNonActivesWS();
         } else {
             lvCustomList.setVisibility(View.GONE);

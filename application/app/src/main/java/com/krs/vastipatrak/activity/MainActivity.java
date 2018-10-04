@@ -632,6 +632,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             Bundle mBundle = new Bundle();
             mBundle.putInt(Common.Constant_Class.AdminControl, Common.Constant_Class.NonActive);
             fragment.setArguments(mBundle);
+        }else if(menu == 6)
+        {
+            Bundle mBundle = new Bundle();
+            mBundle.putInt(Common.Constant_Class.AdminControl, -1);
+            fragment.setArguments(mBundle);
         }
         fragmentTransaction.replace(R.id.container_body, fragment).commit();
 

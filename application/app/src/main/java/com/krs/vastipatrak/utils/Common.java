@@ -1678,8 +1678,6 @@ public class Common {
         });
         builder.setPositiveButton("View", new DialogInterface.OnClickListener() {
             public void onClick(@NonNull DialogInterface dialog, int which) {
-
-
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
                 mActivity.startActivity(intent);
