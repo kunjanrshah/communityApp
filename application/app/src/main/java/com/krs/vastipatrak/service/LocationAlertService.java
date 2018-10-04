@@ -77,7 +77,7 @@ public class LocationAlertService extends Service {
                 isStop = mBundle.getBoolean("isStop");
                 id = mBundle.getString("id");
                 time = mBundle.getString("time");
-                Log.d(TAG, "Timer profile_id: " + id + " alert_time: " + time);
+                Log.d(TAG, "Timer profile_id: " + id + " alert_time: " + time +" isStop: "+isStop);
                 if (!isStop) {
                     Timer mTimer = new Timer();
                     mlstMapTimer.put(id, mTimer);

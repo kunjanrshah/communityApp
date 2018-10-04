@@ -397,96 +397,54 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
 
-
         chk_profile_bdate_rem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String date = Common.parseDateToddMMyyyy(edtbdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
-                if (chk_profile_bdate_rem.isChecked()) {
-                    setReminder(date, BIRTH_DATE, 0);
+                String bdate = edtbdate.getText().toString().trim();
+                if (!bdate.isEmpty()) {
+                    final String date = Common.parseDateToddMMyyyy(bdate, ddMMMyyyy, yyyy_MM_dd);
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+                    builder.setTitle(mActivity.getString(R.string.app_name));
+                    if (chk_profile_bdate_rem.isChecked()) {
+                        String message = "Do you want set Reminder for Birthdate ?";
+                        builder.setMessage(message);
+                        builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                setReminder(date, BIRTH_DATE, 0);
+                            }
+                        });
+                        builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                chk_profile_bdate_rem.setChecked(false);
+                                dialog.dismiss();
+                            }
+                        }).show();
+
+                    } else {
+                        String message = "Do you want Unset Reminder for Birthdate ?";
+                        builder.setMessage(message);
+                        builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                setReminder(date, BIRTH_DATE, Integer.parseInt(profile_bdate_rem));
+                            }
+                        });
+                        builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                chk_profile_bdate_rem.setChecked(true);
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }
                 } else {
-                    setReminder(date, BIRTH_DATE, Integer.parseInt(profile_bdate_rem));
+                    Toast.makeText(getActivity(), "Birthdate not found!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-       /* tbtn_share.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
-                builder.setTitle(mActivity.getString(R.string.app_name));
-                if (setChecked) {
-                    setChecked = false;
-                    Intent mIntent=new Intent(mActivity, MyLocationService.class);
-                    mIntent.putExtra(Common.Constant_Class.TBTN_SHARE,true);
-                    if (isChecked) {
-                        mEditor.putString(Common.Constant_Class.TBTN_SHARE, "1");
-                        mEditor.apply();
-                        mActivity.startService(mIntent);
-                        toggle = true;
-                    } else {
-                        mEditor.putString(Common.Constant_Class.TBTN_SHARE, "0");
-                        mEditor.apply();
-                        mActivity.startService(mIntent);
-                        toggle = true;
-                    }
-                } else {
-                    if (Common.isOnline(mActivity)) {
-                        if (toggle) {
-                            if (isChecked) {
-                                String message = "Do you want to Share your Location ?";
-                                builder.setMessage(message);
-                                builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                                        mEditor.putString(Common.Constant_Class.TBTN_SHARE, "1");
-                                        mEditor.apply();
-                                        mActivity.startService(new Intent(mActivity, MyLocationService.class));
-                                        toggle = true;
-                                        dialog.dismiss();
-                                        userLocationUpdateWS("1");
-                                    }
-                                });
-                                builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                                        toggle = false;
-                                        tbtn_share.setChecked(false);
-                                        dialog.dismiss();
-                                        userLocationUpdateWS("0");
-                                    }
-                                }).show();
-                            } else {
-                                String message = "Do you want to Stop sharing your Location ?";
-                                builder.setMessage(message);
-                                builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
-                                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                                        mEditor.putString(Common.Constant_Class.TBTN_SHARE, "0");
-                                        mEditor.apply();
-                                        mActivity.startService(new Intent(mActivity, MyLocationService.class));
-                                        toggle = true;
-                                        dialog.dismiss();
-                                    }
-                                });
-                                builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                                        toggle = false;
-                                        tbtn_share.setChecked(true);
-                                        dialog.dismiss();
-                                    }
-                                }).show();
-                            }
-                        } else {
-                            toggle = true;
-                        }
-                    } else {
-                        Toast.makeText(mActivity, Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
-                        tbtn_share.setChecked(!isChecked);
-                    }
-                }
-            }
-        });*/
 
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             EnableAll();
@@ -693,7 +651,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         rbtnM.setEnabled(true);
         rbtnF.setEnabled(true);
         spinnerBlood.setEnabled(true);
-        chk_profile_bdate_rem.setEnabled(false);
+        chk_profile_bdate_rem.setVisibility(View.GONE);
     }
 
     private void DisableAll() {
@@ -746,7 +704,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         spinnerBlood.setEnabled(false);
         spinnerGotra.setEnabled(false);
 
-        chk_profile_bdate_rem.setEnabled(true);
+        chk_profile_bdate_rem.setVisibility(View.VISIBLE);
 
     }
 

@@ -102,6 +102,7 @@
     <string name="title_events">Events</string>
     <string name="title_relatives">My Relatives</string>
     <string name="title_calendar">Calendar</string>
+    <string name="title_admins">Admins</string>
     <string name="title_share_event">Share Event</string>
     <string name="title_sync">Sync</string>
     <string name="spinner_blood">Select BloodGroup</string>

@@ -502,6 +502,9 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
+        MenuItem filterAdmins = menu.findItem(R.id.action_admins);
+        filterAdmins.setVisible(false);
+
         MenuItem filterItem = menu.findItem(R.id.action_filter);
         filterItem.setVisible(false);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();

@@ -275,17 +275,21 @@ public class Common {
     }
 
     public static boolean isOnline(Context mContext) {
-        ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = Objects.requireNonNull(cm).getActiveNetworkInfo();
-        if (netInfo != null) {
-            if (netInfo.isConnected()) {
-                return true;
-            } else {
-                Toast.makeText(mContext, "Network is not connected!", Toast.LENGTH_SHORT).show();
-                return false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = Objects.requireNonNull(cm).getActiveNetworkInfo();
+            if (netInfo != null) {
+                if (netInfo.isConnected()) {
+                    return true;
+                } else {
+                    Toast.makeText(mContext, "Network is not connected!", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
             }
+            Toast.makeText(mContext, "Network is not connected!", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        Toast.makeText(mContext, "Network is not connected!", Toast.LENGTH_SHORT).show();
         return false;
     }
 
@@ -1649,15 +1653,12 @@ public class Common {
             alert(mActiviy, "No Search records found!");
         }
     }
-    /*public static void ExportMatrimonyData(@NonNull Activity mActiviy) {
-
-    }*/
 
     private static void ExportAlert(@NonNull final Activity mActivity, @NonNull final File file) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(mActivity.getString(R.string.app_name));
-
         builder.setMessage("Data Exported in a Excel Sheet");
+
         builder.setNegativeButton("Share", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(@NonNull DialogInterface dialog, int which) {
@@ -1673,18 +1674,15 @@ public class Common {
                     intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...");
                     mActivity.startActivity(Intent.createChooser(intentShareFile, "Share File"));
                 }
-                dialog.dismiss();
-
             }
         });
         builder.setPositiveButton("View", new DialogInterface.OnClickListener() {
             public void onClick(@NonNull DialogInterface dialog, int which) {
 
+
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
                 mActivity.startActivity(intent);
-
-                dialog.dismiss();
             }
         }).show();
     }

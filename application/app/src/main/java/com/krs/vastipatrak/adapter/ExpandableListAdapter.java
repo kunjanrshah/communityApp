@@ -607,6 +607,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             tlalert.setVisibility(View.GONE);
                             btnsave.setVisibility(View.GONE);
                             if (testHashMap2.get(id) != null) {
+                                testHashMap2.remove(id);
                                 Intent mIntent = new Intent(_context, LocationAlertService.class);
                                 mIntent.putExtra("isStop", true);
                                 mIntent.putExtra("id", id);

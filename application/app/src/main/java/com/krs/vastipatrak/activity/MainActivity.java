@@ -23,7 +23,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -158,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         drawerFragment.setDrawerListener(this);
         searchFragment = new SearchFragment();
 
-
         if (Build.VERSION.SDK_INT >= 23) {
             if (Common.canCallPhone(this) && !Common.canAccessLocation(this)) {
                 requestPermissions(INIT_PERMS, INIT_REQUEST);
@@ -198,7 +196,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         };
         Common.getDeviceId(this);
-
+        if (mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase("")) {
+            Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(mIntent);
+            finish();
+        }
 
         getGotraWS();
 
@@ -461,13 +463,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         });
 
         export = menu.findItem(R.id.action_export);
-        /*export.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Common.ExportSearchData(MainActivity.this);
-                return false;
-            }
-        });*/
 
         MenuItem voiceItem = menu.findItem(R.id.action_voice);
         voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -816,7 +811,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new ChangePasswordFragment();
                 break;
             case 7:
-                Toast.makeText(MainActivity.this,"On the Way",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "On the Way", Toast.LENGTH_SHORT).show();
                 /*Intent mIntent2 = new Intent(MainActivity.this, TourActivity.class);
                 startActivity(mIntent2);*/
                 // this.overridePendingTransition(0, 0);

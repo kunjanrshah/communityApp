@@ -308,11 +308,48 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         chk_marriage_bdate_rem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String date = Common.parseDateToddMMyyyy(edt_mdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
-                if (chk_marriage_bdate_rem.isChecked()) {
-                    setReminder(date, Common.Constant_Class.MARRIAGE_DATE, "0", 0);
+                String mdate = edt_mdate.getText().toString().trim();
+                String msg = "";
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+                builder.setTitle(mActivity.getString(R.string.app_name));
+
+                if (!mdate.isEmpty()) {
+                    final String date = Common.parseDateToddMMyyyy(mdate, ddMMMyyyy, yyyy_MM_dd);
+                    if (chk_marriage_bdate_rem.isChecked()) {
+                        msg = "Do you want to set Reminder for Marriage Date ?";
+                        builder.setMessage(msg);
+                        builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                setReminder(date, Common.Constant_Class.MARRIAGE_DATE, "0", 0);
+                            }
+                        });
+                        builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                chk_marriage_bdate_rem.setChecked(false);
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    } else {
+                        msg = "Do you want to Unset Reminder for Marriage Date ?";
+                        builder.setMessage(msg);
+                        builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                setReminder(date, Common.Constant_Class.MARRIAGE_DATE, mdate_rem, 0);
+                            }
+                        });
+                        builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                chk_marriage_bdate_rem.setChecked(true);
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }
                 } else {
-                    setReminder(date, Common.Constant_Class.MARRIAGE_DATE, mdate_rem, 0);
+                    Toast.makeText(getActivity(), "Marriage date not found!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -320,11 +357,47 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         chk_spouse_bdate_rem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String date = Common.parseDateToddMMyyyy(edtsponse_bdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
-                if (chk_spouse_bdate_rem.isChecked()) {
-                    setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, "0", 0);
+                String sbdate = edtsponse_bdate.getText().toString().trim();
+                String msg = "";
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+                builder.setTitle(mActivity.getString(R.string.app_name));
+                if (!sbdate.isEmpty()) {
+                    final String date = Common.parseDateToddMMyyyy(sbdate, ddMMMyyyy, yyyy_MM_dd);
+                    if (chk_spouse_bdate_rem.isChecked()) {
+                        msg = "Do you want to set Reminder for Spouse BirthDate ?";
+                        builder.setMessage(msg);
+                        builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, "0", 0);
+                            }
+                        });
+                        builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                chk_spouse_bdate_rem.setChecked(false);
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    } else {
+                        msg = "Do you want to set Reminder for Spouse BirthDate ?";
+                        builder.setMessage(msg);
+                        builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, sbdate_rem, 0);
+                            }
+                        });
+                        builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                chk_spouse_bdate_rem.setChecked(false);
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }
                 } else {
-                    setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, sbdate_rem, 0);
+                    Toast.makeText(getActivity(), "Spouse Birthdate not found!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -410,14 +483,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtMSpouseName.setKeyListener(null);
         edtMSpouseName.setCursorVisible(false);
 
-        /*img_spouse.setEnabled(false);
-        img_fspouse.setEnabled(false);
-        img_mspouse.setEnabled(false);*/
         btn_add.setVisibility(View.GONE);
         rbtnChildYes.setEnabled(false);
         rbtnChildNo.setEnabled(false);
-        chk_marriage_bdate_rem.setEnabled(true);
-        chk_spouse_bdate_rem.setEnabled(true);
+        chk_marriage_bdate_rem.setVisibility(View.VISIBLE);
+        chk_spouse_bdate_rem.setVisibility(View.VISIBLE);
     }
 
     private void EnableAll() {
@@ -427,8 +497,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtMSpouseName.setEnabled(true);
         edtsponse_bdate.setEnabled(true);
         edtsponse_nplace.setEnabled(true);
-        chk_marriage_bdate_rem.setEnabled(false);
-        chk_spouse_bdate_rem.setEnabled(false);
+        chk_marriage_bdate_rem.setVisibility(View.GONE);
+        chk_spouse_bdate_rem.setVisibility(View.GONE);
     }
 
 
@@ -631,22 +701,96 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         mViewholder.chk_child_bdate_rem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String date = Common.parseDateToddMMyyyy(mViewholder.edtchild_bdate.getText().toString().trim(), ddMMMyyyy, yyyy_MM_dd);
-                if (mViewholder.chk_child_bdate_rem.isChecked()) {
-                    setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, "0", mViewholder.child_id);
+                String bdate = mViewholder.edtchild_bdate.getText().toString().trim();
+                String msg = "";
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+                builder.setTitle(mActivity.getString(R.string.app_name));
+                if (!bdate.isEmpty()) {
+                    final String date = Common.parseDateToddMMyyyy(bdate, ddMMMyyyy, yyyy_MM_dd);
+                    if (mViewholder.chk_child_bdate_rem.isChecked()) {
+                        msg = "Do you want to set Reminder for Child Birthdate ?";
+                        builder.setMessage(msg);
+                        builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, "0", mViewholder.child_id);
+                            }
+                        });
+                        builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mViewholder.chk_child_bdate_rem.setChecked(false);
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    } else {
+                        msg = "Do you want to Unset Reminder for Child Birthdate ?";
+                        builder.setMessage(msg);
+                        builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, lstchild.get(mViewholder.child_id), mViewholder.child_id);
+                            }
+                        });
+                        builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mViewholder.chk_child_bdate_rem.setChecked(true);
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }
                 } else {
-                    setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, lstchild.get(mViewholder.child_id), mViewholder.child_id);
+                    Toast.makeText(getActivity(), "Child Birthdate not found!", Toast.LENGTH_SHORT).show();
+                    if (mViewholder.chk_child_bdate_rem.isChecked()) {
+                        mViewholder.chk_child_bdate_rem.setChecked(false);
+                    } else {
+                        mViewholder.chk_child_bdate_rem.setChecked(true);
+                    }
                 }
             }
         });
 
-        mViewholder.chk_child_marriage.setOnClickListener(new View.OnClickListener() {
+
+        mViewholder.tbtn_interest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                String msg = "";
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+                builder.setTitle(mActivity.getString(R.string.app_name));
+                if (mViewholder.tbtn_interest.isChecked()) {
+                    msg = "Interested for Matrimony ?";
+                    builder.setMessage(msg);
+                    builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                        public void onClick(@NonNull DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mViewholder.tbtn_interest.setChecked(false);
+                            dialog.dismiss();
+                        }
+                    }).show();
+                } else {
+                    msg = "Not interested for Matrimony ?";
+                    builder.setMessage(msg);
+                    builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                        public void onClick(@NonNull DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(@NonNull DialogInterface dialog, int which) {
+                            mViewholder.tbtn_interest.setChecked(true);
+                            dialog.dismiss();
+                        }
+                    }).show();
+                }
             }
         });
-
 
         assert mViewholder.radioGroupId != null;
         mViewholder.radioGroupId.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -701,8 +845,10 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             mViewholder.edtchild_btime.setCursorVisible(false);
 
             mViewholder.tbtn_interest.setEnabled(false);
-            mViewholder.chk_child_bdate_rem.setEnabled(true);
+            mViewholder.chk_child_bdate_rem.setVisibility(View.VISIBLE);
             mViewholder.chk_child_marriage.setClickable(false);
+        } else {
+            mViewholder.chk_child_bdate_rem.setVisibility(View.INVISIBLE);
         }
 
         mViewholder.edtMobile.setOnClickListener(new View.OnClickListener() {

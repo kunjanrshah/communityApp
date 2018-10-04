@@ -1216,6 +1216,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
         if (isOnline(getmContext())) {
             JSONObject mjson = new JSONObject();
             try {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(getResources().getString(R.string.title_admins));
                 mjson.put(Common.Constant_Class.ROLE, "ADMIN");
             } catch (Exception e) {
                 e.printStackTrace();
