@@ -173,7 +173,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dip"
-                        android:hint="@string/hint_native_place"
+                        android:hint="@string/hint_native"
                         android:inputType="textCapSentences"
                         android:nextFocusDown="@+id/input_layout_birth_place"
                         android:singleLine="true" />

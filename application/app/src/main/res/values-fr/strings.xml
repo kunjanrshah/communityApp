@@ -1,11 +1,11 @@
 <resources>
     <string name="theme_app_name">VastiPatrak</string>
-    <string name="app_name">VastiPatrak</string>
+    <string name="app_name">जनगणना</string>
     <string name="hint_email">Email</string>
     <string name="hint_email_mobile">Email or Mobile</string>
     <string name="hint_mobile">Mobile</string>
     <string name="hint_password">Password</string>
-    <string name="hint_conform_password">Confirm Password</string>
+    <string name="hint_conform_password">Conform Password</string>
     <string name="hint_address">Address</string>
     <string name="hint_city">City</string>
     <string name="hint_native">Native Place</string>
@@ -24,6 +24,7 @@
     <string name="hint_birth_date_to">Birth Date To</string>
     <string name="hint_education">Education </string>
     <string name="hint_birth_place">Birth Place </string>
+    <string name="hint_native_place">Native Place </string>
     <string name="hint_sponse_native">Spouse Native</string>
     <string name="hint_land_line">Land Line </string>
     <string name="hint_gotra">Gotra </string>
@@ -33,7 +34,7 @@
     <string name="err_msg_invalid_mobile">Invalid Mobile Number</string>
     <string name="err_msg_blank">Please enter missing details</string>
     <string name="err_msg_password">Enter the password</string>
-    <string name="err_msg_conform_password">wrong password try again</string>
+    <string name="err_msg_conform_password">Wrong password</string>
     <string name="forgot_password"><u>Forgot Password</u></string>
     <string name="sync_data"><u>Sync Data</u></string>
     <string name="err_msg_name">Enter your name</string>
@@ -41,7 +42,7 @@
     <string name="err_msg_surname">Enter your surname</string>
     <string name="err_msg_native">Enter your native place</string>
     <string name="err_msg_address">Enter your address </string>
-    <string name="err_msg_repeat_password">Password and Repeat password not match</string>
+    <string name="err_msg_repeat_password">Password and Repeat password must be same</string>
     <string name="go_to_whatsapp">Go to WhatsApp ?</string>
     <string name="action_search">Search</string>
     <string name="action_save">Save</string>
@@ -55,7 +56,7 @@
     <string name="action_admin">Admins</string>
     <string name="action_share_event">Share Event</string>
     <string name="action_voice">Voice</string>
-    <string name="action_advsearch">Advanced Search</string>
+    <string name="action_advsearch">Advance Search</string>
     <string name="action_export">Export Search</string>
 
     <string name="action_change_role">Change Role</string>

@@ -89,6 +89,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.krs.vastipatrak.utils.Common.watchYoutubeVideo;
+
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback//, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
@@ -632,8 +634,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             Bundle mBundle = new Bundle();
             mBundle.putInt(Common.Constant_Class.AdminControl, Common.Constant_Class.NonActive);
             fragment.setArguments(mBundle);
-        }else if(menu == 6)
-        {
+        } else if (menu == 6) {
             Bundle mBundle = new Bundle();
             mBundle.putInt(Common.Constant_Class.AdminControl, -1);
             fragment.setArguments(mBundle);
@@ -813,18 +814,43 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new CalendarFragment();
                 break;
             case 6:
-                fragment = new ChangePasswordFragment();
+                Toast.makeText(MainActivity.this, "On the Way", Toast.LENGTH_SHORT).show();
+
+                /*AlertDialog.Builder b = new AlertDialog.Builder(MainActivity.this);
+                b.setTitle(getResources().getString(R.string.app_name));
+                String[] types = {"English", "Gujarati", "Hindi"};
+                b.setItems(types, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+                        switch (which) {
+                            case 0:
+                                //onZipRequested();
+                                break;
+                            case 1:
+                                //onCategoryRequested();
+                                break;
+                            case 2:
+                                //onCategoryRequested();
+                                break;
+                        }
+                    }
+                });
+
+                b.show();*/
                 break;
             case 7:
-                Toast.makeText(MainActivity.this, "On the Way", Toast.LENGTH_SHORT).show();
-                /*Intent mIntent2 = new Intent(MainActivity.this, TourActivity.class);
-                startActivity(mIntent2);*/
-                // this.overridePendingTransition(0, 0);
+                fragment = new ChangePasswordFragment();
                 break;
             case 8:
-                fragment = new HelpFragment();
+                watchYoutubeVideo(MainActivity.this, "3d9CJP3wWPU");
                 break;
             case 9:
+                fragment = new HelpFragment();
+                break;
+            case 10:
                 ExitAlert();
                 break;
 

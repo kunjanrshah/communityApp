@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -52,16 +53,17 @@ import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.LocaleHelper;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import io.realm.Realm;
+import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
+import static com.krs.vastipatrak.utils.Common.watchYoutubeVideo;
 
 
 public class LoginActivity extends Activity {
@@ -78,6 +80,10 @@ public class LoginActivity extends Activity {
     @NonNull
     private final String tag_json_obj = "jobj_req";
     private final String TAG = MainActivity.class.getSimpleName();
+    Resources resources;
+    Context context;
+    TextView txtLan;
+    TextView tv;
     @Nullable
     private JSONObject json = null;
     private ImageView img_profile, img_cancel;
@@ -88,8 +94,6 @@ public class LoginActivity extends Activity {
     private boolean isShow1 = true;
     @Nullable
     private String screen = "";
-    @Nullable
-    //private ProgressDialog pDialog;
     private EditText inputEmail, inputPassword, inputName, inputConformPassword, inputForgotPassword, inputMobile, input_email_mobile, edt_father_name, edt_surname, edt_address, edt_native;
     private TextInputLayout inputLayoutName, inputLayoutEmail, input_layout_email_mobile, inputLayoutPassword, inputLayoutConformPassword, InputLayoutForgotPassword, inputLayoutMobile, input_layout_father_name, input_layout_surname, input_layout_address, input_layout_native_place;
     @Nullable
@@ -100,7 +104,6 @@ public class LoginActivity extends Activity {
     private TextView txt_forgot, txtSignup;
     @Nullable
     private TextView txtTour = null;
-    private Realm realm;
 
     private static boolean isValidEmail(@NonNull String email) {
         return TextUtils.isEmpty(email) || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -212,14 +215,48 @@ public class LoginActivity extends Activity {
         txtTour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LoginActivity.this,"On the Way",Toast.LENGTH_SHORT).show();
-
-                /*Intent mIntent = new Intent(LoginActivity.this, TourActivity.class);
-                startActivity(mIntent);*/
+                watchYoutubeVideo(LoginActivity.this, "3d9CJP3wWPU");
             }
         });
         Common.getDeviceId(this);
+        if (mSharedPreferences.getString(Common.Constant_Class.LAN, "en").equalsIgnoreCase("de")) {
+            context = LocaleHelper.setLocale(LoginActivity.this, "de");
+        } else {
+            context = LocaleHelper.setLocale(LoginActivity.this, "en");
+        }
+        resources = context.getResources();
+       // setLocalization();
     }
+
+    /*private void setLocalization() {
+        ((TextView) findViewById(R.id.txt_app_name)).setText("" + resources.getString(R.string.app_name));
+        if (SignupToggle) {
+            txtSignup.setText(resources.getString(R.string.btn_sign_in));
+            btn_signup.setText(resources.getString(R.string.btn_sign_up));
+        } else {
+            txtSignup.setText(resources.getString(R.string.btn_sign_up));
+            btn_signup.setText(resources.getString(R.string.btn_sign_in));
+        }
+        input_email_mobile.setHint(resources.getString(R.string.hint_email_mobile));
+        ((EditText) findViewById(R.id.input_email)).setHint(resources.getString(R.string.hint_email));
+        ((EditText) findViewById(R.id.input_mobile)).setHint(resources.getString(R.string.hint_mobile));
+
+        ((EditText) findViewById(R.id.input_password)).setHint(resources.getString(R.string.hint_password));
+
+        ((EditText) findViewById(R.id.input_conform_password)).setHint(resources.getString(R.string.hint_conform_password));
+
+        edt_native.setHint(resources.getString(R.string.hint_native));
+        edt_address.setHint(resources.getString(R.string.hint_address));
+        txt_forgot.setText(resources.getString(R.string.forgot_password));
+        txtLan.setText(resources.getString(R.string.language));
+        txtTour.setText(resources.getString(R.string.tour_video));
+        tv.setText(resources.getString(R.string.marquee_text));
+        tv.setSelected(true);
+        inputName.setHint(resources.getString(R.string.hint_name));
+        edt_father_name.setHint(resources.getString(R.string.hint_father_name));
+        edt_surname.setHint(resources.getString(R.string.hint_surname));
+
+    }*/
 
 
     @Override
@@ -233,8 +270,6 @@ public class LoginActivity extends Activity {
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
-        realm = AppController.getInstance().realm;
-
 
         txtTour = findViewById(R.id.txtTour);
 
@@ -287,8 +322,54 @@ public class LoginActivity extends Activity {
         spinnerSubcast.setAdapter(arrayAdapter2);
         spinnerSubcast.setText("Dasha");
 
-        TextView tv = findViewById(R.id.TextView03);
+        tv = findViewById(R.id.TextView03);
         tv.setSelected(true);
+        txtLan = findViewById(R.id.txtLan);
+        txtLan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(LoginActivity.this,"On the Way",Toast.LENGTH_SHORT).show();
+
+               /* AlertDialog.Builder b = new AlertDialog.Builder(LoginActivity.this);
+                b.setTitle(getResources().getString(R.string.app_name));
+                String[] types = {getString(R.string.english), getString(R.string.gujarati), getString(R.string.hindi)};
+                b.setItems(types, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+                        switch (which) {
+                            case 0:
+                                mEditor.putString(Common.Constant_Class.LAN, "en");
+                                mEditor.apply();
+                                context = LocaleHelper.setLocale(LoginActivity.this, "en");
+                                resources = context.getResources();
+                                //setLocalization();
+                                break;
+                            case 1:
+                                mEditor.putString(Common.Constant_Class.LAN, "de");
+                                mEditor.apply();
+                                context = LocaleHelper.setLocale(LoginActivity.this, "de");
+                                resources = context.getResources();
+                                Toast.makeText(LoginActivity.this,"On the Way",Toast.LENGTH_SHORT).show();
+                               // setLocalization();
+                                break;
+                            case 2:
+                                mEditor.putString(Common.Constant_Class.LAN, "fr");
+                                mEditor.apply();
+                                context = LocaleHelper.setLocale(LoginActivity.this, "fr");
+                                resources = context.getResources();
+                                Toast.makeText(LoginActivity.this,"On the Way",Toast.LENGTH_SHORT).show();
+                               // setLocalization();
+                                break;
+                        }
+                    }
+                });
+                b.show();*/
+            }
+        });
 
         inputPassword.setOnTouchListener(new EditText.OnTouchListener() {
             @Override
@@ -358,7 +439,6 @@ public class LoginActivity extends Activity {
 
 
     private void setListner() {
-
         edt_father_name.addTextChangedListener(new MyTextWatcher(edt_father_name));
         edt_surname.addTextChangedListener(new MyTextWatcher(edt_surname));
         edt_address.addTextChangedListener(new MyTextWatcher(edt_address));
@@ -372,7 +452,6 @@ public class LoginActivity extends Activity {
     private void togglePage() {
         if (SignupToggle) {
             txtSignup.setText(getResources().getString(R.string.btn_sign_in));
-
             inputLayoutMobile.setVisibility(View.VISIBLE);
             inputLayoutName.setVisibility(View.VISIBLE);
             inputLayoutConformPassword.setVisibility(View.VISIBLE);
@@ -412,6 +491,7 @@ public class LoginActivity extends Activity {
             SignupToggle = true;
             input_email_mobile.requestFocus();
         }
+     //   setLocalization();
     }
 
     private void validateFatherName() {
@@ -696,7 +776,7 @@ public class LoginActivity extends Activity {
                         params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
                         params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
                         params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                        params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                        params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences != null ? mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, "") : null);
                         if (mSharedPreferences != null) {
                             params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
                         }
@@ -720,10 +800,10 @@ public class LoginActivity extends Activity {
             final String mobile = inputMobile.getText().toString();
             final String password = inputPassword.getText().toString();
             String cpassword = inputConformPassword.getText().toString();
-            final String father_name = edt_father_name.getText().toString();
+           /* final String father_name = edt_father_name.getText().toString();
             final String surname = edt_surname.getText().toString();
             final String _native = edt_native.getText().toString();
-            final String address = edt_address.getText().toString();
+            final String address = edt_address.getText().toString();*/
             String subcast = spinnerSubcast.getText().toString();
             final String ekdo = spinnerEkdo.getText().toString();
 
@@ -921,7 +1001,7 @@ public class LoginActivity extends Activity {
         if (data != null) {
             try {
                 if (data.getData() == null) {
-                    bmp = (Bitmap) data.getExtras().get("data");
+                    bmp = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
                 } else {
                     Uri selectedImage = data.getData();
                     bmp = Common.scaleImage(this, selectedImage);

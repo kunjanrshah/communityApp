@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -71,8 +72,8 @@
                         android:layout_marginLeft="50dp"
                         android:contentDescription="TODO"
                         android:padding="5dp"
-                        android:visibility="invisible"
-                        android:src="@drawable/cancel" />
+                        android:src="@drawable/cancel"
+                        android:visibility="invisible" />
 
                     <ImageView
                         android:id="@+id/img_profile"
@@ -243,7 +244,7 @@
                     android:id="@+id/spinnerEkdo"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:hint="Select Ekdo"
+                    android:hint="@string/select_ekdo"
                     android:textColorHint="#05ab9a"
                     android:visibility="gone" />
 
@@ -251,7 +252,7 @@
                     android:id="@+id/spinnerSubcast"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:hint="Select Subcast"
+                    android:hint="@string/select_subcast"
                     android:textColorHint="#05ab9a"
                     android:visibility="gone" />
 
@@ -285,22 +286,41 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txtTour"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginBottom="10dp"
-            android:layout_marginEnd="10dp"
-            android:text="Tour Video"
-            android:textColor="@color/colorPrimary"
-            android:textSize="18sp" />
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/txtLan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="@string/language"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                tools:ignore="UselessLeaf" />
+
+            <TextView
+                android:id="@+id/txtTour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/tour_video"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/TextView03"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_alignBottom="@+id/ll_home"
             android:layout_weight="0.90"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
@@ -308,6 +328,6 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:text="@string/marquee_text"
-            android:textSize="18sp"             />
+            android:textSize="18sp" />
     </LinearLayout>
 </LinearLayout>

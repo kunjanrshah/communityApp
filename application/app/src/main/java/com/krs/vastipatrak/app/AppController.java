@@ -2,6 +2,7 @@ package com.krs.vastipatrak.app;
 
 import android.app.Application;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -18,6 +19,7 @@ import com.android.volley.toolbox.Volley;
 
 import com.crashlytics.android.Crashlytics;
 import com.krs.vastipatrak.model.ListProfileData;
+import com.krs.vastipatrak.utils.LocaleHelper;
 
 import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
@@ -56,16 +58,17 @@ public class AppController extends Application {
                 .build();
         Fabric.with(fabric);
 
-      //  Fabric.with(this, new Crashlytics());
         MultiDex.install(this);
         mInstance = this;
         initRealm();
         initFirebaseAnalytics();
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
+    }
 
-
-
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.onAttach(base, "en"));
     }
 
     private void initFirebaseAnalytics()
