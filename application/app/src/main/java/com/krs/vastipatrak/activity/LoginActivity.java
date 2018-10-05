@@ -225,17 +225,17 @@ public class LoginActivity extends Activity {
             context = LocaleHelper.setLocale(LoginActivity.this, "en");
         }
         resources = context.getResources();
-       // setLocalization();
+        setLocalization();
     }
 
-    /*private void setLocalization() {
+    private void setLocalization() {
         ((TextView) findViewById(R.id.txt_app_name)).setText("" + resources.getString(R.string.app_name));
         if (SignupToggle) {
-            txtSignup.setText(resources.getString(R.string.btn_sign_in));
-            btn_signup.setText(resources.getString(R.string.btn_sign_up));
-        } else {
             txtSignup.setText(resources.getString(R.string.btn_sign_up));
             btn_signup.setText(resources.getString(R.string.btn_sign_in));
+        } else {
+            txtSignup.setText(resources.getString(R.string.btn_sign_in));
+            btn_signup.setText(resources.getString(R.string.btn_sign_up));
         }
         input_email_mobile.setHint(resources.getString(R.string.hint_email_mobile));
         ((EditText) findViewById(R.id.input_email)).setHint(resources.getString(R.string.hint_email));
@@ -255,8 +255,7 @@ public class LoginActivity extends Activity {
         inputName.setHint(resources.getString(R.string.hint_name));
         edt_father_name.setHint(resources.getString(R.string.hint_father_name));
         edt_surname.setHint(resources.getString(R.string.hint_surname));
-
-    }*/
+    }
 
 
     @Override
@@ -329,9 +328,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(LoginActivity.this,"On the Way",Toast.LENGTH_SHORT).show();
-
-               /* AlertDialog.Builder b = new AlertDialog.Builder(LoginActivity.this);
+                AlertDialog.Builder b = new AlertDialog.Builder(LoginActivity.this);
                 b.setTitle(getResources().getString(R.string.app_name));
                 String[] types = {getString(R.string.english), getString(R.string.gujarati), getString(R.string.hindi)};
                 b.setItems(types, new DialogInterface.OnClickListener() {
@@ -346,28 +343,28 @@ public class LoginActivity extends Activity {
                                 mEditor.apply();
                                 context = LocaleHelper.setLocale(LoginActivity.this, "en");
                                 resources = context.getResources();
-                                //setLocalization();
+                                setLocalization();
                                 break;
                             case 1:
                                 mEditor.putString(Common.Constant_Class.LAN, "de");
                                 mEditor.apply();
                                 context = LocaleHelper.setLocale(LoginActivity.this, "de");
                                 resources = context.getResources();
-                                Toast.makeText(LoginActivity.this,"On the Way",Toast.LENGTH_SHORT).show();
-                               // setLocalization();
+                                Toast.makeText(LoginActivity.this, "On the Way", Toast.LENGTH_SHORT).show();
+                                setLocalization();
                                 break;
                             case 2:
                                 mEditor.putString(Common.Constant_Class.LAN, "fr");
                                 mEditor.apply();
                                 context = LocaleHelper.setLocale(LoginActivity.this, "fr");
                                 resources = context.getResources();
-                                Toast.makeText(LoginActivity.this,"On the Way",Toast.LENGTH_SHORT).show();
-                               // setLocalization();
+                                Toast.makeText(LoginActivity.this, "On the Way", Toast.LENGTH_SHORT).show();
+                                setLocalization();
                                 break;
                         }
                     }
                 });
-                b.show();*/
+                b.show();
             }
         });
 
@@ -491,7 +488,7 @@ public class LoginActivity extends Activity {
             SignupToggle = true;
             input_email_mobile.requestFocus();
         }
-     //   setLocalization();
+        setLocalization();
     }
 
     private void validateFatherName() {
