@@ -2272,13 +2272,13 @@ public class Common {
         public static final String INACTIVES_URL = BASE_URL + "/API/getInactiveUsers";
         public static final String PROFILE_URL = BASE_URL + "/API/profile";
         public static final String EVENTS_URL = BASE_URL + "/API/getEvents";
-        public static final String GET_CITIES_URL = BASE_URL + "/API/getCities";
+       // public static final String GET_CITIES_URL = BASE_URL + "/API/getCities";
         public static final String CHANGE_ROLE_URL = BASE_URL + "/API/changeRole";
         public static final String GET_GOTRA_URL = BASE_URL + "/API/getGotra";
         public static final String SHARED_USERS_URL = BASE_URL + "/API/shareUsers";
         public static final String NEAR_BY_USERS_URL = BASE_URL + "/API/getNearByUsers";
-        public static final String SEND_REQUEST_URL = BASE_URL + "/API/sendRequest";
-        public static final String REQUEST_ACTION_URL = BASE_URL + "/API/requestAction";
+     //   public static final String SEND_REQUEST_URL = BASE_URL + "/API/sendRequest";
+     //   public static final String REQUEST_ACTION_URL = BASE_URL + "/API/requestAction";
         public static final String GET_RELATIONS_URL = BASE_URL + "/API/getRelations";
         public static final String SET_REMINDER_URL = BASE_URL + "/API/setReminder";
         public static final String GET_USERS_BY_DATE_URL = BASE_URL + "/API/getUsersByDate";
