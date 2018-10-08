@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -33,6 +35,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -81,6 +84,7 @@ import com.krs.vastipatrak.fragments.SharedUsersFragment;
 import com.krs.vastipatrak.interfaces.IAdminControl;
 import com.krs.vastipatrak.service.MyLocationService;
 import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
 import org.json.JSONArray;
@@ -94,8 +98,7 @@ import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.watchYoutubeVideo;
 
-public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback//, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
-{
+public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback, ConnectivityReceiver.ConnectivityReceiverListener {
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
     public static final int CAMARA_REQUEST = 4;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -143,12 +146,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private IAdminControl IAdminControl;
     private MenuItem export;
     private MenuItem change_role;
+    private Snackbar snackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        snackbar = Snackbar.make(findViewById(R.id.drawer_layout), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
@@ -226,16 +230,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 mEditor.apply();
                 MOVE_TO_SEARCH = 1;
                 moveToSearch(MOVE_TO_SEARCH);
-            }
-            else if (push.toLowerCase().contains("location")) {
+            } else if (push.toLowerCase().contains("location")) {
                 MyProfileActivity.isEnable = false;
                 mEditor.putString(Common.Constant_Class.NOTIFICATION, "");
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
                 Intent mIntent = new Intent(this, MyProfileActivity.class);
                 startActivity(mIntent);
-            }
-            else {
+            } else {
                 Bundle mBundle = getIntent().getExtras();
                 if (mBundle != null) {
                     query = mBundle.getString(Common.Constant_Class.QUERY);
@@ -250,6 +252,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 }
             }
         }
+
+        checkConnection();
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnack(isConnected);
     }
 
     private void logUser() {
@@ -372,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     protected void onResume() {
         super.onResume();
-
+        AppController.getInstance().setConnectivityListener(this);
         // register GCM registration complete receiver
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(Config.REGISTRATION_COMPLETE));
 
@@ -386,6 +395,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             MOVE_TO_SEARCH = 1;
             moveToSearch(MOVE_TO_SEARCH);
         }
+
+
     }
 
     @Override
@@ -864,38 +875,16 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new CalendarFragment();
                 break;
             case 6:
-                Toast.makeText(MainActivity.this, "On the Way", Toast.LENGTH_SHORT).show();
+               Toast.makeText(MainActivity.this, "On the Way", Toast.LENGTH_SHORT).show();
 
-                /*AlertDialog.Builder b = new AlertDialog.Builder(MainActivity.this);
-                b.setTitle(getResources().getString(R.string.app_name));
-                String[] types = {"English", "Gujarati", "Hindi"};
-                b.setItems(types, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        dialog.dismiss();
-                        switch (which) {
-                            case 0:
-                                //onZipRequested();
-                                break;
-                            case 1:
-                                //onCategoryRequested();
-                                break;
-                            case 2:
-                                //onCategoryRequested();
-                                break;
-                        }
-                    }
-                });
-
-                b.show();*/
                 break;
             case 7:
                 fragment = new ChangePasswordFragment();
                 break;
             case 8:
-                watchYoutubeVideo(MainActivity.this, "3d9CJP3wWPU");
+                Intent mIntent = new Intent(MainActivity.this, TourActivity.class);
+                startActivity(mIntent);
+                //watchYoutubeVideo(MainActivity.this, "3d9CJP3wWPU");
                 break;
             case 9:
                 fragment = new HelpFragment();
@@ -1131,50 +1120,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }, 2000);
     }
 
-
-    /*private synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
-    }*/
-
-    /*@Override
-    public void onConnected(Bundle bundle) {
-        LocationRequest mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(LOCATION_INTERVAL); // Update location every minutes
-        try {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (mLastLocation != null) {
-            String lat = String.valueOf(mLastLocation.getLatitude());
-            String lon = String.valueOf(mLastLocation.getLongitude());
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        String lat = String.valueOf(location.getLatitude());
-        String lon = String.valueOf(location.getLongitude());
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        buildGoogleApiClient();
-    }*/
-
     @Override
     public void setIsSearch(boolean isSearch) {
         if (isSearch) {
@@ -1193,5 +1138,30 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             change_role.setVisible(true);
             deleteItem.setVisible(true);
         }
+    }
+
+
+    private void showSnack(boolean isConnected) {
+
+        if (!isConnected) {
+            if (snackbar != null) {
+                View sbView = snackbar.getView();
+                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                textView.setTextColor(Color.WHITE);
+                snackbar.show();
+            }
+        } else {
+            if (snackbar != null) {
+                if (snackbar.isShownOrQueued()) {
+                    snackbar.dismiss();
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
     }
 }

@@ -453,8 +453,8 @@ public class RelativeFragment extends Fragment {
             holder.txt_to.setText(last_name);
             holder.txt_msg.setText(Common.getCapsSentences(relation));
             if (status.contains(Common.Constant_Class.ACCEPTED)) {
-                holder.txt_request.setText("Requested from ");
-                holder.txt_approve.setText("Approved from ");
+                holder.txt_request.setText("Requested by ");
+                holder.txt_approve.setText("Approved by ");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.primary_blue));
                 holder.txt_to.setTextColor(getResources().getColor(R.color.primary_blue));
                 holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.ico_approve));
@@ -462,7 +462,7 @@ public class RelativeFragment extends Fragment {
               // holder.txt_status.setText(Html.fromHtml(last_name + "  <b>" + Common.getCapsSentences(relation) + "</b> of " + from_name));
                // makeLinks(holder.txt_status, new String[]{last_name, from_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
             } else if (status.contains(Common.Constant_Class.REQUESTED)) {
-                holder.txt_request.setText("Requested from ");
+                holder.txt_request.setText("Requested by ");
                 holder.txt_approve.setText("To ");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 holder.txt_to.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -471,8 +471,8 @@ public class RelativeFragment extends Fragment {
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape10));
                // makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
             }else if (status.contains(Common.Constant_Class.REJECTED)) {
-                holder.txt_request.setText("Requested from ");
-                holder.txt_approve.setText("Rejected from ");
+                holder.txt_request.setText("Requested by ");
+                holder.txt_approve.setText("Rejected by ");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 holder.txt_to.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 //holder.txt_status.setText(Html.fromHtml(last_name + " rejected <b>" + Common.getCapsSentences(relation) + "</b> to " + from_name));

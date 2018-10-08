@@ -3,13 +3,14 @@ package com.krs.vastipatrak.activity;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,14 +27,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.ItemArrayAdapter;
+import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.fragments.BusinessFilter;
 import com.krs.vastipatrak.fragments.FamilyFilter;
 import com.krs.vastipatrak.fragments.PersonalFilter;
 import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -47,14 +51,14 @@ import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_CHILD_BLOOD_
 import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
-public class FilterActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
-        DatePickerDialog.OnDateSetListener {
+public class FilterActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
     static final int CUSTOM_DIALOG_ID = 0;
     private final String[] READ_CONTACT_PERMS = {Manifest.permission.READ_CONTACTS};
     private final int READ_CONTACT_REQUEST = 3;
 
     RecyclerView recyclerView;
+    Snackbar snackbar;
     private ViewPager viewPager;
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -77,15 +81,28 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 requestPermissions(READ_CONTACT_PERMS, READ_CONTACT_REQUEST);
             }
         }
+        checkConnection();
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnack(isConnected);
     }
 
     private void MemoryAllocation() {
+        snackbar = Snackbar.make(findViewById(R.id.ll_filter), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
         viewPager = findViewById(R.id.viewpager);
         toolbar = findViewById(R.id.toolbar);
         tabLayout = findViewById(R.id.tabs);
         SharedPreferences mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_FILTER, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppController.getInstance().setConnectivityListener(this);
     }
 
     @Override
@@ -178,9 +195,9 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String strAddress = ((PersonalFilter) personal).edtAddress.getText().toString().trim();
                 String strphone = ((PersonalFilter) personal).edt_phone.getText().toString().trim();
                 String strbdateFrom = ((PersonalFilter) personal).edtbdateFrom.getText().toString().trim();
-                strbdateFrom=Common.parseDateToddMMyyyy(strbdateFrom,ddMMMyyyy,yyyy_MM_dd);
+                strbdateFrom = Common.parseDateToddMMyyyy(strbdateFrom, ddMMMyyyy, yyyy_MM_dd);
                 String strbdateTo = ((PersonalFilter) personal).edtbdateTo.getText().toString().trim();
-                strbdateTo=Common.parseDateToddMMyyyy(strbdateTo,ddMMMyyyy,yyyy_MM_dd);
+                strbdateTo = Common.parseDateToddMMyyyy(strbdateTo, ddMMMyyyy, yyyy_MM_dd);
 
                 String strEaddress = ((PersonalFilter) personal).edt_Eaddress.getText().toString().trim();
                 String strCity = ((PersonalFilter) personal).edtCity.getText().toString().trim();
@@ -329,16 +346,16 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 boolean child_married = ((FamilyFilter) family).chk_child_marriage.isChecked();
 
                 String strmdate_from = ((FamilyFilter) family).edt_mdate_from.getText().toString().trim();
-                strmdate_from=Common.parseDateToddMMyyyy(strmdate_from,ddMMMyyyy,yyyy_MM_dd);
+                strmdate_from = Common.parseDateToddMMyyyy(strmdate_from, ddMMMyyyy, yyyy_MM_dd);
 
                 String strmdate_to = ((FamilyFilter) family).edt_mdate_to.getText().toString().trim();
-                strmdate_to=Common.parseDateToddMMyyyy(strmdate_to,ddMMMyyyy,yyyy_MM_dd);
+                strmdate_to = Common.parseDateToddMMyyyy(strmdate_to, ddMMMyyyy, yyyy_MM_dd);
 
                 String childBdateFrom = ((FamilyFilter) family).edt_cdate_from.getText().toString().trim();
-                childBdateFrom=Common.parseDateToddMMyyyy(childBdateFrom,ddMMMyyyy,yyyy_MM_dd);
+                childBdateFrom = Common.parseDateToddMMyyyy(childBdateFrom, ddMMMyyyy, yyyy_MM_dd);
 
                 String childBdateTo = ((FamilyFilter) family).edt_cdate_to.getText().toString().trim();
-                childBdateTo=Common.parseDateToddMMyyyy(childBdateTo,ddMMMyyyy,yyyy_MM_dd);
+                childBdateTo = Common.parseDateToddMMyyyy(childBdateTo, ddMMMyyyy, yyyy_MM_dd);
 
                 String strSpouseName = ((FamilyFilter) family).edtSpouseName.getText().toString().trim();
                 String strSpouseFName = ((FamilyFilter) family).edtSpouseFName.getText().toString().trim();
@@ -571,6 +588,28 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
     @Override
     public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
 
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
+    private void showSnack(boolean isConnected) {
+        if (!isConnected) {
+            if (snackbar != null) {
+                View sbView = snackbar.getView();
+                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                textView.setTextColor(Color.WHITE);
+                snackbar.show();
+            }
+        } else {
+            if (snackbar != null) {
+                if (snackbar.isShownOrQueued()) {
+                    snackbar.dismiss();
+                }
+            }
+        }
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

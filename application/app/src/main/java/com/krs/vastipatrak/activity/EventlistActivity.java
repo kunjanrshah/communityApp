@@ -4,11 +4,12 @@ package com.krs.vastipatrak.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,12 +27,11 @@ import com.krs.vastipatrak.adapter.EventListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListEventData;
 import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.ConnectivityReceiver;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
-import java.util.Objects;
 
 import io.realm.Realm;
 
@@ -39,11 +39,12 @@ import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
 import static com.krs.vastipatrak.utils.Common.parseDateToddMMyyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
-public class EventlistActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
+public class EventlistActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
     private static final int RECOVERY_REQUEST = 1;
+    Snackbar snackbar;
     private RecyclerView listEvents;
-    private TextView txt_title, txt_desc, tvEventLocation, tvEventDate,txt_distance;
+    private TextView txt_title, txt_desc, tvEventLocation, tvEventDate, txt_distance;
     @Nullable
     private String eventId = "";
     private String eventDesc = "";
@@ -91,7 +92,7 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
                 final double clat = Double.valueOf(curr_lat);
                 final double clng = Double.valueOf(curr_lng);
                 if (clat != 0 && clng != 0 && !lat.isEmpty() && !lng.isEmpty()) {
-                    Common.showDirections(EventlistActivity.this,clat, clng, Double.parseDouble(lat), Double.parseDouble(lat), eventLocation);
+                    Common.showDirections(EventlistActivity.this, clat, clng, Double.parseDouble(lat), Double.parseDouble(lat), eventLocation);
                 } else {
                     Toast.makeText(EventlistActivity.this, "Location not found!", Toast.LENGTH_SHORT).show();
                 }
@@ -101,16 +102,22 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
         String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
         String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
         if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !lat.isEmpty() && !lng.isEmpty()) {
-            new Common.getDistance(this,txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, curr_lat, curr_lng, lat, lng);
+            new Common.getDistance(this, txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, curr_lat, curr_lng, lat, lng);
         }
+        checkConnection();
     }
 
-    /*private void showDirections(double src_lat, double src_lng, double dst_lat, double dst_lng, String address) {
-        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", src_lat, src_lng, "", dst_lat, dst_lng, address);
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-        startActivity(intent);
-    }*/
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnack(isConnected);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppController.getInstance().setConnectivityListener(this);
+    }
+
 
     private void setDate(TextView tvEventDate, String edate) {
         SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -124,26 +131,24 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
         String goal = outFormat.format(date);
 
         String strDate = "";
-        if (DateUtils.isToday(date.getTime()))
-            strDate = "Today";
-        else if (DateUtils.isToday(date.getTime() + DateUtils.DAY_IN_MILLIS))
-            strDate = "Yesterday";
-        else if (DateUtils.isToday(date.getTime() - DateUtils.DAY_IN_MILLIS))
-            strDate = "Tommorrow";
-        else
-            strDate = parseDateToddMMyyyy(edate, yyyy_MM_dd, dd_MMM_yyyy);
+        if (DateUtils.isToday(date.getTime())) strDate = "Today";
+        else if (DateUtils.isToday(date.getTime() + DateUtils.DAY_IN_MILLIS)) strDate = "Yesterday";
+        else if (DateUtils.isToday(date.getTime() - DateUtils.DAY_IN_MILLIS)) strDate = "Tommorrow";
+        else strDate = parseDateToddMMyyyy(edate, yyyy_MM_dd, dd_MMM_yyyy);
 
         tvEventDate.setText(strDate + "\n" + goal);
     }
 
     private void MemoryAllocation() {
+        snackbar = Snackbar.make(findViewById(R.id.eventlist_layout), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
+
         listEvents = findViewById(R.id.listEvents);
         txt_title = findViewById(R.id.txt_title);
         txt_desc = findViewById(R.id.txt_desc);
         tvEventLocation = findViewById(R.id.tvEventLocation);
         tvEventDate = findViewById(R.id.tvEventDate);
-        img_back= findViewById(R.id.img_back);
-        txt_distance= findViewById(R.id.txt_distance);
+        img_back = findViewById(R.id.img_back);
+        txt_distance = findViewById(R.id.txt_distance);
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
 
         Realm realm = AppController.getInstance().realm;
@@ -185,5 +190,27 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void showSnack(boolean isConnected) {
+        if (!isConnected) {
+            if (snackbar != null) {
+                View sbView = snackbar.getView();
+                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                textView.setTextColor(Color.WHITE);
+                snackbar.show();
+            }
+        } else {
+            if (snackbar != null) {
+                if (snackbar.isShownOrQueued()) {
+                    snackbar.dismiss();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
     }
 }

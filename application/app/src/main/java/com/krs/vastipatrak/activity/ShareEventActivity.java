@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -13,16 +15,20 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.ConnectivityReceiver;
 
 import im.delight.android.webview.AdvancedWebView;
 
 
-public class ShareEventActivity extends AppCompatActivity implements AdvancedWebView.Listener {
+public class ShareEventActivity extends AppCompatActivity implements AdvancedWebView.Listener, ConnectivityReceiver.ConnectivityReceiverListener {
 
     private AdvancedWebView mWebView;
+    Snackbar snackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +38,11 @@ public class ShareEventActivity extends AppCompatActivity implements AdvancedWeb
         mWebView.getSettings().setSupportMultipleWindows(true);
         mWebView.setGeolocationEnabled(true);
         mWebView.setListener(this, this);
-       // mWebView.loadUrl(getResources().getString(R.string.event_url));
+        snackbar = Snackbar.make(findViewById(R.id.webview), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
+
+        // mWebView.loadUrl(getResources().getString(R.string.event_url));
         startWebView(mWebView,getResources().getString(R.string.event_url));
+        checkConnection();
       /*  mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
@@ -45,6 +54,11 @@ public class ShareEventActivity extends AppCompatActivity implements AdvancedWeb
                 return true;
             }
         });*/
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnack(isConnected);
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -95,7 +109,7 @@ public class ShareEventActivity extends AppCompatActivity implements AdvancedWeb
     protected void onResume() {
         super.onResume();
         mWebView.onResume();
-        // ...
+        AppController.getInstance().setConnectivityListener(this);
     }
 
     @SuppressLint("NewApi")
@@ -111,6 +125,24 @@ public class ShareEventActivity extends AppCompatActivity implements AdvancedWeb
         mWebView.onDestroy();
         // ...
         super.onDestroy();
+    }
+
+    private void showSnack(boolean isConnected) {
+
+        if (!isConnected) {
+            if (snackbar != null) {
+                View sbView = snackbar.getView();
+                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                textView.setTextColor(Color.WHITE);
+                snackbar.show();
+            }
+        } else {
+            if (snackbar != null) {
+                if (snackbar.isShownOrQueued()) {
+                    snackbar.dismiss();
+                }
+            }
+        }
     }
 
     @Override
@@ -150,4 +182,8 @@ public class ShareEventActivity extends AppCompatActivity implements AdvancedWeb
     }
 
 
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
 }

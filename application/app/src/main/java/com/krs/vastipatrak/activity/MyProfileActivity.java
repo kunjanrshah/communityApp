@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -42,6 +45,7 @@ import com.krs.vastipatrak.fragments.PersonalFragment;
 import com.krs.vastipatrak.fragments.RelativeFragment;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -55,7 +59,7 @@ import java.util.Map;
 import java.util.Objects;
 
 
-public class MyProfileActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+public class MyProfileActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
 
     public static boolean isEnable = false;
@@ -74,6 +78,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private Fragment relative = null;
     private SharedPreferences mSharedPreferences = null;
     private boolean isBackPressed = false;
+    Snackbar snackbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,8 +94,21 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         } else {
             id = mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, "");
         }
+        checkConnection();
         SyncUser(id);
         // call_profile_ws(new JSONObject(), "0");
+    }
+
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnack(isConnected);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppController.getInstance().setConnectivityListener(this);
     }
 
     @Nullable
@@ -100,6 +118,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
     @SuppressLint("CommitPrefEdits")
     private void MemoryAllocation() {
+        snackbar = Snackbar.make(findViewById(R.id.ll_profile), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
 
         toolbar = findViewById(R.id.toolbar);
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
@@ -788,6 +807,25 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
     }
 
+    private void showSnack(boolean isConnected) {
+
+        if (!isConnected) {
+            if (snackbar != null) {
+                View sbView = snackbar.getView();
+                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                textView.setTextColor(Color.WHITE);
+                snackbar.show();
+            }
+        } else {
+            if (snackbar != null) {
+                if (snackbar.isShownOrQueued()) {
+                    snackbar.dismiss();
+                }
+            }
+        }
+    }
+
+
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
 
@@ -801,6 +839,11 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     @Override
     public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
 
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

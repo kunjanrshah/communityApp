@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -56,6 +58,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.krs.vastipatrak.utils.LocaleHelper;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
@@ -69,7 +72,7 @@ import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 import static com.krs.vastipatrak.utils.Common.watchYoutubeVideo;
 
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
 
     final boolean[] isLogin = {false};
@@ -87,6 +90,7 @@ public class LoginActivity extends Activity {
     Context context;
     TextView txtLan;
     TextView tv;
+    Snackbar snackbar;
     @Nullable
     private JSONObject json = null;
     private ImageView img_profile, img_cancel;
@@ -229,7 +233,7 @@ public class LoginActivity extends Activity {
         txtHow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                watchYoutubeVideo(LoginActivity.this, "Ii5POjxrXA4");
+                watchYoutubeVideo(LoginActivity.this, getResources().getString(R.string.login_2));
             }
         });
         Common.getDeviceId(this);
@@ -239,14 +243,28 @@ public class LoginActivity extends Activity {
             context = LocaleHelper.setLocale(LoginActivity.this, "en");
         }
         resources = context.getResources();
+        checkConnection();
     }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnack(isConnected);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppController.getInstance().setConnectivityListener(this);
+    }
+
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     private void Memory_Allocation() {
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
-
+        snackbar = Snackbar.make(findViewById(R.id.ll_login), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
         txtHow = findViewById(R.id.txtHow);
         txt_label = findViewById(R.id.txt_label);
         input_layout_father_name = findViewById(R.id.input_layout_father_name);
@@ -1006,6 +1024,30 @@ public class LoginActivity extends Activity {
                 }
             }
         }
+    }
+
+    private void showSnack(boolean isConnected) {
+
+        if (!isConnected) {
+            if (snackbar != null) {
+                View sbView = snackbar.getView();
+                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                textView.setTextColor(Color.WHITE);
+                snackbar.show();
+            }
+        } else {
+            if (snackbar != null) {
+                if (snackbar.isShownOrQueued()) {
+                    snackbar.dismiss();
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
     }
 
     private class MyTextWatcher implements TextWatcher {
