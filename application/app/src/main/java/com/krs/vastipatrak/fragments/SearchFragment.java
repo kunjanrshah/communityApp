@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -45,6 +44,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.adapter.ExpandableListAdapter;
 import com.krs.vastipatrak.app.AppController;
@@ -65,16 +65,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
 import io.realm.RealmResults;
-import jxl.Workbook;
-import jxl.WorkbookSettings;
-import jxl.write.Label;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
 
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 import static com.krs.vastipatrak.utils.Common.isOnline;
@@ -117,7 +111,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
     private ISearchCallback iSearchCallback;
     private Context mContext;
     private String SearchString = "";
-    private boolean isAdmin=false;
+    private boolean isAdmin = false;
+
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -194,7 +189,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             adminControl = args.getInt(Common.Constant_Class.AdminControl, -1);
         }
         Memory_Allocation(rootView);
-        isAdmin=false;
+        isAdmin = false;
         if (query != null && !query.equalsIgnoreCase("")) {
             Common.Title = query;
             OnlineSearch(query, Common.Constant_Class.GLOBAL_SEARCH_URL);
@@ -228,7 +223,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     page++;
                 }
                 if (page > 0) {
-                    isAdmin=false;
+                    isAdmin = false;
                     OnlineSearch(search, search_url);
                 } else {
                     mSwipyRefreshLayout.setRefreshing(false);
@@ -287,7 +282,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         if (page1 > 0 && page1 <= page_count) {
                             page = page1;
                             dialog.dismiss();
-                            isAdmin=false;
+                            isAdmin = false;
                             OnlineSearch(search, search_url);
                         } else {
                             Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
@@ -339,7 +334,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 query_string = "";
                 query = str;
                 page = 1;
-                isAdmin=false;
+                isAdmin = false;
                 OnlineSearch(str, Common.Constant_Class.GLOBAL_SEARCH_URL);
                 //callSearchWS(str, Common.Constant_Class.GLOBAL_SEARCH_URL);
                 return false;
@@ -461,7 +456,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                             JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                             for (int i = 0; i < mJsonArray.length(); i++) {
                                 JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                Common.ExportProfile(mJsondata,getActivity());
+                                Common.ExportProfile(mJsondata, getActivity());
                             }
                             Common.ExportSearchData(getActivity());
                         }
@@ -546,7 +541,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         Log.d(TAG, response.toString());
 
                         try {
-                           hideProgressDialog();
+                            hideProgressDialog();
                             iSearchCallback = (ISearchCallback) getmContext();
                             if (iSearchCallback != null) {
                                 iSearchCallback.setIsSearch(true);
@@ -691,24 +686,34 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
                 }
                 Toast.makeText(getmContext(), "" + message + " Page " + page, Toast.LENGTH_LONG).show();
-                hideProgressDialog();
                 iSearchCallback.setIsSearch(true);
             } else {
                 if (lstSelectedIDs != null) {
                     lstSelectedIDs.clear();
                 }
-                iSearchCallback.setIsSearch(false);
-                hideProgressDialog();
-                if (isNonActive) {
-                    lvCustomList.setVisibility(View.GONE);
-                    Objects.requireNonNull(txtLable).setVisibility(View.VISIBLE);
-                    Common.alert(Objects.requireNonNull(getActivity()), message);
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                    String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                    if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                        Intent mIntent = new Intent(getActivity(), LoginActivity.class);
+                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mIntent);
+                        getActivity().finish();
+                    }
                 } else {
-                    Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
+                    iSearchCallback.setIsSearch(false);
+                    if (isNonActive) {
+                        lvCustomList.setVisibility(View.GONE);
+                        Objects.requireNonNull(txtLable).setVisibility(View.VISIBLE);
+                        Common.alert(Objects.requireNonNull(getActivity()), message);
+                    } else {
+                        Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
             mExpandableListAdapter = new ExpandableListAdapter(getmContext(), listDataHeader, listDataChild, false);
             lvCustomList.setAdapter(mExpandableListAdapter);
+            hideProgressDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -787,6 +792,17 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             Common.UpdateProfileStatus(lstSelectedIDs, String.valueOf(mode));
                             alert(message);
+                        }else {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                    Intent mIntent = new Intent(getActivity(), LoginActivity.class);
+                                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(mIntent);
+                                    getActivity().finish();
+                                }
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -843,10 +859,20 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            Common.DeleteProfiles(lstSelectedIDs);
                             alert(message);
+                            Common.DeleteProfiles(lstSelectedIDs);
+                        }else {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                    Intent mIntent = new Intent(getActivity(), LoginActivity.class);
+                                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(mIntent);
+                                    getActivity().finish();
+                                }
+                            }
                         }
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -892,7 +918,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     callNonActivesWS();
                 } else {
                     page = 1;
-                    isAdmin=false;
+                    isAdmin = false;
                     OnlineSearch(Common.Title, Common.Constant_Class.GLOBAL_SEARCH_URL);
                     // callSearchWS(Common.Title, Common.Constant_Class.GLOBAL_SEARCH_URL);
                 }
@@ -978,13 +1004,24 @@ public class SearchFragment extends Fragment implements IAdminControl {
                             boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
                             String message = response.getString(Common.Constant_Class.MESSAGE);
                             if (success) {
-                                if(isAdmin)
-                                {
-                                    ((MainActivity)getActivity()).moveToSearch(6);
+                                if (isAdmin) {
+                                    ((MainActivity) getActivity()).moveToSearch(6);
                                 }
-                              //  lvCustomList.setAdapter(mExpandableListAdapter);
+                                //  lvCustomList.setAdapter(mExpandableListAdapter);
+                                Common.alert(getActivity(), message);
+                            }else {
+                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                                    String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                                    if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                        Intent mIntent = new Intent(getActivity(), LoginActivity.class);
+                                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(mIntent);
+                                        getActivity().finish();
+                                    }
+                                }
                             }
-                            Common.alert(getActivity(), message);
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -1221,7 +1258,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            isAdmin=true;
+            isAdmin = true;
             OnlineSearch(mjson.toString(), Common.Constant_Class.ADVANCE_SEARCH_URL);
         }
     }

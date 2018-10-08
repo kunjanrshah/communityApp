@@ -2,6 +2,7 @@ package com.krs.vastipatrak.service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -21,14 +22,42 @@ import org.json.JSONObject;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = MyFirebaseMessagingService.class.getSimpleName();
-
     private NotificationUtils notificationUtils;
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
 
+    @Override
+    public void onNewToken(String s) {
+        super.onNewToken(s);
+        // Saving reg id to shared preferences
+        storeRegIdInPref(s);
+
+        // sending reg id to your server
+        sendRegistrationToServer(s);
+
+        // Notify UI that registration has completed, so the progress indicator can be hidden.
+        Intent registrationComplete = new Intent(Config.REGISTRATION_COMPLETE);
+        registrationComplete.putExtra("token", s);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
+    }
+
+    private void sendRegistrationToServer(final String token) {
+        // sending gcm token to server
+        Log.e(TAG, "sendRegistrationToServer: " + token);
+    }
+
+    private void storeRegIdInPref(String token) {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(Common.Constant_Class.DEVICE_TOKEN, token);
+        editor.apply();
+    }
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         Log.e(TAG, "From: " + remoteMessage.getFrom());
-
+        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
         /*if (remoteMessage == null)
             return;*/
 
@@ -54,7 +83,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if (title == null || title.isEmpty()) {
                 title = "MEDK Vastipatrak";
             }
-
+            mEditor.putString(Common.Constant_Class.NOTIFICATION,notification);
+            mEditor.putString(Common.Constant_Class.PROFILE_ID,user_id);
+            mEditor.apply();
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
             try {
@@ -87,7 +118,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void handleDataMessage(JSONObject json) {
         Log.e(TAG, "push json: " + json.toString());
-        String notification = "", title = "", imageUrl = "", timestamp = "",user_id="";
+        String notification = "", title = "", imageUrl = "", timestamp = "", user_id = "";
 
         try {
 
@@ -126,18 +157,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
                 notificationUtils.playNotificationSound();
             } else {*/
-                // app is in background, show the notification in notification tray
-                Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-                resultIntent.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
-                resultIntent.putExtra(Common.Constant_Class.USER_ID, user_id);
-                // check for image attachment
-                if (TextUtils.isEmpty(imageUrl)) {
-                    showNotificationMessage(getApplicationContext(), title, notification, timestamp, resultIntent,user_id);
-                } else {
-                    // image is present, show notification with image
-                    showNotificationMessageWithBigImage(getApplicationContext(), title, notification, timestamp, resultIntent, imageUrl);
-                }
-         //   }
+            // app is in background, show the notification in notification tray
+            Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+            resultIntent.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
+            resultIntent.putExtra(Common.Constant_Class.USER_ID, user_id);
+
+            // check for image attachment
+            if (TextUtils.isEmpty(imageUrl)) {
+                showNotificationMessage(getApplicationContext(), title, notification, timestamp, resultIntent, user_id);
+            } else {
+                // image is present, show notification with image
+                showNotificationMessageWithBigImage(getApplicationContext(), title, notification, timestamp, resultIntent, imageUrl);
+            }
+            //   }
         } catch (JSONException e) {
             Log.e(TAG, "Json Exception: " + e.getMessage());
         } catch (Exception e) {
@@ -148,10 +180,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     /**
      * Showing notification with text only
      */
-    private void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent,String user_id) {
+    private void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent, String user_id) {
         notificationUtils = new NotificationUtils(context);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        notificationUtils.showNotificationMessage(title, message, timeStamp, intent,user_id);
+        notificationUtils.showNotificationMessage(title, message, timeStamp, intent, user_id);
     }
 
     /**

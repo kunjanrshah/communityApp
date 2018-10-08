@@ -3,6 +3,7 @@ package com.krs.vastipatrak.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
 
@@ -161,11 +163,22 @@ public class ChangePasswordFragment extends Fragment {
                     Common.hideProgressDialog();
 
                     try {
+                        String message = response.getString(Common.Constant_Class.MESSAGE);
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             Common.UpdateProfilePassword(input_password.getText().toString(), mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                            String message = response.getString(Common.Constant_Class.MESSAGE);
                             Toast.makeText(mActivity, message, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                    Intent mIntent = new Intent(getActivity(), LoginActivity.class);
+                                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(mIntent);
+                                    getActivity().finish();
+                                }
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

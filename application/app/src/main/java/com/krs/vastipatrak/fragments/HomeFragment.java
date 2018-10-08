@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -39,6 +38,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.EventlistActivity;
+import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.interfaces.OnItemClickListener;
 import com.krs.vastipatrak.model.ListEventData;
@@ -53,7 +53,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -278,6 +277,16 @@ public class HomeFragment extends Fragment {
                                 e.printStackTrace();
                             }
                             setEventAdapter();
+                        } else {
+                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                    Intent mIntent = new Intent( getActivity(), LoginActivity.class);
+                                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(mIntent);
+                                    getActivity().finish();
+                                }
+                            }
                         }
                         Common.hideProgressDialog();
                         Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
@@ -430,7 +439,7 @@ public class HomeFragment extends Fragment {
                     final double clat = Double.valueOf(curr_lat);
                     final double clng = Double.valueOf(curr_lng);
                     if (clat != 0 && clng != 0 && !lat.isEmpty() && !lng.isEmpty()) {
-                        Common.showDirections(getActivity(),clat, clng, Double.parseDouble(data.getLat()), Double.parseDouble(data.getLng()), data.getLocation());
+                        Common.showDirections(getActivity(), clat, clng, Double.parseDouble(data.getLat()), Double.parseDouble(data.getLng()), data.getLocation());
                     } else {
                         Toast.makeText(getActivity(), "Location not found!", Toast.LENGTH_SHORT).show();
                     }

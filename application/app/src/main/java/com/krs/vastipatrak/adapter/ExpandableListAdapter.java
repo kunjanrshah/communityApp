@@ -48,6 +48,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildData;
@@ -716,6 +717,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 public void onResponse(@NonNull JSONObject response) {
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
+                        String message = "";
+                        if (response.has(Common.Constant_Class.MESSAGE)) {
+                            message = response.getString(Common.Constant_Class.MESSAGE);
+                        }
 
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             if (is_share.equalsIgnoreCase("1")) {
@@ -724,7 +729,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                 Toast.makeText(_context, "You have not shared your location to " + name, Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Toast.makeText(_context, "Something went wrong!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(_context, message, Toast.LENGTH_SHORT).show();
+                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                    Intent mIntent = new Intent(_context, LoginActivity.class);
+                                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    _context.startActivity(mIntent);
+                                    ((Activity) _context).finish();
+                                }
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -773,6 +787,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         Toast.makeText(_context, message, Toast.LENGTH_SHORT).show();
+                        if (!success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+
+                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                    Intent mIntent = new Intent(_context, LoginActivity.class);
+                                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    _context.startActivity(mIntent);
+                                    ((Activity) _context).finish();
+                                }
+                            }
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

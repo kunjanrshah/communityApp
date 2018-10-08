@@ -354,8 +354,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     mListProfileData.setStr_mspouse_hash(str_mspouse_hash);
                     mListProfileData.setStr_spouse_hash(str_spouse_hash);
 
-                  //  mListProfileData.setMdate_reminder_id(chk_m_bdate_rem);
-                   // mListProfileData.setSpouse_bdate_reminder_id(chk_spouse_bdate_rem);
+                    //  mListProfileData.setMdate_reminder_id(chk_m_bdate_rem);
+                    // mListProfileData.setSpouse_bdate_reminder_id(chk_spouse_bdate_rem);
                     setProfileJsonObject(mListProfileData, child_container, Objects.requireNonNull(lst_delID));
                 } else {
                     Toast.makeText(MyProfileActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
@@ -578,6 +578,17 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                                     message = mData.getString(Common.Constant_Class.EMAIL_ADDRESS);
                                 } else if (mData.has(mData.getString(Common.Constant_Class.MOBILE))) {
                                     message = mData.getString(Common.Constant_Class.MOBILE);
+                                } else {
+
+                                    if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                                        String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                                        if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                            Intent mIntent = new Intent(MyProfileActivity.this, LoginActivity.class);
+                                            mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(mIntent);
+                                            finish();
+                                        }
+                                    }
                                 }
                                 Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
                             } catch (Exception e) {
@@ -618,7 +629,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private void SyncUser(String profile_id) {
         if (Common.isOnline(this)) {
             Common.showProgressDialog(this);
-
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
@@ -648,6 +658,15 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                             tabLayout.setupWithViewPager(viewPager);
                         } else {
                             Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                    Intent mIntent = new Intent(MyProfileActivity.this, LoginActivity.class);
+                                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(mIntent);
+                                    finish();
+                                }
+                            }
                         }
                         Common.hideProgressDialog();
                     } catch (Exception e) {

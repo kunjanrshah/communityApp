@@ -1,6 +1,7 @@
 package com.krs.vastipatrak.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.azurechen.fcalendar.data.CalendarAdapter;
 import com.azurechen.fcalendar.data.Day;
 import com.azurechen.fcalendar.widget.FlexibleCalendar;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.adapter.ExpandableListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildData;
@@ -264,10 +266,22 @@ public class CalendarFragment extends Fragment {
                     listDataHeader.add(lpd);
                     listDataChild.put(lpd, mlstChildData);
                 }
+                mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, false);
+                lvCustomList.setAdapter(mExpandableListAdapter);
+                Toast.makeText(getActivity(), "" + message, Toast.LENGTH_LONG).show();
+            }else {
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                    String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                    if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                        Intent mIntent = new Intent(getActivity(), LoginActivity.class);
+                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mIntent);
+                        getActivity().finish();
+                    }
+                }
             }
-            mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, false);
-            lvCustomList.setAdapter(mExpandableListAdapter);
-            Toast.makeText(getActivity(), "" + message, Toast.LENGTH_LONG).show();
+
             hideProgressDialog();
         } catch (Exception e) {
             e.printStackTrace();

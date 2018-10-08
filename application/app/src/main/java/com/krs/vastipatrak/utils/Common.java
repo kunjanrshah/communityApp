@@ -757,12 +757,17 @@ public class Common {
 
     public static void DeleteProfiles(ArrayList<String> lstSelectedIDs) {
         Realm realm = AppController.getInstance().realm;
-        for (int i = 0; i < lstSelectedIDs.size(); i++) {
-            RealmResults<ListProfileData> results = realm.where(ListProfileData.class).equalTo(Constant_Class.PROFILE_ID, lstSelectedIDs.get(i)).findAll();
-            realm.beginTransaction();
-            results.deleteAllFromRealm();
-            realm.commitTransaction();
-
+        try {
+            for (int i = 0; i < lstSelectedIDs.size(); i++) {
+                RealmResults<ListProfileData> results = realm.where(ListProfileData.class).equalTo(Constant_Class.PROFILE_ID, lstSelectedIDs.get(i)).findAll();
+                if (!realm.isInTransaction()) {
+                    realm.beginTransaction();
+                    results.deleteAllFromRealm();
+                    realm.commitTransaction();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -2003,6 +2008,16 @@ public class Common {
         return (distanceInKm);
     }*/
 
+    public static void watchYoutubeVideo(Context context, String id) {
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://www.youtube.com/watch?v=" + id));
+        try {
+            context.startActivity(appIntent);
+        } catch (ActivityNotFoundException ex) {
+            context.startActivity(webIntent);
+        }
+    }
 
     private boolean checktimings(String time, String endtime) {
 
@@ -2023,17 +2038,6 @@ public class Common {
             e.printStackTrace();
         }
         return false;
-    }
-
-    public static void watchYoutubeVideo(Context context, String id){
-        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
-        Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse("http://www.youtube.com/watch?v=" + id));
-        try {
-            context.startActivity(appIntent);
-        } catch (ActivityNotFoundException ex) {
-            context.startActivity(webIntent);
-        }
     }
 
     public static class getDistance extends AsyncTask<String, String, String> {
@@ -2090,12 +2094,12 @@ public class Common {
         public static final String _BUSINESS = " PROFESSIONAL";
         public static final String _FAMILY = "      FAMILY      ";
 
-        public static final String GIRLS = "     GIRLS  ";
-        public static final String BOYS_P1 = "  BOYS PART-1  ";
-        public static final String BOYS_P2 = "   BOYS PART-2";
-
+        public static final String NOTIFICATION = "notification";
         public static final int NonActive = 0;
         public static final String AdminControl = "AdminControl";
+
+        public static final String ERROR_CODE = "errorcode";
+        public static final String ERROR_13 = "-13";
 
 
         public static final String SHARE_USER_IDS = "share_user_ids";
@@ -2295,7 +2299,6 @@ public class Common {
         public static final String GET_RELATIONS_URL = BASE_URL + "/API/getRelations";
         public static final String SET_REMINDER_URL = BASE_URL + "/API/setReminder";
         public static final String GET_USERS_BY_DATE_URL = BASE_URL + "/API/getUsersByDate";
-
         public static String DEVICE_ID_VALUE = "";
     }
 }

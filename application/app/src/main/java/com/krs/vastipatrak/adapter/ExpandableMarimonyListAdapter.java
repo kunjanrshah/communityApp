@@ -40,6 +40,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildrenData;
@@ -460,6 +461,17 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                                 JSONObject mJsondata = mJsonArray.getJSONObject(i);
                                 Common.SaveProfile(mJsondata);
                                 notifyDataSetChanged();
+                            }
+                        }else {
+                            Toast.makeText(_context, message, Toast.LENGTH_SHORT).show();
+                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                    Intent mIntent = new Intent(_context, LoginActivity.class);
+                                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    _context.startActivity(mIntent);
+                                    ((Activity)_context).finish();
+                                }
                             }
                         }
                     } catch (Exception e) {

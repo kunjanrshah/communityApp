@@ -50,6 +50,9 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
@@ -101,9 +104,9 @@ public class LoginActivity extends Activity {
     private SharedPreferences.Editor mEditor;
     private boolean SignupToggle = true;
     private Button btn_signup;
-    private TextView txt_forgot, txtSignup;
+    private TextView txt_forgot, txtSignup, txt_label;
     @Nullable
-    private TextView txtTour = null;
+    private TextView txtHow = null;
 
     private static boolean isValidEmail(@NonNull String email) {
         return TextUtils.isEmpty(email) || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -116,6 +119,15 @@ public class LoginActivity extends Activity {
         Memory_Allocation();
         setListner();
 
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(LoginActivity.this, new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String newToken = instanceIdResult.getToken();
+                Log.e("newToken", newToken);
+                mEditor.putString(Common.Constant_Class.DEVICE_TOKEN, newToken);
+                mEditor.apply();
+            }
+        });
         if (Build.VERSION.SDK_INT >= 23) {
 
             if (Common.canCallPhone(this) || !Common.canAccessLocation(this) || !Common.canSMS(this)) {
@@ -137,9 +149,11 @@ public class LoginActivity extends Activity {
 
         if (mSharedPreferences != null && !mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase("") && screen == null) {
             Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
+
             mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
             startActivity(mIntent);
             finish();
+            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
         }
 
         txtSignup.setOnClickListener(new View.OnClickListener() {
@@ -211,11 +225,11 @@ public class LoginActivity extends Activity {
             }
         });
 
-        assert txtTour != null;
-        txtTour.setOnClickListener(new View.OnClickListener() {
+        assert txtHow != null;
+        txtHow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                watchYoutubeVideo(LoginActivity.this, "3d9CJP3wWPU");
+                watchYoutubeVideo(LoginActivity.this, "Ii5POjxrXA4");
             }
         });
         Common.getDeviceId(this);
@@ -225,44 +239,6 @@ public class LoginActivity extends Activity {
             context = LocaleHelper.setLocale(LoginActivity.this, "en");
         }
         resources = context.getResources();
-       // setLocalization();
-    }
-
-    /*private void setLocalization() {
-        ((TextView) findViewById(R.id.txt_app_name)).setText("" + resources.getString(R.string.app_name));
-        if (SignupToggle) {
-            txtSignup.setText(resources.getString(R.string.btn_sign_in));
-            btn_signup.setText(resources.getString(R.string.btn_sign_up));
-        } else {
-            txtSignup.setText(resources.getString(R.string.btn_sign_up));
-            btn_signup.setText(resources.getString(R.string.btn_sign_in));
-        }
-        input_email_mobile.setHint(resources.getString(R.string.hint_email_mobile));
-        ((EditText) findViewById(R.id.input_email)).setHint(resources.getString(R.string.hint_email));
-        ((EditText) findViewById(R.id.input_mobile)).setHint(resources.getString(R.string.hint_mobile));
-
-        ((EditText) findViewById(R.id.input_password)).setHint(resources.getString(R.string.hint_password));
-
-        ((EditText) findViewById(R.id.input_conform_password)).setHint(resources.getString(R.string.hint_conform_password));
-
-        edt_native.setHint(resources.getString(R.string.hint_native));
-        edt_address.setHint(resources.getString(R.string.hint_address));
-        txt_forgot.setText(resources.getString(R.string.forgot_password));
-        txtLan.setText(resources.getString(R.string.language));
-        txtTour.setText(resources.getString(R.string.tour_video));
-        tv.setText(resources.getString(R.string.marquee_text));
-        tv.setSelected(true);
-        inputName.setHint(resources.getString(R.string.hint_name));
-        edt_father_name.setHint(resources.getString(R.string.hint_father_name));
-        edt_surname.setHint(resources.getString(R.string.hint_surname));
-
-    }*/
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
     }
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
@@ -271,8 +247,8 @@ public class LoginActivity extends Activity {
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
 
-        txtTour = findViewById(R.id.txtTour);
-
+        txtHow = findViewById(R.id.txtHow);
+        txt_label = findViewById(R.id.txt_label);
         input_layout_father_name = findViewById(R.id.input_layout_father_name);
         edt_father_name = findViewById(R.id.edt_father_name);
 
@@ -329,7 +305,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(LoginActivity.this,"On the Way",Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "On the Way", Toast.LENGTH_SHORT).show();
 
                /* AlertDialog.Builder b = new AlertDialog.Builder(LoginActivity.this);
                 b.setTitle(getResources().getString(R.string.app_name));
@@ -467,10 +443,14 @@ public class LoginActivity extends Activity {
             spinnerSubcast.setVisibility(View.GONE);
             spinnerEkdo.setVisibility(View.GONE);
             btn_signup.setText(getResources().getString(R.string.btn_sign_up));
+            txtHow.setText(getResources().getString(R.string.how_to_signup));
+            txt_label.setText(R.string.signup_with);
             SignupToggle = false;
             inputPassword.setText("");
             inputName.requestFocus();
         } else {
+            txtHow.setText(getResources().getString(R.string.how_to_login));
+            txt_label.setText(R.string.login_with);
             txtSignup.setText(getResources().getString(R.string.btn_sign_up));
             inputLayoutMobile.setVisibility(View.GONE);
             inputLayoutName.setVisibility(View.GONE);
@@ -486,12 +466,11 @@ public class LoginActivity extends Activity {
             input_layout_father_name.setVisibility(View.GONE);
             input_layout_native_place.setVisibility(View.GONE);
             input_layout_surname.setVisibility(View.GONE);
-
             btn_signup.setText(getResources().getString(R.string.btn_sign_in));
             SignupToggle = true;
             input_email_mobile.requestFocus();
         }
-     //   setLocalization();
+        //   setLocalization();
     }
 
     private void validateFatherName() {
@@ -618,8 +597,20 @@ public class LoginActivity extends Activity {
                                 if (response.has(Common.Constant_Class.PASSWORD) && response.has(Common.Constant_Class.MOBILE)) {
                                     inputPassword.setText("");
                                 }
+                                Common.alert(LoginActivity.this, message);
+                            } else {
+                                Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                                if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                                    String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                                    if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                        Intent mIntent = new Intent(LoginActivity.this, LoginActivity.class);
+                                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(mIntent);
+                                        finish();
+                                    }
+                                }
                             }
-                            Common.alert(LoginActivity.this, message);
+
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -783,8 +774,6 @@ public class LoginActivity extends Activity {
                         return params;
                     }
                 };
-
-
                 jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                 AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
             }

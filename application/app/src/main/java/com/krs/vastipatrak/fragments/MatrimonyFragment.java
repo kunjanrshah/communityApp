@@ -3,6 +3,7 @@ package com.krs.vastipatrak.fragments;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.adapter.ExpandableMarimonyListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ExportProfileData;
@@ -295,7 +297,16 @@ public class MatrimonyFragment extends Fragment {
                                     btnSearch.performClick();
                                 }
                             } else {
-                                Common.alert(getActivity(), message);
+                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                                    String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                                    if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                        Intent mIntent = new Intent(getActivity(), LoginActivity.class);
+                                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(mIntent);
+                                        getActivity().finish();
+                                    }
+                                }
                             }
                             mSwipyRefreshLayout.setRefreshing(false);
                             hideProgressDialog();

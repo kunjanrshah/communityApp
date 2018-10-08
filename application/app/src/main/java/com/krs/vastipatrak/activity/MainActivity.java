@@ -50,6 +50,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
@@ -198,27 +201,55 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         };
         Common.getDeviceId(this);
+        logUser();
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this, new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String newToken = instanceIdResult.getToken();
+                Log.e("newToken", newToken);
+                mEditor.putString(Common.Constant_Class.DEVICE_TOKEN, newToken);
+                mEditor.apply();
+            }
+        });
         if (mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase("")) {
+            mEditor.putString(Common.Constant_Class.NOTIFICATION, "");
+            mEditor.apply();
             Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+            mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(mIntent);
             finish();
-        }
-
-        getGotraWS();
-
-        Bundle mBundle = getIntent().getExtras();
-        if (mBundle != null) {
-            query = mBundle.getString(Common.Constant_Class.QUERY);
-            query_string = mBundle.getString(Common.Constant_Class.QUERY_STRING);
-        }
-        if (query == null && query_string == null && push_message == null) {
-            displayView(0);
-        } else if (query_string != null && query != null && query.isEmpty() && query_string.isEmpty()) {
-            displayView(0);
         } else {
-            displayView(-1);
+            getGotraWS();
+            String push = mSharedPreferences.getString(Common.Constant_Class.NOTIFICATION, "");
+            if (push.toLowerCase().contains("approve") && !push.toLowerCase().contains("admin")) {
+                mEditor.putString(Common.Constant_Class.NOTIFICATION, "");
+                mEditor.apply();
+                MOVE_TO_SEARCH = 1;
+                moveToSearch(MOVE_TO_SEARCH);
+            }
+            else if (push.toLowerCase().contains("location")) {
+                MyProfileActivity.isEnable = false;
+                mEditor.putString(Common.Constant_Class.NOTIFICATION, "");
+                mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+                mEditor.apply();
+                Intent mIntent = new Intent(this, MyProfileActivity.class);
+                startActivity(mIntent);
+            }
+            else {
+                Bundle mBundle = getIntent().getExtras();
+                if (mBundle != null) {
+                    query = mBundle.getString(Common.Constant_Class.QUERY);
+                    query_string = mBundle.getString(Common.Constant_Class.QUERY_STRING);
+                }
+                if (query == null && query_string == null && push_message == null) {
+                    displayView(0);
+                } else if (query_string != null && query != null && query.isEmpty() && query_string.isEmpty()) {
+                    displayView(0);
+                } else {
+                    displayView(-1);
+                }
+            }
         }
-        logUser();
     }
 
     private void logUser() {
@@ -252,6 +283,15 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
                         } else {
                             Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                    Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+                                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(mIntent);
+                                    finish();
+                                }
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -342,24 +382,34 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         // clear the notification area when the app is opened
         NotificationUtils.clearNotifications(getApplicationContext());
-
-
+        if (push_message != null && push_message.contains("approve")) {
+            MOVE_TO_SEARCH = 1;
+            moveToSearch(MOVE_TO_SEARCH);
+        }
     }
 
     @Override
     protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
+        try {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        try {
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
+            filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY - 1);
+            this.registerReceiver(this.mReceiver, filter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
-        filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY - 1);
-        this.registerReceiver(this.mReceiver, filter);
         /*if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }*/
@@ -368,7 +418,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        this.unregisterReceiver(this.mReceiver);
+        try {
+            this.unregisterReceiver(this.mReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         /*if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
         }*/
@@ -745,11 +800,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     @Override
     public void onDrawerItemSelected(View view, int position) {
-
-       /* if (position == 0) {
-            query = "";
-            query_string = "";
-        }*/
         MOVE_TO_POSITION = position;
         displayView(position);
     }
@@ -1140,8 +1190,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         } else {
             export.setVisible(false);
-            activeItem.setVisible(false);
-            deactiveItem.setVisible(false);
             change_role.setVisible(true);
             deleteItem.setVisible(true);
         }
