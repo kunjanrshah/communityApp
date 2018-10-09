@@ -1,5 +1,6 @@
 package com.krs.vastipatrak.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,13 +22,9 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 
-public class TourActivity extends YouTubeBaseActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
+public class TourActivity extends Activity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
-
-    private static final int RECOVERY_REQUEST = 1;
-    private VideoListAdapter adapter;
     private Snackbar snackbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,25 +35,15 @@ public class TourActivity extends YouTubeBaseActivity implements ConnectivityRec
     }
 
     private void MemoryAllocation() {
-        /*RecyclerView listVideos = findViewById(R.id.listVideos);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        listVideos.setLayoutManager(mLayoutManager);
-        listVideos.setItemAnimator(new DefaultItemAnimator());
-        adapter = new VideoListAdapter(this);
-        listVideos.setAdapter(adapter);*/
 
         RecyclerView recyclerView=(RecyclerView)findViewById(R.id.listVideos);
         recyclerView.setHasFixedSize(true);
-        //to use RecycleView, you need a layout manager. default is LinearLayoutManager
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         VideoListAdapter adapter=new VideoListAdapter(this);
         recyclerView.setAdapter(adapter);
-
     }
-
-
 
     private void showSnack(boolean isConnected) {
 

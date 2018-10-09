@@ -1,6 +1,7 @@
 package com.krs.vastipatrak.activity;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +41,7 @@ import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
 import static com.krs.vastipatrak.utils.Common.parseDateToddMMyyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
-public class EventlistActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener, ConnectivityReceiver.ConnectivityReceiverListener {
+public class EventlistActivity extends Activity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     private static final int RECOVERY_REQUEST = 1;
     Snackbar snackbar;
@@ -78,6 +80,9 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
         txt_desc.setText(eventDesc);
         tvEventLocation.setText(eventLocation);
         setDate(tvEventDate, eventDate);
+        listEvents.setHasFixedSize(true);
+
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         listEvents.setLayoutManager(mLayoutManager);
         listEvents.setItemAnimator(new DefaultItemAnimator());
@@ -162,34 +167,6 @@ public class EventlistActivity extends YouTubeBaseActivity implements YouTubePla
                 finish();
             }
         });
-    }
-
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, @NonNull YouTubePlayer youTubePlayer, boolean b) {
-        assert adapter != null;
-        String url = adapter.getYoutubeUrl();
-        int i = url.indexOf("v=");
-        url = url.substring(i + 2);
-        youTubePlayer.cueVideo(url);//fhWaJi1Hsfo
-    }
-
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, @NonNull YouTubeInitializationResult youTubeInitializationResult) {
-        if (youTubeInitializationResult.isUserRecoverableError()) {
-            youTubeInitializationResult.getErrorDialog(this, RECOVERY_REQUEST).show();
-        } else {
-            String error = String.format(getString(R.string.player_error), youTubeInitializationResult.toString());
-            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        try {
-            EventListAdapter.ViewHolder.youTubeView.initialize(Common.Constant_Class.YOUTUBE_API_KEY, this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void showSnack(boolean isConnected) {

@@ -54,7 +54,7 @@ public class BusinessFragment extends Fragment implements Serializable {
     private TextView txt_office;
     private double office_lat = 0;
     private double office_lng = 0;
-    private String user_id = "";
+
     private Activity mActivity;
 
     public BusinessFragment() {
@@ -177,13 +177,6 @@ public class BusinessFragment extends Fragment implements Serializable {
         return rootView;
     }
 
-   /* private void showDirections(double latitude, double longitude) {
-        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", latitude, longitude, "", office_lat, office_lng, edtOAddress.getText().toString().trim());
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-        startActivity(intent);
-    }*/
-
     private void officeLocUpdateWS() {
         if (Common.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
@@ -196,6 +189,9 @@ public class BusinessFragment extends Fragment implements Serializable {
                 if (lat != 0 && lng != 0) {
                     mJsonObject.put(Common.Constant_Class.OFFICE_LAT, lat);
                     mJsonObject.put(Common.Constant_Class.OFFICE_LNG, lng);
+                    if (MyProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                        mJsonObject.put(Common.Constant_Class.UPDATE_USER_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""));
+                    }
                     mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                     mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
                     mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
@@ -256,7 +252,7 @@ public class BusinessFragment extends Fragment implements Serializable {
         mSharedPreferences = mActivity.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
-        user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+       // user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
         txt_office = rootView.findViewById(R.id.txt_office);
     }
 

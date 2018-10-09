@@ -1,7 +1,9 @@
 package com.krs.vastipatrak.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
@@ -15,8 +17,10 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
+import com.google.android.youtube.player.YouTubeThumbnailLoader;
+import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.model.ListEventData;
 import com.krs.vastipatrak.utils.Common;
@@ -28,7 +32,6 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     private final static int TYPE_IMAGE = 1, TYPE_YOUTUBE = 2;
     private final Context context;
     private final ArrayList<String> listUrls;
-    private String YoutubeUrl = "";
 
     public EventListAdapter(Context context, ListEventData data) {
         this.context = context;
@@ -37,13 +40,6 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         listUrls.addAll(data.getYoutubeUrl());
     }
 
-    public String getYoutubeUrl() {
-        return YoutubeUrl;
-    }
-
-    private void setYoutubeUrl(String youtubeUrl) {
-        YoutubeUrl = youtubeUrl;
-    }
 
     @Override
     public int getItemViewType(int position) {
@@ -59,36 +55,64 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
         View cardView;
         assert inflater != null;
         if (viewType == 1) {
             cardView = inflater.inflate(R.layout.item_child, null, false);
+            cardView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT));
         } else {
-            cardView = inflater.inflate(R.layout.video_item_child, null, false);
+            cardView = inflater.inflate(R.layout.video_child_view, null, false);
+            cardView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
         }
-
         return new ViewHolder(cardView, viewType);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
         int viewType = holder.getItemViewType();
         if (viewType == 1) {
             Drawable dr = context.getResources().getDrawable(R.drawable.user_profile);
-            Bitmap bitmap =getBitmap(dr);
+            Bitmap bitmap = getBitmap(dr);
             Drawable d = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, 500, 500, true));
-            Glide.with(context).load(listUrls.get(position)).apply(new RequestOptions().override(1200, 1000).placeholder(d).error(d)).into(holder.eventImage);
+            Glide.with(context).load(listUrls.get(position)).apply(new RequestOptions().placeholder(d).error(d)).into(holder.eventImage);
         } else {
-            setYoutubeUrl(listUrls.get(position));
-            ViewHolder.youTubeView.initialize(Common.Constant_Class.YOUTUBE_API_KEY, (YouTubePlayer.OnInitializedListener) context);
+
+            final YouTubeThumbnailLoader.OnThumbnailLoadedListener onThumbnailLoadedListener = new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
+                @Override
+                public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
+
+                }
+
+                @Override
+                public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
+                    youTubeThumbnailView.setVisibility(View.VISIBLE);
+                }
+            };
+
+
+            holder.youTubeThumbnailView.initialize(Common.Constant_Class.YOUTUBE_API_KEY, new YouTubeThumbnailView.OnInitializedListener() {
+                @Override
+                public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
+
+                    String url = listUrls.get(position);
+                    int i = url.indexOf("v=");
+                    url = url.substring(i + 2);
+                    youTubeThumbnailLoader.setVideo(url);
+                    youTubeThumbnailLoader.setOnThumbnailLoadedListener(onThumbnailLoadedListener);
+                }
+
+                @Override
+                public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
+                    //write something for failure
+                }
+            });
+
         }
     }
 
 
-    private Bitmap getBitmap(Drawable drawable)
-    {
+    private Bitmap getBitmap(Drawable drawable) {
         try {
             Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
@@ -106,10 +130,10 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         return listUrls.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @SuppressLint("StaticFieldLeak")
-        public static YouTubePlayerView youTubeView;
+        YouTubeThumbnailView youTubeThumbnailView;
+        ImageView playButton;
         ImageView eventImage;
 
         ViewHolder(@NonNull View itemView, int ViewType) {
@@ -117,8 +141,20 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             if (ViewType == 1) {
                 eventImage = itemView.findViewById(R.id.image_event);
             } else {
-                youTubeView = itemView.findViewById(R.id.youtube_view);
+                playButton = (ImageView) itemView.findViewById(R.id.btnYoutube_player);
+                playButton.setOnClickListener(this);
+                youTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.youtube_thumbnail);
             }
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            String url = listUrls.get(getLayoutPosition());
+            int i = url.indexOf("v=");
+            url = url.substring(i + 2);
+            Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) context, Common.Constant_Class.YOUTUBE_API_KEY, url);
+            context.startActivity(intent);
         }
     }
 }

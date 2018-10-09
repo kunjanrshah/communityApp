@@ -319,10 +319,16 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     if (chk_marriage_bdate_rem.isChecked()) {
                         msg = "Do you want to set Reminder for Marriage Date ?";
                         builder.setMessage(msg);
+                        final EditText input = new EditText(getActivity());
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                        input.setLayoutParams(lp);
+                        String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
+                        input.setText("Happy Marriage Anniversary from " + name);
+                        builder.setView(input);
                         builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder(date, Common.Constant_Class.MARRIAGE_DATE, "0", 0);
+                                setReminder(input.getText().toString(), date, Common.Constant_Class.MARRIAGE_DATE, "0", 0);
                             }
                         });
                         builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -338,7 +344,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder(date, Common.Constant_Class.MARRIAGE_DATE, mdate_rem, 0);
+                                setReminder("", date, Common.Constant_Class.MARRIAGE_DATE, mdate_rem, 0);
                             }
                         });
                         builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -367,10 +373,16 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     if (chk_spouse_bdate_rem.isChecked()) {
                         msg = "Do you want to set Reminder for Spouse BirthDate ?";
                         builder.setMessage(msg);
+                        final EditText input = new EditText(getActivity());
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                        input.setLayoutParams(lp);
+                        String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
+                        input.setText("Happy Birthday from " + name);
+                        builder.setView(input);
                         builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, "0", 0);
+                                setReminder(input.getText().toString(), date, Common.Constant_Class.WIFE_BIRTH_DATE, "0", 0);
                             }
                         });
                         builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -381,12 +393,12 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                             }
                         }).show();
                     } else {
-                        msg = "Do you want to set Reminder for Spouse BirthDate ?";
+                        msg = "Do you want to Unset Reminder for Spouse BirthDate ?";
                         builder.setMessage(msg);
                         builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder(date, Common.Constant_Class.WIFE_BIRTH_DATE, sbdate_rem, 0);
+                                setReminder("", date, Common.Constant_Class.WIFE_BIRTH_DATE, sbdate_rem, 0);
                             }
                         });
                         builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -711,10 +723,16 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     if (mViewholder.chk_child_bdate_rem.isChecked()) {
                         msg = "Do you want to set Reminder for Child Birthdate ?";
                         builder.setMessage(msg);
+                        final EditText input = new EditText(getActivity());
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                        input.setLayoutParams(lp);
+                        String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
+                        input.setText("Happy Birthday from " + name);
+                        builder.setView(input);
                         builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, "0", mViewholder.child_id);
+                                setReminder(input.getText().toString(), date, Common.Constant_Class.CHILD_BIRTH_DATE, "0", mViewholder.child_id);
                             }
                         });
                         builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -730,7 +748,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder(date, Common.Constant_Class.CHILD_BIRTH_DATE, lstchild.get(mViewholder.child_id), mViewholder.child_id);
+                                setReminder("", date, Common.Constant_Class.CHILD_BIRTH_DATE, lstchild.get(mViewholder.child_id), mViewholder.child_id);
                             }
                         });
                         builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -1018,7 +1036,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         builder.show();
     }
 
-    private void setReminder(String rem_date, final String rem_type, String rem_value, final int child_id) {
+    private void setReminder(String msg, String rem_date, final String rem_type, String rem_value, final int child_id) {
         if (Common.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
             try {
@@ -1027,6 +1045,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 mJsonObject.put(Common.Constant_Class.REMINDER_DATE, rem_date);
                 mJsonObject.put(Common.Constant_Class.REMINDER_TYPE, rem_type);
                 mJsonObject.put(Common.Constant_Class.REMINDER_ID, rem_value);
+                mJsonObject.put(Common.Constant_Class.MESSAGE, msg);
                 mJsonObject.put(Common.Constant_Class._CHILD_ID, child_id);
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
@@ -1052,7 +1071,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                             } else if (rem_type.equalsIgnoreCase(Common.Constant_Class.CHILD_BIRTH_DATE)) {
                                 lstchild.put(child_id, rem);
                             }
-                        }else {
+                        } else {
                             if (response.has(Common.Constant_Class.ERROR_CODE)) {
                                 String error = response.getString(Common.Constant_Class.ERROR_CODE);
                                 if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {

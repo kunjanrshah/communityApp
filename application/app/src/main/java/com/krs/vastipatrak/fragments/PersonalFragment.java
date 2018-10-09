@@ -31,6 +31,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -409,10 +410,15 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     if (chk_profile_bdate_rem.isChecked()) {
                         String message = "Do you want set Reminder for Birthdate ?";
                         builder.setMessage(message);
+                        final EditText input = new EditText(getActivity());
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                        input.setLayoutParams(lp);
+                        input.setText("Happy Birthday from " + edtFName.getText().toString() + " " + edtLName.getText().toString());
+                        builder.setView(input);
                         builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder(date, BIRTH_DATE, 0);
+                                setReminder(date, BIRTH_DATE, input.getText().toString(), 0);
                             }
                         });
                         builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -429,7 +435,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder(date, BIRTH_DATE, Integer.parseInt(profile_bdate_rem));
+                                setReminder(date, BIRTH_DATE, "", Integer.parseInt(profile_bdate_rem));
                             }
                         });
                         builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -852,7 +858,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
-    private void setReminder(String rem_date, String rem_type, int rem_id) {
+    private void setReminder(String rem_date, String rem_type, String msg, int rem_id) {
         if (Common.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
             try {
@@ -861,7 +867,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 mJsonObject.put(Common.Constant_Class.REMINDER_DATE, rem_date);
                 mJsonObject.put(Common.Constant_Class.REMINDER_TYPE, rem_type);
                 mJsonObject.put(Common.Constant_Class.REMINDER_ID, rem_id);
-                mJsonObject.put(Common.Constant_Class.MESSAGE, "Happy BirthDay");
+                mJsonObject.put(Common.Constant_Class.MESSAGE, msg);
                 mJsonObject.put(Common.Constant_Class._CHILD_ID, "0");
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
@@ -880,7 +886,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             JSONObject mObject = response.getJSONObject(Common.Constant_Class.DATA);
                             profile_bdate_rem = mObject.getString("reminder_id");
-                        }else {
+                        } else {
                             if (response.has(Common.Constant_Class.ERROR_CODE)) {
                                 String error = response.getString(Common.Constant_Class.ERROR_CODE);
                                 if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
@@ -933,6 +939,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     mJsonObject.put(Common.Constant_Class.HOME_LAT, lat);
                     mJsonObject.put(Common.Constant_Class.HOME_LNG, lng);
                     mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                    if (MyProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                        mJsonObject.put(Common.Constant_Class.UPDATE_USER_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""));
+                    }
                     mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
                     mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
                 }
@@ -950,9 +959,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             alert("Home location updated!");
-                            mEditor.putString(Common.Constant_Class.HOME_LAT, String.valueOf(lat));
-                            mEditor.putString(Common.Constant_Class.HOME_LNG, String.valueOf(lng));
-                            mEditor.apply();
+                            if (!MyProfileActivity.isEnable) {
+                                mEditor.putString(Common.Constant_Class.HOME_LAT, String.valueOf(lat));
+                                mEditor.putString(Common.Constant_Class.HOME_LNG, String.valueOf(lng));
+                                mEditor.apply();
+                            }
                         } else {
                             alert("Something went wrong!");
                         }

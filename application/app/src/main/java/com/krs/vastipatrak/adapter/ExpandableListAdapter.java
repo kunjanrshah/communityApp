@@ -175,7 +175,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             childViewHolder.txt_native = convertView.findViewById(R.id.txt_native);
             childViewHolder.txt_mother = convertView.findViewById(R.id.txt_mother);
             childViewHolder.txt_phone = convertView.findViewById(R.id.txt_phone);
-
             childViewHolder.tbtn_share = convertView.findViewById(R.id.tbtn_share);
             childViewHolder.tbtn_share.setTextOn(null);
             childViewHolder.tbtn_share.setText(null);
@@ -266,15 +265,47 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             childViewHolder.tbtn_share.setVisibility(View.GONE);
         }
 
-        childViewHolder.tbtn_share.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        childViewHolder.tbtn_share.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    mListChildData.setCan_share("1");
-                    userLocationShareWS(profile_id, name, "1");
+            public void onClick(View v) {
+                String msg = "";
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(_context, R.style.AppCompatAlertDialogStyle);
+                builder.setTitle(_context.getString(R.string.app_name));
+                if (childViewHolder.tbtn_share.isChecked()) {
+                    msg = "Start share your location to " + name + "?";
+                    builder.setMessage(msg);
+                    builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                        public void onClick(@NonNull DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            mListChildData.setCan_share("1");
+                            userLocationShareWS(profile_id, name, "1");
+                        }
+                    });
+                    builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            childViewHolder.tbtn_share.setChecked(false);
+                            dialog.dismiss();
+                        }
+                    }).show();
                 } else {
-                    mListChildData.setCan_share("0");
-                    userLocationShareWS(profile_id, name, "0");
+                    msg = "Stop share your location to " + name + "?";
+                    builder.setMessage(msg);
+                    builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                        public void onClick(@NonNull DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            mListChildData.setCan_share("0");
+                            userLocationShareWS(profile_id, name, "0");
+                        }
+                    });
+                    builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            childViewHolder.tbtn_share.setChecked(true);
+                            dialog.dismiss();
+                        }
+                    }).show();
                 }
             }
         });

@@ -43,6 +43,8 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
     @Override
     public void onBindViewHolder(final VideoInfoHolder holder, final int position) {
 
+        holder.txt_title.setVisibility(View.VISIBLE);
+        holder.txt_title.setText(VideoTitle[position]);
 
         final YouTubeThumbnailLoader.OnThumbnailLoadedListener onThumbnailLoadedListener = new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
             @Override
@@ -55,15 +57,13 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
                 youTubeThumbnailView.setVisibility(View.VISIBLE);
             }
         };
-        holder.txt_title.setVisibility(View.VISIBLE);
-        holder.txt_title.setText(VideoTitle[position]);
+
 
         holder.youTubeThumbnailView.initialize(Common.Constant_Class.YOUTUBE_API_KEY, new YouTubeThumbnailView.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
 
                 youTubeThumbnailLoader.setVideo(VideoID[position]);
-
                 youTubeThumbnailLoader.setOnThumbnailLoadedListener(onThumbnailLoadedListener);
             }
 
