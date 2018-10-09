@@ -21,7 +21,7 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 
-public class TourActivity extends YouTubeBaseActivity implements ConnectivityReceiver.ConnectivityReceiverListener, YouTubePlayer.OnInitializedListener {
+public class TourActivity extends YouTubeBaseActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
 
     private static final int RECOVERY_REQUEST = 1;
@@ -38,25 +38,25 @@ public class TourActivity extends YouTubeBaseActivity implements ConnectivityRec
     }
 
     private void MemoryAllocation() {
-        RecyclerView listVideos = findViewById(R.id.listVideos);
+        /*RecyclerView listVideos = findViewById(R.id.listVideos);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         listVideos.setLayoutManager(mLayoutManager);
         listVideos.setItemAnimator(new DefaultItemAnimator());
         adapter = new VideoListAdapter(this);
-        listVideos.setAdapter(adapter);
+        listVideos.setAdapter(adapter);*/
+
+        RecyclerView recyclerView=(RecyclerView)findViewById(R.id.listVideos);
+        recyclerView.setHasFixedSize(true);
+        //to use RecycleView, you need a layout manager. default is LinearLayoutManager
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        VideoListAdapter adapter=new VideoListAdapter(this);
+        recyclerView.setAdapter(adapter);
+
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        try {
-            VideoListAdapter.ViewHolder.youTubeView1.initialize(Common.Constant_Class.YOUTUBE_API_KEY, this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void showSnack(boolean isConnected) {
 
@@ -90,24 +90,5 @@ public class TourActivity extends YouTubeBaseActivity implements ConnectivityRec
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         showSnack(isConnected);
-    }
-
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        if (adapter != null) {
-            String url = adapter.getYoutubeUrl();
-            Log.v(TourActivity.class.getSimpleName(), "youtubeURL: " + url);
-            youTubePlayer.cueVideo(url);
-        }
-    }
-
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-        if (youTubeInitializationResult.isUserRecoverableError()) {
-            youTubeInitializationResult.getErrorDialog(this, RECOVERY_REQUEST).show();
-        } else {
-            String error = String.format(getString(R.string.player_error), youTubeInitializationResult.toString());
-            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        }
     }
 }
