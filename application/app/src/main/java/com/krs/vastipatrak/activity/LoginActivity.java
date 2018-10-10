@@ -233,7 +233,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         txtHow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                watchYoutubeVideo(LoginActivity.this, getResources().getString(R.string.login_2));
+                watchYoutubeVideo(LoginActivity.this, getResources().getString(R.string.login_1));
             }
         });
         Common.getDeviceId(this);

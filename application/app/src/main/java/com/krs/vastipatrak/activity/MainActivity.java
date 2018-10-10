@@ -595,6 +595,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             if (Common.isOnline(this)) {
                 nonActives.setVisible(true);
                 event.setVisible(true);
+
                 activeAdd.setVisible(true);
                 if (MOVE_TO_POSITION == 5) {
                     change_role.setVisible(true);
@@ -625,6 +626,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 MOVE_TO_SEARCH = 1;
+                activeItem.setVisible(true);
+                deactiveItem.setVisible(true);
+                deleteItem.setVisible(true);
                 moveToSearch(MOVE_TO_SEARCH);
                 return false;
             }
@@ -882,9 +886,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new ChangePasswordFragment();
                 break;
             case 8:
-                /*Intent mIntent = new Intent(MainActivity.this, TourActivity.class);
-                startActivity(mIntent);*/
-                watchYoutubeVideo(MainActivity.this, "3d9CJP3wWPU");
+                Intent mIntent = new Intent(MainActivity.this, TourActivity.class);
+                startActivity(mIntent);
+             //   watchYoutubeVideo(MainActivity.this, "3d9CJP3wWPU");
                 break;
             case 9:
                 fragment = new HelpFragment();

@@ -1,30 +1,23 @@
 package com.krs.vastipatrak.activity;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.youtube.player.YouTubeBaseActivity;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.VideoListAdapter;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 
 public class TourActivity extends Activity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     private Snackbar snackbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +29,12 @@ public class TourActivity extends Activity implements ConnectivityReceiver.Conne
 
     private void MemoryAllocation() {
 
-        RecyclerView recyclerView=(RecyclerView)findViewById(R.id.list);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        VideoListAdapter adapter=new VideoListAdapter(this);
+        VideoListAdapter adapter = new VideoListAdapter(this);
         recyclerView.setAdapter(adapter);
     }
 

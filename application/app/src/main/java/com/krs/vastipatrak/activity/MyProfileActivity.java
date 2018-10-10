@@ -181,6 +181,12 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         MenuItem admins = menu.findItem(R.id.action_admins);
         admins.setVisible(false);
 
+        MenuItem scan_image = menu.findItem(R.id.action_scan_image);
+        scan_image.setVisible(false);
+
+        MenuItem scan_qr = menu.findItem(R.id.action_scan);
+        scan_qr.setVisible(false);
+
         MenuItem filterItem = menu.findItem(R.id.action_filter);
         filterItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override

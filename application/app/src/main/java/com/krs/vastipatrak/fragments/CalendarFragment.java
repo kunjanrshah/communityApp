@@ -66,16 +66,14 @@ public class CalendarFragment extends Fragment {
             public void onDaySelect() {
                 Day day = viewCalendar.getSelectedDay();
                 String date = day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay();
-                Log.i(getClass().getName(), "Selected Day: "
-                        + date);
+                Log.i(getClass().getName(), "Selected Day: " + date);
                 CalendarWS(date);
             }
 
             @Override
             public void onItemClick(View v) {
                 Day day = viewCalendar.getSelectedDay();
-                Log.i(getClass().getName(), "The Day of Clicked View: "
-                        + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay());
+                Log.i(getClass().getName(), "The Day of Clicked View: " + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay());
             }
 
             @Override
@@ -85,17 +83,12 @@ public class CalendarFragment extends Fragment {
 
             @Override
             public void onMonthChange() {
-                Log.i(getClass().getName(), "Month Changed"
-                        + ". Current Year: " + viewCalendar.getYear()
-                        + ", Current Month: " + (viewCalendar.getMonth() + 1));
+                Log.i(getClass().getName(), "Month Changed" + ". Current Year: " + viewCalendar.getYear() + ", Current Month: " + (viewCalendar.getMonth() + 1));
             }
 
             @Override
             public void onWeekChange(int position) {
-                Log.i(getClass().getName(), "Week Changed"
-                        + ". Current Year: " + viewCalendar.getYear()
-                        + ", Current Month: " + (viewCalendar.getMonth() + 1)
-                        + ", Current Week position of Month: " + position);
+                Log.i(getClass().getName(), "Week Changed" + ". Current Year: " + viewCalendar.getYear() + ", Current Month: " + (viewCalendar.getMonth() + 1) + ", Current Week position of Month: " + position);
             }
         });
 
@@ -266,11 +259,7 @@ public class CalendarFragment extends Fragment {
                     listDataHeader.add(lpd);
                     listDataChild.put(lpd, mlstChildData);
                 }
-                mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, false);
-                lvCustomList.setAdapter(mExpandableListAdapter);
-                Toast.makeText(getActivity(), "" + message, Toast.LENGTH_LONG).show();
-            }else {
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            } else {
                 if (response.has(Common.Constant_Class.ERROR_CODE)) {
                     String error = response.getString(Common.Constant_Class.ERROR_CODE);
                     if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
@@ -281,7 +270,9 @@ public class CalendarFragment extends Fragment {
                     }
                 }
             }
-
+            mExpandableListAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, false);
+            lvCustomList.setAdapter(mExpandableListAdapter);
+            Toast.makeText(getActivity(), "" + message, Toast.LENGTH_LONG).show();
             hideProgressDialog();
         } catch (Exception e) {
             e.printStackTrace();
