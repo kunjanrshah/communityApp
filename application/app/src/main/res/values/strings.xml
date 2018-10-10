@@ -80,71 +80,67 @@
 
 
     <string-array name="yt_titles">
-        <item>@string/how_to_forgot_3</item>
-        <item>@string/how_to_event_list_4</item>
-        <item>@string/how_to_update_profile_5</item>
-        <item>@string/how_ror_6</item>
-        <item>@string/how_search_profile_7</item>
-        <item>@string/how_share_loc_8</item>
-        <item>@string/how_near_by_9</item>
-        <item>@string/how_matrimony_10</item>
-        <item>@string/how_export_search_11</item>
-        <item>@string/how_share_code_12</item>
-        <item>@string/how_calendar_13</item>
-        <item>@string/how_reminder_14</item>
-        <item>@string/how_event_manage_15</item>
-        <item>@string/how_admin_manage_16</item>
+        <item>@string/how_to_forgot_1</item>
+        <item>@string/how_search_profile_2</item>
+        <item>@string/how_to_event_list_3</item>
+        <item>@string/how_to_update_profile_4</item>
+        <item>@string/how_ror_5</item>
+        <item>@string/how_share_loc_6</item>
+        <item>@string/how_near_by_7</item>
+        <item>@string/how_matrimony_8</item>
+        <item>@string/how_export_search_9</item>
+        <item>@string/how_share_code_10</item>
+        <item>@string/how_calendar_11</item>
+        <item>@string/how_event_manage_12</item>
+        <item>@string/how_admin_manage_13</item>
 
     </string-array>
 
-    <string name="how_to_forgot_3">1. If you forgot your password</string>
-    <string name="how_to_event_list_4">2. Event list</string>
-    <string name="how_to_update_profile_5">3. Update your Profile</string>
-    <string name="how_ror_6">4. Request of Relation</string>
-    <string name="how_search_profile_7">5. Search Profiles</string>
-    <string name="how_share_loc_8">6. Share Location Home,Office and Users</string>
-    <string name="how_near_by_9">7. Nearby Location</string>
-    <string name="how_matrimony_10">8. Matrimony</string>
-    <string name="how_export_search_11">9. Export search</string>
-    <string name="how_share_code_12">10. Share with QR code</string>
-    <string name="how_calendar_13">11. Calendar</string>
-    <string name="how_reminder_14">12. Set Reminder</string>
-    <string name="how_event_manage_15">13. Event management by Admin</string>
-    <string name="how_admin_manage_16">14. Admin Management</string>
+    <string name="how_to_forgot_1">1. If you forgot your password</string>
+    <string name="how_search_profile_2">2. Search Profiles</string>
+    <string name="how_to_event_list_3">3. Event list</string>
+    <string name="how_to_update_profile_4">4. Update your Profile</string>
+    <string name="how_ror_5">5. Request of Relation</string>
+    <string name="how_share_loc_6">6. Share Location Home,Office and Users</string>
+    <string name="how_near_by_7">7. Nearby Location</string>
+    <string name="how_matrimony_8">8. Matrimony</string>
+    <string name="how_export_search_9">9. Export search</string>
+    <string name="how_share_code_10">10. Share with QR code</string>
+    <string name="how_calendar_11">11. Calendar and Set Reminder</string>
+    <string name="how_event_manage_12">12. Event management by Admin</string>
+    <string name="how_admin_manage_13">13. Admin Management</string>
 
 
     <string-array name="yt_code">
-        <item>@string/forgot_3</item>
-        <item>@string/event_list_4</item>
-        <item>@string/update_profile_5</item>
-        <item>@string/ror_6</item>
-        <item>@string/search_profile_7</item>
-        <item>@string/share_loc_8</item>
-        <item>@string/near_by_9</item>
-        <item>@string/matrimony_10</item>
-        <item>@string/export_search_11</item>
-        <item>@string/share_code_12</item>
-        <item>@string/calendar_13</item>
-        <item>@string/reminder_14</item>
-        <item>@string/event_manage_15</item>
-        <item>@string/admin_manage_16</item>
+        <item>@string/forgot_1</item>
+        <item>@string/search_profile_2</item>
+        <item>@string/event_list_3</item>
+        <item>@string/update_profile_4</item>
+        <item>@string/ror_5</item>
+        <item>@string/share_loc_6</item>
+        <item>@string/near_by_7</item>
+        <item>@string/matrimony_8</item>
+        <item>@string/export_search_9</item>
+        <item>@string/share_code_10</item>
+        <item>@string/calendar_11</item>
+        <item>@string/event_manage_12</item>
+        <item>@string/admin_manage_13</item>
 
     </string-array>
-    <string name="login_2">Ii5POjxrXA4</string>
-    <string name="forgot_3">Ii5POjxrXA4</string>
-    <string name="event_list_4">Ii5POjxrXA4</string>
-    <string name="update_profile_5">Ii5POjxrXA4</string>
-    <string name="ror_6">Ii5POjxrXA4</string>
-    <string name="search_profile_7">Ii5POjxrXA4</string>
-    <string name="share_loc_8">Ii5POjxrXA4</string>
-    <string name="near_by_9">Ii5POjxrXA4</string>
-    <string name="matrimony_10">Ii5POjxrXA4</string>
-    <string name="export_search_11">Ii5POjxrXA4</string>
-    <string name="share_code_12">Ii5POjxrXA4</string>
-    <string name="calendar_13">Ii5POjxrXA4</string>
-    <string name="reminder_14">Ii5POjxrXA4</string>
-    <string name="event_manage_15">Ii5POjxrXA4</string>
-    <string name="admin_manage_16">Ii5POjxrXA4</string>
+    <string name="login_1">Ii5POjxrXA4</string>
+    <string name="forgot_1">N1DmqA8q8qM</string>
+    <string name="search_profile_2">lW5Z9jrtcQQ</string>
+    <string name="event_list_3">NpkgGGNNZbY</string>
+    <string name="update_profile_4">eEuE3CdTZ9s</string>
+    <string name="ror_5">vGu_EEzXpbk</string>
+    <string name="share_loc_6">eEuE3CdTZ9s</string>
+    <string name="near_by_7">FgTNH4XxqHo</string>
+    <string name="matrimony_8">265YIBfOuNQ</string>
+    <string name="export_search_9">JQ9dJ3Z2uRs</string>
+    <string name="share_code_10">2Ka3Nk4tO5I</string>
+    <string name="calendar_11">wcS-2vvguhg</string>
+    <string name="event_manage_12">-cuP2ICdQOQ</string>
+    <string name="admin_manage_13">ie5uXjVdzPA</string>
 
 
     <!-- navigation drawer item labels  -->
