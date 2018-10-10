@@ -21,8 +21,8 @@ android {
     defaultConfig {
         applicationId "com.krs.vastipatrak"
         minSdkVersion 21
-        versionCode 8
-        versionName "1.8.0"
+        versionCode 9
+        versionName "1.9.0"
         multiDexEnabled true
     }
     buildTypes {
@@ -33,6 +33,13 @@ android {
     }
     sourceSets {
         main { res.srcDirs = ['src/main/res', 'src/main/res/values-gu', 'src/main/res/values-hi'] }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
     }
 }
 

@@ -30,13 +30,13 @@ public class TourActivity extends Activity implements ConnectivityReceiver.Conne
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour);
         MemoryAllocation();
-        snackbar = Snackbar.make(findViewById(R.id.ll_tour), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
+        snackbar = Snackbar.make(findViewById(R.id.list), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
         checkConnection();
     }
 
     private void MemoryAllocation() {
 
-        RecyclerView recyclerView=(RecyclerView)findViewById(R.id.listVideos);
+        RecyclerView recyclerView=(RecyclerView)findViewById(R.id.list);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

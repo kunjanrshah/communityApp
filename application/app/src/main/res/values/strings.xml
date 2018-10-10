@@ -80,8 +80,6 @@
 
 
     <string-array name="yt_titles">
-        <item>@string/how_to_download_1</item>
-        <item>@string/how_to_login_2</item>
         <item>@string/how_to_forgot_3</item>
         <item>@string/how_to_event_list_4</item>
         <item>@string/how_to_update_profile_5</item>
@@ -99,27 +97,23 @@
 
     </string-array>
 
-    <string name="how_to_download_1">1. How to download and install</string>
-    <string name="how_to_login_2">2. How to Login or Signup</string>
-    <string name="how_to_forgot_3">3. If you forgot your password</string>
-    <string name="how_to_event_list_4">4. Event list</string>
-    <string name="how_to_update_profile_5">5. Update your Profile</string>
-    <string name="how_ror_6">6. Request of Relation</string>
-    <string name="how_search_profile_7">7. Search Profiles</string>
-    <string name="how_share_loc_8">8. Share Location Home,Office and Users</string>
-    <string name="how_near_by_9">9. Nearby Location</string>
-    <string name="how_matrimony_10">10. Matrimony</string>
-    <string name="how_export_search_11">11. Export search</string>
-    <string name="how_share_code_12">12. Share with QR code</string>
-    <string name="how_calendar_13">13. Calendar</string>
-    <string name="how_reminder_14">14. Set Reminder</string>
-    <string name="how_event_manage_15">15. Event management by Admin</string>
-    <string name="how_admin_manage_16">16. Admin Management</string>
+    <string name="how_to_forgot_3">1. If you forgot your password</string>
+    <string name="how_to_event_list_4">2. Event list</string>
+    <string name="how_to_update_profile_5">3. Update your Profile</string>
+    <string name="how_ror_6">4. Request of Relation</string>
+    <string name="how_search_profile_7">5. Search Profiles</string>
+    <string name="how_share_loc_8">6. Share Location Home,Office and Users</string>
+    <string name="how_near_by_9">7. Nearby Location</string>
+    <string name="how_matrimony_10">8. Matrimony</string>
+    <string name="how_export_search_11">9. Export search</string>
+    <string name="how_share_code_12">10. Share with QR code</string>
+    <string name="how_calendar_13">11. Calendar</string>
+    <string name="how_reminder_14">12. Set Reminder</string>
+    <string name="how_event_manage_15">13. Event management by Admin</string>
+    <string name="how_admin_manage_16">14. Admin Management</string>
 
 
     <string-array name="yt_code">
-        <item>@string/download_1</item>
-        <item>@string/login_2</item>
         <item>@string/forgot_3</item>
         <item>@string/event_list_4</item>
         <item>@string/update_profile_5</item>
@@ -136,8 +130,6 @@
         <item>@string/admin_manage_16</item>
 
     </string-array>
-
-    <string name="download_1">Ii5POjxrXA4</string>
     <string name="login_2">Ii5POjxrXA4</string>
     <string name="forgot_3">Ii5POjxrXA4</string>
     <string name="event_list_4">Ii5POjxrXA4</string>

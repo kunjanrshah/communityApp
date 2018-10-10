@@ -53,7 +53,7 @@ public class NearByFragment extends Fragment {
     private ExpandableListView lvCustomList;
     private TextView txtLable;
     private RadioButton rdb_home, rdb_office, rdb_user;
-    private String type = "";
+    private String type = "home";
     private EditText edt_distance;
     private Button btnok;
     @Nullable
@@ -78,7 +78,7 @@ public class NearByFragment extends Fragment {
     }
 
     private void setType() {
-        type = mSharedPreferences.getString(LOCATION_TYPE, "");
+        type = mSharedPreferences.getString(LOCATION_TYPE, "home");
         if (type.isEmpty() || type.equalsIgnoreCase("home")) {
             rdb_home.setChecked(true);
             rdb_office.setChecked(false);

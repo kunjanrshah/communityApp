@@ -882,9 +882,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new ChangePasswordFragment();
                 break;
             case 8:
-                Intent mIntent = new Intent(MainActivity.this, TourActivity.class);
-                startActivity(mIntent);
-                //watchYoutubeVideo(MainActivity.this, "3d9CJP3wWPU");
+                /*Intent mIntent = new Intent(MainActivity.this, TourActivity.class);
+                startActivity(mIntent);*/
+                watchYoutubeVideo(MainActivity.this, "3d9CJP3wWPU");
                 break;
             case 9:
                 fragment = new HelpFragment();
