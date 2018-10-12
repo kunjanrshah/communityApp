@@ -251,15 +251,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         childViewHolder.img_details.setVisibility(View.VISIBLE);
         String bool = mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0");
         if (bool.equalsIgnoreCase("1")) {
-            if (Shared != null && Shared.equalsIgnoreCase("from")) {
-                childViewHolder.tbtn_share.setVisibility(View.GONE);
-            } else {
-                childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
-            }
             if (can_share.equalsIgnoreCase("1")) {
                 childViewHolder.tbtn_share.setChecked(true);
             } else {
                 childViewHolder.tbtn_share.setChecked(false);
+            }
+            if (Shared == null) {
+                childViewHolder.tbtn_share.setVisibility(View.GONE);
+            } else {
+                if (Shared.equalsIgnoreCase("from")) {
+                    childViewHolder.tbtn_share.setVisibility(View.GONE);
+                } else {
+                    childViewHolder.tbtn_share.setVisibility(View.VISIBLE);
+                }
             }
         } else {
             childViewHolder.tbtn_share.setVisibility(View.GONE);
