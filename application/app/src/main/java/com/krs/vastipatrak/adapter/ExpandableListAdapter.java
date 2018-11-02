@@ -48,6 +48,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.FamilyTreeActivity;
 import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
@@ -165,6 +166,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = infalInflater.inflate(R.layout.list_item, null);
             childViewHolder = new ChildViewHolder();
             childViewHolder.ll_child = convertView.findViewById(R.id.ll_child);
+            childViewHolder.imgTree = convertView.findViewById(R.id.imgTree);
             childViewHolder.txt_blood = convertView.findViewById(R.id.txt_blood);
             childViewHolder.txt_gender = convertView.findViewById(R.id.txt_gender);
             childViewHolder.txt_gotra = convertView.findViewById(R.id.txt_gotra);
@@ -394,6 +396,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         dialog.dismiss();
                     }
                 }).show();
+            }
+        });
+
+        childViewHolder.imgTree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mIntent = new Intent(_context, FamilyTreeActivity.class);
+                JSONObject mjson = mListChildData.getMjsonobj();
+                mIntent.putExtra(_context.getString(R.string.ft_intent), mjson.toString());
+                _context.startActivity(mIntent);
             }
         });
 
@@ -976,6 +988,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         ImageView imgNudge;
         ImageView img_details;
         ImageView imgROR;
+        ImageView imgTree;
     }
 
     private class GroupViewHolder {

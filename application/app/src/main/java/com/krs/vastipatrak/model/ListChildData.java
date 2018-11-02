@@ -1,6 +1,8 @@
 package com.krs.vastipatrak.model;
 
 
+import org.json.JSONObject;
+
 public class ListChildData {
     private String str_phone;
     private String str_native;
@@ -17,11 +19,58 @@ public class ListChildData {
     private String home_lng;
     private String profile_id;
     private String can_share = "0";
-    private String mother_name;
     private String user_lat;
     private String user_lng;
     private String str_name;
     private String Shared;
+
+    public JSONObject getMjsonobj() {
+        return mjsonobj;
+    }
+
+    public void setMjsonobj(JSONObject mjsonobj) {
+        this.mjsonobj = mjsonobj;
+    }
+
+    private JSONObject mjsonobj;
+    private String father;
+    private String mother;
+    private String spouse;
+
+    public String getFather() {
+        return father;
+    }
+
+    public void setFather(String father) {
+        this.father = father;
+    }
+
+    public String getSpouse() {
+        return spouse;
+    }
+
+    public void setSpouse(String spouse) {
+        this.spouse = spouse;
+    }
+
+    public String getSpouse_father() {
+        return spouse_father;
+    }
+
+    public void setSpouse_father(String spouse_father) {
+        this.spouse_father = spouse_father;
+    }
+
+    public String getSpouse_mother() {
+        return spouse_mother;
+    }
+
+    public void setSpouse_mother(String spouse_mother) {
+        this.spouse_mother = spouse_mother;
+    }
+
+    private String spouse_father;
+    private String spouse_mother;
 
     public String getShared() {
         return Shared;
@@ -48,10 +97,10 @@ public class ListChildData {
         this.profile_id = profile_id;
     }
     public String getMother_name() {
-        return mother_name;
+        return mother;
     }
     public void setMother_name(String mother_name) {
-        this.mother_name = mother_name;
+        this.mother = mother_name;
     }
 
     public String getName() {

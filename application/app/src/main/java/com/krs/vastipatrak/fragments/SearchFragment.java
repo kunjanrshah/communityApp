@@ -663,6 +663,9 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     String phone = mJsondata.getString(Common.Constant_Class.PHONE);
                     String gender = mJsondata.getString(Common.Constant_Class.GENDER);
                     String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
+                    String sfather = mJsondata.getString(Common.Constant_Class.SPOUSE_FATHER_NAME);
+                    String smother = mJsondata.getString(Common.Constant_Class.SPOUSE_MOTHER_NAME);
+
 
                     ListChildData lcd = new ListChildData();
                     lcd.setID(profile_id);
@@ -674,11 +677,17 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     lcd.setBirth_place(birth_place);
                     lcd.setBlood_Group(blood_group);
                     lcd.setMobile(mobile);
-                    lcd.setMother_name(mother_name);
                     lcd.setPhone(phone);
                     lcd.setGender(gender);
                     lcd.setGotra(gotra);
+                    lcd.setMjsonobj(mJsondata);
                     lcd.setName(first_name + " " + last_name);
+                    lcd.setFather(father_name);
+                    lcd.setMother_name(mother_name);
+                    lcd.setSpouse_father(sfather);
+                    lcd.setSpouse_mother(smother);
+
+
                     ArrayList<ListChildData> mlstChildData = new ArrayList<>();
                     mlstChildData.add(lcd);
                     listDataHeader.add(lpd);
