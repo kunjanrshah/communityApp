@@ -113,7 +113,9 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (adapter != null) {
+                    getTreeViews(adapter);
+                }
             }
         });
 
@@ -144,17 +146,17 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         draggableTreeView.setOnDragItemListener(new DraggableTreeView.DragItemCallback() {
             @Override
             public void onStartDrag(View item, TreeNode node) {
-             //   Log.e("start", (String) node.getData());
+                //   Log.e("start", (String) node.getData());
             }
 
             @Override
             public void onChangedPosition(View item, TreeNode child, TreeNode parent, int position) {
-               // Log.e("changed", (String) parent.getData() + " > " + (String) child.getData() + ":" + String.valueOf(position));
+                // Log.e("changed", (String) parent.getData() + " > " + (String) child.getData() + ":" + String.valueOf(position));
             }
 
             @Override
             public void onEndDrag(View item, TreeNode child, TreeNode parent, int position) {
-            //    Log.e("end", (String) parent.getData() + " > " + (String) child.getData() + ":" + String.valueOf(position));
+                //    Log.e("end", (String) parent.getData() + " > " + (String) child.getData() + ":" + String.valueOf(position));
             }
         });
 
@@ -177,17 +179,17 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
             Object object = children.get(i).getData();
             int level = children.get(i).getLevel();
 
-            Node node1=new Node(object.toString());
-         //   graph.addNode(node1);
+            Node node1 = new Node(object.toString());
+            //   graph.addNode(node1);
 
-            Log.d("Treeviews","Name: "+object.toString()+" Level:"+level);
+            Log.d("Treeviews", "Name: " + object.toString() + " Level:" + level);
             if (children.get(i).getChildren().size() != 0) {
-                getTreeNodeView(children.get(i),node1);
+                getTreeNodeView(children.get(i), node1);
             }
         }
     }
 
-    public void getTreeNodeView(TreeNode node,Node p_node) {
+    public void getTreeNodeView(TreeNode node, Node p_node) {
         ArrayList<TreeNode> children = node.getChildren();
         for (int i = 0; i < children.size(); i++) {
 
@@ -195,12 +197,12 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
             Object object1 = children.get(i).getData();
             int level1 = children.get(i).getLevel();
 
-            Node node2=new Node(children.get(i).getData());
-          //  graph.addEdge(p_node,node2);
+            Node node2 = new Node(children.get(i).getData());
+            //  graph.addEdge(p_node,node2);
 
-            Log.d("Treeviews","Name1: "+object1.toString()+" Level1:"+level1);
+            Log.d("Treeviews", "Name1: " + object1.toString() + " Level1:" + level1);
             if (children.get(i).getChildren().size() != 0) {
-                getTreeNodeView(children.get(i),node2);
+                getTreeNodeView(children.get(i), node2);
             }
         }
     }
