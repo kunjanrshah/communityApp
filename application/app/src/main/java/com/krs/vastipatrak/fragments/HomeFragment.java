@@ -62,7 +62,6 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 
 import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
-import static com.krs.vastipatrak.utils.Common.getRandomColor;
 import static com.krs.vastipatrak.utils.Common.parseDateToddMMyyyy;
 import static com.krs.vastipatrak.utils.Common.textAsBitmap;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
@@ -427,7 +426,7 @@ public class HomeFragment extends Fragment {
                 strDate = parseDateToddMMyyyy(data.getEventDate(), yyyy_MM_dd, dd_MMM_yyyy);
 
             holder.txtEventDate.setText(strDate + "\n" + goal);
-            getRandomColor(Objects.requireNonNull(getActivity()), position, holder.ll_event);
+            //getRandomColor(Objects.requireNonNull(getActivity()), position, holder.ll_event);
 
             holder.txtLocation.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -67,8 +67,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
-import static com.krs.vastipatrak.utils.Common.getChildRandomColor;
-import static com.krs.vastipatrak.utils.Common.getParentRandomColor;
+
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -212,7 +211,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 childViewHolder.ll_child.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape5));
             }
         } else {
-            getChildRandomColor(_context, childPosition, childViewHolder.ll_child);
+           // getChildRandomColor(_context, childPosition, childViewHolder.ll_child);
         }
 
         childViewHolder.txt_phone.setOnClickListener(new View.OnClickListener() {
@@ -596,7 +595,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         } else {
             groupViewHolder.txt_distance.setEnabled(true);
             groupViewHolder.txt_distance.setClickable(true);
-            getParentRandomColor(_context, groupPosition, groupViewHolder.ll_parent);
+           // getParentRandomColor(_context, groupPosition, groupViewHolder.ll_parent);
         }
 
         groupViewHolder.txt_distance.setOnClickListener(new View.OnClickListener() {

@@ -145,7 +145,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         } else {
             childViewHolder = (ChildViewHolder) convertView.getTag();
         }
-        Common.getChildRandomColor(_context, childPosition, childViewHolder.ll_child_matrimony);
+        //Common.getChildRandomColor(_context, childPosition, childViewHolder.ll_child_matrimony);
         final String id = mListMatrimonyChildData.getProfile_id();
         String address = mListMatrimonyChildData.getChild_address();
         String birth_date = mListMatrimonyChildData.getChild_birth_date();
@@ -344,7 +344,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
             groupViewHolder = (GroupViewHolder) convertView.getTag();
         }
 
-        Common.getParentRandomColor(_context, groupPosition, groupViewHolder.ll_parent_matrimony);
+        //Common.getParentRandomColor(_context, groupPosition, groupViewHolder.ll_parent_matrimony);
         final String child_id = mListMatrimonyParentData.getId();
         final String imgURL = mListMatrimonyParentData.getProfilePicUrl();
         final String Name = mListMatrimonyParentData.getName();

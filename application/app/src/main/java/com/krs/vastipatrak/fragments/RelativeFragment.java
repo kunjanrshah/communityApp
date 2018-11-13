@@ -5,19 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,6 +70,9 @@ public class RelativeFragment extends Fragment {
             try {
                 mJsonObject = new JSONObject();
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
+                    mJsonObject.put(Common.Constant_Class.PROFILE_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""));
+                }
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -459,8 +455,8 @@ public class RelativeFragment extends Fragment {
                 holder.txt_to.setTextColor(getResources().getColor(R.color.primary_blue));
                 holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.ico_approve));
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape1));
-              // holder.txt_status.setText(Html.fromHtml(last_name + "  <b>" + Common.getCapsSentences(relation) + "</b> of " + from_name));
-               // makeLinks(holder.txt_status, new String[]{last_name, from_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
+                // holder.txt_status.setText(Html.fromHtml(last_name + "  <b>" + Common.getCapsSentences(relation) + "</b> of " + from_name));
+                // makeLinks(holder.txt_status, new String[]{last_name, from_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
             } else if (status.contains(Common.Constant_Class.REQUESTED)) {
                 holder.txt_request.setText("Requested by ");
                 holder.txt_approve.setText("To ");
@@ -469,8 +465,8 @@ public class RelativeFragment extends Fragment {
                 //holder.txt_status.setText(Html.fromHtml(from_name + " requested <b>" + Common.getCapsSentences(relation) + "</b> to " + last_name));
                 holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.cancel));
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape10));
-               // makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
-            }else if (status.contains(Common.Constant_Class.REJECTED)) {
+                // makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
+            } else if (status.contains(Common.Constant_Class.REJECTED)) {
                 holder.txt_request.setText("Requested by ");
                 holder.txt_approve.setText("Rejected by ");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -478,7 +474,7 @@ public class RelativeFragment extends Fragment {
                 //holder.txt_status.setText(Html.fromHtml(last_name + " rejected <b>" + Common.getCapsSentences(relation) + "</b> to " + from_name));
                 holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.cancel));
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape9));
-               // makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
+                // makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
             }
 
             if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
@@ -587,8 +583,8 @@ public class RelativeFragment extends Fragment {
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {
-            final TextView txt_msg,txt_to,txt_from,txt_request,txt_approve;
-            final LinearLayout ll_relative,ll_from,ll_to;
+            final TextView txt_msg, txt_to, txt_from, txt_request, txt_approve;
+            final LinearLayout ll_relative, ll_from, ll_to;
             final ImageView img_status;
 
             MyViewHolder(@NonNull View view) {

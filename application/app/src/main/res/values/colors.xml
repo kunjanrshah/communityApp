@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#F50057</color>
+    <!--<color name="colorPrimary">#F50057</color>
     <color name="colorPrimaryDark">#C51162</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
@@ -9,8 +9,17 @@
 
     <color name="ripple">#F06292</color>
     <color name="accent">#E91E63</color>
-    <color name="accent_pressed">#C2185B</color>
+    <color name="accent_pressed">#C2185B</color>-->
 
+    <color name="colorPrimary">#492e9e</color>
+    <color name="colorPrimaryDark">#5227d8</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="navigationBarColor">#000000</color>
+    <color name="colorAccent">#4f42b5</color>
+
+    <color name="ripple">#F06292</color>
+    <color name="accent">#E91E63</color>
+    <color name="accent_pressed">#C2185B</color>
 
     <!-- Screens background color-->
 

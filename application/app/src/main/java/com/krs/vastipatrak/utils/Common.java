@@ -1792,6 +1792,7 @@ public class Common {
         }
     }
 
+/*
     public static void getChildRandomColor(@NonNull Context context, int position, LinearLayout ll_event) {
         int i = position % 10;
         Log.v("color number:", "" + i);
@@ -1833,7 +1834,9 @@ public class Common {
         }
 
     }
+*/
 
+/*
     public static void getParentRandomColor(@NonNull Context context, int position, LinearLayout ll_event) {
         int i = position % 10;
         Log.v("color number:", "" + i);
@@ -1875,6 +1878,7 @@ public class Common {
         }
 
     }
+*/
 
     public static String getCapsSentences(String tagName) {
         String[] splits = tagName.toLowerCase().split(" ");
