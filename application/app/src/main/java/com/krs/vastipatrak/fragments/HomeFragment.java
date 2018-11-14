@@ -39,6 +39,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.EventlistActivity;
 import com.krs.vastipatrak.activity.LoginActivity;
+import com.krs.vastipatrak.adapter.VideoListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.interfaces.OnItemClickListener;
 import com.krs.vastipatrak.model.ListEventData;
@@ -81,7 +82,7 @@ public class HomeFragment extends Fragment {
     private int page = 1;
     private SwipyRefreshLayout mSwipyRefreshLayout;
     private FloatingActionButton mFloatingActionButton;
-
+    private RecyclerView videoRecyclerView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,27 +111,19 @@ public class HomeFragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 || dy < 0 && mFloatingActionButton.isShown())
+                    mFloatingActionButton.hide();
+            }
 
-
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    mFloatingActionButton.show();
+                }
+                super.onScrollStateChanged(recyclerView, newState);
             }
         });
-       /* recycler_view.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                int lastItem = firstVisibleItem + visibleItemCount;
-                if (lastItem == totalItemCount) {
-
-                    mFloatingActionButton.setVisibility(View.INVISIBLE);
-                } else {
-                    mFloatingActionButton.setVisibility(View.VISIBLE);
-                }
-            }
-        });*/
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,6 +173,7 @@ public class HomeFragment extends Fragment {
 
     private void MemoryAllocation(View rootView) {
         mRecycleView = rootView.findViewById(R.id.recycler_view);
+        videoRecyclerView = (RecyclerView) rootView.findViewById(R.id.list);
         mFloatingActionButton = rootView.findViewById(R.id.floating_action_button);
         mSwipyRefreshLayout = rootView.findViewById(R.id.swipyrefreshlayout);
         realm = AppController.getInstance().realm;
@@ -281,11 +275,13 @@ public class HomeFragment extends Fragment {
                             if (response.has(Common.Constant_Class.ERROR_CODE)) {
                                 String error = response.getString(Common.Constant_Class.ERROR_CODE);
                                 if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
-                                    Intent mIntent = new Intent( getActivity(), LoginActivity.class);
+                                    Intent mIntent = new Intent(getActivity(), LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(mIntent);
                                     getActivity().finish();
                                 }
+                            } else {
+                                setVideoAdapter();
                             }
                         }
                         Common.hideProgressDialog();
@@ -329,8 +325,24 @@ public class HomeFragment extends Fragment {
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         } else {
-            setEventAdapter();
+            setVideoAdapter();
+            // setEventAdapter();
         }
+    }
+
+
+    private void setVideoAdapter() {
+
+        mFloatingActionButton.setVisibility(View.GONE);
+        mRecycleView.setVisibility(View.GONE);
+        mSwipyRefreshLayout.setVisibility(View.GONE);
+        videoRecyclerView.setVisibility(View.VISIBLE);
+        videoRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        videoRecyclerView.setLayoutManager(linearLayoutManager);
+        VideoListAdapter adapter = new VideoListAdapter(getActivity());
+        videoRecyclerView.setAdapter(adapter);
     }
 
     private void setEventAdapter() {
@@ -417,14 +429,12 @@ public class HomeFragment extends Fragment {
             String goal = outFormat.format(date);
 
             String strDate = "";
-            if (DateUtils.isToday(mdate.getTime()))
-                strDate = "Today";
+            if (DateUtils.isToday(mdate.getTime())) strDate = "Today";
             else if (DateUtils.isToday(mdate.getTime() + DateUtils.DAY_IN_MILLIS))
                 strDate = "Yesterday";
             else if (DateUtils.isToday(mdate.getTime() - DateUtils.DAY_IN_MILLIS))
                 strDate = "Tommorrow";
-            else
-                strDate = parseDateToddMMyyyy(data.getEventDate(), yyyy_MM_dd, dd_MMM_yyyy);
+            else strDate = parseDateToddMMyyyy(data.getEventDate(), yyyy_MM_dd, dd_MMM_yyyy);
 
             holder.txtEventDate.setText(strDate + "\n" + goal);
             getRandomColor(Objects.requireNonNull(getActivity()), position, holder.ll_event);

@@ -81,23 +81,38 @@
 
 
     <string-array name="yt_titles">
-        <item>@string/how_to_forgot_1</item>
-        <item>@string/how_search_profile_2</item>
-        <item>@string/how_to_event_list_3</item>
         <item>@string/how_to_update_profile_4</item>
-        <item>@string/how_ror_5</item>
+        <item>@string/how_search_profile_2</item>
+        <item>@string/how_to_forgot_1</item>
+        <item>@string/how_share_code_10</item>
+        <item>@string/how_to_event_list_3</item>
         <item>@string/how_share_loc_6</item>
         <item>@string/how_near_by_7</item>
         <item>@string/how_matrimony_8</item>
         <item>@string/how_export_search_9</item>
-        <item>@string/how_share_code_10</item>
         <item>@string/how_calendar_11</item>
+        <item>@string/how_ror_5</item>
         <item>@string/how_event_manage_12</item>
         <item>@string/how_admin_manage_13</item>
 
     </string-array>
 
-    <string name="how_to_forgot_1">1. If you forgot your password</string>
+    <string name="how_to_update_profile_4">1.તમારી પ્રોફાઇલ વિગતો કેવી રીતે અપડેટ કરવી અને સાચવવી</string>
+    <string name="how_search_profile_2">2.પ્રોફાઇલ કેવી રીતે શોધવું અને ફિલ્ટર કેવી રીતે વાપરવું</string>
+    <string name="how_to_forgot_1">3.શું તમે તમારો પાસવર્ડ ભૂલી ગયા છો ફક્ત "forgot password" પર ક્લિક કરો અને તમારું ઇમેઇલ દાખલ કરો. તમારો પાસવર્ડ તમારા ઇમેઇલ સરનામાંમાં મોકલવામાં આવશે.</string>
+    <string name="how_share_code_10">4.QR કોડ સાથે તમારી પ્રોફાઇલ અન્ય લોકોને કેવી રીતે શેર કરવી</string>
+    <string name="how_to_event_list_3">5.સંચાલક દ્વારા શેર કરેલ ઇવેન્ટ્સ કેવી રીતે ચકાસવી?</string>
+    <string name="how_share_loc_6">6.તમારુ અને તમારા ઘરના સ્થાનને નકશા સાથે કેવી રીતે શેર કરવું
+</string>
+    <string name="how_near_by_7">7.કિલોમીટર અંતર સાથે તમારી નજીકના પ્રોફાઇલ્સ કેવી રીતે શોધવી</string>
+    <string name="how_matrimony_8">8.છોકરાઓ અને છોકરીઓને રસ હોય તેવા લગ્ન સંબંધોની વિગતો કેવી રીતે શોધવી?</string>
+    <string name="how_export_search_9">9. એક્સેલ ફાઇલમાં તમારી શોધ સૂચિની વિગતો કેવી રીતે મેળવવી?</string>
+    <string name="how_calendar_11">10.કૅલેન્ડર સાથે પ્રોફાઇલની જન્મ તારીખ અને લગ્ન તારીખ કેવી રીતે ચકાસવી અને આપમેળે રીમાઇન્ડર અને મેસેજ સેટ કરો જેથી સંદેશ તે તારીખે એપ્લિકેશન દ્વારા મોકલવામાં આવશે</string>
+    <string name="how_ror_5">11.તમારા સંબંધીઓના સંબંધ માટે વિનંતી કેવી રીતે મોકલવી</string>
+    <string name="how_event_manage_12">12. એડમિન દ્વારા ઇવેન્ટ્સ કેવી રીતે સંચાલિત અને શેર કરવી</string>
+    <string name="how_admin_manage_13">13. સંચાલક દ્વારા વિનંતી કેવી રીતે મંજૂર કરવી અથવા કાઢી નાખવી</string>
+
+   <!-- <string name="how_to_forgot_1">1. If you forgot your password</string>
     <string name="how_search_profile_2">2. Search Profiles</string>
     <string name="how_to_event_list_3">3. Event list</string>
     <string name="how_to_update_profile_4">4. Update your Profile</string>
@@ -109,21 +124,21 @@
     <string name="how_share_code_10">10. Share with QR code</string>
     <string name="how_calendar_11">11. Calendar and Set Reminder</string>
     <string name="how_event_manage_12">12. Event management by Admin</string>
-    <string name="how_admin_manage_13">13. Admin Management</string>
+    <string name="how_admin_manage_13">13. Admin Management</string>-->
 
 
     <string-array name="yt_code">
-        <item>@string/forgot_1</item>
-        <item>@string/search_profile_2</item>
-        <item>@string/event_list_3</item>
         <item>@string/update_profile_4</item>
-        <item>@string/ror_5</item>
+        <item>@string/search_profile_2</item>
+        <item>@string/forgot_1</item>
+        <item>@string/share_code_10</item>
+        <item>@string/event_list_3</item>
         <item>@string/share_loc_6</item>
         <item>@string/near_by_7</item>
         <item>@string/matrimony_8</item>
         <item>@string/export_search_9</item>
-        <item>@string/share_code_10</item>
         <item>@string/calendar_11</item>
+        <item>@string/ror_5</item>
         <item>@string/event_manage_12</item>
         <item>@string/admin_manage_13</item>
 
@@ -224,8 +239,8 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="_1_if_you_have_xiomi_vivo_or_oppo_phone_then_please_enable_auto_start_option">1. If you have Xiomi,Vivo or Oppo Phone then please enable auto start option</string>
     <string name="not_connected">Not connected to internet</string>
     <string name="ft_intent">FT_Intent</string>
-    <string name="FT_IMG">ft_img</string>
-    <string name="FT_NAME">ft_name</string>
+    <string name="FT_IMG">profile_pic</string>
+    <string name="FT_NAME">name</string>
 
 
 </resources>

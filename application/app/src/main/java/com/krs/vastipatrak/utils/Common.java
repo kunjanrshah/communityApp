@@ -2301,6 +2301,7 @@ public class Common {
         public static final String REQUEST_ACTION_URL = BASE_URL + "/API/requestAction";
         public static final String GET_RELATIONS_URL = BASE_URL + "/API/getRelations";
         public static final String SET_REMINDER_URL = BASE_URL + "/API/setReminder";
+        public static final String SET_TREE_URL = BASE_URL + "/API/saveTree";
         public static final String GET_USERS_BY_DATE_URL = BASE_URL + "/API/getUsersByDate";
         public static String DEVICE_ID_VALUE = "";
     }

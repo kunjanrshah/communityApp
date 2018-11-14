@@ -18,12 +18,14 @@ public class FtSpinnerAdapter extends BaseAdapter {
     Context context;
     ArrayList<String> lstImages;
     ArrayList<String> lstNames;
+    ArrayList<String> lstLevels;
     LayoutInflater inflter;
 
-    public FtSpinnerAdapter(Context applicationContext, ArrayList<String> lstImages,ArrayList<String> lstNames) {
+    public FtSpinnerAdapter(Context applicationContext, ArrayList<String> lstImages,ArrayList<String> lstNames,ArrayList<String> lstLevels) {
         this.context = applicationContext;
         this.lstImages = lstImages;
         this.lstNames = lstNames;
+        this.lstLevels=lstLevels;
         inflter = (LayoutInflater.from(applicationContext));
     }
 

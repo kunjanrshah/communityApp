@@ -149,6 +149,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_email_mobile"
+                        android:text="kunjanrshah@gmail.com"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -196,6 +197,7 @@
                         android:layout_height="wrap_content"
                         android:drawableEnd="@drawable/password_hide"
                         android:hint="@string/hint_password"
+                        android:text="1234"
                         android:inputType="textPassword"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
