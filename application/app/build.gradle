@@ -97,5 +97,6 @@ dependencies {
     implementation 'de.blox:graphview:0.4.0'
     implementation project(':library')
     implementation project(':draggabletreeview')
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -2225,6 +2225,8 @@ public class Common {
         public static final String B_NAGATIVE = "B -VE";
         public static final String O_POSITIVE = "O +VE";
         public static final String O_NAGATIVE = "O -VE";
+        public static final String AB_POSITIVE = "AB +VE";
+        public static final String AB_NAGATIVE = "AB -VE";
         public static final String EDUCATION = "education";
         public static final String PROFILE_PIC = "profile_pic";
         public static final String PROFILE_PIC_HASH = "profile_pic_hash";

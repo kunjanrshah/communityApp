@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -53,11 +55,17 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.service.MyLocationService;
 import com.krs.vastipatrak.utils.Common;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -65,6 +73,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static android.app.Activity.RESULT_OK;
 import static com.krs.vastipatrak.utils.Common.Constant_Class.BIRTH_DATE;
 import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
@@ -571,14 +580,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         });
         builder.show();
     }
-
-    /*private void showDirections(double slat, double slng, double dlat, double dlng, String address) {
-        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f &daddr=%f,%f", slat, slng, dlat, dlng);
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-        startActivity(intent);
-    }
-*/
     private void MemoryAllocation(View rootView) {
 
 
@@ -770,6 +771,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 spinnerBlood.setSelection(5);
             } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_NAGATIVE)) {
                 spinnerBlood.setSelection(6);
+            }
+            else if (blood.equalsIgnoreCase(Common.Constant_Class.AB_POSITIVE)) {
+                spinnerBlood.setSelection(7);
+            }
+            else if (blood.equalsIgnoreCase(Common.Constant_Class.AB_NAGATIVE)) {
+                spinnerBlood.setSelection(8);
             }
             if (mListProfileData.getGender().equalsIgnoreCase("male") || mListProfileData.getGender().equalsIgnoreCase("")) {
                 rbtnF.setChecked(false);
@@ -1063,58 +1070,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
-   /* private void getDistanceOnRoad(double latitude, double longitude,
-                                     double prelatitute, double prelongitude) {
-        String result_in_kms = "";
-        String url = "http://maps.google.com/maps/api/directions/xml?origin="
-                + latitude + "," + longitude + "&destination=" + prelatitute
-                + "," + prelongitude + "&sensor=false&units=metric";
-       final String tag[] = { "text" };
-
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
-
-            @Override
-            public void onResponse(@NonNull JSONObject response) {
-                try
-                {
-                    //  String str = json.getJSONObject("data").toString();
-                    InputStream is = new ByteArrayInputStream(response.toString().getBytes());
-                    //  InputStream is = response.getEntity().getContent();
-                    DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                    Document doc = builder.parse(is);
-                    if (doc != null) {
-                        NodeList nl;
-                        ArrayList args = new ArrayList();
-                        for (String s : tag) {
-                            nl = doc.getElementsByTagName(s);
-                            if (nl.getLength() > 0) {
-                                Node node = nl.item(nl.getLength() - 1);
-                                args.add(node.getTextContent());
-                            } else {
-                                args.add(" - ");
-                            }
-                        }
-                     String   result_in_kms = String.format("%s", args.get(0));
-                    }
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(@NonNull VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-            }
-        });
-
-
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
-    }*/
 
     private void alert(String message) {
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
@@ -1160,6 +1115,31 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         break;
                 }
             }
+        }
+    }
+
+
+    private void setImageFromActivityResult(Uri resultUri) {
+        assert mActivity != null;
+        Bitmap bmp;
+        if (img_selection.equalsIgnoreCase("profile")) {
+            Glide.with(mActivity).load(resultUri).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+            img_profile.invalidate();
+            BitmapDrawable drawable = (BitmapDrawable) img_profile.getDrawable();
+            bmp = drawable.getBitmap();
+            str_profile_hash = Common.getBase64(bmp);
+        } else if (img_selection.equalsIgnoreCase("father")) {
+            Glide.with(mActivity).load(resultUri).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_father);
+            img_profile.invalidate();
+            BitmapDrawable drawable = (BitmapDrawable) img_father.getDrawable();
+            bmp = drawable.getBitmap();
+            str_father_hash = Common.getBase64(bmp);
+        } else if (img_selection.equalsIgnoreCase("mother")) {
+            Glide.with(mActivity).load(resultUri).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mother);
+            img_profile.invalidate();
+            BitmapDrawable drawable = (BitmapDrawable) img_mother.getDrawable();
+            bmp = drawable.getBitmap();
+            str_mother_hash = Common.getBase64(bmp);
         }
     }
 
