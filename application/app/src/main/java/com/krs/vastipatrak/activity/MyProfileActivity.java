@@ -144,13 +144,15 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
     private void backNavigation() {
 
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
-            saveProfile(1);
+        Common.hideKeyboard(this);
+        finish();
+        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+
+        /*if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
+         //   saveProfile(1);
         } else {
-            Common.hideKeyboard(this);
-            finish();
-            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-        }
+
+        }*/
     }
 
 
@@ -266,146 +268,145 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private void saveProfile(int state) {
         ListProfileData mListProfileData = new ListProfileData();
 
-        // Personal Details
-        String fname = ((PersonalFragment) personal).edtFName.getText().toString().trim();
-        String lname = ((PersonalFragment) personal).edtLName.getText().toString().trim();
-        String FatherName = ((PersonalFragment) personal).edtFatherName.getText().toString().trim();
-        String MotherName = ((PersonalFragment) personal).edtMotherName.getText().toString().trim();
-        String Education = ((PersonalFragment) personal).edtEducation.getText().toString().trim();
-        String BPlace = ((PersonalFragment) personal).edtBPlace.getText().toString().trim();
-        String NPlace = ((PersonalFragment) personal).edtNPlace.getText().toString().trim();
-        String Gotra = ((PersonalFragment) personal).spinnerGotra.getSelectedItem().toString().trim();
-        String Mobile = ((PersonalFragment) personal).edtMobile.getText().toString().trim();
-        String Address = ((PersonalFragment) personal).edtAddress.getText().toString().trim();
-        String Eaddress = ((PersonalFragment) personal).edt_Eaddress.getText().toString().trim();
-        String city = ((PersonalFragment) personal).edtCity.getText().toString().trim();
+        if (personal != null && ((PersonalFragment) personal).edtFName != null && business != null && ((BusinessFragment) business).edtOccupation != null) {
+            // Personal Details
+            String fname = ((PersonalFragment) personal).edtFName.getText().toString().trim();
+            String lname = ((PersonalFragment) personal).edtLName.getText().toString().trim();
+            String FatherName = ((PersonalFragment) personal).edtFatherName.getText().toString().trim();
+            String MotherName = ((PersonalFragment) personal).edtMotherName.getText().toString().trim();
+            String Education = ((PersonalFragment) personal).edtEducation.getText().toString().trim();
+            String BPlace = ((PersonalFragment) personal).edtBPlace.getText().toString().trim();
+            String NPlace = ((PersonalFragment) personal).edtNPlace.getText().toString().trim();
+            String Gotra = ((PersonalFragment) personal).spinnerGotra.getSelectedItem().toString().trim();
+            String Mobile = ((PersonalFragment) personal).edtMobile.getText().toString().trim();
+            String Address = ((PersonalFragment) personal).edtAddress.getText().toString().trim();
+            String Eaddress = ((PersonalFragment) personal).edt_Eaddress.getText().toString().trim();
+            String city = ((PersonalFragment) personal).edtCity.getText().toString().trim();
 
-        if (!Eaddress.equalsIgnoreCase("")) {
-            if (Common.isValidEmail(Eaddress)) {
-                valid = "Email is not valid Format";
+            if (!Eaddress.equalsIgnoreCase("")) {
+                if (Common.isValidEmail(Eaddress)) {
+                    valid = "Email is not valid Format";
+                }
             }
-        }
-
-        if (!Gotra.equalsIgnoreCase("Gotra")) {
-
-        }
-
-        String phone = Objects.requireNonNull(((PersonalFragment) personal).edt_phone).getText().toString().trim();
-        String bdate = Objects.requireNonNull(((PersonalFragment) personal).edtbdate).getText().toString().trim();
-        bdate = Common.parseDateToddMMyyyy(bdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
-        if (!bdate.equalsIgnoreCase("")) {
-            if (!Common.isThisDateValid(bdate, "yyyy-mm-dd")) {
-                valid = "Birth Date is not valid Format";
-            }
-        }
-
-        String time = Objects.requireNonNull(((PersonalFragment) personal).edtbTime).getText().toString().trim();
-        if (!time.equalsIgnoreCase("")) {
-            if (Common.IsValidate(time)) {
-                valid = "Birth Time is not valid 24 Hours";
-            }
-        }
-
-        String gender = ((PersonalFragment) personal).gender;
-        String bgroup = ((PersonalFragment) personal).spinnerBlood.getSelectedItem().toString().trim();
-        String str_profile_hash = ((PersonalFragment) personal).str_profile_hash;
-        String str_father_hash = ((PersonalFragment) personal).str_father_hash;
-        String str_mother_hash = ((PersonalFragment) personal).str_mother_hash;
-        boolean bdate_rem = ((PersonalFragment) personal).chk_profile_bdate_rem.isChecked();
-
-        // Business Details
-        String occupation = ((BusinessFragment) business).edtOccupation.getText().toString().trim();
-        String Work = ((BusinessFragment) business).edtWork.getText().toString().trim();
-        String OMobile = ((BusinessFragment) business).edtOMobile.getText().toString().trim();
-        String OAddress = ((BusinessFragment) business).edtOAddress.getText().toString().trim();
-
-        // Familty Details
-        String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "", sdate = "", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
-        String sponseNative = "", sponseMobile = "";
-        boolean chk_spouse_bdate_rem = false, chk_m_bdate_rem = false;
-        LinearLayout child_container = null;
-        ArrayList<Integer> lst_delID = null;
-        try {
-            spouseName = ((FamilyFragment) family).edtSpouseName.getText().toString().trim();
-            sponseMobile = ((FamilyFragment) family).edtsponse_mobile.getText().toString().trim();
-            sponseNative = ((FamilyFragment) family).edtsponse_nplace.getText().toString().trim();
-            SpouseFName = ((FamilyFragment) family).edtSpouseFName.getText().toString().trim();
-            MSpouseName = ((FamilyFragment) family).edtMSpouseName.getText().toString().trim();
-            mdate = ((FamilyFragment) family).edt_mdate.getText().toString().trim();
-
-            chk_spouse_bdate_rem = ((FamilyFragment) family).chk_spouse_bdate_rem.isChecked();
-            chk_m_bdate_rem = ((FamilyFragment) family).chk_marriage_bdate_rem.isChecked();
-
-            mdate = Common.parseDateToddMMyyyy(mdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
-            if (!mdate.equalsIgnoreCase("")) {
-                if (!Common.isThisDateValid(mdate, "yyyy-mm-dd")) {
-                    valid = "Marriage Date is not valid Format";
+            String phone = Objects.requireNonNull(((PersonalFragment) personal).edt_phone).getText().toString().trim();
+            String bdate = Objects.requireNonNull(((PersonalFragment) personal).edtbdate).getText().toString().trim();
+            bdate = Common.parseDateToddMMyyyy(bdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
+            if (!bdate.equalsIgnoreCase("")) {
+                if (!Common.isThisDateValid(bdate, "yyyy-mm-dd")) {
+                    valid = "Birth Date is not valid Format";
                 }
             }
 
-            sdate = ((FamilyFragment) family).edtsponse_bdate.getText().toString().trim();
-            sdate = Common.parseDateToddMMyyyy(sdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
-            if (!sdate.equalsIgnoreCase("")) {
-                if (!Common.isThisDateValid(sdate, "yyyy-mm-dd")) {
-                    valid = "Sponse Birth Date is not valid Format";
+            String time = Objects.requireNonNull(((PersonalFragment) personal).edtbTime).getText().toString().trim();
+            if (!time.equalsIgnoreCase("")) {
+                if (Common.IsValidate(time)) {
+                    valid = "Birth Time is not valid 24 Hours";
                 }
             }
 
-            str_fspouse_hash = ((FamilyFragment) family).str_fspouse_hash;
-            str_mspouse_hash = ((FamilyFragment) family).str_mspouse_hash;
-            str_spouse_hash = ((FamilyFragment) family).str_spouse_hash;
-            child_container = ((FamilyFragment) family).child_container;
-            lst_delID = ((FamilyFragment) family).lst_delID;
+            String gender = ((PersonalFragment) personal).gender;
+            String bgroup = ((PersonalFragment) personal).spinnerBlood.getSelectedItem().toString().trim();
+            String str_profile_hash = ((PersonalFragment) personal).str_profile_hash;
+            String str_father_hash = ((PersonalFragment) personal).str_father_hash;
+            String str_mother_hash = ((PersonalFragment) personal).str_mother_hash;
+            boolean bdate_rem = ((PersonalFragment) personal).chk_profile_bdate_rem.isChecked();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (valid.isEmpty()) {
 
-            mListProfileData.setFirst_name(fname);
-            mListProfileData.setLast_name(lname);
-            mListProfileData.setFather_name(FatherName);
-            mListProfileData.setMother_name(MotherName);
-            mListProfileData.setEducation(Education);
-            mListProfileData.setBirth_place(BPlace);
-            mListProfileData.setNative_place(NPlace);
-            mListProfileData.setGotra(Gotra);
-            mListProfileData.setMobile(Mobile);
-            mListProfileData.setAddress(Address);
-            mListProfileData.setEmail_address(Eaddress);
-            mListProfileData.setPhone(phone);
-            mListProfileData.setCity(city);
-            mListProfileData.setBirth_date(bdate);
-            mListProfileData.setBirth_time(time);
-            mListProfileData.setGender(gender);
-            mListProfileData.setBlood_group(bgroup);
-            mListProfileData.setOccupation(occupation);
-            mListProfileData.setWork(Work);
-            mListProfileData.setOffice_mobile(OMobile);
-            mListProfileData.setOffice_address(OAddress);
-            mListProfileData.setSpouse_name(spouseName);
-            mListProfileData.setSponse_bdate(sdate);
-            mListProfileData.setSponse_mobile(sponseMobile);
-            mListProfileData.setSponse_native(sponseNative);
-            mListProfileData.setSfather_name(SpouseFName);
-            mListProfileData.setSmother_name(MSpouseName);
-            mListProfileData.setMarriage_date(mdate);
-            mListProfileData.setStr_profile_hash(str_profile_hash);
-            mListProfileData.setStr_father_hash(str_father_hash);
-            mListProfileData.setStr_mother_hash(str_mother_hash);
-            mListProfileData.setStr_fspouse_hash(str_fspouse_hash);
-            mListProfileData.setStr_mspouse_hash(str_mspouse_hash);
-            mListProfileData.setStr_spouse_hash(str_spouse_hash);
-            setProfileJsonObject(mListProfileData, child_container, Objects.requireNonNull(lst_delID));
-        } else {
-            Toast.makeText(MyProfileActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
+            // Business Details
+            String occupation = ((BusinessFragment) business).edtOccupation.getText().toString().trim();
+            String Work = ((BusinessFragment) business).edtWork.getText().toString().trim();
+            String OMobile = ((BusinessFragment) business).edtOMobile.getText().toString().trim();
+            String OAddress = ((BusinessFragment) business).edtOAddress.getText().toString().trim();
+
+            // Familty Details
+            String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "", sdate = "", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
+            String sponseNative = "", sponseMobile = "";
+            boolean chk_spouse_bdate_rem = false, chk_m_bdate_rem = false;
+            LinearLayout child_container = null;
+            ArrayList<Integer> lst_delID = null;
+            try {
+                spouseName = ((FamilyFragment) family).edtSpouseName.getText().toString().trim();
+                sponseMobile = ((FamilyFragment) family).edtsponse_mobile.getText().toString().trim();
+                sponseNative = ((FamilyFragment) family).edtsponse_nplace.getText().toString().trim();
+                SpouseFName = ((FamilyFragment) family).edtSpouseFName.getText().toString().trim();
+                MSpouseName = ((FamilyFragment) family).edtMSpouseName.getText().toString().trim();
+                mdate = ((FamilyFragment) family).edt_mdate.getText().toString().trim();
+
+                chk_spouse_bdate_rem = ((FamilyFragment) family).chk_spouse_bdate_rem.isChecked();
+                chk_m_bdate_rem = ((FamilyFragment) family).chk_marriage_bdate_rem.isChecked();
+
+                mdate = Common.parseDateToddMMyyyy(mdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
+                if (!mdate.equalsIgnoreCase("")) {
+                    if (!Common.isThisDateValid(mdate, "yyyy-mm-dd")) {
+                        valid = "Marriage Date is not valid Format";
+                    }
+                }
+
+                sdate = ((FamilyFragment) family).edtsponse_bdate.getText().toString().trim();
+                sdate = Common.parseDateToddMMyyyy(sdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
+                if (!sdate.equalsIgnoreCase("")) {
+                    if (!Common.isThisDateValid(sdate, "yyyy-mm-dd")) {
+                        valid = "Sponse Birth Date is not valid Format";
+                    }
+                }
+
+                str_fspouse_hash = ((FamilyFragment) family).str_fspouse_hash;
+                str_mspouse_hash = ((FamilyFragment) family).str_mspouse_hash;
+                str_spouse_hash = ((FamilyFragment) family).str_spouse_hash;
+                child_container = ((FamilyFragment) family).child_container;
+                lst_delID = ((FamilyFragment) family).lst_delID;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (valid.isEmpty()) {
+
+                mListProfileData.setFirst_name(fname);
+                mListProfileData.setLast_name(lname);
+                mListProfileData.setFather_name(FatherName);
+                mListProfileData.setMother_name(MotherName);
+                mListProfileData.setEducation(Education);
+                mListProfileData.setBirth_place(BPlace);
+                mListProfileData.setNative_place(NPlace);
+                mListProfileData.setGotra(Gotra);
+                mListProfileData.setMobile(Mobile);
+                mListProfileData.setAddress(Address);
+                mListProfileData.setEmail_address(Eaddress);
+                mListProfileData.setPhone(phone);
+                mListProfileData.setCity(city);
+                mListProfileData.setBirth_date(bdate);
+                mListProfileData.setBirth_time(time);
+                mListProfileData.setGender(gender);
+                mListProfileData.setBlood_group(bgroup);
+                mListProfileData.setOccupation(occupation);
+                mListProfileData.setWork(Work);
+                mListProfileData.setOffice_mobile(OMobile);
+                mListProfileData.setOffice_address(OAddress);
+                mListProfileData.setSpouse_name(spouseName);
+                mListProfileData.setSponse_bdate(sdate);
+                mListProfileData.setSponse_mobile(sponseMobile);
+                mListProfileData.setSponse_native(sponseNative);
+                mListProfileData.setSfather_name(SpouseFName);
+                mListProfileData.setSmother_name(MSpouseName);
+                mListProfileData.setMarriage_date(mdate);
+                mListProfileData.setStr_profile_hash(str_profile_hash);
+                mListProfileData.setStr_father_hash(str_father_hash);
+                mListProfileData.setStr_mother_hash(str_mother_hash);
+                mListProfileData.setStr_fspouse_hash(str_fspouse_hash);
+                mListProfileData.setStr_mspouse_hash(str_mspouse_hash);
+                mListProfileData.setStr_spouse_hash(str_spouse_hash);
+                setProfileJsonObject(mListProfileData, child_container, Objects.requireNonNull(lst_delID));
+                valid = "";
+            } else {
+                Toast.makeText(MyProfileActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
+            }
         }
-        if (valid.isEmpty() && state == 1) {
+        /*if (valid.isEmpty() && state == 1) {
             Common.hideKeyboard(this);
             finish();
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-        }
-        valid = "";
+        }*/
+
     }
 
     private void setProfileJsonObject(@NonNull ListProfileData mListProfileData, @Nullable LinearLayout child_container, @NonNull ArrayList<Integer> lst_delID) {
@@ -607,7 +608,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                                     mEditor.apply();
                                     AppController.getInstance().isUpdate = true;
                                 }
-                                alert(message);
+                                Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+//                                alert(message);
                             } else {
                                 setupViewPager(viewPager);
                                 tabLayout.setupWithViewPager(viewPager);
@@ -779,18 +781,18 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
+            Common.hideKeyboard(this);
             Fragment fragment = new FragmentDrawer();
             getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
-
-            //   Intent mIntent = new Intent(MyProfileActivity.this, MainActivity.class);
-            //   mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            //   startActivity(mIntent);
-            overridePendingTransition(0, 0);
             Log.d(TAG, "step onKeyDown");
             finish();
+            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
+            /*if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
+              //  saveProfile(1);
+            } else {
 
-            // your code here
+            }*/
             return false;
         }
         return super.onKeyDown(keyCode, event);

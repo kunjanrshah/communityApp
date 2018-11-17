@@ -323,7 +323,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(LoginActivity.this, "On the Way", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Work in Progress", Toast.LENGTH_SHORT).show();
 
                /* AlertDialog.Builder b = new AlertDialog.Builder(LoginActivity.this);
                 b.setTitle(getResources().getString(R.string.app_name));

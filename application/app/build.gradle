@@ -21,8 +21,8 @@ android {
     defaultConfig {
         applicationId "com.krs.vastipatrak"
         minSdkVersion 21
-        versionCode 9
-        versionName "1.9.0"
+        versionCode 13
+        versionName "1.13.0"
         multiDexEnabled true
     }
     buildTypes {

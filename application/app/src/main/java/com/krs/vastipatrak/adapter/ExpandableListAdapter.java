@@ -50,6 +50,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.FamilyTreeActivity;
 import com.krs.vastipatrak.activity.LoginActivity;
+import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildData;
@@ -402,10 +403,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         childViewHolder.imgTree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mIntent = new Intent(_context, FamilyTreeActivity.class);
+
+                Toast.makeText(_context, "Coming Soon", Toast.LENGTH_SHORT).show();
+                /*Intent mIntent = new Intent(_context, FamilyTreeActivity.class);
                 JSONObject mjson = mListChildData.getMjsonobj();
                 mIntent.putExtra(_context.getString(R.string.ft_intent), mjson.toString());
-                _context.startActivity(mIntent);
+                _context.startActivity(mIntent);*/
             }
         });
 

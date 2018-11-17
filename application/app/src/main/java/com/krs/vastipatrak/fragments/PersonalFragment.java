@@ -633,6 +633,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         blood_cate.add(Common.Constant_Class.B_NAGATIVE);
         blood_cate.add(Common.Constant_Class.O_POSITIVE);
         blood_cate.add(Common.Constant_Class.O_NAGATIVE);
+        blood_cate.add(Common.Constant_Class.AB_POSITIVE);
+        blood_cate.add(Common.Constant_Class.AB_NAGATIVE);
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, blood_cate);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
