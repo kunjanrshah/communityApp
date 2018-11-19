@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.Constant_Class.LOCATION_TYPE;
+import static com.krs.vastipatrak.utils.Common.hideKeyboard;
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 import static com.krs.vastipatrak.utils.Common.showProgressDialog;
 
@@ -53,7 +54,7 @@ public class NearByFragment extends Fragment {
     private ExpandableListView lvCustomList;
     private TextView txtLable;
     private RadioButton rdb_home, rdb_office, rdb_user;
-    private String type = "Home";
+    private String type = "";
     private EditText edt_distance;
     private Button btnok;
     @Nullable
@@ -71,6 +72,7 @@ public class NearByFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_near_by, container, false);
+        type=getString(R.string.near_by_home);
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(R.string.title_near_by_users);
         MemoryAllocation(rootView);
         callNearby();
@@ -78,16 +80,16 @@ public class NearByFragment extends Fragment {
     }
 
     private void setType() {
-        type = mSharedPreferences.getString(LOCATION_TYPE, "Home");
-        if (type.isEmpty() || type.equalsIgnoreCase("Home")) {
+        type = mSharedPreferences.getString(LOCATION_TYPE, getString(R.string.near_by_home));
+        if (type.isEmpty() || type.equalsIgnoreCase(getString(R.string.near_by_home))) {
             rdb_home.setChecked(true);
             rdb_office.setChecked(false);
             rdb_user.setChecked(false);
-        } else if (type.equalsIgnoreCase("Office")) {
+        } else if (type.equalsIgnoreCase(getString(R.string.near_by_office))) {
             rdb_home.setChecked(false);
             rdb_office.setChecked(true);
             rdb_user.setChecked(false);
-        } else if (type.equalsIgnoreCase("User")) {
+        } else if (type.equalsIgnoreCase(getString(R.string.near_by_users))) {
             rdb_home.setChecked(false);
             rdb_office.setChecked(false);
             rdb_user.setChecked(true);
@@ -129,7 +131,7 @@ public class NearByFragment extends Fragment {
                 if (isChecked) {
                     rdb_office.setChecked(false);
                     rdb_user.setChecked(false);
-                    type = "Home";
+                    type = getString(R.string.near_by_home);
                     mEditor.putString(LOCATION_TYPE, type);
                     mEditor.apply();
                 }
@@ -142,7 +144,7 @@ public class NearByFragment extends Fragment {
                 if (isChecked) {
                     rdb_home.setChecked(false);
                     rdb_user.setChecked(false);
-                    type = "Office";
+                    type = getString(R.string.near_by_office);
                     mEditor.putString(LOCATION_TYPE, type);
                     mEditor.apply();
                 }
@@ -155,7 +157,7 @@ public class NearByFragment extends Fragment {
                 if (isChecked) {
                     rdb_home.setChecked(false);
                     rdb_office.setChecked(false);
-                    type = "User";
+                    type = getString(R.string.near_by_users);
                     mEditor.putString(LOCATION_TYPE, type);
                     mEditor.apply();
                 }
@@ -186,6 +188,7 @@ public class NearByFragment extends Fragment {
                     try {
                         listDataHeader.clear();
                         listDataChild.clear();
+                        hideKeyboard(getActivity());
                         if (response.has(Common.Constant_Class.DATA)) {
                             JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                             for (int i = 0; i < mJsonArray.length(); i++) {

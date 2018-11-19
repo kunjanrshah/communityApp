@@ -86,42 +86,48 @@ public class RelativeFragment extends Fragment {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
-                        JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
-                        if (mJsonArray.length() > 0) {
-                            lstRelative = new ArrayList<>();
-                        }
-                        for (int i = 0; i < mJsonArray.length(); i++) {
-                            JSONObject mJsonreldata = mJsonArray.getJSONObject(i);
-                            String id = mJsonreldata.getString(Common.Constant_Class.ID);
-                            String user_id = mJsonreldata.getString(Common.Constant_Class.USER_ID);
-                            String to_user_id = mJsonreldata.getString(Common.Constant_Class.TO_USER_ID);
-                            String relation = mJsonreldata.getString(Common.Constant_Class.RELATION);
-                            String status = mJsonreldata.getString(Common.Constant_Class.RELATIONSHIP_STATUS);
-                            String to_first_name = mJsonreldata.getString(Common.Constant_Class.TO_FIRST_NAME);
-                            String to_last_name = mJsonreldata.getString(Common.Constant_Class.TO_LAST_NAME);
-                            String from_first_name = mJsonreldata.getString(Common.Constant_Class.FROM_FIRST_NAME);
-                            String from_last_name = mJsonreldata.getString(Common.Constant_Class.FROM_LAST_NAME);
-                            Relative mRelative = new Relative();
-                            mRelative.setId(id);
-                            mRelative.setUser_id(user_id);
-                            mRelative.setFrom_first_name(from_first_name);
-                            mRelative.setFrom_last_name(from_last_name);
-                            mRelative.setToFirst_name(to_first_name);
-                            mRelative.setToLast_name(to_last_name);
-                            mRelative.setRelation(relation);
-                            mRelative.setStatus(status);
-                            mRelative.setTo_user_id(to_user_id);
-                            lstRelative.add(mRelative);
+
+                        String success = response.getString(Common.Constant_Class.SUCCESS);
+                        if(success.equalsIgnoreCase("true"))
+                        {
+                            JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                            if (mJsonArray.length() > 0) {
+                                lstRelative = new ArrayList<>();
+                            }
+                            for (int i = 0; i < mJsonArray.length(); i++) {
+                                JSONObject mJsonreldata = mJsonArray.getJSONObject(i);
+                                String id = mJsonreldata.getString(Common.Constant_Class.ID);
+                                String user_id = mJsonreldata.getString(Common.Constant_Class.USER_ID);
+                                String to_user_id = mJsonreldata.getString(Common.Constant_Class.TO_USER_ID);
+                                String relation = mJsonreldata.getString(Common.Constant_Class.RELATION);
+                                String status = mJsonreldata.getString(Common.Constant_Class.RELATIONSHIP_STATUS);
+                                String to_first_name = mJsonreldata.getString(Common.Constant_Class.TO_FIRST_NAME);
+                                String to_last_name = mJsonreldata.getString(Common.Constant_Class.TO_LAST_NAME);
+                                String from_first_name = mJsonreldata.getString(Common.Constant_Class.FROM_FIRST_NAME);
+                                String from_last_name = mJsonreldata.getString(Common.Constant_Class.FROM_LAST_NAME);
+                                Relative mRelative = new Relative();
+                                mRelative.setId(id);
+                                mRelative.setUser_id(user_id);
+                                mRelative.setFrom_first_name(from_first_name);
+                                mRelative.setFrom_last_name(from_last_name);
+                                mRelative.setToFirst_name(to_first_name);
+                                mRelative.setToLast_name(to_last_name);
+                                mRelative.setRelation(relation);
+                                mRelative.setStatus(status);
+                                mRelative.setTo_user_id(to_user_id);
+                                lstRelative.add(mRelative);
+                            }
+
+                            if (mJsonArray.length() > 0) {
+                                recycler_view.setVisibility(View.VISIBLE);
+                                txtLable.setVisibility(View.GONE);
+                                setAdapter();
+                            } else {
+                                recycler_view.setVisibility(View.GONE);
+                                txtLable.setVisibility(View.VISIBLE);
+                            }
                         }
 
-                        if (mJsonArray.length() > 0) {
-                            recycler_view.setVisibility(View.VISIBLE);
-                            txtLable.setVisibility(View.GONE);
-                            setAdapter();
-                        } else {
-                            recycler_view.setVisibility(View.GONE);
-                            txtLable.setVisibility(View.VISIBLE);
-                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         hideProgressDialog();

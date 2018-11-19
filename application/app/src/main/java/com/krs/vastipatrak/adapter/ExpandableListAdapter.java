@@ -48,9 +48,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.FamilyTreeActivity;
 import com.krs.vastipatrak.activity.LoginActivity;
-import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildData;
@@ -482,14 +480,24 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String is_share = mListParentData.getIs_share();
         String dist = mListParentData.getDistance();
         String Shared = mListParentData.getShared();
+        String type = mListParentData.getType();
+        String is_location = mListParentData.isIs_location_enable();
         if (!dist.isEmpty()) {
             groupViewHolder.txt_dist.setVisibility(View.VISIBLE);
             DecimalFormat df2 = new DecimalFormat("#.##");
-            groupViewHolder.txt_dist.setText(df2.format(milesTokm(Double.parseDouble(dist))) + "> Km");
+            if (type.equalsIgnoreCase(_context.getString(R.string.near_by_users))) {
+                if (is_location.equalsIgnoreCase("1")) {
+                    groupViewHolder.txt_dist.setText("Now " + df2.format(milesTokm(Double.parseDouble(dist))) + "> Km");
+                } else {
+                    groupViewHolder.txt_dist.setText("Last " + df2.format(milesTokm(Double.parseDouble(dist))) + "> Km");
+                    groupViewHolder.txt_dist.setTextColor(_context.getColor(R.color.navigationBarColor));
+                }
+            } else {
+                groupViewHolder.txt_dist.setText(df2.format(milesTokm(Double.parseDouble(dist))) + "> Km");
+            }
         } else {
             groupViewHolder.txt_dist.setVisibility(View.GONE);
         }
-
 
         // Rounded corners
         Glide.with(_context).load(imgURL).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).into(groupViewHolder.ivIcon);

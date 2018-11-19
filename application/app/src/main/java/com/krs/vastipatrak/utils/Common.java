@@ -1005,6 +1005,13 @@ public class Common {
                 }
                 mListProfileData.setmListChildrenData(mlistchilds);
             }
+            try {
+                if (AppController.getInstance().realm.isInTransaction()) {
+                    AppController.getInstance().realm.commitTransaction();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             AppController.getInstance().realm.beginTransaction();
             AppController.getInstance().realm.copyToRealmOrUpdate(mListProfileData);
@@ -1466,7 +1473,7 @@ public class Common {
         SimpleDateFormat dateFormat = new SimpleDateFormat(oldFormat);
         Date myDate = null;
         try {
-            if (!strDate.equalsIgnoreCase("0000-00-00")) {
+            if (!strDate.equalsIgnoreCase("0000-00-00") && !strDate.isEmpty()) {
                 myDate = dateFormat.parse(strDate);
                 SimpleDateFormat timeFormat = new SimpleDateFormat(newFormat);
                 formatedDate = timeFormat.format(myDate);
@@ -2075,8 +2082,6 @@ public class Common {
             }
         }
     }
-
-
 
 
     public static class Constant_Class {

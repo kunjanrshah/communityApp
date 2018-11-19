@@ -79,6 +79,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private Fragment relative = null;
     private SharedPreferences mSharedPreferences = null;
     private boolean isBackPressed = false;
+    String id = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,7 +89,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
         MemoryAllocation();
         ToolbarSetup();
-        String id = "";
+
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
         } else {
@@ -219,14 +220,15 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         });
 
         final MenuItem saveItem = menu.findItem(R.id.action_save);
-
-
-        if (Objects.requireNonNull(mSharedPreferences).getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
+        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             saveItem.setVisible(true);
         } else {
-            saveItem.setVisible(false);
+            if (isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                saveItem.setVisible(true);
+            } else {
+                saveItem.setVisible(false);
+            }
         }
-
 
         MenuItem action_toggle = menu.findItem(R.id.action_toggle);
         if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
@@ -245,8 +247,9 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     isEnable = true;
                     saveItem.setVisible(true);
                 }
-                setupViewPager(viewPager);
-                tabLayout.setupWithViewPager(viewPager);
+                SyncUser(id);
+                //setupViewPager(viewPager);
+                //tabLayout.setupWithViewPager(viewPager);
                 return false;
             }
         });

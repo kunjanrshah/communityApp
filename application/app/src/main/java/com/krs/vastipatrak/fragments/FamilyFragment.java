@@ -555,7 +555,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         Glide.with(mActivity).load(mspouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mspouse);
         if (mListProfileData.getmListChildrenData() != null) {
             if (mListProfileData.getmListChildrenData().size() > 0) {
-
+                child_container.removeAllViews();
+                child_container.removeAllViewsInLayout();
                 for (int i = 0; i < mListProfileData.getmListChildrenData().size(); i++) {
 
                     if (i == 0) {
@@ -567,8 +568,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                             btn_add.setVisibility(View.GONE);
                         }
                     }
-                    ListChildrenData mObjChild = mListProfileData.getmListChildrenData().get(i);
                     add_child_layout();
+                    ListChildrenData mObjChild = mListProfileData.getmListChildrenData().get(i);
                     final Viewholder mViewholder = (Viewholder) child_container.getChildAt(i).getTag();
                     mViewholder.child_id = Integer.parseInt(Objects.requireNonNull(mObjChild).getChild_id());
                     Objects.requireNonNull(mViewholder.edtchild_name).setText(mObjChild.getChild_name());
