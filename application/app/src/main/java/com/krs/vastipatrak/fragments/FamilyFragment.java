@@ -571,12 +571,14 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     add_child_layout();
                     ListChildrenData mObjChild = mListProfileData.getmListChildrenData().get(i);
                     final Viewholder mViewholder = (Viewholder) child_container.getChildAt(i).getTag();
-                    mViewholder.child_id = Integer.parseInt(Objects.requireNonNull(mObjChild).getChild_id());
-                    Objects.requireNonNull(mViewholder.edtchild_name).setText(mObjChild.getChild_name());
-                    Objects.requireNonNull(mViewholder.edtchild_bdate).setText(mObjChild.getChild_bday());
-                    Objects.requireNonNull(mViewholder.edtMobile).setText(mObjChild.getMobile());
 
+                    mViewholder.child_id = Integer.parseInt(Objects.requireNonNull(mObjChild).getChild_id());
+                    mViewholder.edtchild_name.setText(mObjChild.getChild_name());
+                    Log.d(FamilyFragment.class.getName(),"kunj: "+mObjChild.getChild_name());
+                    mViewholder.edtchild_bdate.setText(mObjChild.getChild_bday());
+                    mViewholder.edtMobile.setText(mObjChild.getMobile());
                     mViewholder.chk_child_marriage.setChecked(mObjChild.isIs_married());
+
                     if (mObjChild.getChild_bdate_reminder_id().equalsIgnoreCase("0")) {
                         mViewholder.chk_child_bdate_rem.setChecked(false);
                         lstchild.put(mViewholder.child_id, "0");
@@ -1006,8 +1008,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 }).show();
             }
         });
-        child_container.addView(addView);
         addView.setTag(mViewholder);
+        child_container.addView(addView,child_container.getChildCount());
     }
 
     private void selectImage() {
@@ -1138,7 +1140,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             }
             phoneCursor.close();
         }
-
 
         Bitmap bmp = null;
         if (data != null) {

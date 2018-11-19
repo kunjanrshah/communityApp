@@ -65,6 +65,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     public static boolean isEnable = false;
     private final String TAG = MainActivity.class.getSimpleName();
     Snackbar snackbar;
+    String id = "";
     private SharedPreferences.Editor mEditor;
     private SearchView searchView;
     private Bundle mBundle = null;
@@ -79,7 +80,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private Fragment relative = null;
     private SharedPreferences mSharedPreferences = null;
     private boolean isBackPressed = false;
-    String id = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,6 +125,9 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mBundle = getIntent().getExtras();
+        if (mBundle != null) {
+            isEnable = mBundle.getBoolean("isEnable", false);
+        }
         viewPager = findViewById(R.id.viewpager);
         tabLayout = findViewById(R.id.tabs);
     }
@@ -247,7 +250,20 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     isEnable = true;
                     saveItem.setVisible(true);
                 }
-                SyncUser(id);
+
+                Intent mIntent = new Intent(MyProfileActivity.this, MyProfileActivity.class);
+                if (mBundle != null) {
+                    mBundle.putBoolean("isEnable", isEnable);
+                } else {
+                    mBundle = new Bundle();
+                    mBundle.putBoolean("isEnable", isEnable);
+                }
+
+                mIntent.putExtras(mBundle);
+                startActivity(mIntent);
+                finish();
+
+                //SyncUser(id);
                 //setupViewPager(viewPager);
                 //tabLayout.setupWithViewPager(viewPager);
                 return false;
@@ -612,7 +628,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                                     AppController.getInstance().isUpdate = true;
                                 }
                                 Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
-//                                alert(message);
+                                //                                alert(message);
                             } else {
                                 setupViewPager(viewPager);
                                 tabLayout.setupWithViewPager(viewPager);
