@@ -150,6 +150,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
         Common.hideKeyboard(this);
         finish();
+        setResult(11);
         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
         /*if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
@@ -253,19 +254,16 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
                 Intent mIntent = new Intent(MyProfileActivity.this, MyProfileActivity.class);
                 if (mBundle != null) {
-                    mBundle.putBoolean("isEnable", isEnable);
+                    mBundle.putBoolean(getString(R.string.isEnable), isEnable);
                 } else {
                     mBundle = new Bundle();
-                    mBundle.putBoolean("isEnable", isEnable);
+                    mBundle.putBoolean(getString(R.string.isEnable), isEnable);
                 }
 
                 mIntent.putExtras(mBundle);
                 startActivity(mIntent);
                 finish();
 
-                //SyncUser(id);
-                //setupViewPager(viewPager);
-                //tabLayout.setupWithViewPager(viewPager);
                 return false;
             }
         });
@@ -362,7 +360,9 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 }
 
                 sdate = ((FamilyFragment) family).edtsponse_bdate.getText().toString().trim();
-                sdate = Common.parseDateToddMMyyyy(sdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
+                if (!sdate.isEmpty()) {
+                    sdate = Common.parseDateToddMMyyyy(sdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
+                }
                 if (!sdate.equalsIgnoreCase("")) {
                     if (!Common.isThisDateValid(sdate, "yyyy-mm-dd")) {
                         valid = "Sponse Birth Date is not valid Format";
@@ -517,8 +517,11 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     }
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_NAME, Objects.requireNonNull(mViewholder.edtchild_name).getText());
                     String child_bday = Objects.requireNonNull(mViewholder.edtchild_bdate.getText().toString().trim());
-                    child_bday = Common.parseDateToddMMyyyy(child_bday, Common.ddMMMyyyy, Common.yyyy_MM_dd);
-                    if (!child_bday.equalsIgnoreCase("")) {
+                    if (!child_bday.isEmpty()) {
+                        child_bday = Common.parseDateToddMMyyyy(child_bday, Common.ddMMMyyyy, Common.yyyy_MM_dd);
+                    }
+
+                    if (!child_bday.isEmpty()) {
                         if (!Common.isThisDateValid(child_bday, "yyyy-mm-dd")) {
                             valid = "Child Birth Date is not valid Format";
                         }
@@ -805,6 +808,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
             Log.d(TAG, "step onKeyDown");
             finish();
+            setResult(11);
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
             /*if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {

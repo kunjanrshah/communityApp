@@ -317,8 +317,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 if (!mdate.isEmpty()) {
                     final String date = Common.parseDateToddMMyyyy(mdate, ddMMMyyyy, yyyy_MM_dd);
                     if (chk_marriage_bdate_rem.isChecked()) {
-                        msg = "Do you want to set Reminder for Marriage Date ?";
+                        msg = "Do you want to set Reminder for Marriage Date ? Type Message to wish ";
                         builder.setMessage(msg);
+                        builder.setCancelable(false);
                         final EditText input = new EditText(getActivity());
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         input.setLayoutParams(lp);
@@ -356,6 +357,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         }).show();
                     }
                 } else {
+                    chk_marriage_bdate_rem.setChecked(false);
                     Toast.makeText(getActivity(), "Marriage date not found!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -371,8 +373,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 if (!sbdate.isEmpty()) {
                     final String date = Common.parseDateToddMMyyyy(sbdate, ddMMMyyyy, yyyy_MM_dd);
                     if (chk_spouse_bdate_rem.isChecked()) {
-                        msg = "Do you want to set Reminder for Spouse BirthDate ?";
+                        msg = "Do you want to set Reminder for Spouse BirthDate ? Type Message to wish ";
                         builder.setMessage(msg);
+                        builder.setCancelable(false);
                         final EditText input = new EditText(getActivity());
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         input.setLayoutParams(lp);
@@ -410,6 +413,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         }).show();
                     }
                 } else {
+                    chk_spouse_bdate_rem.setChecked(false);
                     Toast.makeText(getActivity(), "Spouse Birthdate not found!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -724,8 +728,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 if (!bdate.isEmpty()) {
                     final String date = Common.parseDateToddMMyyyy(bdate, ddMMMyyyy, yyyy_MM_dd);
                     if (mViewholder.chk_child_bdate_rem.isChecked()) {
-                        msg = "Do you want to set Reminder for Child Birthdate ?";
+                        msg = "Do you want to set Reminder for Child Birthdate ? Type Message to wish ";
                         builder.setMessage(msg);
+                        builder.setCancelable(false);
                         final EditText input = new EditText(getActivity());
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         input.setLayoutParams(lp);
@@ -764,11 +769,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     }
                 } else {
                     Toast.makeText(getActivity(), "Child Birthdate not found!", Toast.LENGTH_SHORT).show();
-                    if (mViewholder.chk_child_bdate_rem.isChecked()) {
+                   // if (mViewholder.chk_child_bdate_rem.isChecked()) {
                         mViewholder.chk_child_bdate_rem.setChecked(false);
-                    } else {
-                        mViewholder.chk_child_bdate_rem.setChecked(true);
-                    }
+                   // } else {
+                    //    mViewholder.chk_child_bdate_rem.setChecked(true);
+                   // }
                 }
             }
         });

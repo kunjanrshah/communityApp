@@ -1,6 +1,7 @@
 package com.krs.vastipatrak.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -296,6 +297,15 @@ public class SearchFragment extends Fragment implements IAdminControl {
         return rootView;
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==11)
+        {
+            Log.d(TAG,"kunj Search Fragments");
+        }
+    }
 
     private void Memory_Allocation(View root) {
 
@@ -595,10 +605,11 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 total_records = response.getString(Common.Constant_Class.TOTAL_RECORDS);
             }
 
-            Objects.requireNonNull(listDataHeader).clear();
-            Objects.requireNonNull(listDataChild).clear();
+
             if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                 int total = 0;
+                Objects.requireNonNull(listDataHeader).clear();
+                Objects.requireNonNull(listDataChild).clear();
                 lvCustomList.setVisibility(View.VISIBLE);
                 try {
                     total = Integer.parseInt(total_records);

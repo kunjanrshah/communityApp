@@ -416,8 +416,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     final String date = Common.parseDateToddMMyyyy(bdate, ddMMMyyyy, yyyy_MM_dd);
                     android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
                     builder.setTitle(mActivity.getString(R.string.app_name));
+                    builder.setCancelable(false);
                     if (chk_profile_bdate_rem.isChecked()) {
-                        String message = "Do you want set Reminder for Birthdate ?";
+                        String message = "Do you want set Reminder for Birthdate ? Type Message to wish ";
                         builder.setMessage(message);
                         final EditText input = new EditText(getActivity());
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -457,6 +458,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     }
                 } else {
                     Toast.makeText(getActivity(), "Birthdate not found!", Toast.LENGTH_SHORT).show();
+                    chk_profile_bdate_rem.setChecked(false);
                 }
             }
         });
