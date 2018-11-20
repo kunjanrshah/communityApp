@@ -56,6 +56,8 @@ import com.krs.vastipatrak.utils.Common;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -97,6 +99,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private String mdate_rem = "0";
     private String sbdate_rem = "0";
     private HashMap<Integer, String> lstchild = null;
+    private String TAG = FamilyFragment.class.getSimpleName();
 
     public FamilyFragment() {
         // Required empty public constructor
@@ -578,7 +581,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
                     mViewholder.child_id = Integer.parseInt(Objects.requireNonNull(mObjChild).getChild_id());
                     mViewholder.edtchild_name.setText(mObjChild.getChild_name());
-                    Log.d(FamilyFragment.class.getName(),"kunj: "+mObjChild.getChild_name());
+                    Log.d(FamilyFragment.class.getName(), "kunj: " + mObjChild.getChild_name());
                     mViewholder.edtchild_bdate.setText(mObjChild.getChild_bday());
                     mViewholder.edtMobile.setText(mObjChild.getMobile());
                     mViewholder.chk_child_marriage.setChecked(mObjChild.isIs_married());
@@ -769,11 +772,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     }
                 } else {
                     Toast.makeText(getActivity(), "Child Birthdate not found!", Toast.LENGTH_SHORT).show();
-                   // if (mViewholder.chk_child_bdate_rem.isChecked()) {
-                        mViewholder.chk_child_bdate_rem.setChecked(false);
-                   // } else {
+                    // if (mViewholder.chk_child_bdate_rem.isChecked()) {
+                    mViewholder.chk_child_bdate_rem.setChecked(false);
+                    // } else {
                     //    mViewholder.chk_child_bdate_rem.setChecked(true);
-                   // }
+                    // }
                 }
             }
         });
@@ -788,12 +791,24 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 if (mViewholder.tbtn_interest.isChecked()) {
                     msg = "Interested for Matrimony ?";
                     builder.setMessage(msg);
-                    builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(@NonNull DialogInterface dialog, int which) {
                             dialog.dismiss();
+
+                            JSONArray mJsonArray=null;
+                            try {
+                                mJsonArray=new JSONArray();
+                                JSONObject mJSONObject=new JSONObject();
+                                mJSONObject.put("id",mViewholder.child_id);
+                                mJSONObject.put("is_interested",mViewholder.tbtn_interest.isChecked());
+                                mJsonArray.put(mJSONObject);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                           MatrimonyUpdateWS(mJsonArray);
                         }
                     });
-                    builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mViewholder.tbtn_interest.setChecked(false);
@@ -803,12 +818,23 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 } else {
                     msg = "Not interested for Matrimony ?";
                     builder.setMessage(msg);
-                    builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(@NonNull DialogInterface dialog, int which) {
                             dialog.dismiss();
+                            JSONArray mJsonArray=null;
+                            try {
+                                mJsonArray=new JSONArray();
+                                JSONObject mJSONObject=new JSONObject();
+                                mJSONObject.put("id",mViewholder.child_id);
+                                mJSONObject.put("is_interested",mViewholder.tbtn_interest.isChecked());
+                                mJsonArray.put(mJSONObject);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            MatrimonyUpdateWS(mJsonArray);
                         }
                     });
-                    builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(@NonNull DialogInterface dialog, int which) {
                             mViewholder.tbtn_interest.setChecked(true);
@@ -1014,7 +1040,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             }
         });
         addView.setTag(mViewholder);
-        child_container.addView(addView,child_container.getChildCount());
+        child_container.addView(addView, child_container.getChildCount());
     }
 
     private void selectImage() {
@@ -1043,6 +1069,66 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         });
         builder.show();
     }
+
+    private void MatrimonyUpdateWS(JSONArray jsonArray) {
+        if (Common.isOnline(mActivity)) {
+            JSONObject mJsonObject=null;
+            try {
+                mJsonObject=new JSONObject();
+                mJsonObject.put("childs",jsonArray);
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                if (MyProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                    mJsonObject.put(Common.Constant_Class.UPDATE_USER_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""));
+                }
+                mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Log.d(TAG,"MatrimonyUpdateWS: "+ mJsonObject.toString());
+            Common.showProgressDialog(getActivity());
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    try {
+                        Common.hideProgressDialog();
+                        String success = response.getString(Common.Constant_Class.SUCCESS);
+                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                            Toast.makeText(getActivity(), "Matrimony Updated", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getActivity(), "Something went wrong!", Toast.LENGTH_LONG).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    Common.hideProgressDialog();
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
+        }
+    }
+
 
     private void setReminder(String msg, String rem_date, final String rem_type, String rem_value, final int child_id) {
         if (Common.isOnline(mActivity)) {

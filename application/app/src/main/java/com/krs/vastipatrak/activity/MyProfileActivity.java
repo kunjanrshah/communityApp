@@ -604,7 +604,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 e.printStackTrace();
             }
 
-
+            Log.d(TAG,"kunj mJsonObject: "+mJsonObject);
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override

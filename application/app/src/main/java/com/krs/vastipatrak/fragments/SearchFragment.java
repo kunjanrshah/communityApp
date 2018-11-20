@@ -640,6 +640,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     String is_location_enable = mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE);
                     String user_lat = mJsondata.getString(Common.Constant_Class.USER_LAT);
                     String user_lng = mJsondata.getString(Common.Constant_Class.USER_LNG);
+                    String password = mJsondata.getString(Common.Constant_Class.PLAIN_PASSWORD);
                     String can_share = "0";
                     if (mJsondata.has(Common.Constant_Class.CAN_SHARE)) {
                         can_share = mJsondata.getString(Common.Constant_Class.CAN_SHARE);
@@ -658,7 +659,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     lpd.setIs_location_enable(is_location_enable);
                     lpd.setUser_lat(user_lat);
                     lpd.setUser_lng(user_lng);
-
+                    lpd.setPassword(password);
                     String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
                     String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
                     String birth_date = mJsondata.getString(Common.Constant_Class.BIRTH_DATE);

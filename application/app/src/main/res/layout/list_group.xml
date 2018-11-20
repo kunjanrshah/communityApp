@@ -88,8 +88,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:textColor="@color/colorPrimary"
                     android:text="No Data"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14dp"
                     android:visibility="gone" />
 
@@ -125,11 +125,11 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="bottom"
-                android:gravity="bottom"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/share_icon"
                 android:contentDescription="TODO"
-                android:focusable="false" />
+                android:focusable="false"
+                android:gravity="bottom" />
 
         </LinearLayout>
     </LinearLayout>
@@ -137,10 +137,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="-5dp"
-        android:orientation="horizontal">
+        android:layout_marginEnd="10dp"
+        android:orientation="vertical">
 
 
         <TextView
@@ -151,6 +151,15 @@
             android:text="Updated: "
             android:textColor="@android:color/black"
             android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:visibility="gone" />
     </LinearLayout>
 
 

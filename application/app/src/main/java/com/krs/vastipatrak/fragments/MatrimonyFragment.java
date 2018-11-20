@@ -120,10 +120,9 @@ public class MatrimonyFragment extends Fragment {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 int lastItem = firstVisibleItem + visibleItemCount;
                 if (lastItem == totalItemCount) {
-
-                    mFloatingActionButton.setVisibility(View.INVISIBLE);
+                    mFloatingActionButton.hide();
                 } else {
-                    mFloatingActionButton.setVisibility(View.VISIBLE);
+                    mFloatingActionButton.show();
                 }
             }
         });
@@ -356,8 +355,8 @@ public class MatrimonyFragment extends Fragment {
                     lpd.setProfilePicUrl(childrenData.getChild_img_url());
                     lpd.setName(childrenData.getChild_name());
                     lpd.setChild_gender(childrenData.getGender());
-                    lpd.setFatherName(data.getFather_name());
-                    lpd.setMotherName(data.getMother_name());
+                    lpd.setFatherName(data.getFirst_name()+""+data.getLast_name());
+                    lpd.setMotherName(data.getSpouse_name());
                     lpd.setCity(data.getCity());
                     lpd.setUpdated_time(data.getUpdated_time());
 

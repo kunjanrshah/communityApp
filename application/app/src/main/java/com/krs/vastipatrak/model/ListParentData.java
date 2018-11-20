@@ -8,7 +8,7 @@ public class ListParentData {
     private String str_profile_pic_url;
     private String status;
     private String id;
-
+    private String password;
     private String city;
     private String is_location_enable;
     private String updated_time;
@@ -22,6 +22,14 @@ public class ListParentData {
     private String type;
     private String str_name;
     private String Shared;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getShared() {
         return Shared;

@@ -206,6 +206,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String str_native = mListChildData.getNative();
         String phone = mListChildData.getPhone().trim().replaceAll("\\?", "").replaceAll("\\+", "");
 
+
         if (sharedUsers) {
             if (Shared != null && Shared.equalsIgnoreCase("from")) {
                 childViewHolder.ll_child.setBackground(_context.getResources().getDrawable(R.drawable.parent_shape1));
@@ -459,6 +460,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.tvCity = convertView.findViewById(R.id.tvCity);
             groupViewHolder.tvMail = convertView.findViewById(R.id.tvMail);
             groupViewHolder.txt_dist = convertView.findViewById(R.id.txt_dist);
+            groupViewHolder.tvPassword = convertView.findViewById(R.id.tvPassword);
 
             if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN) && !sharedUsers && !isNearby) {
                 groupViewHolder.checkbox.setVisibility(View.VISIBLE);
@@ -579,8 +581,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 openImageDialog(Name, imgURL);
             }
         });
+        String user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+        if (user_id.equalsIgnoreCase("4345")) {
+            String password = mListParentData.getPassword();
+            groupViewHolder.tvPassword.setVisibility(View.VISIBLE);
+            groupViewHolder.tvPassword.setText(password);
+        } else {
+            groupViewHolder.tvPassword.setVisibility(View.GONE);
+        }
+
         String updated_time = mListParentData.getUpdated_time();
-        Log.d(TAG, "kunj updated_time: " + updated_time);
         if (updated_time.equalsIgnoreCase("0")) {
             groupViewHolder.tvUpdatedTime.setText("Not Updated");
         } else {
@@ -1020,6 +1030,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView tvUpdatedTime;
         CheckBox checkbox;
         TextView txt_dist;
+        TextView tvPassword;
     }
 
     class CheckListener implements CompoundButton.OnCheckedChangeListener {

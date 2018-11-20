@@ -731,6 +731,17 @@ public class Common {
         return mlistProfileData;
     }
 
+    public static void alert(Context context, String message) {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
+        builder.setTitle(context.getString(R.string.app_name));
+        builder.setMessage(message);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
+    }
+
     public static void UpdateProfilePassword(String password, String id) {
 
         ListProfileData mListProfile = AppController.getInstance().realm.where(ListProfileData.class).equalTo(Common.Constant_Class.PROFILE_ID, id).findFirst();
@@ -2017,8 +2028,7 @@ public class Common {
 
     public static void watchYoutubeVideo(Context context, String id) {
         Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
-        Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse("http://www.youtube.com/watch?v=" + id));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + id));
         try {
             context.startActivity(appIntent);
         } catch (ActivityNotFoundException ex) {
@@ -2160,6 +2170,8 @@ public class Common {
 
         public static final String EMAIL_ADDRESS = "email_address";
         public static final String PASSWORD = "password";
+        public static final String PLAIN_PASSWORD = "plain_password";
+
         public static final String REPEAT_PASSWORD = "repeat_password";
         public static final String SUCCESS = "success";
         public static final String MESSAGE = "message";

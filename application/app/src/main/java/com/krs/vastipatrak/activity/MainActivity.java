@@ -864,6 +864,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 mEditor.apply();
                 Intent mIntent1 = new Intent(MainActivity.this, MyProfileActivity.class);
                 startActivity(mIntent1);
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 //  this.overridePendingTransition(0, 0);
                 break;
             case 2:
@@ -893,6 +894,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             case 9:
                 Intent mIntent = new Intent(MainActivity.this, TourActivity.class);
                 startActivity(mIntent);
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
              //   watchYoutubeVideo(MainActivity.this, "3d9CJP3wWPU");
                 break;
             case 10:
@@ -909,6 +911,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
             fragmentTransaction.replace(R.id.container_body, fragment);
             fragmentTransaction.commit();
             overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
