@@ -580,7 +580,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
         });
         String updated_time = mListParentData.getUpdated_time();
-        groupViewHolder.tvUpdatedTime.setText("Updated: " + Common.getUpdatedTime(updated_time));
+        Log.d(TAG, "kunj updated_time: " + updated_time);
+        if (updated_time.equalsIgnoreCase("0")) {
+            groupViewHolder.tvUpdatedTime.setText("Not Updated");
+        } else {
+            groupViewHolder.tvUpdatedTime.setText("Updated: " + Common.getUpdatedTime(updated_time));
+        }
 
         final String user_lat = mListParentData.getUser_lat();
         final String user_lng = mListParentData.getUser_lng();
