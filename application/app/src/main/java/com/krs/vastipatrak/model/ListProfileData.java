@@ -63,6 +63,8 @@ public class ListProfileData extends RealmObject {
     private String sponse_native;
     private String sponse_mobile;
 
+    private String sponse_bg;
+
     private String bdate_reminder_id;
     private String spouse_bdate_reminder_id;
     private String mdate_reminder_id;
@@ -90,7 +92,13 @@ public class ListProfileData extends RealmObject {
         this.mdate_reminder_id = mdate_reminder_id;
     }
 
+    public String getSponse_bg() {
+        return sponse_bg;
+    }
 
+    public void setSponse_bg(String sponse_bg) {
+        this.sponse_bg = sponse_bg;
+    }
    /* public boolean isChk_profile_bdate_rem() {
         return chk_profile_bdate_rem;
     }

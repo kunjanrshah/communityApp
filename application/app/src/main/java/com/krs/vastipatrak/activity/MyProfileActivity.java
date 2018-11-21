@@ -58,6 +58,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_WIFI_BLOOD_GROUP;
+
 
 public class MyProfileActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
@@ -337,12 +339,13 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
             // Familty Details
             String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "", sdate = "", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
-            String sponseNative = "", sponseMobile = "";
+            String sponseNative = "", sponseMobile = "",spouse_bg="";
             boolean chk_spouse_bdate_rem = false, chk_m_bdate_rem = false;
             LinearLayout child_container = null;
             ArrayList<Integer> lst_delID = null;
             try {
                 spouseName = ((FamilyFragment) family).edtSpouseName.getText().toString().trim();
+                spouse_bg = ((FamilyFragment) family).sp_spouse_blood.getSelectedItem().toString();
                 sponseMobile = ((FamilyFragment) family).edtsponse_mobile.getText().toString().trim();
                 sponseNative = ((FamilyFragment) family).edtsponse_nplace.getText().toString().trim();
                 SpouseFName = ((FamilyFragment) family).edtSpouseFName.getText().toString().trim();
@@ -402,6 +405,10 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 mListProfileData.setOffice_mobile(OMobile);
                 mListProfileData.setOffice_address(OAddress);
                 mListProfileData.setSpouse_name(spouseName);
+                if(!spouse_bg.equalsIgnoreCase(TITLE_WIFI_BLOOD_GROUP))
+                {
+                    mListProfileData.setSponse_bg(spouse_bg);
+                }
                 mListProfileData.setSponse_bdate(sdate);
                 mListProfileData.setSponse_mobile(sponseMobile);
                 mListProfileData.setSponse_native(sponseNative);
@@ -486,6 +493,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             // mListProfileData.getch
             Objects.requireNonNull(mJsonObject).put(Common.Constant_Class.MARRIAGE_DATE, mListProfileData.getMarriage_date());
             mJsonObject.put(Common.Constant_Class.SPOUSE_NAME, mListProfileData.getSpouse_name());
+            mJsonObject.put(Common.Constant_Class.SPOUSE_BG, mListProfileData.getSponse_bg());
             mJsonObject.put(Common.Constant_Class.SPOUSE_BDATE, mListProfileData.getSponse_bdate());
             mJsonObject.put(Common.Constant_Class.SPOUSE_MOBILE, mListProfileData.getSponse_mobile());
             mJsonObject.put(Common.Constant_Class.SPOUSE_NATIVE, mListProfileData.getSponse_native());

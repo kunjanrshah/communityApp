@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_CHILD_BLOOD_GROUP;
+import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_WIFI_BLOOD_GROUP;
 import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
@@ -366,7 +367,28 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String childMobile = ((FamilyFilter) family).edtcmobile.getText().toString().trim();
                 String childBplace = ((FamilyFilter) family).edtchildbplace.getText().toString().trim();
                 String bgroup = ((FamilyFilter) family).spinnerBlood.getSelectedItem().toString().trim();
+                String sp_spouse_blood = ((FamilyFilter) family).sp_spouse_blood.getSelectedItem().toString().trim();
+                String sp_start_age = ((FamilyFilter) family).sp_start_age.getSelectedItem().toString().trim();
+                String sp_end_age = ((FamilyFilter) family).sp_end_age.getSelectedItem().toString().trim();
                 String childGender = ((FamilyFilter) family).gender;
+
+                if(!sp_spouse_blood.equalsIgnoreCase(TITLE_WIFI_BLOOD_GROUP))
+                {
+                    mJsonObject.put(Common.Constant_Class.SPOUSE_BG, sp_spouse_blood);
+                    lstProceed.add("Spouse BG: " + sp_spouse_blood);
+                }
+
+                if(!sp_start_age.equalsIgnoreCase(getString(R.string.CHILD_AGE)))
+                {
+                    mJsonObject.put(Common.Constant_Class.FROM_CHILD_AGE, sp_start_age);
+                    lstProceed.add("Child Age From: " + sp_start_age);
+                }
+
+                if(!sp_end_age.equalsIgnoreCase(getString(R.string.CHILD_AGE)))
+                {
+                    mJsonObject.put(Common.Constant_Class.TO_CHILD_AGE, sp_end_age);
+                    lstProceed.add("Child Age To: " + sp_end_age);
+                }
 
                 if (child_married) {
                     mJsonObject.put(Common.Constant_Class.CHILD_MARRIAGE, child_married);

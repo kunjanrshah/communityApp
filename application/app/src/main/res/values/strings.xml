@@ -189,6 +189,10 @@
     <string name="title_sync">Sync</string>
     <string name="spinner_blood">Select BloodGroup</string>
     <string name="spinner_gotra">Select Gotra</string>
+
+    <string name="start_age">Start Age</string>
+    <string name="end_age">End Age</string>
+
     <string name="start">Start</string>
 
     <string name="home_location">Are you at your home ?\nMobile will set this location for your home.</string>
@@ -246,6 +250,7 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="near_by_users">User</string>
     <string name="isEnable">isEnable</string>
     <string name="ver">Ver. 1.15</string>
+    <string name="CHILD_AGE">CHILD AGE</string>
 
 
 </resources>

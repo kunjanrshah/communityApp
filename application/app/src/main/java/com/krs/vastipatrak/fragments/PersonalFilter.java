@@ -3,7 +3,6 @@ package com.krs.vastipatrak.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -19,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -26,52 +26,44 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.FilterActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
 import com.melnykov.fab.FloatingActionButton;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
-import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
-public class PersonalFilter extends Fragment {
+public class PersonalFilter extends Fragment implements AdapterView.OnItemSelectedListener {
 
 
     private static final int CONTACT_PICKER_RESULT = 1001;
-    public Spinner spinnerBlood,spinnerGotra;
+    public Spinner spinnerBlood, spinnerGotra;
     public RadioButton rbtnM;
     public RadioButton rbtnF;
     public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtCity;
-    public EditText edtbdateFrom,edtbdateTo;
-    private SharedPreferences mSharedPreferences;
+    public EditText edtbdateFrom, edtbdateTo;
     //public String bdateFrom="",bdateTo="";
-   // public String gender = "";
+    // public String gender = "";
     //private ObservableScrollView scroll_pdetails;
     ArrayAdapter<String> dataAdapter;
+    private Spinner sp_start_age;
+    private Spinner sp_end_age;
+    private SharedPreferences mSharedPreferences;
     private RadioButton rbtnB;
     private FloatingActionButton floatingActionButton;
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -146,9 +138,9 @@ public class PersonalFilter extends Fragment {
                                 String date = str_day + "/" + str_month + "/" + year;
                                 edtbdateFrom.setText(date);
                                 edtbdateTo.setText(date);
-                              //  date= year+ "-" + str_month + "-" + str_day;
-                               // bdateFrom=date;
-                               // bdateTo=date;
+                                //  date= year+ "-" + str_month + "-" + str_day;
+                                // bdateFrom=date;
+                                // bdateTo=date;
                             }
                         });
                         dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
@@ -166,7 +158,7 @@ public class PersonalFilter extends Fragment {
                 final int DRAWABLE_RIGHT = 2;
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if ((event.getRawX()-400) >= (edtbdateTo.getRight() - edtbdateTo.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if ((event.getRawX() - 400) >= (edtbdateTo.getRight() - edtbdateTo.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         Calendar now = Calendar.getInstance();
                         DatePickerDialog dpd = DatePickerDialog.newInstance((DatePickerDialog.OnDateSetListener) getActivity(), now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
                         dpd.setThemeDark(true);
@@ -192,7 +184,7 @@ public class PersonalFilter extends Fragment {
                                     if (Common.CompareTwoDates(edtbdateFrom.getText().toString(), date)) {
                                         edtbdateTo.setText(date);
                                         //date= year + "-" + str_month + "-" +str_day;
-                                      //  bdateTo=date;
+                                        //  bdateTo=date;
                                     } else {
                                         Toast.makeText(getActivity(), "Invalid date", Toast.LENGTH_SHORT).show();
                                     }
@@ -223,7 +215,7 @@ public class PersonalFilter extends Fragment {
             public boolean onTouch(View v, @NonNull MotionEvent event) {
                 final int DRAWABLE_RIGHT = 2;
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if ((event.getRawX()-500) >= (edtMobile.getRight() - edtMobile.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if ((event.getRawX() - 500) >= (edtMobile.getRight() - edtMobile.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         if (Build.VERSION.SDK_INT >= 23) {
                             if (Common.canReadContacts(Objects.requireNonNull(getActivity()))) {
                                 Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
@@ -246,11 +238,30 @@ public class PersonalFilter extends Fragment {
 
     private void MemoryAllocation(@NonNull View rootView) {
 
-       // gender = "";
+        // gender = "";
         //  scroll_pdetails = rootView.findViewById(R.id.scroll_pdetails);
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         floatingActionButton = rootView.findViewById(R.id.fab_psave);
         spinnerBlood = rootView.findViewById(R.id.spinnerBlood);
+        sp_start_age = rootView.findViewById(R.id.sp_start_age);
+        sp_end_age = rootView.findViewById(R.id.sp_end_age);
+
+        List<String> list = new ArrayList<String>();
+        for (int i = 1; i < 102; i++) {
+            list.add("Age " + (i-1));
+        }
+        list.add(0,"AGE");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_start_age.setOnItemSelectedListener(this);
+        sp_start_age.setAdapter(dataAdapter);
+
+        dataAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_end_age.setOnItemSelectedListener(this);
+        sp_end_age.setAdapter(dataAdapter);
+
         spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
         spinnerGotra.setAdapter(AppController.getInstance().dataAdapter);
         rbtnM = rootView.findViewById(R.id.rbtnM);
@@ -277,93 +288,96 @@ public class PersonalFilter extends Fragment {
     private void setPreferenceData() {
         SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_FILTER, Context.MODE_PRIVATE);
         String json = mSharedPreferences.getString("adv_search", "");
-        JSONObject mjsonObject = null;
-        try {
-            mjsonObject = new JSONObject(json);
-            if (mjsonObject.has(Common.Constant_Class.BLOOD_GROUP)) {
-                String compareValue = mjsonObject.getString(Common.Constant_Class.BLOOD_GROUP);
-                if (!compareValue.isEmpty()) {
-                    int spinnerPosition = dataAdapter.getPosition(compareValue);
-                    spinnerBlood.setSelection(spinnerPosition);
+        if (!json.isEmpty()) {
+            JSONObject mjsonObject = null;
+            try {
+                mjsonObject = new JSONObject(json);
+                if (mjsonObject.has(Common.Constant_Class.BLOOD_GROUP)) {
+                    String compareValue = mjsonObject.getString(Common.Constant_Class.BLOOD_GROUP);
+                    if (!compareValue.isEmpty()) {
+                        int spinnerPosition = dataAdapter.getPosition(compareValue);
+                        spinnerBlood.setSelection(spinnerPosition);
+                    }
                 }
-            }
-            if (mjsonObject.has(Common.Constant_Class.GENDER)) {
-                String gender = mjsonObject.getString(Common.Constant_Class.GENDER);
-                if (gender.equals("both")) {
-                    rbtnM.setChecked(false);
-                    rbtnF.setChecked(false);
-                    rbtnB.setChecked(true);
-                } else if (gender.equals("male")) {
-                    rbtnB.setChecked(false);
-                    rbtnF.setChecked(false);
-                    rbtnM.setChecked(true);
-                } else if (gender.equals("female")) {
-                    rbtnB.setChecked(false);
-                    rbtnM.setChecked(false);
-                    rbtnF.setChecked(true);
+                if (mjsonObject.has(Common.Constant_Class.GENDER)) {
+                    String gender = mjsonObject.getString(Common.Constant_Class.GENDER);
+                    if (gender.equals("both")) {
+                        rbtnM.setChecked(false);
+                        rbtnF.setChecked(false);
+                        rbtnB.setChecked(true);
+                    } else if (gender.equals("male")) {
+                        rbtnB.setChecked(false);
+                        rbtnF.setChecked(false);
+                        rbtnM.setChecked(true);
+                    } else if (gender.equals("female")) {
+                        rbtnB.setChecked(false);
+                        rbtnM.setChecked(false);
+                        rbtnF.setChecked(true);
+                    }
                 }
-            }
-            if (mjsonObject.has(Common.Constant_Class.FROM_BIRTH_DATE)) {
-                String bdate = mjsonObject.getString(Common.Constant_Class.FROM_BIRTH_DATE);
-              //  bdateFrom=bdate;
-                bdate=Common.parseDateToddMMyyyy(bdate,yyyy_MM_dd,ddMMMyyyy);
-                edtbdateFrom.setText(bdate);
-            }
-            if (mjsonObject.has(Common.Constant_Class.TO_BIRTH_DATE)) {
-                String bdate = mjsonObject.getString(Common.Constant_Class.TO_BIRTH_DATE);
-               // bdateTo=bdate;
-                bdate=Common.parseDateToddMMyyyy(bdate,yyyy_MM_dd,ddMMMyyyy);
-                edtbdateTo.setText(bdate);
-            }
+                if (mjsonObject.has(Common.Constant_Class.FROM_BIRTH_DATE)) {
+                    String bdate = mjsonObject.getString(Common.Constant_Class.FROM_BIRTH_DATE);
+                    //  bdateFrom=bdate;
+                    bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
+                    edtbdateFrom.setText(bdate);
+                }
+                if (mjsonObject.has(Common.Constant_Class.TO_BIRTH_DATE)) {
+                    String bdate = mjsonObject.getString(Common.Constant_Class.TO_BIRTH_DATE);
+                    // bdateTo=bdate;
+                    bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
+                    edtbdateTo.setText(bdate);
+                }
 
-            if (mjsonObject.has(Common.Constant_Class.FIRST_NAME)) {
-                String fname = mjsonObject.getString(Common.Constant_Class.FIRST_NAME);
-                edtFName.setText(fname);
-            }
-            if (mjsonObject.has(Common.Constant_Class.LAST_NAME)) {
-                edtLName.setText(mjsonObject.getString(Common.Constant_Class.LAST_NAME));
-            }
-            if (mjsonObject.has(Common.Constant_Class.FATHER_NAME)) {
-                edtFatherName.setText(mjsonObject.getString(Common.Constant_Class.FATHER_NAME));
-            }
-            if (mjsonObject.has(Common.Constant_Class.MOTHER_NAME)) {
-                edtMotherName.setText(mjsonObject.getString(Common.Constant_Class.MOTHER_NAME));
-            }
-            if (mjsonObject.has(Common.Constant_Class.EDUCATION)) {
-                edtEducation.setText(mjsonObject.getString(Common.Constant_Class.EDUCATION));
-            }
-
-            if (mjsonObject.has(Common.Constant_Class.BIRTH_PLACE)) {
-                edtBPlace.setText(mjsonObject.getString(Common.Constant_Class.BIRTH_PLACE));
-            }
-            if (mjsonObject.has(Common.Constant_Class.NATIVE_PLACE)) {
-                edtNPlace.setText(mjsonObject.getString(Common.Constant_Class.NATIVE_PLACE));
-            }
-            if (mjsonObject.has(Common.Constant_Class.CITY)) {
-                edtCity.setText(mjsonObject.getString(Common.Constant_Class.CITY));
-            }
-            if (mjsonObject.has(Common.Constant_Class.GOTRA)) {
-                 String gotra=mjsonObject.getString(Common.Constant_Class.GOTRA);
-                if (AppController.getInstance().lstgotra != null) {
-                    int i = AppController.getInstance().lstgotra.indexOf(gotra);
-                    spinnerGotra.setSelection(i);
+                if (mjsonObject.has(Common.Constant_Class.FIRST_NAME)) {
+                    String fname = mjsonObject.getString(Common.Constant_Class.FIRST_NAME);
+                    edtFName.setText(fname);
                 }
+                if (mjsonObject.has(Common.Constant_Class.LAST_NAME)) {
+                    edtLName.setText(mjsonObject.getString(Common.Constant_Class.LAST_NAME));
+                }
+                if (mjsonObject.has(Common.Constant_Class.FATHER_NAME)) {
+                    edtFatherName.setText(mjsonObject.getString(Common.Constant_Class.FATHER_NAME));
+                }
+                if (mjsonObject.has(Common.Constant_Class.MOTHER_NAME)) {
+                    edtMotherName.setText(mjsonObject.getString(Common.Constant_Class.MOTHER_NAME));
+                }
+                if (mjsonObject.has(Common.Constant_Class.EDUCATION)) {
+                    edtEducation.setText(mjsonObject.getString(Common.Constant_Class.EDUCATION));
+                }
+
+                if (mjsonObject.has(Common.Constant_Class.BIRTH_PLACE)) {
+                    edtBPlace.setText(mjsonObject.getString(Common.Constant_Class.BIRTH_PLACE));
+                }
+                if (mjsonObject.has(Common.Constant_Class.NATIVE_PLACE)) {
+                    edtNPlace.setText(mjsonObject.getString(Common.Constant_Class.NATIVE_PLACE));
+                }
+                if (mjsonObject.has(Common.Constant_Class.CITY)) {
+                    edtCity.setText(mjsonObject.getString(Common.Constant_Class.CITY));
+                }
+                if (mjsonObject.has(Common.Constant_Class.GOTRA)) {
+                    String gotra = mjsonObject.getString(Common.Constant_Class.GOTRA);
+                    if (AppController.getInstance().lstgotra != null) {
+                        int i = AppController.getInstance().lstgotra.indexOf(gotra);
+                        spinnerGotra.setSelection(i);
+                    }
+                }
+                if (mjsonObject.has(Common.Constant_Class.MOBILE)) {
+                    edtMobile.setText(mjsonObject.getString(Common.Constant_Class.MOBILE));
+                }
+                if (mjsonObject.has(Common.Constant_Class.ADDRESS)) {
+                    edtAddress.setText(mjsonObject.getString(Common.Constant_Class.ADDRESS));
+                }
+                if (mjsonObject.has(Common.Constant_Class.EMAIL_ADDRESS)) {
+                    edt_Eaddress.setText(mjsonObject.getString(Common.Constant_Class.EMAIL_ADDRESS));
+                }
+                if (mjsonObject.has(Common.Constant_Class.PHONE)) {
+                    edt_phone.setText(mjsonObject.getString(Common.Constant_Class.PHONE));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            if (mjsonObject.has(Common.Constant_Class.MOBILE)) {
-                edtMobile.setText(mjsonObject.getString(Common.Constant_Class.MOBILE));
-            }
-            if (mjsonObject.has(Common.Constant_Class.ADDRESS)) {
-                edtAddress.setText(mjsonObject.getString(Common.Constant_Class.ADDRESS));
-            }
-            if (mjsonObject.has(Common.Constant_Class.EMAIL_ADDRESS)) {
-                edt_Eaddress.setText(mjsonObject.getString(Common.Constant_Class.EMAIL_ADDRESS));
-            }
-            if (mjsonObject.has(Common.Constant_Class.PHONE)) {
-                edt_phone.setText(mjsonObject.getString(Common.Constant_Class.PHONE));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
+
     }
 
     private void setAdapterBGlist() {
@@ -382,30 +396,20 @@ public class PersonalFilter extends Fragment {
     }
 
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CONTACT_PICKER_RESULT && resultCode == Activity.RESULT_OK && null != data) {
             Uri contactUri = data.getData();
-            Cursor contactCursor = Objects.requireNonNull(getActivity()).getContentResolver().query(Objects.requireNonNull(contactUri),
-                    new String[]{ContactsContract.Contacts._ID}, null, null,
-                    null);
+            Cursor contactCursor = Objects.requireNonNull(getActivity()).getContentResolver().query(Objects.requireNonNull(contactUri), new String[]{ContactsContract.Contacts._ID}, null, null, null);
             String id = null;
             if (Objects.requireNonNull(contactCursor).moveToFirst()) {
-                id = contactCursor.getString(contactCursor
-                        .getColumnIndex(ContactsContract.Contacts._ID));
+                id = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.Contacts._ID));
             }
             contactCursor.close();
             String phoneNumber;
-            Cursor phoneCursor = getActivity().getContentResolver().query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "= ? ",
-                    new String[]{id}, null);
+            Cursor phoneCursor = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER}, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "= ? ", new String[]{id}, null);
             if (Objects.requireNonNull(phoneCursor).moveToFirst()) {
-                phoneNumber = phoneCursor
-                        .getString(phoneCursor
-                                .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 Log.v("phoneNumber :", "" + phoneNumber);
                 if (phoneNumber != null) {
                     edtMobile.setText(phoneNumber.replace("+", ""));
@@ -414,5 +418,15 @@ public class PersonalFilter extends Fragment {
             phoneCursor.close();
 
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

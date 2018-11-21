@@ -2236,6 +2236,7 @@ public class Common {
         public static final String TITLE_BLOOD_GROUP = "Blood Group";
         public static final String TITLE_GOTRA = "Gotra";
         public static final String TITLE_CHILD_BLOOD_GROUP = "Child BG";
+        public static final String TITLE_WIFI_BLOOD_GROUP = "Wife BG";
         public static final String A_POSITIVE = "A +VE";
         public static final String A_NAGATIVE = "A -VE";
         public static final String B_POSITIVE = "B +VE";
@@ -2250,6 +2251,8 @@ public class Common {
         public static final String IMG_MOTHER = "img_mother";
         public static final String IMG_FATHER = "img_father";
         public static final String SPOUSE_NAME = "spouse_name";
+        public static final String SPOUSE_BG = "spouse_bg";
+
         public static final String SPOUSE_NATIVE = "spouse_native_place";
         public static final String SPOUSE_BDATE = "spouse_birth_place";
         public static final String SPOUSE_MOBILE = "spouse_mobile";
@@ -2276,6 +2279,9 @@ public class Common {
         public static final String CHILD_BTIME = "birth_time";
         public static final String CHILD_BPLACE = "child_birth_place";
         public static final String CHILD_MARRIAGE = "isMarried";
+        public static final String SPOUSE_BG = "spouse_bg";
+        public static final String FROM_CHILD_AGE = "from_child_age";
+        public static final String TO_CHILD_AGE = "to_child_age";
         public static final String IS_INTERESTED = "is_interested";
         public static final String IS_MARRIED = "isMarried";
         public static final String CHILD_EDU = "child_edu";

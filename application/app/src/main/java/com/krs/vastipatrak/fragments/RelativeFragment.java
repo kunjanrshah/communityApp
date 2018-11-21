@@ -5,19 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,8 +81,7 @@ public class RelativeFragment extends Fragment {
                     try {
 
                         String success = response.getString(Common.Constant_Class.SUCCESS);
-                        if(success.equalsIgnoreCase("true"))
-                        {
+                        if (success.equalsIgnoreCase("true")) {
                             JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                             if (mJsonArray.length() > 0) {
                                 lstRelative = new ArrayList<>();
@@ -156,7 +148,6 @@ public class RelativeFragment extends Fragment {
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         }
     }
-
 
     private void setActionWS(String id, String status) {
         if (Common.isOnline(getActivity())) {
@@ -458,48 +449,54 @@ public class RelativeFragment extends Fragment {
             holder.txt_from.setText(from_name);
             holder.txt_to.setText(last_name);
             holder.txt_msg.setText(Common.getCapsSentences(relation));
+            holder.img_delete.setImageDrawable(getResources().getDrawable(R.drawable.cancel));
             if (status.contains(Common.Constant_Class.ACCEPTED)) {
                 holder.txt_request.setText("Requested by ");
                 holder.txt_approve.setText("Approved by ");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.primary_blue));
                 holder.txt_to.setTextColor(getResources().getColor(R.color.primary_blue));
-                holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.ico_approve));
+                holder.txt_status.setText("Reject");
+                holder.txt_status.setClickable(true);
+                //holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.ico_approve));
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape1));
-              // holder.txt_status.setText(Html.fromHtml(last_name + "  <b>" + Common.getCapsSentences(relation) + "</b> of " + from_name));
-               // makeLinks(holder.txt_status, new String[]{last_name, from_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
+                // holder.txt_status.setText(Html.fromHtml(last_name + "  <b>" + Common.getCapsSentences(relation) + "</b> of " + from_name));
+                // makeLinks(holder.txt_status, new String[]{last_name, from_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
             } else if (status.contains(Common.Constant_Class.REQUESTED)) {
                 holder.txt_request.setText("Requested by ");
                 holder.txt_approve.setText("To ");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 holder.txt_to.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 //holder.txt_status.setText(Html.fromHtml(from_name + " requested <b>" + Common.getCapsSentences(relation) + "</b> to " + last_name));
-                holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.cancel));
+                holder.txt_status.setText("Waiting");
+                holder.txt_status.setClickable(false);
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape10));
-               // makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
-            }else if (status.contains(Common.Constant_Class.REJECTED)) {
+                // makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
+            } else if (status.contains(Common.Constant_Class.REJECTED)) {
                 holder.txt_request.setText("Requested by ");
                 holder.txt_approve.setText("Rejected by ");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 holder.txt_to.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 //holder.txt_status.setText(Html.fromHtml(last_name + " rejected <b>" + Common.getCapsSentences(relation) + "</b> to " + from_name));
-                holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.cancel));
+                holder.txt_status.setText("Approve");
+                holder.txt_status.setClickable(true);
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape9));
-               // makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
+                // makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
             }
 
             if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
-                holder.img_status.setEnabled(true);
-                holder.img_status.setClickable(true);
-                holder.img_status.setLongClickable(true);
+                holder.txt_status.setEnabled(true);
+                holder.img_delete.setEnabled(true);
+                holder.txt_status.setClickable(true);
+                holder.img_delete.setClickable(true);
             } else {
-                holder.img_status.setEnabled(false);
-                holder.img_status.setClickable(false);
-                holder.img_status.setLongClickable(false);
+                holder.txt_status.setEnabled(false);
+                holder.img_delete.setEnabled(false);
+                holder.txt_status.setClickable(false);
+                holder.img_delete.setClickable(false);
             }
 
-
             final String finalLast_name = last_name;
-            holder.img_status.setOnClickListener(new View.OnClickListener() {
+            holder.txt_status.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String message = "";
@@ -528,15 +525,14 @@ public class RelativeFragment extends Fragment {
                                 dialog.dismiss();
                             }
                         }).show();
-                    } else {
-                        Toast.makeText(getActivity(), "Long Press to DELETE !", Toast.LENGTH_LONG).show();
                     }
                 }
             });
 
-            holder.img_status.setOnLongClickListener(new View.OnLongClickListener() {
+            holder.img_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
+                public void onClick(View v) {
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
                     builder.setTitle(getActivity().getString(R.string.app_name));
                     builder.setCancelable(false);
@@ -553,9 +549,10 @@ public class RelativeFragment extends Fragment {
 
                         }
                     }).show();
-                    return false;
+
                 }
             });
+
 
             holder.ll_from.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -593,9 +590,11 @@ public class RelativeFragment extends Fragment {
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {
-            final TextView txt_msg,txt_to,txt_from,txt_request,txt_approve;
-            final LinearLayout ll_relative,ll_from,ll_to;
-            final ImageView img_status;
+            final TextView txt_msg, txt_to, txt_from, txt_request, txt_approve;
+            final LinearLayout ll_relative, ll_from, ll_to;
+            final ImageView img_delete;
+            TextView txt_status;
+
 
             MyViewHolder(@NonNull View view) {
                 super(view);
@@ -609,7 +608,8 @@ public class RelativeFragment extends Fragment {
                 ll_relative = view.findViewById(R.id.ll_relative);
                 ll_from = view.findViewById(R.id.ll_from);
                 ll_to = view.findViewById(R.id.ll_to);
-                img_status = view.findViewById(R.id.img_status);
+                img_delete = view.findViewById(R.id.img_delete);
+                txt_status = view.findViewById(R.id.txt_status);
             }
         }
     }

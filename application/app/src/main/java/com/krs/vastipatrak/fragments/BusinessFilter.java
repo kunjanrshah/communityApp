@@ -89,51 +89,44 @@ public class BusinessFilter extends Fragment {
     private void setPreferenceData() {
         SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_FILTER, Context.MODE_PRIVATE);
         String json = mSharedPreferences.getString("adv_search", "");
-        JSONObject mjsonObject = null;
-        try {
-            mjsonObject = new JSONObject(json);
-            if (mjsonObject.has(Common.Constant_Class.OCCUPATION)) {
-                edtOccupation.setText(mjsonObject.getString(Common.Constant_Class.OCCUPATION));
-            }
-            if (mjsonObject.has(Common.Constant_Class.WORK)) {
-                edtWork.setText(mjsonObject.getString(Common.Constant_Class.WORK));
-            }
-            if (mjsonObject.has(Common.Constant_Class.OFFICE_MOBILE)) {
-                edtOMobile.setText(mjsonObject.getString(Common.Constant_Class.OFFICE_MOBILE));
-            }
-            if (mjsonObject.has(Common.Constant_Class.OFFICE_ADDRESS)) {
-                edtOAddress.setText(mjsonObject.getString(Common.Constant_Class.OFFICE_ADDRESS));
-            }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!json.isEmpty()) {
+            JSONObject mjsonObject = null;
+            try {
+                mjsonObject = new JSONObject(json);
+                if (mjsonObject.has(Common.Constant_Class.OCCUPATION)) {
+                    edtOccupation.setText(mjsonObject.getString(Common.Constant_Class.OCCUPATION));
+                }
+                if (mjsonObject.has(Common.Constant_Class.WORK)) {
+                    edtWork.setText(mjsonObject.getString(Common.Constant_Class.WORK));
+                }
+                if (mjsonObject.has(Common.Constant_Class.OFFICE_MOBILE)) {
+                    edtOMobile.setText(mjsonObject.getString(Common.Constant_Class.OFFICE_MOBILE));
+                }
+                if (mjsonObject.has(Common.Constant_Class.OFFICE_ADDRESS)) {
+                    edtOAddress.setText(mjsonObject.getString(Common.Constant_Class.OFFICE_ADDRESS));
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CONTACT_PICKER_RESULT && resultCode == Activity.RESULT_OK && null != data) {
             Uri contactUri = data.getData();
-            Cursor contactCursor = requireNonNull(getActivity()).getContentResolver().query(Objects.requireNonNull(contactUri),
-                    new String[]{ContactsContract.Contacts._ID}, null, null,
-                    null);
+            Cursor contactCursor = requireNonNull(getActivity()).getContentResolver().query(Objects.requireNonNull(contactUri), new String[]{ContactsContract.Contacts._ID}, null, null, null);
             String id = null;
             if (requireNonNull(contactCursor).moveToFirst()) {
-                id = contactCursor.getString(contactCursor
-                        .getColumnIndex(ContactsContract.Contacts._ID));
+                id = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.Contacts._ID));
             }
             contactCursor.close();
             String phoneNumber;
-            Cursor phoneCursor = getActivity().getContentResolver().query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "= ? ",
-                    new String[]{id}, null);
+            Cursor phoneCursor = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER}, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "= ? ", new String[]{id}, null);
             if (requireNonNull(phoneCursor).moveToFirst()) {
-                phoneNumber = phoneCursor
-                        .getString(phoneCursor
-                                .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 Log.v("phoneNumber :", "" + phoneNumber);
                 if (phoneNumber != null) {
                     edtOMobile.setText(phoneNumber.replace("+", ""));

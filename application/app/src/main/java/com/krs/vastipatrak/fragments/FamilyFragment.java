@@ -84,6 +84,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     public EditText edt_mdate, edtsponse_bdate;
     public CheckBox chk_marriage_bdate_rem = null;
     public CheckBox chk_spouse_bdate_rem = null;
+    public Spinner sp_spouse_blood;
+    ArrayAdapter<String> dataAdapter;
     private RadioButton rbtnChildYes;
     private String spouse_url = "";
     private String fspouse_url = "";
@@ -101,6 +103,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private HashMap<Integer, String> lstchild = null;
     private String TAG = FamilyFragment.class.getSimpleName();
 
+
     public FamilyFragment() {
         // Required empty public constructor
     }
@@ -110,7 +113,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_family, container, false);
         Memory_Allocation(rootView);
-
+        setAdapterBGlist();
         try {
             ListProfileData mListProfileData = ((MyProfileActivity) Objects.requireNonNull(getActivity())).getMyData();
             if (mListProfileData != null) {
@@ -455,6 +458,24 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         return rootView;
     }
 
+
+    private void setAdapterBGlist() {
+        List<String> blood = new ArrayList<>();
+        blood.add(Common.Constant_Class.TITLE_WIFI_BLOOD_GROUP);
+        blood.add(Common.Constant_Class.A_POSITIVE);
+        blood.add(Common.Constant_Class.A_NAGATIVE);
+        blood.add(Common.Constant_Class.B_POSITIVE);
+        blood.add(Common.Constant_Class.B_NAGATIVE);
+        blood.add(Common.Constant_Class.AB_POSITIVE);
+        blood.add(Common.Constant_Class.AB_NAGATIVE);
+        blood.add(Common.Constant_Class.O_POSITIVE);
+        blood.add(Common.Constant_Class.O_NAGATIVE);
+
+        dataAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, blood);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_spouse_blood.setAdapter(dataAdapter);
+    }
+
     private void Memory_Allocation(View root) {
 
         mActivity = Objects.requireNonNull(getActivity());
@@ -469,6 +490,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         img_spouse = root.findViewById(R.id.img_spouse);
         img_fspouse = root.findViewById(R.id.img_fspouse);
         img_mspouse = root.findViewById(R.id.img_mspouse);
+        sp_spouse_blood = root.findViewById(R.id.sp_spouse_blood);
         chk_marriage_bdate_rem = root.findViewById(R.id.chk_marriage_bdate_rem);
         chk_spouse_bdate_rem = root.findViewById(R.id.chk_spouse_bdate_rem);
         btn_add = root.findViewById(R.id.btn_add);
@@ -795,17 +817,17 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         public void onClick(@NonNull DialogInterface dialog, int which) {
                             dialog.dismiss();
 
-                            JSONArray mJsonArray=null;
+                            JSONArray mJsonArray = null;
                             try {
-                                mJsonArray=new JSONArray();
-                                JSONObject mJSONObject=new JSONObject();
-                                mJSONObject.put("id",mViewholder.child_id);
-                                mJSONObject.put("is_interested",mViewholder.tbtn_interest.isChecked());
+                                mJsonArray = new JSONArray();
+                                JSONObject mJSONObject = new JSONObject();
+                                mJSONObject.put("id", mViewholder.child_id);
+                                mJSONObject.put("is_interested", mViewholder.tbtn_interest.isChecked());
                                 mJsonArray.put(mJSONObject);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                           MatrimonyUpdateWS(mJsonArray);
+                            MatrimonyUpdateWS(mJsonArray);
                         }
                     });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -821,12 +843,12 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(@NonNull DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            JSONArray mJsonArray=null;
+                            JSONArray mJsonArray = null;
                             try {
-                                mJsonArray=new JSONArray();
-                                JSONObject mJSONObject=new JSONObject();
-                                mJSONObject.put("id",mViewholder.child_id);
-                                mJSONObject.put("is_interested",mViewholder.tbtn_interest.isChecked());
+                                mJsonArray = new JSONArray();
+                                JSONObject mJSONObject = new JSONObject();
+                                mJSONObject.put("id", mViewholder.child_id);
+                                mJSONObject.put("is_interested", mViewholder.tbtn_interest.isChecked());
                                 mJsonArray.put(mJSONObject);
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -1072,10 +1094,10 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
     private void MatrimonyUpdateWS(JSONArray jsonArray) {
         if (Common.isOnline(mActivity)) {
-            JSONObject mJsonObject=null;
+            JSONObject mJsonObject = null;
             try {
-                mJsonObject=new JSONObject();
-                mJsonObject.put("childs",jsonArray);
+                mJsonObject = new JSONObject();
+                mJsonObject.put("childs", jsonArray);
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 if (MyProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
                     mJsonObject.put(Common.Constant_Class.UPDATE_USER_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""));
@@ -1086,7 +1108,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Log.d(TAG,"MatrimonyUpdateWS: "+ mJsonObject.toString());
+            Log.d(TAG, "MatrimonyUpdateWS: " + mJsonObject.toString());
             Common.showProgressDialog(getActivity());
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
