@@ -74,7 +74,6 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.fragments.CalendarFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
-import com.krs.vastipatrak.fragments.FamilyTreeFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.HelpFragment;
 import com.krs.vastipatrak.fragments.HomeFragment;
@@ -96,8 +95,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import static com.krs.vastipatrak.utils.Common.watchYoutubeVideo;
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback, ConnectivityReceiver.ConnectivityReceiverListener {
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
@@ -892,9 +889,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new ChangePasswordFragment();
                 break;
             case 9:
-                Intent mIntent = new Intent(MainActivity.this, TourActivity.class);
+                fragment = new TourFragment();
+               /* Intent mIntent = new Intent(MainActivity.this, TourFragment.class);
                 startActivity(mIntent);
-                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);*/
              //   watchYoutubeVideo(MainActivity.this, "3d9CJP3wWPU");
                 break;
             case 10:

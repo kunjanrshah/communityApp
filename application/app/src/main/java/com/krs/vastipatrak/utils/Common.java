@@ -2279,7 +2279,6 @@ public class Common {
         public static final String CHILD_BTIME = "birth_time";
         public static final String CHILD_BPLACE = "child_birth_place";
         public static final String CHILD_MARRIAGE = "isMarried";
-        public static final String SPOUSE_BG = "spouse_bg";
         public static final String FROM_CHILD_AGE = "from_child_age";
         public static final String TO_CHILD_AGE = "to_child_age";
         public static final String IS_INTERESTED = "is_interested";

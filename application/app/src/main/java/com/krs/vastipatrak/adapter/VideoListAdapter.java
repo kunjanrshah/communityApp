@@ -17,9 +17,6 @@ import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.utils.Common;
 
-/**
- * Created by ofaroque on 8/13/15.
- */
 public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.VideoInfoHolder> {
 
 

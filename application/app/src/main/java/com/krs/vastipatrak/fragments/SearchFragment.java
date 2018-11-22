@@ -245,9 +245,9 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 int lastItem = firstVisibleItem + visibleItemCount;
                 if (lastItem == totalItemCount) {
 
-                    mFloatingActionButton.setVisibility(View.INVISIBLE);
+                    mFloatingActionButton.hide();
                 } else {
-                    mFloatingActionButton.setVisibility(View.VISIBLE);
+                    mFloatingActionButton.show();
                 }
             }
         });

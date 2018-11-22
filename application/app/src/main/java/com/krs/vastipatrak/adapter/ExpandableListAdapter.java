@@ -492,7 +492,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     groupViewHolder.txt_dist.setText("Now " + df2.format(milesTokm(Double.parseDouble(dist))) + "> Km");
                 } else {
                     groupViewHolder.txt_dist.setText("Last " + df2.format(milesTokm(Double.parseDouble(dist))) + "> Km");
-                    groupViewHolder.txt_dist.setTextColor(_context.getColor(R.color.navigationBarColor));
+                    groupViewHolder.txt_dist.setTextColor(_context.getResources().getColor(R.color.navigationBarColor));
                 }
             } else {
                 groupViewHolder.txt_dist.setText(df2.format(milesTokm(Double.parseDouble(dist))) + "> Km");

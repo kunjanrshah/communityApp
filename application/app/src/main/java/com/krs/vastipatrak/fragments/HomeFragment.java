@@ -333,7 +333,7 @@ public class HomeFragment extends Fragment {
 
     private void setVideoAdapter() {
 
-        mFloatingActionButton.setVisibility(View.GONE);
+        mFloatingActionButton.hide();
         mRecycleView.setVisibility(View.GONE);
         mSwipyRefreshLayout.setVisibility(View.GONE);
         videoRecyclerView.setVisibility(View.VISIBLE);

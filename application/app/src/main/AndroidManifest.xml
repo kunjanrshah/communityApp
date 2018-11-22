@@ -61,7 +61,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.TourActivity"
+            android:name=".activity.TourFragment"
             android:label="@string/theme_app_name"
             android:screenOrientation="portrait" />
         <activity
