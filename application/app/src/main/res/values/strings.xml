@@ -283,6 +283,7 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="isEnable">isEnable</string>
     <string name="ver">Ver. 1.15</string>
     <string name="CHILD_AGE">CHILD AGE</string>
+    <string name="SPOUSE_AGE">SPOUSE AGE</string>
 
 
 </resources>

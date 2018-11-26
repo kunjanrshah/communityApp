@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -61,7 +62,6 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -71,6 +71,7 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.krs.vastipatrak.activity.MyProfileActivity.chooseFragment;
 import static com.krs.vastipatrak.utils.Common.Constant_Class.BIRTH_DATE;
 import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
@@ -93,9 +94,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private RadioButton rbtnM;
     private RadioButton rbtnF;
     private CircleImageView img_profile;
-    private ImageView img_cancel;
-    private ImageView img_father;
-    private ImageView img_mother;
+    private CircleImageView img_father;
+    private CircleImageView img_mother;
+    private ImageView img_profile_cancel;
+    private ImageView img_father_cancel;
+    private ImageView img_mother_cancel;
     private TextView txt_home;
     private String img_selection = "";
     private String profile_url = "";
@@ -113,6 +116,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private Activity mActivity;
     private String profile_id = "";
     private Uri mCropImageUri;
+
     public PersonalFragment() {
 
     }
@@ -161,12 +165,36 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
 
-        img_cancel.setOnClickListener(new View.OnClickListener() {
+        img_profile_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                img_profile.setImageDrawable(getResources().getDrawable(R.drawable.user_profile));
-                img_selection = "profile";
+                img_profile.setImageResource(R.drawable.user_profile);
+                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.user_profile);
+                if (icon != null) {
+                    str_profile_hash = Common.getBase64(icon);
+                }
+            }
+        });
 
+        img_father_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                img_father.setImageResource(R.drawable.user_profile);
+                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.user_profile);
+                if (icon != null) {
+                    str_father_hash = Common.getBase64(icon);
+                }
+            }
+        });
+
+        img_mother_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                img_mother.setImageResource(R.drawable.user_profile);
+                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.user_profile);
+                if (icon != null) {
+                    str_mother_hash = Common.getBase64(icon);
+                }
             }
         });
 
@@ -191,7 +219,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             public void onClick(View v) {
                 if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
                     img_selection = "mother";
-                   startImageActivity();
+                    startImageActivity();
                 } else {
                     String Name = edtMotherName.getText().toString();
                     openImageDialog(Name, mother_url);
@@ -562,9 +590,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         return rootView;
     }
 
-    private void startImageActivity()
-    {
+    private void startImageActivity() {
         if (Common.hasPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) && Common.hasPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            chooseFragment=TAG;
             CropImage.startPickImageActivity(getActivity());
         }
     }
@@ -614,7 +642,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         mSharedPreferences = mActivity.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
-        //user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+
         edtFName = rootView.findViewById(R.id.edtFName);
         edtLName = rootView.findViewById(R.id.edtLName);
         edtFatherName = rootView.findViewById(R.id.edtFatherName);
@@ -632,7 +660,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtAddress = rootView.findViewById(R.id.edtAddress);
         edt_phone = rootView.findViewById(R.id.edt_phone);
         img_profile = rootView.findViewById(R.id.img_profile);
-        img_cancel = rootView.findViewById(R.id.img_cancel);
+        img_profile_cancel = rootView.findViewById(R.id.img_profile_cancel);
+        img_father_cancel = rootView.findViewById(R.id.img_father_cancel);
+        img_mother_cancel = rootView.findViewById(R.id.img_mother_cancel);
         img_father = rootView.findViewById(R.id.img_father);
         img_mother = rootView.findViewById(R.id.img_mother);
         tbtn_share = rootView.findViewById(R.id.tbtn_share);
@@ -1127,8 +1157,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             Toast.makeText(getActivity(), "Cancelling, required permissions are not granted", Toast.LENGTH_LONG).show();
         }
 
-        if(REQUEST_CODE==requestCode && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-        {
+        if (REQUEST_CODE == requestCode && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             CropImage.startPickImageActivity(getActivity());
         }
     }
@@ -1137,64 +1166,30 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // handle result of pick image chooser
-        Uri imageUri=null;
+        Uri imageUri = null;
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             imageUri = CropImage.getPickImageResultUri(getActivity(), data);
 
-            // For API >= 23 we need to check specifically that we have permissions to read external storage.
             if (CropImage.hasPermissionInManifest(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) && CropImage.hasPermissionInManifest(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 startCropImageActivity(imageUri);
             }
         }
 
         if (CropImage.isReadExternalStoragePermissionsRequired(getActivity(), imageUri)) {
-                // request permissions and handle the result in onRequestPermissionsResult()
-                mCropImageUri = imageUri;
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-            } else {
-                // no permissions required or already grunted, can start crop image activity
-
-            }
+            // request permissions and handle the result in onRequestPermissionsResult()
+            mCropImageUri = imageUri;
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        } else {
+            // no permissions required or already grunted, can start crop image activity
+        }
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == getActivity().RESULT_OK) {
                 setImageFromActivityResult(result.getUri());
-                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(getActivity(), "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
             }
         }
-
-
-       /* Bitmap bmp = null;
-        if (data != null) {
-
-            if (data.getData() == null) {
-                bmp = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
-            } else {
-                Uri selectedImage = data.getData();
-                try {
-                    bmp = Common.scaleImage(mActivity, selectedImage);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (bmp != null) {
-
-                switch (requestCode) {
-                    case 0:
-                        if (resultCode == Activity.RESULT_OK) {
-                            setImageFromActivityResult(bmp);
-                        }
-                        break;
-                    case 1:
-                        if (resultCode == Activity.RESULT_OK) {
-                            setImageFromActivityResult(bmp);
-                        }
-                        break;
-                }
-            }
-        }*/
     }
 
 
@@ -1202,40 +1197,24 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         assert mActivity != null;
         Bitmap bmp;
         if (img_selection.equalsIgnoreCase("profile")) {
-          //  Glide.with(mActivity).load(resultUri).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
             img_profile.setImageURI(resultUri);
             BitmapDrawable drawable = (BitmapDrawable) img_profile.getDrawable();
             bmp = drawable.getBitmap();
             str_profile_hash = Common.getBase64(bmp);
         } else if (img_selection.equalsIgnoreCase("father")) {
-            Glide.with(mActivity).load(resultUri).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_father);
-            img_profile.invalidate();
+            img_father.setImageURI(resultUri);
+            img_father.invalidate();
             BitmapDrawable drawable = (BitmapDrawable) img_father.getDrawable();
             bmp = drawable.getBitmap();
             str_father_hash = Common.getBase64(bmp);
         } else if (img_selection.equalsIgnoreCase("mother")) {
-            Glide.with(mActivity).load(resultUri).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mother);
-            img_profile.invalidate();
+            img_mother.setImageURI(resultUri);
+            img_mother.invalidate();
             BitmapDrawable drawable = (BitmapDrawable) img_mother.getDrawable();
             bmp = drawable.getBitmap();
             str_mother_hash = Common.getBase64(bmp);
         }
     }
-
-    private void setImageFromActivityResult(@NonNull Bitmap bmp) {
-        assert mActivity != null;
-        if (img_selection.equalsIgnoreCase("profile")) {
-            Glide.with(mActivity).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
-            str_profile_hash = Common.getBase64(bmp);
-        } else if (img_selection.equalsIgnoreCase("father")) {
-            Glide.with(mActivity).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_father);
-            str_father_hash = Common.getBase64(bmp);
-        } else if (img_selection.equalsIgnoreCase("mother")) {
-            Glide.with(mActivity).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mother);
-            str_mother_hash = Common.getBase64(bmp);
-        }
-    }
-
 
     @Override
     public void onItemSelected(@NonNull AdapterView<?> parent, View view, int position, long id) {

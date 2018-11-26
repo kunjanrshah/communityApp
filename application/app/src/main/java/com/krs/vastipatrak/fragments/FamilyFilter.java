@@ -63,6 +63,8 @@ public class FamilyFilter extends Fragment implements AdapterView.OnItemSelected
     private RadioGroup rgroupid;
     public Spinner sp_start_age;
     public Spinner sp_end_age;
+    public Spinner sp_spouse_start_age;
+    public Spinner sp_spouse_end_age;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -80,11 +82,16 @@ public class FamilyFilter extends Fragment implements AdapterView.OnItemSelected
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp_start_age.setOnItemSelectedListener(this);
         sp_start_age.setAdapter(dataAdapter);
-
-        dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp_end_age.setOnItemSelectedListener(this);
         sp_end_age.setAdapter(dataAdapter);
+
+        list.add(0, getString(R.string.SPOUSE_AGE));
+        dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_spouse_start_age.setOnItemSelectedListener(this);
+        sp_spouse_start_age.setAdapter(dataAdapter);
+        sp_spouse_end_age.setOnItemSelectedListener(this);
+        sp_spouse_end_age.setAdapter(dataAdapter);
 
         setAdapterBGlist();
         setPreferenceData();
@@ -329,6 +336,8 @@ public class FamilyFilter extends Fragment implements AdapterView.OnItemSelected
         sp_spouse_blood = rootView.findViewById(R.id.sp_spouse_blood);
         sp_start_age = rootView.findViewById(R.id.sp_start_age);
         sp_end_age = rootView.findViewById(R.id.sp_end_age);
+        sp_spouse_start_age= rootView.findViewById(R.id.sp_spouse_start_age);
+        sp_spouse_end_age= rootView.findViewById(R.id.sp_spouse_end_age);
         edtSpouseName = rootView.findViewById(R.id.edtSpouseName);
         edtSpouseFName = rootView.findViewById(R.id.edtSpouseFName);
         edtSpouseMName = rootView.findViewById(R.id.edtSpouseMName);

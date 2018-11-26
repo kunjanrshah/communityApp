@@ -57,12 +57,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_SPOUSE_BLOOD_GROUP;
 
 public class MyProfileActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
 
     public static boolean isEnable = false;
+    public static String chooseFragment = "";
     private final String TAG = MainActivity.class.getSimpleName();
     Snackbar snackbar;
     String id = "";
@@ -337,7 +339,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
             // Familty Details
             String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "", sdate = "", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
-            String sponseNative = "", sponseMobile = "",spouse_bg="",spouse_edu="";
+            String sponseNative = "", sponseMobile = "", spouse_bg = "", spouse_edu = "";
             boolean chk_spouse_bdate_rem = false, chk_m_bdate_rem = false;
             LinearLayout child_container = null;
             ArrayList<Integer> lst_delID = null;
@@ -405,8 +407,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 mListProfileData.setOffice_mobile(OMobile);
                 mListProfileData.setOffice_address(OAddress);
                 mListProfileData.setSpouse_name(spouseName);
-                if(!spouse_bg.equalsIgnoreCase(TITLE_SPOUSE_BLOOD_GROUP))
-                {
+                if (!spouse_bg.equalsIgnoreCase(TITLE_SPOUSE_BLOOD_GROUP)) {
                     mListProfileData.setSponse_bg(spouse_bg);
                 }
                 mListProfileData.setSpouse_education(spouse_edu);
@@ -639,8 +640,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                                     mEditor.apply();
                                     AppController.getInstance().isUpdate = true;
                                 }
-                              //  Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
-                                   alert(message);
+                                //  Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+                                alert(message);
                             } else {
                                 setupViewPager(viewPager);
                                 tabLayout.setupWithViewPager(viewPager);
@@ -791,7 +792,11 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        personal.onActivityResult(requestCode, resultCode, data);
+        if (chooseFragment.equalsIgnoreCase(FamilyFragment.class.getSimpleName())) {
+            family.onActivityResult(requestCode, resultCode, data);
+        } else if (chooseFragment.equalsIgnoreCase(PersonalFragment.class.getSimpleName())) {
+            personal.onActivityResult(requestCode, resultCode, data);
+        }
 
         switch (requestCode) {
             case Common.REQ_CODE_SPEECH_INPUT: {

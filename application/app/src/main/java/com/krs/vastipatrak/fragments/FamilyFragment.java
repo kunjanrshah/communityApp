@@ -1,5 +1,6 @@
 package com.krs.vastipatrak.fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,12 +11,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -47,12 +49,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.LoginActivity;
-import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -68,6 +71,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.app.Activity.RESULT_OK;
+import static com.krs.vastipatrak.activity.MyProfileActivity.chooseFragment;
 import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
@@ -76,7 +83,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
     private static final int CONTACT_PICKER_RESULT = 1001;
     private static final int CONTACT_PICKER_RESULT_CHILD = 1002;
-    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName, edtsponse_mobile, edtsponse_nplace,edtSpouseEdu;
+    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName, edtsponse_mobile, edtsponse_nplace, edtSpouseEdu;
     public String str_spouse_hash = "", str_fspouse_hash = "", str_mspouse_hash = "";
     public LinearLayout child_container = null;
     public ArrayList<Integer> lst_delID = null;
@@ -91,9 +98,14 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private String fspouse_url = "";
     private String mspouse_url = "";
     private Button btn_add;
-    private ImageView img_spouse;
-    private ImageView img_fspouse;
-    private ImageView img_mspouse;
+    private CircleImageView img_spouse;
+    private CircleImageView img_fspouse;
+    private CircleImageView img_mspouse;
+
+    private ImageView img_spouse_cancel;
+    private ImageView img_fspouse_cancel;
+    private ImageView img_mspouse_cancel;
+
     private String img_selection = "";
     private SharedPreferences mSharedPreferences;
     private Activity mActivity;
@@ -103,6 +115,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private HashMap<Integer, String> lstchild = null;
     private String TAG = FamilyFragment.class.getSimpleName();
     private List<String> blood;
+    private Uri mCropImageUri;
 
     public FamilyFragment() {
         // Required empty public constructor
@@ -237,7 +250,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             public void onClick(View v) {
                 if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
                     img_selection = "spouse";
-                    selectImage();
+                    startImageActivity();
                 } else {
                     String Name = edtSpouseName.getText().toString();
                     openImageDialog(Name, spouse_url);
@@ -251,7 +264,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             public void onClick(View v) {
                 if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
                     img_selection = "fspouse";
-                    selectImage();
+                    startImageActivity();
                 } else {
                     String Name = edtSpouseFName.getText().toString();
                     openImageDialog(Name, fspouse_url);
@@ -265,7 +278,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             public void onClick(View v) {
                 if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
                     img_selection = "mspouse";
-                    selectImage();
+                    startImageActivity();
                 } else {
                     String Name = edtMSpouseName.getText().toString();
                     openImageDialog(Name, mspouse_url);
@@ -455,6 +468,39 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             }
         });
 
+        img_spouse_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                img_spouse.setImageResource(R.drawable.user_profile);
+                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.user_profile);
+                if (icon != null) {
+                    str_spouse_hash = Common.getBase64(icon);
+                }
+            }
+        });
+
+        img_fspouse_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                img_fspouse.setImageResource(R.drawable.user_profile);
+                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.user_profile);
+                if (icon != null) {
+                    str_fspouse_hash = Common.getBase64(icon);
+                }
+            }
+        });
+
+        img_mspouse_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                img_mspouse.setImageResource(R.drawable.user_profile);
+                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.user_profile);
+                if (icon != null) {
+                    str_mspouse_hash = Common.getBase64(icon);
+                }
+            }
+        });
+
         return rootView;
     }
 
@@ -482,7 +528,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         edt_mdate = root.findViewById(R.id.edt_mdate);
         edtsponse_bdate = root.findViewById(R.id.edtsponse_bdate);
-        edtSpouseEdu= root.findViewById(R.id.edtSpouseEdu);
+        edtSpouseEdu = root.findViewById(R.id.edtSpouseEdu);
         edtsponse_mobile = root.findViewById(R.id.edtsponse_mobile);
         edtsponse_nplace = root.findViewById(R.id.edtsponse_nplace);
         edtSpouseName = root.findViewById(R.id.edtSpouseName);
@@ -491,6 +537,12 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         img_spouse = root.findViewById(R.id.img_spouse);
         img_fspouse = root.findViewById(R.id.img_fspouse);
         img_mspouse = root.findViewById(R.id.img_mspouse);
+
+        img_spouse_cancel = root.findViewById(R.id.img_spouse_cancel);
+        img_fspouse_cancel = root.findViewById(R.id.img_fspouse_cancel);
+        img_mspouse_cancel = root.findViewById(R.id.img_mspouse_cancel);
+
+
         sp_spouse_blood = root.findViewById(R.id.sp_spouse_blood);
         chk_marriage_bdate_rem = root.findViewById(R.id.chk_marriage_bdate_rem);
         chk_spouse_bdate_rem = root.findViewById(R.id.chk_spouse_bdate_rem);
@@ -686,7 +738,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
                             if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
                                 mViewholder.ImgHash = "selectImage";
-                                selectImage();
+                                startImageActivity();
                             } else {
                                 String Name = mViewholder.edtchild_name.getText().toString();
                                 openImageDialog(Name, child_url);
@@ -715,6 +767,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         final Viewholder mViewholder = new Viewholder();
         mViewholder.child_id = 0;
         mViewholder.img_child = addView.findViewById(R.id.img_child);
+        mViewholder.img_child_cancel = addView.findViewById(R.id.img_child_cancel);
         mViewholder.edtchild_name = addView.findViewById(R.id.edtchild_name);
         mViewholder.edtMobile = addView.findViewById(R.id.edtMobile);
         mViewholder.spinnerBlood = addView.findViewById(R.id.spinnerBlood);
@@ -897,10 +950,21 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
                 if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
                     mViewholder.ImgHash = "selectImage";
-                    selectImage();
+                    startImageActivity();
                 } else {
                     String Name = mViewholder.edtchild_name.getText().toString();
                     //  openImageDialog(Name, child_url);
+                }
+            }
+        });
+
+        mViewholder.img_child_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewholder.img_child.setImageResource(R.drawable.user_profile);
+                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.user_profile);
+                if (icon != null) {
+                    mViewholder.ImgHash = Common.getBase64(icon);
                 }
             }
         });
@@ -1075,6 +1139,14 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         child_container.addView(addView, child_container.getChildCount());
     }
 
+    private void startImageActivity() {
+        if (Common.hasPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) && Common.hasPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            chooseFragment=TAG;
+            CropImage.startPickImageActivity(getActivity());
+        }
+    }
+
+/*
     private void selectImage() {
         final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
 
@@ -1101,6 +1173,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         });
         builder.show();
     }
+*/
 
     private void MatrimonyUpdateWS(JSONArray jsonArray) {
         if (Common.isOnline(mActivity)) {
@@ -1242,7 +1315,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if ((requestCode == CONTACT_PICKER_RESULT || requestCode == CONTACT_PICKER_RESULT_CHILD) && resultCode == Activity.RESULT_OK && null != data) {
+        if ((requestCode == CONTACT_PICKER_RESULT || requestCode == CONTACT_PICKER_RESULT_CHILD) && resultCode == RESULT_OK && null != data) {
             Uri contactUri = data.getData();
             Cursor contactCursor = Objects.requireNonNull(getActivity()).getContentResolver().query(Objects.requireNonNull(contactUri), new String[]{ContactsContract.Contacts._ID}, null, null, null);
             String id = null;
@@ -1263,8 +1336,32 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             }
             phoneCursor.close();
         }
+        Uri imageUri = null;
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK) {
+            imageUri = CropImage.getPickImageResultUri(getActivity(), data);
 
-        Bitmap bmp = null;
+            if (CropImage.hasPermissionInManifest(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) && CropImage.hasPermissionInManifest(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                startCropImageActivity(imageUri);
+            }
+        }
+
+        if (CropImage.isReadExternalStoragePermissionsRequired(getActivity(), imageUri)) {
+            // request permissions and handle the result in onRequestPermissionsResult()
+            mCropImageUri = imageUri;
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        } else {
+            // no permissions required or already grunted, can start crop image activity
+        }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == getActivity().RESULT_OK) {
+                setImageFromActivityResult(result.getUri());
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(getActivity(), "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
+            }
+        }
+
+        /*Bitmap bmp = null;
         if (data != null) {
             if (data.getData() == null) {
                 bmp = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
@@ -1292,34 +1389,45 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         break;
                 }
             }
-        }
+        }*/
     }
 
-    private void setImageFromActivityResult(@NonNull Bitmap bmp) {
+    /**
+     * Start crop image activity for the given image.
+     */
+    private void startCropImageActivity(Uri imageUri) {
+        CropImage.activity(imageUri).setGuidelines(CropImageView.Guidelines.ON).setMultiTouchEnabled(true).start(getActivity());
+    }
 
+    private void setImageFromActivityResult(Uri resultUri) {
+        Bitmap bmp;
         if (img_selection.equalsIgnoreCase("spouse")) {
-            //    img_spouse.setImageBitmap(bmp);
-            Glide.with(mActivity).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_spouse);
+            img_spouse.setImageURI(resultUri);
+            BitmapDrawable drawable = (BitmapDrawable) img_spouse.getDrawable();
+            bmp = drawable.getBitmap();
             str_spouse_hash = Common.getBase64(bmp);
         } else if (img_selection.equalsIgnoreCase("fspouse")) {
-            //  img_fspouse.setImageBitmap(bmp);
-            Glide.with(mActivity).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_fspouse);
+            img_fspouse.setImageURI(resultUri);
+            BitmapDrawable drawable = (BitmapDrawable) img_fspouse.getDrawable();
+            bmp = drawable.getBitmap();
             str_fspouse_hash = Common.getBase64(bmp);
         } else if (img_selection.equalsIgnoreCase("mspouse")) {
-            //img_mspouse.setImageBitmap(bmp);
-            Glide.with(mActivity).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mspouse);
+            img_mspouse.setImageURI(resultUri);
+            BitmapDrawable drawable = (BitmapDrawable) img_mspouse.getDrawable();
+            bmp = drawable.getBitmap();
             str_mspouse_hash = Common.getBase64(bmp);
         }
         img_selection = "";
         for (int i = 0; i < child_container.getChildCount(); i++) {
             Viewholder cViewholder = (Viewholder) child_container.getChildAt(i).getTag();
             if (cViewholder.ImgHash.equalsIgnoreCase("selectImage")) {
-                Glide.with(mActivity).load(bmp).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(Objects.requireNonNull(cViewholder.img_child));
+                cViewholder.img_child.setImageURI(resultUri);
+                BitmapDrawable drawable = (BitmapDrawable) cViewholder.img_child.getDrawable();
+                bmp = drawable.getBitmap();
                 cViewholder.ImgHash = Common.getBase64(bmp);
                 break;
             }
         }
-
     }
 
     @Override
@@ -1358,7 +1466,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         public CheckBox chk_child_bdate_rem = null;
         public EditText edtchild_bdate = null;
         @Nullable
-        ImageView img_child = null;
+        CircleImageView img_child = null;
+        ImageView img_child_cancel = null;
         @Nullable
         RadioGroup radioGroupId = null;
         @Nullable
