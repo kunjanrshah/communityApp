@@ -76,7 +76,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
     private static final int CONTACT_PICKER_RESULT = 1001;
     private static final int CONTACT_PICKER_RESULT_CHILD = 1002;
-    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName, edtsponse_mobile, edtsponse_nplace;
+    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName, edtsponse_mobile, edtsponse_nplace,edtSpouseEdu;
     public String str_spouse_hash = "", str_fspouse_hash = "", str_mspouse_hash = "";
     public LinearLayout child_container = null;
     public ArrayList<Integer> lst_delID = null;
@@ -102,7 +102,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private String sbdate_rem = "0";
     private HashMap<Integer, String> lstchild = null;
     private String TAG = FamilyFragment.class.getSimpleName();
-
+    private List<String> blood;
 
     public FamilyFragment() {
         // Required empty public constructor
@@ -137,7 +137,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         dpd.vibrate(true);
                         dpd.dismissOnPause(false);
                         dpd.showYearPickerFirst(false);
-                        dpd.setTitle("Sponse Birth Date");
+                        dpd.setTitle("Spouse Birth Date");
                         dpd.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
@@ -460,8 +460,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
 
     private void setAdapterBGlist() {
-        List<String> blood = new ArrayList<>();
-        blood.add(Common.Constant_Class.TITLE_WIFI_BLOOD_GROUP);
+        blood = new ArrayList<>();
+        blood.add(Common.Constant_Class.TITLE_SPOUSE_BLOOD_GROUP);
         blood.add(Common.Constant_Class.A_POSITIVE);
         blood.add(Common.Constant_Class.A_NAGATIVE);
         blood.add(Common.Constant_Class.B_POSITIVE);
@@ -482,6 +482,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         edt_mdate = root.findViewById(R.id.edt_mdate);
         edtsponse_bdate = root.findViewById(R.id.edtsponse_bdate);
+        edtSpouseEdu= root.findViewById(R.id.edtSpouseEdu);
         edtsponse_mobile = root.findViewById(R.id.edtsponse_mobile);
         edtsponse_nplace = root.findViewById(R.id.edtsponse_nplace);
         edtSpouseName = root.findViewById(R.id.edtSpouseName);
@@ -509,6 +510,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
         edtsponse_bdate.setKeyListener(null);
         edtsponse_bdate.setCursorVisible(false);
+
+        edtSpouseEdu.setKeyListener(null);
+        edtSpouseEdu.setCursorVisible(false);
+
+        sp_spouse_blood.setClickable(false);
 
         edtsponse_mobile.setKeyListener(null);
         edtsponse_mobile.setCursorVisible(false);
@@ -539,6 +545,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtMSpouseName.setEnabled(true);
         edtsponse_bdate.setEnabled(true);
         edtsponse_nplace.setEnabled(true);
+        edtSpouseEdu.setEnabled(true);
+        sp_spouse_blood.setClickable(true);
         chk_marriage_bdate_rem.setVisibility(View.GONE);
         chk_spouse_bdate_rem.setVisibility(View.GONE);
     }
@@ -552,10 +560,12 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             DisableAll();
         }
         profile_id = mListProfileData.getProfile_id();
-        edtSpouseName.setText(Objects.requireNonNull(mListProfileData).getSpouse_name());
+        edtSpouseName.setText(mListProfileData.getSpouse_name());
+        edtSpouseEdu.setText(mListProfileData.getSpouse_education());
         edtsponse_nplace.setText(mListProfileData.getSponse_native());
         edtsponse_bdate.setText(mListProfileData.getSponse_bdate());
         edtsponse_mobile.setText(mListProfileData.getSponse_mobile());
+        sp_spouse_blood.setSelection(blood.indexOf(mListProfileData.getSponse_bg()));
 
         edt_mdate.setText(mListProfileData.getMarriage_date());
         edtSpouseFName.setText(mListProfileData.getSfather_name());

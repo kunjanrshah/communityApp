@@ -205,19 +205,17 @@
 <![CDATA[
  *જૈ જૈ શ્રી ગોકુલેશ*
  \n => આપણે જોઇએ છે કે આપણી Vastipatrak એપને આપ સૌનો સારો પ્રતિસાદ મળી રહ્યો છે...
-  \n\n*દરરોજ ઓછામાં ઓછી 50 જેટલી Request અમને મળે છે...*
+  \n\n
 પણ અમે જોયું કે...
 
 \n\n૧) *એપ આપ સૌ એ ડાઉનલોડ કરી છે પણ આપની પ્રોફાઈલ અપડેટ નથી કરી..તો એ ખાસ કરવી..*
-
-\n\n૨) બીજું કે *ઘણા અનમેરિડ છોકરા કે છોકરીઓ પણ આ એપ ડાઉનલોડ કરી રહ્યા છેજે સારું છે પણ તેમની અલગ પ્રોફાઈલ ન બનાવતા ફેમીલી ની એક જ પ્રોફાઈલ બનાવાય તે આવકાર્ય છે..*
 \n\n
   *3 પ્રકારની માહિતી આપને ભરવી જરૂરી છે..*
 \n1. *પોતાની પ્રોફાઈલ*
-\n2. *occupation (ધંધાને લગતી વિગતો)*
+\n2. *Occupation (ધંધાને લગતી વિગતો)*
 \n3. *My family (પરિવાર ની વિગતો)*
 
- \n\n*family પર્સન જ પ્રોફાઈલ અલગ બનાવે..*
+ \n\n*Family પર્સન જ પ્રોફાઈલ અલગ બનાવે..*
 \n*અને ડુપ્લિકેશન મહેરબાની કરી ન કરશો..*
 
 
@@ -240,12 +238,6 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
 ]]>
 </string>
 
-    <!--<string name="nice_html">
-<![CDATA[
-https://play.google.com/store/apps/details?id=com.krs.vastipatrak
-\nDownload the Vastiparak app and update your profile.\nHi, This is %s from Vastipatrak App. \nJay Shree Krishna %s
-]]>
-</string>-->
     <string name="gotra">Gotra :</string>
     <string name="blood_group">Blood Group :</string>
     <string name="mobile">Mobile :</string>

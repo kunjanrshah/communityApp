@@ -359,7 +359,7 @@ public class FamilyFilter extends Fragment implements AdapterView.OnItemSelected
         blood_cate.add(Common.Constant_Class.O_POSITIVE);
         blood_cate.add(Common.Constant_Class.O_NAGATIVE);
 
-        blood_sate.add(Common.Constant_Class.TITLE_WIFI_BLOOD_GROUP);
+        blood_sate.add(Common.Constant_Class.TITLE_SPOUSE_BLOOD_GROUP);
         blood_sate.add(Common.Constant_Class.A_POSITIVE);
         blood_sate.add(Common.Constant_Class.A_NAGATIVE);
         blood_sate.add(Common.Constant_Class.B_POSITIVE);

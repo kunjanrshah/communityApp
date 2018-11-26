@@ -153,7 +153,7 @@ public class Common {
         return (Common.hasPermission(mContext, Manifest.permission.READ_CONTACTS));
     }
 
-    private static boolean hasPermission(@NonNull Context mContext, @NonNull String perm) {
+    public static boolean hasPermission(@NonNull Context mContext, @NonNull String perm) {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
     }
 
@@ -309,15 +309,16 @@ public class Common {
         Objects.requireNonNull(is).close();
 
         int rotatedWidth, rotatedHeight;
-        int orientation = getOrientation(context, photoUri);
+        rotatedWidth = dbo.outWidth;
+        rotatedHeight = dbo.outHeight;
 
+        /*int orientation = getOrientation(context, photoUri);
         if (orientation == 90 || orientation == 270) {
             rotatedWidth = dbo.outHeight;
             rotatedHeight = dbo.outWidth;
         } else {
-            rotatedWidth = dbo.outWidth;
-            rotatedHeight = dbo.outHeight;
-        }
+
+        }*/
 
         Bitmap srcBitmap;
         is = context.getContentResolver().openInputStream(photoUri);
@@ -340,12 +341,12 @@ public class Common {
          * if the orientation is not 0 (or -1, which means we don't know), we
          * have to do a rotation.
          */
-        if (orientation > 0) {
+        /*if (orientation > 0) {
             Matrix matrix = new Matrix();
             matrix.postRotate(orientation);
 
             srcBitmap = Bitmap.createBitmap(srcBitmap, 0, 0, srcBitmap.getWidth(), srcBitmap.getHeight(), matrix, true);
-        }
+        }*/
 
         String type = context.getContentResolver().getType(photoUri);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -883,6 +884,12 @@ public class Common {
 
             if (mJsonObject.has(Constant_Class.SPOUSE_NATIVE)) {
                 mListProfileData.setSponse_native(mJsonObject.getString(Common.Constant_Class.SPOUSE_NATIVE));
+            }
+            if (mJsonObject.has(Constant_Class.SPOUSE_EDU)) {
+                mListProfileData.setSpouse_education(mJsonObject.getString(Common.Constant_Class.SPOUSE_EDU));
+            }
+            if (mJsonObject.has(Constant_Class.SPOUSE_BG)) {
+                mListProfileData.setSponse_bg(mJsonObject.getString(Common.Constant_Class.SPOUSE_BG));
             }
 
             if (mJsonObject.has(Constant_Class.SPOUSE_BDATE)) {
@@ -2236,7 +2243,7 @@ public class Common {
         public static final String TITLE_BLOOD_GROUP = "Blood Group";
         public static final String TITLE_GOTRA = "Gotra";
         public static final String TITLE_CHILD_BLOOD_GROUP = "Child BG";
-        public static final String TITLE_WIFI_BLOOD_GROUP = "Wife BG";
+        public static final String TITLE_SPOUSE_BLOOD_GROUP = "SPOUSE BG";
         public static final String A_POSITIVE = "A +VE";
         public static final String A_NAGATIVE = "A -VE";
         public static final String B_POSITIVE = "B +VE";
@@ -2251,7 +2258,9 @@ public class Common {
         public static final String IMG_MOTHER = "img_mother";
         public static final String IMG_FATHER = "img_father";
         public static final String SPOUSE_NAME = "spouse_name";
-        public static final String SPOUSE_BG = "spouse_bg";
+
+        public static final String SPOUSE_BG = "spouse_blood_group";
+        public static final String SPOUSE_EDU = "spouse_education";
 
         public static final String SPOUSE_NATIVE = "spouse_native_place";
         public static final String SPOUSE_BDATE = "spouse_birth_place";

@@ -245,9 +245,10 @@ public class MatrimonyFragment extends Fragment {
                             if (response.has(Common.Constant_Class.TOTAL_RECORDS)) {
                                 total_records = response.getString(Common.Constant_Class.TOTAL_RECORDS);
                             }
-                            listDataHeader.clear();
-                            listDataChild.clear();
+
                             if (success) {
+                                listDataHeader.clear();
+                                listDataChild.clear();
                                 RealmResults<MatrimonyProfileData> profileData = realm.where(MatrimonyProfileData.class).findAll();
                                 realm.beginTransaction();
                                 profileData.deleteAllFromRealm();

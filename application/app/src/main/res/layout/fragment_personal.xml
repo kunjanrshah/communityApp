@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="10dp"
     android:layout_marginTop="10dp">
 
@@ -23,13 +24,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+                    <FrameLayout
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content">
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/img_profile"
+                            android:layout_width="@dimen/profile_image_width"
+                            android:layout_height="@dimen/profile_image_height"
+                            android:layout_centerInParent="true"
+                            app:civ_border_color="@color/colorAccent"
+                            android:contentDescription="TODO"
+                            app:civ_border_width="1dp"
+                            android:src="@drawable/user_profile" />
+                        <ImageView
+                            android:id="@+id/img_cancel"
+                            android:layout_width="35dip"
+                            android:layout_height="35dip"
+                            android:padding="5dp"
+                            android:layout_gravity="right"
+                            android:contentDescription="TODO"
+                            android:src="@drawable/cancel"
+                            />
 
-                    <ImageView
-                        android:id="@+id/img_profile"
-                        android:layout_width="@dimen/profile_image_width"
-                        android:layout_height="@dimen/profile_image_height"
-                        android:contentDescription="TODO"
-                        android:src="@drawable/user_profile" />
+                    </FrameLayout>
+
 
                     <ToggleButton
                         android:id="@+id/tbtn_share"

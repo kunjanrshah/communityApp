@@ -57,9 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_WIFI_BLOOD_GROUP;
-
+import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_SPOUSE_BLOOD_GROUP;
 
 public class MyProfileActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
@@ -339,7 +337,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
             // Familty Details
             String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "", sdate = "", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
-            String sponseNative = "", sponseMobile = "",spouse_bg="";
+            String sponseNative = "", sponseMobile = "",spouse_bg="",spouse_edu="";
             boolean chk_spouse_bdate_rem = false, chk_m_bdate_rem = false;
             LinearLayout child_container = null;
             ArrayList<Integer> lst_delID = null;
@@ -363,6 +361,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 }
 
                 sdate = ((FamilyFragment) family).edtsponse_bdate.getText().toString().trim();
+                spouse_edu = ((FamilyFragment) family).edtSpouseEdu.getText().toString().trim();
+
                 if (!sdate.isEmpty()) {
                     sdate = Common.parseDateToddMMyyyy(sdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
                 }
@@ -405,10 +405,11 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 mListProfileData.setOffice_mobile(OMobile);
                 mListProfileData.setOffice_address(OAddress);
                 mListProfileData.setSpouse_name(spouseName);
-                if(!spouse_bg.equalsIgnoreCase(TITLE_WIFI_BLOOD_GROUP))
+                if(!spouse_bg.equalsIgnoreCase(TITLE_SPOUSE_BLOOD_GROUP))
                 {
                     mListProfileData.setSponse_bg(spouse_bg);
                 }
+                mListProfileData.setSpouse_education(spouse_edu);
                 mListProfileData.setSponse_bdate(sdate);
                 mListProfileData.setSponse_mobile(sponseMobile);
                 mListProfileData.setSponse_native(sponseNative);
@@ -494,6 +495,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             Objects.requireNonNull(mJsonObject).put(Common.Constant_Class.MARRIAGE_DATE, mListProfileData.getMarriage_date());
             mJsonObject.put(Common.Constant_Class.SPOUSE_NAME, mListProfileData.getSpouse_name());
             mJsonObject.put(Common.Constant_Class.SPOUSE_BG, mListProfileData.getSponse_bg());
+            mJsonObject.put(Common.Constant_Class.SPOUSE_EDU, mListProfileData.getSpouse_education());
             mJsonObject.put(Common.Constant_Class.SPOUSE_BDATE, mListProfileData.getSponse_bdate());
             mJsonObject.put(Common.Constant_Class.SPOUSE_MOBILE, mListProfileData.getSponse_mobile());
             mJsonObject.put(Common.Constant_Class.SPOUSE_NATIVE, mListProfileData.getSponse_native());
@@ -637,8 +639,8 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                                     mEditor.apply();
                                     AppController.getInstance().isUpdate = true;
                                 }
-                                Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
-                                //                                alert(message);
+                              //  Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+                                   alert(message);
                             } else {
                                 setupViewPager(viewPager);
                                 tabLayout.setupWithViewPager(viewPager);
@@ -789,6 +791,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        personal.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
             case Common.REQ_CODE_SPEECH_INPUT: {

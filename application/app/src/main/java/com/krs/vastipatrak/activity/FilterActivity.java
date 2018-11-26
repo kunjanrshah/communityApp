@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_CHILD_BLOOD_GROUP;
-import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_WIFI_BLOOD_GROUP;
+import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_SPOUSE_BLOOD_GROUP;
 import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
@@ -372,7 +372,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String sp_end_age = ((FamilyFilter) family).sp_end_age.getSelectedItem().toString().trim();
                 String childGender = ((FamilyFilter) family).gender;
 
-                if(!sp_spouse_blood.equalsIgnoreCase(TITLE_WIFI_BLOOD_GROUP))
+                if(!sp_spouse_blood.equalsIgnoreCase(TITLE_SPOUSE_BLOOD_GROUP))
                 {
                     mJsonObject.put(Common.Constant_Class.SPOUSE_BG, sp_spouse_blood);
                     lstProceed.add("Spouse BG: " + sp_spouse_blood);

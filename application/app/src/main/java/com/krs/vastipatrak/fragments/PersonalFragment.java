@@ -1,5 +1,6 @@
 package com.krs.vastipatrak.fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,15 +9,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -49,7 +49,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.LoginActivity;
-import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListProfileData;
@@ -62,10 +61,7 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -73,7 +69,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static android.app.Activity.RESULT_OK;
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.krs.vastipatrak.utils.Common.Constant_Class.BIRTH_DATE;
 import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
@@ -82,6 +79,7 @@ import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 public class PersonalFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
 
+    final int REQUEST_CODE = 100;
     private final String TAG = "PersonalFragment";
     public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbTime = null, edtCity = null;
     //public String bdate = "";
@@ -94,7 +92,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private ToggleButton tbtn_share;
     private RadioButton rbtnM;
     private RadioButton rbtnF;
-    private ImageView img_profile;
+    private CircleImageView img_profile;
+    private ImageView img_cancel;
     private ImageView img_father;
     private ImageView img_mother;
     private TextView txt_home;
@@ -113,7 +112,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private double user_lng;
     private Activity mActivity;
     private String profile_id = "";
-
+    private Uri mCropImageUri;
     public PersonalFragment() {
 
     }
@@ -153,11 +152,20 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                 if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
                     img_selection = "profile";
-                    selectImage();
+                    startImageActivity();
                 } else {
                     String Name = edtFName.getText().toString() + " " + edtLName.getText().toString();
                     openImageDialog(Name, profile_url);
                 }
+
+            }
+        });
+
+        img_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                img_profile.setImageDrawable(getResources().getDrawable(R.drawable.user_profile));
+                img_selection = "profile";
 
             }
         });
@@ -169,7 +177,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                 if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
                     img_selection = "father";
-                    selectImage();
+                    startImageActivity();
                 } else {
                     String Name = edtFatherName.getText().toString();
                     openImageDialog(Name, father_url);
@@ -183,7 +191,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             public void onClick(View v) {
                 if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
                     img_selection = "mother";
-                    selectImage();
+                   startImageActivity();
                 } else {
                     String Name = edtMotherName.getText().toString();
                     openImageDialog(Name, mother_url);
@@ -542,7 +550,23 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
 
+        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Common.hasPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                requestPermissions(permissions, REQUEST_CODE);
+            }
+            if (!Common.hasPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                requestPermissions(permissions, REQUEST_CODE);
+            }
+        }
         return rootView;
+    }
+
+    private void startImageActivity()
+    {
+        if (Common.hasPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) && Common.hasPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            CropImage.startPickImageActivity(getActivity());
+        }
     }
 
     private void openImageDialog(String name, String url) {
@@ -555,33 +579,35 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         dialog.show();
     }
 
-    private void selectImage() {
-        final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
+    /*
+        private void selectImage() {
+            final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-        builder.setTitle("Add Photo!");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(@NonNull DialogInterface dialog, int item) {
-                if (items[item].equals("Take Photo")) {
-                    if (Common.canCAMARA(mActivity)) {
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(intent, 0);
-                    } else {
-                        requestPermissions(MainActivity.CALL_CAMARA, MainActivity.CAMARA_REQUEST);
+            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+            builder.setTitle("Add Photo!");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(@NonNull DialogInterface dialog, int item) {
+                    if (items[item].equals("Take Photo")) {
+                        if (Common.canCAMARA(mActivity)) {
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(intent, 0);
+                        } else {
+                            requestPermissions(MainActivity.CALL_CAMARA, MainActivity.CAMARA_REQUEST);
+                        }
+
+                    } else if (items[item].equals("Choose from Library")) {
+                        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        intent.setType("image/*");
+                        startActivityForResult(Intent.createChooser(intent, "Select File"), 1);
+                    } else if (items[item].equals("Cancel")) {
+                        dialog.dismiss();
                     }
-
-                } else if (items[item].equals("Choose from Library")) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*");
-                    startActivityForResult(Intent.createChooser(intent, "Select File"), 1);
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
                 }
-            }
-        });
-        builder.show();
-    }
+            });
+            builder.show();
+        }
+    */
     private void MemoryAllocation(View rootView) {
 
 
@@ -606,6 +632,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtAddress = rootView.findViewById(R.id.edtAddress);
         edt_phone = rootView.findViewById(R.id.edt_phone);
         img_profile = rootView.findViewById(R.id.img_profile);
+        img_cancel = rootView.findViewById(R.id.img_cancel);
         img_father = rootView.findViewById(R.id.img_father);
         img_mother = rootView.findViewById(R.id.img_mother);
         tbtn_share = rootView.findViewById(R.id.tbtn_share);
@@ -775,11 +802,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 spinnerBlood.setSelection(5);
             } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_NAGATIVE)) {
                 spinnerBlood.setSelection(6);
-            }
-            else if (blood.equalsIgnoreCase(Common.Constant_Class.AB_POSITIVE)) {
+            } else if (blood.equalsIgnoreCase(Common.Constant_Class.AB_POSITIVE)) {
                 spinnerBlood.setSelection(7);
-            }
-            else if (blood.equalsIgnoreCase(Common.Constant_Class.AB_NAGATIVE)) {
+            } else if (blood.equalsIgnoreCase(Common.Constant_Class.AB_NAGATIVE)) {
                 spinnerBlood.setSelection(8);
             }
             if (mListProfileData.getGender().equalsIgnoreCase("male") || mListProfileData.getGender().equalsIgnoreCase("")) {
@@ -1086,11 +1111,61 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         }).show();
     }
 
+    /**
+     * Start crop image activity for the given image.
+     */
+    private void startCropImageActivity(Uri imageUri) {
+        CropImage.activity(imageUri).setGuidelines(CropImageView.Guidelines.ON).setMultiTouchEnabled(true).start(getActivity());
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (mCropImageUri != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // required permissions granted, start crop image activity
+            startCropImageActivity(mCropImageUri);
+        } else {
+            Toast.makeText(getActivity(), "Cancelling, required permissions are not granted", Toast.LENGTH_LONG).show();
+        }
+
+        if(REQUEST_CODE==requestCode && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        {
+            CropImage.startPickImageActivity(getActivity());
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // handle result of pick image chooser
+        Uri imageUri=null;
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            imageUri = CropImage.getPickImageResultUri(getActivity(), data);
 
-        Bitmap bmp = null;
+            // For API >= 23 we need to check specifically that we have permissions to read external storage.
+            if (CropImage.hasPermissionInManifest(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) && CropImage.hasPermissionInManifest(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                startCropImageActivity(imageUri);
+            }
+        }
+
+        if (CropImage.isReadExternalStoragePermissionsRequired(getActivity(), imageUri)) {
+                // request permissions and handle the result in onRequestPermissionsResult()
+                mCropImageUri = imageUri;
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+            } else {
+                // no permissions required or already grunted, can start crop image activity
+
+            }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == getActivity().RESULT_OK) {
+                setImageFromActivityResult(result.getUri());
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(getActivity(), "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
+            }
+        }
+
+
+       /* Bitmap bmp = null;
         if (data != null) {
 
             if (data.getData() == null) {
@@ -1119,7 +1194,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         break;
                 }
             }
-        }
+        }*/
     }
 
 
@@ -1127,8 +1202,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         assert mActivity != null;
         Bitmap bmp;
         if (img_selection.equalsIgnoreCase("profile")) {
-            Glide.with(mActivity).load(resultUri).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
-            img_profile.invalidate();
+          //  Glide.with(mActivity).load(resultUri).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+            img_profile.setImageURI(resultUri);
             BitmapDrawable drawable = (BitmapDrawable) img_profile.getDrawable();
             bmp = drawable.getBitmap();
             str_profile_hash = Common.getBase64(bmp);

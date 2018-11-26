@@ -62,6 +62,25 @@ public class ListProfileData extends RealmObject {
     private String sponse_bdate;
     private String sponse_native;
     private String sponse_mobile;
+    private String spouse_blood_group;
+    private String spouse_education;
+
+    public String getSpouse_blood_group() {
+        return spouse_blood_group;
+    }
+
+    public void setSpouse_blood_group(String spouse_blood_group) {
+        this.spouse_blood_group = spouse_blood_group;
+    }
+
+    public String getSpouse_education() {
+        return spouse_education;
+    }
+
+    public void setSpouse_education(String spouse_education) {
+        this.spouse_education = spouse_education;
+    }
+
 
     private String sponse_bg;
 
