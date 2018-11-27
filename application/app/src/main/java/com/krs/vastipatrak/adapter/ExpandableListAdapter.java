@@ -55,8 +55,9 @@ import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
 import com.krs.vastipatrak.service.LocationAlertService;
 import com.krs.vastipatrak.utils.Common;
-import com.krs.vastipatrak.utils.RoundedCornersTransformation;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
@@ -66,6 +67,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.krs.vastipatrak.utils.Common.Constant_Class.BIRTH_DATE;
+import static com.krs.vastipatrak.utils.Common.Constant_Class.MARRIAGE_DATE;
+import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
 import static com.krs.vastipatrak.utils.Common.getChildRandomColor;
 import static com.krs.vastipatrak.utils.Common.getParentRandomColor;
@@ -411,6 +415,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
         });
 
+
         return convertView;
     }
 
@@ -461,6 +466,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.tvMail = convertView.findViewById(R.id.tvMail);
             groupViewHolder.txt_dist = convertView.findViewById(R.id.txt_dist);
             groupViewHolder.tvPassword = convertView.findViewById(R.id.tvPassword);
+            groupViewHolder.ll_lable = convertView.findViewById(R.id.ll_lable);
+
 
             if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN) && !sharedUsers && !isNearby) {
                 groupViewHolder.checkbox.setVisibility(View.VISIBLE);
@@ -502,7 +509,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
         // Rounded corners
-        Glide.with(_context).load(imgURL).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).into(groupViewHolder.ivIcon);
+        //Glide.with(_context).load(imgURL).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).thumbnail(0.5f).into(groupViewHolder.ivIcon);
+        Glide.with(_context).load(imgURL).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(groupViewHolder.ivIcon);
 
         groupViewHolder.tvCity.setText(Common.camelCase(city));
         groupViewHolder.tvName.setText(Common.camelCase(Name));
@@ -732,8 +740,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
 
@@ -760,15 +766,203 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 shareImage(bitmap, Name);
             }
         });
+
+        JSONArray array = mListParentData.getCalLabelArray();
+        if (array != null && array.length() > 0) {
+            groupViewHolder.ll_lable.removeAllViewsInLayout();
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject mjson = null;
+                try {
+                    mjson = array.getJSONObject(i);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                addLabel(groupViewHolder.ll_lable, mjson,id);
+            }
+        }
         return convertView;
     }
 
-   /* private void showDirections(double clat, double clng, double dlat, double dlng, String address) {
-        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f (%s)&daddr=%f,%f (%s)", clat, clng, "", dlat, dlng, address);
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-        _context.startActivity(intent);
-    }*/
+    private void addLabel(LinearLayout view, JSONObject jsonObject, final String id) {
+        LayoutInflater layoutInflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View addView = layoutInflater.inflate(R.layout.cal_lable_view, null);
+        final ViewHolder mViewholder = new ViewHolder();
+        mViewholder.txtdType = addView.findViewById(R.id.txtdType);
+        mViewholder.txtType = addView.findViewById(R.id.txtType);
+        mViewholder.txtName = addView.findViewById(R.id.txtName);
+        mViewholder.txtyear = addView.findViewById(R.id.txtyear);
+        mViewholder.txtDate = addView.findViewById(R.id.txtDate);
+        mViewholder.chk_rem = addView.findViewById(R.id.chk_rem);
+        try {
+            final String date_type = jsonObject.getString(_context.getString(R.string.date_type));
+            if (date_type.equalsIgnoreCase("marriagedate")) {
+                mViewholder.txtdType.setText("M");
+            } else {
+                mViewholder.txtdType.setText("B");
+            }
+            final String type = jsonObject.getString(_context.getString(R.string.type));
+            if (type.equalsIgnoreCase("self")) {
+                mViewholder.txtType.setVisibility(View.GONE);
+            } else {
+                mViewholder.txtType.setVisibility(View.VISIBLE);
+                mViewholder.txtType.setText(type);
+            }
+
+            mViewholder.txtName.setText(jsonObject.getString(_context.getString(R.string.name)));
+            mViewholder.txtyear.setText(jsonObject.getString(_context.getString(R.string.age))+"Years ");
+            String rdate = jsonObject.getString(_context.getString(R.string.date));
+            if (!rdate.isEmpty()) {
+                rdate = Common.parseDateToddMMyyyy(rdate, yyyy_MM_dd, dd_MMM_yyyy);
+                mViewholder.txtDate.setText(rdate);
+            }
+
+            final String finalRdate = rdate;
+            mViewholder.chk_rem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final String date = Common.parseDateToddMMyyyy(finalRdate, ddMMMyyyy, yyyy_MM_dd);
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(_context, R.style.AppCompatAlertDialogStyle);
+                    builder.setTitle(_context.getString(R.string.app_name));
+                    builder.setCancelable(false);
+
+                    String message = "Do you want set Reminder for Birthdate ? Change Message to wish ";
+                    String messge1="Do you want Unset Reminder for Birthdate ?";
+                    String msg="Happy Birthday from ";
+                    String status=BIRTH_DATE;
+                    if (date_type.equalsIgnoreCase("marriagedate")) {
+                        message = "Do you want set Reminder for Marriage anniversary ? Change Message to wish ";
+                        messge1="Do you want Unset Reminder for Marriage anniversary ?";
+                        msg="Happy Marriage anniversary from ";
+                        status=MARRIAGE_DATE;
+                    }
+
+                    String child_id="0";
+                    if (type.equalsIgnoreCase("child")) {
+                        child_id="0";
+                    }
+
+                    if (mViewholder.chk_rem.isChecked()) {
+                        builder.setMessage(message);
+                        final EditText input = new EditText(_context);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                        input.setLayoutParams(lp);
+                        String name="";
+                        name=mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME,"");
+                        name=name+" "+mSharedPreferences.getString(Common.Constant_Class.LAST_NAME,"");
+                        input.setText(msg + name);
+                        builder.setView(input);
+                        final String finalStatus = status;
+                        final String finalChild_id1 = child_id;
+                        builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                setReminder(id,date, finalStatus, input.getText().toString(), finalChild_id1,0);
+                            }
+                        });
+                        builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                mViewholder.chk_rem.setChecked(false);
+                                dialog.dismiss();
+                            }
+                        }).show();
+
+                    } else {
+                        builder.setMessage(messge1);
+                        final String finalStatus1 = status;
+                        final String finalChild_id = child_id;
+                        builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                setReminder(id,date, finalStatus1, "", finalChild_id,Integer.parseInt(profile_bdate_rem));
+                            }
+                        });
+                        builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                mViewholder.chk_rem.setChecked(true);
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        addView.setTag(mViewholder);
+        view.addView(addView);
+    }
+
+    private void setReminder(String profile_id,String rem_date, String rem_type, String msg,String child_id, int rem_id) {
+        if (Common.isOnline(_context)) {
+            JSONObject mJsonObject = null;
+            try {
+                mJsonObject = new JSONObject();
+                mJsonObject.put(Common.Constant_Class.PROFILE_ID, profile_id);
+                mJsonObject.put(Common.Constant_Class.REMINDER_DATE, rem_date);
+                mJsonObject.put(Common.Constant_Class.REMINDER_TYPE, rem_type);
+                mJsonObject.put(Common.Constant_Class.REMINDER_ID, rem_id);
+                mJsonObject.put(Common.Constant_Class.MESSAGE, msg);
+                mJsonObject.put(Common.Constant_Class._CHILD_ID, child_id);
+                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Common.showProgressDialog(_context);
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SET_REMINDER_URL, mJsonObject, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    try {
+                        Common.hideProgressDialog();
+                        String success = response.getString(Common.Constant_Class.SUCCESS);
+                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                            JSONObject mObject = response.getJSONObject(Common.Constant_Class.DATA);
+                            profile_bdate_rem = mObject.getString("reminder_id");
+                        } else {
+                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
+                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
+                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                    Intent mIntent = new Intent(_context, LoginActivity.class);
+                                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    _context.startActivity(mIntent);
+                                    ((Activity)_context).finish();
+                                }
+                            }
+                        }
+                        Toast.makeText(_context, message, Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    Common.hideProgressDialog();
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
+        }
+    }
+
 
     private void userLocationShareWS(String share_id, final String name, final String is_share) {
         if (Common.isOnline(_context)) {
@@ -900,7 +1094,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
     }
 
-
     private void shareImage(Bitmap bitmap, String text) {
         String pathofBmp = MediaStore.Images.Media.insertImage(_context.getContentResolver(), bitmap, "title", null);
         Uri uri = Uri.parse(pathofBmp);
@@ -912,7 +1105,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         _context.startActivity(Intent.createChooser(shareIntent, "Vastipatrak"));
     }
 
-
     @Override
     public boolean hasStableIds() {
         return false;
@@ -923,80 +1115,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-   /* private void showProgressDialog() {
-        if (pDialog != null && !pDialog.isShowing()) pDialog.show();
+    public static class ViewHolder {
+        TextView txtdType;
+        TextView txtType;
+        TextView txtName;
+        TextView txtyear;
+        TextView txtDate;
+        CheckBox chk_rem;
     }
-
-    private void hideProgressDialog() {
-        if (pDialog != null) {
-            pDialog.dismiss();
-            pDialog = null;
-        }
-    }*/
-
-/*
-    private void SyncUser(String profile_id) {
-        if (Common.isOnline(_context)) {
-            showProgressDialog();
-
-            JSONObject mJsonObject = null;
-            try {
-                mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-                mJsonObject.put(Common.Constant_Class.PROFILE_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, profile_id));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            String sync_url = Common.Constant_Class.SYNC_URL;
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, sync_url, mJsonObject, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(@NonNull JSONObject response) {
-                    Log.d(TAG, "response: " + response.toString());
-                    hideProgressDialog();
-                    try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
-                        Toast.makeText(_context, message, Toast.LENGTH_SHORT).show();
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
-                            for (int i = 0; i < mJsonArray.length(); i++) {
-                                JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                Common.SaveProfile(mJsondata);
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(@NonNull VolleyError error) {
-                    VolleyLog.d(TAG, "Error: " + error.getMessage());
-
-                    hideProgressDialog();
-                }
-            }) {
-                @NonNull
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
-                    return params;
-                }
-            };
-            // Adding request to request queue
-            String tag_json_obj = "jobj_req";
-            AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
-
-        }
-
-    }
-*/
 
     private class ChildViewHolder {
         TextView txt_blood;
@@ -1019,6 +1145,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private class GroupViewHolder {
         LinearLayout ll_parent;
+        LinearLayout ll_lable;
         ImageView ivIcon;
         ImageView imgShare;
         TextView tvName;

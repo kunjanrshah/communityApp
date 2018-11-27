@@ -2259,8 +2259,15 @@ public class Common {
         public static final String IMG_FATHER = "img_father";
         public static final String SPOUSE_NAME = "spouse_name";
 
-        public static final String SPOUSE_BG = "spouse_blood_group";
+        public static final String SPOUSE_BG = "spouse_bloodgroup";
         public static final String SPOUSE_EDU = "spouse_education";
+        public static final String SPOUSE_START_AGE = "spouse_start_age";
+        public static final String SPOUSE_END_AGE = "spouse_end_age";
+        public static final String CHILD_START_AGE = "child_start_age";
+        public static final String CHILD_END_AGE = "child_end_age";
+        public static final String USER_START_AGE = "user_start_age";
+        public static final String USER_END_AGE = "user_end_age";
+
 
         public static final String SPOUSE_NATIVE = "spouse_native_place";
         public static final String SPOUSE_BDATE = "spouse_birth_place";
@@ -2288,8 +2295,6 @@ public class Common {
         public static final String CHILD_BTIME = "birth_time";
         public static final String CHILD_BPLACE = "child_birth_place";
         public static final String CHILD_MARRIAGE = "isMarried";
-        public static final String FROM_CHILD_AGE = "from_child_age";
-        public static final String TO_CHILD_AGE = "to_child_age";
         public static final String IS_INTERESTED = "is_interested";
         public static final String IS_MARRIED = "isMarried";
         public static final String CHILD_EDU = "child_edu";

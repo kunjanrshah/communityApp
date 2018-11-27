@@ -49,7 +49,7 @@ public class FamilyFilter extends Fragment implements AdapterView.OnItemSelected
     private static final int CONTACT_PICKER_RESULT = 1001;
     @NonNull
     public String gender = "";
-    public EditText edtSpouseName, edtSpouseFName, edtSpouseMName;
+    public EditText edtSpouseName, edtSpouseFName, edtSpouseMName,edtSpouseEdu;
     public EditText edtchild_name, edtcedu, edtchild_work, edtchildbplace, edtcmobile;
     public EditText edt_mdate_from, edt_mdate_to, edt_cdate_from, edt_cdate_to;
     public Spinner spinnerBlood;
@@ -61,8 +61,8 @@ public class FamilyFilter extends Fragment implements AdapterView.OnItemSelected
     private FloatingActionButton floatingActionButton;
     private ObservableScrollView scroll_fdetails;
     private RadioGroup rgroupid;
-    public Spinner sp_start_age;
-    public Spinner sp_end_age;
+    public Spinner sp_child_start_age;
+    public Spinner sp_child_end_age;
     public Spinner sp_spouse_start_age;
     public Spinner sp_spouse_end_age;
 
@@ -77,17 +77,14 @@ public class FamilyFilter extends Fragment implements AdapterView.OnItemSelected
         for (int i = 1; i < 102; i++) {
             list.add("Age " + (i - 1));
         }
-        list.add(0, getString(R.string.CHILD_AGE));
+        list.add(0, getString(R.string.AGE));
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sp_start_age.setOnItemSelectedListener(this);
-        sp_start_age.setAdapter(dataAdapter);
-        sp_end_age.setOnItemSelectedListener(this);
-        sp_end_age.setAdapter(dataAdapter);
+        sp_child_start_age.setOnItemSelectedListener(this);
+        sp_child_start_age.setAdapter(dataAdapter);
+        sp_child_end_age.setOnItemSelectedListener(this);
+        sp_child_end_age.setAdapter(dataAdapter);
 
-        list.add(0, getString(R.string.SPOUSE_AGE));
-        dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp_spouse_start_age.setOnItemSelectedListener(this);
         sp_spouse_start_age.setAdapter(dataAdapter);
         sp_spouse_end_age.setOnItemSelectedListener(this);
@@ -334,11 +331,12 @@ public class FamilyFilter extends Fragment implements AdapterView.OnItemSelected
         edt_mdate_to = rootView.findViewById(R.id.edt_mdate_to);
         spinnerBlood = rootView.findViewById(R.id.spinnerBlood);
         sp_spouse_blood = rootView.findViewById(R.id.sp_spouse_blood);
-        sp_start_age = rootView.findViewById(R.id.sp_start_age);
-        sp_end_age = rootView.findViewById(R.id.sp_end_age);
+        sp_child_start_age = rootView.findViewById(R.id.sp_start_age);
+        sp_child_end_age = rootView.findViewById(R.id.sp_end_age);
         sp_spouse_start_age= rootView.findViewById(R.id.sp_spouse_start_age);
         sp_spouse_end_age= rootView.findViewById(R.id.sp_spouse_end_age);
         edtSpouseName = rootView.findViewById(R.id.edtSpouseName);
+        edtSpouseEdu= rootView.findViewById(R.id.edtSpouseEdu);
         edtSpouseFName = rootView.findViewById(R.id.edtSpouseFName);
         edtSpouseMName = rootView.findViewById(R.id.edtSpouseMName);
         edtchild_name = rootView.findViewById(R.id.edtchild_name);

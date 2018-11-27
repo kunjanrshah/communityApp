@@ -58,8 +58,8 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
     // public String gender = "";
     //private ObservableScrollView scroll_pdetails;
     ArrayAdapter<String> dataAdapter;
-    private Spinner sp_start_age;
-    private Spinner sp_end_age;
+    public Spinner sp_user_start_age;
+    public Spinner sp_user_end_age;
     private SharedPreferences mSharedPreferences;
     private RadioButton rbtnB;
     private FloatingActionButton floatingActionButton;
@@ -243,8 +243,8 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         floatingActionButton = rootView.findViewById(R.id.fab_psave);
         spinnerBlood = rootView.findViewById(R.id.spinnerBlood);
-        sp_start_age = rootView.findViewById(R.id.sp_start_age);
-        sp_end_age = rootView.findViewById(R.id.sp_end_age);
+        sp_user_start_age = rootView.findViewById(R.id.sp_start_age);
+        sp_user_end_age = rootView.findViewById(R.id.sp_end_age);
 
         List<String> list = new ArrayList<String>();
         for (int i = 1; i < 102; i++) {
@@ -254,13 +254,13 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sp_start_age.setOnItemSelectedListener(this);
-        sp_start_age.setAdapter(dataAdapter);
+        sp_user_start_age.setOnItemSelectedListener(this);
+        sp_user_start_age.setAdapter(dataAdapter);
 
         dataAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sp_end_age.setOnItemSelectedListener(this);
-        sp_end_age.setAdapter(dataAdapter);
+        sp_user_end_age.setOnItemSelectedListener(this);
+        sp_user_end_age.setAdapter(dataAdapter);
 
         spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
         spinnerGotra.setAdapter(AppController.getInstance().dataAdapter);

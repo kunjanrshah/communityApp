@@ -8,12 +8,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -206,11 +204,29 @@ public class CalendarFragment extends Fragment {
                     String is_location_enable = mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE);
                     String user_lat = mJsondata.getString(Common.Constant_Class.USER_LAT);
                     String user_lng = mJsondata.getString(Common.Constant_Class.USER_LNG);
+
+                    String bdate_rem_id = mJsondata.getString(Common.Constant_Class.BDATE_REMINDER_ID);
+                    String spouse_rem_id = mJsondata.getString(Common.Constant_Class.SPOUSE_BDATE_REMINDER_ID);
+                    String mdate_rem_id = mJsondata.getString(Common.Constant_Class.MDATE_REMINDER_ID);
+                    //String child_rem_id = mJsondata.getString(Common.Constant_Class.CHILD_BDATE_REMINDER_ID);
+
+
                     String can_share = "0";
                     if (mJsondata.has(Common.Constant_Class.CAN_SHARE)) {
                         can_share = mJsondata.getString(Common.Constant_Class.CAN_SHARE);
                     }
+
                     ListParentData lpd = new ListParentData();
+                    if (mJsondata.has(getString(R.string.search_date_info))) {
+                        JSONArray array = mJsondata.getJSONArray(getString(R.string.search_date_info));
+                        lpd.setCalLabelArray(array);
+                    }
+
+                    lpd.setBdate_rem_id(bdate_rem_id);
+                    lpd.setSpouse_rem_id(spouse_rem_id);
+                    lpd.setMdate_rem_id(mdate_rem_id);
+                    lpd.setChild_rem_id(child_rem_id);
+
                     lpd.setName(first_name + " " + last_name);
                     lpd.setFatherName(father_name);
                     lpd.setMotherName(mother_name);

@@ -1,5 +1,7 @@
 package com.krs.vastipatrak.model;
 
+import org.json.JSONArray;
+
 public class ListParentData {
 
 
@@ -22,6 +24,54 @@ public class ListParentData {
     private String type;
     private String str_name;
     private String Shared;
+    private JSONArray CalLabelArray;
+
+    String bdate_rem_id;
+    String spouse_rem_id;
+    String mdate_rem_id;
+    String child_rem_id;
+    public String getBdate_rem_id() {
+        return bdate_rem_id;
+    }
+
+    public void setBdate_rem_id(String bdate_rem_id) {
+        this.bdate_rem_id = bdate_rem_id;
+    }
+
+    public String getSpouse_rem_id() {
+        return spouse_rem_id;
+    }
+
+    public void setSpouse_rem_id(String spouse_rem_id) {
+        this.spouse_rem_id = spouse_rem_id;
+    }
+
+    public String getMdate_rem_id() {
+        return mdate_rem_id;
+    }
+
+    public void setMdate_rem_id(String mdate_rem_id) {
+        this.mdate_rem_id = mdate_rem_id;
+    }
+
+    public String getChild_rem_id() {
+        return child_rem_id;
+    }
+
+    public void setChild_rem_id(String child_rem_id) {
+        this.child_rem_id = child_rem_id;
+    }
+
+
+
+
+    public JSONArray getCalLabelArray() {
+        return CalLabelArray;
+    }
+
+    public void setCalLabelArray(JSONArray calLabelArray) {
+        CalLabelArray = calLabelArray;
+    }
 
     public String getPassword() {
         return password;

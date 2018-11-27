@@ -111,13 +111,13 @@
                         android:layout_centerInParent="true"
                         android:contentDescription="TODO"
                         android:src="@drawable/user_profile"
-                        app:civ_border_color="@color/colorAccent"
+                        app:civ_border_color="@color/colorPrimaryDark"
                         app:civ_border_width="1dp" />
 
                     <ImageView
                         android:id="@+id/img_spouse_cancel"
-                        android:layout_width="35dip"
-                        android:layout_height="35dip"
+                        android:layout_width="25dip"
+                        android:layout_height="25dip"
                         android:layout_gravity="right"
                         android:contentDescription="TODO"
                         android:padding="5dp"
@@ -236,13 +236,13 @@
                         android:layout_centerInParent="true"
                         android:contentDescription="TODO"
                         android:src="@drawable/user_profile"
-                        app:civ_border_color="@color/colorAccent"
+                        app:civ_border_color="@color/colorPrimaryDark"
                         app:civ_border_width="1dp" />
 
                     <ImageView
                         android:id="@+id/img_fspouse_cancel"
-                        android:layout_width="35dip"
-                        android:layout_height="35dip"
+                        android:layout_width="25dip"
+                        android:layout_height="25dip"
                         android:layout_gravity="right"
                         android:contentDescription="TODO"
                         android:padding="5dp"
@@ -283,13 +283,13 @@
                         android:layout_centerInParent="true"
                         android:contentDescription="TODO"
                         android:src="@drawable/user_profile"
-                        app:civ_border_color="@color/colorAccent"
+                        app:civ_border_color="@color/colorPrimaryDark"
                         app:civ_border_width="1dp" />
 
                     <ImageView
                         android:id="@+id/img_mspouse_cancel"
-                        android:layout_width="35dip"
-                        android:layout_height="35dip"
+                        android:layout_width="25dip"
+                        android:layout_height="25dip"
                         android:layout_gravity="right"
                         android:contentDescription="TODO"
                         android:padding="5dp"

@@ -320,7 +320,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) && !MyProfileActivity.isEnable) {
 
                 } else {
-                    add_child_layout();
+                    add_child_layout(null);
                 }
             }
         });
@@ -659,8 +659,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                             btn_add.setVisibility(View.GONE);
                         }
                     }
-                    add_child_layout();
                     ListChildrenData mObjChild = mListProfileData.getmListChildrenData().get(i);
+                    add_child_layout(mObjChild);
                     final Viewholder mViewholder = (Viewholder) child_container.getChildAt(i).getTag();
 
                     mViewholder.child_id = Integer.parseInt(Objects.requireNonNull(mObjChild).getChild_id());
@@ -713,8 +713,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         mViewholder.edtchild_bdate.setEnabled(true);
                         mViewholder.edtchild_edu.setEnabled(true);
                         mViewholder.edtchild_work.setEnabled(true);
-                        Objects.requireNonNull(mViewholder.img_child).setEnabled(true);
-                        mViewholder.img_child.setClickable(true);
                     } else {
                         mViewholder.edtchild_name.setKeyListener(null);
                         mViewholder.edtchild_name.setCursorVisible(false);
@@ -727,8 +725,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
                         mViewholder.edtchild_work.setKeyListener(null);
                         mViewholder.edtchild_work.setCursorVisible(false);
-                        Objects.requireNonNull(mViewholder.img_child).setEnabled(false);
-                        mViewholder.img_child.setClickable(false);
+
                     }
                     final String child_url = mObjChild.getChild_img_url();
                     Glide.with(mActivity).load(child_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(mViewholder.img_child);
@@ -757,13 +754,18 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         dialog.setTitle(name);
 
         ImageView image = dialog.findViewById(R.id.img_dialog);
-        Glide.with(mActivity).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
+        if (url.isEmpty()) {
+            image.setImageDrawable(getResources().getDrawable(R.drawable.user_profile));
+        } else {
+            Glide.with(mActivity).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
+        }
+
         dialog.show();
     }
 
-    private void add_child_layout() {
+    private void add_child_layout(final ListChildrenData mObjChild) {
         LayoutInflater layoutInflater = (LayoutInflater) mActivity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        @SuppressLint("InflateParams") final View addView = Objects.requireNonNull(layoutInflater).inflate(R.layout.child_row, null);
+        final View addView = layoutInflater.inflate(R.layout.child_row, null);
         final Viewholder mViewholder = new Viewholder();
         mViewholder.child_id = 0;
         mViewholder.img_child = addView.findViewById(R.id.img_child);
@@ -953,7 +955,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     startImageActivity();
                 } else {
                     String Name = mViewholder.edtchild_name.getText().toString();
-                    //  openImageDialog(Name, child_url);
+                    String url = "";
+                    if (mObjChild != null) {
+                        url = mObjChild.getChild_img_url();
+                    }
+                    openImageDialog(Name, url);
                 }
             }
         });
@@ -1141,7 +1147,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
     private void startImageActivity() {
         if (Common.hasPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) && Common.hasPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            chooseFragment=TAG;
+            chooseFragment = TAG;
             CropImage.startPickImageActivity(getActivity());
         }
     }

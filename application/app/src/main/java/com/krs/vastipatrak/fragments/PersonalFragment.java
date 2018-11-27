@@ -87,6 +87,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     public String str_profile_hash = "", str_father_hash = "", str_mother_hash = "";
     public String gender = "";
     public Spinner spinnerBlood, spinnerGotra;
+
     public EditText edtbdate = null;
     public CheckBox chk_profile_bdate_rem = null;
     public String profile_bdate_rem = "0";
@@ -116,6 +117,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private Activity mActivity;
     private String profile_id = "";
     private Uri mCropImageUri;
+
 
     public PersonalFragment() {
 

@@ -157,7 +157,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:text="Spouse FROM"
+                        android:text="Spouse From"
                         android:textSize="18dp" />
 
                     <Spinner
@@ -179,7 +179,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:text="TO"
+                        android:text="To"
                         android:textSize="18dp" />
 
                     <Spinner
@@ -458,7 +458,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:text="FROM"
+                        android:text="Child From"
                         android:textSize="18dp" />
 
                     <Spinner
@@ -480,7 +480,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:text="TO"
+                        android:text="To"
                         android:textSize="18dp" />
 
                     <Spinner

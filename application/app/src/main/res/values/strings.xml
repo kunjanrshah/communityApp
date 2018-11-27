@@ -282,8 +282,13 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="near_by_users">User</string>
     <string name="isEnable">isEnable</string>
     <string name="ver">Ver. 1.15</string>
-    <string name="CHILD_AGE">CHILD AGE</string>
-    <string name="SPOUSE_AGE">SPOUSE AGE</string>
+    <string name="AGE">AGE</string>
+    <string name="search_date_info">search_date_info</string>
+    <string name="type">type</string>
+    <string name="date">date</string>
+    <string name="date_type">date_type</string>
+    <string name="age">age</string>
+    <string name="name">name</string>
 
 
 </resources>

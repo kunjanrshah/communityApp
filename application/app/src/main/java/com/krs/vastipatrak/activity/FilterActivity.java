@@ -204,6 +204,21 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String strCity = ((PersonalFilter) personal).edtCity.getText().toString().trim();
                 String strGotra = ((PersonalFilter) personal).spinnerGotra.getSelectedItem().toString().trim();
                 String bgroup = ((PersonalFilter) personal).spinnerBlood.getSelectedItem().toString().trim();
+
+                String sp_user_start_age = ((PersonalFilter) personal).sp_user_start_age.getSelectedItem().toString().trim();
+                String sp_user_end_age = ((PersonalFilter) personal).sp_user_end_age.getSelectedItem().toString().trim();
+
+                if (!sp_user_start_age.equalsIgnoreCase(getString(R.string.AGE))) {
+                    mJsonObject.put(Common.Constant_Class.USER_START_AGE, sp_user_start_age.replace("Age ",""));
+                    lstProceed.add("User Age From: " + sp_user_start_age);
+                }
+
+                if (!sp_user_end_age.equalsIgnoreCase(getString(R.string.AGE))) {
+                    mJsonObject.put(Common.Constant_Class.USER_END_AGE, sp_user_end_age.replace("Age ",""));
+                    lstProceed.add("User Age To: " + sp_user_end_age);
+                }
+
+
                 String gender;
 
                 if (bgroup.equalsIgnoreCase(Common.Constant_Class.TITLE_BLOOD_GROUP)) {
@@ -367,27 +382,44 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String childMobile = ((FamilyFilter) family).edtcmobile.getText().toString().trim();
                 String childBplace = ((FamilyFilter) family).edtchildbplace.getText().toString().trim();
                 String bgroup = ((FamilyFilter) family).spinnerBlood.getSelectedItem().toString().trim();
+
                 String sp_spouse_blood = ((FamilyFilter) family).sp_spouse_blood.getSelectedItem().toString().trim();
-                String sp_start_age = ((FamilyFilter) family).sp_start_age.getSelectedItem().toString().trim();
-                String sp_end_age = ((FamilyFilter) family).sp_end_age.getSelectedItem().toString().trim();
+                String edtSpouseEdu = ((FamilyFilter) family).edtSpouseEdu.getText().toString().trim();
+                String sp_spouse_start_age = ((FamilyFilter) family).sp_spouse_start_age.getSelectedItem().toString().trim();
+                String sp_spouse_end_age = ((FamilyFilter) family).sp_spouse_end_age.getSelectedItem().toString().trim();
+                String sp_child_start_age = ((FamilyFilter) family).sp_child_start_age.getSelectedItem().toString().trim();
+                String sp_child_end_age = ((FamilyFilter) family).sp_child_end_age.getSelectedItem().toString().trim();
                 String childGender = ((FamilyFilter) family).gender;
 
-                if(!sp_spouse_blood.equalsIgnoreCase(TITLE_SPOUSE_BLOOD_GROUP))
-                {
+                if (!sp_spouse_blood.equalsIgnoreCase(TITLE_SPOUSE_BLOOD_GROUP)) {
                     mJsonObject.put(Common.Constant_Class.SPOUSE_BG, sp_spouse_blood);
                     lstProceed.add("Spouse BG: " + sp_spouse_blood);
                 }
 
-                if(!sp_start_age.equalsIgnoreCase(getString(R.string.CHILD_AGE)))
-                {
-                    mJsonObject.put(Common.Constant_Class.FROM_CHILD_AGE, sp_start_age);
-                    lstProceed.add("Child Age From: " + sp_start_age);
+                if (!edtSpouseEdu.isEmpty()) {
+                    mJsonObject.put(Common.Constant_Class.SPOUSE_EDU, edtSpouseEdu);
+                    lstProceed.add("Spouse Education: " + edtSpouseEdu);
                 }
 
-                if(!sp_end_age.equalsIgnoreCase(getString(R.string.CHILD_AGE)))
-                {
-                    mJsonObject.put(Common.Constant_Class.TO_CHILD_AGE, sp_end_age);
-                    lstProceed.add("Child Age To: " + sp_end_age);
+                if (!sp_spouse_start_age.equalsIgnoreCase(getString(R.string.AGE))) {
+                    mJsonObject.put(Common.Constant_Class.SPOUSE_START_AGE, sp_spouse_start_age.replace("Age ",""));
+                    lstProceed.add("Spouse Age From: " + sp_spouse_start_age);
+                }
+
+                if (!sp_spouse_end_age.equalsIgnoreCase(getString(R.string.AGE))) {
+                    mJsonObject.put(Common.Constant_Class.SPOUSE_END_AGE, sp_spouse_end_age.replace("Age ",""));
+                    lstProceed.add("Spouse Age To: " + sp_spouse_end_age);
+                }
+
+
+                if (!sp_child_start_age.equalsIgnoreCase(getString(R.string.AGE))) {
+                    mJsonObject.put(Common.Constant_Class.CHILD_START_AGE, sp_child_start_age.replace("Age ",""));
+                    lstProceed.add("Child Age From: " + sp_child_start_age);
+                }
+
+                if (!sp_child_end_age.equalsIgnoreCase(getString(R.string.AGE))) {
+                    mJsonObject.put(Common.Constant_Class.CHILD_END_AGE, sp_child_end_age.replace("Age ",""));
+                    lstProceed.add("Child Age To: " + sp_child_end_age);
                 }
 
                 if (child_married) {
