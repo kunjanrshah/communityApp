@@ -2259,7 +2259,7 @@ public class Common {
         public static final String IMG_FATHER = "img_father";
         public static final String SPOUSE_NAME = "spouse_name";
 
-        public static final String SPOUSE_BG = "spouse_bloodgroup";
+        public static final String SPOUSE_BG = "spouse_blood_group";
         public static final String SPOUSE_EDU = "spouse_education";
         public static final String SPOUSE_START_AGE = "spouse_start_age";
         public static final String SPOUSE_END_AGE = "spouse_end_age";
