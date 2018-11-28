@@ -32,7 +32,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -60,7 +59,6 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.krs.vastipatrak.utils.LocaleHelper;
-import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.json.JSONObject;
 
@@ -79,10 +77,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
     private final String[] INIT_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS};
     private final int CAMARA_REQUEST = 4;
     private final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
-    @NonNull
-    private final String[] SubcastList = {"Dasha"};
-    @NonNull
-    private final String[] EkdoList = {"Modasa"};
+
     @NonNull
     private final String tag_json_obj = "jobj_req";
     private final String TAG = MainActivity.class.getSimpleName();
@@ -95,14 +90,12 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
     private JSONObject json = null;
     private ImageView img_profile, img_cancel;
     private String str_profile_hash = "";
-    private MaterialBetterSpinner spinnerSubcast;
-    private MaterialBetterSpinner spinnerEkdo;
     private boolean isShow = true;
     private boolean isShow1 = true;
     @Nullable
     private String screen = "";
-    private EditText inputEmail, inputPassword, inputName, inputConformPassword, inputForgotPassword, inputMobile, input_email_mobile, edt_father_name, edt_surname, edt_address, edt_native;
-    private TextInputLayout inputLayoutName, inputLayoutEmail, input_layout_email_mobile, inputLayoutPassword, inputLayoutConformPassword, InputLayoutForgotPassword, inputLayoutMobile, input_layout_father_name, input_layout_surname, input_layout_address, input_layout_native_place;
+    private EditText inputEmail, inputPassword, inputName, inputConformPassword, inputForgotPassword, inputMobile, input_email_mobile, edt_spouse_name, edt_address;
+    private TextInputLayout inputLayoutName, inputLayoutEmail, input_layout_email_mobile, inputLayoutPassword, inputLayoutConformPassword, InputLayoutForgotPassword, inputLayoutMobile, input_layout_spouse_name, input_layout_address;
     @Nullable
     private SharedPreferences mSharedPreferences = null;
     private SharedPreferences.Editor mEditor;
@@ -267,17 +260,13 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         snackbar = Snackbar.make(findViewById(R.id.ll_login), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
         txtHow = findViewById(R.id.txtHow);
         txt_label = findViewById(R.id.txt_label);
-        input_layout_father_name = findViewById(R.id.input_layout_father_name);
-        edt_father_name = findViewById(R.id.edt_father_name);
 
-        input_layout_surname = findViewById(R.id.input_layout_surname);
-        edt_surname = findViewById(R.id.edt_surname);
+        input_layout_spouse_name = findViewById(R.id.input_layout_spouse_name);
+        edt_spouse_name = findViewById(R.id.edt_spouse_name);
 
         input_layout_address = findViewById(R.id.input_layout_address);
         edt_address = findViewById(R.id.edt_address);
 
-        input_layout_native_place = findViewById(R.id.input_layout_native_place);
-        edt_native = findViewById(R.id.edt_native);
 
         inputEmail = findViewById(R.id.input_email);
         inputLayoutEmail = findViewById(R.id.input_layout_email);
@@ -305,16 +294,6 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         txtSignup = findViewById(R.id.txtSignup);
         img_profile = findViewById(R.id.img_profile);
         img_cancel = findViewById(R.id.img_cancel);
-        spinnerSubcast = findViewById(R.id.spinnerSubcast);
-        spinnerEkdo = findViewById(R.id.spinnerEkdo);
-
-        ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, EkdoList);
-        spinnerEkdo.setAdapter(arrayAdapter1);
-        spinnerEkdo.setText("Modasa");
-
-        ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, SubcastList);
-        spinnerSubcast.setAdapter(arrayAdapter2);
-        spinnerSubcast.setText("Dasha");
 
         tv = findViewById(R.id.TextView03);
         tv.setSelected(true);
@@ -325,43 +304,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
 
                 Toast.makeText(LoginActivity.this, "Work in Progress", Toast.LENGTH_SHORT).show();
 
-               /* AlertDialog.Builder b = new AlertDialog.Builder(LoginActivity.this);
-                b.setTitle(getResources().getString(R.string.app_name));
-                String[] types = {getString(R.string.english), getString(R.string.gujarati), getString(R.string.hindi)};
-                b.setItems(types, new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        dialog.dismiss();
-                        switch (which) {
-                            case 0:
-                                mEditor.putString(Common.Constant_Class.LAN, "en");
-                                mEditor.apply();
-                                context = LocaleHelper.setLocale(LoginActivity.this, "en");
-                                resources = context.getResources();
-                                //setLocalization();
-                                break;
-                            case 1:
-                                mEditor.putString(Common.Constant_Class.LAN, "de");
-                                mEditor.apply();
-                                context = LocaleHelper.setLocale(LoginActivity.this, "de");
-                                resources = context.getResources();
-                                Toast.makeText(LoginActivity.this,"On the Way",Toast.LENGTH_SHORT).show();
-                               // setLocalization();
-                                break;
-                            case 2:
-                                mEditor.putString(Common.Constant_Class.LAN, "fr");
-                                mEditor.apply();
-                                context = LocaleHelper.setLocale(LoginActivity.this, "fr");
-                                resources = context.getResources();
-                                Toast.makeText(LoginActivity.this,"On the Way",Toast.LENGTH_SHORT).show();
-                               // setLocalization();
-                                break;
-                        }
-                    }
-                });
-                b.show();*/
             }
         });
 
@@ -433,10 +376,8 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
 
 
     private void setListner() {
-        edt_father_name.addTextChangedListener(new MyTextWatcher(edt_father_name));
-        edt_surname.addTextChangedListener(new MyTextWatcher(edt_surname));
+        edt_spouse_name.addTextChangedListener(new MyTextWatcher(edt_spouse_name));
         edt_address.addTextChangedListener(new MyTextWatcher(edt_address));
-        edt_native.addTextChangedListener(new MyTextWatcher(edt_native));
         inputName.addTextChangedListener(new MyTextWatcher(inputName));
         inputEmail.addTextChangedListener(new MyTextWatcher(inputEmail));
         inputPassword.addTextChangedListener(new MyTextWatcher(inputPassword));
@@ -454,21 +395,20 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             txt_forgot.setVisibility(View.GONE);
             img_profile.setVisibility(View.VISIBLE);
             img_cancel.setVisibility(View.VISIBLE);
-            input_layout_address.setVisibility(View.GONE);
-            input_layout_father_name.setVisibility(View.GONE);
-            input_layout_native_place.setVisibility(View.GONE);
-            input_layout_surname.setVisibility(View.GONE);
-            spinnerSubcast.setVisibility(View.GONE);
-            spinnerEkdo.setVisibility(View.GONE);
+            input_layout_address.setVisibility(View.VISIBLE);
+            input_layout_spouse_name.setVisibility(View.VISIBLE);
+            // spinnerSubcast.setVisibility(View.GONE);
+            // spinnerEkdo.setVisibility(View.GONE);
             btn_signup.setText(getResources().getString(R.string.btn_sign_up));
             txtHow.setText(getResources().getString(R.string.how_to_signup));
-            txt_label.setText(R.string.signup_with);
+            txt_label.setVisibility(View.VISIBLE);
+            txt_label.setText(R.string.nice_signup);
             SignupToggle = false;
             inputPassword.setText("");
             inputName.requestFocus();
         } else {
             txtHow.setText(getResources().getString(R.string.how_to_login));
-            txt_label.setText(R.string.login_with);
+            txt_label.setVisibility(View.GONE);
             txtSignup.setText(getResources().getString(R.string.btn_sign_up));
             inputLayoutMobile.setVisibility(View.GONE);
             inputLayoutName.setVisibility(View.GONE);
@@ -476,14 +416,12 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             inputLayoutConformPassword.setVisibility(View.GONE);
             inputLayoutEmail.setVisibility(View.GONE);
             input_layout_email_mobile.setVisibility(View.VISIBLE);
-            spinnerSubcast.setVisibility(View.GONE);
-            spinnerEkdo.setVisibility(View.GONE);
+            //  spinnerSubcast.setVisibility(View.GONE);
+            //  spinnerEkdo.setVisibility(View.GONE);
             img_profile.setVisibility(View.INVISIBLE);
             img_cancel.setVisibility(View.INVISIBLE);
             input_layout_address.setVisibility(View.GONE);
-            input_layout_father_name.setVisibility(View.GONE);
-            input_layout_native_place.setVisibility(View.GONE);
-            input_layout_surname.setVisibility(View.GONE);
+            input_layout_spouse_name.setVisibility(View.GONE);
             btn_signup.setText(getResources().getString(R.string.btn_sign_in));
             SignupToggle = true;
             input_email_mobile.requestFocus();
@@ -491,32 +429,15 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         //   setLocalization();
     }
 
-    private void validateFatherName() {
-        if (edt_father_name.getText().toString().trim().isEmpty()) {
-            input_layout_father_name.setError(getString(R.string.err_msg_father_name));
-            requestFocus(edt_father_name);
+    private void validateSpouseName() {
+        if (edt_spouse_name.getText().toString().trim().isEmpty()) {
+            input_layout_spouse_name.setError(getString(R.string.err_msg_spouse_name));
+            requestFocus(edt_spouse_name);
         } else {
-            input_layout_father_name.setErrorEnabled(false);
+            input_layout_spouse_name.setErrorEnabled(false);
         }
     }
 
-    private void validateSurname() {
-        if (edt_surname.getText().toString().trim().isEmpty()) {
-            input_layout_surname.setError(getString(R.string.err_msg_surname));
-            requestFocus(edt_surname);
-        } else {
-            input_layout_surname.setErrorEnabled(false);
-        }
-    }
-
-    private void validateNative() {
-        if (edt_native.getText().toString().trim().isEmpty()) {
-            input_layout_native_place.setError(getString(R.string.err_msg_native));
-            requestFocus(edt_native);
-        } else {
-            input_layout_native_place.setErrorEnabled(false);
-        }
-    }
 
     private void validateAddress() {
         if (edt_address.getText().toString().trim().isEmpty()) {
@@ -807,12 +728,14 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             final String mobile = inputMobile.getText().toString();
             final String password = inputPassword.getText().toString();
             String cpassword = inputConformPassword.getText().toString();
-           /* final String father_name = edt_father_name.getText().toString();
+            final String spouse_name = edt_spouse_name.getText().toString();
+            final String address = edt_address.getText().toString();
+           /*
             final String surname = edt_surname.getText().toString();
             final String _native = edt_native.getText().toString();
-            final String address = edt_address.getText().toString();*/
-            String subcast = spinnerSubcast.getText().toString();
-            final String ekdo = spinnerEkdo.getText().toString();
+            */
+            // String subcast = spinnerSubcast.getText().toString();
+            // final String ekdo = spinnerEkdo.getText().toString();
 
             if (!email.equalsIgnoreCase("")) {
                 if (Common.isValidEmail(email)) {
@@ -821,19 +744,19 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                 }
             }
 
-            if (!email.equalsIgnoreCase("") && !name.equalsIgnoreCase("") && !mobile.equalsIgnoreCase("") && !password.equalsIgnoreCase("") && !cpassword.equalsIgnoreCase("")) {
+            if (!email.equalsIgnoreCase("") && !name.equalsIgnoreCase("") && !mobile.equalsIgnoreCase("") && !password.equalsIgnoreCase("") && !cpassword.equalsIgnoreCase("") && !spouse_name.equalsIgnoreCase("") && !address.equalsIgnoreCase("")) {
                 if (password.equalsIgnoreCase(cpassword)) {
                     if (mobile.length() >= 10) {
                         try {
                             json = new JSONObject();
                             Common.showProgressDialog(this);
                             json.put(Common.Constant_Class.FIRST_NAME, name);
+                            json.put(Common.Constant_Class.SPOUSE_NAME, spouse_name);
                             json.put(Common.Constant_Class.EMAIL_ADDRESS, email);
                             json.put(Common.Constant_Class.MOBILE, mobile);
                             json.put(Common.Constant_Class.PASSWORD, password);
                             json.put(Common.Constant_Class.REPEAT_PASSWORD, cpassword);
-                            json.put(Common.Constant_Class.SUB_CAST, subcast);
-                            json.put(Common.Constant_Class.EKDO, ekdo);
+                            json.put(Common.Constant_Class.ADDRESS, address);
 
                             if (screen != null && screen.equalsIgnoreCase(Common.Constant_Class.SEARCH_FRAGMENT)) {
                                 json.put(Common.Constant_Class.STATUS, "1");
@@ -842,7 +765,6 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                             }
                             if (!str_profile_hash.isEmpty()) {
                                 json.put(Common.Constant_Class.PROFILE_PIC, str_profile_hash);
-                                // json.put(Common.Constant_Class.PROFILE_PIC_HASH, str_profile_hash);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -866,6 +788,8 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                                             inputPassword.setText("");
                                             inputConformPassword.setText("");
                                             inputPassword.setText("");
+                                            edt_spouse_name.setText("");
+                                            edt_address.setText("");
                                             togglePage();
                                         }
 
@@ -1081,17 +1005,11 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                 case R.id.input_forgot_password:
                     validateForgotPassword();
                     break;
-                case R.id.edt_father_name:
-                    validateFatherName();
-                    break;
-                case R.id.edt_surname:
-                    validateSurname();
+                case R.id.edt_spouse_name:
+                    validateSpouseName();
                     break;
                 case R.id.edt_address:
                     validateAddress();
-                    break;
-                case R.id.edt_native:
-                    validateNative();
                     break;
             }
         }

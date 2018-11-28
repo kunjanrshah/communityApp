@@ -46,14 +46,13 @@
 
         <TextView
             android:id="@+id/txt_label"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="*Login with Family Head"
-            android:textColor="@color/mdtp_red_focused"
-            android:textSize="16sp"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="3dp"
             android:padding="3dp"
-            android:textStyle="bold" />
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -109,34 +108,20 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/input_layout_father_name"
+                    android:id="@+id/input_layout_spouse_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone">
 
                     <EditText
-                        android:id="@+id/edt_father_name"
+                        android:id="@+id/edt_spouse_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/hint_father_name"
+                        android:hint="@string/hint_spouse_name"
                         android:inputType="textCapSentences"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/input_layout_surname"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone">
-
-                    <EditText
-                        android:id="@+id/edt_surname"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_surname"
-                        android:inputType="textCapSentences"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
 
 
                 <android.support.design.widget.TextInputLayout
@@ -196,9 +181,9 @@
                         android:layout_height="wrap_content"
                         android:drawableEnd="@drawable/password_hide"
                         android:hint="@string/hint_password"
-                        android:text="kunj"
                         android:inputType="textPassword"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:text="kunj" />
                 </android.support.design.widget.TextInputLayout>
 
 
@@ -217,20 +202,6 @@
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/input_layout_native_place"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone">
-
-                    <EditText
-                        android:id="@+id/edt_native"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_native"
-                        android:inputType="textCapSentences"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/input_layout_address"
@@ -248,28 +219,12 @@
                 </android.support.design.widget.TextInputLayout>
 
 
-                <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
-                    android:id="@+id/spinnerEkdo"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:hint="@string/select_ekdo"
-                    android:textColorHint="#05ab9a"
-                    android:visibility="gone" />
-
-                <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
-                    android:id="@+id/spinnerSubcast"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:hint="@string/select_subcast"
-                    android:textColorHint="#05ab9a"
-                    android:visibility="gone" />
-
                 <Button
                     android:id="@+id/btn_signup"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
                     android:background="@color/colorPrimary"
                     android:text="@string/btn_sign_in"
                     android:textColor="@android:color/white" />

@@ -37,8 +37,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
-
 public class NotificationUtils {
 
     private final Context mContext;
@@ -108,7 +106,7 @@ public class NotificationUtils {
         if (TextUtils.isEmpty(message)) return;
 
         // notification icon
-        final int icon = R.drawable.app_icon;
+        final int icon = R.drawable.ic_app;
 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         final PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -150,7 +148,7 @@ public class NotificationUtils {
 
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "NotificationDemo", IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "NotificationDemo", NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
         }
         if (id == null || id.isEmpty()) {

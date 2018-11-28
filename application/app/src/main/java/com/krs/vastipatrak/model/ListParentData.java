@@ -29,7 +29,16 @@ public class ListParentData {
     String bdate_rem_id;
     String spouse_rem_id;
     String mdate_rem_id;
-    String child_rem_id;
+    JSONArray childs;
+    public JSONArray getChilds() {
+        return childs;
+    }
+
+    public void setChilds(JSONArray childs) {
+        this.childs = childs;
+    }
+
+
     public String getBdate_rem_id() {
         return bdate_rem_id;
     }
@@ -54,13 +63,6 @@ public class ListParentData {
         this.mdate_rem_id = mdate_rem_id;
     }
 
-    public String getChild_rem_id() {
-        return child_rem_id;
-    }
-
-    public void setChild_rem_id(String child_rem_id) {
-        this.child_rem_id = child_rem_id;
-    }
 
 
 

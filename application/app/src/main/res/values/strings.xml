@@ -1,6 +1,6 @@
 <resources>
-    <string name="theme_app_name">VastiPatrak</string>
-    <string name="app_name">VastiPatrak</string>
+    <string name="theme_app_name">વસ્તીપત્રક</string>
+    <string name="app_name">વસ્તીપત્રક</string>
     <string name="hint_email">Email</string>
     <string name="hint_email_mobile">Email or Mobile</string>
     <string name="hint_mobile">Mobile</string>
@@ -12,7 +12,7 @@
     <string name="btn_sign_up">SIGN UP</string>
     <string name="btn_add_new">ADD NEW</string>
     <string name="btn_sign_in">SIGN IN</string>
-    <string name="hint_name">Name</string>
+    <string name="hint_name">Family Head Name</string>
     <string name="hint_surname">Surname</string>
     <string name="hint_father_name">Father Name</string>
     <string name="hint_mother_name">Mother Name</string>
@@ -37,7 +37,7 @@
     <string name="forgot_password"><u>Forgot Password</u></string>
     <string name="sync_data"><u>Sync Data</u></string>
     <string name="err_msg_name">Enter your name</string>
-    <string name="err_msg_father_name">Enter your father name</string>
+    <string name="err_msg_spouse_name">Enter your spouse name</string>
     <string name="err_msg_surname">Enter your surname</string>
     <string name="err_msg_native">Enter your native place</string>
     <string name="err_msg_address">Enter your address </string>
@@ -112,19 +112,19 @@
     <string name="how_event_manage_12">12. એડમિન દ્વારા ઇવેન્ટ્સ કેવી રીતે સંચાલિત અને શેર કરવી</string>
     <string name="how_admin_manage_13">13. સંચાલક દ્વારા વિનંતી કેવી રીતે મંજૂર કરવી અથવા કાઢી નાખવી</string>
 
-   <!-- <string name="how_to_forgot_1">1. If you forgot your password</string>
-    <string name="how_search_profile_2">2. Search Profiles</string>
-    <string name="how_to_event_list_3">3. Event list</string>
-    <string name="how_to_update_profile_4">4. Update your Profile</string>
-    <string name="how_ror_5">5. Request of Relation</string>
-    <string name="how_share_loc_6">6. Share Location Home,Office and Users</string>
-    <string name="how_near_by_7">7. Nearby Location</string>
-    <string name="how_matrimony_8">8. Matrimony</string>
-    <string name="how_export_search_9">9. Export search</string>
-    <string name="how_share_code_10">10. Share with QR code</string>
-    <string name="how_calendar_11">11. Calendar and Set Reminder</string>
-    <string name="how_event_manage_12">12. Event management by Admin</string>
-    <string name="how_admin_manage_13">13. Admin Management</string>-->
+    <!-- <string name="how_to_forgot_1">1. If you forgot your password</string>
+     <string name="how_search_profile_2">2. Search Profiles</string>
+     <string name="how_to_event_list_3">3. Event list</string>
+     <string name="how_to_update_profile_4">4. Update your Profile</string>
+     <string name="how_ror_5">5. Request of Relation</string>
+     <string name="how_share_loc_6">6. Share Location Home,Office and Users</string>
+     <string name="how_near_by_7">7. Nearby Location</string>
+     <string name="how_matrimony_8">8. Matrimony</string>
+     <string name="how_export_search_9">9. Export search</string>
+     <string name="how_share_code_10">10. Share with QR code</string>
+     <string name="how_calendar_11">11. Calendar and Set Reminder</string>
+     <string name="how_event_manage_12">12. Event management by Admin</string>
+     <string name="how_admin_manage_13">13. Admin Management</string>-->
 
 
     <string-array name="yt_code">
@@ -238,6 +238,13 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
 ]]>
 </string>
 
+    <string name="nice_signup">
+<![CDATA[
+ 1.પરિણીત વ્યક્તિ કુટુંબના વડા ના નામ થી સાઇન અપ કરી શકે છે.\n2. અપરિણિત વ્યક્તિ પિતા નામ સાથે સાઇન અપ કરો.\n3. ચકાસણી કૉલ માટે રાહ જુઓ.
+]]>
+</string>
+
+
     <string name="gotra">Gotra :</string>
     <string name="blood_group">Blood Group :</string>
     <string name="mobile">Mobile :</string>
@@ -268,8 +275,7 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="language">Language</string>
     <string name="select_subcast">Select Subcast</string>
     <string name="select_ekdo">Select Ekdo</string>
-    <string name="signup_with">Signup with Family Head</string>
-    <string name="login_with">Login with Family Head</string>
+
     <string name="marquee_text">Technical help: 9427051418 Kunjan R. Shah (Ahmedabad) </string>
     <string name="_2_technical_help_9427051418_kunjan_r_shah_ahmedabad">2. Technical help: 9427051418 Kunjan R. Shah (Ahmedabad)</string>
     <string name="_1_if_you_have_xiomi_vivo_or_oppo_phone_then_please_enable_auto_start_option">1. If you have Xiomi,Vivo or Oppo Phone then please enable auto start option</string>
@@ -289,6 +295,7 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="date_type">date_type</string>
     <string name="age">age</string>
     <string name="name">name</string>
+    <string name="hint_spouse_name">Spouse name</string>
 
 
 </resources>

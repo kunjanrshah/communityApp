@@ -87,17 +87,17 @@
             android:orientation="horizontal">
             <Button
                 android:id="@+id/txt_status"
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="30dp"
                 android:background="@drawable/mybutton"
                 android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/img_delete"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:padding="5dp"
-                android:layout_marginLeft="50dp"
+                android:layout_marginLeft="3dp"
                 android:src="@drawable/cancel" />
 
         </LinearLayout>

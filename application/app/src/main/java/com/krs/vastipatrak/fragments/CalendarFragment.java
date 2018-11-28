@@ -208,7 +208,7 @@ public class CalendarFragment extends Fragment {
                     String bdate_rem_id = mJsondata.getString(Common.Constant_Class.BDATE_REMINDER_ID);
                     String spouse_rem_id = mJsondata.getString(Common.Constant_Class.SPOUSE_BDATE_REMINDER_ID);
                     String mdate_rem_id = mJsondata.getString(Common.Constant_Class.MDATE_REMINDER_ID);
-                    //String child_rem_id = mJsondata.getString(Common.Constant_Class.CHILD_BDATE_REMINDER_ID);
+                    JSONArray childs=mJsondata.getJSONArray("childs");
 
 
                     String can_share = "0";
@@ -225,7 +225,7 @@ public class CalendarFragment extends Fragment {
                     lpd.setBdate_rem_id(bdate_rem_id);
                     lpd.setSpouse_rem_id(spouse_rem_id);
                     lpd.setMdate_rem_id(mdate_rem_id);
-                    lpd.setChild_rem_id(child_rem_id);
+                    lpd.setChilds(childs);
 
                     lpd.setName(first_name + " " + last_name);
                     lpd.setFatherName(father_name);

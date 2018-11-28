@@ -197,7 +197,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
         } else if (query_string != null && !query_string.equalsIgnoreCase("")) {
             OnlineSearch(query_string, Common.Constant_Class.ADVANCE_SEARCH_URL);
         } else if (adminControl == Common.Constant_Class.NonActive && query.isEmpty() && query_string.isEmpty()) {
-            callNonActivesWS();
+          //  callNonActivesWS();
         } else {
             lvCustomList.setVisibility(View.GONE);
             Objects.requireNonNull(txtLable).setVisibility(View.VISIBLE);
@@ -605,11 +605,10 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 total_records = response.getString(Common.Constant_Class.TOTAL_RECORDS);
             }
 
-
+            Objects.requireNonNull(listDataHeader).clear();
+            Objects.requireNonNull(listDataChild).clear();
             if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                 int total = 0;
-                Objects.requireNonNull(listDataHeader).clear();
-                Objects.requireNonNull(listDataChild).clear();
                 lvCustomList.setVisibility(View.VISIBLE);
                 try {
                     total = Integer.parseInt(total_records);
@@ -758,7 +757,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
                     mSwipyRefreshLayout.setRefreshing(false);
-
+                    hideProgressDialog();
                     displayData(response, true);
                 }
             }, new Response.ErrorListener() {

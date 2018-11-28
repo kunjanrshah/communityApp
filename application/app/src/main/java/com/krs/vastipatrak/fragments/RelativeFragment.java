@@ -69,6 +69,13 @@ public class RelativeFragment extends Fragment {
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
+                String id = "";
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
+                    id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+                } else {
+                    id = mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, "");
+                }
+                mJsonObject.put(Common.Constant_Class.PROFILE_ID, id);
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             } catch (Exception e) {
@@ -455,32 +462,34 @@ public class RelativeFragment extends Fragment {
                 holder.txt_approve.setText("Approved by ");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.primary_blue));
                 holder.txt_to.setTextColor(getResources().getColor(R.color.primary_blue));
-                holder.txt_status.setText("Reject");
                 holder.txt_status.setClickable(true);
-                //holder.img_status.setImageDrawable(getResources().getDrawable(R.drawable.ico_approve));
+                String input = "Reject";
+                String output = input.substring(0, 1).toUpperCase() + input.substring(1);
+                holder.txt_status.setText(output);
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape1));
-                // holder.txt_status.setText(Html.fromHtml(last_name + "  <b>" + Common.getCapsSentences(relation) + "</b> of " + from_name));
-                // makeLinks(holder.txt_status, new String[]{last_name, from_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
             } else if (status.contains(Common.Constant_Class.REQUESTED)) {
                 holder.txt_request.setText("Requested by ");
                 holder.txt_approve.setText("To ");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 holder.txt_to.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                //holder.txt_status.setText(Html.fromHtml(from_name + " requested <b>" + Common.getCapsSentences(relation) + "</b> to " + last_name));
-                holder.txt_status.setText("Waiting");
+                String input = "Waiting";
+                String output = input.substring(0, 1).toUpperCase() + input.substring(1);
+                holder.txt_status.setText(output);
+
                 holder.txt_status.setClickable(false);
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape10));
-                // makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
             } else if (status.contains(Common.Constant_Class.REJECTED)) {
                 holder.txt_request.setText("Requested by ");
                 holder.txt_approve.setText("Rejected by ");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 holder.txt_to.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                //holder.txt_status.setText(Html.fromHtml(last_name + " rejected <b>" + Common.getCapsSentences(relation) + "</b> to " + from_name));
-                holder.txt_status.setText("Approve");
+                String input = "Approve";
+                String output = input.substring(0, 1).toUpperCase() + input.substring(1);
+                holder.txt_status.setText(output);
+
                 holder.txt_status.setClickable(true);
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape9));
-                // makeLinks(holder.txt_status, new String[]{from_name, last_name}, new ClickableSpan[]{clickableSpan1, clickableSpan2});
+
             }
 
             if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {

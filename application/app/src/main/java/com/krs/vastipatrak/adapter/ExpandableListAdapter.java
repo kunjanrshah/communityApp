@@ -768,6 +768,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         });
 
         JSONArray array = mListParentData.getCalLabelArray();
+        JSONArray childs=mListParentData.getChilds();
         if (array != null && array.length() > 0) {
             groupViewHolder.ll_lable.removeAllViewsInLayout();
             for (int i = 0; i < array.length(); i++) {
@@ -777,13 +778,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                addLabel(groupViewHolder.ll_lable, mjson,id);
+                addLabel(groupViewHolder.ll_lable, mjson,id,childs);
             }
         }
         return convertView;
     }
 
-    private void addLabel(LinearLayout view, JSONObject jsonObject, final String id) {
+    private void addLabel(LinearLayout view, JSONObject jsonObject, final String id,JSONArray childs) {
         LayoutInflater layoutInflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View addView = layoutInflater.inflate(R.layout.cal_lable_view, null);
         final ViewHolder mViewholder = new ViewHolder();
@@ -874,7 +875,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder(id,date, finalStatus1, "", finalChild_id,Integer.parseInt(profile_bdate_rem));
+                              //  setReminder(id,date, finalStatus1, "", finalChild_id,Integer.parseInt(profile_bdate_rem));
                             }
                         });
                         builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -922,7 +923,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             JSONObject mObject = response.getJSONObject(Common.Constant_Class.DATA);
-                            profile_bdate_rem = mObject.getString("reminder_id");
+                       //     profile_bdate_rem = mObject.getString("reminder_id");
                         } else {
                             if (response.has(Common.Constant_Class.ERROR_CODE)) {
                                 String error = response.getString(Common.Constant_Class.ERROR_CODE);
