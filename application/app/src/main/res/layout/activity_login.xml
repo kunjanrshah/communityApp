@@ -71,17 +71,6 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/img_cancel"
-                        android:layout_width="35dip"
-                        android:layout_height="35dip"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="50dp"
-                        android:contentDescription="TODO"
-                        android:padding="5dp"
-                        android:src="@drawable/cancel"
-                        android:visibility="invisible" />
-
-                    <ImageView
                         android:id="@+id/img_profile"
                         android:layout_width="90dip"
                         android:layout_height="90dip"
@@ -89,6 +78,18 @@
                         android:contentDescription="TODO"
                         android:src="@drawable/user_profile"
                         android:visibility="invisible" />
+
+                    <ImageView
+                        android:id="@+id/img_cancel"
+                        android:layout_width="30dip"
+                        android:layout_height="30dip"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="40dp"
+                        android:contentDescription="TODO"
+                        android:padding="5dp"
+                        android:src="@drawable/cancel"
+                        android:visibility="invisible" />
+
                 </FrameLayout>
 
 
@@ -165,6 +166,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_mobile"
+                        android:maxLength="10"
                         android:inputType="number"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>

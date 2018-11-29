@@ -8,8 +8,6 @@ public class ListChildData {
     private String str_native;
     private String str_address;
     private String str_birth_date;
-    private String str_birth_time;
-    private String str_birth_place;
     private String str_gotra;
     private String str_gender;
     private String str_blood_group;
@@ -23,19 +21,18 @@ public class ListChildData {
     private String user_lng;
     private String str_name;
     private String Shared;
-
-    public JSONObject getMjsonobj() {
-        return mjsonobj;
-    }
-
-    public void setMjsonobj(JSONObject mjsonobj) {
-        this.mjsonobj = mjsonobj;
-    }
-
-    private JSONObject mjsonobj;
+    private String spouse_name;
     private String father;
     private String mother;
-    private String spouse;
+
+
+    public String getSpouse_name() {
+        return spouse_name;
+    }
+
+    public void setSpouse_name(String spouse_name) {
+        this.spouse_name = spouse_name;
+    }
 
     public String getFather() {
         return father;
@@ -44,33 +41,6 @@ public class ListChildData {
     public void setFather(String father) {
         this.father = father;
     }
-
-    public String getSpouse() {
-        return spouse;
-    }
-
-    public void setSpouse(String spouse) {
-        this.spouse = spouse;
-    }
-
-    public String getSpouse_father() {
-        return spouse_father;
-    }
-
-    public void setSpouse_father(String spouse_father) {
-        this.spouse_father = spouse_father;
-    }
-
-    public String getSpouse_mother() {
-        return spouse_mother;
-    }
-
-    public void setSpouse_mother(String spouse_mother) {
-        this.spouse_mother = spouse_mother;
-    }
-
-    private String spouse_father;
-    private String spouse_mother;
 
     public String getShared() {
         return Shared;
@@ -186,14 +156,6 @@ public class ListChildData {
         this.str_gotra = str_gotra;
     }
 
-    public String getBirth_place() {
-        return str_birth_place;
-    }
-
-    public void setBirth_place(String str_birth_place) {
-        this.str_birth_place = str_birth_place;
-    }
-
     public String getPhone() {
         return str_phone;
     }
@@ -224,15 +186,6 @@ public class ListChildData {
 
     public void setNative(String str_native) {
         this.str_native = str_native;
-    }
-
-
-    public String getbirth_time() {
-        return str_birth_time;
-    }
-
-    public void setbirth_time(String str_birth_time) {
-        this.str_birth_time = str_birth_time;
     }
 
 }

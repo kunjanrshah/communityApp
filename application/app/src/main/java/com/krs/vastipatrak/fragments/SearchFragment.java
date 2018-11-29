@@ -662,8 +662,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
                     String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
                     String birth_date = mJsondata.getString(Common.Constant_Class.BIRTH_DATE);
-                    String birth_time = mJsondata.getString(Common.Constant_Class.BIRTH_TIME);
-                    String birth_place = mJsondata.getString(Common.Constant_Class.BIRTH_PLACE);
                     String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
                     String is_share = "0";
                     if (mJsondata.has(Common.Constant_Class.IS_SHARE)) {
@@ -674,9 +672,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     String phone = mJsondata.getString(Common.Constant_Class.PHONE);
                     String gender = mJsondata.getString(Common.Constant_Class.GENDER);
                     String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
-                    String sfather = mJsondata.getString(Common.Constant_Class.SPOUSE_FATHER_NAME);
-                    String smother = mJsondata.getString(Common.Constant_Class.SPOUSE_MOTHER_NAME);
-
+                    String spouse = mJsondata.getString(Common.Constant_Class.SPOUSE_NAME);
 
                     ListChildData lcd = new ListChildData();
                     lcd.setID(profile_id);
@@ -684,20 +680,15 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     lcd.setNative(native_place);
                     lcd.setAddress(address);
                     lcd.setbirth_date(birth_date);
-                    lcd.setbirth_time(birth_time);
-                    lcd.setBirth_place(birth_place);
                     lcd.setBlood_Group(blood_group);
                     lcd.setMobile(mobile);
                     lcd.setPhone(phone);
                     lcd.setGender(gender);
                     lcd.setGotra(gotra);
-                    lcd.setMjsonobj(mJsondata);
                     lcd.setName(first_name + " " + last_name);
+                    lcd.setSpouse_name(spouse);
                     lcd.setFather(father_name);
                     lcd.setMother_name(mother_name);
-                    lcd.setSpouse_father(sfather);
-                    lcd.setSpouse_mother(smother);
-
 
                     ArrayList<ListChildData> mlstChildData = new ArrayList<>();
                     mlstChildData.add(lcd);
@@ -940,7 +931,6 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     page = 1;
                     isAdmin = false;
                     OnlineSearch(Common.Title, Common.Constant_Class.GLOBAL_SEARCH_URL);
-                    // callSearchWS(Common.Title, Common.Constant_Class.GLOBAL_SEARCH_URL);
                 }
                 dialog.dismiss();
             }

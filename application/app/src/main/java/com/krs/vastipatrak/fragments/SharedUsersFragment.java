@@ -111,8 +111,6 @@ public class SharedUsersFragment extends Fragment {
             String native_place = mjsondata.getString(Common.Constant_Class.NATIVE_PLACE);
             String address = mjsondata.getString(Common.Constant_Class.ADDRESS);
             String birth_date = mjsondata.getString(Common.Constant_Class.BIRTH_DATE);
-            String birth_time = mjsondata.getString(Common.Constant_Class.BIRTH_TIME);
-            String birth_place = mjsondata.getString(Common.Constant_Class.BIRTH_PLACE);
             String blood_group = mjsondata.getString(Common.Constant_Class.BLOOD_GROUP);
             String is_share = "0";
             if (mjsondata.has(Common.Constant_Class.IS_SHARE)) {
@@ -132,8 +130,6 @@ public class SharedUsersFragment extends Fragment {
             lcd.setNative(native_place);
             lcd.setAddress(address);
             lcd.setbirth_date(birth_date);
-            lcd.setbirth_time(birth_time);
-            lcd.setBirth_place(birth_place);
             lcd.setBlood_Group(blood_group);
             lcd.setMobile(mobile);
             lcd.setMother_name(mother_name);

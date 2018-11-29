@@ -69,7 +69,6 @@ import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.Constant_Class.BIRTH_DATE;
 import static com.krs.vastipatrak.utils.Common.Constant_Class.MARRIAGE_DATE;
-import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
 import static com.krs.vastipatrak.utils.Common.getChildRandomColor;
 import static com.krs.vastipatrak.utils.Common.getParentRandomColor;
@@ -84,15 +83,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private final String TAG = ExpandableListAdapter.class.getSimpleName();
     private final SharedPreferences mSharedPreferences;
     private final SharedPreferences.Editor mEditor;
-    @NonNull
-    private final String[] SPINNERLIST = {"Father", "Son", "Daughter", "Brother", "Sister", "Grandfather", "Grandson", "Uncle", "Uncle's Son", "Uncle in law", "Uncle's Son"};
-    HashMap<String, String> testHashMap2;
-    Gson gson;
+    private HashMap<String, String> testHashMap2;
+    private Gson gson;
     private boolean isNearby = false;
-    @Nullable
-    // private ProgressDialog pDialog;
     private ChildViewHolder childViewHolder;
     private boolean sharedUsers = false;
+    private HashMap<Integer, String> remHashMap;
 
     @SuppressLint("UseSparseArrays")
     public ExpandableListAdapter(Context context, ArrayList<ListParentData> listDataHeader, HashMap<ListParentData, List<ListChildData>> listDataChild, boolean sharedUsers) {
@@ -100,7 +96,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         this._listDataHeader = listDataHeader;
         this._listDataChild = listDataChild;
         this.sharedUsers = sharedUsers;
-
+        remHashMap = new HashMap<>();
         mSharedPreferences = _context.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
@@ -174,8 +170,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             childViewHolder.txt_gender = convertView.findViewById(R.id.txt_gender);
             childViewHolder.txt_gotra = convertView.findViewById(R.id.txt_gotra);
             childViewHolder.txt_bdate = convertView.findViewById(R.id.txt_bdate);
-            childViewHolder.txt_btime = convertView.findViewById(R.id.txt_btime);
-            childViewHolder.txt_bplace = convertView.findViewById(R.id.txt_bplace);
+            childViewHolder.txt_spouse = convertView.findViewById(R.id.txt_spouse);
             childViewHolder.txt_address = convertView.findViewById(R.id.txt_address);
             childViewHolder.txt_native = convertView.findViewById(R.id.txt_native);
             childViewHolder.txt_mother = convertView.findViewById(R.id.txt_mother);
@@ -197,8 +192,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String address = mListChildData.getAddress();
         String birth_date = mListChildData.getbirth_date();
         birth_date = Common.parseDateToddMMyyyy(birth_date, yyyy_MM_dd, dd_MMM_yyyy);
-        String birth_place = mListChildData.getBirth_place();
-        String birth_time = mListChildData.getbirth_time();
+        String spouse_name = mListChildData.getSpouse_name();
         String blood_group = mListChildData.getBlood_Group();
         String gender = mListChildData.getGender();
         String gotra = mListChildData.getGotra();
@@ -336,8 +330,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         childViewHolder.txt_gender.setText(gender);
         childViewHolder.txt_gotra.setText(Common.camelCase(gotra));
         childViewHolder.txt_bdate.setText(birth_date);
-        childViewHolder.txt_btime.setText(birth_time);
-        childViewHolder.txt_bplace.setText(Common.camelCase(birth_place));
+        childViewHolder.txt_spouse.setText(spouse_name);
+
 
         childViewHolder.img_details.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -491,6 +485,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String Shared = mListParentData.getShared();
         String type = mListParentData.getType();
         String is_location = mListParentData.isIs_location_enable();
+
         if (!dist.isEmpty()) {
             groupViewHolder.txt_dist.setVisibility(View.VISIBLE);
             DecimalFormat df2 = new DecimalFormat("#.##");
@@ -768,49 +763,77 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         });
 
         JSONArray array = mListParentData.getCalLabelArray();
-        JSONArray childs=mListParentData.getChilds();
+        JSONArray childs = mListParentData.getChilds();
         if (array != null && array.length() > 0) {
+            String bdate_rem_id = mListParentData.getBdate_rem_id();
+            String spouse_rem_id = mListParentData.getSpouse_rem_id();
+            String mdate_rem_id = mListParentData.getMdate_rem_id();
             groupViewHolder.ll_lable.removeAllViewsInLayout();
+
             for (int i = 0; i < array.length(); i++) {
                 JSONObject mjson = null;
                 try {
                     mjson = array.getJSONObject(i);
+                    mjson.put("bdate_rem_id", bdate_rem_id);
+                    mjson.put("spouse_rem_id", spouse_rem_id);
+                    mjson.put("mdate_rem_id", mdate_rem_id);
+                    addLabel(groupViewHolder.ll_lable, mjson, id, childs, groupPosition);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                addLabel(groupViewHolder.ll_lable, mjson,id,childs);
             }
         }
         return convertView;
     }
 
-    private void addLabel(LinearLayout view, JSONObject jsonObject, final String id,JSONArray childs) {
+    private void addLabel(LinearLayout view, JSONObject jsonObject, final String id, JSONArray childs, final int groupPosition) {
         LayoutInflater layoutInflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View addView = layoutInflater.inflate(R.layout.cal_lable_view, null);
         final ViewHolder mViewholder = new ViewHolder();
-        mViewholder.txtdType = addView.findViewById(R.id.txtdType);
-        mViewholder.txtType = addView.findViewById(R.id.txtType);
+        mViewholder.img_dType = addView.findViewById(R.id.img_dType);
+        mViewholder.imgType = addView.findViewById(R.id.imgType);
         mViewholder.txtName = addView.findViewById(R.id.txtName);
         mViewholder.txtyear = addView.findViewById(R.id.txtyear);
         mViewholder.txtDate = addView.findViewById(R.id.txtDate);
         mViewholder.chk_rem = addView.findViewById(R.id.chk_rem);
         try {
+
+            String rem_id = "";
+            final String label_id = jsonObject.getString("id");
             final String date_type = jsonObject.getString(_context.getString(R.string.date_type));
-            if (date_type.equalsIgnoreCase("marriagedate")) {
-                mViewholder.txtdType.setText("M");
-            } else {
-                mViewholder.txtdType.setText("B");
-            }
+
+            String child_id = "0";
             final String type = jsonObject.getString(_context.getString(R.string.type));
             if (type.equalsIgnoreCase("self")) {
-                mViewholder.txtType.setVisibility(View.GONE);
+                rem_id = jsonObject.getString("bdate_rem_id");
+                mViewholder.imgType.setImageDrawable(_context.getResources().getDrawable(R.drawable.man));
+            }
+            if (type.equalsIgnoreCase("wife")) {
+                mViewholder.imgType.setImageDrawable(_context.getResources().getDrawable(R.drawable._woman));
+                rem_id = jsonObject.getString("spouse_rem_id");
+            } else if (type.equalsIgnoreCase("child")) {
+                child_id = label_id;
+                for (int i = 0; i < childs.length(); i++) {
+                    JSONObject json = childs.getJSONObject(i);
+                    String cid = json.getString("id");
+                    if (cid.equalsIgnoreCase(child_id)) {
+                        rem_id = json.getString("child_bdate_reminder_id");
+                        break;
+                    }
+                }
+                mViewholder.imgType.setImageDrawable(_context.getResources().getDrawable(R.drawable.child));
+            }
+
+
+            if (date_type.equalsIgnoreCase("marriagedate")) {
+                rem_id = jsonObject.getString("mdate_rem_id");
+                mViewholder.img_dType.setImageDrawable(_context.getDrawable(R.drawable.marriage));
             } else {
-                mViewholder.txtType.setVisibility(View.VISIBLE);
-                mViewholder.txtType.setText(type);
+                mViewholder.img_dType.setImageDrawable(_context.getDrawable(R.drawable.birthday));
             }
 
             mViewholder.txtName.setText(jsonObject.getString(_context.getString(R.string.name)));
-            mViewholder.txtyear.setText(jsonObject.getString(_context.getString(R.string.age))+"Years ");
+            mViewholder.txtyear.setText(jsonObject.getString(_context.getString(R.string.age)) + "Y");
             String rdate = jsonObject.getString(_context.getString(R.string.date));
             if (!rdate.isEmpty()) {
                 rdate = Common.parseDateToddMMyyyy(rdate, yyyy_MM_dd, dd_MMM_yyyy);
@@ -818,28 +841,30 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
 
             final String finalRdate = rdate;
+            final String finalChild_id = child_id;
+            final String finalRem_id = rem_id;
+            if (!rem_id.isEmpty() && !rem_id.equalsIgnoreCase("0")) {
+                mViewholder.chk_rem.setChecked(true);
+            } else {
+                mViewholder.chk_rem.setChecked(false);
+            }
             mViewholder.chk_rem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final String date = Common.parseDateToddMMyyyy(finalRdate, ddMMMyyyy, yyyy_MM_dd);
+                    final String date = Common.parseDateToddMMyyyy(finalRdate, dd_MMM_yyyy, yyyy_MM_dd);
                     android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(_context, R.style.AppCompatAlertDialogStyle);
                     builder.setTitle(_context.getString(R.string.app_name));
                     builder.setCancelable(false);
 
-                    String message = "Do you want set Reminder for Birthdate ? Change Message to wish ";
-                    String messge1="Do you want Unset Reminder for Birthdate ?";
-                    String msg="Happy Birthday from ";
-                    String status=BIRTH_DATE;
+                    String message = "Do you want set Reminder for Birthdate ? Change Message for wish ";
+                    String messge1 = "Do you want Unset Reminder for Birthdate ?";
+                    String msg = "Happy Birthday from ";
+                    String status = BIRTH_DATE;
                     if (date_type.equalsIgnoreCase("marriagedate")) {
-                        message = "Do you want set Reminder for Marriage anniversary ? Change Message to wish ";
-                        messge1="Do you want Unset Reminder for Marriage anniversary ?";
-                        msg="Happy Marriage anniversary from ";
-                        status=MARRIAGE_DATE;
-                    }
-
-                    String child_id="0";
-                    if (type.equalsIgnoreCase("child")) {
-                        child_id="0";
+                        message = "Do you want set Reminder for Marriage anniversary ? Change Message for wish ";
+                        messge1 = "Do you want Unset Reminder for Marriage anniversary ?";
+                        msg = "Happy Marriage anniversary from ";
+                        status = MARRIAGE_DATE;
                     }
 
                     if (mViewholder.chk_rem.isChecked()) {
@@ -847,17 +872,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         final EditText input = new EditText(_context);
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         input.setLayoutParams(lp);
-                        String name="";
-                        name=mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME,"");
-                        name=name+" "+mSharedPreferences.getString(Common.Constant_Class.LAST_NAME,"");
+                        String name = "";
+                        name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "");
+                        name = name + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
                         input.setText(msg + name);
                         builder.setView(input);
                         final String finalStatus = status;
-                        final String finalChild_id1 = child_id;
+
                         builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder(id,date, finalStatus, input.getText().toString(), finalChild_id1,0);
+                                setReminder(id, date, finalStatus, input.getText().toString(), finalChild_id, 0);
                             }
                         });
                         builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -871,11 +896,20 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     } else {
                         builder.setMessage(messge1);
                         final String finalStatus1 = status;
-                        final String finalChild_id = child_id;
+                        int reminder_id = Integer.parseInt(finalRem_id);
+                        if (remHashMap.size() > 0) {
+                            if (!finalChild_id.equalsIgnoreCase("0") && !remHashMap.get(Integer.parseInt(finalChild_id)).isEmpty()) {
+                                reminder_id = Integer.parseInt(remHashMap.get(Integer.parseInt(finalChild_id)));
+                            } else if (finalChild_id.equalsIgnoreCase("0") && !remHashMap.get(Integer.parseInt(id)).isEmpty()) {
+                                reminder_id = Integer.parseInt(remHashMap.get(Integer.parseInt(id)));
+                            }
+                        }
+
+                        final int finalReminder_id = reminder_id;
                         builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                              //  setReminder(id,date, finalStatus1, "", finalChild_id,Integer.parseInt(profile_bdate_rem));
+                                setReminder(id, date, finalStatus1, "", finalChild_id, finalReminder_id);
                             }
                         });
                         builder.setNegativeButton(_context.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -896,7 +930,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         view.addView(addView);
     }
 
-    private void setReminder(String profile_id,String rem_date, String rem_type, String msg,String child_id, int rem_id) {
+    private void setReminder(final String profile_id, String rem_date, String rem_type, String msg, final String child_id, final int rem_id) {
         if (Common.isOnline(_context)) {
             JSONObject mJsonObject = null;
             try {
@@ -923,7 +957,22 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             JSONObject mObject = response.getJSONObject(Common.Constant_Class.DATA);
-                       //     profile_bdate_rem = mObject.getString("reminder_id");
+                            String rem = mObject.getString("reminder_id");
+                            if (rem_id == 0) {
+                                if (child_id.equalsIgnoreCase("0")) {
+                                    remHashMap.put(Integer.parseInt(profile_id), rem);
+                                } else {
+                                    remHashMap.put(Integer.parseInt(child_id), rem);
+                                }
+                            } else {
+                                if (remHashMap.size() > 0) {
+                                    if (child_id.equalsIgnoreCase("0")) {
+                                        remHashMap.remove(Integer.parseInt(profile_id));
+                                    } else {
+                                        remHashMap.remove(Integer.parseInt(child_id));
+                                    }
+                                }
+                            }
                         } else {
                             if (response.has(Common.Constant_Class.ERROR_CODE)) {
                                 String error = response.getString(Common.Constant_Class.ERROR_CODE);
@@ -931,7 +980,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                     Intent mIntent = new Intent(_context, LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     _context.startActivity(mIntent);
-                                    ((Activity)_context).finish();
+                                    ((Activity) _context).finish();
                                 }
                             }
                         }
@@ -1117,8 +1166,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     public static class ViewHolder {
-        TextView txtdType;
-        TextView txtType;
+        ImageView img_dType;
+        ImageView imgType;
         TextView txtName;
         TextView txtyear;
         TextView txtDate;
@@ -1130,8 +1179,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView txt_gender;
         TextView txt_gotra;
         TextView txt_bdate;
-        TextView txt_btime;
-        TextView txt_bplace;
+        TextView txt_spouse;
+        //TextView txt_btime;
+        //TextView txt_bplace;
         TextView txt_address;
         TextView txt_native;
         TextView txt_mother;

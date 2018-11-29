@@ -203,8 +203,8 @@
 
     <string name="nice_html">
 <![CDATA[
- *જૈ જૈ શ્રી ગોકુલેશ*
- \n => આપણે જોઇએ છે કે આપણી Vastipatrak એપને આપ સૌનો સારો પ્રતિસાદ મળી રહ્યો છે...
+ \nHi, This is %s from Vastipatrak App. \n જૈ જૈ શ્રી ગોકુલેશ %s
+ \n\n => આપણે જોઇએ છે કે આપણી Vastipatrak એપને આપ સૌનો સારો પ્રતિસાદ મળી રહ્યો છે...
   \n\n
 પણ અમે જોયું કે...
 
@@ -215,11 +215,10 @@
 \n2. *Occupation (ધંધાને લગતી વિગતો)*
 \n3. *My family (પરિવાર ની વિગતો)*
 
- \n\n*Family પર્સન જ પ્રોફાઈલ અલગ બનાવે..*
-\n*અને ડુપ્લિકેશન મહેરબાની કરી ન કરશો..*
+ \n\n*1.પરિણીત વ્યક્તિ કુટુંબના વડા ના નામ થી સાઇન અપ કરી શકે છે.*\n*2. અપરિણિત વ્યક્તિ પિતા નામ સાથે સાઇન અપ કરો.*\n*3. ચકાસણી કૉલ માટે રાહ જુઓ*.
 
 
-\n\n*આપનો data Secure છે તમે તમારો data ખડાયતા સમાજને  જ આપી રહ્યાં છો... એટલે નિશ્ચિંત બની તમામ ડેટા અપડેટ કરો....*
+\n\n*આપનો data Secure છે તમે તમારો data MEDK ખડાયતા સમાજને  જ આપી રહ્યાં છો... એટલે નિશ્ચિંત બની તમામ ડેટા અપડેટ કરો....*
 
 \n\nકંઇ પણ query હોય તો જણાવેલ નંબર પર *whats app કે call કરો* જેથી આપણી એપમાં લેટેસ્ટ ડેટા આવી શકે અને સૌ એનો ઉપયોગ પણ કરી શકે...
 \n\n
@@ -234,7 +233,7 @@
 આભાર...
 \n\n
 https://play.google.com/store/apps/details?id=com.krs.vastipatrak
-\nDownload the Vastipatrak app and update your profile. \nHi, This is %s from Vastipatrak App. \n જૈ જૈ શ્રી ગોકુલેશ %s
+\n
 ]]>
 </string>
 
@@ -276,7 +275,7 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="select_subcast">Select Subcast</string>
     <string name="select_ekdo">Select Ekdo</string>
 
-    <string name="marquee_text">Technical help: 9427051418 Kunjan R. Shah (Ahmedabad) </string>
+    <string name="marquee_text">Technical help: 9427051418 Kunjan RajendraBhai Shah (Ahmedabad) </string>
     <string name="_2_technical_help_9427051418_kunjan_r_shah_ahmedabad">2. Technical help: 9427051418 Kunjan R. Shah (Ahmedabad)</string>
     <string name="_1_if_you_have_xiomi_vivo_or_oppo_phone_then_please_enable_auto_start_option">1. If you have Xiomi,Vivo or Oppo Phone then please enable auto start option</string>
     <string name="not_connected">Not connected to internet</string>
@@ -296,6 +295,26 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="age">age</string>
     <string name="name">name</string>
     <string name="hint_spouse_name">Spouse name</string>
+
+
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="_start">GOT IT</string>
+
+    <string name="slide_1_title">Hello Food!</string>
+    <string name="slide_1_desc">The easiest way to order food from your favourite restaurant!</string>
+
+    <string name="slide_2_title">Movie Tickets</string>
+    <string name="slide_2_desc">Book movie tickets for your family and friends!</string>
+
+    <string name="slide_3_title">Great Discounts</string>
+    <string name="slide_3_desc">Best discounts on every single service we offer!</string>
+
+    <string name="slide_4_title">World Travel</string>
+    <string name="slide_4_desc">Book tickets of any transportation and travel the world!</string>
+
+    <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
+    <string name="play_again">Play Again</string>
 
 
 </resources>

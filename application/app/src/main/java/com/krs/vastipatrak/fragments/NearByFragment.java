@@ -240,8 +240,6 @@ public class NearByFragment extends Fragment {
                                 String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
                                 String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
                                 String birth_date = mJsondata.getString(Common.Constant_Class.BIRTH_DATE);
-                                String birth_time = mJsondata.getString(Common.Constant_Class.BIRTH_TIME);
-                                String birth_place = mJsondata.getString(Common.Constant_Class.BIRTH_PLACE);
                                 String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
                                 String is_share = "0";
                                 if (mJsondata.has(Common.Constant_Class.IS_SHARE)) {
@@ -257,8 +255,6 @@ public class NearByFragment extends Fragment {
                                 lcd.setNative(native_place);
                                 lcd.setAddress(address);
                                 lcd.setbirth_date(birth_date);
-                                lcd.setbirth_time(birth_time);
-                                lcd.setBirth_place(birth_place);
                                 lcd.setBlood_Group(blood_group);
                                 lcd.setMobile(mobile);
                                 lcd.setMother_name(mother_name);

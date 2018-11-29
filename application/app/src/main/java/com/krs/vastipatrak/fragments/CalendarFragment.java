@@ -40,7 +40,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
+import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
 public class CalendarFragment extends Fragment {
 
@@ -65,8 +67,9 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onDaySelect() {
                 Day day = viewCalendar.getSelectedDay();
-                String date = day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay();
+                String date = day.getYear() + "-" + (day.getMonth() + 1) + "-" + day.getDay();
                 Log.i(getClass().getName(), "Selected Day: " + date);
+
                 CalendarWS(date);
             }
 
@@ -133,6 +136,7 @@ public class CalendarFragment extends Fragment {
         // viewCalendar.select(new Day(year, month, day));
         String date = year + "-" + month + "-" + day;
         CalendarWS(date);
+
     }
 
     private void CalendarWS(String date) {
@@ -141,7 +145,6 @@ public class CalendarFragment extends Fragment {
             JSONObject mJsonObject = null;
             try {
 
-                // date=Common.parseDateToddMMyyyy(date,ddMMMyyyy,yyyy_MM_dd);
                 mJsonObject = new JSONObject();
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.DATE, date);
@@ -244,8 +247,6 @@ public class CalendarFragment extends Fragment {
                     String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
                     String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
                     String birth_date = mJsondata.getString(Common.Constant_Class.BIRTH_DATE);
-                    String birth_time = mJsondata.getString(Common.Constant_Class.BIRTH_TIME);
-                    String birth_place = mJsondata.getString(Common.Constant_Class.BIRTH_PLACE);
                     String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
                     String is_share = "0";
                     if (mJsondata.has(Common.Constant_Class.IS_SHARE)) {
@@ -256,6 +257,7 @@ public class CalendarFragment extends Fragment {
                     String phone = mJsondata.getString(Common.Constant_Class.PHONE);
                     String gender = mJsondata.getString(Common.Constant_Class.GENDER);
                     String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
+                    String spouse = mJsondata.getString(Common.Constant_Class.SPOUSE_NAME);
 
                     ListChildData lcd = new ListChildData();
                     lcd.setID(profile_id);
@@ -263,8 +265,7 @@ public class CalendarFragment extends Fragment {
                     lcd.setNative(native_place);
                     lcd.setAddress(address);
                     lcd.setbirth_date(birth_date);
-                    lcd.setbirth_time(birth_time);
-                    lcd.setBirth_place(birth_place);
+
                     lcd.setBlood_Group(blood_group);
                     lcd.setMobile(mobile);
                     lcd.setMother_name(mother_name);
@@ -272,6 +273,7 @@ public class CalendarFragment extends Fragment {
                     lcd.setGender(gender);
                     lcd.setGotra(gotra);
                     lcd.setName(first_name + " " + last_name);
+                    lcd.setSpouse_name(spouse);
                     ArrayList<ListChildData> mlstChildData = new ArrayList<>();
                     mlstChildData.add(lcd);
                     listDataHeader.add(lpd);

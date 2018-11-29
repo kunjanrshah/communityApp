@@ -35,6 +35,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -237,6 +238,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         }
         resources = context.getResources();
         checkConnection();
+        //showActivityOverlay();
     }
 
     private void checkConnection() {
@@ -374,6 +376,22 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         });
     }
 
+    private void showActivityOverlay() {
+        final Dialog dialog = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
+        dialog.setContentView(R.layout.overlay_activity);
+
+        LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.llOverlay_activity);
+        layout.setBackgroundColor(Color.TRANSPARENT);
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+    }
 
     private void setListner() {
         edt_spouse_name.addTextChangedListener(new MyTextWatcher(edt_spouse_name));
@@ -725,17 +743,11 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         if (Common.isOnline(this)) {
             final String name = inputName.getText().toString();
             final String email = inputEmail.getText().toString();
-            final String mobile = inputMobile.getText().toString();
+            final String mobile = inputMobile.getText().toString().trim();
             final String password = inputPassword.getText().toString();
             String cpassword = inputConformPassword.getText().toString();
             final String spouse_name = edt_spouse_name.getText().toString();
             final String address = edt_address.getText().toString();
-           /*
-            final String surname = edt_surname.getText().toString();
-            final String _native = edt_native.getText().toString();
-            */
-            // String subcast = spinnerSubcast.getText().toString();
-            // final String ekdo = spinnerEkdo.getText().toString();
 
             if (!email.equalsIgnoreCase("")) {
                 if (Common.isValidEmail(email)) {
@@ -746,7 +758,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
 
             if (!email.equalsIgnoreCase("") && !name.equalsIgnoreCase("") && !mobile.equalsIgnoreCase("") && !password.equalsIgnoreCase("") && !cpassword.equalsIgnoreCase("") && !spouse_name.equalsIgnoreCase("") && !address.equalsIgnoreCase("")) {
                 if (password.equalsIgnoreCase(cpassword)) {
-                    if (mobile.length() >= 10) {
+                    if (mobile.length() == 10) {
                         try {
                             json = new JSONObject();
                             Common.showProgressDialog(this);
@@ -792,56 +804,8 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                                             edt_address.setText("");
                                             togglePage();
                                         }
-
-
-                                        /*if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
-                                            Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
-                                            if (mSharedPreferences != null) {
-                                                mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                                            }
-                                            startActivity(mIntent);
-                                            finish();
-                                        }*/
-
-
-/*                                        String user_id = response.getString(Common.Constant_Class.USER_ID);
-                                        if (!message.contains("admin")) {
-
-                                            String profile_url = response.getString(Common.Constant_Class.PROFILE_PIC_URL);
-                                            String first_name = response.getString(Common.Constant_Class.FIRST_NAME);
-                                            String last_name = response.getString(Common.Constant_Class.LAST_NAME);
-
-                                            mEditor.putString(Common.Constant_Class.EMAIL, email);
-                                            mEditor.putString(Common.Constant_Class.PASSWORD, password);
-                                            mEditor.putString(Common.Constant_Class.USER_ID, user_id);
-                                            mEditor.putString(Common.Constant_Class.FIRST_NAME, first_name);
-                                            mEditor.putString(Common.Constant_Class.LAST_NAME, last_name);
-                                            mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, profile_url);
-                                            mEditor.apply();
-
-
-                                        } else{
-
-                                            ListProfileData mListProfileData = new ListProfileData();
-                                            mListProfileData.setProfile_id(user_id);
-                                            mListProfileData.setFirst_name(name);
-                                            mListProfileData.setLast_name(surname);
-                                            mListProfileData.setNative_place(_native);
-                                            mListProfileData.setFather_name(father_name);
-                                            mListProfileData.setAddress(address);
-                                            mListProfileData.setEkdo(ekdo);
-                                            mListProfileData.setEmail_address(email);
-                                            mListProfileData.setPassword(password);
-                                            mListProfileData.setMobile(mobile);
-
-                                            realm.beginTransaction();
-                                            realm.copyToRealm(mListProfileData);
-                                            realm.commitTransaction();
-
-                                        }*/
                                     }
                                     Common.alert(LoginActivity.this, message);
-                                    //Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_SHORT).show();
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }

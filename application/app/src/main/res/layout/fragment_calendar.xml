@@ -38,9 +38,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-       android:layout_marginBottom="10dp"
-        android:layout_marginRight="80dp"
+       android:layout_marginBottom="35dp"
+        android:layout_marginRight="70dp"
         android:src="@drawable/expand"
+
         android:background="@color/colorPrimaryDark"
         custom:fabSize="normal" />
 </android.support.design.widget.CoordinatorLayout>
