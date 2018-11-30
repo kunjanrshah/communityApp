@@ -2,6 +2,7 @@ package com.krs.vastipatrak.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,7 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.utils.PrefManager;
+import com.krs.vastipatrak.utils.Common;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -29,19 +30,50 @@ public class WelcomeActivity extends AppCompatActivity {
     private TextView[] dots;
     private int[] layouts;
     private Button btnSkip, btnNext;
-    private PrefManager prefManager;
+    //	viewpager change listener
+    ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
+
+        @Override
+        public void onPageSelected(int position) {
+            addBottomDots(position);
+
+            // changing the next button text 'NEXT' / 'GOT IT'
+            if (position == layouts.length - 1) {
+                // last page. make button text to GOT IT
+                btnNext.setText(getString(R.string._start));
+                btnSkip.setVisibility(View.GONE);
+            } else {
+                // still pages are left
+                btnNext.setText(getString(R.string.next));
+                btnSkip.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int arg0) {
+
+        }
+    };
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+    //private PrefManager prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Checking for first time launch - before calling setContentView()
-        prefManager = new PrefManager(this);
-        //if (!prefManager.isFirstTimeLaunch()) {
+        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_WELCOME, MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
+        if (!mSharedPreferences.getBoolean(getString(R.string.is_first_time), true)) {
             launchHomeScreen();
             finish();
-        //}
-
+        }
         // Making notification bar transparent
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
@@ -57,11 +89,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
         // layouts of all welcome sliders
         // add few more layouts if you want
-        layouts = new int[]{
-                R.layout.welcome_slide1,
-                R.layout.welcome_slide2,
-                R.layout.welcome_slide3,
-                R.layout.welcome_slide4};
+        layouts = new int[]{R.layout.welcome_slide1, R.layout.welcome_slide2, R.layout.welcome_slide3, R.layout.welcome_slide4};
 
         // adding bottom dots
         addBottomDots(0);
@@ -111,8 +139,7 @@ public class WelcomeActivity extends AppCompatActivity {
             dotsLayout.addView(dots[i]);
         }
 
-        if (dots.length > 0)
-            dots[currentPage].setTextColor(colorsActive[currentPage]);
+        if (dots.length > 0) dots[currentPage].setTextColor(colorsActive[currentPage]);
     }
 
     private int getItem(int i) {
@@ -120,40 +147,16 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void launchHomeScreen() {
-        prefManager.setFirstTimeLaunch(false);
-        startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
+        mEditor.putBoolean(getString(R.string.is_first_time), false);
+        mEditor.apply();
+        if (mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase("")) {
+            Intent mIntent = new Intent(WelcomeActivity.this, LoginActivity.class);
+            startActivity(mIntent);
+        } else {
+            startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+        }
         finish();
     }
-
-    //	viewpager change listener
-    ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
-
-        @Override
-        public void onPageSelected(int position) {
-            addBottomDots(position);
-
-            // changing the next button text 'NEXT' / 'GOT IT'
-            if (position == layouts.length - 1) {
-                // last page. make button text to GOT IT
-                btnNext.setText(getString(R.string._start));
-                btnSkip.setVisibility(View.GONE);
-            } else {
-                // still pages are left
-                btnNext.setText(getString(R.string.next));
-                btnSkip.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int arg0) {
-
-        }
-    };
 
     /**
      * Making notification bar transparent

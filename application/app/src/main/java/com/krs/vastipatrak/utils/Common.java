@@ -15,7 +15,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -103,6 +102,29 @@ public class Common {
         Matcher matcher = pattern.matcher(time);
         return !matcher.matches();
 
+    }
+
+
+    public static boolean isValidDate(String bdate) {
+        SimpleDateFormat sdf = new SimpleDateFormat(yyyy_MM_dd);
+        Date strDate = null;
+        try {
+            if(!bdate.isEmpty())
+            {
+                strDate = sdf.parse(bdate);
+            }else
+            {
+                return false;
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (new Date().before(strDate)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public static boolean isValidEmail(@Nullable CharSequence target) {
@@ -2151,6 +2173,7 @@ public class Common {
         public static final String API_KEY_VALUE = "q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
         public static final String DEVICE_TYPE_VALUE = "Android";
         public static final String PREF_NAME = "Vastipatrak";
+        public static final String PREF_WELCOME = "Welcome";
         public static final String PREF_FILTER = "Vastipatrak_Filter";
         public static final String PREF_TOKEN = "Pref_Token";
         public static final String SCREEN = "screen";

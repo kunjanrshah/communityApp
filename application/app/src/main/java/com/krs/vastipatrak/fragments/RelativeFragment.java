@@ -354,24 +354,9 @@ public class RelativeFragment extends Fragment {
 
         private final OnItemClickListener listener;
 
-
         RelativeAdapter(OnItemClickListener listener) {
             this.listener = listener;
         }
-
-        /*public void makeLinks(TextView textView, String[] links, ClickableSpan[] clickableSpans) {
-            SpannableString spannableString = new SpannableString(textView.getText());
-            for (int i = 0; i < links.length; i++) {
-                ClickableSpan clickableSpan = clickableSpans[i];
-                String link = links[i];
-
-                int startIndexOfLink = textView.getText().toString().indexOf(link);
-                spannableString.setSpan(clickableSpan, startIndexOfLink, startIndexOfLink + link.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            textView.setHighlightColor(Color.TRANSPARENT); // prevent TextView change background when highlight
-            textView.setMovementMethod(LinkMovementMethod.getInstance());
-            textView.setText(spannableString, TextView.BufferType.SPANNABLE);
-        }*/
 
         @NonNull
         @Override
@@ -409,50 +394,6 @@ public class RelativeFragment extends Fragment {
             final String user_id = reldata.getUser_id();
             String relation = reldata.getRelation();
 
-           /* ClickableSpan clickableSpan1 = new ClickableSpan() {
-                @Override
-                public void onClick(View textView) {
-                    String str = ((TextView) textView).getText().toString().toLowerCase();
-                    int len = str.indexOf(reldata.getRelation().toLowerCase());
-                    String str1 = str.substring(0, len);
-                    String id = "";
-                    if (str1.contains(reldata.getFrom_first_name().toLowerCase())) {
-                        id = reldata.getUser_id();
-                    } else {
-                        id = reldata.getTo_user_id();
-                    }
-                    moveToprofile(id);
-                }
-
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    super.updateDrawState(ds);
-                    ds.setUnderlineText(false);
-                }
-            };
-
-            ClickableSpan clickableSpan2 = new ClickableSpan() {
-                @Override
-                public void onClick(View textView) {
-                    String str = ((TextView) textView).getText().toString().toLowerCase();
-                    int len = str.toLowerCase().indexOf(reldata.getRelation().toLowerCase());
-                    String str1 = str.substring(0, len);
-                    String id = "";
-                    if (str1.contains(reldata.getFrom_first_name().toLowerCase())) {
-                        id = reldata.getTo_user_id();
-                    } else {
-                        id = reldata.getUser_id();
-                    }
-                    moveToprofile(id);
-                }
-
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    super.updateDrawState(ds);
-                    ds.setUnderlineText(false);
-                }
-            };*/
-
             holder.txt_from.setText(from_name);
             holder.txt_to.setText(last_name);
             holder.txt_msg.setText(Common.getCapsSentences(relation));
@@ -475,7 +416,8 @@ public class RelativeFragment extends Fragment {
                 String input = "Waiting";
                 String output = input.substring(0, 1).toUpperCase() + input.substring(1);
                 holder.txt_status.setText(output);
-
+                holder.txt_status.setTextColor(getResources().getColor(R.color.mdtp_white));
+                holder.txt_status.setBackground(getResources().getDrawable(R.drawable.mybutton1));
                 holder.txt_status.setClickable(false);
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape10));
             } else if (status.contains(Common.Constant_Class.REJECTED)) {

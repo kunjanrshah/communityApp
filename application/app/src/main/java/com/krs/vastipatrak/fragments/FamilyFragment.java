@@ -588,6 +588,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         rbtnChildNo.setEnabled(false);
         chk_marriage_bdate_rem.setVisibility(View.VISIBLE);
         chk_spouse_bdate_rem.setVisibility(View.VISIBLE);
+
+        img_spouse_cancel.setVisibility(View.GONE);
+        img_fspouse_cancel.setVisibility(View.GONE);
+        img_mspouse_cancel.setVisibility(View.GONE);
+
     }
 
     private void EnableAll() {
@@ -601,6 +606,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         sp_spouse_blood.setClickable(true);
         chk_marriage_bdate_rem.setVisibility(View.GONE);
         chk_spouse_bdate_rem.setVisibility(View.GONE);
+        img_spouse_cancel.setVisibility(View.VISIBLE);
+        img_fspouse_cancel.setVisibility(View.VISIBLE);
+        img_mspouse_cancel.setVisibility(View.VISIBLE);
     }
 
 
@@ -980,7 +988,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             Objects.requireNonNull(mViewholder.btn_remove).setVisibility(View.GONE);
             Objects.requireNonNull(mViewholder.edtchild_name).setKeyListener(null);
             mViewholder.edtchild_name.setCursorVisible(false);
-
+            mViewholder.img_child_cancel.setVisibility(View.GONE);
             Objects.requireNonNull(mViewholder.edtMobile).setKeyListener(null);
             mViewholder.edtMobile.setCursorVisible(false);
             mViewholder.spinnerBlood.setEnabled(false);

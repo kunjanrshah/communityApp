@@ -24,12 +24,22 @@ public class ListParentData {
     private String type;
     private String str_name;
     private String Shared;
+    private String address;
     private JSONArray CalLabelArray;
 
     String bdate_rem_id;
     String spouse_rem_id;
     String mdate_rem_id;
     JSONArray childs;
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+
     public JSONArray getChilds() {
         return childs;
     }

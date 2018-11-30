@@ -330,7 +330,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                     str_day = "0" + str_day;
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
-                                //  bdate = year + "-" + str_month + "-" + str_day;
                                 edtbdate.setText(date);
                             }
                         });
@@ -594,7 +593,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
     private void startImageActivity() {
         if (Common.hasPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) && Common.hasPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            chooseFragment=TAG;
+            chooseFragment = TAG;
             CropImage.startPickImageActivity(getActivity());
         }
     }
@@ -609,37 +608,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         dialog.show();
     }
 
-    /*
-        private void selectImage() {
-            final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-            builder.setTitle("Add Photo!");
-            builder.setItems(items, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(@NonNull DialogInterface dialog, int item) {
-                    if (items[item].equals("Take Photo")) {
-                        if (Common.canCAMARA(mActivity)) {
-                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            startActivityForResult(intent, 0);
-                        } else {
-                            requestPermissions(MainActivity.CALL_CAMARA, MainActivity.CAMARA_REQUEST);
-                        }
-
-                    } else if (items[item].equals("Choose from Library")) {
-                        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        intent.setType("image/*");
-                        startActivityForResult(Intent.createChooser(intent, "Select File"), 1);
-                    } else if (items[item].equals("Cancel")) {
-                        dialog.dismiss();
-                    }
-                }
-            });
-            builder.show();
-        }
-    */
     private void MemoryAllocation(View rootView) {
-
 
         mSharedPreferences = mActivity.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
@@ -723,9 +693,16 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         rbtnF.setEnabled(true);
         spinnerBlood.setEnabled(true);
         chk_profile_bdate_rem.setVisibility(View.GONE);
+        img_profile_cancel.setVisibility(View.VISIBLE);
+        img_father_cancel.setVisibility(View.VISIBLE);
+        img_mother_cancel.setVisibility(View.VISIBLE);
     }
 
     private void DisableAll() {
+
+        img_profile_cancel.setVisibility(View.GONE);
+        img_father_cancel.setVisibility(View.GONE);
+        img_mother_cancel.setVisibility(View.GONE);
 
         edtFName.setKeyListener(null);
         edtFName.setCursorVisible(false);

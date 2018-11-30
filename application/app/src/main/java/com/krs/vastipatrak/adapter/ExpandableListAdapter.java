@@ -29,6 +29,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -476,14 +477,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String id = mListParentData.getId();
         final String imgURL = mListParentData.getProfilePicUrl();
         final String Name = mListParentData.getName();
+        final String Mobile = mListParentData.getMobile();
+        final String address = mListParentData.getAddress();
         String FatherName = mListParentData.getFatherName();
-        String Mobile = mListParentData.getMobile();
         String city = mListParentData.getCity();
         String mail = mListParentData.getMail();
         String is_share = mListParentData.getIs_share();
         String dist = mListParentData.getDistance();
         String Shared = mListParentData.getShared();
         String type = mListParentData.getType();
+
         String is_location = mListParentData.isIs_location_enable();
 
         if (!dist.isEmpty()) {
@@ -746,19 +749,75 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         groupViewHolder.imgShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bitmap bitmap = null;
-                ImageView imageView = new ImageView(_context);
-                MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-                try {
-                    BitMatrix bitMatrix = multiFormatWriter.encode(id, BarcodeFormat.QR_CODE, 200, 200);
-                    BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                    bitmap = barcodeEncoder.createBitmap(bitMatrix);
-                    bitmap = Common.drawTextToBitmap(bitmap, Name);
-                    imageView.setImageBitmap(bitmap);
-                } catch (WriterException e) {
-                    e.printStackTrace();
-                }
-                shareImage(bitmap, Name);
+
+
+                // custom dialog
+                final Dialog dialog = new Dialog(_context);
+                dialog.setContentView(R.layout.custom_share_dialog);
+                dialog.setTitle(_context.getString(R.string.app_name));
+
+                // set the custom dialog components - text, image and button
+                final RadioButton radio_qr = dialog.findViewById(R.id.radio_qr);
+                final RadioButton radio_text = dialog.findViewById(R.id.radio_text);
+                ;
+                Button btn_ok = dialog.findViewById(R.id.btn_ok);
+                Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
+                radio_text.setChecked(true);
+                radio_qr.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (radio_qr.isChecked()) {
+                            radio_text.setChecked(false);
+                        }
+                    }
+                });
+
+                radio_text.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (radio_text.isChecked()) {
+                            radio_qr.setChecked(false);
+                        }
+                    }
+                });
+
+                btn_ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (radio_qr.isChecked()) {
+                            Bitmap bitmap = null;
+                            ImageView imageView = new ImageView(_context);
+                            MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+                            try {
+                                BitMatrix bitMatrix = multiFormatWriter.encode(id, BarcodeFormat.QR_CODE, 200, 200);
+                                BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                                bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                                bitmap = Common.drawTextToBitmap(bitmap, Name);
+                                imageView.setImageBitmap(bitmap);
+                            } catch (WriterException e) {
+                                e.printStackTrace();
+                            }
+                            shareImage(bitmap, Name);
+                        } else {
+                            String shareBody = "Name: " + Name + "\n" + "Mobile: " + Mobile + "\n" + " Address: " + address;
+                            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                            sharingIntent.setType("text/plain");
+                            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, Name);
+                            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                            _context.startActivity(Intent.createChooser(sharingIntent, "Share Using"));
+                        }
+                    }
+                });
+
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+
             }
         });
 
@@ -806,7 +865,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             final String type = jsonObject.getString(_context.getString(R.string.type));
             if (type.equalsIgnoreCase("self")) {
                 rem_id = jsonObject.getString("bdate_rem_id");
-                mViewholder.imgType.setImageDrawable(_context.getResources().getDrawable(R.drawable.man));
+                if (!date_type.equalsIgnoreCase("marriagedate")) {
+                    mViewholder.imgType.setImageDrawable(_context.getResources().getDrawable(R.drawable.man));
+                } else {
+                    mViewholder.imgType.setVisibility(View.GONE);
+                }
             }
             if (type.equalsIgnoreCase("wife")) {
                 mViewholder.imgType.setImageDrawable(_context.getResources().getDrawable(R.drawable._woman));

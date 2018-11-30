@@ -259,6 +259,8 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
+        mEditor.putString(Common.Constant_Class.NOTIFICATION, "");
+        mEditor.apply();
         snackbar = Snackbar.make(findViewById(R.id.ll_login), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
         txtHow = findViewById(R.id.txtHow);
         txt_label = findViewById(R.id.txt_label);

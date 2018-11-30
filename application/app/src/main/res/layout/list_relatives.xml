@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-
     android:orientation="horizontal"
     android:padding="5dp">
 
@@ -90,7 +89,7 @@
                 android:layout_width="80dp"
                 android:layout_height="30dp"
                 android:background="@drawable/mybutton"
-                android:textStyle="bold" />
+                 />
 
             <ImageView
                 android:id="@+id/img_delete"

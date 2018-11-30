@@ -99,7 +99,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         }
         checkConnection();
         SyncUser(id);
-        // call_profile_ws(new JSONObject(), "0");
     }
 
 
@@ -152,14 +151,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
         Common.hideKeyboard(this);
         finish();
-        setResult(11);
         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-
-        /*if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
-         //   saveProfile(1);
-        } else {
-
-        }*/
     }
 
 
@@ -286,7 +278,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
     private void saveProfile(int state) {
         ListProfileData mListProfileData = new ListProfileData();
-
+        valid="";
         if (personal != null && ((PersonalFragment) personal).edtFName != null && business != null && ((BusinessFragment) business).edtOccupation != null) {
             // Personal Details
             String fname = ((PersonalFragment) personal).edtFName.getText().toString().trim();
@@ -311,9 +303,12 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             String bdate = Objects.requireNonNull(((PersonalFragment) personal).edtbdate).getText().toString().trim();
             bdate = Common.parseDateToddMMyyyy(bdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
             if (!bdate.equalsIgnoreCase("")) {
-                if (!Common.isThisDateValid(bdate, "yyyy-mm-dd")) {
+                if (!Common.isThisDateValid(bdate, Common.yyyy_MM_dd)) {
                     valid = "Birth Date is not valid Format";
                 }
+            }
+            if (!Common.isValidDate(bdate)) {
+                valid = "Birth Date is not valid ";
             }
 
             String time = Objects.requireNonNull(((PersonalFragment) personal).edtbTime).getText().toString().trim();
@@ -340,7 +335,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             // Familty Details
             String spouseName = "", SpouseFName = "", MSpouseName = "", mdate = "", sdate = "", str_fspouse_hash = "", str_mspouse_hash = "", str_spouse_hash = "";
             String sponseNative = "", sponseMobile = "", spouse_bg = "", spouse_edu = "";
-            boolean chk_spouse_bdate_rem = false, chk_m_bdate_rem = false;
+            //  boolean chk_spouse_bdate_rem = false, chk_m_bdate_rem = false;
             LinearLayout child_container = null;
             ArrayList<Integer> lst_delID = null;
             try {
@@ -351,15 +346,17 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 SpouseFName = ((FamilyFragment) family).edtSpouseFName.getText().toString().trim();
                 MSpouseName = ((FamilyFragment) family).edtMSpouseName.getText().toString().trim();
                 mdate = ((FamilyFragment) family).edt_mdate.getText().toString().trim();
-
-                chk_spouse_bdate_rem = ((FamilyFragment) family).chk_spouse_bdate_rem.isChecked();
-                chk_m_bdate_rem = ((FamilyFragment) family).chk_marriage_bdate_rem.isChecked();
+                //chk_spouse_bdate_rem = ((FamilyFragment) family).chk_spouse_bdate_rem.isChecked();
+                // chk_m_bdate_rem = ((FamilyFragment) family).chk_marriage_bdate_rem.isChecked();
 
                 mdate = Common.parseDateToddMMyyyy(mdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
                 if (!mdate.equalsIgnoreCase("")) {
                     if (!Common.isThisDateValid(mdate, "yyyy-mm-dd")) {
                         valid = "Marriage Date is not valid Format";
                     }
+                }
+                if (!Common.isValidDate(mdate)) {
+                    valid = "Marriage Date is not valid ";
                 }
 
                 sdate = ((FamilyFragment) family).edtsponse_bdate.getText().toString().trim();
@@ -372,6 +369,9 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     if (!Common.isThisDateValid(sdate, "yyyy-mm-dd")) {
                         valid = "Sponse Birth Date is not valid Format";
                     }
+                }
+                if (!Common.isValidDate(sdate)) {
+                    valid = "Birth Date is not valid ";
                 }
 
                 str_fspouse_hash = ((FamilyFragment) family).str_fspouse_hash;
@@ -536,6 +536,10 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                         if (!Common.isThisDateValid(child_bday, "yyyy-mm-dd")) {
                             valid = "Child Birth Date is not valid Format";
                         }
+                    }
+
+                    if (!Common.isValidDate(child_bday)) {
+                        valid = "Child birthdate is not valid ";
                     }
 
                     boolean child_interest = Objects.requireNonNull(mViewholder.tbtn_interest).isChecked();

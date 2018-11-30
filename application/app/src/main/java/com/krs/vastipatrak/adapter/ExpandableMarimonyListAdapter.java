@@ -3,7 +3,6 @@ package com.krs.vastipatrak.adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,8 +21,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListMatrimonyChildData;
 import com.krs.vastipatrak.model.ListMatrimonyParentData;
+import com.krs.vastipatrak.model.MatrimonyProfileData;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.RoundedCornersTransformation;
 
@@ -277,7 +279,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
-                MyProfileActivity.isEnable=false;
+                MyProfileActivity.isEnable = false;
                 Intent mIntent = new Intent(_context, MyProfileActivity.class);
                 _context.startActivity(mIntent);
             }
@@ -377,23 +379,82 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View v) {
 
-                ListChildrenData childData = realm.where(ListChildrenData.class).equalTo(Common.Constant_Class.CHILD_ID, child_id).findFirst();
-                String name = "";
-                Bitmap bitmap = null;
-                if (childData != null) {
-                    name = childData.getChild_name();
-                    String id = childData.getProfile_id();
-                    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-                    try {
-                        BitMatrix bitMatrix = multiFormatWriter.encode(id, BarcodeFormat.QR_CODE, 200, 200);
-                        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                        bitmap = barcodeEncoder.createBitmap(bitMatrix);
-                        bitmap= Common.drawTextToBitmap(bitmap,Name);
-                    } catch (WriterException e) {
-                        e.printStackTrace();
+                // custom dialog
+                final Dialog dialog = new Dialog(_context);
+                dialog.setContentView(R.layout.custom_share_dialog);
+                dialog.setTitle(_context.getString(R.string.app_name));
+                final RadioButton radio_qr = dialog.findViewById(R.id.radio_qr);
+                final RadioButton radio_text = dialog.findViewById(R.id.radio_text);
+                Button btn_ok = dialog.findViewById(R.id.btn_ok);
+                Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
+                radio_text.setChecked(true);
+                final ListChildrenData childData = realm.where(ListChildrenData.class).equalTo(Common.Constant_Class.CHILD_ID, child_id).findFirst();
+                final String id = childData.getProfile_id();
+                final MatrimonyProfileData profileData = realm.where(MatrimonyProfileData.class).equalTo("profile_id", id).findFirst();
+                radio_qr.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (radio_qr.isChecked()) {
+                            radio_text.setChecked(false);
+                        }
                     }
-                }
-                shareImage(bitmap, name);
+                });
+
+                radio_text.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (radio_text.isChecked()) {
+                            radio_qr.setChecked(false);
+                        }
+                    }
+                });
+
+                btn_ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (radio_qr.isChecked()) {
+                            String name = "";
+                            Bitmap bitmap = null;
+                            if (childData != null) {
+                                name = childData.getChild_name();
+
+                                MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+                                try {
+                                    BitMatrix bitMatrix = multiFormatWriter.encode(id, BarcodeFormat.QR_CODE, 200, 200);
+                                    BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                                    bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                                    bitmap = Common.drawTextToBitmap(bitmap, Name);
+                                } catch (WriterException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            shareImage(bitmap, name);
+                        } else {
+                            String address = "", mobile = "";
+                            if (profileData != null) {
+                                address = profileData.getAddress();
+                                mobile = childData.getMobile();
+                            }
+                            String shareBody = "Name: " + Name + "\n" + "Mobile: " + mobile + "\n" + " Address: " + address;
+                            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                            sharingIntent.setType("text/plain");
+                            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, Name);
+                            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                            _context.startActivity(Intent.createChooser(sharingIntent, "Share Using"));
+                        }
+                    }
+                });
+
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+
+
             }
         });
         return convertView;
@@ -406,7 +467,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("image/*");
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, text + "'s Father Profile QR Code");
-       // shareIntent.putExtra(Intent.EXTRA_TEXT, text + "'s Father Profile QR Code");
+        // shareIntent.putExtra(Intent.EXTRA_TEXT, text + "'s Father Profile QR Code");
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         _context.startActivity(Intent.createChooser(shareIntent, "Vastipatrak"));
     }
@@ -462,7 +523,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                                 Common.SaveProfile(mJsondata);
                                 notifyDataSetChanged();
                             }
-                        }else {
+                        } else {
                             Toast.makeText(_context, message, Toast.LENGTH_SHORT).show();
                             if (response.has(Common.Constant_Class.ERROR_CODE)) {
                                 String error = response.getString(Common.Constant_Class.ERROR_CODE);
@@ -470,7 +531,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                                     Intent mIntent = new Intent(_context, LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     _context.startActivity(mIntent);
-                                    ((Activity)_context).finish();
+                                    ((Activity) _context).finish();
                                 }
                             }
                         }
