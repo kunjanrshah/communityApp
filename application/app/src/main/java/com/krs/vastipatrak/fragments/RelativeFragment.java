@@ -24,11 +24,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.interfaces.OnItemClickListener;
 import com.krs.vastipatrak.utils.Common;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -361,7 +364,7 @@ public class RelativeFragment extends Fragment {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_relatives, parent, false);
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_relatives1, parent, false);
             final MyViewHolder holder = new MyViewHolder(itemView);
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -385,22 +388,28 @@ public class RelativeFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
             final Relative reldata = lstRelative.get(position);
-            String from_name = reldata.getFrom_first_name() + " " + reldata.getFrom_last_name();
+
+            String from_name = reldata.getFrom_first_name();// + " " + reldata.getFrom_last_name();
             from_name = Common.camelCase(from_name);
-            String last_name = reldata.getToFirst_name() + " " + reldata.getToLast_name();
-            last_name = Common.camelCase(last_name);
+
+            Glide.with(getActivity()).load(R.drawable._woman).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(holder.img_request);
+            Glide.with(getActivity()).load(R.drawable.man).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(holder.img_approve);
+
+            String to_name = reldata.getToFirst_name(); //+ " " + reldata.getToLast_name();
+            to_name = Common.camelCase(to_name);
+
             String status = reldata.getStatus();
             final String rel_id = reldata.getId();
             final String user_id = reldata.getUser_id();
             String relation = reldata.getRelation();
 
             holder.txt_from.setText(from_name);
-            holder.txt_to.setText(last_name);
+            holder.txt_to.setText(to_name);
             holder.txt_msg.setText(Common.getCapsSentences(relation));
             holder.img_delete.setImageDrawable(getResources().getDrawable(R.drawable.cancel));
             if (status.contains(Common.Constant_Class.ACCEPTED)) {
-                holder.txt_request.setText("Requested by ");
-                holder.txt_approve.setText("Approved by ");
+                holder.txt_request.setText("Requested");
+                holder.txt_approve.setText("Approved");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.primary_blue));
                 holder.txt_to.setTextColor(getResources().getColor(R.color.primary_blue));
                 holder.txt_status.setClickable(true);
@@ -409,7 +418,7 @@ public class RelativeFragment extends Fragment {
                 holder.txt_status.setText(output);
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape1));
             } else if (status.contains(Common.Constant_Class.REQUESTED)) {
-                holder.txt_request.setText("Requested by ");
+                holder.txt_request.setText("Requested");
                 holder.txt_approve.setText("To ");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 holder.txt_to.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -421,8 +430,8 @@ public class RelativeFragment extends Fragment {
                 holder.txt_status.setClickable(false);
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape10));
             } else if (status.contains(Common.Constant_Class.REJECTED)) {
-                holder.txt_request.setText("Requested by ");
-                holder.txt_approve.setText("Rejected by ");
+                holder.txt_request.setText("Requested");
+                holder.txt_approve.setText("Rejected");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 holder.txt_to.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 String input = "Approve";
@@ -446,7 +455,7 @@ public class RelativeFragment extends Fragment {
                 holder.img_delete.setClickable(false);
             }
 
-            final String finalLast_name = last_name;
+            final String finalLast_name = to_name;
             holder.txt_status.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -544,11 +553,16 @@ public class RelativeFragment extends Fragment {
             final TextView txt_msg, txt_to, txt_from, txt_request, txt_approve;
             final LinearLayout ll_relative, ll_from, ll_to;
             final ImageView img_delete;
+            ImageView img_request, img_approve;
             TextView txt_status;
 
 
             MyViewHolder(@NonNull View view) {
                 super(view);
+
+                img_request = view.findViewById(R.id.img_request);
+                img_approve = view.findViewById(R.id.img_approve);
+
                 txt_msg = view.findViewById(R.id.txt_msg);
                 txt_to = view.findViewById(R.id.txt_to);
 
