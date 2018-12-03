@@ -24,6 +24,15 @@ public class ListChildData {
     private String spouse_name;
     private String father;
     private String mother;
+    private JSONObject mJsonObject;
+
+    public JSONObject getmJsonObject() {
+        return mJsonObject;
+    }
+
+    public void setmJsonObject(JSONObject mJsonObject) {
+        this.mJsonObject = mJsonObject;
+    }
 
 
     public String getSpouse_name() {

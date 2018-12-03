@@ -49,6 +49,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.FamilyTreeActivity;
 import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.app.AppController;
@@ -403,8 +404,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             public void onClick(View v) {
 
                 Toast.makeText(_context, "Coming Soon", Toast.LENGTH_SHORT).show();
-                /*Intent mIntent = new Intent(_context, FamilyTreeActivity.class);
-                JSONObject mjson = mListChildData.getMjsonobj();
+               /* Intent mIntent = new Intent(_context, FamilyTreeActivity.class);
+                JSONObject mjson = mListChildData.getmJsonObject();
                 mIntent.putExtra(_context.getString(R.string.ft_intent), mjson.toString());
                 _context.startActivity(mIntent);*/
             }

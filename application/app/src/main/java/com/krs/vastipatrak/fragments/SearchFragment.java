@@ -692,7 +692,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     lcd.setSpouse_name(spouse);
                     lcd.setFather(father_name);
                     lcd.setMother_name(mother_name);
-
+                    lcd.setmJsonObject(mJsondata);
                     ArrayList<ListChildData> mlstChildData = new ArrayList<>();
                     mlstChildData.add(lcd);
                     listDataHeader.add(lpd);

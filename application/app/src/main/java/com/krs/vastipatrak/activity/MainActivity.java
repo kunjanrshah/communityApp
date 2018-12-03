@@ -77,6 +77,7 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.fragments.CalendarFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
+import com.krs.vastipatrak.fragments.FamilyTreeFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.HelpFragment;
 import com.krs.vastipatrak.fragments.HomeFragment;
@@ -892,7 +893,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 Intent mIntent1 = new Intent(MainActivity.this, MyProfileActivity.class);
                 startActivity(mIntent1);
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-                //  this.overridePendingTransition(0, 0);
                 break;
             case 2:
                 fragment = new NearByFragment();
@@ -906,7 +906,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             case 5:
                 Toast.makeText(MainActivity.this, "Coming Soon", Toast.LENGTH_SHORT).show();
 
-                //fragment = new FamilyTreeFragment();
+              //  fragment = new FamilyTreeFragment();
                 break;
             case 6:
                 fragment = new CalendarFragment();
@@ -920,10 +920,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 break;
             case 9:
                 fragment = new TourFragment();
-               /* Intent mIntent = new Intent(MainActivity.this, TourFragment.class);
-                startActivity(mIntent);
-                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);*/
-                //   watchYoutubeVideo(MainActivity.this, "3d9CJP3wWPU");
                 break;
             case 10:
                 fragment = new HelpFragment();

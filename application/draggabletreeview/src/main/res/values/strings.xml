@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">DraggableTreeView</string>
-    <string name="FT_IMG">ft_img</string>
-    <string name="FT_NAME">ft_name</string>
+    <string name="FT_IMG">profile_pic</string>
+    <string name="FT_NAME">name</string>
+    <string name="FT_BDATE">ft_bdate</string>
 </resources>

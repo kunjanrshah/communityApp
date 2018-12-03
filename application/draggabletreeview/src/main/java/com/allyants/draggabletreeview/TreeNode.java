@@ -12,12 +12,12 @@ import java.util.ArrayList;
 
 public class TreeNode {
 
-    private int level = 0;
+    public int level = 0;
     private boolean isRoot = false;
     private TreeNode parent;
     private boolean isCollapsed = false;
     private ArrayList<TreeNode> children = new ArrayList<>();
-    private Object data;
+    public Object data;
     private View view;
 
     public TreeNode(Context context){
