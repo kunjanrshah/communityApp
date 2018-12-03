@@ -59,6 +59,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
         }
     };
+    private SharedPreferences mPreferencesWelcome;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
     //private PrefManager prefManager;
@@ -68,9 +69,10 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Checking for first time launch - before calling setContentView()
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_WELCOME, MODE_PRIVATE);
-        mEditor = mSharedPreferences.edit();
-        if (!mSharedPreferences.getBoolean(getString(R.string.is_first_time), true)) {
+        mPreferencesWelcome = getSharedPreferences(Common.Constant_Class.PREF_WELCOME, MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
+        mEditor = mPreferencesWelcome.edit();
+        if (!mPreferencesWelcome.getBoolean(getString(R.string.is_first_time), true)) {
             launchHomeScreen();
             finish();
         }

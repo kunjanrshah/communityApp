@@ -364,7 +364,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_margin="10dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -378,13 +378,13 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="FROM"
-                        android:textSize="18dp" />
+                        android:textSize="14dp" />
 
                     <Spinner
                         android:id="@+id/sp_start_age"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dip" />
+                        android:layout_marginStart="5dip" />
 
                 </LinearLayout>
 
@@ -400,13 +400,13 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="TO"
-                        android:textSize="18dp" />
+                        android:textSize="14dp" />
 
                     <Spinner
                         android:id="@+id/sp_end_age"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dip"
+                        android:layout_marginStart="5dip"
                         android:layout_weight="1" />
 
                 </LinearLayout>

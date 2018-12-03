@@ -49,6 +49,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +58,7 @@ import java.util.Objects;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 import static com.krs.vastipatrak.utils.Common.ExportProfile;
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
@@ -274,6 +277,12 @@ public class MatrimonyFragment extends Fragment {
                                     }
                                     if (!isExport) {
                                         getChildRecords1();
+                                        Collections.sort(listDataHeader, new Comparator<ListMatrimonyParentData>() {
+                                            @Override
+                                            public int compare(ListMatrimonyParentData s1, ListMatrimonyParentData s2) {
+                                                return s1.getName().compareToIgnoreCase(s2.getName());
+                                            }
+                                        });
                                         ExpandableMarimonyListAdapter mExpandableMatrimonyListAdapter = new ExpandableMarimonyListAdapter(getActivity(), listDataHeader, listDataChild);
                                         lvMatrimonyList.setAdapter(mExpandableMatrimonyListAdapter);
                                         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
@@ -347,6 +356,7 @@ public class MatrimonyFragment extends Fragment {
     private void getChildRecords1() {
         RealmResults<MatrimonyProfileData> profileData = realm.where(MatrimonyProfileData.class).findAll();
         if (profileData != null && profileData.size() > 0) {
+            //profileData = profileData.sort(Common.Constant_Class.CHILD_NAME, Sort.ASCENDING);
             for (MatrimonyProfileData data : profileData) {
 
                 for (ListChildrenData childrenData : data.getmListChildrenData()) {

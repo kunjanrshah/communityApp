@@ -73,25 +73,10 @@ public class FamilyFilter extends Fragment implements AdapterView.OnItemSelected
 
         MemoryAllocation(rootView);
 
-        List<String> list = new ArrayList<String>();
-        for (int i = 1; i < 102; i++) {
-            list.add("Age " + (i - 1));
-        }
-        list.add(0, getString(R.string.AGE));
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sp_child_start_age.setOnItemSelectedListener(this);
-        sp_child_start_age.setAdapter(dataAdapter);
-        sp_child_end_age.setOnItemSelectedListener(this);
-        sp_child_end_age.setAdapter(dataAdapter);
-
-        sp_spouse_start_age.setOnItemSelectedListener(this);
-        sp_spouse_start_age.setAdapter(dataAdapter);
-        sp_spouse_end_age.setOnItemSelectedListener(this);
-        sp_spouse_end_age.setAdapter(dataAdapter);
-
+        setAgeSpinner();
         setAdapterBGlist();
         setPreferenceData();
+
         edt_mdate_from.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, @NonNull MotionEvent event) {
@@ -324,6 +309,26 @@ public class FamilyFilter extends Fragment implements AdapterView.OnItemSelected
         return rootView;
     }
 
+    private void setAgeSpinner() {
+
+        List<String> list = new ArrayList<String>();
+        for (int i = 1; i < 102; i++) {
+            list.add("Age " + (i - 1));
+        }
+        list.add(0, getString(R.string.AGE));
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_child_start_age.setOnItemSelectedListener(this);
+        sp_child_start_age.setAdapter(dataAdapter);
+        sp_child_end_age.setOnItemSelectedListener(this);
+        sp_child_end_age.setAdapter(dataAdapter);
+
+        sp_spouse_start_age.setOnItemSelectedListener(this);
+        sp_spouse_start_age.setAdapter(dataAdapter);
+        sp_spouse_end_age.setOnItemSelectedListener(this);
+        sp_spouse_end_age.setAdapter(dataAdapter);
+    }
+
     private void MemoryAllocation(@NonNull View rootView) {
         scroll_fdetails = rootView.findViewById(R.id.scroll_fdetails);
         floatingActionButton = rootView.findViewById(R.id.fab_fsave);
@@ -401,13 +406,11 @@ public class FamilyFilter extends Fragment implements AdapterView.OnItemSelected
                 }
                 if (mjsonObject.has(Common.Constant_Class.FROM_MARRIAGE_DATE)) {
                     String bdate = mjsonObject.getString(Common.Constant_Class.FROM_MARRIAGE_DATE);
-                    // from_mdate=bdate;
                     bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
                     edt_mdate_from.setText(bdate);
                 }
                 if (mjsonObject.has(Common.Constant_Class.TO_MARRIAGE_DATE)) {
                     String bdate = mjsonObject.getString(Common.Constant_Class.TO_MARRIAGE_DATE);
-                    //   to_mdate=bdate;
                     bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
                     edt_mdate_to.setText(bdate);
                 }
@@ -435,13 +438,11 @@ public class FamilyFilter extends Fragment implements AdapterView.OnItemSelected
                 }
                 if (mjsonObject.has(Common.Constant_Class.FROM_CHILD_BDAY)) {
                     String bdate = mjsonObject.getString(Common.Constant_Class.FROM_CHILD_BDAY);
-                    // from_cdate=bdate;
                     bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
                     edt_cdate_from.setText(bdate);
                 }
                 if (mjsonObject.has(Common.Constant_Class.TO_CHILD_BDAY)) {
                     String bdate = mjsonObject.getString(Common.Constant_Class.TO_CHILD_BDAY);
-                    //   to_cdate=bdate;
                     bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
                     edt_cdate_to.setText(bdate);
                 }
@@ -468,6 +469,22 @@ public class FamilyFilter extends Fragment implements AdapterView.OnItemSelected
                     }
                 } else {
                     radioB.setChecked(true);
+                }
+
+                if (mjsonObject.has(Common.Constant_Class.SPOUSE_START_AGE)) {
+                    sp_spouse_start_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.SPOUSE_START_AGE))+1);
+                }
+
+                if (mjsonObject.has(Common.Constant_Class.SPOUSE_END_AGE)) {
+                    sp_spouse_end_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.SPOUSE_END_AGE))+1);
+                }
+
+                if (mjsonObject.has(Common.Constant_Class.CHILD_START_AGE)) {
+                    sp_child_start_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.CHILD_START_AGE))+1);
+                }
+
+                if (mjsonObject.has(Common.Constant_Class.CHILD_END_AGE)) {
+                    sp_child_end_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.CHILD_END_AGE))+1);
                 }
 
             } catch (Exception e) {

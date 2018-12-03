@@ -208,16 +208,18 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 String sp_user_start_age = ((PersonalFilter) personal).sp_user_start_age.getSelectedItem().toString().trim();
                 String sp_user_end_age = ((PersonalFilter) personal).sp_user_end_age.getSelectedItem().toString().trim();
 
-                if (!sp_user_start_age.equalsIgnoreCase(getString(R.string.AGE))) {
-                    mJsonObject.put(Common.Constant_Class.USER_START_AGE, sp_user_start_age.replace("Age ",""));
-                    lstProceed.add("User Age From: " + sp_user_start_age);
+                if (!sp_user_start_age.equalsIgnoreCase(getString(R.string.AGE)) && !sp_user_end_age.equalsIgnoreCase(getString(R.string.AGE))) {
+                    String start = sp_user_start_age.replace("Age ", "");
+                    String end = sp_user_end_age.replace("Age ", "");
+                    if (Integer.parseInt(start) <= Integer.parseInt(end)) {
+                        mJsonObject.put(Common.Constant_Class.USER_START_AGE, sp_user_start_age.replace("Age ", ""));
+                        lstProceed.add("User Age From: " + sp_user_start_age);
+                        mJsonObject.put(Common.Constant_Class.USER_END_AGE, sp_user_end_age.replace("Age ", ""));
+                        lstProceed.add("User Age To: " + sp_user_end_age);
+                    } else {
+                        valid = "User 'From' Age is larger than 'End' Age";
+                    }
                 }
-
-                if (!sp_user_end_age.equalsIgnoreCase(getString(R.string.AGE))) {
-                    mJsonObject.put(Common.Constant_Class.USER_END_AGE, sp_user_end_age.replace("Age ",""));
-                    lstProceed.add("User Age To: " + sp_user_end_age);
-                }
-
 
                 String gender;
 
@@ -401,25 +403,31 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     lstProceed.add("Spouse Education: " + edtSpouseEdu);
                 }
 
-                if (!sp_spouse_start_age.equalsIgnoreCase(getString(R.string.AGE))) {
-                    mJsonObject.put(Common.Constant_Class.SPOUSE_START_AGE, sp_spouse_start_age.replace("Age ",""));
-                    lstProceed.add("Spouse Age From: " + sp_spouse_start_age);
+
+                if (!sp_spouse_start_age.equalsIgnoreCase(getString(R.string.AGE)) && !sp_spouse_end_age.equalsIgnoreCase(getString(R.string.AGE))) {
+                    String start = sp_spouse_start_age.replace("Age ", "");
+                    String end = sp_spouse_end_age.replace("Age ", "");
+                    if (Integer.parseInt(start) <= Integer.parseInt(end)) {
+                        mJsonObject.put(Common.Constant_Class.SPOUSE_START_AGE, sp_spouse_start_age.replace("Age ", ""));
+                        lstProceed.add("Spouse Age From: " + sp_spouse_start_age);
+                        mJsonObject.put(Common.Constant_Class.SPOUSE_END_AGE, sp_spouse_end_age.replace("Age ", ""));
+                        lstProceed.add("Spouse Age To: " + sp_spouse_end_age);
+                    } else {
+                        valid = "Spouse 'From' Age is larger than 'End' Age";
+                    }
                 }
 
-                if (!sp_spouse_end_age.equalsIgnoreCase(getString(R.string.AGE))) {
-                    mJsonObject.put(Common.Constant_Class.SPOUSE_END_AGE, sp_spouse_end_age.replace("Age ",""));
-                    lstProceed.add("Spouse Age To: " + sp_spouse_end_age);
-                }
-
-
-                if (!sp_child_start_age.equalsIgnoreCase(getString(R.string.AGE))) {
-                    mJsonObject.put(Common.Constant_Class.CHILD_START_AGE, sp_child_start_age.replace("Age ",""));
-                    lstProceed.add("Child Age From: " + sp_child_start_age);
-                }
-
-                if (!sp_child_end_age.equalsIgnoreCase(getString(R.string.AGE))) {
-                    mJsonObject.put(Common.Constant_Class.CHILD_END_AGE, sp_child_end_age.replace("Age ",""));
-                    lstProceed.add("Child Age To: " + sp_child_end_age);
+                if (!sp_child_start_age.equalsIgnoreCase(getString(R.string.AGE)) && !sp_child_end_age.equalsIgnoreCase(getString(R.string.AGE))) {
+                    String start = sp_child_start_age.replace("Age ", "");
+                    String end = sp_child_end_age.replace("Age ", "");
+                    if (Integer.parseInt(start) <= Integer.parseInt(end)) {
+                        mJsonObject.put(Common.Constant_Class.CHILD_START_AGE, sp_child_start_age.replace("Age ", ""));
+                        lstProceed.add("Child Age From: " + sp_child_start_age);
+                        mJsonObject.put(Common.Constant_Class.CHILD_END_AGE, sp_child_end_age.replace("Age ", ""));
+                        lstProceed.add("Child Age To: " + sp_child_end_age);
+                    } else {
+                        valid = "Child 'From' Age is larger than 'End' Age";
+                    }
                 }
 
                 if (child_married) {

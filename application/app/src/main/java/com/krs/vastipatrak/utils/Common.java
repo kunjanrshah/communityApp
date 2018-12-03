@@ -112,9 +112,6 @@ public class Common {
             if(!bdate.isEmpty())
             {
                 strDate = sdf.parse(bdate);
-            }else
-            {
-                return false;
             }
 
         } catch (ParseException e) {

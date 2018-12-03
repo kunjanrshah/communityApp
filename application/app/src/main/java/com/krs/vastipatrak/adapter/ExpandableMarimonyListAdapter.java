@@ -55,6 +55,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +65,7 @@ import java.util.Objects;
 import io.realm.Realm;
 
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
+import static java.lang.String.*;
 
 public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
 
@@ -87,6 +90,7 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
 
     public ExpandableMarimonyListAdapter(Context context, ArrayList<ListMatrimonyParentData> listDataHeader, HashMap<ListMatrimonyParentData, List<ListMatrimonyChildData>> listDataChild) {
         this._context = context;
+
         this._listDataHeader = listDataHeader;
         this._listDataChild = listDataChild;
 
@@ -354,7 +358,9 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         String MotherName = mListMatrimonyParentData.getMotherName();
         String city = mListMatrimonyParentData.getCity();
 
-        Glide.with(_context).load(imgURL).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).into(groupViewHolder.ivChildIcon);
+       // Glide.with(_context).load(imgURL).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).into(groupViewHolder.ivChildIcon);
+        Glide.with(_context).load(imgURL).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(groupViewHolder.ivChildIcon);
+
         if (mListMatrimonyParentData.getChild_gender().equalsIgnoreCase("male")) {
             groupViewHolder.imgChildGender.setBackgroundResource(R.drawable.boy);
         } else {

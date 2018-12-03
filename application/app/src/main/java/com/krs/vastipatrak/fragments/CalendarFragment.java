@@ -144,12 +144,10 @@ public class CalendarFragment extends Fragment {
             Common.showProgressDialog(getActivity());
             JSONObject mJsonObject = null;
             try {
-
                 mJsonObject = new JSONObject();
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.DATE, date);
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-                // mJsonObject.put("search_str", "kunjan");//date.trim()
             } catch (Exception e) {
                 e.printStackTrace();
             }

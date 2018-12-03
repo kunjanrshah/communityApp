@@ -1,6 +1,7 @@
 package com.krs.vastipatrak.activity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -34,7 +35,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -139,6 +142,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
+    private SharedPreferences mPreferencesWelcome;
+    private SharedPreferences.Editor mEditorWelcome;
     private SearchView searchView;
     private IntentIntegrator qrScan;
     private IAdminControl IAdminControl;
@@ -154,6 +159,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
+
+        mPreferencesWelcome = getSharedPreferences(Common.Constant_Class.PREF_WELCOME, MODE_PRIVATE);
+        mEditorWelcome = mPreferencesWelcome.edit();
+        mEditorWelcome.apply();
+
         Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
@@ -250,8 +260,28 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 }
             }
         }
-
         checkConnection();
+
+        if (mPreferencesWelcome.getBoolean("first_time_main", true)) {
+            mEditorWelcome.putBoolean("first_time_main", false);
+            mEditorWelcome.apply();
+            showActivityOverlay();
+        }
+    }
+
+    private void showActivityOverlay() {
+        final Dialog dialog = new Dialog(this, android.R.style.Theme_Translucent_NoTitleBar);
+        dialog.setContentView(R.layout.overlay_activity);
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.llOverlay_activity);
+        layout.setBackgroundColor(Color.TRANSPARENT);
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     private void checkConnection() {
@@ -882,7 +912,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new CalendarFragment();
                 break;
             case 7:
-               Toast.makeText(MainActivity.this, "Coming Soon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Coming Soon", Toast.LENGTH_SHORT).show();
 
                 break;
             case 8:
@@ -893,7 +923,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                /* Intent mIntent = new Intent(MainActivity.this, TourFragment.class);
                 startActivity(mIntent);
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);*/
-             //   watchYoutubeVideo(MainActivity.this, "3d9CJP3wWPU");
+                //   watchYoutubeVideo(MainActivity.this, "3d9CJP3wWPU");
                 break;
             case 10:
                 fragment = new HelpFragment();

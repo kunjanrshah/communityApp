@@ -54,12 +54,12 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
     public RadioButton rbtnF;
     public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtCity;
     public EditText edtbdateFrom, edtbdateTo;
+    public Spinner sp_user_start_age;
+    public Spinner sp_user_end_age;
     //public String bdateFrom="",bdateTo="";
     // public String gender = "";
     //private ObservableScrollView scroll_pdetails;
     ArrayAdapter<String> dataAdapter;
-    public Spinner sp_user_start_age;
-    public Spinner sp_user_end_age;
     private SharedPreferences mSharedPreferences;
     private RadioButton rbtnB;
     private FloatingActionButton floatingActionButton;
@@ -248,16 +248,15 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
 
         List<String> list = new ArrayList<String>();
         for (int i = 1; i < 102; i++) {
-            list.add("Age " + (i-1));
+            list.add("Age " + (i - 1));
         }
-        list.add(0,"AGE");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item, list);
+        list.add(0, "AGE");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp_user_start_age.setOnItemSelectedListener(this);
         sp_user_start_age.setAdapter(dataAdapter);
 
-        dataAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, list);
+        dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp_user_end_age.setOnItemSelectedListener(this);
         sp_user_end_age.setAdapter(dataAdapter);
@@ -373,6 +372,15 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
                 if (mjsonObject.has(Common.Constant_Class.PHONE)) {
                     edt_phone.setText(mjsonObject.getString(Common.Constant_Class.PHONE));
                 }
+
+                if (mjsonObject.has(Common.Constant_Class.USER_START_AGE)) {
+                    sp_user_start_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.USER_START_AGE)) + 1);
+                }
+
+                if (mjsonObject.has(Common.Constant_Class.USER_END_AGE)) {
+                    sp_user_end_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.USER_END_AGE)) + 1);
+                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
