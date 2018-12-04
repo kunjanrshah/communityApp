@@ -403,11 +403,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(_context, "Coming Soon", Toast.LENGTH_SHORT).show();
-               /* Intent mIntent = new Intent(_context, FamilyTreeActivity.class);
+                //Toast.makeText(_context, "Coming Soon", Toast.LENGTH_SHORT).show();
+                Intent mIntent = new Intent(_context, FamilyTreeActivity.class);
                 JSONObject mjson = mListChildData.getmJsonObject();
                 mIntent.putExtra(_context.getString(R.string.ft_intent), mjson.toString());
-                _context.startActivity(mIntent);*/
+                _context.startActivity(mIntent);
             }
         });
 

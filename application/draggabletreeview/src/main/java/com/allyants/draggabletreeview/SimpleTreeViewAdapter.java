@@ -32,14 +32,12 @@ public class SimpleTreeViewAdapter extends TreeViewAdapter {
         JSONObject mjobj = (JSONObject) data;
         ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
         TextView textView = (TextView) view.findViewById(R.id.textView);
-        TextView textbdate = (TextView) view.findViewById(R.id.textbdate);
+
         try {
             String url = mjobj.getString(context.getString(R.string.FT_IMG));
             String name = mjobj.getString(context.getString(R.string.FT_NAME));
-           // String bdate = mjobj.getString(context.getString(R.string.FT_BDATE));
             Glide.with(context).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(imageView);
             textView.setText(name);
-           // textbdate.setText(bdate);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -45,13 +45,13 @@ public class FamilyTreeFragment extends Fragment {
     SharedPreferences mSharedPreferences;
     GraphView graphView;
     BaseGraphAdapter<ViewHolder> adapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tree, container, false);
-        graphView = rootView.findViewById(R.id.graph);
+
         Memory_Allocation(rootView);
 
-        //getTreeViews(SecondActivity.adapter);
         // you can set the graph via the constructor or use the adapter.setGraph(Graph) method
         adapter = new BaseGraphAdapter<ViewHolder>(getActivity(), R.layout.node, graph) {
 
@@ -72,6 +72,7 @@ public class FamilyTreeFragment extends Fragment {
 
     private void Memory_Allocation(View rootView) {
         graph = new Graph();
+        graphView = rootView.findViewById(R.id.graph);
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
     }
 
@@ -134,21 +135,33 @@ public class FamilyTreeFragment extends Fragment {
 
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
-                            JSONObject mJsonData=mJsonArray.getJSONObject(0);
+                            JSONObject mJsonData = mJsonArray.getJSONObject(0);
                             JSONArray tree_array = mJsonData.getJSONArray("familyTree");
-
+                            ArrayList<Node> lstNode = new ArrayList<>();
+                            ArrayList<Integer> lstLevel = new ArrayList<>();
                             for (int i = 0; i < tree_array.length(); i++) {
                                 JSONObject mJsonObject = tree_array.getJSONObject(i);
-                                mJsonObject.getString("name");
-                                mJsonObject.getString("level");
-                                mJsonObject.getString("profile_id");
-                                TreeNode item = new TreeNode(mJsonObject);
-                                Node node1 = new Node(mJsonObject.toString());
-                                graph.addNode(node1);
-                                getTreeNodeView(item, node1);
+                                String name = mJsonObject.getString("name");
+                                lstNode.add(new Node(name));
+                                lstLevel.add(Integer.parseInt(mJsonObject.getString("level")));
+                            }
+
+                            ArrayList<Node> listNode1 = new ArrayList<>();
+                            ArrayList<Node> listNode2 = new ArrayList<>();
+                            for (int j = lstLevel.size() - 1; j >= 0; j--) {
+                                for (int i = j - 1; i >= 0; i--) {
+                                    if (lstLevel.get(j) > lstLevel.get(i)) {
+                                        Log.d(FamilyTreeFragment.class.getSimpleName(), "i=" + i + " j=" + j);
+                                        listNode1.add(lstNode.get(i));
+                                        listNode2.add(lstNode.get(j));
+                                        break;
+                                    }
+                                }
+                            }
+                            for (int i = listNode1.size() - 1; i >= 0; i--) {
+                                graph.addEdge(listNode1.get(i), listNode2.get(i));
                             }
                             graphView.setAdapter(adapter);
-
                             // set the algorithm here
                             final BuchheimWalkerConfiguration configuration = new BuchheimWalkerConfiguration.Builder().setSiblingSeparation(100).setLevelSeparation(300).setSubtreeSeparation(300).setOrientation(BuchheimWalkerConfiguration.ORIENTATION_TOP_BOTTOM).build();
                             adapter.setAlgorithm(new BuchheimWalkerAlgorithm(configuration));
