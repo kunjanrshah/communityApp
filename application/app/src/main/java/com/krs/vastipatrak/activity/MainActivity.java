@@ -904,30 +904,23 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new MatrimonyFragment();
                 break;
             case 5:
-                //Toast.makeText(MainActivity.this, "Coming Soon", Toast.LENGTH_SHORT).show();
-
-                fragment = new FamilyTreeFragment();
-                break;
-            case 6:
                 fragment = new CalendarFragment();
                 break;
-            case 7:
-                Toast.makeText(MainActivity.this, "Coming Soon", Toast.LENGTH_SHORT).show();
-
+            case 6:
+                Toast.makeText(MainActivity.this, "Language Coming Soon", Toast.LENGTH_SHORT).show();
                 break;
-            case 8:
+            case 7:
                 fragment = new ChangePasswordFragment();
                 break;
-            case 9:
+            case 8:
                 fragment = new TourFragment();
                 break;
-            case 10:
+            case 9:
                 fragment = new HelpFragment();
                 break;
-            case 11:
+            case 10:
                 ExitAlert();
                 break;
-
             default:
                 break;
         }

@@ -128,7 +128,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         Memory_Allocation(rootView);
         setAdapterBGlist();
         try {
-            ListProfileData mListProfileData = ((MyProfileActivity) Objects.requireNonNull(getActivity())).getMyData();
+            ListProfileData mListProfileData = ((MyProfileActivity) getActivity()).getMyData();
             if (mListProfileData != null) {
                 SetOfflineData(mListProfileData);
             }

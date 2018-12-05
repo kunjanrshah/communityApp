@@ -1,6 +1,7 @@
 package com.allyants.draggabletreeview;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -63,6 +64,8 @@ public class DraggableTreeView extends FrameLayout {
         }
 
     };
+    private SharedPreferences mSharedpreferences;
+    private SharedPreferences.Editor mEditor;
 
     public DraggableTreeView(Context context) {
         super(context);
@@ -81,6 +84,8 @@ public class DraggableTreeView extends FrameLayout {
     }
 
     public void setAdapter(TreeViewAdapter adapter) {
+        mSharedpreferences = getContext().getSharedPreferences("Vastipatrak", Context.MODE_PRIVATE);
+        mEditor = mSharedpreferences.edit();
         this.adapter = adapter;
         this.adapter.setDraggableTreeView(this);
         adapter.setTreeViews();
@@ -250,36 +255,86 @@ public class DraggableTreeView extends FrameLayout {
                         }
 
                         if (temp_node != null && mobileNode != null) {
-                            if (temp_node.getData().toString().equalsIgnoreCase(mobileNode.getData().toString()) && mLastEventX > mDownX + dpToPx(150)) {
-                                Log.d("DraggableTreeView", "DELETE");
+                            if (temp_node.getData().toString().equalsIgnoreCase(mobileNode.getData().toString())) {
+                                if (mLastEventX > mDownX + dpToPx(265)) {
+
+                                    drop_item = Drop.child;
+                                    lastNode = nodeOrder.get(i);
+                                    if (adapter.placeholder.getParent() != null) {
+                                        ((ViewGroup) adapter.placeholder.getParent()).removeView(adapter.placeholder);
+                                    }
+                                    if (adapter.bad_placeholder.getParent() != null) {
+                                        ((ViewGroup) adapter.bad_placeholder.getParent()).removeView(adapter.bad_placeholder);
+                                    }
+                                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    layoutParams.setMargins(dpToPx(sideMargin), 0, 0, 0);
+                                    adapter.placeholder.setLayoutParams(layoutParams);
+                                    adapter.bad_placeholder.setLayoutParams(layoutParams);
+                                    int level = mobileNode.getChildLevel() + lastNode.getLevel() + 1;
+                                    if (maxLevels != -1 && maxLevels < level) {
+                                        ((ViewGroup) lastNode.getView()).addView(adapter.bad_placeholder);
+                                        drop_item = Drop.cancel;
+                                    } else {
+                                        if (has_changed && temp_node != null) {
+                                            mDragItemCallback.onChangedPosition(mobileNode.getView(), mobileNode, temp_node, 0);
+                                        }
+                                        ((ViewGroup) lastNode.getView()).addView(adapter.placeholder);
+                                    }
+                                    mPlaceholderCheck = System.currentTimeMillis();
+
+                                    Log.d("DraggableTreeView", "DELETE");
+                                   /* AlertDialog.Builder builder;
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                        builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert);
+                                    } else {
+                                        builder = new AlertDialog.Builder(getContext());
+                                    }
+                                    builder.setCancelable(false);
+                                    final int finalI = i;
+                                    final TreeNode finalTemp_node = temp_node;
+                                    final boolean finalHas_changed = has_changed;
+                                    builder.setTitle("Delete entry").setMessage("Are you sure you want to delete this entry?")
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mEditor.putBoolean("is_delete",true);
+                                            mEditor.apply();
+
+                                        }
+                                    }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mEditor.putBoolean("is_delete",true);
+                                            mEditor.apply();
+                                            dialog.dismiss();
+                                        }
+                                    }).setIcon(R.drawable.ic_app).show();*/
+                                }
                             } else {
                                 Log.d("DraggableTreeView", "CHILD");
+                                drop_item = Drop.child;
+                                lastNode = nodeOrder.get(i);
+                                if (adapter.placeholder.getParent() != null) {
+                                    ((ViewGroup) adapter.placeholder.getParent()).removeView(adapter.placeholder);
+                                }
+                                if (adapter.bad_placeholder.getParent() != null) {
+                                    ((ViewGroup) adapter.bad_placeholder.getParent()).removeView(adapter.bad_placeholder);
+                                }
+                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                layoutParams.setMargins(dpToPx(sideMargin), 0, 0, 0);
+                                adapter.placeholder.setLayoutParams(layoutParams);
+                                adapter.bad_placeholder.setLayoutParams(layoutParams);
+                                int level = mobileNode.getChildLevel() + lastNode.getLevel() + 1;
+                                if (maxLevels != -1 && maxLevels < level) {
+                                    ((ViewGroup) lastNode.getView()).addView(adapter.bad_placeholder);
+                                    drop_item = Drop.cancel;
+                                } else {
+                                    if (has_changed && temp_node != null) {
+                                        mDragItemCallback.onChangedPosition(mobileNode.getView(), mobileNode, temp_node, 0);
+                                    }
+                                    ((ViewGroup) lastNode.getView()).addView(adapter.placeholder);
+                                }
+                                mPlaceholderCheck = System.currentTimeMillis();
                             }
                         }
-
-                        drop_item = Drop.child;
-                        lastNode = nodeOrder.get(i);
-                        if (adapter.placeholder.getParent() != null) {
-                            ((ViewGroup) adapter.placeholder.getParent()).removeView(adapter.placeholder);
-                        }
-                        if (adapter.bad_placeholder.getParent() != null) {
-                            ((ViewGroup) adapter.bad_placeholder.getParent()).removeView(adapter.bad_placeholder);
-                        }
-                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        layoutParams.setMargins(dpToPx(sideMargin), 0, 0, 0);
-                        adapter.placeholder.setLayoutParams(layoutParams);
-                        adapter.bad_placeholder.setLayoutParams(layoutParams);
-                        int level = mobileNode.getChildLevel() + lastNode.getLevel() + 1;
-                        if (maxLevels != -1 && maxLevels < level) {
-                            ((ViewGroup) lastNode.getView()).addView(adapter.bad_placeholder);
-                            drop_item = Drop.cancel;
-                        } else {
-                            if (has_changed && temp_node != null) {
-                                mDragItemCallback.onChangedPosition(mobileNode.getView(), mobileNode, temp_node, 0);
-                            }
-                            ((ViewGroup) lastNode.getView()).addView(adapter.placeholder);
-                        }
-                        mPlaceholderCheck = System.currentTimeMillis();
                     }
                 } else if (mLastEventY > viewRect.bottom) {
                     //below so make sibling

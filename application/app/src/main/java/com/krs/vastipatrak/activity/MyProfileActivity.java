@@ -40,6 +40,7 @@ import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.fragments.BusinessFragment;
 import com.krs.vastipatrak.fragments.FamilyFragment;
+import com.krs.vastipatrak.fragments.FamilyTreeFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.PersonalFragment;
 import com.krs.vastipatrak.fragments.RelativeFragment;
@@ -80,6 +81,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private Fragment business = null;
     private Fragment family = null;
     private Fragment relative = null;
+    private Fragment familytree=null;
     private SharedPreferences mSharedPreferences = null;
     private boolean isBackPressed = false;
 
@@ -859,14 +861,21 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         }
         family.setArguments(mBundle);
 
+        if (familytree == null) {
+            familytree = new FamilyTreeFragment();
+        }
+        familytree.setArguments(mBundle);
+
         if (relative == null) {
             relative = new RelativeFragment();
         }
 
 
+
         adapter.addFrag(personal, Common.Constant_Class.PERSONAL);
         adapter.addFrag(business, Common.Constant_Class.BUSINESS);
         adapter.addFrag(family, Common.Constant_Class.FAMILY);
+        adapter.addFrag(familytree, Common.Constant_Class.FAMILY_TREE);
         adapter.addFrag(relative, Common.Constant_Class.RELATIVES);
 
         viewPager.setOffscreenPageLimit(4);

@@ -1,6 +1,7 @@
 package com.allyants.draggabletreeview;
 
 import android.content.Context;
+import android.text.InputType;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,7 +38,14 @@ public class SimpleTreeViewAdapter extends TreeViewAdapter {
             String url = mjobj.getString(context.getString(R.string.FT_IMG));
             String name = mjobj.getString(context.getString(R.string.FT_NAME));
             Glide.with(context).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(imageView);
-            textView.setText(name);
+
+            String[] strArray = name.split(" ");
+            StringBuilder builder = new StringBuilder();
+            for (String s : strArray) {
+                String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
+                builder.append(cap + " ");
+            }
+            textView.setText(builder);
         } catch (JSONException e) {
             e.printStackTrace();
         }

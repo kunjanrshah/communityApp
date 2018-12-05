@@ -46,6 +46,7 @@ import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ExportProfileData;
 import com.krs.vastipatrak.model.ListChildrenData;
+import com.krs.vastipatrak.model.ListFamilyTreeData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.model.MatrimonyProfileData;
 
@@ -109,8 +110,7 @@ public class Common {
         SimpleDateFormat sdf = new SimpleDateFormat(yyyy_MM_dd);
         Date strDate = null;
         try {
-            if(!bdate.isEmpty())
-            {
+            if (!bdate.isEmpty()) {
                 strDate = sdf.parse(bdate);
             }
 
@@ -966,10 +966,6 @@ public class Common {
                 mListProfileData.setSync_time(mJsonObject.getString(Constant_Class.SYNC_TIME));
             }
 
-
-            //   String strWhere = "" + Common.Constant_Class.PROFILE_ID + "=" + mJsonObject.getString(Common.Constant_Class.PROFILE_ID);
-            //   db.update(Common.Constant_Class.TABLE_PROFILE, values, strWhere, null);
-
             if (mJsonObject.has(Common.Constant_Class.CHILDS)) {
 
                 JSONArray mJsonArray = new JSONArray(mJsonObject.getString(Common.Constant_Class.CHILDS));
@@ -1042,6 +1038,29 @@ public class Common {
                 }
                 mListProfileData.setmListChildrenData(mlistchilds);
             }
+
+            if (mJsonObject.has(Constant_Class.familyTree)) {
+                JSONArray mjsonarray = mJsonObject.getJSONArray(Constant_Class.familyTree);
+
+                RealmList<ListFamilyTreeData> listFamilyTreeDataRealmList = new RealmList<>();
+                for (int i = 0; i < mjsonarray.length(); i++) {
+                    ListFamilyTreeData listFamilyTreeData = new ListFamilyTreeData();
+                    JSONObject object = mjsonarray.getJSONObject(i);
+                    String id = object.getString("id");
+                    String profile_id = object.getString("profile_id");
+                    String pic = object.getString("profile_pic");
+                    String name = object.getString("name");
+                    String level = object.getString("level");
+                    listFamilyTreeData.setId(id);
+                    listFamilyTreeData.setProfile_id(profile_id);
+                    listFamilyTreeData.setProfile_pic(pic);
+                    listFamilyTreeData.setName(name);
+                    listFamilyTreeData.setLevel(level);
+                    listFamilyTreeDataRealmList.add(listFamilyTreeData);
+                }
+                mListProfileData.setmListFamilyTreeData(listFamilyTreeDataRealmList);
+            }
+
             try {
                 if (AppController.getInstance().realm.isInTransaction()) {
                     AppController.getInstance().realm.commitTransaction();
@@ -2132,6 +2151,7 @@ public class Common {
         public static final String PERSONAL = "PERSONAL";
         public static final String BUSINESS = " PROFESSIONAL ";
         public static final String FAMILY = "FAMILY";
+        public static final String FAMILY_TREE = "FAMILY TREE";
         public static final String RELATIVES = " RELATIVES ";
 
         public static final String _PERSONAL = "     PERSONAL     ";
@@ -2308,6 +2328,9 @@ public class Common {
         public static final String CHILD_NAME = "child_name";
 
         public static final String CHILD_BDATE_REMINDER_ID = "child_bdate_reminder_id";
+
+
+        public static final String familyTree = "familyTree";
 
         public static final String CHILD_BDAY = "child_bday";
         public static final String FROM_CHILD_BDAY = "from_child_bday";

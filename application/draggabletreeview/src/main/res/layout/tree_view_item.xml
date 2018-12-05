@@ -10,14 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="1dp"
-        app:contentPadding="10dp"
+        app:contentPadding="5dp"
         >
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:padding="5dp"
             android:src="@drawable/clock" />
 
         <TextView

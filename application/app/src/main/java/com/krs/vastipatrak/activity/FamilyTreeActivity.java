@@ -48,6 +48,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
 
     Spinner spin;
     private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
 
         setContentView(R.layout.activity_ftree);
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
         String json = getIntent().getExtras().getString(getString(R.string.ft_intent));
         JSONObject mObj = null;
         String first_name, spouse, sfather, smother, father, mother, spouse_url, sfather_url, smother_url, father_url, mother_url, profile_url, bdate;
@@ -166,7 +168,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
 
         adapter = new SimpleTreeViewAdapter(this, root);
         draggableTreeView.setAdapter(adapter);
-        //getUserTree();
+        getUserTree();
         draggableTreeView.setOnDragItemListener(new DraggableTreeView.DragItemCallback() {
             @Override
             public void onStartDrag(View item, TreeNode node) {
@@ -198,6 +200,13 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mEditor.putBoolean("is_delete", true);
+        mEditor.apply();
+    }
+
     public void getTreeViews(SimpleTreeViewAdapter adapter) {
 
         JSONArray mjsonArray = new JSONArray();
@@ -219,7 +228,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                 e.printStackTrace();
             }
 
-            Log.d("Treeviews", "Name: " + object.toString() + " Level:" + level);
+            Log.d(FamilyTreeActivity.class.getSimpleName(), "Name: " + object.toString() + " Level:" + level);
             if (children.get(i).getChildren().size() != 0) {
                 getTreeNodeView(children.get(i), node1, mjsonArray);
             }
@@ -246,7 +255,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.d("Treeviews", "Name1: " + object1.toString() + " Level1:" + level1);
+            Log.d(FamilyTreeActivity.class.getSimpleName(), "Name1: " + object1.toString() + " Level1:" + level1);
             if (children.get(i).getChildren().size() != 0) {
                 getTreeNodeView(children.get(i), node2, mjsonArray);
             }
@@ -279,16 +288,66 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                             JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
                             JSONObject mJsondata = mJsonArray.getJSONObject(0);
                             JSONArray mjArray = mJsondata.getJSONArray("familyTree");
-                            for (int i = 0; i < mjArray.length(); i++) {
+                            ArrayList<TreeNode> lstNode = new ArrayList<>();
+                            ArrayList<Integer> lstLevel = new ArrayList<>();
+                            /*for (int i = 0; i < mjArray.length(); i++) {
                                 JSONObject mobject = mjArray.getJSONObject(i);
                                 mobject.getString("id");
                                 mobject.getString("user_id");
                                 mobject.getString("profile_pic");
+
                                 String name = mobject.getString("name");
                                 mobject.getString("level");
                                 TreeNode item = new TreeNode(mobject);
                                 lstDupName.add(name);
+                                lstNode.add(new TreeNode(name));
+                                lstLevel.add(Integer.parseInt(mobject.getString("level")));
+                            }*/
+                            String url = "http://www.superbinstruments.com/directory-dev/uploads/no-image.png";
+                            JSONObject mjson = new JSONObject();
+                            mjson.put(getString(R.string.FT_IMG), url);
+                            mjson.put(getString(R.string.FT_NAME), "a");
+                            lstNode.add(new TreeNode(mjson));
+
+                            mjson = new JSONObject();
+                            mjson.put(getString(R.string.FT_IMG), url);
+                            mjson.put(getString(R.string.FT_NAME), "b");
+                            lstNode.add(new TreeNode(mjson));
+
+                            mjson = new JSONObject();
+                            mjson.put(getString(R.string.FT_IMG), url);
+                            mjson.put(getString(R.string.FT_NAME), "c");
+                            lstNode.add(new TreeNode(mjson));
+
+                            mjson = new JSONObject();
+                            mjson.put(getString(R.string.FT_IMG), url);
+                            mjson.put(getString(R.string.FT_NAME), "d");
+                            lstNode.add(new TreeNode(mjson));
+
+                            mjson = new JSONObject();
+                            mjson.put(getString(R.string.FT_IMG), url);
+                            mjson.put(getString(R.string.FT_NAME), "e");
+                            lstNode.add(new TreeNode(mjson));
+
+                            lstLevel.add(1);
+                            lstLevel.add(2);
+                            lstLevel.add(3);
+                            lstLevel.add(2);
+                            lstLevel.add(3);
+                            for (int j = lstLevel.size() - 1; j >= 0; j--) {
+                                if (j == 0) {
+                                    root.addChild(lstNode.get(j));
+                                } else {
+                                    for (int i = j - 1; i >= 0; i--) {
+                                        if (lstLevel.get(j) > lstLevel.get(i)) {
+                                            Log.d(FamilyTreeActivity.class.getSimpleName(), "i=" + i + " j=" + j);
+                                            lstNode.get(i).addChild(lstNode.get(j));
+                                            break;
+                                        }
+                                    }
+                                }
                             }
+
                             adapter = new SimpleTreeViewAdapter(FamilyTreeActivity.this, root);
                             draggableTreeView.setAdapter(adapter);
 
@@ -304,10 +363,11 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                                 }
                             }
                         }
-                        Common.hideProgressDialog();
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    Common.hideProgressDialog();
                 }
             }, new Response.ErrorListener() {
 

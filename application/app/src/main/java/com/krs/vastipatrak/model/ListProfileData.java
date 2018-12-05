@@ -62,16 +62,22 @@ public class ListProfileData extends RealmObject {
     private String sponse_bdate;
     private String sponse_native;
     private String sponse_mobile;
-    private String spouse_blood_group;
     private String spouse_education;
+    private String sponse_bg;
+    private String bdate_reminder_id;
+    private String spouse_bdate_reminder_id;
+    private String mdate_reminder_id;
+    private RealmList<ListChildrenData> mListChildrenData;
 
-    public String getSpouse_blood_group() {
-        return spouse_blood_group;
+    public RealmList<ListFamilyTreeData> getmListFamilyTreeData() {
+        return mListFamilyTreeData;
     }
 
-    public void setSpouse_blood_group(String spouse_blood_group) {
-        this.spouse_blood_group = spouse_blood_group;
+    public void setmListFamilyTreeData(RealmList<ListFamilyTreeData> mListFamilyTreeData) {
+        this.mListFamilyTreeData = mListFamilyTreeData;
     }
+
+    private RealmList<ListFamilyTreeData> mListFamilyTreeData;
 
     public String getSpouse_education() {
         return spouse_education;
@@ -81,12 +87,6 @@ public class ListProfileData extends RealmObject {
         this.spouse_education = spouse_education;
     }
 
-
-    private String sponse_bg;
-
-    private String bdate_reminder_id;
-    private String spouse_bdate_reminder_id;
-    private String mdate_reminder_id;
     public String getBdate_reminder_id() {
         return bdate_reminder_id;
     }
@@ -118,34 +118,6 @@ public class ListProfileData extends RealmObject {
     public void setSponse_bg(String sponse_bg) {
         this.sponse_bg = sponse_bg;
     }
-   /* public boolean isChk_profile_bdate_rem() {
-        return chk_profile_bdate_rem;
-    }
-
-    public void setChk_profile_bdate_rem(boolean chk_profile_bdate_rem) {
-        this.chk_profile_bdate_rem = chk_profile_bdate_rem;
-    }*/
-
-   /* private boolean chk_profile_bdate_rem;
-    private boolean chk_spouse_bdate_rem;
-    private boolean chk_m_bdate_rem;*/
-    private RealmList<ListChildrenData> mListChildrenData;
-
-  /*  public boolean getChk_spouse_bdate_rem() {
-        return chk_spouse_bdate_rem;
-    }
-
-    public void setChk_spouse_bdate_rem(boolean chk_spouse_bdate_rem) {
-        this.chk_spouse_bdate_rem = chk_spouse_bdate_rem;
-    }
-
-    public boolean getChk_m_bdate_rem() {
-        return chk_m_bdate_rem;
-    }
-
-    public void setChk_m_bdate_rem(boolean chk_m_bdate_rem) {
-        this.chk_m_bdate_rem = chk_m_bdate_rem;
-    }*/
 
     public String getSponse_bdate() {
         return sponse_bdate;
