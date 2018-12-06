@@ -280,6 +280,9 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="ft_intent">FT_Intent</string>
     <string name="FT_IMG">profile_pic</string>
     <string name="FT_NAME">name</string>
+    <string name="FT_LEVEL">level</string>
+    <string name="FT_PROFILE_ID">profile_id</string>
+
     <string name="near_by_home">Home</string>
     <string name="near_by_office">Office</string>
     <string name="near_by_users">User</string>

@@ -81,7 +81,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private Fragment business = null;
     private Fragment family = null;
     private Fragment relative = null;
-    private Fragment familytree=null;
+    private Fragment familytree = null;
     private SharedPreferences mSharedPreferences = null;
     private boolean isBackPressed = false;
 
@@ -209,11 +209,12 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             }
         });
 
+        Log.d(TAG, "CurrentItem: " + viewPager.getCurrentItem());
+
         MenuItem voiceItem = menu.findItem(R.id.action_voice);
         voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-
                 Common.promptSpeechInput(MyProfileActivity.this);
                 return false;
             }
@@ -221,10 +222,18 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
         final MenuItem saveItem = menu.findItem(R.id.action_save);
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-            saveItem.setVisible(true);
+            if (viewPager.getCurrentItem() == 3 || viewPager.getCurrentItem() == 4) {
+                saveItem.setVisible(false);
+            } else {
+                saveItem.setVisible(true);
+            }
         } else {
             if (isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
-                saveItem.setVisible(true);
+                if (viewPager.getCurrentItem() == 3 || viewPager.getCurrentItem() == 4) {
+                    saveItem.setVisible(false);
+                } else {
+                    saveItem.setVisible(true);
+                }
             } else {
                 saveItem.setVisible(false);
             }
@@ -269,8 +278,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             public boolean onMenuItemClick(MenuItem item) {
 
                 saveProfile(0);
-
-
                 return false;
             }
         });
@@ -280,7 +287,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
     private void saveProfile(int state) {
         ListProfileData mListProfileData = new ListProfileData();
-        valid="";
+        valid = "";
         if (personal != null && ((PersonalFragment) personal).edtFName != null && business != null && ((BusinessFragment) business).edtOccupation != null) {
             // Personal Details
             String fname = ((PersonalFragment) personal).edtFName.getText().toString().trim();
@@ -542,7 +549,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                             valid = "Child birthdate is not valid ";
                         }
                     }
-
 
 
                     boolean child_interest = Objects.requireNonNull(mViewholder.tbtn_interest).isChecked();
@@ -871,7 +877,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         }
 
 
-
         adapter.addFrag(personal, Common.Constant_Class.PERSONAL);
         adapter.addFrag(business, Common.Constant_Class.BUSINESS);
         adapter.addFrag(family, Common.Constant_Class.FAMILY);
@@ -880,6 +885,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
+
 
     }
 

@@ -1,20 +1,29 @@
 package com.krs.vastipatrak.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.FamilyTreeActivity;
 import com.krs.vastipatrak.activity.MyProfileActivity;
 import com.krs.vastipatrak.model.ListFamilyTreeData;
 import com.krs.vastipatrak.model.ListProfileData;
@@ -33,14 +42,18 @@ import de.blox.graphview.tree.BuchheimWalkerAlgorithm;
 import de.blox.graphview.tree.BuchheimWalkerConfiguration;
 import io.realm.RealmList;
 
+import static com.krs.vastipatrak.utils.Common.ShareScreenShot;
+
+
 public class FamilyTreeFragment extends Fragment {
 
     Graph graph;
     SharedPreferences mSharedPreferences;
+    SharedPreferences.Editor mEditor;
     GraphView graphView;
     BaseGraphAdapter<ViewHolder> adapter;
     private ImageView imgShare;
-    private ImageView imglink;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,38 +72,82 @@ public class FamilyTreeFragment extends Fragment {
             @Override
             public void onBindViewHolder(ViewHolder viewHolder, Object data, int position) {
                 JSONObject mjson = (JSONObject) data;
-                String imgUrl = "", name = "";
+                String imgUrl = "", name = "", id = "";
                 try {
                     imgUrl = mjson.getString(getString(R.string.FT_IMG));
                     name = mjson.getString(getString(R.string.FT_NAME));
+                    id = mjson.getString(getString(R.string.FT_PROFILE_ID));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 String[] strArray = name.split(" ");
-                StringBuilder builder = new StringBuilder();
+                final StringBuilder builder = new StringBuilder();
                 for (String s : strArray) {
                     String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
                     builder.append(cap + " ");
                 }
                 viewHolder.mTextView.setText(builder);
                 Glide.with(getActivity()).load(imgUrl).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(viewHolder.imgView);
+                final String finalId = id;
 
+                viewHolder.imgView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Log.d(FamilyTreeActivity.class.getSimpleName(), "name: " + builder);
+                        mEditor.putString(Common.Constant_Class.PROFILE_ID, finalId);
+                        mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+                        mEditor.apply();
+                        try {
+                            MyProfileActivity.isEnable = false;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        Intent mIntent = new Intent(getActivity(), MyProfileActivity.class);
+                        startActivity(mIntent);
+                    }
+                });
+
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
+                    viewHolder.imglink.setVisibility(View.GONE);
+                } else {
+                    viewHolder.imglink.setVisibility(View.VISIBLE);
+                }
+
+                viewHolder.llLink.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // x from web service
+                        String msg = "Do you want add x as child of " + builder + "?";
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+                        alertDialog.setTitle(getActivity().getResources().getString(R.string.app_name));
+                        alertDialog.setMessage(msg);
+                        alertDialog.setPositiveButton("Request", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        alertDialog.show();
+                    }
+                });
             }
         };
 
         imgShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Work in progress", Toast.LENGTH_SHORT).show();
+                ShareScreenShot(getActivity(), graphView);
             }
         });
 
-        imglink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Work in progress", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         try {
             ListProfileData mListProfileData = ((MyProfileActivity) getActivity()).getMyData();
@@ -103,6 +160,7 @@ public class FamilyTreeFragment extends Fragment {
         return rootView;
     }
 
+
     private void SetOfflineData(ListProfileData mListProfileData) {
 
         RealmList<ListFamilyTreeData> familyTreeData = mListProfileData.getmListFamilyTreeData();
@@ -114,27 +172,33 @@ public class FamilyTreeFragment extends Fragment {
             JSONObject mjson = new JSONObject();
             mjson.put(getString(R.string.FT_IMG), url);
             mjson.put(getString(R.string.FT_NAME), "a");
+            mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
             lstNode.add(new Node(mjson));
 
             mjson = new JSONObject();
             mjson.put(getString(R.string.FT_IMG), url);
             mjson.put(getString(R.string.FT_NAME), "b");
+            mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
             lstNode.add(new Node(mjson));
 
             mjson = new JSONObject();
             mjson.put(getString(R.string.FT_IMG), url);
             mjson.put(getString(R.string.FT_NAME), "c");
+            mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
             lstNode.add(new Node(mjson));
 
             mjson = new JSONObject();
             mjson.put(getString(R.string.FT_IMG), url);
             mjson.put(getString(R.string.FT_NAME), "d");
+            mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
             lstNode.add(new Node(mjson));
 
             mjson = new JSONObject();
             mjson.put(getString(R.string.FT_IMG), url);
             mjson.put(getString(R.string.FT_NAME), "e");
+            mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
             lstNode.add(new Node(mjson));
+
             lstLevel.add(1);
             lstLevel.add(2);
             lstLevel.add(3);
@@ -178,8 +242,8 @@ public class FamilyTreeFragment extends Fragment {
         graph = new Graph();
         graphView = rootView.findViewById(R.id.graph);
         imgShare = rootView.findViewById(R.id.imgShare);
-        imglink = rootView.findViewById(R.id.imglink);
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
     }
 
    /* public void getTreeViews(SimpleTreeViewAdapter adapter) {
@@ -220,10 +284,15 @@ public class FamilyTreeFragment extends Fragment {
     private class ViewHolder {
         TextView mTextView;
         ImageView imgView;
+        LinearLayout ll_node, llLink;
+        ImageView imglink;
 
         ViewHolder(View view) {
             mTextView = view.findViewById(R.id.textView);
             imgView = view.findViewById(R.id.imgView);
+            ll_node = view.findViewById(R.id.ll_node);
+            imglink = view.findViewById(R.id.imglink);
+            llLink = view.findViewById(R.id.llLink);
         }
     }
 }

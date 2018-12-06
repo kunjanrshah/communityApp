@@ -23,6 +23,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,7 +124,28 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         // Required empty public constructor
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        final MenuItem saveItem = menu.findItem(R.id.action_save);
+        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
+            saveItem.setVisible(true);
+        } else {
+            if (MyProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                saveItem.setVisible(true);
+            } else {
+                saveItem.setVisible(false);
+            }
+        }
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_family, container, false);

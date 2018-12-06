@@ -21,11 +21,13 @@ public class FtSpinnerAdapter extends BaseAdapter {
     ArrayList<String> lstLevels;
     LayoutInflater inflter;
 
+
     public FtSpinnerAdapter(Context applicationContext, ArrayList<String> lstImages,ArrayList<String> lstNames,ArrayList<String> lstLevels) {
         this.context = applicationContext;
         this.lstImages = lstImages;
         this.lstNames = lstNames;
         this.lstLevels=lstLevels;
+
         inflter = (LayoutInflater.from(applicationContext));
     }
 
@@ -51,6 +53,14 @@ public class FtSpinnerAdapter extends BaseAdapter {
         TextView names = (TextView) view.findViewById(R.id.sp_text);
         Glide.with(context).load(lstImages.get(i)).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(icon);
         names.setText(lstNames.get(i));
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         return view;
     }
 }

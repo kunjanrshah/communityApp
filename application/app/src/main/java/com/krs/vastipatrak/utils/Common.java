@@ -55,6 +55,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -1088,6 +1089,7 @@ public class Common {
         return null;
     }
 
+
     public static void ExportProfile(JSONObject mJsonObject, Activity mActivity) {
         try {
 
@@ -1823,7 +1825,6 @@ public class Common {
         return bitmap;
     }
 
-
     //method to convert your text to image
     public static Bitmap textAsBitmap(String text, float textSize, int textColor) {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -2054,6 +2055,48 @@ public class Common {
         return (rad * 180.0 / Math.PI);
     }
 
+    public static void watchYoutubeVideo(Context context, String id) {
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + id));
+        try {
+            context.startActivity(appIntent);
+        } catch (ActivityNotFoundException ex) {
+            context.startActivity(webIntent);
+        }
+    }
+
+    public static void ShareScreenShot(Context context, View view) {
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        Drawable bgDrawable = view.getBackground();
+        if (bgDrawable != null) {
+            bgDrawable.draw(canvas);
+        } else {
+            canvas.drawColor(Color.WHITE);
+            view.draw(canvas);
+        }
+        store(bitmap, "family_tree.png", context);
+    }
+
+    public static void store(Bitmap bm, String fileName, Context context) {
+        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Screenshots";
+        File dir = new File(dirPath);
+        if (!dir.exists()) dir.mkdirs();
+        File file = new File(dirPath, fileName);
+        try {
+            FileOutputStream fOut = new FileOutputStream(file);
+            bm.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+            fOut.flush();
+            fOut.close();
+            shareImage(file, context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
    /* public static double distance(double lat1, double lon1, double lat2, double lon2) {
 
         Location loc1 = new Location("");
@@ -2071,13 +2114,19 @@ public class Common {
         return (distanceInKm);
     }*/
 
-    public static void watchYoutubeVideo(Context context, String id) {
-        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
-        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + id));
+    private static void shareImage(File file, Context context) {
+        Uri uri = Uri.fromFile(file);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("image/*");
+
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Family Tree");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.krs.vastipatrak \nUpdate your Profile and complete your Family Tree");
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
         try {
-            context.startActivity(appIntent);
-        } catch (ActivityNotFoundException ex) {
-            context.startActivity(webIntent);
+            context.startActivity(Intent.createChooser(intent, "Share Family Tree"));
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(context, "No App Available", Toast.LENGTH_SHORT).show();
         }
     }
 
