@@ -66,7 +66,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
 
     public static boolean isEnable = false;
     public static String chooseFragment = "";
-    private final String TAG = MainActivity.class.getSimpleName();
+    private final String TAG = MyProfileActivity.class.getSimpleName();
     Snackbar snackbar;
     String id = "";
     private SharedPreferences.Editor mEditor;
@@ -84,6 +84,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     private Fragment familytree = null;
     private SharedPreferences mSharedPreferences = null;
     private boolean isBackPressed = false;
+    private MenuItem saveItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -161,8 +162,9 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        saveItem = menu.findItem(R.id.action_save);
 
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -209,7 +211,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             }
         });
 
-        Log.d(TAG, "CurrentItem: " + viewPager.getCurrentItem());
+        saveMenuVisible();
 
         MenuItem voiceItem = menu.findItem(R.id.action_voice);
         voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -220,24 +222,6 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             }
         });
 
-        final MenuItem saveItem = menu.findItem(R.id.action_save);
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-            if (viewPager.getCurrentItem() == 3 || viewPager.getCurrentItem() == 4) {
-                saveItem.setVisible(false);
-            } else {
-                saveItem.setVisible(true);
-            }
-        } else {
-            if (isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
-                if (viewPager.getCurrentItem() == 3 || viewPager.getCurrentItem() == 4) {
-                    saveItem.setVisible(false);
-                } else {
-                    saveItem.setVisible(true);
-                }
-            } else {
-                saveItem.setVisible(false);
-            }
-        }
 
         MenuItem action_toggle = menu.findItem(R.id.action_toggle);
         if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
@@ -284,6 +268,19 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         return true;
     }
 
+    private void saveMenuVisible() {
+        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
+            if (viewPager.getCurrentItem() != 4 && viewPager.getCurrentItem() != 3) {
+                saveItem.setVisible(true);
+            }
+        } else {
+            if (isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                saveItem.setVisible(true);
+            } else {
+                saveItem.setVisible(false);
+            }
+        }
+    }
 
     private void saveProfile(int state) {
         ListProfileData mListProfileData = new ListProfileData();
@@ -886,7 +883,23 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
 
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                Log.d(TAG, "onPageScrolled");
+            }
 
+            @Override
+            public void onPageSelected(int position) {
+                Log.d(TAG, "onPageSelected");
+                saveMenuVisible();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                Log.d(TAG, "onPageScrollStateChanged");
+            }
+        });
     }
 
     private void showSnack(boolean isConnected) {

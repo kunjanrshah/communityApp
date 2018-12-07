@@ -29,14 +29,17 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -263,10 +266,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
         checkConnection();
 
+        showActivityOverlay();
+
         if (mPreferencesWelcome.getBoolean("first_time_main", true)) {
             mEditorWelcome.putBoolean("first_time_main", false);
             mEditorWelcome.apply();
-            showActivityOverlay();
+
         }
     }
 
@@ -275,13 +280,21 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         dialog.setContentView(R.layout.overlay_activity);
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.llOverlay_activity);
+        CheckBox chkOk=dialog.findViewById(R.id.chkOk);
+        chkOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                  dialog.dismiss();
+            }
+        });
+        //layout.setAlpha(0.8f);
         layout.setBackgroundColor(Color.TRANSPARENT);
-        layout.setOnClickListener(new View.OnClickListener() {
+        /*layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 dialog.dismiss();
             }
-        });
+        });*/
         dialog.show();
     }
 
@@ -720,6 +733,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         return true;
     }
 
+
+
     public void moveToSearch(int menu) {
 
 
@@ -830,16 +845,34 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     }
 
+
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if(featureId == AppCompatDelegate.FEATURE_SUPPORT_ACTION_BAR && menu != null){
+            Log.d(TAG,"step onMenuOpened1");
+        }
 
-        /*int id = item.getItemId();
-        if (id == R.id.action_search) {
+        return super.onMenuOpened(featureId, menu);
+    }
 
-            return false;
-        }*/
+    @Override
+    public void onPanelClosed(int featureId, Menu menu) {
+        Log.d(TAG,"step onPanelClosed");
+    }
 
-        return false;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+
+            case KeyEvent.KEYCODE_MENU:
+                Log.d(TAG,"step onKeyDown");
+                break;
+
+            default:
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
