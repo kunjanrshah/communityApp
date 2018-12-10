@@ -111,9 +111,13 @@ public class RelativeFragment extends Fragment {
                                 String to_last_name = mJsonreldata.getString(Common.Constant_Class.TO_LAST_NAME);
                                 String from_first_name = mJsonreldata.getString(Common.Constant_Class.FROM_FIRST_NAME);
                                 String from_last_name = mJsonreldata.getString(Common.Constant_Class.FROM_LAST_NAME);
+                                String to_profile_pic=mJsonreldata.getString(Common.Constant_Class.FROM_PROFILE_PIC);
+                                String from_profile_pic=mJsonreldata.getString(Common.Constant_Class.TO_PROFILE_PIC);
                                 Relative mRelative = new Relative();
                                 mRelative.setId(id);
                                 mRelative.setUser_id(user_id);
+                                mRelative.setTo_profile_pic(to_profile_pic);
+                                mRelative.setFrom_profile_pic(from_profile_pic);
                                 mRelative.setFrom_first_name(from_first_name);
                                 mRelative.setFrom_last_name(from_last_name);
                                 mRelative.setToFirst_name(to_first_name);
@@ -283,6 +287,24 @@ public class RelativeFragment extends Fragment {
         String to_last_name;
         String from_first_name;
         String from_last_name;
+        String to_profile_pic;
+        String from_profile_pic;
+
+        public String getTo_profile_pic() {
+            return to_profile_pic;
+        }
+
+        public void setTo_profile_pic(String to_profile_pic) {
+            this.to_profile_pic = to_profile_pic;
+        }
+
+        public String getFrom_profile_pic() {
+            return from_profile_pic;
+        }
+
+        public void setFrom_profile_pic(String from_profile_pic) {
+            this.from_profile_pic = from_profile_pic;
+        }
 
         public String getUser_id() {
             return user_id;
@@ -396,8 +418,8 @@ public class RelativeFragment extends Fragment {
             String from_name = reldata.getFrom_first_name();// + " " + reldata.getFrom_last_name();
             from_name = Common.camelCase(from_name);
 
-            Glide.with(getActivity()).load(R.drawable._woman).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(holder.img_request);
-            Glide.with(getActivity()).load(R.drawable.man).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(holder.img_approve);
+            Glide.with(getActivity()).load(reldata.getTo_profile_pic()).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(holder.img_request);
+            Glide.with(getActivity()).load(reldata.getFrom_profile_pic()).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(holder.img_approve);
 
             String to_name = reldata.getToFirst_name(); //+ " " + reldata.getToLast_name();
             to_name = Common.camelCase(to_name);

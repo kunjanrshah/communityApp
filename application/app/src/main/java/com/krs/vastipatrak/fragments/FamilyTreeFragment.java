@@ -246,7 +246,7 @@ public class FamilyTreeFragment extends Fragment {
         mEditor = mSharedPreferences.edit();
     }
 
-   /* public void getTreeViews(SimpleTreeViewAdapter adapter) {
+   /* public void getTreeViewsFromAdapter(SimpleTreeViewAdapter adapter) {
         ArrayList<TreeNode> children = adapter.root.getChildren();
         for (int i = 0; i < children.size(); i++) {
             TreeNode node = children.get(i);

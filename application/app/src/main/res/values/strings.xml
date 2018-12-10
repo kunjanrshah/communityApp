@@ -242,6 +242,7 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
 </string>
 
 
+
     <string name="gotra">Gotra :</string>
     <string name="blood_group">Blood Group :</string>
     <string name="mobile">Mobile :</string>
@@ -302,8 +303,16 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="skip">SKIP</string>
     <string name="_start">GOT IT</string>
 
-    <string name="slide_1_title">Hello Food!</string>
-    <string name="slide_1_desc">The easiest way to order food from your favourite restaurant!</string>
+    <string name="slide_1_title"></string>
+    <string name="slide_1_desc"> તમે આપણાં સમાજ ની કોઈ પણ  વ્યક્તિની વિગતસર માહિતી મેળવી શકો છો.
+ જેમ કે વ્યક્તિના
+૧ વડીલનું નામ
+૨ માતા નું નામ
+૩ તેની જન્મતારીખ, જન્મસમય.
+૪ મૂળ વતન
+૫ હાલનું સરનામું
+૬ વ્યવસાયનું સરનામું, અને તેની વિગત.
+૭ તેમજ તેના ફેમિલી મેમ્બર ના બધાજ સભ્યોનું ઉપર લખેલી બધી વિગતો.</string>
 
     <string name="slide_2_title">Movie Tickets</string>
     <string name="slide_2_desc">Book movie tickets for your family and friends!</string>

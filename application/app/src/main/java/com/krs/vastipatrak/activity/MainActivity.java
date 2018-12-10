@@ -271,7 +271,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         if (mPreferencesWelcome.getBoolean("first_time_main", true)) {
             mEditorWelcome.putBoolean("first_time_main", false);
             mEditorWelcome.apply();
-
         }
     }
 
@@ -437,9 +436,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             MOVE_TO_SEARCH = 1;
             moveToSearch(MOVE_TO_SEARCH);
         }
-
-
     }
+
+
 
     @Override
     protected void onPause() {

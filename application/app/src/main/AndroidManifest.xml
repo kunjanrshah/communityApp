@@ -113,6 +113,7 @@
             android:label="@string/title_activity_share_event"
             android:theme="@style/MyMaterialTheme" />
         <activity android:name=".activity.FamilyTreeActivity" />
+        <activity android:name=".app.AppController$ActivityDialog" />
     </application>
 
 </manifest>

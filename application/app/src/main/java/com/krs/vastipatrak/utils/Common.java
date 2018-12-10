@@ -9,6 +9,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -762,6 +763,19 @@ public class Common {
             }
         }).show();
     }
+
+   /* public static void alert(@NonNull Activity mActivity, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+        builder.setTitle(mActivity.getString(R.string.app_name));
+        builder.setCancelable(false);
+        builder.setMessage(message);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
+                dialog.dismiss();
+
+            }
+        }).show();
+    }*/
 
     public static void UpdateProfilePassword(String password, String id) {
 
@@ -1755,18 +1769,7 @@ public class Common {
         }).show();
     }
 
-    public static void alert(@NonNull Activity mActivity, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
-        builder.setTitle(mActivity.getString(R.string.app_name));
-        builder.setCancelable(false);
-        builder.setMessage(message);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(@NonNull DialogInterface dialog, int which) {
-                dialog.dismiss();
 
-            }
-        }).show();
-    }
 
     public static Bitmap drawableToBitmap(Drawable drawable) {
         Bitmap bitmap = null;
@@ -2130,6 +2133,20 @@ public class Common {
         }
     }
 
+    public static int getAppVersion(Context context) {
+        int verCode = 0;
+        try {
+            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            String version = pInfo.versionName;
+            verCode = pInfo.versionCode;
+            Log.d("getAppVersion", "version: " + version + " verCode:" + verCode);
+            return verCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return verCode;
+    }
+
     private boolean checktimings(String time, String endtime) {
 
         String pattern = "HH:mm";
@@ -2186,7 +2203,6 @@ public class Common {
             }
         }
     }
-
 
     public static class Constant_Class {
 
@@ -2260,12 +2276,19 @@ public class Common {
         public static final String TO_LAST_NAME = "to_last_name";
         public static final String FROM_FIRST_NAME = "from_first_name";
         public static final String FROM_LAST_NAME = "from_last_name";
+
+        public static final String FROM_PROFILE_PIC = "from_profile_pic";
+        public static final String TO_PROFILE_PIC = "to_profile_pic";
+
         public static final String REQUESTED = "REQUESTED";
         public static final String ACCEPTED = "ACCEPTED";
         public static final String REJECTED = "REJECTED";
 
         public static final String EMAIL_ADDRESS = "email_address";
         public static final String PASSWORD = "password";
+        public static final String INSERT = "insert";
+        public static final String VERSION = "version";
+
         public static final String PLAIN_PASSWORD = "plain_password";
 
         public static final String REPEAT_PASSWORD = "repeat_password";
@@ -2432,6 +2455,7 @@ public class Common {
         public static final String GET_RELATIONS_URL = BASE_URL + "/API/getRelations";
         public static final String SET_REMINDER_URL = BASE_URL + "/API/setReminder";
         public static final String SET_TREE_URL = BASE_URL + "/API/saveTree";
+        public static final String SET_UPDATED_VERSION_URL = BASE_URL + "/API/getUpdatedVersion";
         public static final String GET_USERS_BY_DATE_URL = BASE_URL + "/API/getUsersByDate";
         public static String DEVICE_ID_VALUE = "";
     }

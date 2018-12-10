@@ -45,6 +45,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
     ArrayList<String> LstNames = new ArrayList<>();
     ArrayList<String> LstLevel = new ArrayList<>();
     ArrayList<String> lstDupName = new ArrayList<>();
+    HashMap<Integer,String> lstHashNode=new HashMap<>();
 
     Spinner spin;
     private SharedPreferences mSharedPreferences;
@@ -59,13 +60,13 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         mEditor = mSharedPreferences.edit();
         String json = getIntent().getExtras().getString(getString(R.string.ft_intent));
         JSONObject mObj = null;
-        String id = "",first_name, spouse, sfather, smother, father, mother, spouse_url, sfather_url, smother_url, father_url, mother_url, profile_url, bdate;
+        String id = "", first_name, spouse, sfather, smother, father, mother, spouse_url, sfather_url, smother_url, father_url, mother_url, profile_url, bdate;
         try {
             LstNames.clear();
             LstImages.clear();
             LstLevel.clear();
             mObj = new JSONObject(json);
-            id=mObj.getString(Common.Constant_Class.ID);
+            id = mObj.getString(Common.Constant_Class.ID);
             first_name = mObj.getString(Common.Constant_Class.FIRST_NAME);
             profile_url = mObj.getString(Common.Constant_Class.PROFILE_PIC_URL);
 
@@ -135,7 +136,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
             @Override
             public void onClick(View v) {
                 if (adapter != null) {
-                    getTreeViews(adapter);
+                    getTreeViewsFromAdapter(adapter);
                 }
             }
         });
@@ -171,7 +172,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
 
         adapter = new SimpleTreeViewAdapter(this, root);
         draggableTreeView.setAdapter(adapter);
-        getUserTree();
+        fetchProfileData();
         draggableTreeView.setOnDragItemListener(new DraggableTreeView.DragItemCallback() {
             @Override
             public void onStartDrag(View item, TreeNode node) {
@@ -206,11 +207,11 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
     @Override
     protected void onResume() {
         super.onResume();
-        mEditor.putBoolean("is_delete", true);
-        mEditor.apply();
+        /*mEditor.putBoolean("is_delete", true);
+        mEditor.apply();*/
     }
 
-    public void getTreeViews(SimpleTreeViewAdapter adapter) {
+    public void getTreeViewsFromAdapter(SimpleTreeViewAdapter adapter) {
 
         JSONArray mjsonArray = new JSONArray();
         ArrayList<TreeNode> children = adapter.root.getChildren();
@@ -254,6 +255,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                 JSONObject mjson = new JSONObject();
                 mjson.put(getString(R.string.FT_IMG), object1.get(getString(R.string.FT_IMG)));
                 mjson.put(getString(R.string.FT_NAME), object1.get(getString(R.string.FT_NAME)));
+                mjson.put(getString(R.string.FT_PROFILE_ID), object1.get(getString(R.string.FT_PROFILE_ID)));
                 mjson.put("level", level1);
                 mjsonArray.put(mjson);
             } catch (JSONException e) {
@@ -266,7 +268,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         }
     }
 
-    private void getUserTree() {
+    private void fetchProfileData() {
         if (Common.isOnline(this)) {
             Common.showProgressDialog(this);
             JSONObject mJsonObject = null;
@@ -294,7 +296,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                             JSONArray mjArray = mJsondata.getJSONArray("familyTree");
                             ArrayList<TreeNode> lstNode = new ArrayList<>();
                             ArrayList<Integer> lstLevel = new ArrayList<>();
-                            /*for (int i = 0; i < mjArray.length(); i++) {
+                            for (int i = 0; i < mjArray.length(); i++) {
                                 JSONObject mobject = mjArray.getJSONObject(i);
                                 mobject.getString("id");
                                 mobject.getString("user_id");
@@ -306,7 +308,9 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                                 lstDupName.add(name);
                                 lstNode.add(new TreeNode(name));
                                 lstLevel.add(Integer.parseInt(mobject.getString("level")));
-                            }*/
+                                lstHashNode.put(Integer.parseInt(mobject.getString("id")),name);
+
+                            }
                             String url = "http://www.superbinstruments.com/directory-dev/uploads/no-image.png";
                             JSONObject mjson = new JSONObject();
                             mjson.put(getString(R.string.FT_IMG), url);
@@ -320,29 +324,9 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                             mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
                             lstNode.add(new TreeNode(mjson));
 
-                            mjson = new JSONObject();
-                            mjson.put(getString(R.string.FT_IMG), url);
-                            mjson.put(getString(R.string.FT_NAME), "c");
-                            mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
-                            lstNode.add(new TreeNode(mjson));
-
-                            mjson = new JSONObject();
-                            mjson.put(getString(R.string.FT_IMG), url);
-                            mjson.put(getString(R.string.FT_NAME), "d");
-                            mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
-                            lstNode.add(new TreeNode(mjson));
-
-                            mjson = new JSONObject();
-                            mjson.put(getString(R.string.FT_IMG), url);
-                            mjson.put(getString(R.string.FT_NAME), "e");
-                            mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
-                            lstNode.add(new TreeNode(mjson));
-
                             lstLevel.add(1);
                             lstLevel.add(2);
-                            lstLevel.add(3);
-                            lstLevel.add(2);
-                            lstLevel.add(3);
+
                             for (int j = lstLevel.size() - 1; j >= 0; j--) {
                                 if (j == 0) {
                                     root.addChild(lstNode.get(j));

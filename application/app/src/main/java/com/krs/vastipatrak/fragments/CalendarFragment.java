@@ -40,9 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
-import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
 public class CalendarFragment extends Fragment {
 
@@ -67,7 +65,20 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onDaySelect() {
                 Day day = viewCalendar.getSelectedDay();
-                String date = day.getYear() + "-" + (day.getMonth() + 1) + "-" + day.getDay();
+                int d = day.getDay();
+                int m = (day.getMonth() + 1);
+                String m1 = "", d1 = "";
+                if (0 < m && m < 10) {
+                    m1 = "0" + m;
+                } else {
+                    m1 = String.valueOf(m);
+                }
+                if (0 < d && d < 10) {
+                    d1 = "0" + d;
+                } else {
+                    d1 = String.valueOf(d);
+                }
+                String date = day.getYear() + "-" + m1 + "-" + d1;
                 Log.i(getClass().getName(), "Selected Day: " + date);
 
                 CalendarWS(date);
@@ -132,9 +143,19 @@ public class CalendarFragment extends Fragment {
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH) + 1;
         int day = cal.get(Calendar.DAY_OF_MONTH);
-
+        String month1 = "", day1 = "";
+        if (0 < month && month < 10) {
+            month1 = "0" + month;
+        } else {
+            month1 = String.valueOf(month);
+        }
+        if (0 < day && day < 10) {
+            day1 = "0" + day;
+        } else {
+            day1 = String.valueOf(day);
+        }
         // viewCalendar.select(new Day(year, month, day));
-        String date = year + "-" + month + "-" + day;
+        String date = year + "-" + month1 + "-" + day1;
         CalendarWS(date);
 
     }
@@ -209,7 +230,7 @@ public class CalendarFragment extends Fragment {
                     String bdate_rem_id = mJsondata.getString(Common.Constant_Class.BDATE_REMINDER_ID);
                     String spouse_rem_id = mJsondata.getString(Common.Constant_Class.SPOUSE_BDATE_REMINDER_ID);
                     String mdate_rem_id = mJsondata.getString(Common.Constant_Class.MDATE_REMINDER_ID);
-                    JSONArray childs=mJsondata.getJSONArray("childs");
+                    JSONArray childs = mJsondata.getJSONArray("childs");
 
 
                     String can_share = "0";
