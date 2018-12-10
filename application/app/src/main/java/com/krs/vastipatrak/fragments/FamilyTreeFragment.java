@@ -7,13 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -87,7 +83,13 @@ public class FamilyTreeFragment extends Fragment {
                     builder.append(cap + " ");
                 }
                 viewHolder.mTextView.setText(builder);
-                Glide.with(getActivity()).load(imgUrl).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(viewHolder.imgView);
+                try {
+                    Glide.with(getActivity()).load(imgUrl).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(viewHolder.imgView);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
                 final String finalId = id;
 
                 viewHolder.imgView.setOnClickListener(new View.OnClickListener() {
@@ -167,35 +169,35 @@ public class FamilyTreeFragment extends Fragment {
 
         ArrayList<Node> lstNode = new ArrayList<>();
         ArrayList<Integer> lstLevel = new ArrayList<>();
-        try {
+       /* try {
             String url = "http://www.superbinstruments.com/directory-dev/uploads/no-image.png";
             JSONObject mjson = new JSONObject();
             mjson.put(getString(R.string.FT_IMG), url);
-            mjson.put(getString(R.string.FT_NAME), "a");
+            mjson.put(getString(R.string.FT_NAME), "Rajendra bhai");
             mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
             lstNode.add(new Node(mjson));
 
             mjson = new JSONObject();
             mjson.put(getString(R.string.FT_IMG), url);
-            mjson.put(getString(R.string.FT_NAME), "b");
+            mjson.put(getString(R.string.FT_NAME), "kunjan shah");
             mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
             lstNode.add(new Node(mjson));
 
             mjson = new JSONObject();
             mjson.put(getString(R.string.FT_IMG), url);
-            mjson.put(getString(R.string.FT_NAME), "c");
+            mjson.put(getString(R.string.FT_NAME), "kushal shah");
             mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
             lstNode.add(new Node(mjson));
 
             mjson = new JSONObject();
             mjson.put(getString(R.string.FT_IMG), url);
-            mjson.put(getString(R.string.FT_NAME), "d");
+            mjson.put(getString(R.string.FT_NAME), "abcd");
             mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
             lstNode.add(new Node(mjson));
 
             mjson = new JSONObject();
             mjson.put(getString(R.string.FT_IMG), url);
-            mjson.put(getString(R.string.FT_NAME), "e");
+            mjson.put(getString(R.string.FT_NAME), "fsdfsfse");
             mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
             lstNode.add(new Node(mjson));
 
@@ -206,14 +208,21 @@ public class FamilyTreeFragment extends Fragment {
             lstLevel.add(3);
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        /*for (int i = 0; i < familyTreeData.size(); i++) {
-            ListFamilyTreeData fdata = familyTreeData.get(i);
-            String name = fdata.getName();
-            lstNode.add(new Node(name));
-            lstLevel.add(Integer.parseInt(fdata.getLevel()));
         }*/
+
+        for (int i = 0; i < familyTreeData.size(); i++) {
+            ListFamilyTreeData fdata = familyTreeData.get(i);
+            JSONObject mjson = new JSONObject();
+            try {
+                mjson.put(getString(R.string.FT_IMG), fdata.getProfile_pic());
+                mjson.put(getString(R.string.FT_NAME), fdata.getName());
+                mjson.put(getString(R.string.FT_PROFILE_ID), fdata.getProfile_id());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            lstNode.add(new Node(mjson));
+            lstLevel.add(Integer.parseInt(fdata.getLevel()));
+        }
 
         ArrayList<Node> listNode1 = new ArrayList<>();
         ArrayList<Node> listNode2 = new ArrayList<>();

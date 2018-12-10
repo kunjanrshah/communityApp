@@ -57,8 +57,8 @@ public class AppController extends Application {
     //public FirebaseAnalytics firebaseAnalytics;
     @Nullable
     public RealmResults<ListProfileData> mListSearchList = null;
-    public ArrayAdapter<String> dataAdapter;
-    public List<String> lstgotra;
+    /*public ArrayAdapter<String> dataAdapter;
+    public List<String> lstgotra;*/
     public SharedPreferences mSharedPreferences;
     public SharedPreferences.Editor mEditor;
     ConnectivityReceiver broadcastRevcevier;
@@ -84,12 +84,10 @@ public class AppController extends Application {
         StrictMode.setVmPolicy(builder.build());
         broadcastRevcevier = new ConnectivityReceiver();
         registerReceiver(broadcastRevcevier, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
-        String user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
-        String token = mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, "");
-        Log.d(TAG, "AppController onCreate " + user_id);
-        if (!user_id.isEmpty() && !token.isEmpty()) {
-           // get_updated_ver_ws(user_id, token);
-        }
+
+        Log.d(TAG,"AppController Screen");
+        mEditor.putBoolean("app_create",true);
+        mEditor.apply();
     }
 
     @Override
@@ -149,120 +147,4 @@ public class AppController extends Application {
         req.setTag(TAG);
         getRequestQueue().add(req);
     }
-
-    private void get_updated_ver_ws(String user_id, String token) {
-
-        if (Common.isOnline(this)) {
-
-            Common.showProgressDialog(this);
-            JSONObject mJsonObject = null;
-
-            try {
-                mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.USER_ID, user_id);
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, token);
-                mJsonObject.put(Common.Constant_Class.INSERT, "0");
-                mJsonObject.put(Common.Constant_Class.VERSION, Common.getAppVersion(this));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SET_UPDATED_VERSION_URL, mJsonObject, new Response.Listener<JSONObject>() {
-
-                @Override
-                public void onResponse(@NonNull JSONObject response) {
-                    Log.d(TAG, "response: " + response.toString());
-                    Common.hideProgressDialog();
-
-                    try {
-                        String data = response.getString(Common.Constant_Class.DATA);
-                        if (data.equals("0")) {
-                            Intent i = new Intent(getApplicationContext(), ActivityDialog.class);
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            getApplicationContext().startActivity(i);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Common.hideProgressDialog();
-                    }
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(@NonNull VolleyError error) {
-                    VolleyLog.d(TAG, "Error: " + error.getMessage());
-
-                    Common.hideProgressDialog();
-                }
-            }) {
-                @NonNull
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
-                    return params;
-                }
-            };
-            // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
-        }
-    }
-
-    public class ActivityDialog extends Activity {
-
-        public ActivityDialog()
-        {
-
-        }
-
-        @Override
-        protected void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            displayAlert();
-        }
-
-        private void displayAlert() {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext());
-
-            // Setting Dialog Title
-            alertDialog.setTitle(R.string.app_name);
-            alertDialog.setCancelable(false);
-            // Setting Dialog Message
-            alertDialog.setMessage("Please update your app");
-
-            // Setting Icon to Dialog
-            alertDialog.setIcon(R.drawable.app_icon);
-
-            // Setting Positive "Yes" Button
-            alertDialog.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-
-                    final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                    } catch (android.content.ActivityNotFoundException anfe) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                    }
-                }
-            });
-
-            // Setting Negative "NO" Button
-            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    // Write your code here to invoke NO event
-                    Toast.makeText(getApplicationContext(), "You clicked on NO", Toast.LENGTH_SHORT).show();
-                    dialog.cancel();
-                }
-            });
-
-            // Showing Alert Message
-            alertDialog.show();
-        }
-
-    }
-
-
 }

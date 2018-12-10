@@ -18,17 +18,13 @@ public class FtSpinnerAdapter extends BaseAdapter {
     Context context;
     ArrayList<String> lstImages;
     ArrayList<String> lstNames;
-    ArrayList<String> lstLevels;
     LayoutInflater inflter;
 
-
-    public FtSpinnerAdapter(Context applicationContext, ArrayList<String> lstImages,ArrayList<String> lstNames,ArrayList<String> lstLevels) {
-        this.context = applicationContext;
+    public FtSpinnerAdapter(Context context, ArrayList<String> lstImages, ArrayList<String> lstNames) {
+        this.context = context;
         this.lstImages = lstImages;
         this.lstNames = lstNames;
-        this.lstLevels=lstLevels;
-
-        inflter = (LayoutInflater.from(applicationContext));
+        inflter = (LayoutInflater.from(context));
     }
 
     @Override
@@ -38,7 +34,7 @@ public class FtSpinnerAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return lstNames.get(i);
     }
 
     @Override
@@ -51,16 +47,12 @@ public class FtSpinnerAdapter extends BaseAdapter {
         view = inflter.inflate(R.layout.custom_spinner_items, null);
         ImageView icon = (ImageView) view.findViewById(R.id.sp_image);
         TextView names = (TextView) view.findViewById(R.id.sp_text);
-        Glide.with(context).load(lstImages.get(i)).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(icon);
-        names.setText(lstNames.get(i));
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
+        try {
+            names.setText(lstNames.get(i));
+            Glide.with(context).load(lstImages.get(i)).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(icon);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return view;
     }
 }

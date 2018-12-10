@@ -24,9 +24,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,7 +117,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private Activity mActivity;
     private String profile_id = "";
     private Uri mCropImageUri;
-
+    private String[] titleGotra;
 
     public PersonalFragment() {
 
@@ -645,7 +642,10 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         chk_profile_bdate_rem = rootView.findViewById(R.id.chk_profile_bdate_rem);
         spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
         spinnerGotra.setOnItemSelectedListener(this);
-        spinnerGotra.setAdapter(AppController.getInstance().dataAdapter);
+        titleGotra = getActivity().getResources().getStringArray(R.array.yt_gotra);
+        ArrayAdapter aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, titleGotra);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerGotra.setAdapter(aa);
 
         spinnerBlood = rootView.findViewById(R.id.spinnerBlood);
         spinnerBlood.setOnItemSelectedListener(this);
@@ -781,9 +781,10 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             Objects.requireNonNull(edt_phone).setText(mListProfileData.getPhone());
             Objects.requireNonNull(edtCity).setText(mListProfileData.getCity());
             String gotra = mListProfileData.getGotra();
-            if (AppController.getInstance().lstgotra != null) {
-                int i = AppController.getInstance().lstgotra.indexOf(gotra);
-                spinnerGotra.setSelection(i);
+            for (int i = 0; i < titleGotra.length; i++) {
+                if (gotra.equalsIgnoreCase(titleGotra[i])) {
+                    spinnerGotra.setSelection(i);
+                }
             }
 
             // Objects.requireNonNull(edtGotra).setText(mListProfileData.getGotra());

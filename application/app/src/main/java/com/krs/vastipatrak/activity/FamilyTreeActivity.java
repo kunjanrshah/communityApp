@@ -45,9 +45,8 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
     ArrayList<String> LstNames = new ArrayList<>();
     ArrayList<String> LstLevel = new ArrayList<>();
     ArrayList<String> lstDupName = new ArrayList<>();
-    HashMap<Integer,String> lstHashNode=new HashMap<>();
 
-    Spinner spin;
+    private Spinner spin;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
 
@@ -60,6 +59,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         mEditor = mSharedPreferences.edit();
         String json = getIntent().getExtras().getString(getString(R.string.ft_intent));
         JSONObject mObj = null;
+
         String id = "", first_name, spouse, sfather, smother, father, mother, spouse_url, sfather_url, smother_url, father_url, mother_url, profile_url, bdate;
         try {
             LstNames.clear();
@@ -125,12 +125,9 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
 
         root = new TreeNode(this);
         draggableTreeView = (DraggableTreeView) findViewById(R.id.dtv);
-
         spin = (Spinner) findViewById(R.id.simpleSpinner);
-        spin.setOnItemSelectedListener(this);
 
-        FtSpinnerAdapter customAdapter = new FtSpinnerAdapter(getApplicationContext(), LstImages, LstNames, LstLevel);
-        spin.setAdapter(customAdapter);
+        spin.setAdapter(new FtSpinnerAdapter(this, LstImages, LstNames));
 
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,9 +167,9 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         });
 
 
-        adapter = new SimpleTreeViewAdapter(this, root);
-        draggableTreeView.setAdapter(adapter);
-        fetchProfileData();
+         adapter = new SimpleTreeViewAdapter(this, root);
+         draggableTreeView.setAdapter(adapter);
+         fetchProfileData();
         draggableTreeView.setOnDragItemListener(new DraggableTreeView.DragItemCallback() {
             @Override
             public void onStartDrag(View item, TreeNode node) {
@@ -197,6 +194,10 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+        spin.setSelection(position);
+        /*Toast.makeText(parent.getContext(),
+                "OnItemSelectedListener : " + parent.getItemAtPosition(position).toString(),
+                Toast.LENGTH_SHORT).show();*/
     }
 
     @Override
@@ -204,12 +205,6 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        /*mEditor.putBoolean("is_delete", true);
-        mEditor.apply();*/
-    }
 
     public void getTreeViewsFromAdapter(SimpleTreeViewAdapter adapter) {
 
@@ -298,20 +293,18 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                             ArrayList<Integer> lstLevel = new ArrayList<>();
                             for (int i = 0; i < mjArray.length(); i++) {
                                 JSONObject mobject = mjArray.getJSONObject(i);
-                                mobject.getString("id");
-                                mobject.getString("user_id");
-                                mobject.getString("profile_pic");
-
-                                String name = mobject.getString("name");
-                                mobject.getString("level");
-                                TreeNode item = new TreeNode(mobject);
+                                /*String id=mobject.getString("id");
+                                String profile_id= mobject.getString("profile_id");
+                                String profile_pic=mobject.getString("profile_pic");
+                                String level = mobject.getString("level");*/
+                                String name = mobject.getString(getString(R.string.FT_NAME));
                                 lstDupName.add(name);
-                                lstNode.add(new TreeNode(name));
-                                lstLevel.add(Integer.parseInt(mobject.getString("level")));
-                                lstHashNode.put(Integer.parseInt(mobject.getString("id")),name);
+
+                                lstNode.add(new TreeNode(mobject));
+                                lstLevel.add(Integer.parseInt(mobject.getString(getString(R.string.FT_LEVEL))));
 
                             }
-                            String url = "http://www.superbinstruments.com/directory-dev/uploads/no-image.png";
+                            /*String url = "http://www.superbinstruments.com/directory-dev/uploads/no-image.png";
                             JSONObject mjson = new JSONObject();
                             mjson.put(getString(R.string.FT_IMG), url);
                             mjson.put(getString(R.string.FT_NAME), "a");
@@ -325,7 +318,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                             lstNode.add(new TreeNode(mjson));
 
                             lstLevel.add(1);
-                            lstLevel.add(2);
+                            lstLevel.add(2);*/
 
                             for (int j = lstLevel.size() - 1; j >= 0; j--) {
                                 if (j == 0) {

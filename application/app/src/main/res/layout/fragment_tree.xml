@@ -17,6 +17,8 @@
                 android:id="@+id/graph"
                 app:hasClickableChildren="true"
                 android:layout_width="match_parent"
+                android:isScrollContainer="true"
+                app:useMaxSize="true"
                 android:layout_height="match_parent"
                 android:layout_marginVertical="-150dp"
                 app:lineThickness="1dp" />

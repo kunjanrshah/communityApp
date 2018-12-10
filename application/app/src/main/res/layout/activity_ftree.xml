@@ -15,7 +15,8 @@
             android:id="@+id/simpleSpinner"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" />
+            android:drawSelectorOnTop="true"
+            android:spinnerMode="dialog" />
 
         <Button
             android:id="@+id/btn_add"
@@ -29,7 +30,6 @@
             android:layout_height="wrap_content"
             android:text="Save" />
 
-
     </LinearLayout>
 
     <RelativeLayout
@@ -40,6 +40,7 @@
             android:id="@+id/dtv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
     </RelativeLayout>
+
+
 </LinearLayout>

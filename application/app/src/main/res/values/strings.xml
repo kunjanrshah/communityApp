@@ -79,6 +79,13 @@
     <string name="event_url">http://www.superbinstruments.com/directory-dev/admin/events</string>
 
 
+    <string-array name="yt_gotra">
+        <item>GAUDANA</item>
+        <item>VASIYANA</item>
+        <item>MERVANA</item>
+        <item>KAGRANU</item>
+    </string-array>
+
     <string-array name="yt_titles">
         <item>@string/how_to_update_profile_4</item>
         <item>@string/how_search_profile_2</item>
@@ -276,13 +283,16 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
 
     <string name="marquee_text">Technical help: 9427051418 Kunjan R. Shah (Ahmedabad) </string>
     <string name="_2_technical_help_9427051418_kunjan_r_shah_ahmedabad">2. Technical help: 9427051418 Kunjan R. Shah (Ahmedabad)</string>
-    <string name="_1_if_you_have_xiomi_vivo_or_oppo_phone_then_please_enable_auto_start_option">1. If you have Xiomi,Vivo or Oppo Phone then please enable auto start option</string>
+    <string name="_1_if_you_have_xiomi_vivo_or_oppo_phone_then_please_enable_auto_start_option">1. If you have Xiomi,Vivo or Oppo Phone then Please Enable AutoStart Option</string>
     <string name="not_connected">Not connected to internet</string>
+
     <string name="ft_intent">FT_Intent</string>
+    <string name="FT_ID">id</string>
     <string name="FT_IMG">profile_pic</string>
+    <string name="FT_PROFILE_ID">profile_id</string>
     <string name="FT_NAME">name</string>
     <string name="FT_LEVEL">level</string>
-    <string name="FT_PROFILE_ID">profile_id</string>
+
 
     <string name="near_by_home">Home</string>
     <string name="near_by_office">Office</string>

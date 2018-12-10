@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.FilterActivity;
-import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
 import com.melnykov.fab.FloatingActionButton;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -56,14 +55,11 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
     public EditText edtbdateFrom, edtbdateTo;
     public Spinner sp_user_start_age;
     public Spinner sp_user_end_age;
-    //public String bdateFrom="",bdateTo="";
-    // public String gender = "";
-    //private ObservableScrollView scroll_pdetails;
     ArrayAdapter<String> dataAdapter;
+    String[] titleGotra;
     private SharedPreferences mSharedPreferences;
     private RadioButton rbtnB;
     private FloatingActionButton floatingActionButton;
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -262,7 +258,10 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
         sp_user_end_age.setAdapter(dataAdapter);
 
         spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
-        spinnerGotra.setAdapter(AppController.getInstance().dataAdapter);
+        titleGotra = getActivity().getResources().getStringArray(R.array.yt_gotra);
+        ArrayAdapter aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, titleGotra);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerGotra.setAdapter(aa);
         rbtnM = rootView.findViewById(R.id.rbtnM);
         rbtnF = rootView.findViewById(R.id.rbtnF);
         rbtnB = rootView.findViewById(R.id.rbtnB);
@@ -355,9 +354,10 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
                 }
                 if (mjsonObject.has(Common.Constant_Class.GOTRA)) {
                     String gotra = mjsonObject.getString(Common.Constant_Class.GOTRA);
-                    if (AppController.getInstance().lstgotra != null) {
-                        int i = AppController.getInstance().lstgotra.indexOf(gotra);
-                        spinnerGotra.setSelection(i);
+                    for (int i = 0; i < titleGotra.length; i++) {
+                        if (gotra.equalsIgnoreCase(titleGotra[i])) {
+                            spinnerGotra.setSelection(i);
+                        }
                     }
                 }
                 if (mjsonObject.has(Common.Constant_Class.MOBILE)) {
