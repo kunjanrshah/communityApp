@@ -2,14 +2,22 @@ package com.krs.vastipatrak.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.allyants.draggabletreeview.DraggableTreeView;
@@ -24,6 +32,7 @@ import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.FtSpinnerAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.ConnectivityReceiver;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,35 +41,59 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import de.blox.graphview.Node;
 
-public class FamilyTreeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class FamilyTreeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
     String TAG = FamilyTreeActivity.class.getSimpleName();
     SimpleTreeViewAdapter adapter;
     TreeNode root;
     DraggableTreeView draggableTreeView;
-    ArrayList<String> LstImages = new ArrayList<>();
-    ArrayList<String> LstNames = new ArrayList<>();
-    ArrayList<String> LstLevel = new ArrayList<>();
-    ArrayList<String> lstDupName = new ArrayList<>();
-
+    ArrayList<String> LstImages;
+    ArrayList<String> LstNames;
+    ArrayList<String> LstLevel;
+    ArrayList<String> lstDupName;
+    Toolbar mToolbar;
+    Snackbar snackbar;
     private Spinner spin;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
+    private SearchView searchView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_ftree);
+        ToolbarSetup();
+
+        snackbar = Snackbar.make(findViewById(R.id.ll_ftree), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
+
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         String json = getIntent().getExtras().getString(getString(R.string.ft_intent));
         JSONObject mObj = null;
 
-        String id = "", first_name, spouse, sfather, smother, father, mother, spouse_url, sfather_url, smother_url, father_url, mother_url, profile_url, bdate;
+        lstDupName = new ArrayList<>();
+        LstLevel = new ArrayList<>();
+        LstNames = new ArrayList<>();
+        LstImages = new ArrayList<>();
+        String id = "";
+        final String first_name;
+        final String spouse;
+        final String sfather;
+        final String smother;
+        final String father;
+        final String mother;
+        final String spouse_url;
+        final String sfather_url;
+        final String smother_url;
+        final String father_url;
+        final String mother_url;
+        final String profile_url;
+        final String bdate;
         try {
             LstNames.clear();
             LstImages.clear();
@@ -167,9 +200,9 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         });
 
 
-         adapter = new SimpleTreeViewAdapter(this, root);
-         draggableTreeView.setAdapter(adapter);
-         fetchProfileData();
+        adapter = new SimpleTreeViewAdapter(this, root);
+        draggableTreeView.setAdapter(adapter);
+        fetchProfileData();
         draggableTreeView.setOnDragItemListener(new DraggableTreeView.DragItemCallback() {
             @Override
             public void onStartDrag(View item, TreeNode node) {
@@ -184,12 +217,135 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
 
             @Override
             public void onEndDrag(View item, TreeNode child, TreeNode parent, int position) {
-                // Log.e("end", (String) parent.getData() + " > " + (String) child.getData() + ":" + String.valueOf(position));
-                Log.d(TAG, "end");
+                Log.e("end", parent.getData() + " > " + child.getData() + ":" + String.valueOf(position));
+
+                JSONObject mObject = (JSONObject) parent.getData();
+                String name = "";
+                try {
+                    name = mObject.getString(getString(R.string.FT_NAME));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (mSharedPreferences.getBoolean("is_delete", false)) {
+                    if (lstDupName != null && lstDupName.size() > 0) {
+                        lstDupName.remove(name);
+                    }
+                    Log.d(TAG, "step remove1 ");
+                    mEditor.putBoolean("is_delete", false);
+                    mEditor.apply();
+                }
+                Log.d(TAG, "step end");
             }
         });
     }
 
+    private void ToolbarSetup() {
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setSubtitle("My Profile");
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "step setNavigationOnClickListener");
+                backNavigation();
+            }
+        });
+    }
+
+    private void backNavigation() {
+        Common.hideKeyboard(this);
+        finish();
+        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem saveItem = menu.findItem(R.id.action_save);
+        saveItem.setVisible(false);
+
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                Intent mIntent = new Intent(FamilyTreeActivity.this, MainActivity.class);
+                mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                mIntent.putExtra(Common.Constant_Class.QUERY, query);
+                startActivity(mIntent);
+                Log.d(TAG, "step onQueryTextSubmit");
+                finish();
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        MenuItem export = menu.findItem(R.id.action_export);
+        export.setVisible(false);
+
+        MenuItem admins = menu.findItem(R.id.action_admins);
+        admins.setVisible(false);
+
+        MenuItem scan_image = menu.findItem(R.id.action_scan_image);
+        scan_image.setVisible(false);
+
+        MenuItem scan_qr = menu.findItem(R.id.action_scan);
+        scan_qr.setVisible(false);
+
+        MenuItem filterItem = menu.findItem(R.id.action_filter);
+        filterItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Intent mIntent = new Intent(FamilyTreeActivity.this, FilterActivity.class);
+                startActivity(mIntent);
+                Log.d(TAG, "step action_filter");
+                finish();
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                return false;
+            }
+        });
+
+
+        MenuItem voiceItem = menu.findItem(R.id.action_voice);
+        voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Common.promptSpeechInput(FamilyTreeActivity.this);
+                return false;
+            }
+        });
+
+        MenuItem action_toggle = menu.findItem(R.id.action_toggle);
+        action_toggle.setVisible(false);
+
+        return true;
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case Common.REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+                    searchView.setQueryHint(result.get(0));
+                    searchView.setQuery(result.get(0), true);
+                }
+                break;
+            }
+
+        }
+    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -210,18 +366,29 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
 
         JSONArray mjsonArray = new JSONArray();
         ArrayList<TreeNode> children = adapter.root.getChildren();
+        boolean isvalid = true;
         for (int i = 0; i < children.size(); i++) {
             TreeNode node = children.get(i);
             JSONObject object = (JSONObject) children.get(i).getData();
             int level = children.get(i).getLevel();
-
+            if (i != children.size() - 1) {
+                int level1 = children.get(i + 1).getLevel();
+                if (level == 1 && level1 == 1) {
+                    isvalid = false;
+                    break;
+                }
+            }
             Node node1 = new Node(object.toString());
             //   graph.addNode(node1);
             JSONObject mjson = new JSONObject();
             try {
-                mjson.put(getString(R.string.FT_IMG), object.get(getString(R.string.FT_IMG)));
-                mjson.put(getString(R.string.FT_NAME), object.get(getString(R.string.FT_NAME)));
-                mjson.put(getString(R.string.FT_PROFILE_ID), object.get(getString(R.string.FT_PROFILE_ID)));
+                String url = object.getString(getString(R.string.FT_IMG));
+                if (url.contains("no-image")) {
+                    url = "";
+                }
+                mjson.put(getString(R.string.FT_IMG), url);
+                mjson.put(getString(R.string.FT_NAME), object.getString(getString(R.string.FT_NAME)));
+                mjson.put(getString(R.string.FT_PROFILE_ID), object.getString(getString(R.string.FT_PROFILE_ID)));
                 mjson.put(getString(R.string.FT_LEVEL), level);
                 mjsonArray.put(mjson);
             } catch (JSONException e) {
@@ -233,7 +400,11 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                 getTreeNodeView(children.get(i), node1, mjsonArray);
             }
         }
-        saveTreeWs(mjsonArray);
+        if (isvalid) {
+            saveTreeWs(mjsonArray);
+        } else {
+            Toast.makeText(this, "Only one root parent valid", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void getTreeNodeView(TreeNode node, Node p_node, JSONArray mjsonArray) {
@@ -304,21 +475,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                                 lstLevel.add(Integer.parseInt(mobject.getString(getString(R.string.FT_LEVEL))));
 
                             }
-                            /*String url = "http://www.superbinstruments.com/directory-dev/uploads/no-image.png";
-                            JSONObject mjson = new JSONObject();
-                            mjson.put(getString(R.string.FT_IMG), url);
-                            mjson.put(getString(R.string.FT_NAME), "a");
-                            mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
-                            lstNode.add(new TreeNode(mjson));
 
-                            mjson = new JSONObject();
-                            mjson.put(getString(R.string.FT_IMG), url);
-                            mjson.put(getString(R.string.FT_NAME), "b");
-                            mjson.put(getString(R.string.FT_PROFILE_ID), "4345");
-                            lstNode.add(new TreeNode(mjson));
-
-                            lstLevel.add(1);
-                            lstLevel.add(2);*/
 
                             for (int j = lstLevel.size() - 1; j >= 0; j--) {
                                 if (j == 0) {
@@ -329,6 +486,8 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                                             Log.d(FamilyTreeActivity.class.getSimpleName(), "i=" + i + " j=" + j);
                                             lstNode.get(i).addChild(lstNode.get(j));
                                             break;
+                                        } else if (lstLevel.get(j) == lstLevel.get(i)) {
+                                            root.addChild(lstNode.get(j));
                                         }
                                     }
                                 }
@@ -410,8 +569,10 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                            if (lstDupName != null) {
+                                lstDupName.clear();
+                            }
                             Toast.makeText(FamilyTreeActivity.this, message, Toast.LENGTH_SHORT).show();
-
                         } else {
                             Toast.makeText(FamilyTreeActivity.this, message, Toast.LENGTH_SHORT).show();
                             if (response.has(Common.Constant_Class.ERROR_CODE)) {
@@ -455,4 +616,26 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
     }
 
 
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
+    private void showSnack(boolean isConnected) {
+
+        if (!isConnected) {
+            if (snackbar != null) {
+                View sbView = snackbar.getView();
+                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                textView.setTextColor(Color.WHITE);
+                snackbar.show();
+            }
+        } else {
+            if (snackbar != null) {
+                if (snackbar.isShownOrQueued()) {
+                    snackbar.dismiss();
+                }
+            }
+        }
+    }
 }

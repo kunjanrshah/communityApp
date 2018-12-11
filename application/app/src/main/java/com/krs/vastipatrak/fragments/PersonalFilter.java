@@ -51,7 +51,8 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
     public Spinner spinnerBlood, spinnerGotra;
     public RadioButton rbtnM;
     public RadioButton rbtnF;
-    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtCity;
+    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtMobile, edtAddress, edt_Eaddress, edt_phone;
+    public EditText edtCity;
     public EditText edtbdateFrom, edtbdateTo;
     public Spinner sp_user_start_age;
     public Spinner sp_user_end_age;

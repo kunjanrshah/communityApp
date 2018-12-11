@@ -282,7 +282,11 @@ public class DraggableTreeView extends FrameLayout {
                                     }
                                     mPlaceholderCheck = System.currentTimeMillis();
 
-                                    Log.d("DraggableTreeView", "DELETE");
+                                    Log.d("DraggableTreeView", "step DELETE");
+
+                                    mEditor.putBoolean("is_delete",true);
+                                    mEditor.apply();
+
                                    /* AlertDialog.Builder builder;
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                         builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert);
@@ -296,8 +300,7 @@ public class DraggableTreeView extends FrameLayout {
                                     builder.setTitle("Delete entry").setMessage("Are you sure you want to delete this entry?")
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            mEditor.putBoolean("is_delete",true);
-                                            mEditor.apply();
+
 
                                         }
                                     }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
