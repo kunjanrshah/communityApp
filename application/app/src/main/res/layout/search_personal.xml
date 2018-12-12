@@ -261,6 +261,16 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/txtCity"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:textStyle="bold"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="10dp"
+                android:text="@string/press_for_city"
+                android:textSize="16sp" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_address"
@@ -275,19 +285,6 @@
                     android:inputType="textCapSentences"
                     android:lines="2"
                     android:nextFocusDown="@+id/input_layout_bdate_from" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_city"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/edtCity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_city"
-                    android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout

@@ -24,10 +24,12 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.FilterActivity;
+import com.krs.vastipatrak.activity.AdvanceSearchActivity;
+import com.krs.vastipatrak.activity.SelectionlistActivity;
 import com.krs.vastipatrak.utils.Common;
 import com.melnykov.fab.FloatingActionButton;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -44,20 +46,23 @@ import java.util.Objects;
 import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
-public class PersonalFilter extends Fragment implements AdapterView.OnItemSelectedListener {
+public class PersonalSearch extends Fragment implements AdapterView.OnItemSelectedListener {
 
 
     private static final int CONTACT_PICKER_RESULT = 1001;
     public Spinner spinnerBlood, spinnerGotra;
     public RadioButton rbtnM;
     public RadioButton rbtnF;
-    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtMobile, edtAddress, edt_Eaddress, edt_phone;
-    public EditText edtCity;
+    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtMobile, edtAddress, edt_Eaddress, edt_phone;
+    public EditText edtEducation, edtBPlace, edtNPlace;
+    // public EditText edtCity;
+    public TextView txtCity;
     public EditText edtbdateFrom, edtbdateTo;
     public Spinner sp_user_start_age;
     public Spinner sp_user_end_age;
     ArrayAdapter<String> dataAdapter;
     String[] titleGotra;
+    private String TAG = PersonalSearch.class.getSimpleName();
     private SharedPreferences mSharedPreferences;
     private RadioButton rbtnB;
     private FloatingActionButton floatingActionButton;
@@ -65,7 +70,7 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.filter_personal, container, false);
+        View rootView = inflater.inflate(R.layout.search_personal, container, false);
 
         MemoryAllocation(rootView);
         setAdapterBGlist();
@@ -203,7 +208,7 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
             @Override
             public void onClick(View v) {
 
-                ((FilterActivity) Objects.requireNonNull(getActivity())).callAdvanceSearchWS();
+                ((AdvanceSearchActivity) Objects.requireNonNull(getActivity())).callAdvanceSearchWS();
             }
         });
 
@@ -229,6 +234,16 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
                 return false;
             }
         });
+
+        txtCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdvanceSearchActivity.chooseFragment = TAG;
+                Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                startActivityForResult(mIntent,10);
+            }
+        });
+
         return rootView;
     }
 
@@ -275,7 +290,7 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
         edtEducation = rootView.findViewById(R.id.edtEducation);
         edtBPlace = rootView.findViewById(R.id.edtBPlace);
         edtNPlace = rootView.findViewById(R.id.edtNPlace);
-        edtCity = rootView.findViewById(R.id.edtCity);
+        txtCity = rootView.findViewById(R.id.txtCity);
 
         edtMobile = rootView.findViewById(R.id.edtMobile);
         edtAddress = rootView.findViewById(R.id.edtAddress);
@@ -351,7 +366,7 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
                     edtNPlace.setText(mjsonObject.getString(Common.Constant_Class.NATIVE_PLACE));
                 }
                 if (mjsonObject.has(Common.Constant_Class.CITY)) {
-                    edtCity.setText(mjsonObject.getString(Common.Constant_Class.CITY));
+                    txtCity.setText(mjsonObject.getString(Common.Constant_Class.CITY));
                 }
                 if (mjsonObject.has(Common.Constant_Class.GOTRA)) {
                     String gotra = mjsonObject.getString(Common.Constant_Class.GOTRA);
@@ -426,6 +441,10 @@ public class PersonalFilter extends Fragment implements AdapterView.OnItemSelect
             }
             phoneCursor.close();
 
+        } else if (requestCode == 10) {
+            if (data != null) {
+                txtCity.setText("City: "+data.getStringExtra("selection"));
+            }
         }
     }
 

@@ -20,7 +20,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.FamilyTreeActivity;
-import com.krs.vastipatrak.activity.MyProfileActivity;
+import com.krs.vastipatrak.activity.ProfileActivity;
 import com.krs.vastipatrak.model.ListFamilyTreeData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
@@ -98,11 +98,11 @@ public class FamilyTreeFragment extends Fragment {
                         mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                         mEditor.apply();
                         try {
-                            MyProfileActivity.isEnable = false;
+                            ProfileActivity.isEnable = false;
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        Intent mIntent = new Intent(getActivity(), MyProfileActivity.class);
+                        Intent mIntent = new Intent(getActivity(), ProfileActivity.class);
                         startActivity(mIntent);
                     }
                 });
@@ -149,7 +149,7 @@ public class FamilyTreeFragment extends Fragment {
 
 
         try {
-            ListProfileData mListProfileData = ((MyProfileActivity) getActivity()).getMyData();
+            ListProfileData mListProfileData = ((ProfileActivity) getActivity()).getMyData();
             if (mListProfileData != null) {
                 SetOfflineData(mListProfileData);
             }

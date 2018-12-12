@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.FilterActivity;
+import com.krs.vastipatrak.activity.AdvanceSearchActivity;
 import com.krs.vastipatrak.utils.Common;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ObservableScrollView;
@@ -32,7 +32,7 @@ import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
-public class BusinessFilter extends Fragment {
+public class BusinessSearch extends Fragment {
 
     private static final int CONTACT_PICKER_RESULT = 1001;
     public EditText edtOccupation, edtWork, edtOMobile, edtOAddress;
@@ -48,7 +48,7 @@ public class BusinessFilter extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((FilterActivity) requireNonNull(getActivity())).callAdvanceSearchWS();
+                ((AdvanceSearchActivity) requireNonNull(getActivity())).callAdvanceSearchWS();
             }
         });
 

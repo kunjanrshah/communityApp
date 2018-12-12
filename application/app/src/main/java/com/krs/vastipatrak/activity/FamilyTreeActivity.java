@@ -243,7 +243,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setSubtitle("My Profile");
+        getSupportActionBar().setSubtitle("Profile");
 
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -304,7 +304,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                Intent mIntent = new Intent(FamilyTreeActivity.this, FilterActivity.class);
+                Intent mIntent = new Intent(FamilyTreeActivity.this, AdvanceSearchActivity.class);
                 startActivity(mIntent);
                 Log.d(TAG, "step action_filter");
                 finish();
@@ -335,15 +335,12 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         switch (requestCode) {
             case Common.REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
-
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
                     searchView.setQueryHint(result.get(0));
                     searchView.setQuery(result.get(0), true);
                 }
                 break;
             }
-
         }
     }
 

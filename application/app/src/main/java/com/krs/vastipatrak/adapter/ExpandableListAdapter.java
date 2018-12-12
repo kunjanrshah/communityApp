@@ -51,7 +51,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.FamilyTreeActivity;
 import com.krs.vastipatrak.activity.LoginActivity;
-import com.krs.vastipatrak.activity.MyProfileActivity;
+import com.krs.vastipatrak.activity.ProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
@@ -342,8 +342,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
-                MyProfileActivity.isEnable = false;
-                Intent mIntent = new Intent(_context, MyProfileActivity.class);
+                ProfileActivity.isEnable = false;
+                Intent mIntent = new Intent(_context, ProfileActivity.class);
                 _context.startActivity(mIntent);
             }
         });

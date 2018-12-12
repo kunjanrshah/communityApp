@@ -38,7 +38,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -93,11 +92,9 @@ import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -242,11 +239,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 MOVE_TO_SEARCH = 1;
                 moveToSearch(MOVE_TO_SEARCH);
             } else if (push.toLowerCase().contains("location")) {
-                MyProfileActivity.isEnable = false;
+                ProfileActivity.isEnable = false;
                 mEditor.putString(Common.Constant_Class.NOTIFICATION, "");
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
-                Intent mIntent = new Intent(this, MyProfileActivity.class);
+                Intent mIntent = new Intent(this, ProfileActivity.class);
                 startActivity(mIntent);
             } else {
                 Bundle mBundle = getIntent().getExtras();
@@ -640,7 +637,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         filter.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent mIntent = new Intent(MainActivity.this, FilterActivity.class);
+                Intent mIntent = new Intent(MainActivity.this, AdvanceSearchActivity.class);
                 startActivity(mIntent);
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 return false;
@@ -1024,7 +1021,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             case 1:
                 mEditor.putBoolean("myprofile", true);
                 mEditor.apply();
-                Intent mIntent1 = new Intent(MainActivity.this, MyProfileActivity.class);
+                Intent mIntent1 = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(mIntent1);
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 break;
@@ -1213,8 +1210,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
-                MyProfileActivity.isEnable = false;
-                Intent mIntent = new Intent(this, MyProfileActivity.class);
+                ProfileActivity.isEnable = false;
+                Intent mIntent = new Intent(this, ProfileActivity.class);
                 startActivity(mIntent);
             }
         }
@@ -1238,8 +1235,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
-                MyProfileActivity.isEnable = false;
-                Intent mIntent = new Intent(MainActivity.this, MyProfileActivity.class);
+                ProfileActivity.isEnable = false;
+                Intent mIntent = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(mIntent);
             }
             //byte[] rawBytes = result.getRawBytes();

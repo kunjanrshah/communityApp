@@ -42,21 +42,18 @@ import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.LoginActivity;
-import com.krs.vastipatrak.activity.MyProfileActivity;
+import com.krs.vastipatrak.activity.ProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListMatrimonyChildData;
 import com.krs.vastipatrak.model.ListMatrimonyParentData;
 import com.krs.vastipatrak.model.MatrimonyProfileData;
 import com.krs.vastipatrak.utils.Common;
-import com.krs.vastipatrak.utils.RoundedCornersTransformation;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +62,6 @@ import java.util.Objects;
 import io.realm.Realm;
 
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
-import static java.lang.String.*;
 
 public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
 
@@ -283,8 +279,8 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
                 mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
-                MyProfileActivity.isEnable = false;
-                Intent mIntent = new Intent(_context, MyProfileActivity.class);
+                ProfileActivity.isEnable = false;
+                Intent mIntent = new Intent(_context, ProfileActivity.class);
                 _context.startActivity(mIntent);
             }
         });

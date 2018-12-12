@@ -2,6 +2,7 @@
     <string name="theme_app_name">વસ્તીપત્રક</string>
     <string name="app_name">વસ્તીપત્રક</string>
     <string name="hint_email">Email</string>
+    <string name="hint_other">Other(Please Specify)</string>
     <string name="hint_email_mobile">Email or Mobile</string>
     <string name="hint_mobile">Mobile</string>
     <string name="hint_password">Password</string>
@@ -337,6 +338,7 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="play_again">Play Again</string>
     <string name="is_first_time">IsFirstTimeLaunch</string>
     <string name="understand">ખબર પડી</string>
+    <string name="press_for_city">Press for City</string>
 
 
 </resources>

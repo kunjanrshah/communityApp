@@ -61,12 +61,12 @@ import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_SPOUSE_BLOOD_GROUP;
 
-public class MyProfileActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, ConnectivityReceiver.ConnectivityReceiverListener {
+public class ProfileActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
 
     public static boolean isEnable = false;
     public static String chooseFragment = "";
-    private final String TAG = MyProfileActivity.class.getSimpleName();
+    private final String TAG = ProfileActivity.class.getSimpleName();
     Snackbar snackbar;
     String id = "";
     private SharedPreferences.Editor mEditor;
@@ -169,7 +169,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                Intent mIntent = new Intent(MyProfileActivity.this, MainActivity.class);
+                Intent mIntent = new Intent(ProfileActivity.this, MainActivity.class);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 mIntent.putExtra(Common.Constant_Class.QUERY, query);
                 startActivity(mIntent);
@@ -202,7 +202,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                Intent mIntent = new Intent(MyProfileActivity.this, FilterActivity.class);
+                Intent mIntent = new Intent(ProfileActivity.this, AdvanceSearchActivity.class);
                 startActivity(mIntent);
                 Log.d(TAG, "step action_filter");
                 finish();
@@ -217,7 +217,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Common.promptSpeechInput(MyProfileActivity.this);
+                Common.promptSpeechInput(ProfileActivity.this);
                 return false;
             }
         });
@@ -241,7 +241,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     saveItem.setVisible(true);
                 }
 
-                Intent mIntent = new Intent(MyProfileActivity.this, MyProfileActivity.class);
+                Intent mIntent = new Intent(ProfileActivity.this, ProfileActivity.class);
                 if (mBundle != null) {
                     mBundle.putBoolean(getString(R.string.isEnable), isEnable);
                 } else {
@@ -432,7 +432,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                 setProfileJsonObject(mListProfileData, child_container, Objects.requireNonNull(lst_delID));
                 valid = "";
             } else {
-                Toast.makeText(MyProfileActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
             }
         }
         /*if (valid.isEmpty() && state == 1) {
@@ -594,7 +594,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
         if (valid.equalsIgnoreCase("")) {
             call_profile_ws(mJsonObject, "1");
         } else {
-            Toast.makeText(MyProfileActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
+            Toast.makeText(ProfileActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
             valid = "";
         }
     }
@@ -616,7 +616,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                     @Override
                     public void run() {
                         if (!(isFinishing())) {
-                            Common.showProgressDialog(MyProfileActivity.this);
+                            Common.showProgressDialog(ProfileActivity.this);
                         }
                     }
                 });
@@ -650,7 +650,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                                     mEditor.apply();
                                     AppController.getInstance().isUpdate = true;
                                 }
-                                //  Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+                                //  Toast.makeText(ProfileActivity.this, message, Toast.LENGTH_SHORT).show();
                                 alert(message);
                             } else {
                                 setupViewPager(viewPager);
@@ -668,16 +668,16 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                                     if (response.has(Common.Constant_Class.ERROR_CODE)) {
                                         String error = response.getString(Common.Constant_Class.ERROR_CODE);
                                         if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
-                                            Intent mIntent = new Intent(MyProfileActivity.this, LoginActivity.class);
+                                            Intent mIntent = new Intent(ProfileActivity.this, LoginActivity.class);
                                             mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(mIntent);
                                             finish();
                                         }
                                     }
                                 }
-                                Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ProfileActivity.this, message, Toast.LENGTH_SHORT).show();
                             } catch (Exception e) {
-                                Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ProfileActivity.this, message, Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
                         }
@@ -706,7 +706,7 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
             jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(50000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         } else {
-            Toast.makeText(MyProfileActivity.this, "" + Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+            Toast.makeText(ProfileActivity.this, "" + Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -742,11 +742,11 @@ public class MyProfileActivity extends AppCompatActivity implements TimePickerDi
                             setupViewPager(viewPager);
                             tabLayout.setupWithViewPager(viewPager);
                         } else {
-                            Toast.makeText(MyProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileActivity.this, message, Toast.LENGTH_SHORT).show();
                             if (response.has(Common.Constant_Class.ERROR_CODE)) {
                                 String error = response.getString(Common.Constant_Class.ERROR_CODE);
                                 if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
-                                    Intent mIntent = new Intent(MyProfileActivity.this, LoginActivity.class);
+                                    Intent mIntent = new Intent(ProfileActivity.this, LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(mIntent);
                                     finish();

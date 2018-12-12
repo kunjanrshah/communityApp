@@ -12,14 +12,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.MyProfileActivity;
+import com.krs.vastipatrak.activity.ProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
@@ -42,7 +38,6 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -74,7 +69,7 @@ public class BusinessFragment extends Fragment implements Serializable {
         Memory_Allocation(rootView);
 
         try {
-            ListProfileData mListProfileData = ((MyProfileActivity) mActivity).getMyData();
+            ListProfileData mListProfileData = ((ProfileActivity) mActivity).getMyData();
             if (mListProfileData != null) {
                 SetOfflineData(mListProfileData);
             }
@@ -98,7 +93,7 @@ public class BusinessFragment extends Fragment implements Serializable {
                         if (lat == 0 && lng == 0) {
                             Common.showSettingsAlert(mActivity);
                         } else {
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
+                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                 builder.setTitle(getString(R.string.app_name));
@@ -149,7 +144,7 @@ public class BusinessFragment extends Fragment implements Serializable {
                         }
                         return true;
                     } else {
-                        if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !MyProfileActivity.isEnable) {
+                        if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
                             try {
                                 boolean flag = true;
                                 if (Build.VERSION.SDK_INT >= 23) {
@@ -194,7 +189,7 @@ public class BusinessFragment extends Fragment implements Serializable {
                 if (lat != 0 && lng != 0) {
                     mJsonObject.put(Common.Constant_Class.OFFICE_LAT, lat);
                     mJsonObject.put(Common.Constant_Class.OFFICE_LNG, lng);
-                    if (MyProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                    if (ProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
                         mJsonObject.put(Common.Constant_Class.UPDATE_USER_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""));
                     }
                     mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
@@ -350,7 +345,7 @@ public class BusinessFragment extends Fragment implements Serializable {
             }
         }
 
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
+        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
             EnableAll();
         } else {
             DisableAll();

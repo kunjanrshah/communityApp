@@ -50,7 +50,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.LoginActivity;
-import com.krs.vastipatrak.activity.MyProfileActivity;
+import com.krs.vastipatrak.activity.ProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.service.MyLocationService;
@@ -71,7 +71,7 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.krs.vastipatrak.activity.MyProfileActivity.chooseFragment;
+import static com.krs.vastipatrak.activity.ProfileActivity.chooseFragment;
 import static com.krs.vastipatrak.utils.Common.Constant_Class.BIRTH_DATE;
 import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
@@ -148,7 +148,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             @Override
             public void onClick(View v) {
 
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
                     img_selection = "profile";
                     startImageActivity();
                 } else {
@@ -197,7 +197,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             @Override
             public void onClick(View v) {
 
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
                     img_selection = "father";
                     startImageActivity();
                 } else {
@@ -211,7 +211,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
                     img_selection = "mother";
                     startImageActivity();
                 } else {
@@ -283,7 +283,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 edtbTime.setText(time);
                             }*/
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             tpd.show(mActivity.getFragmentManager(), "Timepickerdialog");
                         }
 
@@ -325,7 +325,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 edtbdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
                         }
 
@@ -349,7 +349,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         if (curr_lat.isEmpty() && curr_lng.isEmpty()) {
                             Common.showSettingsAlert(mActivity);
                         } else {
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
+                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                 builder.setTitle(getString(R.string.app_name));
@@ -496,7 +496,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             EnableAll();
         } else {
-            if (MyProfileActivity.isEnable) {
+            if (ProfileActivity.isEnable) {
                 EnableAll();
             } else {
                 DisableAll();
@@ -504,7 +504,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         }
 
         try {
-            ListProfileData mListProfileData = ((MyProfileActivity) mActivity).getMyData();
+            ListProfileData mListProfileData = ((ProfileActivity) mActivity).getMyData();
             if (mListProfileData != null) {
                 setOfflineData(mListProfileData);
             }
@@ -515,7 +515,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtMobile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !MyProfileActivity.isEnable) {
+                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
                     try {
                         boolean flag = true;
                         if (Build.VERSION.SDK_INT >= 23) {
@@ -539,7 +539,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edt_phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !MyProfileActivity.isEnable) {
+                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
                     try {
                         boolean flag = true;
                         if (Build.VERSION.SDK_INT >= 23) {
@@ -980,7 +980,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     mJsonObject.put(Common.Constant_Class.HOME_LAT, lat);
                     mJsonObject.put(Common.Constant_Class.HOME_LNG, lng);
                     mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                    if (MyProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                    if (ProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
                         mJsonObject.put(Common.Constant_Class.UPDATE_USER_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""));
                     }
                     mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
@@ -1000,7 +1000,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             alert("Home location updated!");
-                            if (!MyProfileActivity.isEnable) {
+                            if (!ProfileActivity.isEnable) {
                                 mEditor.putString(Common.Constant_Class.HOME_LAT, String.valueOf(lat));
                                 mEditor.putString(Common.Constant_Class.HOME_LNG, String.valueOf(lng));
                                 mEditor.apply();

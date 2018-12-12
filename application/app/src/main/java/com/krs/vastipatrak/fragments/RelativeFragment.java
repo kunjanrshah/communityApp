@@ -7,15 +7,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -31,7 +27,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.MyProfileActivity;
+import com.krs.vastipatrak.activity.ProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.interfaces.OnItemClickListener;
 import com.krs.vastipatrak.utils.Common;
@@ -265,8 +261,8 @@ public class RelativeFragment extends Fragment {
                 /*mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
-                MyProfileActivity.isEnable = false;
-                Intent mIntent = new Intent(getActivity(), MyProfileActivity.class);
+                ProfileActivity.isEnable = false;
+                Intent mIntent = new Intent(getActivity(), ProfileActivity.class);
                 getActivity().startActivity(mIntent);*/
             }
         });
@@ -406,8 +402,8 @@ public class RelativeFragment extends Fragment {
             mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
             mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
             mEditor.apply();
-            MyProfileActivity.isEnable = false;
-            Intent mIntent = new Intent(getActivity(), MyProfileActivity.class);
+            ProfileActivity.isEnable = false;
+            Intent mIntent = new Intent(getActivity(), ProfileActivity.class);
             getActivity().startActivity(mIntent);
         }
 

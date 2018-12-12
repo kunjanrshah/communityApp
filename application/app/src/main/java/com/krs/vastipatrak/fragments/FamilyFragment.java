@@ -52,7 +52,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.LoginActivity;
-import com.krs.vastipatrak.activity.MyProfileActivity;
+import com.krs.vastipatrak.activity.ProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListProfileData;
@@ -77,7 +77,7 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
-import static com.krs.vastipatrak.activity.MyProfileActivity.chooseFragment;
+import static com.krs.vastipatrak.activity.ProfileActivity.chooseFragment;
 import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
@@ -138,7 +138,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
             saveItem.setVisible(true);
         } else {
-            if (MyProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+            if (ProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
                 saveItem.setVisible(true);
             } else {
                 saveItem.setVisible(false);
@@ -152,7 +152,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         Memory_Allocation(rootView);
         setAdapterBGlist();
         try {
-            ListProfileData mListProfileData = ((MyProfileActivity) getActivity()).getMyData();
+            ListProfileData mListProfileData = ((ProfileActivity) getActivity()).getMyData();
             if (mListProfileData != null) {
                 SetOfflineData(mListProfileData);
             }
@@ -192,7 +192,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                 edtsponse_bdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
@@ -236,7 +236,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                 edt_mdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
@@ -272,7 +272,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         img_spouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
                     img_selection = "spouse";
                     startImageActivity();
                 } else {
@@ -286,7 +286,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         img_fspouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
                     img_selection = "fspouse";
                     startImageActivity();
                 } else {
@@ -300,7 +300,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         img_mspouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || MyProfileActivity.isEnable) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
                     img_selection = "mspouse";
                     startImageActivity();
                 } else {
@@ -341,7 +341,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             @Override
             public void onClick(View v) {
 
-                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) && !MyProfileActivity.isEnable) {
+                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) && !ProfileActivity.isEnable) {
 
                 } else {
                     add_child_layout(null);
@@ -463,7 +463,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         });
 
         if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-            if (!MyProfileActivity.isEnable) {
+            if (!ProfileActivity.isEnable) {
                 DisableAll();
             }
         }
@@ -471,7 +471,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtsponse_mobile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !MyProfileActivity.isEnable) {
+                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
                     try {
                         boolean flag = true;
                         if (Build.VERSION.SDK_INT >= 23) {
@@ -638,7 +638,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
     private void SetOfflineData(ListProfileData mListProfileData) {
 
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
+        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
             EnableAll();
         } else {
             DisableAll();
@@ -685,7 +685,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     if (i == 0) {
                         rbtnChildYes.setChecked(true);
                         rbtnChildNo.setChecked(false);
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             btn_add.setVisibility(View.VISIBLE);
                         } else {
                             btn_add.setVisibility(View.GONE);
@@ -740,7 +740,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     Objects.requireNonNull(mViewholder.edtchild_work).setText(mObjChild.getChild_work());
 
 
-                    if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
+                    if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                         mViewholder.edtchild_name.setEnabled(true);
                         mViewholder.edtchild_bdate.setEnabled(true);
                         mViewholder.edtchild_edu.setEnabled(true);
@@ -765,7 +765,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         @Override
                         public void onClick(View v) {
 
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
+                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                                 mViewholder.ImgHash = "selectImage";
                                 startImageActivity();
                             } else {
@@ -982,7 +982,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             @Override
             public void onClick(View v) {
 
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
+                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                     mViewholder.ImgHash = "selectImage";
                     startImageActivity();
                 } else {
@@ -1008,7 +1008,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         });
 
 
-        if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !MyProfileActivity.isEnable) {
+        if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
             Objects.requireNonNull(mViewholder.btn_remove).setVisibility(View.GONE);
             Objects.requireNonNull(mViewholder.edtchild_name).setKeyListener(null);
             mViewholder.edtchild_name.setCursorVisible(false);
@@ -1041,7 +1041,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         mViewholder.edtMobile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !MyProfileActivity.isEnable) {
+                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
                     try {
                         boolean flag = true;
                         if (Build.VERSION.SDK_INT >= 23) {
@@ -1097,7 +1097,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                 mViewholder.edtchild_bdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
@@ -1138,7 +1138,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                 mViewholder.edtchild_btime.setText(time);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || MyProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             tpd.show(mActivity.getFragmentManager(), "Timepickerdialog");
                         }
                         return true;
@@ -1220,7 +1220,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 mJsonObject = new JSONObject();
                 mJsonObject.put("childs", jsonArray);
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                if (MyProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+                if (ProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
                     mJsonObject.put(Common.Constant_Class.UPDATE_USER_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""));
                 }
                 mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");

@@ -33,9 +33,9 @@ import android.widget.Toast;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.ItemArrayAdapter;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.fragments.BusinessFilter;
-import com.krs.vastipatrak.fragments.FamilyFilter;
-import com.krs.vastipatrak.fragments.PersonalFilter;
+import com.krs.vastipatrak.fragments.BusinessSearch;
+import com.krs.vastipatrak.fragments.FamilySearch;
+import com.krs.vastipatrak.fragments.PersonalSearch;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -52,12 +52,12 @@ import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_SPOUSE_BLOOD
 import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
-public class FilterActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, ConnectivityReceiver.ConnectivityReceiverListener {
+public class AdvanceSearchActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
     static final int CUSTOM_DIALOG_ID = 0;
+    public static String chooseFragment = "";
     private final String[] READ_CONTACT_PERMS = {Manifest.permission.READ_CONTACTS};
     private final int READ_CONTACT_REQUEST = 3;
-
     RecyclerView recyclerView;
     Snackbar snackbar;
     private ViewPager viewPager;
@@ -148,7 +148,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
     private void backNavigation() {
         /*Fragment fragment = new FragmentDrawer();
         getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
-        Intent mIntent = new Intent(FilterActivity.this, MainActivity.class);
+        Intent mIntent = new Intent(AdvanceSearchActivity.this, MainActivity.class);
         mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(mIntent);*/
         finish();
@@ -159,11 +159,11 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        personal = new PersonalFilter();
+        personal = new PersonalSearch();
 
-        business = new BusinessFilter();
+        business = new BusinessSearch();
 
-        family = new FamilyFilter();
+        family = new FamilySearch();
         adapter.addFrag(personal, Common.Constant_Class._PERSONAL);
         adapter.addFrag(business, Common.Constant_Class._BUSINESS);
         adapter.addFrag(family, Common.Constant_Class._FAMILY);
@@ -184,29 +184,29 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         try {
             String valid = "";
             ArrayList<String> lstProceed = new ArrayList<>();
-            if (((PersonalFilter) personal).edtFName != null) {
-                String strFName = ((PersonalFilter) personal).edtFName.getText().toString().trim();
-                String strLName = ((PersonalFilter) personal).edtLName.getText().toString().trim();
-                String strFatherName = ((PersonalFilter) personal).edtFatherName.getText().toString().trim();
-                String strMotherName = ((PersonalFilter) personal).edtMotherName.getText().toString().trim();
-                String strEducation = ((PersonalFilter) personal).edtEducation.getText().toString().trim();
-                String strBPlace = ((PersonalFilter) personal).edtBPlace.getText().toString().trim();
-                String strNPlace = ((PersonalFilter) personal).edtNPlace.getText().toString().trim();
-                String strMobile = ((PersonalFilter) personal).edtMobile.getText().toString().trim();
-                String strAddress = ((PersonalFilter) personal).edtAddress.getText().toString().trim();
-                String strphone = ((PersonalFilter) personal).edt_phone.getText().toString().trim();
-                String strbdateFrom = ((PersonalFilter) personal).edtbdateFrom.getText().toString().trim();
+            if (((PersonalSearch) personal).edtFName != null) {
+                String strFName = ((PersonalSearch) personal).edtFName.getText().toString().trim();
+                String strLName = ((PersonalSearch) personal).edtLName.getText().toString().trim();
+                String strFatherName = ((PersonalSearch) personal).edtFatherName.getText().toString().trim();
+                String strMotherName = ((PersonalSearch) personal).edtMotherName.getText().toString().trim();
+                String strEducation = ((PersonalSearch) personal).edtEducation.getText().toString().trim();
+                String strBPlace = ((PersonalSearch) personal).edtBPlace.getText().toString().trim();
+                String strNPlace = ((PersonalSearch) personal).edtNPlace.getText().toString().trim();
+                String strMobile = ((PersonalSearch) personal).edtMobile.getText().toString().trim();
+                String strAddress = ((PersonalSearch) personal).edtAddress.getText().toString().trim();
+                String strphone = ((PersonalSearch) personal).edt_phone.getText().toString().trim();
+                String strbdateFrom = ((PersonalSearch) personal).edtbdateFrom.getText().toString().trim();
                 strbdateFrom = Common.parseDateToddMMyyyy(strbdateFrom, ddMMMyyyy, yyyy_MM_dd);
-                String strbdateTo = ((PersonalFilter) personal).edtbdateTo.getText().toString().trim();
+                String strbdateTo = ((PersonalSearch) personal).edtbdateTo.getText().toString().trim();
                 strbdateTo = Common.parseDateToddMMyyyy(strbdateTo, ddMMMyyyy, yyyy_MM_dd);
 
-                String strEaddress = ((PersonalFilter) personal).edt_Eaddress.getText().toString().trim();
-                String strCity = ((PersonalFilter) personal).edtCity.getText().toString().trim();
-                String strGotra = ((PersonalFilter) personal).spinnerGotra.getSelectedItem().toString().trim();
-                String bgroup = ((PersonalFilter) personal).spinnerBlood.getSelectedItem().toString().trim();
+                String strEaddress = ((PersonalSearch) personal).edt_Eaddress.getText().toString().trim();
+                String strCity = ((PersonalSearch) personal).txtCity.getText().toString().trim();
+                String strGotra = ((PersonalSearch) personal).spinnerGotra.getSelectedItem().toString().trim();
+                String bgroup = ((PersonalSearch) personal).spinnerBlood.getSelectedItem().toString().trim();
 
-                String sp_user_start_age = ((PersonalFilter) personal).sp_user_start_age.getSelectedItem().toString().trim();
-                String sp_user_end_age = ((PersonalFilter) personal).sp_user_end_age.getSelectedItem().toString().trim();
+                String sp_user_start_age = ((PersonalSearch) personal).sp_user_start_age.getSelectedItem().toString().trim();
+                String sp_user_end_age = ((PersonalSearch) personal).sp_user_end_age.getSelectedItem().toString().trim();
 
                 if (!sp_user_start_age.equalsIgnoreCase(getString(R.string.AGE)) && !sp_user_end_age.equalsIgnoreCase(getString(R.string.AGE))) {
                     String start = sp_user_start_age.replace("Age ", "");
@@ -227,9 +227,9 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     bgroup = "";
                 }
 
-                if (((PersonalFilter) personal).rbtnF.isChecked()) {
+                if (((PersonalSearch) personal).rbtnF.isChecked()) {
                     gender = "female";
-                } else if (((PersonalFilter) personal).rbtnM.isChecked()) {
+                } else if (((PersonalSearch) personal).rbtnM.isChecked()) {
                     gender = "male";
                 } else {
                     gender = "both";
@@ -272,8 +272,8 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     } else {
                         valid = "Enter birth date To";
                     }
-                    lstProceed.add("Birthdate From: " + ((PersonalFilter) personal).edtbdateFrom.getText().toString());
-                    lstProceed.add("Birthdate To: " + ((PersonalFilter) personal).edtbdateTo.getText().toString());
+                    lstProceed.add("Birthdate From: " + ((PersonalSearch) personal).edtbdateFrom.getText().toString());
+                    lstProceed.add("Birthdate To: " + ((PersonalSearch) personal).edtbdateTo.getText().toString());
                 }
                 if (!strBPlace.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.BIRTH_PLACE, strBPlace);
@@ -296,9 +296,10 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                     mJsonObject.put(Common.Constant_Class.NATIVE_PLACE, strNPlace);
                     lstProceed.add("Native Place: " + strNPlace);
                 }
-                if (!strCity.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.CITY, strCity);
-                    lstProceed.add("City: " + strCity);
+                if (!strCity.equalsIgnoreCase("") && !strCity.toLowerCase().contains(getResources().getString(R.string.press_for_city))) {
+                    String city = strCity.replace("City: ", "");
+                    mJsonObject.put(Common.Constant_Class.CITY, city);
+                    lstProceed.add("City: " + city);
                 }
                 if (!strEducation.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.EDUCATION, strEducation);
@@ -333,13 +334,13 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 }
             }
 
-            if (((BusinessFilter) business).edtOccupation.getText() != null) {
+            if (((BusinessSearch) business).edtOccupation.getText() != null) {
 
                 String strOccupation, strWork, strOMobile, strOAddress;
-                strOccupation = ((BusinessFilter) business).edtOccupation.getText().toString().trim();
-                strWork = ((BusinessFilter) business).edtWork.getText().toString().trim();
-                strOMobile = ((BusinessFilter) business).edtOMobile.getText().toString().trim();
-                strOAddress = ((BusinessFilter) business).edtOAddress.getText().toString().trim();
+                strOccupation = ((BusinessSearch) business).edtOccupation.getText().toString().trim();
+                strWork = ((BusinessSearch) business).edtWork.getText().toString().trim();
+                strOMobile = ((BusinessSearch) business).edtOMobile.getText().toString().trim();
+                strOAddress = ((BusinessSearch) business).edtOAddress.getText().toString().trim();
 
                 if (!strOccupation.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.OCCUPATION, strOccupation);
@@ -359,39 +360,39 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 }
             }
 
-            if (((FamilyFilter) family).edtSpouseName != null) {
+            if (((FamilySearch) family).edtSpouseName != null) {
 
-                boolean child_married = ((FamilyFilter) family).chk_child_marriage.isChecked();
+                boolean child_married = ((FamilySearch) family).chk_child_marriage.isChecked();
 
-                String strmdate_from = ((FamilyFilter) family).edt_mdate_from.getText().toString().trim();
+                String strmdate_from = ((FamilySearch) family).edt_mdate_from.getText().toString().trim();
                 strmdate_from = Common.parseDateToddMMyyyy(strmdate_from, ddMMMyyyy, yyyy_MM_dd);
 
-                String strmdate_to = ((FamilyFilter) family).edt_mdate_to.getText().toString().trim();
+                String strmdate_to = ((FamilySearch) family).edt_mdate_to.getText().toString().trim();
                 strmdate_to = Common.parseDateToddMMyyyy(strmdate_to, ddMMMyyyy, yyyy_MM_dd);
 
-                String childBdateFrom = ((FamilyFilter) family).edt_cdate_from.getText().toString().trim();
+                String childBdateFrom = ((FamilySearch) family).edt_cdate_from.getText().toString().trim();
                 childBdateFrom = Common.parseDateToddMMyyyy(childBdateFrom, ddMMMyyyy, yyyy_MM_dd);
 
-                String childBdateTo = ((FamilyFilter) family).edt_cdate_to.getText().toString().trim();
+                String childBdateTo = ((FamilySearch) family).edt_cdate_to.getText().toString().trim();
                 childBdateTo = Common.parseDateToddMMyyyy(childBdateTo, ddMMMyyyy, yyyy_MM_dd);
 
-                String strSpouseName = ((FamilyFilter) family).edtSpouseName.getText().toString().trim();
-                String strSpouseFName = ((FamilyFilter) family).edtSpouseFName.getText().toString().trim();
-                String strSpouseMName = ((FamilyFilter) family).edtSpouseMName.getText().toString().trim();
-                String strchild_name = ((FamilyFilter) family).edtchild_name.getText().toString().trim();
-                String strcedu = ((FamilyFilter) family).edtcedu.getText().toString().trim();
-                String strchild_work = ((FamilyFilter) family).edtchild_work.getText().toString().trim();
-                String childMobile = ((FamilyFilter) family).edtcmobile.getText().toString().trim();
-                String childBplace = ((FamilyFilter) family).edtchildbplace.getText().toString().trim();
-                String bgroup = ((FamilyFilter) family).spinnerBlood.getSelectedItem().toString().trim();
+                String strSpouseName = ((FamilySearch) family).edtSpouseName.getText().toString().trim();
+                String strSpouseFName = ((FamilySearch) family).edtSpouseFName.getText().toString().trim();
+                String strSpouseMName = ((FamilySearch) family).edtSpouseMName.getText().toString().trim();
+                String strchild_name = ((FamilySearch) family).edtchild_name.getText().toString().trim();
+                String strcedu = ((FamilySearch) family).edtcedu.getText().toString().trim();
+                String strchild_work = ((FamilySearch) family).edtchild_work.getText().toString().trim();
+                String childMobile = ((FamilySearch) family).edtcmobile.getText().toString().trim();
+                String childBplace = ((FamilySearch) family).edtchildbplace.getText().toString().trim();
+                String bgroup = ((FamilySearch) family).spinnerBlood.getSelectedItem().toString().trim();
 
-                String sp_spouse_blood = ((FamilyFilter) family).sp_spouse_blood.getSelectedItem().toString().trim();
-                String edtSpouseEdu = ((FamilyFilter) family).edtSpouseEdu.getText().toString().trim();
-                String sp_spouse_start_age = ((FamilyFilter) family).sp_spouse_start_age.getSelectedItem().toString().trim();
-                String sp_spouse_end_age = ((FamilyFilter) family).sp_spouse_end_age.getSelectedItem().toString().trim();
-                String sp_child_start_age = ((FamilyFilter) family).sp_child_start_age.getSelectedItem().toString().trim();
-                String sp_child_end_age = ((FamilyFilter) family).sp_child_end_age.getSelectedItem().toString().trim();
-                String childGender = ((FamilyFilter) family).gender;
+                String sp_spouse_blood = ((FamilySearch) family).sp_spouse_blood.getSelectedItem().toString().trim();
+                String edtSpouseEdu = ((FamilySearch) family).edtSpouseEdu.getText().toString().trim();
+                String sp_spouse_start_age = ((FamilySearch) family).sp_spouse_start_age.getSelectedItem().toString().trim();
+                String sp_spouse_end_age = ((FamilySearch) family).sp_spouse_end_age.getSelectedItem().toString().trim();
+                String sp_child_start_age = ((FamilySearch) family).sp_child_start_age.getSelectedItem().toString().trim();
+                String sp_child_end_age = ((FamilySearch) family).sp_child_end_age.getSelectedItem().toString().trim();
+                String childGender = ((FamilySearch) family).gender;
 
                 if (!sp_spouse_blood.equalsIgnoreCase(TITLE_SPOUSE_BLOOD_GROUP)) {
                     mJsonObject.put(Common.Constant_Class.SPOUSE_BG, sp_spouse_blood);
@@ -454,21 +455,21 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
 
                 if (!strmdate_from.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.FROM_MARRIAGE_DATE, strmdate_from);
-                    lstProceed.add("Marriage From: " + ((FamilyFilter) family).edt_mdate_from.getText().toString());
+                    lstProceed.add("Marriage From: " + ((FamilySearch) family).edt_mdate_from.getText().toString());
                 }
 
                 if (!strmdate_to.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.TO_MARRIAGE_DATE, strmdate_to);
-                    lstProceed.add("Marriage To: " + ((FamilyFilter) family).edt_mdate_to.getText().toString());
+                    lstProceed.add("Marriage To: " + ((FamilySearch) family).edt_mdate_to.getText().toString());
                 }
 
                 if (!childBdateFrom.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.FROM_CHILD_BDAY, childBdateFrom);
-                    lstProceed.add("Child BDay From: " + ((FamilyFilter) family).edt_cdate_from.getText().toString());
+                    lstProceed.add("Child BDay From: " + ((FamilySearch) family).edt_cdate_from.getText().toString());
                 }
                 if (!childBdateTo.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.TO_CHILD_BDAY, childBdateTo);
-                    lstProceed.add("Child BDay To: " + ((FamilyFilter) family).edt_cdate_to.getText().toString());
+                    lstProceed.add("Child BDay To: " + ((FamilySearch) family).edt_cdate_to.getText().toString());
                 }
                 if (!strSpouseName.equalsIgnoreCase("")) {
                     mJsonObject.put(Common.Constant_Class.SPOUSE_NAME, strSpouseName);
@@ -508,16 +509,30 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
                 DisplayConfimDialog(mJsonObject.toString(), lstProceed);
                 //showDialog(CUSTOM_DIALOG_ID, mBundle);
             } else {
-                Toast.makeText(FilterActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdvanceSearchActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10) {
+            if (chooseFragment.equalsIgnoreCase(FamilySearch.class.getSimpleName())) {
+                family.onActivityResult(requestCode, resultCode, data);
+            } else if (chooseFragment.equalsIgnoreCase(PersonalSearch.class.getSimpleName())) {
+                personal.onActivityResult(requestCode, resultCode, data);
+            } else if (chooseFragment.equalsIgnoreCase(BusinessSearch.class.getSimpleName())) {
+                business.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
+
     private void DisplayConfimDialog(String json, ArrayList<String> lstProceed) {
         Dialog dialog = null;
-        dialog = new Dialog(FilterActivity.this);
+        dialog = new Dialog(AdvanceSearchActivity.this);
         dialog.setContentView(R.layout.dialog_layout);
         dialog.setTitle("Vastipatrak");
 
@@ -567,7 +582,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
     }
 
     private void navigateActivity(JSONObject mJsonObject) {
-        Intent mIntent = new Intent(FilterActivity.this, MainActivity.class);
+        Intent mIntent = new Intent(AdvanceSearchActivity.this, MainActivity.class);
         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         mIntent.putExtra(Common.Constant_Class.QUERY_STRING, mJsonObject.toString());
 
@@ -591,7 +606,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                Intent mIntent = new Intent(FilterActivity.this, MainActivity.class);
+                Intent mIntent = new Intent(AdvanceSearchActivity.this, MainActivity.class);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 mIntent.putExtra(Common.Constant_Class.QUERY, query);
                 startActivity(mIntent);
@@ -616,7 +631,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         /*export.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Common.ExportSearchData(FilterActivity.this);
+                Common.ExportSearchData(AdvanceSearchActivity.this);
                 return false;
             }
         });*/
@@ -625,7 +640,7 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
         voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Common.promptSpeechInput(FilterActivity.this);
+                Common.promptSpeechInput(AdvanceSearchActivity.this);
                 return false;
             }
         });
@@ -637,8 +652,8 @@ public class FilterActivity extends AppCompatActivity implements TimePickerDialo
             public boolean onMenuItemClick(MenuItem item) {
                 mEditor.clear();
                 mEditor.apply();
-                Toast.makeText(FilterActivity.this, "Clear search data", Toast.LENGTH_SHORT).show();
-                Intent mIntent = new Intent(FilterActivity.this, FilterActivity.class);
+                Toast.makeText(AdvanceSearchActivity.this, "Clear search data", Toast.LENGTH_SHORT).show();
+                Intent mIntent = new Intent(AdvanceSearchActivity.this, AdvanceSearchActivity.class);
                 startActivity(mIntent);
                 finish();
                 return false;

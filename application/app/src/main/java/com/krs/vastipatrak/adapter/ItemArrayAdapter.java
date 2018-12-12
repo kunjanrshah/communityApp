@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.FilterActivity;
 
 import java.util.ArrayList;
 

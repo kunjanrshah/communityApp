@@ -27,7 +27,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.FilterActivity;
+import com.krs.vastipatrak.activity.AdvanceSearchActivity;
 import com.krs.vastipatrak.utils.Common;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ObservableScrollView;
@@ -44,7 +44,7 @@ import java.util.Objects;
 import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
-public class FamilyFilter extends Fragment implements AdapterView.OnItemSelectedListener {
+public class FamilySearch extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private static final int CONTACT_PICKER_RESULT = 1001;
     @NonNull
@@ -272,7 +272,7 @@ public class FamilyFilter extends Fragment implements AdapterView.OnItemSelected
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((FilterActivity) Objects.requireNonNull(getActivity())).callAdvanceSearchWS();
+                ((AdvanceSearchActivity) Objects.requireNonNull(getActivity())).callAdvanceSearchWS();
             }
         });
 
