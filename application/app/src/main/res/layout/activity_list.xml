@@ -28,11 +28,11 @@
 
         <EditText
             android:id="@+id/edt_other"
+            android:layout_margin="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_other"
             android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
-
 
 </LinearLayout>

@@ -338,7 +338,8 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="play_again">Play Again</string>
     <string name="is_first_time">IsFirstTimeLaunch</string>
     <string name="understand">ખબર પડી</string>
-    <string name="press_for_city">Press for City</string>
+    <string name="select_city">Select City</string>
+    <string name="select_birth_place">Select BirthPlace</string>
 
 
 </resources>

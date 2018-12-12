@@ -296,7 +296,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                     mJsonObject.put(Common.Constant_Class.NATIVE_PLACE, strNPlace);
                     lstProceed.add("Native Place: " + strNPlace);
                 }
-                if (!strCity.equalsIgnoreCase("") && !strCity.toLowerCase().contains(getResources().getString(R.string.press_for_city))) {
+                if (!strCity.equalsIgnoreCase("") && !strCity.toLowerCase().contains(getResources().getString(R.string.select_city))) {
                     String city = strCity.replace("City: ", "");
                     mJsonObject.put(Common.Constant_Class.CITY, city);
                     lstProceed.add("City: " + city);
