@@ -96,6 +96,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     public CheckBox chk_spouse_bdate_rem = null;
     public Spinner sp_spouse_blood;
     ArrayAdapter<String> dataAdapter;
+    RequestOptions requestOptions;
     private RadioButton rbtnChildYes;
     private String spouse_url = "";
     private String fspouse_url = "";
@@ -104,11 +105,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private CircleImageView img_spouse;
     private CircleImageView img_fspouse;
     private CircleImageView img_mspouse;
-
     private ImageView img_spouse_cancel;
     private ImageView img_fspouse_cancel;
     private ImageView img_mspouse_cancel;
-
     private String img_selection = "";
     private SharedPreferences mSharedPreferences;
     private Activity mActivity;
@@ -578,6 +577,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         child_container = root.findViewById(R.id.child_container);
         lst_delID = new ArrayList<>();
         lstchild = new HashMap<>();
+        requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.user_profile);
+        requestOptions.error(R.drawable.user);
     }
 
     private void DisableAll() {
@@ -673,9 +675,32 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         spouse_url = mListProfileData.getImg_spouse_url();
         fspouse_url = mListProfileData.getImg_sfather_url();
         mspouse_url = mListProfileData.getImg_smother_url();
-        Glide.with(mActivity).load(spouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_spouse);
-        Glide.with(mActivity).load(fspouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_fspouse);
-        Glide.with(mActivity).load(mspouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mspouse);
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Glide.with(mActivity).load(spouse_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_spouse);
+                } catch (Exception e) {
+                    e.getMessage();
+                }
+                try {
+                    Glide.with(mActivity).load(fspouse_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_fspouse);
+                } catch (Exception e) {
+                    e.getMessage();
+                }
+
+                try {
+                    Glide.with(mActivity).load(mspouse_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mspouse);
+                } catch (Exception e) {
+                    e.getMessage();
+                }
+            }
+        });
+
+        thread.start();
+
+
         if (mListProfileData.getmListChildrenData() != null) {
             if (mListProfileData.getmListChildrenData().size() > 0) {
                 child_container.removeAllViews();
@@ -760,7 +785,19 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
                     }
                     final String child_url = mObjChild.getChild_img_url();
-                    Glide.with(mActivity).load(child_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(mViewholder.img_child);
+                    new Thread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            try {
+                                Glide.with(mActivity).load(child_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(mViewholder.img_child);
+                            } catch (Exception e) {
+                                e.getMessage();
+                            }
+                        }
+                    }).start();
+
+
                     mViewholder.img_child.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -779,17 +816,29 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         }
     }
 
-    private void openImageDialog(String name, String url) {
+    private void openImageDialog(String name, final String url) {
         Dialog dialog = new Dialog(mActivity);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setContentView(R.layout.image_dialog);
         dialog.setTitle(name);
 
-        ImageView image = dialog.findViewById(R.id.img_dialog);
+        final ImageView image = dialog.findViewById(R.id.img_dialog);
         if (url.isEmpty()) {
             image.setImageDrawable(getResources().getDrawable(R.drawable.user_profile));
         } else {
-            Glide.with(mActivity).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
+
+            Thread thread = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        Glide.with(mActivity).load(url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
         }
 
         dialog.show();

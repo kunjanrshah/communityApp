@@ -2,7 +2,7 @@
     <string name="theme_app_name">વસ્તીપત્રક</string>
     <string name="app_name">વસ્તીપત્રક</string>
     <string name="hint_email">Email</string>
-    <string name="hint_other">Other(Please Specify)</string>
+    <string name="hint_other">If Other (Please Specify)</string>
     <string name="hint_email_mobile">Email or Mobile</string>
     <string name="hint_mobile">Mobile</string>
     <string name="hint_password">Password</string>

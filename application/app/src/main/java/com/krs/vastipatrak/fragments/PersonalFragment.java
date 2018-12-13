@@ -91,6 +91,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     public EditText edtbdate = null;
     public CheckBox chk_profile_bdate_rem = null;
     public String profile_bdate_rem = "0";
+    RequestOptions requestOptions;
     private ToggleButton tbtn_share;
     private RadioButton rbtnM;
     private RadioButton rbtnF;
@@ -509,7 +510,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 setOfflineData(mListProfileData);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            e.getMessage();
         }
 
         edtMobile.setOnClickListener(new View.OnClickListener() {
@@ -530,7 +531,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                             getActivity().startActivity(callIntent);
                         }
                     } catch (SecurityException e) {
-                        e.printStackTrace();
+                        e.getMessage();
                     }
                 }
             }
@@ -554,7 +555,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                             getActivity().startActivity(callIntent);
                         }
                     } catch (SecurityException e) {
-                        e.printStackTrace();
+                        e.getMessage();
                     }
                 }
             }
@@ -590,13 +591,27 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
-    private void openImageDialog(String name, String url) {
+    private void openImageDialog(String name, final String url) {
         Dialog dialog = new Dialog(mActivity);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setContentView(R.layout.image_dialog);
         dialog.setTitle(name);
-        ImageView image = dialog.findViewById(R.id.img_dialog);
-        Glide.with(mActivity).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
+        final ImageView image = dialog.findViewById(R.id.img_dialog);
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    Glide.with(mActivity).load(url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
+
+
         dialog.show();
     }
 
@@ -665,6 +680,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, blood_cate);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerBlood.setAdapter(dataAdapter);
+        requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.user_profile);
+        requestOptions.error(R.drawable.user);
     }
 
     private void EnableAll() {
@@ -888,11 +906,35 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             profile_url = mListProfileData.getProfile_pic_url();
             father_url = mListProfileData.getImg_father_url();
             mother_url = mListProfileData.getImg_mother_url();
+            Log.d(TAG, "profile image: " + profile_url);
+            Log.d(TAG, "father image: " + father_url);
+            Log.d(TAG, "mother image: " + mother_url);
+            Thread thread = new Thread(new Runnable() {
 
-            Glide.with(mActivity).load(profile_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
-            Glide.with(mActivity).load(father_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_father);
-            Glide.with(mActivity).load(mother_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mother);
+                @Override
+                public void run() {
 
+                    try {
+                        Glide.with(mActivity).load(profile_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+                    } catch (Exception e) {
+                        e.getMessage();
+                    }
+
+                    try {
+                        Glide.with(mActivity).load(father_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_father);
+                    } catch (Exception e) {
+                        e.getMessage();
+                    }
+
+                    try {
+                        Glide.with(mActivity).load(mother_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mother);
+                    } catch (Exception e) {
+                        e.getMessage();
+                    }
+                }
+            });
+
+            thread.start();
 
         } else {
             Toast.makeText(mActivity, "No Record Found !!", Toast.LENGTH_SHORT).show();
@@ -913,7 +955,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
             } catch (Exception e) {
-                e.printStackTrace();
+                e.getMessage();
             }
             Common.showProgressDialog(getActivity());
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SET_REMINDER_URL, mJsonObject, new Response.Listener<JSONObject>() {
@@ -940,7 +982,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         }
                         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        e.getMessage();
                     }
                 }
             }, new Response.ErrorListener() {
@@ -987,7 +1029,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                e.getMessage();
             }
             Common.showProgressDialog(getActivity());
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
@@ -1009,7 +1051,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                             alert("Something went wrong!");
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        e.getMessage();
                     }
                 }
             }, new Response.ErrorListener() {
@@ -1059,7 +1101,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                e.getMessage();
             }
             Common.showProgressDialog(getActivity());
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
@@ -1076,7 +1118,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                             alert("Something went wrong!");
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        e.getMessage();
                     }
                 }
             }, new Response.ErrorListener() {

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +25,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
@@ -54,18 +54,19 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
     public RadioButton rbtnM;
     public RadioButton rbtnF;
     public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtMobile, edtAddress, edt_Eaddress, edt_phone;
-    public EditText edtEducation, edtBPlace, edtNPlace;
-    // public EditText edtCity;
-    public TextView txtCity;
+    public EditText edtEducation, edtBPlace, edtNPlace, edtCity;
+
     public EditText edtbdateFrom, edtbdateTo;
     public Spinner sp_user_start_age;
     public Spinner sp_user_end_age;
+    TextInputLayout input_layout_City;
     ArrayAdapter<String> dataAdapter;
     String[] titleGotra;
     private String TAG = PersonalSearch.class.getSimpleName();
     private SharedPreferences mSharedPreferences;
     private RadioButton rbtnB;
     private FloatingActionButton floatingActionButton;
+    private boolean is_first = true;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -140,9 +141,6 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                                 String date = str_day + "/" + str_month + "/" + year;
                                 edtbdateFrom.setText(date);
                                 edtbdateTo.setText(date);
-                                //  date= year+ "-" + str_month + "-" + str_day;
-                                // bdateFrom=date;
-                                // bdateTo=date;
                             }
                         });
                         dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
@@ -235,15 +233,64 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
             }
         });
 
-        txtCity.setOnClickListener(new View.OnClickListener() {
+        edtCity.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                AdvanceSearchActivity.chooseFragment = TAG;
-                Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
-                startActivityForResult(mIntent,10);
+            public boolean onTouch(View v, MotionEvent event) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra("listview", false);
+                    startActivityForResult(mIntent, 11);
+                }
+
+                return false;
             }
         });
 
+        edtBPlace.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra("listview", false);
+                    startActivityForResult(mIntent, 12);
+                }
+                return false;
+            }
+        });
+
+        edtEducation.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra("listview", true);
+                    startActivityForResult(mIntent, 13);
+                }
+                return false;
+            }
+        });
+
+        edtNPlace.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+
+        if (is_first) {
+            is_first = false;
+            AdvanceSearchActivity.chooseFragment = TAG;
+            Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+            mIntent.putExtra("listview", true);
+            startActivityForResult(mIntent, 14);
+        }
         return rootView;
     }
 
@@ -290,13 +337,19 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
         edtEducation = rootView.findViewById(R.id.edtEducation);
         edtBPlace = rootView.findViewById(R.id.edtBPlace);
         edtNPlace = rootView.findViewById(R.id.edtNPlace);
-        txtCity = rootView.findViewById(R.id.txtCity);
+        edtCity = rootView.findViewById(R.id.edtCity);
 
         edtMobile = rootView.findViewById(R.id.edtMobile);
         edtAddress = rootView.findViewById(R.id.edtAddress);
         edt_Eaddress = rootView.findViewById(R.id.edt_Eaddress);
         edt_phone = rootView.findViewById(R.id.edt_phone);
+        input_layout_City = rootView.findViewById(R.id.input_layout_City);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        is_first = true;
     }
 
     private void setPreferenceData() {
@@ -331,13 +384,11 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                 }
                 if (mjsonObject.has(Common.Constant_Class.FROM_BIRTH_DATE)) {
                     String bdate = mjsonObject.getString(Common.Constant_Class.FROM_BIRTH_DATE);
-                    //  bdateFrom=bdate;
                     bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
                     edtbdateFrom.setText(bdate);
                 }
                 if (mjsonObject.has(Common.Constant_Class.TO_BIRTH_DATE)) {
                     String bdate = mjsonObject.getString(Common.Constant_Class.TO_BIRTH_DATE);
-                    // bdateTo=bdate;
                     bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
                     edtbdateTo.setText(bdate);
                 }
@@ -366,7 +417,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                     edtNPlace.setText(mjsonObject.getString(Common.Constant_Class.NATIVE_PLACE));
                 }
                 if (mjsonObject.has(Common.Constant_Class.CITY)) {
-                    txtCity.setText(mjsonObject.getString(Common.Constant_Class.CITY));
+                    edtCity.setText(mjsonObject.getString(Common.Constant_Class.CITY));
                 }
                 if (mjsonObject.has(Common.Constant_Class.GOTRA)) {
                     String gotra = mjsonObject.getString(Common.Constant_Class.GOTRA);
@@ -441,9 +492,15 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
             }
             phoneCursor.close();
 
-        } else if (requestCode == 10) {
+        } else if (requestCode == 11) {
             if (data != null) {
-                txtCity.setText("City: "+data.getStringExtra("selection"));
+                is_first = true;
+                edtCity.setText(data.getStringExtra("selection"));
+            }
+        } else if (requestCode == 12) {
+            if (data != null) {
+                is_first = true;
+                edtBPlace.setText(data.getStringExtra("selection"));
             }
         }
     }

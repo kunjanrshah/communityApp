@@ -201,7 +201,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                 strbdateTo = Common.parseDateToddMMyyyy(strbdateTo, ddMMMyyyy, yyyy_MM_dd);
 
                 String strEaddress = ((PersonalSearch) personal).edt_Eaddress.getText().toString().trim();
-                String strCity = ((PersonalSearch) personal).txtCity.getText().toString().trim();
+                String strCity = ((PersonalSearch) personal).edtCity.getText().toString().trim();
                 String strGotra = ((PersonalSearch) personal).spinnerGotra.getSelectedItem().toString().trim();
                 String bgroup = ((PersonalSearch) personal).spinnerBlood.getSelectedItem().toString().trim();
 

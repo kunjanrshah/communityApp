@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -134,6 +135,8 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
         }
         viewPager = findViewById(R.id.viewpager);
         tabLayout = findViewById(R.id.tabs);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
     private void ToolbarSetup() {

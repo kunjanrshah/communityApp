@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
@@ -36,6 +38,9 @@ public class SelectionlistActivity extends AppCompatActivity {
     private String TAG = SelectionlistActivity.class.getSimpleName();
     private SearchView searchView;
     private int lastExpandedPosition = -1;
+    private EditText edt_other;
+    private Button btnSave;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,8 @@ public class SelectionlistActivity extends AppCompatActivity {
         ToolbarSetup();
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
+        edt_other = findViewById(R.id.edt_other);
+        btnSave = findViewById(R.id.btnSave);
 
         // preparing list data
         prepareListData();
@@ -74,7 +81,7 @@ public class SelectionlistActivity extends AppCompatActivity {
                     expListView.collapseGroup(lastExpandedPosition);
                 }
                 lastExpandedPosition = groupPosition;
-                Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " Expanded", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " Expanded", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -92,18 +99,33 @@ public class SelectionlistActivity extends AppCompatActivity {
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-
-                Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " : " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
-
-                Intent mIntent = new Intent();
-                mIntent.putExtra("selection", listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition));
-                setResult(RESULT_OK, mIntent);
-                finish();
-                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-
+                //Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " : " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
+                finishActivity(listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition));
                 return false;
             }
         });
+
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String value = edt_other.getText().toString();
+                if (!value.isEmpty()) {
+                    finishActivity(value);
+                } else {
+                    Toast.makeText(SelectionlistActivity.this, "Specify if Other", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
+    private void finishActivity(String value) {
+        Intent mIntent = new Intent();
+        mIntent.putExtra("selection", value);
+        setResult(RESULT_OK, mIntent);
+        finish();
+        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
 
     private void ToolbarSetup() {
