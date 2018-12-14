@@ -189,9 +189,9 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                 String strLName = ((PersonalSearch) personal).edtLName.getText().toString().trim();
                 String strFatherName = ((PersonalSearch) personal).edtFatherName.getText().toString().trim();
                 String strMotherName = ((PersonalSearch) personal).edtMotherName.getText().toString().trim();
-                String strEducation = ((PersonalSearch) personal).edtEducation.getText().toString().trim();
-                String strBPlace = ((PersonalSearch) personal).edtBPlace.getText().toString().trim();
-                String strNPlace = ((PersonalSearch) personal).edtNPlace.getText().toString().trim();
+                String strEducation = ((PersonalSearch) personal).txtEducation.getText().toString().trim();
+                String strBPlace = ((PersonalSearch) personal).txtBPlace.getText().toString().trim();
+                String strNPlace = ((PersonalSearch) personal).txtNPlace.getText().toString().trim();
                 String strMobile = ((PersonalSearch) personal).edtMobile.getText().toString().trim();
                 String strAddress = ((PersonalSearch) personal).edtAddress.getText().toString().trim();
                 String strphone = ((PersonalSearch) personal).edt_phone.getText().toString().trim();
@@ -201,7 +201,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                 strbdateTo = Common.parseDateToddMMyyyy(strbdateTo, ddMMMyyyy, yyyy_MM_dd);
 
                 String strEaddress = ((PersonalSearch) personal).edt_Eaddress.getText().toString().trim();
-                String strCity = ((PersonalSearch) personal).edtCity.getText().toString().trim();
+                String strCity = ((PersonalSearch) personal).txtCity.getText().toString().trim();
                 String strGotra = ((PersonalSearch) personal).spinnerGotra.getSelectedItem().toString().trim();
                 String bgroup = ((PersonalSearch) personal).spinnerBlood.getSelectedItem().toString().trim();
 

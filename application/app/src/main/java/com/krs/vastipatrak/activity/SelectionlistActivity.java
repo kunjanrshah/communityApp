@@ -1,14 +1,20 @@
 package com.krs.vastipatrak.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +26,9 @@ import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.adapter.ItemsAdapter;
 import com.krs.vastipatrak.adapter.SelectionListAdapter;
+import com.krs.vastipatrak.model.Items;
 import com.krs.vastipatrak.utils.Common;
 
 import java.util.ArrayList;
@@ -35,44 +43,77 @@ public class SelectionlistActivity extends AppCompatActivity {
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
     Toolbar mToolbar;
+    private RecyclerView recyclerView;
+    private ItemsAdapter adapter;
     private String TAG = SelectionlistActivity.class.getSimpleName();
     private SearchView searchView;
     private int lastExpandedPosition = -1;
     private EditText edt_other;
     private Button btnSave;
-
+    private List<Items> ItemList;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        ToolbarSetup();
+
         // get the listview
-        expListView = (ExpandableListView) findViewById(R.id.lvExp);
+        expListView = findViewById(R.id.lvExp);
+        recyclerView = findViewById(R.id.lvList);
         edt_other = findViewById(R.id.edt_other);
         btnSave = findViewById(R.id.btnSave);
 
-        // preparing list data
-        prepareListData();
+        Bundle mBundle = new Bundle();
+        boolean listview = false;
+        String section = "";
+        if (mBundle != null) {
+            mBundle = getIntent().getExtras();
+            listview = mBundle.getBoolean("listview");
+            section = mBundle.getString("section");
+        }
+        ToolbarSetup(section);
+        if (listview) {
+            recyclerView.setHasFixedSize(true);
+            layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        listAdapter = new SelectionListAdapter(this, listDataHeader, listDataChild);
+            recyclerView.setVisibility(View.VISIBLE);
+            expListView.setVisibility(View.GONE);
+            prepareListData();
+            adapter = new ItemsAdapter(this, ItemList);
+            recyclerView.setAdapter(adapter);
 
-        // setting list adapter
-        expListView.setAdapter(listAdapter);
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            expListView.setVisibility(View.VISIBLE);
+            prepareExpandableListData();
+            listAdapter = new SelectionListAdapter(this, listDataHeader, listDataChild);
+            expListView.setAdapter(listAdapter);
+        }
 
-        // Listview Group click listener
+
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                finishActivity(ItemList.get(position).getName());
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+                // do whatever
+            }
+        }));
+
         expListView.setOnGroupClickListener(new OnGroupClickListener() {
 
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                // Toast.makeText(getApplicationContext(),
-                // "Group Clicked " + listDataHeader.get(groupPosition),
-                // Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
 
-        // Listview Group expanded listener
         expListView.setOnGroupExpandListener(new OnGroupExpandListener() {
 
             @Override
@@ -85,7 +126,6 @@ public class SelectionlistActivity extends AppCompatActivity {
             }
         });
 
-        // Listview Group collasped listener
         expListView.setOnGroupCollapseListener(new OnGroupCollapseListener() {
 
             @Override
@@ -94,7 +134,6 @@ public class SelectionlistActivity extends AppCompatActivity {
             }
         });
 
-        // Listview on child click listener
         expListView.setOnChildClickListener(new OnChildClickListener() {
 
             @Override
@@ -121,6 +160,7 @@ public class SelectionlistActivity extends AppCompatActivity {
 
 
     private void finishActivity(String value) {
+        Common.hideKeyboard(this);
         Intent mIntent = new Intent();
         mIntent.putExtra("selection", value);
         setResult(RESULT_OK, mIntent);
@@ -128,11 +168,19 @@ public class SelectionlistActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
 
-    private void ToolbarSetup() {
+    private void ToolbarSetup(String section) {
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setSubtitle("Select City");
+        if (section.equalsIgnoreCase("city")) {
+            getSupportActionBar().setSubtitle("Select City");
+        } else if (section.equalsIgnoreCase("nplace")) {
+            getSupportActionBar().setSubtitle("Select Native");
+        } else if (section.equalsIgnoreCase("bplace")) {
+            getSupportActionBar().setSubtitle("Select BirthPlace");
+        } else if (section.equalsIgnoreCase("education")) {
+            getSupportActionBar().setSubtitle("Select Education");
+        }
 
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,10 +268,14 @@ public class SelectionlistActivity extends AppCompatActivity {
         return true;
     }
 
-    /*
-     * Preparing the list data
-     */
     private void prepareListData() {
+        ItemList = new ArrayList<>();
+        ItemList.add(new Items("item1"));
+        ItemList.add(new Items("item2"));
+        ItemList.add(new Items("item3"));
+    }
+
+    private void prepareExpandableListData() {
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
 
@@ -261,4 +313,52 @@ public class SelectionlistActivity extends AppCompatActivity {
         listDataChild.put(listDataHeader.get(1), nowShowing);
         listDataChild.put(listDataHeader.get(2), comingSoon);
     }
+
+    public static class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+        GestureDetector mGestureDetector;
+        private OnItemClickListener mListener;
+
+        public RecyclerItemClickListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener) {
+            mListener = listener;
+            mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+
+                @Override
+                public void onLongPress(MotionEvent e) {
+                    View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                    if (child != null && mListener != null) {
+                        mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
+                    }
+                }
+            });
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
+            View childView = view.findChildViewUnder(e.getX(), e.getY());
+            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
+                mListener.onItemClick(childView, view.getChildAdapterPosition(childView));
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        }
+
+        public interface OnItemClickListener {
+            public void onItemClick(View view, int position);
+
+            public void onLongItemClick(View view, int position);
+        }
+    }
+
 }

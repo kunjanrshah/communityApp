@@ -579,7 +579,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         lstchild = new HashMap<>();
         requestOptions = new RequestOptions();
         requestOptions.placeholder(R.drawable.user_profile);
-        requestOptions.error(R.drawable.user);
+        requestOptions.error(R.drawable.download);
     }
 
     private void DisableAll() {
@@ -676,29 +676,24 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         fspouse_url = mListProfileData.getImg_sfather_url();
         mspouse_url = mListProfileData.getImg_smother_url();
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Glide.with(mActivity).load(spouse_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_spouse);
-                } catch (Exception e) {
-                    e.getMessage();
-                }
-                try {
-                    Glide.with(mActivity).load(fspouse_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_fspouse);
-                } catch (Exception e) {
-                    e.getMessage();
-                }
+        try {
+            Glide.with(mActivity).load(spouse_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_spouse);
 
-                try {
-                    Glide.with(mActivity).load(mspouse_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mspouse);
-                } catch (Exception e) {
-                    e.getMessage();
-                }
-            }
-        });
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        try {
+            Glide.with(mActivity).load(fspouse_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_fspouse);
 
-        thread.start();
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
+        try {
+            Glide.with(mActivity).load(mspouse_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mspouse);
+        } catch (Exception e) {
+            e.getMessage();
+        }
 
 
         if (mListProfileData.getmListChildrenData() != null) {
@@ -785,17 +780,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
                     }
                     final String child_url = mObjChild.getChild_img_url();
-                    new Thread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            try {
-                                Glide.with(mActivity).load(child_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(mViewholder.img_child);
-                            } catch (Exception e) {
-                                e.getMessage();
-                            }
-                        }
-                    }).start();
+                    try {
+                        Glide.with(mActivity).load(child_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(mViewholder.img_child);
+                    } catch (Exception e) {
+                        e.getMessage();
+                    }
 
 
                     mViewholder.img_child.setOnClickListener(new View.OnClickListener() {
@@ -827,18 +816,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             image.setImageDrawable(getResources().getDrawable(R.drawable.user_profile));
         } else {
 
-            Thread thread = new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        Glide.with(mActivity).load(url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            thread.start();
+            try {
+                Glide.with(mActivity).load(url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         dialog.show();

@@ -597,21 +597,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         dialog.setContentView(R.layout.image_dialog);
         dialog.setTitle(name);
         final ImageView image = dialog.findViewById(R.id.img_dialog);
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    Glide.with(mActivity).load(url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        thread.start();
-
-
+        try {
+            Glide.with(mActivity).load(url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         dialog.show();
     }
 
@@ -682,7 +672,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         spinnerBlood.setAdapter(dataAdapter);
         requestOptions = new RequestOptions();
         requestOptions.placeholder(R.drawable.user_profile);
-        requestOptions.error(R.drawable.user);
+        requestOptions.error(R.drawable.download);
     }
 
     private void EnableAll() {
@@ -909,32 +899,23 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             Log.d(TAG, "profile image: " + profile_url);
             Log.d(TAG, "father image: " + father_url);
             Log.d(TAG, "mother image: " + mother_url);
-            Thread thread = new Thread(new Runnable() {
+            try {
+                Glide.with(mActivity).load(profile_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+            } catch (Exception e) {
+                e.getMessage();
+            }
 
-                @Override
-                public void run() {
+            try {
+                Glide.with(mActivity).load(father_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_father);
+            } catch (Exception e) {
+                e.getMessage();
+            }
 
-                    try {
-                        Glide.with(mActivity).load(profile_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
-                    } catch (Exception e) {
-                        e.getMessage();
-                    }
-
-                    try {
-                        Glide.with(mActivity).load(father_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_father);
-                    } catch (Exception e) {
-                        e.getMessage();
-                    }
-
-                    try {
-                        Glide.with(mActivity).load(mother_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mother);
-                    } catch (Exception e) {
-                        e.getMessage();
-                    }
-                }
-            });
-
-            thread.start();
+            try {
+                Glide.with(mActivity).load(mother_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mother);
+            } catch (Exception e) {
+                e.getMessage();
+            }
 
         } else {
             Toast.makeText(mActivity, "No Record Found !!", Toast.LENGTH_SHORT).show();

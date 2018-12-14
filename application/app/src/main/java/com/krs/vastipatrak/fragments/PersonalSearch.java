@@ -12,19 +12,20 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
@@ -54,12 +55,11 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
     public RadioButton rbtnM;
     public RadioButton rbtnF;
     public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtMobile, edtAddress, edt_Eaddress, edt_phone;
-    public EditText edtEducation, edtBPlace, edtNPlace, edtCity;
-
+    public TextView txtCity, txtEducation, txtBPlace, txtNPlace;
     public EditText edtbdateFrom, edtbdateTo;
     public Spinner sp_user_start_age;
     public Spinner sp_user_end_age;
-    TextInputLayout input_layout_City;
+
     ArrayAdapter<String> dataAdapter;
     String[] titleGotra;
     private String TAG = PersonalSearch.class.getSimpleName();
@@ -233,71 +233,68 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
             }
         });
 
-        edtCity.setOnTouchListener(new View.OnTouchListener() {
+        txtCity.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
                 if (is_first) {
                     is_first = false;
                     AdvanceSearchActivity.chooseFragment = TAG;
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
                     mIntent.putExtra("listview", false);
+                    mIntent.putExtra("section", "city");
                     startActivityForResult(mIntent, 11);
                 }
-
-                return false;
             }
         });
 
-        edtBPlace.setOnTouchListener(new View.OnTouchListener() {
+        txtBPlace.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
                 if (is_first) {
                     is_first = false;
                     AdvanceSearchActivity.chooseFragment = TAG;
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
                     mIntent.putExtra("listview", false);
+                    mIntent.putExtra("section", "bplace");
                     startActivityForResult(mIntent, 12);
                 }
-                return false;
             }
         });
 
-        edtEducation.setOnTouchListener(new View.OnTouchListener() {
+        txtEducation.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
+            public void onClick(View v) {
                 if (is_first) {
                     is_first = false;
                     AdvanceSearchActivity.chooseFragment = TAG;
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
                     mIntent.putExtra("listview", true);
+                    mIntent.putExtra("section", "education");
                     startActivityForResult(mIntent, 13);
                 }
-                return false;
             }
         });
 
-        edtNPlace.setOnTouchListener(new View.OnTouchListener() {
+        txtNPlace.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra("listview", true);
+                    mIntent.putExtra("section", "nplace");
+                    startActivityForResult(mIntent, 14);
+                }
             }
         });
 
-        if (is_first) {
-            is_first = false;
-            AdvanceSearchActivity.chooseFragment = TAG;
-            Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
-            mIntent.putExtra("listview", true);
-            startActivityForResult(mIntent, 14);
-        }
         return rootView;
     }
 
 
     private void MemoryAllocation(@NonNull View rootView) {
 
-        // gender = "";
         //  scroll_pdetails = rootView.findViewById(R.id.scroll_pdetails);
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         floatingActionButton = rootView.findViewById(R.id.fab_psave);
@@ -334,22 +331,24 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
         edtLName = rootView.findViewById(R.id.edtLName);
         edtFatherName = rootView.findViewById(R.id.edtFatherName);
         edtMotherName = rootView.findViewById(R.id.edtMotherName);
-        edtEducation = rootView.findViewById(R.id.edtEducation);
-        edtBPlace = rootView.findViewById(R.id.edtBPlace);
-        edtNPlace = rootView.findViewById(R.id.edtNPlace);
-        edtCity = rootView.findViewById(R.id.edtCity);
+        txtEducation = rootView.findViewById(R.id.txtEducation);
+        txtBPlace = rootView.findViewById(R.id.txtBPlace);
+        txtNPlace = rootView.findViewById(R.id.txtNPlace);
+        txtCity = rootView.findViewById(R.id.txtCity);
 
         edtMobile = rootView.findViewById(R.id.edtMobile);
         edtAddress = rootView.findViewById(R.id.edtAddress);
         edt_Eaddress = rootView.findViewById(R.id.edt_Eaddress);
         edt_phone = rootView.findViewById(R.id.edt_phone);
-        input_layout_City = rootView.findViewById(R.id.input_layout_City);
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
         is_first = true;
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void setPreferenceData() {
@@ -407,17 +406,17 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                     edtMotherName.setText(mjsonObject.getString(Common.Constant_Class.MOTHER_NAME));
                 }
                 if (mjsonObject.has(Common.Constant_Class.EDUCATION)) {
-                    edtEducation.setText(mjsonObject.getString(Common.Constant_Class.EDUCATION));
+                    txtEducation.setText(mjsonObject.getString(Common.Constant_Class.EDUCATION));
                 }
 
                 if (mjsonObject.has(Common.Constant_Class.BIRTH_PLACE)) {
-                    edtBPlace.setText(mjsonObject.getString(Common.Constant_Class.BIRTH_PLACE));
+                    txtBPlace.setText(mjsonObject.getString(Common.Constant_Class.BIRTH_PLACE));
                 }
                 if (mjsonObject.has(Common.Constant_Class.NATIVE_PLACE)) {
-                    edtNPlace.setText(mjsonObject.getString(Common.Constant_Class.NATIVE_PLACE));
+                    txtNPlace.setText(mjsonObject.getString(Common.Constant_Class.NATIVE_PLACE));
                 }
                 if (mjsonObject.has(Common.Constant_Class.CITY)) {
-                    edtCity.setText(mjsonObject.getString(Common.Constant_Class.CITY));
+                    txtCity.setText(mjsonObject.getString(Common.Constant_Class.CITY));
                 }
                 if (mjsonObject.has(Common.Constant_Class.GOTRA)) {
                     String gotra = mjsonObject.getString(Common.Constant_Class.GOTRA);
@@ -473,6 +472,8 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        Common.hideKeyboard(getActivity());
         if (requestCode == CONTACT_PICKER_RESULT && resultCode == Activity.RESULT_OK && null != data) {
             Uri contactUri = data.getData();
             Cursor contactCursor = Objects.requireNonNull(getActivity()).getContentResolver().query(Objects.requireNonNull(contactUri), new String[]{ContactsContract.Contacts._ID}, null, null, null);
@@ -495,12 +496,22 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
         } else if (requestCode == 11) {
             if (data != null) {
                 is_first = true;
-                edtCity.setText(data.getStringExtra("selection"));
+                txtCity.setText(data.getStringExtra("selection"));
             }
         } else if (requestCode == 12) {
             if (data != null) {
                 is_first = true;
-                edtBPlace.setText(data.getStringExtra("selection"));
+                txtBPlace.setText(data.getStringExtra("selection"));
+            }
+        } else if (requestCode == 13) {
+            if (data != null) {
+                is_first = true;
+                txtEducation.setText(data.getStringExtra("selection"));
+            }
+        } else if (requestCode == 14) {
+            if (data != null) {
+                is_first = true;
+                txtNPlace.setText(data.getStringExtra("selection"));
             }
         }
     }
