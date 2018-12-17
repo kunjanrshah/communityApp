@@ -69,8 +69,8 @@ public class SelectionlistActivity extends AppCompatActivity {
         String section = "";
         if (mBundle != null) {
             mBundle = getIntent().getExtras();
-            listview = mBundle.getBoolean("listview");
-            section = mBundle.getString("section");
+            listview = mBundle.getBoolean(getString(R.string.listview));
+            section = mBundle.getString(getString(R.string.section));
         }
         ToolbarSetup(section);
         if (listview) {

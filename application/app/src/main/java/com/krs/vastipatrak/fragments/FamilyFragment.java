@@ -40,6 +40,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -86,7 +87,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
     private static final int CONTACT_PICKER_RESULT = 1001;
     private static final int CONTACT_PICKER_RESULT_CHILD = 1002;
-    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName, edtsponse_mobile, edtsponse_nplace, edtSpouseEdu;
+    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName, edtsponse_mobile;
+    public TextView txt_sponse_nplace, txt_spouse_edu;
     public String str_spouse_hash = "", str_fspouse_hash = "", str_mspouse_hash = "";
     public LinearLayout child_container = null;
     public ArrayList<Integer> lst_delID = null;
@@ -551,9 +553,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         edt_mdate = root.findViewById(R.id.edt_mdate);
         edtsponse_bdate = root.findViewById(R.id.edtsponse_bdate);
-        edtSpouseEdu = root.findViewById(R.id.edtSpouseEdu);
+        txt_spouse_edu = root.findViewById(R.id.txt_spouse_edu);
         edtsponse_mobile = root.findViewById(R.id.edtsponse_mobile);
-        edtsponse_nplace = root.findViewById(R.id.edtsponse_nplace);
+        txt_sponse_nplace = root.findViewById(R.id.txt_sponse_nplace);
         edtSpouseName = root.findViewById(R.id.edtSpouseName);
         edtSpouseFName = root.findViewById(R.id.edtSpouseFName);
         edtMSpouseName = root.findViewById(R.id.edtMSpouseName);
@@ -589,16 +591,12 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtsponse_bdate.setKeyListener(null);
         edtsponse_bdate.setCursorVisible(false);
 
-        edtSpouseEdu.setKeyListener(null);
-        edtSpouseEdu.setCursorVisible(false);
+        txt_spouse_edu.setClickable(false);
+        txt_sponse_nplace.setClickable(false);
 
         sp_spouse_blood.setClickable(false);
-
         edtsponse_mobile.setKeyListener(null);
         edtsponse_mobile.setCursorVisible(false);
-
-        edtsponse_nplace.setKeyListener(null);
-        edtsponse_nplace.setCursorVisible(false);
 
         edtSpouseName.setKeyListener(null);
         edtSpouseName.setCursorVisible(false);
@@ -627,8 +625,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtSpouseFName.setEnabled(true);
         edtMSpouseName.setEnabled(true);
         edtsponse_bdate.setEnabled(true);
-        edtsponse_nplace.setEnabled(true);
-        edtSpouseEdu.setEnabled(true);
+        txt_spouse_edu.setClickable(true);
+        txt_sponse_nplace.setClickable(true);
         sp_spouse_blood.setClickable(true);
         chk_marriage_bdate_rem.setVisibility(View.GONE);
         chk_spouse_bdate_rem.setVisibility(View.GONE);
@@ -647,8 +645,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         }
         profile_id = mListProfileData.getProfile_id();
         edtSpouseName.setText(mListProfileData.getSpouse_name());
-        edtSpouseEdu.setText(mListProfileData.getSpouse_education());
-        edtsponse_nplace.setText(mListProfileData.getSponse_native());
+        txt_spouse_edu.setText(mListProfileData.getSpouse_education());
+        txt_sponse_nplace.setText(mListProfileData.getSponse_native());
         edtsponse_bdate.setText(mListProfileData.getSponse_bdate());
         edtsponse_mobile.setText(mListProfileData.getSponse_mobile());
         sp_spouse_blood.setSelection(blood.indexOf(mListProfileData.getSponse_bg()));
@@ -747,7 +745,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     }
 
                     Objects.requireNonNull(mViewholder.edtchild_btime).setText(mObjChild.getBirth_time());
-                    Objects.requireNonNull(mViewholder.edtchild_bplace).setText(mObjChild.getBirth_place());
+                    Objects.requireNonNull(mViewholder.txt_child_bplace).setText(mObjChild.getBirth_place());
                     Objects.requireNonNull(mViewholder.tbtn_interest).setChecked(mObjChild.isInterest());
 
                     if (mObjChild.getGender().equalsIgnoreCase("male")) {
@@ -756,14 +754,14 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         Objects.requireNonNull(mViewholder.radioGroupId).check(R.id.radioF);
                     }
 
-                    Objects.requireNonNull(mViewholder.edtchild_edu).setText(mObjChild.getChild_edu());
+                    Objects.requireNonNull(mViewholder.txt_child_edu).setText(mObjChild.getChild_edu());
                     Objects.requireNonNull(mViewholder.edtchild_work).setText(mObjChild.getChild_work());
 
 
                     if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                         mViewholder.edtchild_name.setEnabled(true);
                         mViewholder.edtchild_bdate.setEnabled(true);
-                        mViewholder.edtchild_edu.setEnabled(true);
+                        mViewholder.txt_child_edu.setClickable(true);
                         mViewholder.edtchild_work.setEnabled(true);
                     } else {
                         mViewholder.edtchild_name.setKeyListener(null);
@@ -772,8 +770,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         mViewholder.edtchild_bdate.setKeyListener(null);
                         mViewholder.edtchild_bdate.setCursorVisible(false);
 
-                        mViewholder.edtchild_edu.setKeyListener(null);
-                        mViewholder.edtchild_edu.setCursorVisible(false);
+                        mViewholder.txt_child_edu.setClickable(false);
 
                         mViewholder.edtchild_work.setKeyListener(null);
                         mViewholder.edtchild_work.setCursorVisible(false);
@@ -785,7 +782,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     } catch (Exception e) {
                         e.getMessage();
                     }
-
 
                     mViewholder.img_child.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -840,8 +836,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         mViewholder.tbtn_interest = addView.findViewById(R.id.tbtn_interest);
         mViewholder.edtchild_bdate = addView.findViewById(R.id.edtchild_bdate);
         mViewholder.edtchild_btime = addView.findViewById(R.id.edtchild_btime);
-        mViewholder.edtchild_bplace = addView.findViewById(R.id.edtchild_bplace);
-        mViewholder.edtchild_edu = addView.findViewById(R.id.edtchild_edu);
+        mViewholder.txt_child_bplace = addView.findViewById(R.id.txt_child_bplace);
+        mViewholder.txt_child_edu = addView.findViewById(R.id.txt_child_edu);
         mViewholder.edtchild_work = addView.findViewById(R.id.edtchild_work);
         mViewholder.chk_child_bdate_rem = addView.findViewById(R.id.chk_child_bdate_rem);
         mViewholder.chk_child_marriage = addView.findViewById(R.id.chk_child_marriage);
@@ -1050,14 +1046,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             Objects.requireNonNull(mViewholder.edtchild_bdate).setKeyListener(null);
             mViewholder.edtchild_bdate.setCursorVisible(false);
 
-            Objects.requireNonNull(mViewholder.edtchild_edu).setKeyListener(null);
-            mViewholder.edtchild_edu.setCursorVisible(false);
+            mViewholder.txt_child_edu.setClickable(false);
+            mViewholder.txt_child_bplace.setClickable(false);
 
             mViewholder.edtchild_work.setKeyListener(null);
             mViewholder.edtchild_work.setCursorVisible(false);
-
-            Objects.requireNonNull(mViewholder.edtchild_bplace).setKeyListener(null);
-            mViewholder.edtchild_bplace.setCursorVisible(false);
 
             Objects.requireNonNull(mViewholder.edtchild_btime).setKeyListener(null);
             mViewholder.edtchild_btime.setCursorVisible(false);
@@ -1521,12 +1514,12 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         @Nullable
         public EditText edtchild_btime = null;
         @Nullable
-        public EditText edtchild_bplace = null;
+        public TextView txt_child_bplace = null;
 
         @Nullable
         public ToggleButton tbtn_interest = null;
         @Nullable
-        public EditText edtchild_edu = null;
+        public TextView txt_child_edu = null;
         @Nullable
         public EditText edtchild_work = null;
         public String ImgHash = "";

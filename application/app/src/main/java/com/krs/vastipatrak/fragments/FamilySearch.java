@@ -24,10 +24,12 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.AdvanceSearchActivity;
+import com.krs.vastipatrak.activity.SelectionlistActivity;
 import com.krs.vastipatrak.utils.Common;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ObservableScrollView;
@@ -49,22 +51,25 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
     private static final int CONTACT_PICKER_RESULT = 1001;
     @NonNull
     public String gender = "";
-    public EditText edtSpouseName, edtSpouseFName, edtSpouseMName,edtSpouseEdu;
-    public EditText edtchild_name, edtcedu, edtchild_work, edtchildbplace, edtcmobile;
+    public EditText edtSpouseName, edtSpouseFName, edtSpouseMName;
+    public TextView txtSpouseEdu, txtchildBplace, txtchildEdu;
+    public EditText edtchild_name, edtchild_work, edtcmobile;
     public EditText edt_mdate_from, edt_mdate_to, edt_cdate_from, edt_cdate_to;
     public Spinner spinnerBlood;
     public Spinner sp_spouse_blood;
     public CheckBox chk_child_marriage;
-    RadioButton radioM, radioF, radioB;
-    ArrayAdapter<String> dataSAdapter;
-    ArrayAdapter<String> dataCAdapter;
-    private FloatingActionButton floatingActionButton;
-    private ObservableScrollView scroll_fdetails;
-    private RadioGroup rgroupid;
     public Spinner sp_child_start_age;
     public Spinner sp_child_end_age;
     public Spinner sp_spouse_start_age;
     public Spinner sp_spouse_end_age;
+    RadioButton radioM, radioF, radioB;
+    ArrayAdapter<String> dataSAdapter;
+    ArrayAdapter<String> dataCAdapter;
+    String TAG = PersonalSearch.class.getSimpleName();
+    private FloatingActionButton floatingActionButton;
+    private ObservableScrollView scroll_fdetails;
+    private RadioGroup rgroupid;
+    private boolean is_first = true;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -76,6 +81,48 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
         setAgeSpinner();
         setAdapterBGlist();
         setPreferenceData();
+
+        txtSpouseEdu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), true);
+                    mIntent.putExtra(getString(R.string.section), "Spouse Education");
+                    startActivityForResult(mIntent, 11);
+                }
+            }
+        });
+
+        txtchildBplace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), false);
+                    mIntent.putExtra(getString(R.string.section), "Child BirthPlace");
+                    startActivityForResult(mIntent, 12);
+                }
+            }
+        });
+
+        txtchildEdu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), true);
+                    mIntent.putExtra(getString(R.string.section), "Child Education");
+                    startActivityForResult(mIntent, 13);
+                }
+            }
+        });
 
         edt_mdate_from.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -338,18 +385,18 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
         sp_spouse_blood = rootView.findViewById(R.id.sp_spouse_blood);
         sp_child_start_age = rootView.findViewById(R.id.sp_start_age);
         sp_child_end_age = rootView.findViewById(R.id.sp_end_age);
-        sp_spouse_start_age= rootView.findViewById(R.id.sp_spouse_start_age);
-        sp_spouse_end_age= rootView.findViewById(R.id.sp_spouse_end_age);
+        sp_spouse_start_age = rootView.findViewById(R.id.sp_spouse_start_age);
+        sp_spouse_end_age = rootView.findViewById(R.id.sp_spouse_end_age);
         edtSpouseName = rootView.findViewById(R.id.edtSpouseName);
-        edtSpouseEdu= rootView.findViewById(R.id.edtSpouseEdu);
+        txtSpouseEdu = rootView.findViewById(R.id.txtSpouseEdu);
         edtSpouseFName = rootView.findViewById(R.id.edtSpouseFName);
         edtSpouseMName = rootView.findViewById(R.id.edtSpouseMName);
         edtchild_name = rootView.findViewById(R.id.edtchild_name);
-        edtcedu = rootView.findViewById(R.id.edtcedu);
+        txtchildEdu = rootView.findViewById(R.id.txtchildEdu);
         edtchild_work = rootView.findViewById(R.id.edtchild_work);
         edt_cdate_from = rootView.findViewById(R.id.edt_cdate_from);
         edt_cdate_to = rootView.findViewById(R.id.edt_cdate_to);
-        edtchildbplace = rootView.findViewById(R.id.edtchildbplace);
+        txtchildBplace = rootView.findViewById(R.id.txtchildBplace);
         edtcmobile = rootView.findViewById(R.id.edtcmobile);
         rgroupid = rootView.findViewById(R.id.rgroupid);
         radioM = rootView.findViewById(R.id.radioM);
@@ -431,7 +478,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                     edtchild_name.setText(mjsonObject.getString(Common.Constant_Class.CHILD_NAME));
                 }
                 if (mjsonObject.has(Common.Constant_Class.CHILD_EDU)) {
-                    edtcedu.setText(mjsonObject.getString(Common.Constant_Class.CHILD_EDU));
+                    txtchildEdu.setText(mjsonObject.getString(Common.Constant_Class.CHILD_EDU));
                 }
                 if (mjsonObject.has(Common.Constant_Class.CHILD_WORK)) {
                     edtchild_work.setText(mjsonObject.getString(Common.Constant_Class.CHILD_WORK));
@@ -447,7 +494,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                     edt_cdate_to.setText(bdate);
                 }
                 if (mjsonObject.has(Common.Constant_Class.CHILD_BPLACE)) {
-                    edtchildbplace.setText(mjsonObject.getString(Common.Constant_Class.CHILD_BPLACE));
+                    txtchildBplace.setText(mjsonObject.getString(Common.Constant_Class.CHILD_BPLACE));
                 }
                 if (mjsonObject.has(Common.Constant_Class.CHILD_GENDER)) {
                     String gender = mjsonObject.getString(Common.Constant_Class.CHILD_GENDER);
@@ -472,19 +519,19 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                 }
 
                 if (mjsonObject.has(Common.Constant_Class.SPOUSE_START_AGE)) {
-                    sp_spouse_start_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.SPOUSE_START_AGE))+1);
+                    sp_spouse_start_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.SPOUSE_START_AGE)) + 1);
                 }
 
                 if (mjsonObject.has(Common.Constant_Class.SPOUSE_END_AGE)) {
-                    sp_spouse_end_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.SPOUSE_END_AGE))+1);
+                    sp_spouse_end_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.SPOUSE_END_AGE)) + 1);
                 }
 
                 if (mjsonObject.has(Common.Constant_Class.CHILD_START_AGE)) {
-                    sp_child_start_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.CHILD_START_AGE))+1);
+                    sp_child_start_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.CHILD_START_AGE)) + 1);
                 }
 
                 if (mjsonObject.has(Common.Constant_Class.CHILD_END_AGE)) {
-                    sp_child_end_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.CHILD_END_AGE))+1);
+                    sp_child_end_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.CHILD_END_AGE)) + 1);
                 }
 
             } catch (Exception e) {
@@ -514,6 +561,21 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                 }
             }
             phoneCursor.close();
+        } else if (requestCode == 11) {
+            if (data != null) {
+                is_first = true;
+                txtSpouseEdu.setText(data.getStringExtra(getString(R.string.section)));
+            }
+        } else if (requestCode == 12) {
+            if (data != null) {
+                is_first = true;
+                txtchildBplace.setText(data.getStringExtra(getString(R.string.section)));
+            }
+        } else if (requestCode == 13) {
+            if (data != null) {
+                is_first = true;
+                txtchildEdu.setText(data.getStringExtra(getString(R.string.section)));
+            }
         }
     }
 

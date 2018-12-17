@@ -240,8 +240,8 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                     is_first = false;
                     AdvanceSearchActivity.chooseFragment = TAG;
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
-                    mIntent.putExtra("listview", false);
-                    mIntent.putExtra("section", "city");
+                    mIntent.putExtra(getString(R.string.listview), false);
+                    mIntent.putExtra(getString(R.string.section), "City");
                     startActivityForResult(mIntent, 11);
                 }
             }
@@ -254,8 +254,8 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                     is_first = false;
                     AdvanceSearchActivity.chooseFragment = TAG;
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
-                    mIntent.putExtra("listview", false);
-                    mIntent.putExtra("section", "bplace");
+                    mIntent.putExtra(getString(R.string.listview), false);
+                    mIntent.putExtra(getString(R.string.section), "Birth Place");
                     startActivityForResult(mIntent, 12);
                 }
             }
@@ -268,8 +268,8 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                     is_first = false;
                     AdvanceSearchActivity.chooseFragment = TAG;
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
-                    mIntent.putExtra("listview", true);
-                    mIntent.putExtra("section", "education");
+                    mIntent.putExtra(getString(R.string.listview), true);
+                    mIntent.putExtra(getString(R.string.section), "Education");
                     startActivityForResult(mIntent, 13);
                 }
             }
@@ -282,8 +282,8 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                     is_first = false;
                     AdvanceSearchActivity.chooseFragment = TAG;
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
-                    mIntent.putExtra("listview", true);
-                    mIntent.putExtra("section", "nplace");
+                    mIntent.putExtra(getString(R.string.listview), true);
+                    mIntent.putExtra(getString(R.string.section), "Native");
                     startActivityForResult(mIntent, 14);
                 }
             }

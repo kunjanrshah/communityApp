@@ -337,6 +337,66 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     }
 
+    private void getList(String type) {
+        if (Common.isOnline(this)) {
+
+            Common.showProgressDialog(this);
+            JSONObject mJsonObject = null;
+
+            try {
+                mJsonObject = new JSONObject();
+                String user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+                String token = mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, "");
+                mJsonObject.put(Common.Constant_Class.USER_ID, user_id);
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, token);
+                mJsonObject.put(Common.Constant_Class.RESPONSE_DATA, R.string._gotra);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.GET_GOTRA_URL, mJsonObject, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    Log.d(TAG, "response: " + response.toString());
+                    Common.hideProgressDialog();
+
+                    try {
+                        String data = response.getString(Common.Constant_Class.DATA);
+                        if (data.equals("0")) {
+                            displayAlert();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Common.hideProgressDialog();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+
+                    Common.hideProgressDialog();
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
+        }
+    }
+
     private void displayAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 

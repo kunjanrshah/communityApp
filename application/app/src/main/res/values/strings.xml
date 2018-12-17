@@ -347,6 +347,10 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="is_first_time">IsFirstTimeLaunch</string>
     <string name="understand">ખબર પડી</string>
     <string name="press_for_city">Press for City</string>
+    <string name="realm_name">vastipatrak.realm</string>
+    <string name="_gotra">gotra</string>
+    <string name="section">section</string>
+    <string name="listview">listview</string>
 
 
 </resources>

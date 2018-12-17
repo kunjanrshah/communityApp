@@ -294,14 +294,14 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
             String lname = ((PersonalFragment) personal).edtLName.getText().toString().trim();
             String FatherName = ((PersonalFragment) personal).edtFatherName.getText().toString().trim();
             String MotherName = ((PersonalFragment) personal).edtMotherName.getText().toString().trim();
-            String Education = ((PersonalFragment) personal).edtEducation.getText().toString().trim();
-            String BPlace = ((PersonalFragment) personal).edtBPlace.getText().toString().trim();
-            String NPlace = ((PersonalFragment) personal).edtNPlace.getText().toString().trim();
+            String Education = ((PersonalFragment) personal).txtEducation.getText().toString().trim();
+            String BPlace = ((PersonalFragment) personal).txtBPlace.getText().toString().trim();
+            String NPlace = ((PersonalFragment) personal).txtNPlace.getText().toString().trim();
             String Gotra = ((PersonalFragment) personal).spinnerGotra.getSelectedItem().toString().trim();
             String Mobile = ((PersonalFragment) personal).edtMobile.getText().toString().trim();
             String Address = ((PersonalFragment) personal).edtAddress.getText().toString().trim();
             String Eaddress = ((PersonalFragment) personal).edt_Eaddress.getText().toString().trim();
-            String city = ((PersonalFragment) personal).edtCity.getText().toString().trim();
+            String city = ((PersonalFragment) personal).txtCity.getText().toString().trim();
 
             if (!Eaddress.equalsIgnoreCase("")) {
                 if (Common.isValidEmail(Eaddress)) {
@@ -352,12 +352,10 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                 spouseName = ((FamilyFragment) family).edtSpouseName.getText().toString().trim();
                 spouse_bg = ((FamilyFragment) family).sp_spouse_blood.getSelectedItem().toString();
                 sponseMobile = ((FamilyFragment) family).edtsponse_mobile.getText().toString().trim();
-                sponseNative = ((FamilyFragment) family).edtsponse_nplace.getText().toString().trim();
+                sponseNative = ((FamilyFragment) family).txt_sponse_nplace.getText().toString().trim();
                 SpouseFName = ((FamilyFragment) family).edtSpouseFName.getText().toString().trim();
                 MSpouseName = ((FamilyFragment) family).edtMSpouseName.getText().toString().trim();
                 mdate = ((FamilyFragment) family).edt_mdate.getText().toString().trim();
-                //chk_spouse_bdate_rem = ((FamilyFragment) family).chk_spouse_bdate_rem.isChecked();
-                // chk_m_bdate_rem = ((FamilyFragment) family).chk_marriage_bdate_rem.isChecked();
 
                 mdate = Common.parseDateToddMMyyyy(mdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
                 if (!mdate.isEmpty()) {
@@ -366,9 +364,8 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                     }
                 }
 
-
                 sdate = ((FamilyFragment) family).edtsponse_bdate.getText().toString().trim();
-                spouse_edu = ((FamilyFragment) family).edtSpouseEdu.getText().toString().trim();
+                spouse_edu = ((FamilyFragment) family).txt_spouse_edu.getText().toString().trim();
 
                 if (!sdate.isEmpty()) {
                     sdate = Common.parseDateToddMMyyyy(sdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
@@ -554,7 +551,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                     boolean child_interest = Objects.requireNonNull(mViewholder.tbtn_interest).isChecked();
                     String child_gender = mViewholder.gender;
                     String child_btime = Objects.requireNonNull(mViewholder.edtchild_btime).getText().toString();
-                    String child_bplace = Objects.requireNonNull(mViewholder.edtchild_bplace).getText().toString();
+                    String child_bplace = Objects.requireNonNull(mViewholder.txt_child_bplace).getText().toString();
                     String child_mobile = Objects.requireNonNull(mViewholder.edtMobile).getText().toString();
                     String child_blood = Objects.requireNonNull(mViewholder.spinnerBlood).getSelectedItem().toString();
                     boolean chk_bdate_rem = mViewholder.chk_child_bdate_rem.isChecked();
@@ -567,7 +564,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                     mJsonObject_Child.put(Common.Constant_Class.BIRTH_TIME, child_btime);
                     mJsonObject_Child.put(Common.Constant_Class.BIRTH_PLACE, child_bplace);
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_BDAY, child_bday);
-                    mJsonObject_Child.put(Common.Constant_Class.CHILD_EDU, Objects.requireNonNull(mViewholder.edtchild_edu).getText());
+                    mJsonObject_Child.put(Common.Constant_Class.CHILD_EDU, Objects.requireNonNull(mViewholder.txt_child_edu).getText());
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_WORK, Objects.requireNonNull(mViewholder.edtchild_work).getText());
                     if (!mViewholder.ImgHash.equalsIgnoreCase("")) {
                         mJsonObject_Child.put(Common.Constant_Class.CHILD_IMAGE, mViewholder.ImgHash);

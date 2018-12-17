@@ -82,8 +82,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
     final int REQUEST_CODE = 100;
     private final String TAG = "PersonalFragment";
-    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtEducation, edtBPlace, edtNPlace, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbTime = null, edtCity = null;
-    //public String bdate = "";
+    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbTime = null;
+    public TextView txtEducation, txtBPlace, txtNPlace, txtCity = null;
     public String str_profile_hash = "", str_father_hash = "", str_mother_hash = "";
     public String gender = "";
     public Spinner spinnerBlood, spinnerGotra;
@@ -618,12 +618,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtMotherName = rootView.findViewById(R.id.edtMotherName);
         edtbdate = rootView.findViewById(R.id.edtbdate);
         edtbTime = rootView.findViewById(R.id.edtbTime);
-        edtEducation = rootView.findViewById(R.id.edtEducation);
-        edtBPlace = rootView.findViewById(R.id.edtBPlace);
-        edtNPlace = rootView.findViewById(R.id.edtNPlace);
+        txtEducation = rootView.findViewById(R.id.txtEducation);
+        txtBPlace = rootView.findViewById(R.id.txtBPlace);
+        txtNPlace = rootView.findViewById(R.id.txtNPlace);
         edtMobile = rootView.findViewById(R.id.edtMobile);
         edt_Eaddress = rootView.findViewById(R.id.edt_Eaddress);
-        edtCity = rootView.findViewById(R.id.edt_City);
+        txtCity = rootView.findViewById(R.id.txtCity);
 
         txt_home = rootView.findViewById(R.id.txt_home);
         edtAddress = rootView.findViewById(R.id.edtAddress);
@@ -680,11 +680,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtLName.setEnabled(true);
         edtFatherName.setEnabled(true);
         edtMotherName.setEnabled(true);
-        edtEducation.setEnabled(true);
-        edtBPlace.setEnabled(true);
-        edtNPlace.setEnabled(true);
+        txtEducation.setClickable(true);
+        txtBPlace.setClickable(true);
+        txtNPlace.setClickable(true);
+        txtCity.setClickable(true);
         spinnerGotra.setEnabled(true);
-        edtCity.setEnabled(true);
+
         edt_Eaddress.setEnabled(true);
         edtMobile.setEnabled(true);
         edtAddress.setEnabled(true);
@@ -719,14 +720,10 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtMotherName.setKeyListener(null);
         edtMotherName.setCursorVisible(false);
 
-        edtEducation.setKeyListener(null);
-        edtEducation.setCursorVisible(false);
-
-        edtBPlace.setKeyListener(null);
-        edtBPlace.setCursorVisible(false);
-
-        edtNPlace.setKeyListener(null);
-        edtNPlace.setCursorVisible(false);
+        txtEducation.setClickable(false);
+        txtBPlace.setClickable(false);
+        txtNPlace.setClickable(false);
+        txtCity.setClickable(false);
 
         edtMobile.setKeyListener(null);
         edtMobile.setCursorVisible(false);
@@ -746,8 +743,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtbdate.setKeyListener(null);
         edtbdate.setCursorVisible(false);
 
-        edtCity.setKeyListener(null);
-        edtCity.setCursorVisible(false);
 
         rbtnM.setKeyListener(null);
         rbtnF.setKeyListener(null);
@@ -770,7 +765,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             Objects.requireNonNull(edtFatherName).setText(mListProfileData.getFather_name());
             Objects.requireNonNull(edtMotherName).setText(mListProfileData.getMother_name());
             Objects.requireNonNull(edtbdate).setText(mListProfileData.getBirth_date());
-            Objects.requireNonNull(edtBPlace).setText(mListProfileData.getBirth_place());
+            Objects.requireNonNull(txtBPlace).setText(mListProfileData.getBirth_place());
             String str_time = mListProfileData.getBirth_time();
             String is_block = mListProfileData.getIs_block();
             String is_loc_enable = mListProfileData.isIs_location_enable();
@@ -787,7 +782,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             Objects.requireNonNull(edtbTime).setText(str_time);
             Objects.requireNonNull(edtMobile).setText(mListProfileData.getMobile());
             Objects.requireNonNull(edt_phone).setText(mListProfileData.getPhone());
-            Objects.requireNonNull(edtCity).setText(mListProfileData.getCity());
+            Objects.requireNonNull(txtCity).setText(mListProfileData.getCity());
             String gotra = mListProfileData.getGotra();
             for (int i = 0; i < titleGotra.length; i++) {
                 if (gotra.equalsIgnoreCase(titleGotra[i])) {
@@ -796,8 +791,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             }
 
             // Objects.requireNonNull(edtGotra).setText(mListProfileData.getGotra());
-            Objects.requireNonNull(edtNPlace).setText(mListProfileData.getNative_place());
-            Objects.requireNonNull(edtEducation).setText(mListProfileData.getEducation());
+            Objects.requireNonNull(txtNPlace).setText(mListProfileData.getNative_place());
+            Objects.requireNonNull(txtEducation).setText(mListProfileData.getEducation());
             Objects.requireNonNull(edt_Eaddress).setText(mListProfileData.getEmail_address());
             Objects.requireNonNull(edtAddress).setText(mListProfileData.getAddress());
             String blood = mListProfileData.getBlood_group();

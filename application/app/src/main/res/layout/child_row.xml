@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
 
@@ -97,9 +97,9 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
         android:layout_marginStart="10dip"
-        android:layout_marginTop="5dp">
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp">
 
         <EditText
             android:id="@+id/edtchild_name"
@@ -170,12 +170,14 @@
                     android:hint="Birth date"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="DD/MM/YYYY"
                 android:textSize="10sp" />
+
             <CheckBox
                 android:id="@+id/chk_child_bdate_rem"
                 android:layout_width="match_parent"
@@ -204,17 +206,14 @@
                     android:hint="Birth time"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="HH:MM with 24 Hours"
                 android:textSize="10sp" />
-            <CheckBox
-                android:id="@+id/chk_child_marriage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Married" />
+
 
         </LinearLayout>
 
@@ -226,49 +225,94 @@
         android:baselineAligned="false"
         android:orientation="horizontal">
 
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_marginStart="5dip"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/edtchild_bplace"
-                android:layout_width="fill_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dip"
+                android:layout_marginStart="5dip"
+                android:text="Child BirthPlace" />
+
+            <TextView
+                android:id="@+id/txt_child_bplace"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dip"
+                android:background="@drawable/back"
+                android:gravity="center_vertical"
                 android:hint="Birth place"
-                android:singleLine="true" />
-        </android.support.design.widget.TextInputLayout>
+                android:nextFocusDown="@id/sp_spouse_blood"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
 
-        <android.support.design.widget.TextInputLayout
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_marginStart="5dip"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/edtchild_edu"
-                android:layout_width="fill_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dip"
+                android:layout_marginStart="5dip"
+                android:text="Child Education" />
+
+            <TextView
+                android:id="@+id/txt_child_edu"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dip"
+                android:background="@drawable/back"
+                android:gravity="center_vertical"
                 android:hint="Education"
-                android:singleLine="true" />
-        </android.support.design.widget.TextInputLayout>
+                android:nextFocusDown="@id/sp_spouse_blood"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
 
     </LinearLayout>
 
-
-    <android.support.design.widget.TextInputLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/edtchild_work"
-            android:layout_width="fill_parent"
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginStart="5dip"
-            android:hint="Work Details"
-            android:singleLine="true" />
-    </android.support.design.widget.TextInputLayout>
+            android:layout_weight="1">
 
+            <EditText
+                android:id="@+id/edtchild_work"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dip"
+                android:layout_marginBottom="20dp"
+                android:hint="Work Details"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <CheckBox
+            android:id="@+id/chk_child_marriage"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="Married" />
+
+
+    </LinearLayout>
 </LinearLayout>

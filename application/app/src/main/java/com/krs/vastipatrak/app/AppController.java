@@ -123,10 +123,9 @@ public class AppController extends Application {
 
     public void initRealm() {
         Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder().name("vastipatrak.realm").schemaVersion(1).deleteRealmIfMigrationNeeded().build();
+        RealmConfiguration config = new RealmConfiguration.Builder().name(getString(R.string.realm_name)).schemaVersion(1).deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(config);
         realm = Realm.getInstance(config);
-
     }
 
     private RequestQueue getRequestQueue() {
@@ -147,4 +146,8 @@ public class AppController extends Application {
         req.setTag(TAG);
         getRequestQueue().add(req);
     }
+
+
+
+
 }
