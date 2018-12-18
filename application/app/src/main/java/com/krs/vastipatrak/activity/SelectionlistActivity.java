@@ -2,8 +2,10 @@ package com.krs.vastipatrak.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,15 +27,26 @@ import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.ItemsAdapter;
 import com.krs.vastipatrak.adapter.SelectionListAdapter;
+import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.Items;
 import com.krs.vastipatrak.utils.Common;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class SelectionlistActivity extends AppCompatActivity {
@@ -52,6 +65,7 @@ public class SelectionlistActivity extends AppCompatActivity {
     private Button btnSave;
     private List<Items> ItemList;
     private RecyclerView.LayoutManager layoutManager;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +77,16 @@ public class SelectionlistActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.lvList);
         edt_other = findViewById(R.id.edt_other);
         btnSave = findViewById(R.id.btnSave);
-
+        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
         Bundle mBundle = new Bundle();
         boolean listview = false;
-        String section = "";
+        String title = "";
         if (mBundle != null) {
             mBundle = getIntent().getExtras();
             listview = mBundle.getBoolean(getString(R.string.listview));
-            section = mBundle.getString(getString(R.string.section));
+            title = mBundle.getString(getString(R.string.title));
         }
-        ToolbarSetup(section);
+        ToolbarSetup(title);
         if (listview) {
             recyclerView.setHasFixedSize(true);
             layoutManager = new LinearLayoutManager(this);
@@ -81,14 +95,22 @@ public class SelectionlistActivity extends AppCompatActivity {
 
             recyclerView.setVisibility(View.VISIBLE);
             expListView.setVisibility(View.GONE);
-            prepareListData();
+            if (title.toLowerCase().contains("native")) {
+                prepareListData(AppController.getInstance().lstNative);
+            } else if (title.toLowerCase().contains("education")) {
+                prepareListData(AppController.getInstance().lstEducation);
+            }
+
             adapter = new ItemsAdapter(this, ItemList);
             recyclerView.setAdapter(adapter);
 
         } else {
             recyclerView.setVisibility(View.GONE);
             expListView.setVisibility(View.VISIBLE);
+            listDataHeader = new ArrayList<String>();
+            listDataChild = new HashMap<String, List<String>>();
             prepareExpandableListData();
+            getStateList();
             listAdapter = new SelectionListAdapter(this, listDataHeader, listDataChild);
             expListView.setAdapter(listAdapter);
         }
@@ -158,29 +180,80 @@ public class SelectionlistActivity extends AppCompatActivity {
         });
     }
 
+    private void getStateList() {
+        if (Common.isOnline(this)) {
+
+            Common.showProgressDialog(this);
+            JSONObject mJsonObject = null;
+
+            try {
+                mJsonObject = new JSONObject();
+                String user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+                String token = mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, "");
+                mJsonObject.put(Common.Constant_Class.USER_ID, user_id);
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, token);
+                mJsonObject.put(Common.Constant_Class.RESPONSE_DATA, "state");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.GET_MASTER_DATA_URL, mJsonObject, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    Log.d(TAG, "response: " + response.toString());
+                    Common.hideProgressDialog();
+
+                    try {
+                        JSONArray mArray = response.getJSONArray(Common.Constant_Class.DATA);
+                        for (int i = 0; i < mArray.length(); i++) {
+                            JSONObject mObject = mArray.getJSONObject(i);
+                            listDataHeader.add(mObject.getString("state"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Common.hideProgressDialog();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    Common.hideProgressDialog();
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
+        }
+    }
+
 
     private void finishActivity(String value) {
         Common.hideKeyboard(this);
         Intent mIntent = new Intent();
-        mIntent.putExtra("selection", value);
+        mIntent.putExtra(getString(R.string.selection), value);
         setResult(RESULT_OK, mIntent);
         finish();
         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
 
-    private void ToolbarSetup(String section) {
+    private void ToolbarSetup(String title) {
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        if (section.equalsIgnoreCase("city")) {
-            getSupportActionBar().setSubtitle("Select City");
-        } else if (section.equalsIgnoreCase("nplace")) {
-            getSupportActionBar().setSubtitle("Select Native");
-        } else if (section.equalsIgnoreCase("bplace")) {
-            getSupportActionBar().setSubtitle("Select BirthPlace");
-        } else if (section.equalsIgnoreCase("education")) {
-            getSupportActionBar().setSubtitle("Select Education");
-        }
+        getSupportActionBar().setSubtitle(title);
 
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -268,16 +341,16 @@ public class SelectionlistActivity extends AppCompatActivity {
         return true;
     }
 
-    private void prepareListData() {
+    private void prepareListData(ArrayList<String> list) {
+        Collections.sort(list);
         ItemList = new ArrayList<>();
-        ItemList.add(new Items("item1"));
-        ItemList.add(new Items("item2"));
-        ItemList.add(new Items("item3"));
+        for (int i = 0; i < list.size(); i++) {
+            ItemList.add(new Items(list.get(i)));
+        }
     }
 
     private void prepareExpandableListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+
 
         // Adding child data
         listDataHeader.add("Gujarat");

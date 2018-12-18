@@ -1,32 +1,19 @@
 package com.krs.vastipatrak.app;
 
 
-import android.app.Activity;
 import android.app.Application;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.krs.vastipatrak.R;
@@ -35,11 +22,8 @@ import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.krs.vastipatrak.utils.LocaleHelper;
 
-import org.json.JSONObject;
-
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
@@ -58,7 +42,10 @@ public class AppController extends Application {
     @Nullable
     public RealmResults<ListProfileData> mListSearchList = null;
     /*public ArrayAdapter<String> dataAdapter;
-    public List<String> lstgotra;*/
+    public List<String> lstGotra;*/
+    public ArrayList<String> lstGotra;
+    public ArrayList<String> lstNative;
+    public ArrayList<String> lstEducation;
     public SharedPreferences mSharedPreferences;
     public SharedPreferences.Editor mEditor;
     ConnectivityReceiver broadcastRevcevier;
@@ -76,6 +63,9 @@ public class AppController extends Application {
 
         MultiDex.install(this);
         mInstance = this;
+        lstGotra =new ArrayList<>();
+        lstNative =new ArrayList<>();
+        lstEducation =new ArrayList<>();
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         initRealm();

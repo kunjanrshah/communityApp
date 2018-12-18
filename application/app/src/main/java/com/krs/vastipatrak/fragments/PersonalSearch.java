@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.AdvanceSearchActivity;
 import com.krs.vastipatrak.activity.SelectionlistActivity;
+import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
 import com.melnykov.fab.FloatingActionButton;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -61,7 +62,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
     public Spinner sp_user_end_age;
 
     ArrayAdapter<String> dataAdapter;
-    String[] titleGotra;
+   // String[] titleGotra;
     private String TAG = PersonalSearch.class.getSimpleName();
     private SharedPreferences mSharedPreferences;
     private RadioButton rbtnB;
@@ -241,7 +242,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                     AdvanceSearchActivity.chooseFragment = TAG;
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
                     mIntent.putExtra(getString(R.string.listview), false);
-                    mIntent.putExtra(getString(R.string.section), "City");
+                    mIntent.putExtra(getString(R.string.title), "City");
                     startActivityForResult(mIntent, 11);
                 }
             }
@@ -255,7 +256,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                     AdvanceSearchActivity.chooseFragment = TAG;
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
                     mIntent.putExtra(getString(R.string.listview), false);
-                    mIntent.putExtra(getString(R.string.section), "Birth Place");
+                    mIntent.putExtra(getString(R.string.title), "Birth Place");
                     startActivityForResult(mIntent, 12);
                 }
             }
@@ -269,7 +270,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                     AdvanceSearchActivity.chooseFragment = TAG;
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
                     mIntent.putExtra(getString(R.string.listview), true);
-                    mIntent.putExtra(getString(R.string.section), "Education");
+                    mIntent.putExtra(getString(R.string.title), "Education");
                     startActivityForResult(mIntent, 13);
                 }
             }
@@ -283,7 +284,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                     AdvanceSearchActivity.chooseFragment = TAG;
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
                     mIntent.putExtra(getString(R.string.listview), true);
-                    mIntent.putExtra(getString(R.string.section), "Native");
+                    mIntent.putExtra(getString(R.string.title), "Native");
                     startActivityForResult(mIntent, 14);
                 }
             }
@@ -318,8 +319,8 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
         sp_user_end_age.setAdapter(dataAdapter);
 
         spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
-        titleGotra = getActivity().getResources().getStringArray(R.array.yt_gotra);
-        ArrayAdapter aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, titleGotra);
+       // titleGotra = getActivity().getResources().getStringArray(R.array.yt_gotra);
+        ArrayAdapter aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, AppController.getInstance().lstGotra);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerGotra.setAdapter(aa);
         rbtnM = rootView.findViewById(R.id.rbtnM);
@@ -420,11 +421,8 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                 }
                 if (mjsonObject.has(Common.Constant_Class.GOTRA)) {
                     String gotra = mjsonObject.getString(Common.Constant_Class.GOTRA);
-                    for (int i = 0; i < titleGotra.length; i++) {
-                        if (gotra.equalsIgnoreCase(titleGotra[i])) {
-                            spinnerGotra.setSelection(i);
-                        }
-                    }
+                    int i=AppController.getInstance().lstGotra.indexOf(gotra);
+                    spinnerGotra.setSelection(i);
                 }
                 if (mjsonObject.has(Common.Constant_Class.MOBILE)) {
                     edtMobile.setText(mjsonObject.getString(Common.Constant_Class.MOBILE));
@@ -496,22 +494,22 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
         } else if (requestCode == 11) {
             if (data != null) {
                 is_first = true;
-                txtCity.setText(data.getStringExtra("selection"));
+                txtCity.setText(data.getStringExtra(getString(R.string.selection)));
             }
         } else if (requestCode == 12) {
             if (data != null) {
                 is_first = true;
-                txtBPlace.setText(data.getStringExtra("selection"));
+                txtBPlace.setText(data.getStringExtra(getString(R.string.selection)));
             }
         } else if (requestCode == 13) {
             if (data != null) {
                 is_first = true;
-                txtEducation.setText(data.getStringExtra("selection"));
+                txtEducation.setText(data.getStringExtra(getString(R.string.selection)));
             }
         } else if (requestCode == 14) {
             if (data != null) {
                 is_first = true;
-                txtNPlace.setText(data.getStringExtra("selection"));
+                txtNPlace.setText(data.getStringExtra(getString(R.string.selection)));
             }
         }
     }

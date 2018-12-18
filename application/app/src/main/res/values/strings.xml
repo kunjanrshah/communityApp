@@ -298,9 +298,10 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="ft_intent">FT_Intent</string>
     <string name="FT_ID">id</string>
     <string name="FT_IMG">profile_pic</string>
+    <string name="FT_IDENTIFIER">identifier</string>
     <string name="FT_PROFILE_ID">profile_id</string>
     <string name="FT_NAME">name</string>
-    <string name="FT_LEVEL">level</string>
+
 
 
     <string name="near_by_home">Home</string>
@@ -349,8 +350,13 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="press_for_city">Press for City</string>
     <string name="realm_name">vastipatrak.realm</string>
     <string name="_gotra">gotra</string>
-    <string name="section">section</string>
+
     <string name="listview">listview</string>
+    <string name="title">title</string>
+    <string name="selection">selection</string>
+    <string name="_native">native</string>
+    <string name="_education">occupation</string>
+    <string name="FT_LEVEL">level</string>
 
 
 </resources>

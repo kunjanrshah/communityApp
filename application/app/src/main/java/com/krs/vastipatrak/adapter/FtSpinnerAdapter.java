@@ -24,6 +24,7 @@ public class FtSpinnerAdapter extends BaseAdapter {
         this.context = context;
         this.lstImages = lstImages;
         this.lstNames = lstNames;
+
         inflter = (LayoutInflater.from(context));
     }
 
@@ -47,6 +48,8 @@ public class FtSpinnerAdapter extends BaseAdapter {
         view = inflter.inflate(R.layout.custom_spinner_items, null);
         ImageView icon = (ImageView) view.findViewById(R.id.sp_image);
         TextView names = (TextView) view.findViewById(R.id.sp_text);
+
+
         try {
             names.setText(lstNames.get(i));
             Glide.with(context).load(lstImages.get(i)).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(icon);

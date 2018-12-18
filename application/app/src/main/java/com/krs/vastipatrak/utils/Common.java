@@ -2249,7 +2249,7 @@ public class Common {
         public static final String DEVICE_TOKEN = "device_token";
         public static final String DEVICE_ID = "int_udid";
         public static final String ACCESS_TOKEN = "access_token";
-        public static final String RESPONSE_DATA = "responsedata";
+        public static final String RESPONSE_DATA = "response_data";
         public static final String NEAR_BY = "nearBy";
         public static final String DISTANCE = "distance";
 
@@ -2365,6 +2365,8 @@ public class Common {
         public static final String CITY = "city";
         public static final String TITLE_BLOOD_GROUP = "Blood Group";
         public static final String TITLE_GOTRA = "Gotra";
+        public static final String TITLE_NATIVE = "Native";
+        public static final String TITLE_EDUCATION = "Education";
         public static final String TITLE_CHILD_BLOOD_GROUP = "Child BG";
         public static final String TITLE_SPOUSE_BLOOD_GROUP = "SPOUSE BG";
         public static final String A_POSITIVE = "A +VE";
@@ -2467,10 +2469,7 @@ public class Common {
         public static final String SET_REMINDER_URL = BASE_URL + "/API/setReminder";
         public static final String SET_TREE_URL = BASE_URL + "/API/saveTree";
         public static final String SET_UPDATED_VERSION_URL = BASE_URL + "/API/getUpdatedVersion";
-        public static final String GET_GOTRA_URL = BASE_URL + "/API/getUpdatedVersion";
-        public static final String GET_CITY_URL = BASE_URL + "/API/getUpdatedVersion";
-        public static final String GET_EDUCATION_URL = BASE_URL + "/API/getUpdatedVersion";
-        public static final String GET_NATIVE_URL = BASE_URL + "/API/getUpdatedVersion";
+        public static final String GET_MASTER_DATA_URL = BASE_URL + "/API/getMasterData";
         public static final String GET_USERS_BY_DATE_URL = BASE_URL + "/API/getUsersByDate";
         public static String DEVICE_ID_VALUE = "";
     }

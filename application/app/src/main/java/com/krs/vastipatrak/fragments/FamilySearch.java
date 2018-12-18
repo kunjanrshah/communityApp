@@ -90,7 +90,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                     AdvanceSearchActivity.chooseFragment = TAG;
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
                     mIntent.putExtra(getString(R.string.listview), true);
-                    mIntent.putExtra(getString(R.string.section), "Spouse Education");
+                    mIntent.putExtra(getString(R.string.title), "Spouse Education");
                     startActivityForResult(mIntent, 11);
                 }
             }
@@ -104,7 +104,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                     AdvanceSearchActivity.chooseFragment = TAG;
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
                     mIntent.putExtra(getString(R.string.listview), false);
-                    mIntent.putExtra(getString(R.string.section), "Child BirthPlace");
+                    mIntent.putExtra(getString(R.string.title), "Child BirthPlace");
                     startActivityForResult(mIntent, 12);
                 }
             }
@@ -118,7 +118,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                     AdvanceSearchActivity.chooseFragment = TAG;
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
                     mIntent.putExtra(getString(R.string.listview), true);
-                    mIntent.putExtra(getString(R.string.section), "Child Education");
+                    mIntent.putExtra(getString(R.string.title), "Child Education");
                     startActivityForResult(mIntent, 13);
                 }
             }
@@ -356,6 +356,12 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        is_first=true;
+    }
+
     private void setAgeSpinner() {
 
         List<String> list = new ArrayList<String>();
@@ -563,18 +569,15 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
             phoneCursor.close();
         } else if (requestCode == 11) {
             if (data != null) {
-                is_first = true;
-                txtSpouseEdu.setText(data.getStringExtra(getString(R.string.section)));
+                txtSpouseEdu.setText(data.getStringExtra(getString(R.string.selection)));
             }
         } else if (requestCode == 12) {
             if (data != null) {
-                is_first = true;
-                txtchildBplace.setText(data.getStringExtra(getString(R.string.section)));
+                txtchildBplace.setText(data.getStringExtra(getString(R.string.selection)));
             }
         } else if (requestCode == 13) {
             if (data != null) {
-                is_first = true;
-                txtchildEdu.setText(data.getStringExtra(getString(R.string.section)));
+                txtchildEdu.setText(data.getStringExtra(getString(R.string.selection)));
             }
         }
     }

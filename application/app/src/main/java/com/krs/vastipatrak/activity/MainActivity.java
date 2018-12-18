@@ -92,9 +92,11 @@ import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -273,6 +275,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             mEditor.putBoolean("app_create", false);
             mEditor.apply();
             get_updated_ver_ws();
+            getList(getResources().getString(R.string._gotra));
+            getList(getResources().getString(R.string._native));
+            getList(getResources().getString(R.string._education));
         }
     }
 
@@ -337,7 +342,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     }
 
-    private void getList(String type) {
+
+
+    private void getList(final String type) {
         if (Common.isOnline(this)) {
 
             Common.showProgressDialog(this);
@@ -349,13 +356,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 String token = mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, "");
                 mJsonObject.put(Common.Constant_Class.USER_ID, user_id);
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, token);
-                mJsonObject.put(Common.Constant_Class.RESPONSE_DATA, R.string._gotra);
+                mJsonObject.put(Common.Constant_Class.RESPONSE_DATA, type);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.GET_GOTRA_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.GET_MASTER_DATA_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
@@ -363,10 +370,30 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     Common.hideProgressDialog();
 
                     try {
-                        String data = response.getString(Common.Constant_Class.DATA);
-                        if (data.equals("0")) {
-                            displayAlert();
+                        JSONArray mArray = response.getJSONArray(Common.Constant_Class.DATA);
+                        if (type.equalsIgnoreCase(getResources().getString(R.string._gotra))) {
+                            for (int i = 0; i < mArray.length(); i++) {
+                                JSONObject mObject = mArray.getJSONObject(i);
+                                AppController.getInstance().lstGotra.add(mObject.getString("gotra"));
+                            }
+                            Collections.sort(AppController.getInstance().lstGotra);
+                            AppController.getInstance().lstGotra.add(Common.Constant_Class.TITLE_GOTRA);
+                        } else if (type.equalsIgnoreCase(getString(R.string._native))) {
+                            for (int i = 0; i < mArray.length(); i++) {
+                                JSONObject mObject = mArray.getJSONObject(i);
+                                AppController.getInstance().lstNative.add(mObject.getString(getString(R.string._native)));
+                            }
+                            Collections.sort(AppController.getInstance().lstNative);
+                            AppController.getInstance().lstNative.add(Common.Constant_Class.TITLE_NATIVE);
+                        } else if (type.equalsIgnoreCase(getString(R.string._education))) {
+                            for (int i = 0; i < mArray.length(); i++) {
+                                JSONObject mObject = mArray.getJSONObject(i);
+                                AppController.getInstance().lstEducation.add(mObject.getString(getString(R.string._education)));
+                            }
+                            Collections.sort(AppController.getInstance().lstEducation);
+                            AppController.getInstance().lstEducation.add(Common.Constant_Class.TITLE_EDUCATION);
                         }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                         Common.hideProgressDialog();
@@ -377,7 +404,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
-
                     Common.hideProgressDialog();
                 }
             }) {
@@ -482,14 +508,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
                             JSONArray mJsonArray = response.getJSONArray("data");
-                            AppController.getInstance().lstgotra = new ArrayList<>();
+                            AppController.getInstance().lstGotra = new ArrayList<>();
 
                             for (int i = 0; i < mJsonArray.length(); i++) {
-                                AppController.getInstance().lstgotra.add(mJsonArray.getString(i));
+                                AppController.getInstance().lstGotra.add(mJsonArray.getString(i));
                             }
-                            Collections.sort(AppController.getInstance().lstgotra);
-                            AppController.getInstance().lstgotra.add(0, Common.Constant_Class.TITLE_GOTRA);
-                            AppController.getInstance().dataAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, AppController.getInstance().lstgotra);
+                            Collections.sort(AppController.getInstance().lstGotra);
+                            AppController.getInstance().lstGotra.add(0, Common.Constant_Class.TITLE_GOTRA);
+                            AppController.getInstance().dataAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, AppController.getInstance().lstGotra);
                             AppController.getInstance().dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
                         } else {

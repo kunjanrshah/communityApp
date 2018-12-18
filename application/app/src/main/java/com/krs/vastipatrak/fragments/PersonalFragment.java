@@ -49,8 +49,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.AdvanceSearchActivity;
 import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.activity.ProfileActivity;
+import com.krs.vastipatrak.activity.SelectionlistActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.service.MyLocationService;
@@ -118,7 +120,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     private Activity mActivity;
     private String profile_id = "";
     private Uri mCropImageUri;
-    private String[] titleGotra;
+    private boolean is_first = true;
 
     public PersonalFragment() {
 
@@ -572,6 +574,62 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
 
+        txtEducation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), true);
+                    mIntent.putExtra(getString(R.string.title), "Education");
+                    startActivityForResult(mIntent, 11);
+                }
+            }
+        });
+
+        txtNPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), true);
+                    mIntent.putExtra(getString(R.string.title), "Native");
+                    startActivityForResult(mIntent, 12);
+                }
+            }
+        });
+
+        txtBPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), false);
+                    mIntent.putExtra(getString(R.string.title), "Birth Place");
+                    startActivityForResult(mIntent, 13);
+                }
+            }
+        });
+
+        txtCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), false);
+                    mIntent.putExtra(getString(R.string.title), "City");
+                    startActivityForResult(mIntent, 14);
+                }
+            }
+        });
+
         String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Common.hasPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -605,6 +663,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         dialog.show();
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        is_first = true;
+    }
 
     private void MemoryAllocation(View rootView) {
 
@@ -647,8 +711,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         chk_profile_bdate_rem = rootView.findViewById(R.id.chk_profile_bdate_rem);
         spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
         spinnerGotra.setOnItemSelectedListener(this);
-        titleGotra = getActivity().getResources().getStringArray(R.array.yt_gotra);
-        ArrayAdapter aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, titleGotra);
+        //titleGotra = getActivity().getResources().getStringArray(R.array.yt_gotra);
+        ArrayAdapter aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, AppController.getInstance().lstGotra);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerGotra.setAdapter(aa);
 
@@ -784,13 +848,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             Objects.requireNonNull(edt_phone).setText(mListProfileData.getPhone());
             Objects.requireNonNull(txtCity).setText(mListProfileData.getCity());
             String gotra = mListProfileData.getGotra();
-            for (int i = 0; i < titleGotra.length; i++) {
-                if (gotra.equalsIgnoreCase(titleGotra[i])) {
-                    spinnerGotra.setSelection(i);
-                }
-            }
+            int i = AppController.getInstance().lstGotra.indexOf(gotra);
+            spinnerGotra.setSelection(i);
 
-            // Objects.requireNonNull(edtGotra).setText(mListProfileData.getGotra());
             Objects.requireNonNull(txtNPlace).setText(mListProfileData.getNative_place());
             Objects.requireNonNull(txtEducation).setText(mListProfileData.getEducation());
             Objects.requireNonNull(edt_Eaddress).setText(mListProfileData.getEmail_address());
@@ -1181,6 +1241,26 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 setImageFromActivityResult(result.getUri());
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(getActivity(), "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
+            }
+        } else if (requestCode == 11) {
+            if (data != null) {
+                is_first = true;
+                txtEducation.setText(data.getStringExtra(getString(R.string.selection)));
+            }
+        } else if (requestCode == 12) {
+            if (data != null) {
+                is_first = true;
+                txtNPlace.setText(data.getStringExtra(getString(R.string.selection)));
+            }
+        } else if (requestCode == 13) {
+            if (data != null) {
+                is_first = true;
+                txtBPlace.setText(data.getStringExtra(getString(R.string.selection)));
+            }
+        } else if (requestCode == 14) {
+            if (data != null) {
+                is_first = true;
+                txtCity.setText(data.getStringExtra(getString(R.string.selection)));
             }
         }
     }
