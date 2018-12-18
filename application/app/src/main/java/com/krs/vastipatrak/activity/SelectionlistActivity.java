@@ -1,15 +1,25 @@
 package com.krs.vastipatrak.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
@@ -17,13 +27,26 @@ import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.adapter.ItemsAdapter;
 import com.krs.vastipatrak.adapter.SelectionListAdapter;
+import com.krs.vastipatrak.app.AppController;
+import com.krs.vastipatrak.model.Items;
 import com.krs.vastipatrak.utils.Common;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class SelectionlistActivity extends AppCompatActivity {
@@ -33,39 +56,86 @@ public class SelectionlistActivity extends AppCompatActivity {
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
     Toolbar mToolbar;
+    private RecyclerView recyclerView;
+    private ItemsAdapter adapter;
     private String TAG = SelectionlistActivity.class.getSimpleName();
     private SearchView searchView;
     private int lastExpandedPosition = -1;
+    private EditText edt_other;
+    private Button btnSave;
+    private List<Items> ItemList;
+    private RecyclerView.LayoutManager layoutManager;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        ToolbarSetup();
+
         // get the listview
-        expListView = (ExpandableListView) findViewById(R.id.lvExp);
+        expListView = findViewById(R.id.lvExp);
+        recyclerView = findViewById(R.id.lvList);
+        edt_other = findViewById(R.id.edt_other);
+        btnSave = findViewById(R.id.btnSave);
+        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
+        Bundle mBundle = new Bundle();
+        boolean listview = false;
+        String title = "";
+        if (mBundle != null) {
+            mBundle = getIntent().getExtras();
+            listview = mBundle.getBoolean(getString(R.string.listview));
+            title = mBundle.getString(getString(R.string.title));
+        }
+        ToolbarSetup(title);
+        if (listview) {
+            recyclerView.setHasFixedSize(true);
+            layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        // preparing list data
-        prepareListData();
+            recyclerView.setVisibility(View.VISIBLE);
+            expListView.setVisibility(View.GONE);
+            if (title.toLowerCase().contains("native")) {
+                prepareListData(AppController.getInstance().lstNative);
+            } else if (title.toLowerCase().contains("education")) {
+                prepareListData(AppController.getInstance().lstEducation);
+            }
 
-        listAdapter = new SelectionListAdapter(this, listDataHeader, listDataChild);
+            adapter = new ItemsAdapter(this, ItemList);
+            recyclerView.setAdapter(adapter);
 
-        // setting list adapter
-        expListView.setAdapter(listAdapter);
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            expListView.setVisibility(View.VISIBLE);
+            listDataHeader = new ArrayList<String>();
+            listDataChild = new HashMap<String, List<String>>();
+            prepareExpandableListData();
+            getStateList();
+            listAdapter = new SelectionListAdapter(this, listDataHeader, listDataChild);
+            expListView.setAdapter(listAdapter);
+        }
 
-        // Listview Group click listener
+
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                finishActivity(ItemList.get(position).getName());
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+                // do whatever
+            }
+        }));
+
         expListView.setOnGroupClickListener(new OnGroupClickListener() {
 
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                // Toast.makeText(getApplicationContext(),
-                // "Group Clicked " + listDataHeader.get(groupPosition),
-                // Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
 
-        // Listview Group expanded listener
         expListView.setOnGroupExpandListener(new OnGroupExpandListener() {
 
             @Override
@@ -74,11 +144,10 @@ public class SelectionlistActivity extends AppCompatActivity {
                     expListView.collapseGroup(lastExpandedPosition);
                 }
                 lastExpandedPosition = groupPosition;
-                Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " Expanded", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " Expanded", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Listview Group collasped listener
         expListView.setOnGroupCollapseListener(new OnGroupCollapseListener() {
 
             @Override
@@ -87,30 +156,104 @@ public class SelectionlistActivity extends AppCompatActivity {
             }
         });
 
-        // Listview on child click listener
         expListView.setOnChildClickListener(new OnChildClickListener() {
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-
-                Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " : " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
-
-                Intent mIntent = new Intent();
-                mIntent.putExtra("selection", listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition));
-                setResult(RESULT_OK, mIntent);
-                finish();
-                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-
+                //Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " : " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
+                finishActivity(listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition));
                 return false;
+            }
+        });
+
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String value = edt_other.getText().toString();
+                if (!value.isEmpty()) {
+                    finishActivity(value);
+                } else {
+                    Toast.makeText(SelectionlistActivity.this, "Specify if Other", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
-    private void ToolbarSetup() {
+    private void getStateList() {
+        if (Common.isOnline(this)) {
+
+            Common.showProgressDialog(this);
+            JSONObject mJsonObject = null;
+
+            try {
+                mJsonObject = new JSONObject();
+                String user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+                String token = mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, "");
+                mJsonObject.put(Common.Constant_Class.USER_ID, user_id);
+                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, token);
+                mJsonObject.put(Common.Constant_Class.RESPONSE_DATA, "state");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.GET_MASTER_DATA_URL, mJsonObject, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    Log.d(TAG, "response: " + response.toString());
+                    Common.hideProgressDialog();
+
+                    try {
+                        JSONArray mArray = response.getJSONArray(Common.Constant_Class.DATA);
+                        for (int i = 0; i < mArray.length(); i++) {
+                            JSONObject mObject = mArray.getJSONObject(i);
+                            listDataHeader.add(mObject.getString("state"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Common.hideProgressDialog();
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(@NonNull VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    Common.hideProgressDialog();
+                }
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
+        }
+    }
+
+
+    private void finishActivity(String value) {
+        Common.hideKeyboard(this);
+        Intent mIntent = new Intent();
+        mIntent.putExtra(getString(R.string.selection), value);
+        setResult(RESULT_OK, mIntent);
+        finish();
+        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+    }
+
+    private void ToolbarSetup(String title) {
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setSubtitle("Select City");
+        getSupportActionBar().setSubtitle(title);
 
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,12 +341,16 @@ public class SelectionlistActivity extends AppCompatActivity {
         return true;
     }
 
-    /*
-     * Preparing the list data
-     */
-    private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+    private void prepareListData(ArrayList<String> list) {
+        Collections.sort(list);
+        ItemList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            ItemList.add(new Items(list.get(i)));
+        }
+    }
+
+    private void prepareExpandableListData() {
+
 
         // Adding child data
         listDataHeader.add("Gujarat");
@@ -239,4 +386,52 @@ public class SelectionlistActivity extends AppCompatActivity {
         listDataChild.put(listDataHeader.get(1), nowShowing);
         listDataChild.put(listDataHeader.get(2), comingSoon);
     }
+
+    public static class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+        GestureDetector mGestureDetector;
+        private OnItemClickListener mListener;
+
+        public RecyclerItemClickListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener) {
+            mListener = listener;
+            mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+
+                @Override
+                public void onLongPress(MotionEvent e) {
+                    View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                    if (child != null && mListener != null) {
+                        mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
+                    }
+                }
+            });
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
+            View childView = view.findChildViewUnder(e.getX(), e.getY());
+            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
+                mListener.onItemClick(childView, view.getChildAdapterPosition(childView));
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        }
+
+        public interface OnItemClickListener {
+            public void onItemClick(View view, int position);
+
+            public void onLongItemClick(View view, int position);
+        }
+    }
+
 }

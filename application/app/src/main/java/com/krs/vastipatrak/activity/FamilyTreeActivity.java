@@ -54,6 +54,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
     ArrayList<String> LstImages;
     ArrayList<String> LstNames;
     ArrayList<String> LstLevel;
+    ArrayList<String> LstIdentifier;
     ArrayList<String> lstDupName;
     Toolbar mToolbar;
     Snackbar snackbar;
@@ -80,6 +81,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         LstLevel = new ArrayList<>();
         LstNames = new ArrayList<>();
         LstImages = new ArrayList<>();
+        LstIdentifier = new ArrayList<>();
         String id = "";
         final String first_name;
         final String spouse;
@@ -95,6 +97,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         final String profile_url;
         final String bdate;
         try {
+            LstIdentifier.clear();
             LstNames.clear();
             LstImages.clear();
             LstLevel.clear();
@@ -105,31 +108,37 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
 
             LstNames.add(first_name);
             LstImages.add(profile_url);
+            LstIdentifier.add("profile");
 
             father = mObj.getString(Common.Constant_Class.FATHER_NAME);
             father_url = mObj.getString(Common.Constant_Class.IMG_FATHER_URL);
             LstNames.add(father);
             LstImages.add(father_url);
+            LstIdentifier.add("father");
 
             mother = mObj.getString(Common.Constant_Class.MOTHER_NAME);
             mother_url = mObj.getString(Common.Constant_Class.IMG_MOTHER_URL);
             LstNames.add(mother);
             LstImages.add(mother_url);
+            LstIdentifier.add("mother");
 
             spouse = mObj.getString(Common.Constant_Class.SPOUSE_NAME);
             spouse_url = mObj.getString(Common.Constant_Class.IMG_SPOUSE_URL);
             LstNames.add(spouse);
             LstImages.add(spouse_url);
+            LstIdentifier.add("spouse");
 
             sfather = mObj.getString(Common.Constant_Class.SPOUSE_FATHER_NAME);
             sfather_url = mObj.getString(Common.Constant_Class.IMG_SFATHER_URL);
             LstNames.add(sfather);
             LstImages.add(sfather_url);
+            LstIdentifier.add("sfather");
 
             smother = mObj.getString(Common.Constant_Class.SPOUSE_MOTHER_NAME);
             smother_url = mObj.getString(Common.Constant_Class.IMG_SMOTHER_URL);
             LstNames.add(smother);
             LstImages.add(smother_url);
+            LstIdentifier.add("smother");
 
 
             if (mObj.has(Common.Constant_Class.CHILDS)) {
@@ -146,6 +155,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                     }
                     LstImages.add(chlid_url);
                     LstNames.add(child_name);
+                    LstIdentifier.add("child_" + mJsonObj.getString(Common.Constant_Class.CHILD_ID));
                 }
             }
         } catch (JSONException e) {
@@ -182,8 +192,15 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                         mjsonobj = new JSONObject();
                         mjsonobj.put(getString(R.string.FT_IMG), LstImages.get(spin.getSelectedItemPosition()));
                         mjsonobj.put(getString(R.string.FT_NAME), LstNames.get(spin.getSelectedItemPosition()));
+                        mjsonobj.put(getString(R.string.FT_IDENTIFIER), LstIdentifier.get(spin.getSelectedItemPosition()));
                         mjsonobj.put(getString(R.string.FT_PROFILE_ID), finalId);
                         lstDupName.add(LstNames.get(spin.getSelectedItemPosition()));
+
+                        TreeNode item = new TreeNode(mjsonobj);
+                        root.addChild(item);
+                        adapter = new SimpleTreeViewAdapter(FamilyTreeActivity.this, root);
+                        draggableTreeView.setAdapter(adapter);
+
                     } else {
                         Toast.makeText(FamilyTreeActivity.this, "Name already exist!", Toast.LENGTH_SHORT).show();
                         return;
@@ -191,11 +208,6 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                TreeNode item = new TreeNode(mjsonobj);
-                root.addChild(item);
-                adapter = new SimpleTreeViewAdapter(FamilyTreeActivity.this, root);
-                draggableTreeView.setAdapter(adapter);
             }
         });
 
@@ -379,12 +391,13 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
             //   graph.addNode(node1);
             JSONObject mjson = new JSONObject();
             try {
-                String url = object.getString(getString(R.string.FT_IMG));
+                /*String url = object.getString(getString(R.string.FT_IMG));
                 if (url.contains("no-image")) {
                     url = "";
-                }
-                mjson.put(getString(R.string.FT_IMG), url);
-                mjson.put(getString(R.string.FT_NAME), object.getString(getString(R.string.FT_NAME)));
+                }*/
+                //mjson.put(getString(R.string.FT_IMG), url);
+                mjson.put(getString(R.string.FT_IDENTIFIER), object.getString(getString(R.string.FT_IDENTIFIER)));
+                // mjson.put(getString(R.string.FT_NAME), object.getString(getString(R.string.FT_NAME)));
                 mjson.put(getString(R.string.FT_PROFILE_ID), object.getString(getString(R.string.FT_PROFILE_ID)));
                 mjson.put(getString(R.string.FT_LEVEL), level);
                 mjsonArray.put(mjson);
@@ -416,10 +429,11 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
             //  graph.addEdge(p_node,node2);
             try {
                 JSONObject mjson = new JSONObject();
-                mjson.put(getString(R.string.FT_IMG), object1.get(getString(R.string.FT_IMG)));
-                mjson.put(getString(R.string.FT_NAME), object1.get(getString(R.string.FT_NAME)));
+                //mjson.put(getString(R.string.FT_IMG), object1.get(getString(R.string.FT_IMG)));
+                //mjson.put(getString(R.string.FT_NAME), object1.get(getString(R.string.FT_NAME)));
+                mjson.put(getString(R.string.FT_IDENTIFIER), object1.getString(getString(R.string.FT_IDENTIFIER)));
                 mjson.put(getString(R.string.FT_PROFILE_ID), object1.get(getString(R.string.FT_PROFILE_ID)));
-                mjson.put("level", level1);
+                mjson.put(getString(R.string.FT_LEVEL), level1);
                 mjsonArray.put(mjson);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -544,7 +558,6 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         if (Common.isOnline(this)) {
             Common.showProgressDialog(this);

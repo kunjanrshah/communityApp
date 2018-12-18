@@ -2,7 +2,7 @@
     <string name="theme_app_name">વસ્તીપત્રક</string>
     <string name="app_name">વસ્તીપત્રક</string>
     <string name="hint_email">Email</string>
-    <string name="hint_other">Other(Please Specify)</string>
+    <string name="hint_other">If Other (Please Specify)</string>
     <string name="hint_email_mobile">Email or Mobile</string>
     <string name="hint_mobile">Mobile</string>
     <string name="hint_password">Password</string>
@@ -85,6 +85,14 @@
         <item>VASIYANA</item>
         <item>MERVANA</item>
         <item>KAGRANU</item>
+        <item>NANDOLA</item>
+        <item>NARSANA</item>
+        <item>BHATSYANA</item>
+        <item>SAVALANA</item>
+        <item>NADIYANA</item>
+        <item>SALISANA</item>
+        <item>NAANU</item>
+        <item>KALYANU</item>
     </string-array>
 
     <string-array name="yt_titles">
@@ -290,9 +298,10 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="ft_intent">FT_Intent</string>
     <string name="FT_ID">id</string>
     <string name="FT_IMG">profile_pic</string>
+    <string name="FT_IDENTIFIER">identifier</string>
     <string name="FT_PROFILE_ID">profile_id</string>
     <string name="FT_NAME">name</string>
-    <string name="FT_LEVEL">level</string>
+
 
 
     <string name="near_by_home">Home</string>
@@ -338,8 +347,16 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="play_again">Play Again</string>
     <string name="is_first_time">IsFirstTimeLaunch</string>
     <string name="understand">ખબર પડી</string>
-    <string name="select_city">Select City</string>
-    <string name="select_birth_place">Select BirthPlace</string>
+    <string name="press_for_city">Press for City</string>
+    <string name="realm_name">vastipatrak.realm</string>
+    <string name="_gotra">gotra</string>
+
+    <string name="listview">listview</string>
+    <string name="title">title</string>
+    <string name="selection">selection</string>
+    <string name="_native">native</string>
+    <string name="_education">occupation</string>
+    <string name="FT_LEVEL">level</string>
 
 
 </resources>

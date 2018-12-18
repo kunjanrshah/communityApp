@@ -40,6 +40,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -51,8 +52,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.AdvanceSearchActivity;
 import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.activity.ProfileActivity;
+import com.krs.vastipatrak.activity.SelectionlistActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListProfileData;
@@ -86,7 +89,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
     private static final int CONTACT_PICKER_RESULT = 1001;
     private static final int CONTACT_PICKER_RESULT_CHILD = 1002;
-    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName, edtsponse_mobile, edtsponse_nplace, edtSpouseEdu;
+    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName, edtsponse_mobile;
+    public TextView txt_sponse_nplace, txt_spouse_edu;
     public String str_spouse_hash = "", str_fspouse_hash = "", str_mspouse_hash = "";
     public LinearLayout child_container = null;
     public ArrayList<Integer> lst_delID = null;
@@ -96,6 +100,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     public CheckBox chk_spouse_bdate_rem = null;
     public Spinner sp_spouse_blood;
     ArrayAdapter<String> dataAdapter;
+    RequestOptions requestOptions;
     private RadioButton rbtnChildYes;
     private String spouse_url = "";
     private String fspouse_url = "";
@@ -104,11 +109,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private CircleImageView img_spouse;
     private CircleImageView img_fspouse;
     private CircleImageView img_mspouse;
-
     private ImageView img_spouse_cancel;
     private ImageView img_fspouse_cancel;
     private ImageView img_mspouse_cancel;
-
     private String img_selection = "";
     private SharedPreferences mSharedPreferences;
     private Activity mActivity;
@@ -119,6 +122,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private String TAG = FamilyFragment.class.getSimpleName();
     private List<String> blood;
     private Uri mCropImageUri;
+    private boolean is_first = true;
+    private HashMap<Integer, TextView> hashMap;
+    private int educate = 110;
 
     public FamilyFragment() {
         // Required empty public constructor
@@ -525,9 +531,42 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             }
         });
 
+        txt_sponse_nplace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), true);
+                    mIntent.putExtra(getString(R.string.title), "Native");
+                    startActivityForResult(mIntent, 11);
+                }
+            }
+        });
+
+        txt_spouse_edu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), true);
+                    mIntent.putExtra(getString(R.string.title), "Education");
+                    startActivityForResult(mIntent, 12);
+                }
+            }
+        });
+
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        is_first = true;
+    }
 
     private void setAdapterBGlist() {
         blood = new ArrayList<>();
@@ -547,14 +586,14 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     }
 
     private void Memory_Allocation(View root) {
-
+        hashMap = new HashMap<>();
         mActivity = Objects.requireNonNull(getActivity());
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         edt_mdate = root.findViewById(R.id.edt_mdate);
         edtsponse_bdate = root.findViewById(R.id.edtsponse_bdate);
-        edtSpouseEdu = root.findViewById(R.id.edtSpouseEdu);
+        txt_spouse_edu = root.findViewById(R.id.txt_spouse_edu);
         edtsponse_mobile = root.findViewById(R.id.edtsponse_mobile);
-        edtsponse_nplace = root.findViewById(R.id.edtsponse_nplace);
+        txt_sponse_nplace = root.findViewById(R.id.txt_sponse_nplace);
         edtSpouseName = root.findViewById(R.id.edtSpouseName);
         edtSpouseFName = root.findViewById(R.id.edtSpouseFName);
         edtMSpouseName = root.findViewById(R.id.edtMSpouseName);
@@ -578,6 +617,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         child_container = root.findViewById(R.id.child_container);
         lst_delID = new ArrayList<>();
         lstchild = new HashMap<>();
+        requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.user_profile);
+        requestOptions.error(R.drawable.download);
     }
 
     private void DisableAll() {
@@ -587,16 +629,12 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtsponse_bdate.setKeyListener(null);
         edtsponse_bdate.setCursorVisible(false);
 
-        edtSpouseEdu.setKeyListener(null);
-        edtSpouseEdu.setCursorVisible(false);
+        txt_spouse_edu.setClickable(false);
+        txt_sponse_nplace.setClickable(false);
 
         sp_spouse_blood.setClickable(false);
-
         edtsponse_mobile.setKeyListener(null);
         edtsponse_mobile.setCursorVisible(false);
-
-        edtsponse_nplace.setKeyListener(null);
-        edtsponse_nplace.setCursorVisible(false);
 
         edtSpouseName.setKeyListener(null);
         edtSpouseName.setCursorVisible(false);
@@ -625,8 +663,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtSpouseFName.setEnabled(true);
         edtMSpouseName.setEnabled(true);
         edtsponse_bdate.setEnabled(true);
-        edtsponse_nplace.setEnabled(true);
-        edtSpouseEdu.setEnabled(true);
+        txt_spouse_edu.setClickable(true);
+        txt_sponse_nplace.setClickable(true);
         sp_spouse_blood.setClickable(true);
         chk_marriage_bdate_rem.setVisibility(View.GONE);
         chk_spouse_bdate_rem.setVisibility(View.GONE);
@@ -645,8 +683,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         }
         profile_id = mListProfileData.getProfile_id();
         edtSpouseName.setText(mListProfileData.getSpouse_name());
-        edtSpouseEdu.setText(mListProfileData.getSpouse_education());
-        edtsponse_nplace.setText(mListProfileData.getSponse_native());
+        txt_spouse_edu.setText(mListProfileData.getSpouse_education());
+        txt_sponse_nplace.setText(mListProfileData.getSponse_native());
         edtsponse_bdate.setText(mListProfileData.getSponse_bdate());
         edtsponse_mobile.setText(mListProfileData.getSponse_mobile());
         sp_spouse_blood.setSelection(blood.indexOf(mListProfileData.getSponse_bg()));
@@ -673,9 +711,27 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         spouse_url = mListProfileData.getImg_spouse_url();
         fspouse_url = mListProfileData.getImg_sfather_url();
         mspouse_url = mListProfileData.getImg_smother_url();
-        Glide.with(mActivity).load(spouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_spouse);
-        Glide.with(mActivity).load(fspouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_fspouse);
-        Glide.with(mActivity).load(mspouse_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mspouse);
+
+        try {
+            Glide.with(mActivity).load(spouse_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_spouse);
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        try {
+            Glide.with(mActivity).load(fspouse_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_fspouse);
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
+        try {
+            Glide.with(mActivity).load(mspouse_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_mspouse);
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
+
         if (mListProfileData.getmListChildrenData() != null) {
             if (mListProfileData.getmListChildrenData().size() > 0) {
                 child_container.removeAllViews();
@@ -727,7 +783,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     }
 
                     Objects.requireNonNull(mViewholder.edtchild_btime).setText(mObjChild.getBirth_time());
-                    Objects.requireNonNull(mViewholder.edtchild_bplace).setText(mObjChild.getBirth_place());
+                    Objects.requireNonNull(mViewholder.txt_child_bplace).setText(mObjChild.getBirth_place());
                     Objects.requireNonNull(mViewholder.tbtn_interest).setChecked(mObjChild.isInterest());
 
                     if (mObjChild.getGender().equalsIgnoreCase("male")) {
@@ -736,14 +792,14 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         Objects.requireNonNull(mViewholder.radioGroupId).check(R.id.radioF);
                     }
 
-                    Objects.requireNonNull(mViewholder.edtchild_edu).setText(mObjChild.getChild_edu());
+                    Objects.requireNonNull(mViewholder.txt_child_edu).setText(mObjChild.getChild_edu());
                     Objects.requireNonNull(mViewholder.edtchild_work).setText(mObjChild.getChild_work());
 
 
                     if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                         mViewholder.edtchild_name.setEnabled(true);
                         mViewholder.edtchild_bdate.setEnabled(true);
-                        mViewholder.edtchild_edu.setEnabled(true);
+                        mViewholder.txt_child_edu.setClickable(true);
                         mViewholder.edtchild_work.setEnabled(true);
                     } else {
                         mViewholder.edtchild_name.setKeyListener(null);
@@ -752,15 +808,19 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         mViewholder.edtchild_bdate.setKeyListener(null);
                         mViewholder.edtchild_bdate.setCursorVisible(false);
 
-                        mViewholder.edtchild_edu.setKeyListener(null);
-                        mViewholder.edtchild_edu.setCursorVisible(false);
+                        mViewholder.txt_child_edu.setClickable(false);
 
                         mViewholder.edtchild_work.setKeyListener(null);
                         mViewholder.edtchild_work.setCursorVisible(false);
 
                     }
                     final String child_url = mObjChild.getChild_img_url();
-                    Glide.with(mActivity).load(child_url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(mViewholder.img_child);
+                    try {
+                        Glide.with(mActivity).load(child_url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(mViewholder.img_child);
+                    } catch (Exception e) {
+                        e.getMessage();
+                    }
+
                     mViewholder.img_child.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -779,23 +839,30 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         }
     }
 
-    private void openImageDialog(String name, String url) {
+    private void openImageDialog(String name, final String url) {
         Dialog dialog = new Dialog(mActivity);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setContentView(R.layout.image_dialog);
         dialog.setTitle(name);
 
-        ImageView image = dialog.findViewById(R.id.img_dialog);
+        final ImageView image = dialog.findViewById(R.id.img_dialog);
         if (url.isEmpty()) {
             image.setImageDrawable(getResources().getDrawable(R.drawable.user_profile));
         } else {
-            Glide.with(mActivity).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
+
+            try {
+                Glide.with(mActivity).load(url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         dialog.show();
     }
 
+
     private void add_child_layout(final ListChildrenData mObjChild) {
+
         LayoutInflater layoutInflater = (LayoutInflater) mActivity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View addView = layoutInflater.inflate(R.layout.child_row, null);
         final Viewholder mViewholder = new Viewholder();
@@ -809,8 +876,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         mViewholder.tbtn_interest = addView.findViewById(R.id.tbtn_interest);
         mViewholder.edtchild_bdate = addView.findViewById(R.id.edtchild_bdate);
         mViewholder.edtchild_btime = addView.findViewById(R.id.edtchild_btime);
-        mViewholder.edtchild_bplace = addView.findViewById(R.id.edtchild_bplace);
-        mViewholder.edtchild_edu = addView.findViewById(R.id.edtchild_edu);
+        mViewholder.txt_child_bplace = addView.findViewById(R.id.txt_child_bplace);
+        mViewholder.txt_child_edu = addView.findViewById(R.id.txt_child_edu);
         mViewholder.edtchild_work = addView.findViewById(R.id.edtchild_work);
         mViewholder.chk_child_bdate_rem = addView.findViewById(R.id.chk_child_bdate_rem);
         mViewholder.chk_child_marriage = addView.findViewById(R.id.chk_child_marriage);
@@ -839,6 +906,38 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         mViewholder.btn_remove = addView.findViewById(R.id.btn_remove);
         mViewholder.ImgHash = "";
         mViewholder.setClickBDate = false;
+
+
+        mViewholder.txt_child_bplace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), false);
+                    mIntent.putExtra(getString(R.string.title), "Birth Place");
+                    startActivityForResult(mIntent, educate);
+                }
+            }
+        });
+
+        educate++;
+        hashMap.put(educate, mViewholder.txt_child_edu);
+        mViewholder.txt_child_edu.setTag(educate);
+        mViewholder.txt_child_edu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), true);
+                    mIntent.putExtra(getString(R.string.title), "Education");
+                    startActivityForResult(mIntent, Integer.parseInt(mViewholder.txt_child_edu.getTag().toString()));
+                }
+            }
+        });
 
         mViewholder.chk_child_bdate_rem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1019,14 +1118,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             Objects.requireNonNull(mViewholder.edtchild_bdate).setKeyListener(null);
             mViewholder.edtchild_bdate.setCursorVisible(false);
 
-            Objects.requireNonNull(mViewholder.edtchild_edu).setKeyListener(null);
-            mViewholder.edtchild_edu.setCursorVisible(false);
+            mViewholder.txt_child_edu.setClickable(false);
+            mViewholder.txt_child_bplace.setClickable(false);
 
             mViewholder.edtchild_work.setKeyListener(null);
             mViewholder.edtchild_work.setCursorVisible(false);
-
-            Objects.requireNonNull(mViewholder.edtchild_bplace).setKeyListener(null);
-            mViewholder.edtchild_bplace.setCursorVisible(false);
 
             Objects.requireNonNull(mViewholder.edtchild_btime).setKeyListener(null);
             mViewholder.edtchild_btime.setCursorVisible(false);
@@ -1175,6 +1271,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         });
         addView.setTag(mViewholder);
         child_container.addView(addView, child_container.getChildCount());
+
     }
 
     private void startImageActivity() {
@@ -1397,37 +1494,21 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(getActivity(), "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
             }
+        } else if (requestCode == 11) {
+            if (data != null) {
+                is_first = true;
+                txt_sponse_nplace.setText(data.getStringExtra(getString(R.string.selection)));
+            }
+        } else if (requestCode == 12) {
+            if (data != null) {
+                is_first = true;
+                txt_spouse_edu.setText(data.getStringExtra(getString(R.string.selection)));
+            }
+        } else {
+            if (hashMap.get(requestCode) != null) {
+                hashMap.get(requestCode).setText(data.getStringExtra(getString(R.string.selection)));
+            }
         }
-
-        /*Bitmap bmp = null;
-        if (data != null) {
-            if (data.getData() == null) {
-                bmp = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
-            } else {
-                Uri selectedImage = data.getData();
-                try {
-                    bmp = Common.scaleImage(mActivity, selectedImage);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (bmp != null) {
-
-                switch (requestCode) {
-                    case 0:
-                        if (resultCode == Activity.RESULT_OK) {
-                            setImageFromActivityResult(bmp);
-                        }
-                        break;
-                    case 1:
-                        if (resultCode == Activity.RESULT_OK) {
-                            setImageFromActivityResult(bmp);
-                        }
-                        break;
-                }
-            }
-        }*/
     }
 
     /**
@@ -1489,13 +1570,12 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         public Spinner spinnerBlood = null;
         @Nullable
         public EditText edtchild_btime = null;
-        @Nullable
-        public EditText edtchild_bplace = null;
 
-        @Nullable
+        public TextView txt_child_bplace = null;
+        public TextView txt_child_edu = null;
+
+
         public ToggleButton tbtn_interest = null;
-        @Nullable
-        public EditText edtchild_edu = null;
         @Nullable
         public EditText edtchild_work = null;
         public String ImgHash = "";

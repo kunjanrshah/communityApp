@@ -51,6 +51,10 @@ import com.krs.vastipatrak.model.ListFamilyTreeData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.model.MatrimonyProfileData;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -60,6 +64,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -1901,6 +1908,9 @@ public class Common {
 
     }
 
+
+
+
     public static void getParentRandomColor(@NonNull Context context, int position, LinearLayout ll_event) {
         int i = position % 10;
         Log.v("color number:", "" + i);
@@ -2239,6 +2249,7 @@ public class Common {
         public static final String DEVICE_TOKEN = "device_token";
         public static final String DEVICE_ID = "int_udid";
         public static final String ACCESS_TOKEN = "access_token";
+        public static final String RESPONSE_DATA = "response_data";
         public static final String NEAR_BY = "nearBy";
         public static final String DISTANCE = "distance";
 
@@ -2354,6 +2365,8 @@ public class Common {
         public static final String CITY = "city";
         public static final String TITLE_BLOOD_GROUP = "Blood Group";
         public static final String TITLE_GOTRA = "Gotra";
+        public static final String TITLE_NATIVE = "Native";
+        public static final String TITLE_EDUCATION = "Education";
         public static final String TITLE_CHILD_BLOOD_GROUP = "Child BG";
         public static final String TITLE_SPOUSE_BLOOD_GROUP = "SPOUSE BG";
         public static final String A_POSITIVE = "A +VE";
@@ -2447,7 +2460,7 @@ public class Common {
         public static final String EVENTS_URL = BASE_URL + "/API/getEvents";
         public static final String GET_CITIES_URL = BASE_URL + "/API/getCities";
         public static final String CHANGE_ROLE_URL = BASE_URL + "/API/changeRole";
-        public static final String GET_GOTRA_URL = BASE_URL + "/API/getGotra";
+        //public static final String GET_GOTRA_URL = BASE_URL + "/API/getGotra";
         public static final String SHARED_USERS_URL = BASE_URL + "/API/shareUsers";
         public static final String NEAR_BY_USERS_URL = BASE_URL + "/API/getNearByUsers";
         public static final String SEND_REQUEST_URL = BASE_URL + "/API/sendRequest";
@@ -2456,6 +2469,7 @@ public class Common {
         public static final String SET_REMINDER_URL = BASE_URL + "/API/setReminder";
         public static final String SET_TREE_URL = BASE_URL + "/API/saveTree";
         public static final String SET_UPDATED_VERSION_URL = BASE_URL + "/API/getUpdatedVersion";
+        public static final String GET_MASTER_DATA_URL = BASE_URL + "/API/getMasterData";
         public static final String GET_USERS_BY_DATE_URL = BASE_URL + "/API/getUsersByDate";
         public static String DEVICE_ID_VALUE = "";
     }

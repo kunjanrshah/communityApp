@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.AdvanceSearchActivity;
 import com.krs.vastipatrak.activity.SelectionlistActivity;
+import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
 import com.melnykov.fab.FloatingActionButton;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -54,18 +56,18 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
     public RadioButton rbtnM;
     public RadioButton rbtnF;
     public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtMobile, edtAddress, edt_Eaddress, edt_phone;
-    public EditText edtEducation, edtBPlace, edtNPlace;
-    // public EditText edtCity;
-    public TextView txtCity;
+    public TextView txtCity, txtEducation, txtBPlace, txtNPlace;
     public EditText edtbdateFrom, edtbdateTo;
     public Spinner sp_user_start_age;
     public Spinner sp_user_end_age;
+
     ArrayAdapter<String> dataAdapter;
-    String[] titleGotra;
+   // String[] titleGotra;
     private String TAG = PersonalSearch.class.getSimpleName();
     private SharedPreferences mSharedPreferences;
     private RadioButton rbtnB;
     private FloatingActionButton floatingActionButton;
+    private boolean is_first = true;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -140,9 +142,6 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                                 String date = str_day + "/" + str_month + "/" + year;
                                 edtbdateFrom.setText(date);
                                 edtbdateTo.setText(date);
-                                //  date= year+ "-" + str_month + "-" + str_day;
-                                // bdateFrom=date;
-                                // bdateTo=date;
                             }
                         });
                         dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
@@ -238,9 +237,56 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
         txtCity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdvanceSearchActivity.chooseFragment = TAG;
-                Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
-                startActivityForResult(mIntent,10);
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), false);
+                    mIntent.putExtra(getString(R.string.title), "City");
+                    startActivityForResult(mIntent, 11);
+                }
+            }
+        });
+
+        txtBPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), false);
+                    mIntent.putExtra(getString(R.string.title), "Birth Place");
+                    startActivityForResult(mIntent, 12);
+                }
+            }
+        });
+
+        txtEducation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), true);
+                    mIntent.putExtra(getString(R.string.title), "Education");
+                    startActivityForResult(mIntent, 13);
+                }
+            }
+        });
+
+        txtNPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_first) {
+                    is_first = false;
+                    AdvanceSearchActivity.chooseFragment = TAG;
+                    Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
+                    mIntent.putExtra(getString(R.string.listview), true);
+                    mIntent.putExtra(getString(R.string.title), "Native");
+                    startActivityForResult(mIntent, 14);
+                }
             }
         });
 
@@ -250,7 +296,6 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
 
     private void MemoryAllocation(@NonNull View rootView) {
 
-        // gender = "";
         //  scroll_pdetails = rootView.findViewById(R.id.scroll_pdetails);
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         floatingActionButton = rootView.findViewById(R.id.fab_psave);
@@ -274,8 +319,8 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
         sp_user_end_age.setAdapter(dataAdapter);
 
         spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
-        titleGotra = getActivity().getResources().getStringArray(R.array.yt_gotra);
-        ArrayAdapter aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, titleGotra);
+       // titleGotra = getActivity().getResources().getStringArray(R.array.yt_gotra);
+        ArrayAdapter aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, AppController.getInstance().lstGotra);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerGotra.setAdapter(aa);
         rbtnM = rootView.findViewById(R.id.rbtnM);
@@ -287,9 +332,9 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
         edtLName = rootView.findViewById(R.id.edtLName);
         edtFatherName = rootView.findViewById(R.id.edtFatherName);
         edtMotherName = rootView.findViewById(R.id.edtMotherName);
-        edtEducation = rootView.findViewById(R.id.edtEducation);
-        edtBPlace = rootView.findViewById(R.id.edtBPlace);
-        edtNPlace = rootView.findViewById(R.id.edtNPlace);
+        txtEducation = rootView.findViewById(R.id.txtEducation);
+        txtBPlace = rootView.findViewById(R.id.txtBPlace);
+        txtNPlace = rootView.findViewById(R.id.txtNPlace);
         txtCity = rootView.findViewById(R.id.txtCity);
 
         edtMobile = rootView.findViewById(R.id.edtMobile);
@@ -297,6 +342,14 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
         edt_Eaddress = rootView.findViewById(R.id.edt_Eaddress);
         edt_phone = rootView.findViewById(R.id.edt_phone);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        is_first = true;
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void setPreferenceData() {
@@ -331,13 +384,11 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                 }
                 if (mjsonObject.has(Common.Constant_Class.FROM_BIRTH_DATE)) {
                     String bdate = mjsonObject.getString(Common.Constant_Class.FROM_BIRTH_DATE);
-                    //  bdateFrom=bdate;
                     bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
                     edtbdateFrom.setText(bdate);
                 }
                 if (mjsonObject.has(Common.Constant_Class.TO_BIRTH_DATE)) {
                     String bdate = mjsonObject.getString(Common.Constant_Class.TO_BIRTH_DATE);
-                    // bdateTo=bdate;
                     bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
                     edtbdateTo.setText(bdate);
                 }
@@ -356,25 +407,22 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                     edtMotherName.setText(mjsonObject.getString(Common.Constant_Class.MOTHER_NAME));
                 }
                 if (mjsonObject.has(Common.Constant_Class.EDUCATION)) {
-                    edtEducation.setText(mjsonObject.getString(Common.Constant_Class.EDUCATION));
+                    txtEducation.setText(mjsonObject.getString(Common.Constant_Class.EDUCATION));
                 }
 
                 if (mjsonObject.has(Common.Constant_Class.BIRTH_PLACE)) {
-                    edtBPlace.setText(mjsonObject.getString(Common.Constant_Class.BIRTH_PLACE));
+                    txtBPlace.setText(mjsonObject.getString(Common.Constant_Class.BIRTH_PLACE));
                 }
                 if (mjsonObject.has(Common.Constant_Class.NATIVE_PLACE)) {
-                    edtNPlace.setText(mjsonObject.getString(Common.Constant_Class.NATIVE_PLACE));
+                    txtNPlace.setText(mjsonObject.getString(Common.Constant_Class.NATIVE_PLACE));
                 }
                 if (mjsonObject.has(Common.Constant_Class.CITY)) {
                     txtCity.setText(mjsonObject.getString(Common.Constant_Class.CITY));
                 }
                 if (mjsonObject.has(Common.Constant_Class.GOTRA)) {
                     String gotra = mjsonObject.getString(Common.Constant_Class.GOTRA);
-                    for (int i = 0; i < titleGotra.length; i++) {
-                        if (gotra.equalsIgnoreCase(titleGotra[i])) {
-                            spinnerGotra.setSelection(i);
-                        }
-                    }
+                    int i=AppController.getInstance().lstGotra.indexOf(gotra);
+                    spinnerGotra.setSelection(i);
                 }
                 if (mjsonObject.has(Common.Constant_Class.MOBILE)) {
                     edtMobile.setText(mjsonObject.getString(Common.Constant_Class.MOBILE));
@@ -422,6 +470,8 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        Common.hideKeyboard(getActivity());
         if (requestCode == CONTACT_PICKER_RESULT && resultCode == Activity.RESULT_OK && null != data) {
             Uri contactUri = data.getData();
             Cursor contactCursor = Objects.requireNonNull(getActivity()).getContentResolver().query(Objects.requireNonNull(contactUri), new String[]{ContactsContract.Contacts._ID}, null, null, null);
@@ -441,9 +491,25 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
             }
             phoneCursor.close();
 
-        } else if (requestCode == 10) {
+        } else if (requestCode == 11) {
             if (data != null) {
-                txtCity.setText("City: "+data.getStringExtra("selection"));
+                is_first = true;
+                txtCity.setText(data.getStringExtra(getString(R.string.selection)));
+            }
+        } else if (requestCode == 12) {
+            if (data != null) {
+                is_first = true;
+                txtBPlace.setText(data.getStringExtra(getString(R.string.selection)));
+            }
+        } else if (requestCode == 13) {
+            if (data != null) {
+                is_first = true;
+                txtEducation.setText(data.getStringExtra(getString(R.string.selection)));
+            }
+        } else if (requestCode == 14) {
+            if (data != null) {
+                is_first = true;
+                txtNPlace.setText(data.getStringExtra(getString(R.string.selection)));
             }
         }
     }

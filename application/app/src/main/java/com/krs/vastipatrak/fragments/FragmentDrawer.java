@@ -81,8 +81,7 @@ public class FragmentDrawer extends Fragment {
 
     @SuppressLint("Range")
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         // Inflating view layout
@@ -91,13 +90,18 @@ public class FragmentDrawer extends Fragment {
 
         img_profile = layout.findViewById(R.id.img_profile);
         txt_name = layout.findViewById(R.id.txt_name);
-        Glide.with(getActivity()).load(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+        try {
+            Glide.with(getActivity()).load(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
         String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
         txt_name.setText(name);
         NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(getActivity(), getData());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-      //  recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        //  recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -120,7 +124,11 @@ public class FragmentDrawer extends Fragment {
 
                 if (AppController.getInstance().isUpdate) {
                     AppController.getInstance().isUpdate = false;
-                    Glide.with(getActivity()).load(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+                    try {
+                        Glide.with(getActivity()).load(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+                    } catch (Exception e) {
+                        e.getMessage();
+                    }
                     String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
                     txt_name.setText(name);
                 }
