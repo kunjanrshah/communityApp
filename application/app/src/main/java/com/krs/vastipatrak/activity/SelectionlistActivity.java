@@ -62,7 +62,7 @@ public class SelectionlistActivity extends AppCompatActivity {
     private SearchView searchView;
     private int lastExpandedPosition = -1;
     private EditText edt_other;
-    private Button btnSave;
+    private Button btnSave,btnClear;
     private List<Items> ItemList;
     private RecyclerView.LayoutManager layoutManager;
     private SharedPreferences mSharedPreferences;
@@ -77,6 +77,7 @@ public class SelectionlistActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.lvList);
         edt_other = findViewById(R.id.edt_other);
         btnSave = findViewById(R.id.btnSave);
+        btnClear= findViewById(R.id.btnClear);
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
         Bundle mBundle = new Bundle();
         boolean listview = false;
@@ -109,10 +110,9 @@ public class SelectionlistActivity extends AppCompatActivity {
             expListView.setVisibility(View.VISIBLE);
             listDataHeader = new ArrayList<String>();
             listDataChild = new HashMap<String, List<String>>();
-            prepareExpandableListData();
+            // prepareExpandableListData();
             getStateList();
-            listAdapter = new SelectionListAdapter(this, listDataHeader, listDataChild);
-            expListView.setAdapter(listAdapter);
+
         }
 
 
@@ -172,12 +172,26 @@ public class SelectionlistActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String value = edt_other.getText().toString();
                 if (!value.isEmpty()) {
+                    value=value+" (other)";
                     finishActivity(value);
                 } else {
                     Toast.makeText(SelectionlistActivity.this, "Specify if Other", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        btnClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishActivity("");
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Common.hideKeyboard(this);
     }
 
     private void getStateList() {
@@ -192,7 +206,7 @@ public class SelectionlistActivity extends AppCompatActivity {
                 String token = mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, "");
                 mJsonObject.put(Common.Constant_Class.USER_ID, user_id);
                 mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, token);
-                mJsonObject.put(Common.Constant_Class.RESPONSE_DATA, "state");
+                mJsonObject.put(Common.Constant_Class.RESPONSE_DATA, "city_state");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -209,7 +223,15 @@ public class SelectionlistActivity extends AppCompatActivity {
                         for (int i = 0; i < mArray.length(); i++) {
                             JSONObject mObject = mArray.getJSONObject(i);
                             listDataHeader.add(mObject.getString("state"));
+                            JSONArray cityArray = mObject.getJSONArray("city");
+                            List<String> citylist = new ArrayList<String>();
+                            for (int j = 0; j < cityArray.length(); j++) {
+                                citylist.add(cityArray.getString(j));
+                            }
+                            listDataChild.put(mObject.getString("state"), citylist);
                         }
+                        listAdapter = new SelectionListAdapter(SelectionlistActivity.this, listDataHeader, listDataChild);
+                        expListView.setAdapter(listAdapter);
                     } catch (Exception e) {
                         e.printStackTrace();
                         Common.hideProgressDialog();

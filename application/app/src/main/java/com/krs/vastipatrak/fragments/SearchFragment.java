@@ -527,6 +527,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(search);
                         JSONObject globalObj = new JSONObject();
                         globalObj.put("search_str", search.toLowerCase().trim());
+                      //  globalObj.put("search_str", "");
                         search = globalObj.toString();
                     }
                     SearchString = search;

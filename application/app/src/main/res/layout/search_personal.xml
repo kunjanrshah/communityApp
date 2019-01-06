@@ -108,7 +108,7 @@
                             android:drawableEnd="@drawable/calendar"
                             android:hint="@string/hint_birth_date_from"
                             android:inputType="date"
-                            android:nextFocusDown="@id/input_layout_bdate_to"
+                            android:nextFocusDown="@id/edtbdate_to"
                             android:singleLine="true" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -141,7 +141,7 @@
                             android:drawableEnd="@drawable/calendar"
                             android:hint="@string/hint_birth_date_to"
                             android:inputType="date"
-                            android:nextFocusDown="@id/txtNPlace"
+                            android:nextFocusDown="@id/edt_Education"
                             android:singleLine="true" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -153,6 +153,66 @@
                         android:text="DD/MM/YYYY"
                         android:textSize="10sp" />
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_edu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/edt_Education"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center_vertical"
+                        android:hint="@string/hint_education"
+                        android:inputType="textCapSentences"
+                        android:textColor="@android:color/black"
+                        android:nextFocusDown="@id/txtBPlace"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dip"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:text="BirthPlace" />
+
+                    <TextView
+                        android:id="@+id/txtBPlace"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="1"
+                        android:background="@drawable/back"
+                        android:gravity="center_vertical"
+                        android:hint="@string/hint_birth_place"
+                        android:textColor="@android:color/black"
+                        android:inputType="textCapSentences"
+                        android:nextFocusDown="@id/txtNPlace"
+                        android:padding="5dp"
+                        android:singleLine="true" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -183,69 +243,7 @@
                         android:gravity="center_vertical"
                         android:hint="@string/hint_native"
                         android:inputType="textCapSentences"
-                        android:nextFocusDown="@id/txtBPlace"
-                        android:padding="5dp"
-                        android:singleLine="true" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dip"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dip"
-                        android:text="BirthPlace" />
-
-                    <TextView
-                        android:id="@+id/txtBPlace"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="5dip"
-                        android:layout_weight="1"
-                        android:background="@drawable/back"
-                        android:gravity="center_vertical"
-                        android:hint="@string/hint_birth_place"
-                        android:inputType="textCapSentences"
-                        android:nextFocusDown="@id/txtEducation"
-                        android:padding="5dp"
-                        android:singleLine="true" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dip"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dip"
-                        android:text="Education" />
-
-                    <TextView
-                        android:id="@+id/txtEducation"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/back"
-                        android:gravity="center_vertical"
-                        android:hint="@string/hint_education"
-                        android:inputType="textCapSentences"
+                        android:textColor="@android:color/black"
                         android:nextFocusDown="@id/txtCity"
                         android:padding="5dp"
                         android:singleLine="true" />
@@ -273,10 +271,11 @@
                         android:background="@drawable/back"
                         android:gravity="center_vertical"
                         android:nextFocusDown="@id/edt_phone"
+                        android:textColor="@android:color/black"
                         android:padding="5dp"
                         android:singleLine="true"
-                        android:text="@string/hint_city"
-                        android:textColor="@color/mdtp_transparent_black" />
+                        android:hint="@string/hint_city"
+                         />
                 </LinearLayout>
 
             </LinearLayout>
@@ -298,7 +297,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_land_line"
                         android:inputType="phone"
-                        android:nextFocusDown="@id/input_layout_mobile"
+                        android:nextFocusDown="@id/edtMobile"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -332,13 +331,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top|left"
-                    android:inputType="textMultiLine"
-                    android:lines="2"
-                    android:maxLines="3"
-                    android:minLines="2"
+                    android:singleLine="true"
                     android:hint="@string/hint_address"
-                    android:nextFocusDown="@id/input_layout_bdate_from"
-                    android:scrollbars="vertical" />
+                    android:nextFocusDown="@id/edt_Eaddress"
+                     />
 
 
             </android.support.design.widget.TextInputLayout>
@@ -353,6 +349,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_email"
+                    android:nextFocusDown="@id/spinnerGotra"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 

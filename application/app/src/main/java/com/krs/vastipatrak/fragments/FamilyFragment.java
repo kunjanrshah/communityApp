@@ -152,6 +152,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_family, container, false);
@@ -171,7 +172,6 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             public boolean onTouch(View v, @NonNull MotionEvent event) {
 
                 final int DRAWABLE_RIGHT = 2;
-
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (edtsponse_bdate.getRight() - edtsponse_bdate.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         Calendar now = Calendar.getInstance();
@@ -199,7 +199,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                             }
                         });
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
-                            dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+
+                         //  dpd.show(getActivity().getSupportFragmentManager(), "Datepickerdialog");
                         }
                         return true;
                     }
@@ -243,7 +244,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                             }
                         });
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
-                            dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+                          //  dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
                     }
@@ -1194,7 +1195,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                             }
                         });
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
-                            dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
+                         //   dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
                     }
@@ -1235,7 +1236,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                             }
                         });
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
-                            tpd.show(mActivity.getFragmentManager(), "Timepickerdialog");
+                          //  tpd.show(mActivity.getFragmentManager(), "Timepickerdialog");
                         }
                         return true;
                     }

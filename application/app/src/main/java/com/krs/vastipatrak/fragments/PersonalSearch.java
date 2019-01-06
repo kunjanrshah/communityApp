@@ -55,8 +55,8 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
     public Spinner spinnerBlood, spinnerGotra;
     public RadioButton rbtnM;
     public RadioButton rbtnF;
-    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtMobile, edtAddress, edt_Eaddress, edt_phone;
-    public TextView txtCity, txtEducation, txtBPlace, txtNPlace;
+    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtMobile, edtAddress, edt_Eaddress, edt_phone,edt_Education;
+    public TextView txtCity, txtBPlace, txtNPlace;
     public EditText edtbdateFrom, edtbdateTo;
     public Spinner sp_user_start_age;
     public Spinner sp_user_end_age;
@@ -144,7 +144,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                                 edtbdateTo.setText(date);
                             }
                         });
-                        dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
+                    //    dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
                         return true;
                     }
                 }
@@ -196,7 +196,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
 
                             }
                         });
-                        dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
+                    //    dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         return true;
                     }
                 }
@@ -262,7 +262,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
             }
         });
 
-        txtEducation.setOnClickListener(new View.OnClickListener() {
+        /*txtEducation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (is_first) {
@@ -274,7 +274,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                     startActivityForResult(mIntent, 13);
                 }
             }
-        });
+        });*/
 
         txtNPlace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -332,7 +332,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
         edtLName = rootView.findViewById(R.id.edtLName);
         edtFatherName = rootView.findViewById(R.id.edtFatherName);
         edtMotherName = rootView.findViewById(R.id.edtMotherName);
-        txtEducation = rootView.findViewById(R.id.txtEducation);
+        edt_Education = rootView.findViewById(R.id.txtEducation);
         txtBPlace = rootView.findViewById(R.id.txtBPlace);
         txtNPlace = rootView.findViewById(R.id.txtNPlace);
         txtCity = rootView.findViewById(R.id.txtCity);
@@ -407,7 +407,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                     edtMotherName.setText(mjsonObject.getString(Common.Constant_Class.MOTHER_NAME));
                 }
                 if (mjsonObject.has(Common.Constant_Class.EDUCATION)) {
-                    txtEducation.setText(mjsonObject.getString(Common.Constant_Class.EDUCATION));
+                    edt_Education.setText(mjsonObject.getString(Common.Constant_Class.EDUCATION));
                 }
 
                 if (mjsonObject.has(Common.Constant_Class.BIRTH_PLACE)) {
@@ -501,12 +501,12 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                 is_first = true;
                 txtBPlace.setText(data.getStringExtra(getString(R.string.selection)));
             }
-        } else if (requestCode == 13) {
+        } /*else if (requestCode == 13) {
             if (data != null) {
                 is_first = true;
                 txtEducation.setText(data.getStringExtra(getString(R.string.selection)));
             }
-        } else if (requestCode == 14) {
+        }*/ else if (requestCode == 14) {
             if (data != null) {
                 is_first = true;
                 txtNPlace.setText(data.getStringExtra(getString(R.string.selection)));

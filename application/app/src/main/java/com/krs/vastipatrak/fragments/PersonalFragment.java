@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -38,6 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -248,7 +250,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
 
-        edtbTime.setOnTouchListener(new View.OnTouchListener() {
+       /* edtbTime.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, @NonNull MotionEvent event) {
 
@@ -278,16 +280,82 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 edtbTime.setText(time);
                             }
 
-                           /* @Override
+                           *//* @Override
                             public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
                                 String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
                                 String minuteString = minute < 10 ? "0" + minute : "" + minute;
                                 String time = hourString + ":" + minuteString;
                                 edtbTime.setText(time);
-                            }*/
+                            }*//*
                         });
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             tpd.show(mActivity.getFragmentManager(), "Timepickerdialog");
+                        }
+
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });*/
+
+        edtbTime.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, @NonNull MotionEvent event) {
+
+                final int DRAWABLE_RIGHT = 2;
+
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (edtbTime.getRight() - edtbTime.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+
+                        final Calendar c = Calendar.getInstance();
+                        final boolean is24Hours = DateFormat.is24HourFormat(getContext());
+                        final TimePickerDialogFragment timePicker = TimePickerDialogFragment.newInstance(
+                                c.get(Calendar.HOUR_OF_DAY),
+                                c.get(Calendar.MINUTE),
+                                is24Hours);
+                        timePicker.setListener(new android.app.TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+                                String minuteString = minute < 10 ? "0" + minute : "" + minute;
+                                String time = hourString + ":" + minuteString;
+                                edtbTime.setText(time);
+                            }
+                        });
+
+                       /* Calendar now = Calendar.getInstance();
+                        TimePickerDialog tpd = TimePickerDialog.newInstance((TimePickerDialog.OnTimeSetListener) getContext(), now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), false);
+                        tpd.setThemeDark(true);
+                        tpd.vibrate(true);
+                        tpd.dismissOnPause(false);
+                        tpd.enableSeconds(false);
+                        tpd.setTitle("Birth Time");
+                        tpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialogInterface) {
+                                Log.d("TimePicker", "Dialog was cancelled");
+                            }
+                        });
+                        tpd.setOnTimeSetListener(new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                                String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+                                String minuteString = minute < 10 ? "0" + minute : "" + minute;
+                                String time = hourString + ":" + minuteString;
+                                edtbTime.setText(time);
+                            }
+
+                           *//* @Override
+                            public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+                                String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+                                String minuteString = minute < 10 ? "0" + minute : "" + minute;
+                                String time = hourString + ":" + minuteString;
+                                edtbTime.setText(time);
+                            }*//*
+                        });*/
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                            timePicker.showNow(getChildFragmentManager(), null);
                         }
 
                         return true;
@@ -314,7 +382,6 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                         dpd.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-
                                 monthOfYear = (++monthOfYear);
                                 String str_month = String.valueOf(monthOfYear);
                                 String str_day = String.valueOf(dayOfMonth);
@@ -329,9 +396,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                             }
                         });
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
-                            dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
+                          //  dpd.show(getActivity().getSupportFragmentManager(), "Datepickerdialog");
                         }
-
                         return true;
                     }
                 }

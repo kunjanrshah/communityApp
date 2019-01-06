@@ -189,7 +189,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                 String strLName = ((PersonalSearch) personal).edtLName.getText().toString().trim();
                 String strFatherName = ((PersonalSearch) personal).edtFatherName.getText().toString().trim();
                 String strMotherName = ((PersonalSearch) personal).edtMotherName.getText().toString().trim();
-                String strEducation = ((PersonalSearch) personal).txtEducation.getText().toString().trim();
+                String strEducation = ((PersonalSearch) personal).edt_Education.getText().toString().trim();
                 String strBPlace = ((PersonalSearch) personal).txtBPlace.getText().toString().trim();
                 String strNPlace = ((PersonalSearch) personal).txtNPlace.getText().toString().trim();
                 String strMobile = ((PersonalSearch) personal).edtMobile.getText().toString().trim();
@@ -296,7 +296,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                     mJsonObject.put(Common.Constant_Class.NATIVE_PLACE, strNPlace);
                     lstProceed.add("Native Place: " + strNPlace);
                 }
-                if (!strCity.equalsIgnoreCase("") && !strCity.toLowerCase().contains(getResources().getString(R.string.select_city))) {
+                if (!strCity.equalsIgnoreCase("") && !strCity.toLowerCase().contains(getResources().getString(R.string.press_for_city))) {
                     String city = strCity.replace("City: ", "");
                     mJsonObject.put(Common.Constant_Class.CITY, city);
                     lstProceed.add("City: " + city);
