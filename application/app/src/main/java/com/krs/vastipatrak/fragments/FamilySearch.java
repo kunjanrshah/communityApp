@@ -157,7 +157,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                                 edt_mdate_to.setText(date);
                             }
                         });
-                    //    dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
+                      //  dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
 
                         return true;
                     }
@@ -246,13 +246,14 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                                 edt_cdate_to.setText(date);
                             }
                         });
-                      //  dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
+                       // dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
                         return true;
                     }
                 }
                 return false;
             }
         });
+
 
         edt_cdate_to.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -294,7 +295,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                                 }
                             }
                         });
-                     //   dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
+                       // dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
                         return true;
                     }
                 }

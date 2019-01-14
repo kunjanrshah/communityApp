@@ -59,6 +59,7 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.service.MyLocationService;
 import com.krs.vastipatrak.utils.Common;
+
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -314,14 +315,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 c.get(Calendar.HOUR_OF_DAY),
                                 c.get(Calendar.MINUTE),
                                 is24Hours);
-                        timePicker.setListener(new android.app.TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
-                                String minuteString = minute < 10 ? "0" + minute : "" + minute;
-                                String time = hourString + ":" + minuteString;
-                                edtbTime.setText(time);
-                            }
+                        timePicker.setListener((view, hourOfDay, minute) -> {
+                            String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+                            String minuteString = minute < 10 ? "0" + minute : "" + minute;
+                            String time = hourString + ":" + minuteString;
+                            edtbTime.setText(time);
                         });
 
                        /* Calendar now = Calendar.getInstance();
