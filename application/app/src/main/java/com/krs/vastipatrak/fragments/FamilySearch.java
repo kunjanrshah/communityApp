@@ -51,8 +51,8 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
     private static final int CONTACT_PICKER_RESULT = 1001;
     @NonNull
     public String gender = "";
-    public EditText edtSpouseName, edtSpouseFName, edtSpouseMName;
-    public TextView txtSpouseEdu, txtchildBplace, txtchildEdu;
+    public EditText edtSpouseName, edtSpouseFName, edtSpouseMName, edtchildEdu, edtSpouseEdu;
+    public TextView txtchildBplace;
     public EditText edtchild_name, edtchild_work, edtcmobile;
     public EditText edt_mdate_from, edt_mdate_to, edt_cdate_from, edt_cdate_to;
     public Spinner spinnerBlood;
@@ -82,7 +82,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
         setAdapterBGlist();
         setPreferenceData();
 
-        txtSpouseEdu.setOnClickListener(new View.OnClickListener() {
+       /* txtSpouseEdu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (is_first) {
@@ -94,7 +94,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                     startActivityForResult(mIntent, 11);
                 }
             }
-        });
+        });*/
 
         txtchildBplace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +110,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
             }
         });
 
-        txtchildEdu.setOnClickListener(new View.OnClickListener() {
+        /*txtchildEdu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (is_first) {
@@ -122,7 +122,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                     startActivityForResult(mIntent, 13);
                 }
             }
-        });
+        });*/
 
         edt_mdate_from.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -141,7 +141,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                         dpd.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-
+                                monthOfYear = (++monthOfYear);
                                 String str_month = String.valueOf(monthOfYear);
                                 String str_day = String.valueOf(dayOfMonth);
                                 if (str_month.length() == 1) {
@@ -157,7 +157,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                                 edt_mdate_to.setText(date);
                             }
                         });
-                      //  dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
+                        dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
 
                         return true;
                     }
@@ -183,7 +183,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                         dpd.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-
+                                monthOfYear = (++monthOfYear);
                                 String str_month = String.valueOf(monthOfYear);
                                 String str_day = String.valueOf(dayOfMonth);
                                 if (str_month.length() == 1) {
@@ -205,7 +205,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                                 }
                             }
                         });
-                       // dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
+                        dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
                         return true;
                     }
                 }
@@ -230,7 +230,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                         dpd.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-
+                                monthOfYear = (++monthOfYear);
                                 String str_month = String.valueOf(monthOfYear);
                                 String str_day = String.valueOf(dayOfMonth);
                                 if (str_month.length() == 1) {
@@ -246,7 +246,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                                 edt_cdate_to.setText(date);
                             }
                         });
-                       // dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
+                        dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
                         return true;
                     }
                 }
@@ -271,7 +271,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                         dpd.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-
+                                monthOfYear = (++monthOfYear);
                                 String str_month = String.valueOf(monthOfYear);
                                 String str_day = String.valueOf(dayOfMonth);
                                 if (str_month.length() == 1) {
@@ -295,7 +295,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                                 }
                             }
                         });
-                       // dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
+                        dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
                         return true;
                     }
                 }
@@ -394,11 +394,11 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
         sp_spouse_start_age = rootView.findViewById(R.id.sp_spouse_start_age);
         sp_spouse_end_age = rootView.findViewById(R.id.sp_spouse_end_age);
         edtSpouseName = rootView.findViewById(R.id.edtSpouseName);
-        txtSpouseEdu = rootView.findViewById(R.id.txtSpouseEdu);
+        edtSpouseEdu = rootView.findViewById(R.id.edtSpouseEdu);
         edtSpouseFName = rootView.findViewById(R.id.edtSpouseFName);
         edtSpouseMName = rootView.findViewById(R.id.edtSpouseMName);
         edtchild_name = rootView.findViewById(R.id.edtchild_name);
-        txtchildEdu = rootView.findViewById(R.id.txtchildEdu);
+        edtchildEdu = rootView.findViewById(R.id.edtchildEdu);
         edtchild_work = rootView.findViewById(R.id.edtchild_work);
         edt_cdate_from = rootView.findViewById(R.id.edt_cdate_from);
         edt_cdate_to = rootView.findViewById(R.id.edt_cdate_to);
@@ -484,7 +484,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                     edtchild_name.setText(mjsonObject.getString(Common.Constant_Class.CHILD_NAME));
                 }
                 if (mjsonObject.has(Common.Constant_Class.CHILD_EDU)) {
-                    txtchildEdu.setText(mjsonObject.getString(Common.Constant_Class.CHILD_EDU));
+                    edtchildEdu.setText(mjsonObject.getString(Common.Constant_Class.CHILD_EDU));
                 }
                 if (mjsonObject.has(Common.Constant_Class.CHILD_WORK)) {
                     edtchild_work.setText(mjsonObject.getString(Common.Constant_Class.CHILD_WORK));
@@ -569,7 +569,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
             phoneCursor.close();
         } else if (requestCode == 11) {
             if (data != null) {
-                txtSpouseEdu.setText(data.getStringExtra(getString(R.string.selection)));
+                edtSpouseEdu.setText(data.getStringExtra(getString(R.string.selection)));
             }
         } else if (requestCode == 12) {
             if (data != null) {
@@ -577,7 +577,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
             }
         } else if (requestCode == 13) {
             if (data != null) {
-                txtchildEdu.setText(data.getStringExtra(getString(R.string.selection)));
+                edtchildEdu.setText(data.getStringExtra(getString(R.string.selection)));
             }
         }
     }

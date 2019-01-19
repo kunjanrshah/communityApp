@@ -21,6 +21,7 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,6 +42,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -63,7 +65,6 @@ import com.krs.vastipatrak.utils.Common;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -89,8 +90,8 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
     private static final int CONTACT_PICKER_RESULT = 1001;
     private static final int CONTACT_PICKER_RESULT_CHILD = 1002;
-    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName, edtsponse_mobile;
-    public TextView txt_sponse_nplace, txt_spouse_edu;
+    public EditText edtSpouseName, edtSpouseFName, edtMSpouseName, edtsponse_mobile, edt_spouse_edu;
+    public TextView txt_sponse_nplace;
     public String str_spouse_hash = "", str_fspouse_hash = "", str_mspouse_hash = "";
     public LinearLayout child_container = null;
     public ArrayList<Integer> lst_delID = null;
@@ -200,7 +201,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         });
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
 
-                         //  dpd.show(getActivity().getSupportFragmentManager(), "Datepickerdialog");
+                            dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
                     }
@@ -244,7 +245,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                             }
                         });
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
-                          //  dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+                            dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
                     }
@@ -546,7 +547,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             }
         });
 
-        txt_spouse_edu.setOnClickListener(new View.OnClickListener() {
+        /*txt_spouse_edu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (is_first) {
@@ -558,7 +559,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     startActivityForResult(mIntent, 12);
                 }
             }
-        });
+        });*/
 
         return rootView;
     }
@@ -592,7 +593,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         edt_mdate = root.findViewById(R.id.edt_mdate);
         edtsponse_bdate = root.findViewById(R.id.edtsponse_bdate);
-        txt_spouse_edu = root.findViewById(R.id.txt_spouse_edu);
+        edt_spouse_edu = root.findViewById(R.id.edt_spouse_edu);
         edtsponse_mobile = root.findViewById(R.id.edtsponse_mobile);
         txt_sponse_nplace = root.findViewById(R.id.txt_sponse_nplace);
         edtSpouseName = root.findViewById(R.id.edtSpouseName);
@@ -630,7 +631,10 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtsponse_bdate.setKeyListener(null);
         edtsponse_bdate.setCursorVisible(false);
 
-        txt_spouse_edu.setClickable(false);
+        edt_spouse_edu.setKeyListener(null);
+        edt_spouse_edu.setCursorVisible(false);
+
+
         txt_sponse_nplace.setClickable(false);
 
         sp_spouse_blood.setClickable(false);
@@ -664,7 +668,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtSpouseFName.setEnabled(true);
         edtMSpouseName.setEnabled(true);
         edtsponse_bdate.setEnabled(true);
-        txt_spouse_edu.setClickable(true);
+        edt_spouse_edu.setEnabled(true);
         txt_sponse_nplace.setClickable(true);
         sp_spouse_blood.setClickable(true);
         chk_marriage_bdate_rem.setVisibility(View.GONE);
@@ -684,7 +688,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         }
         profile_id = mListProfileData.getProfile_id();
         edtSpouseName.setText(mListProfileData.getSpouse_name());
-        txt_spouse_edu.setText(mListProfileData.getSpouse_education());
+        edt_spouse_edu.setText(mListProfileData.getSpouse_education());
         txt_sponse_nplace.setText(mListProfileData.getSponse_native());
         edtsponse_bdate.setText(mListProfileData.getSponse_bdate());
         edtsponse_mobile.setText(mListProfileData.getSponse_mobile());
@@ -793,14 +797,15 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         Objects.requireNonNull(mViewholder.radioGroupId).check(R.id.radioF);
                     }
 
-                    Objects.requireNonNull(mViewholder.txt_child_edu).setText(mObjChild.getChild_edu());
+                    Objects.requireNonNull(mViewholder.edt_child_edu).setText(mObjChild.getChild_edu());
                     Objects.requireNonNull(mViewholder.edtchild_work).setText(mObjChild.getChild_work());
 
 
                     if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                         mViewholder.edtchild_name.setEnabled(true);
+
                         mViewholder.edtchild_bdate.setEnabled(true);
-                        mViewholder.txt_child_edu.setClickable(true);
+                        mViewholder.edt_child_edu.setEnabled(true);
                         mViewholder.edtchild_work.setEnabled(true);
                     } else {
                         mViewholder.edtchild_name.setKeyListener(null);
@@ -809,11 +814,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         mViewholder.edtchild_bdate.setKeyListener(null);
                         mViewholder.edtchild_bdate.setCursorVisible(false);
 
-                        mViewholder.txt_child_edu.setClickable(false);
+                        mViewholder.edt_child_edu.setKeyListener(null);
+                        mViewholder.edt_child_edu.setCursorVisible(false);
 
                         mViewholder.edtchild_work.setKeyListener(null);
                         mViewholder.edtchild_work.setCursorVisible(false);
-
                     }
                     final String child_url = mObjChild.getChild_img_url();
                     try {
@@ -878,7 +883,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         mViewholder.edtchild_bdate = addView.findViewById(R.id.edtchild_bdate);
         mViewholder.edtchild_btime = addView.findViewById(R.id.edtchild_btime);
         mViewholder.txt_child_bplace = addView.findViewById(R.id.txt_child_bplace);
-        mViewholder.txt_child_edu = addView.findViewById(R.id.txt_child_edu);
+        mViewholder.edt_child_edu = addView.findViewById(R.id.edt_child_edu);
         mViewholder.edtchild_work = addView.findViewById(R.id.edtchild_work);
         mViewholder.chk_child_bdate_rem = addView.findViewById(R.id.chk_child_bdate_rem);
         mViewholder.chk_child_marriage = addView.findViewById(R.id.chk_child_marriage);
@@ -924,9 +929,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         });
 
         educate++;
-        hashMap.put(educate, mViewholder.txt_child_edu);
-        mViewholder.txt_child_edu.setTag(educate);
-        mViewholder.txt_child_edu.setOnClickListener(new View.OnClickListener() {
+        hashMap.put(educate, mViewholder.txt_child_bplace);
+        mViewholder.txt_child_bplace.setTag(educate);
+       /* mViewholder.edt_child_edu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (is_first) {
@@ -935,10 +940,10 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     Intent mIntent = new Intent(getActivity(), SelectionlistActivity.class);
                     mIntent.putExtra(getString(R.string.listview), true);
                     mIntent.putExtra(getString(R.string.title), "Education");
-                    startActivityForResult(mIntent, Integer.parseInt(mViewholder.txt_child_edu.getTag().toString()));
+                    startActivityForResult(mIntent, Integer.parseInt(mViewholder.edt_child_edu.getTag().toString()));
                 }
             }
-        });
+        });*/
 
         mViewholder.chk_child_bdate_rem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1118,9 +1123,9 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             mViewholder.spinnerBlood.setEnabled(false);
             Objects.requireNonNull(mViewholder.edtchild_bdate).setKeyListener(null);
             mViewholder.edtchild_bdate.setCursorVisible(false);
-
-            mViewholder.txt_child_edu.setClickable(false);
             mViewholder.txt_child_bplace.setClickable(false);
+            mViewholder.edt_child_edu.setKeyListener(null);
+            mViewholder.edt_child_edu.setCursorVisible(false);
 
             mViewholder.edtchild_work.setKeyListener(null);
             mViewholder.edtchild_work.setCursorVisible(false);
@@ -1195,7 +1200,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                             }
                         });
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
-                         //   dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
+                            dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
                     }
@@ -1213,7 +1218,27 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (mViewholder.edtchild_btime.getRight() - mViewholder.edtchild_btime.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        Calendar now = Calendar.getInstance();
+
+                        final Calendar c = Calendar.getInstance();
+                        final boolean is24Hours = DateFormat.is24HourFormat(getContext());
+                        final TimePickerDialogFragment timePicker = TimePickerDialogFragment.newInstance(
+                                c.get(Calendar.HOUR_OF_DAY),
+                                c.get(Calendar.MINUTE),
+                                is24Hours);
+                        timePicker.setListener(new android.app.TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+                                String minuteString = minute < 10 ? "0" + minute : "" + minute;
+                                String time = hourString + ":" + minuteString;
+                                mViewholder.edtchild_btime.setText(time);
+                            }
+                        });
+
+                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                            timePicker.showNow(getChildFragmentManager(), null);
+                        }
+                        /*Calendar now = Calendar.getInstance();
                         TimePickerDialog tpd = TimePickerDialog.newInstance((TimePickerDialog.OnTimeSetListener) getContext(), now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), false);
                         tpd.setThemeDark(true);
                         tpd.vibrate(true);
@@ -1234,10 +1259,10 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                 String time = hourString + ":" + minuteString;
                                 mViewholder.edtchild_btime.setText(time);
                             }
-                        });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
-                          //  tpd.show(mActivity.getFragmentManager(), "Timepickerdialog");
-                        }
+                        });*/
+                        /*if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                           tpd.show(mActivity.getFragmentManager(), "Timepickerdialog");
+                        }*/
                         return true;
                     }
                 }
@@ -1500,12 +1525,12 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 is_first = true;
                 txt_sponse_nplace.setText(data.getStringExtra(getString(R.string.selection)));
             }
-        } else if (requestCode == 12) {
+        } /*else if (requestCode == 12) {
             if (data != null) {
                 is_first = true;
-                txt_spouse_edu.setText(data.getStringExtra(getString(R.string.selection)));
+                txt_sponse_nplace.setText(data.getStringExtra(getString(R.string.selection)));
             }
-        } else {
+        } */ else {
             if (hashMap.get(requestCode) != null) {
                 hashMap.get(requestCode).setText(data.getStringExtra(getString(R.string.selection)));
             }
@@ -1573,7 +1598,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         public EditText edtchild_btime = null;
 
         public TextView txt_child_bplace = null;
-        public TextView txt_child_edu = null;
+        public EditText edt_child_edu = null;
 
 
         public ToggleButton tbtn_interest = null;

@@ -380,14 +380,14 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                 String strSpouseFName = ((FamilySearch) family).edtSpouseFName.getText().toString().trim();
                 String strSpouseMName = ((FamilySearch) family).edtSpouseMName.getText().toString().trim();
                 String strchild_name = ((FamilySearch) family).edtchild_name.getText().toString().trim();
-                String strcedu = ((FamilySearch) family).txtchildEdu.getText().toString().trim();
+                String strcedu = ((FamilySearch) family).edtchildEdu.getText().toString().trim();
                 String strchild_work = ((FamilySearch) family).edtchild_work.getText().toString().trim();
                 String childMobile = ((FamilySearch) family).edtcmobile.getText().toString().trim();
                 String childBplace = ((FamilySearch) family).txtchildBplace.getText().toString().trim();
                 String bgroup = ((FamilySearch) family).spinnerBlood.getSelectedItem().toString().trim();
 
                 String sp_spouse_blood = ((FamilySearch) family).sp_spouse_blood.getSelectedItem().toString().trim();
-                String edtSpouseEdu = ((FamilySearch) family).txtSpouseEdu.getText().toString().trim();
+                String edtSpouseEdu = ((FamilySearch) family).edtSpouseEdu.getText().toString().trim();
                 String sp_spouse_start_age = ((FamilySearch) family).sp_spouse_start_age.getSelectedItem().toString().trim();
                 String sp_spouse_end_age = ((FamilySearch) family).sp_spouse_end_age.getSelectedItem().toString().trim();
                 String sp_child_start_age = ((FamilySearch) family).sp_child_start_age.getSelectedItem().toString().trim();
@@ -676,7 +676,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
         if (!isConnected) {
             if (snackbar != null) {
                 View sbView = snackbar.getView();
-                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
                 textView.setTextColor(Color.WHITE);
                 snackbar.show();
             }

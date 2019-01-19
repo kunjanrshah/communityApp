@@ -141,7 +141,7 @@
                             android:drawableEnd="@drawable/calendar"
                             android:hint="@string/hint_birth_date_to"
                             android:inputType="date"
-                            android:nextFocusDown="@id/edt_Education"
+                            android:nextFocusDown="@id/edt_Education1"
                             android:singleLine="true" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -169,7 +169,7 @@
                     android:layout_weight="1">
 
                     <EditText
-                        android:id="@+id/edt_Education"
+                        android:id="@+id/edt_Education1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"

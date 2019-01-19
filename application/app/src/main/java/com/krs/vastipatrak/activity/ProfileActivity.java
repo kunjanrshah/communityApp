@@ -1,6 +1,7 @@
 package com.krs.vastipatrak.activity;
 
 import android.annotation.SuppressLint;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -50,7 +51,6 @@ import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import android.app.TimePickerDialog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -293,7 +293,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
             String lname = ((PersonalFragment) personal).edtLName.getText().toString().trim();
             String FatherName = ((PersonalFragment) personal).edtFatherName.getText().toString().trim();
             String MotherName = ((PersonalFragment) personal).edtMotherName.getText().toString().trim();
-            String Education = ((PersonalFragment) personal).txtEducation.getText().toString().trim();
+            String Education = ((PersonalFragment) personal).edtEducation.getText().toString().trim();
             String BPlace = ((PersonalFragment) personal).txtBPlace.getText().toString().trim();
             String NPlace = ((PersonalFragment) personal).txtNPlace.getText().toString().trim();
             String Gotra = ((PersonalFragment) personal).spinnerGotra.getSelectedItem().toString().trim();
@@ -314,9 +314,9 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                 if (!Common.isThisDateValid(bdate, Common.yyyy_MM_dd)) {
                     valid = "Birth Date is not valid Format";
                 }
-                if (!Common.isValidDate(bdate) && valid.isEmpty()) {
+               /* if (!Common.isValidDate(bdate) && valid.isEmpty()) {
                     valid = "Birth Date is not valid ";
-                }
+                }*/
             }
 
 
@@ -364,7 +364,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                 }
 
                 sdate = ((FamilyFragment) family).edtsponse_bdate.getText().toString().trim();
-                spouse_edu = ((FamilyFragment) family).txt_spouse_edu.getText().toString().trim();
+                spouse_edu = ((FamilyFragment) family).edt_spouse_edu.getText().toString().trim();
 
                 if (!sdate.isEmpty()) {
                     sdate = Common.parseDateToddMMyyyy(sdate, Common.ddMMMyyyy, Common.yyyy_MM_dd);
@@ -373,9 +373,9 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                     if (!Common.isThisDateValid(sdate, "yyyy-mm-dd")) {
                         valid = "Sponse Birth Date is not valid Format";
                     }
-                    if (!Common.isValidDate(sdate) && valid.isEmpty()) {
+                    /*if (!Common.isValidDate(sdate) && valid.isEmpty()) {
                         valid = "Sponse Birth Date is not valid ";
-                    }
+                    }*/
                 }
 
 
@@ -444,13 +444,10 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
 
     private void setProfileJsonObject(@NonNull ListProfileData mListProfileData, @Nullable LinearLayout child_container, @NonNull ArrayList<Integer> lst_delID) {
 
-
         JSONObject mJsonObject = null;
-
         // Personal Details
         try {
             mJsonObject = new JSONObject();
-
             mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
             mJsonObject.put(Common.Constant_Class.USER_ID, Objects.requireNonNull(mSharedPreferences).getString(Common.Constant_Class.USER_ID, ""));
             mJsonObject.put(Common.Constant_Class.FIRST_NAME, mListProfileData.getFirst_name());
@@ -485,7 +482,6 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
 
         // Business details
         try {
-
             assert mJsonObject != null;
             mJsonObject.put(Common.Constant_Class.OCCUPATION, mListProfileData.getOccupation());
             mJsonObject.put(Common.Constant_Class.OFFICE_MOBILE, mListProfileData.getOffice_mobile());
@@ -541,9 +537,9 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                         if (!Common.isThisDateValid(child_bday, "yyyy-mm-dd")) {
                             valid = "Child Birth Date is not valid Format";
                         }
-                        if (!Common.isValidDate(child_bday) && valid.isEmpty()) {
+                       /* if (!Common.isValidDate(child_bday) && valid.isEmpty()) {
                             valid = "Child birthdate is not valid ";
-                        }
+                        }*/
                     }
 
 
@@ -563,7 +559,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                     mJsonObject_Child.put(Common.Constant_Class.BIRTH_TIME, child_btime);
                     mJsonObject_Child.put(Common.Constant_Class.BIRTH_PLACE, child_bplace);
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_BDAY, child_bday);
-                    mJsonObject_Child.put(Common.Constant_Class.CHILD_EDU, Objects.requireNonNull(mViewholder.txt_child_edu).getText());
+                    mJsonObject_Child.put(Common.Constant_Class.CHILD_EDU, Objects.requireNonNull(mViewholder.edt_child_edu).getText());
                     mJsonObject_Child.put(Common.Constant_Class.CHILD_WORK, Objects.requireNonNull(mViewholder.edtchild_work).getText());
                     if (!mViewholder.ImgHash.equalsIgnoreCase("")) {
                         mJsonObject_Child.put(Common.Constant_Class.CHILD_IMAGE, mViewholder.ImgHash);
@@ -906,7 +902,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
         if (!isConnected) {
             if (snackbar != null) {
                 View sbView = snackbar.getView();
-                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
                 textView.setTextColor(Color.WHITE);
                 snackbar.show();
             }

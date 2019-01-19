@@ -152,7 +152,22 @@
                 android:orientation="horizontal">
 
 
-                <LinearLayout
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/edt_spouse_edu"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dip"
+                        android:hint="Spouse Education"
+                        android:inputType="textCapSentences"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+                <!--<LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dip"
@@ -166,7 +181,7 @@
                         android:text="Spouse Education" />
 
                     <TextView
-                        android:id="@+id/txt_spouse_edu"
+                        android:id="@+id/edt_spouse_edu"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
@@ -177,7 +192,7 @@
                         android:padding="5dp"
                         android:singleLine="true"
                         android:textColor="@android:color/black" />
-                </LinearLayout>
+                </LinearLayout>-->
 
                 <LinearLayout
                     android:layout_width="match_parent"

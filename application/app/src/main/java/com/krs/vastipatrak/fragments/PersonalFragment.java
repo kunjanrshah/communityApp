@@ -87,7 +87,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     final int REQUEST_CODE = 100;
     private final String TAG = "PersonalFragment";
     public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtMobile, edtAddress, edt_Eaddress, edt_phone, edtbTime = null;
-    public TextView txtEducation, txtBPlace, txtNPlace, txtCity = null;
+    public TextView txtBPlace, txtNPlace, txtCity = null;
+    public EditText edtEducation;
     public String str_profile_hash = "", str_father_hash = "", str_mother_hash = "";
     public String gender = "";
     public Spinner spinnerBlood, spinnerGotra;
@@ -395,7 +396,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                             }
                         });
                         if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
-                          //  dpd.show(getActivity().getSupportFragmentManager(), "Datepickerdialog");
+                            dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
                     }
@@ -639,7 +640,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
 
-        txtEducation.setOnClickListener(new View.OnClickListener() {
+        /*txtEducation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (is_first) {
@@ -651,7 +652,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     startActivityForResult(mIntent, 11);
                 }
             }
-        });
+        });*/
 
         txtNPlace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -747,7 +748,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtMotherName = rootView.findViewById(R.id.edtMotherName);
         edtbdate = rootView.findViewById(R.id.edtbdate);
         edtbTime = rootView.findViewById(R.id.edtbTime);
-        txtEducation = rootView.findViewById(R.id.txtEducation);
+        edtEducation = rootView.findViewById(R.id.edtEducation);
         txtBPlace = rootView.findViewById(R.id.txtBPlace);
         txtNPlace = rootView.findViewById(R.id.txtNPlace);
         edtMobile = rootView.findViewById(R.id.edtMobile);
@@ -780,7 +781,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         ArrayAdapter aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, AppController.getInstance().lstGotra);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerGotra.setAdapter(aa);
-
+        spinnerGotra.setSelection(AppController.getInstance().lstGotra.size() - 1);
         spinnerBlood = rootView.findViewById(R.id.spinnerBlood);
         spinnerBlood.setOnItemSelectedListener(this);
 
@@ -809,7 +810,8 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtLName.setEnabled(true);
         edtFatherName.setEnabled(true);
         edtMotherName.setEnabled(true);
-        txtEducation.setClickable(true);
+        edtEducation.setEnabled(true);
+
         txtBPlace.setClickable(true);
         txtNPlace.setClickable(true);
         txtCity.setClickable(true);
@@ -849,7 +851,9 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtMotherName.setKeyListener(null);
         edtMotherName.setCursorVisible(false);
 
-        txtEducation.setClickable(false);
+        edtEducation.setKeyListener(null);
+        edtEducation.setCursorVisible(false);
+
         txtBPlace.setClickable(false);
         txtNPlace.setClickable(false);
         txtCity.setClickable(false);
@@ -917,7 +921,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             spinnerGotra.setSelection(i);
 
             Objects.requireNonNull(txtNPlace).setText(mListProfileData.getNative_place());
-            Objects.requireNonNull(txtEducation).setText(mListProfileData.getEducation());
+            Objects.requireNonNull(edtEducation).setText(mListProfileData.getEducation());
             Objects.requireNonNull(edt_Eaddress).setText(mListProfileData.getEmail_address());
             Objects.requireNonNull(edtAddress).setText(mListProfileData.getAddress());
             String blood = mListProfileData.getBlood_group();
@@ -1310,7 +1314,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         } else if (requestCode == 11) {
             if (data != null) {
                 is_first = true;
-                txtEducation.setText(data.getStringExtra(getString(R.string.selection)));
+                edtEducation.setText(data.getStringExtra(getString(R.string.selection)));
             }
         } else if (requestCode == 12) {
             if (data != null) {

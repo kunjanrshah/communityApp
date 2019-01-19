@@ -254,8 +254,24 @@
                 android:textColor="@android:color/black" />
         </LinearLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dip"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1">
 
-        <LinearLayout
+            <EditText
+                android:id="@+id/edt_child_edu"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Child Education"
+                android:nextFocusDown="@id/sp_spouse_blood"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dip"
@@ -282,7 +298,7 @@
                 android:padding="5dp"
                 android:singleLine="true"
                 android:textColor="@android:color/black" />
-        </LinearLayout>
+        </LinearLayout>-->
 
     </LinearLayout>
 

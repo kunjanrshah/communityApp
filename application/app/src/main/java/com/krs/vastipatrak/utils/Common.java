@@ -51,10 +51,6 @@ import com.krs.vastipatrak.model.ListFamilyTreeData;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.model.MatrimonyProfileData;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -64,9 +60,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -126,11 +119,7 @@ public class Common {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        if (new Date().before(strDate)) {
-            return false;
-        } else {
-            return true;
-        }
+        return !new Date().before(strDate);
     }
 
     public static boolean isValidEmail(@Nullable CharSequence target) {
@@ -1590,7 +1579,7 @@ public class Common {
 
 
             if (!pDialog.isShowing()) pDialog.show();
-            ProgressBar progressbar = (ProgressBar) pDialog.findViewById(android.R.id.progress);
+            ProgressBar progressbar = pDialog.findViewById(android.R.id.progress);
             progressbar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#F50057"), android.graphics.PorterDuff.Mode.SRC_IN);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1819,7 +1808,7 @@ public class Common {
         // text color - #3D3D3D
         paint.setColor(Color.rgb(61, 61, 61));
         // text size in pixels
-        paint.setTextSize((int) (24));
+        paint.setTextSize((24));
 
         // text shadow
         paint.setShadowLayer(1f, 0f, 1f, Color.WHITE);
@@ -2029,11 +2018,7 @@ public class Common {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date strFrom = sdf.parse(from);
         Date strTo = sdf.parse(to);
-        if (strTo.after(strFrom) || strTo.equals(strFrom)) {
-            return true;
-        } else {
-            return false;
-        }
+        return strTo.after(strFrom) || strTo.equals(strFrom);
     }
 
     public static double CalculationByDistance(double lat1, double lon1, double lat2, double lon2) {
@@ -2166,12 +2151,7 @@ public class Common {
             Date date1 = sdf.parse(time);
             Date date2 = sdf.parse(endtime);
 
-            if (date1.before(date2)) {
-                return true;
-            } else {
-
-                return false;
-            }
+            return date1.before(date2);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -2445,6 +2425,7 @@ public class Common {
         public static final String IMG_SMOTHER_URL = "img_smother_url";
         public static final String CHILD_IMAGE_URL = "child_image_url";
         private static final String BASE_URL = "http://www.superbinstruments.com/directory-dev";
+        //  private static final String BASE_URL = "http://www.superbinstruments.com/yadav";
         public static final String LOGIN_URL = BASE_URL + "/API/login";
         public static final String SIGNUP_URL = BASE_URL + "/API/register";
         public static final String FORGOT_PASSWORD_URL = BASE_URL + "/API/forgotPassword";

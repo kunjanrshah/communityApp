@@ -111,8 +111,23 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dip"
+                    android:layout_weight="1">
 
-                <LinearLayout
+                    <EditText
+                        android:id="@+id/edtSpouseEdu"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dip"
+                        android:hint="Spouse Education"
+                        android:inputType="textCapSentences"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+                <!--<LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dip"
@@ -137,7 +152,7 @@
                         android:nextFocusDown="@id/txtBPlace"
                         android:padding="5dp"
                         android:singleLine="true" />
-                </LinearLayout>
+                </LinearLayout>-->
 
                 <Spinner
                     android:id="@+id/sp_spouse_blood"
@@ -195,8 +210,9 @@
                     <Spinner
                         android:id="@+id/sp_spouse_end_age"
                         android:layout_width="150dp"
+                        android:layout_marginStart="5dip"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dip"
+                        android:paddingStart="15dp"
                         android:layout_weight="1" />
 
                 </LinearLayout>
@@ -399,32 +415,48 @@
                         android:singleLine="true" />
                 </LinearLayout>
 
-                <LinearLayout
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="5dp"
-                    android:orientation="vertical">
+                    android:layout_marginStart="5dip"
+                    android:layout_weight="1">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/edtchildEdu"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dip"
-                        android:text="Child Education" />
-
-                    <TextView
-                        android:id="@+id/txtchildEdu"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/back"
-                        android:gravity="center_vertical"
+                        android:layout_marginStart="10dip"
                         android:hint="Child Education"
-                        android:textColor="@android:color/black"
                         android:inputType="textCapSentences"
-                        android:nextFocusDown="@id/txtBPlace"
-                        android:padding="5dp"
                         android:singleLine="true" />
-                </LinearLayout>
+                </android.support.design.widget.TextInputLayout>
+
+                <!-- <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+                     android:layout_marginLeft="5dp"
+                     android:orientation="vertical">
+
+                     <TextView
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_marginStart="5dip"
+                         android:text="Child Education" />
+
+                     <TextView
+                         android:id="@+id/txtchildEdu"
+                         android:layout_width="match_parent"
+                         android:layout_height="40dp"
+                         android:background="@drawable/back"
+                         android:gravity="center_vertical"
+                         android:hint="Child Education"
+                         android:textColor="@android:color/black"
+                         android:inputType="textCapSentences"
+                         android:nextFocusDown="@id/txtBPlace"
+                         android:padding="5dp"
+                         android:singleLine="true" />
+                 </LinearLayout>-->
 
             </LinearLayout>
 

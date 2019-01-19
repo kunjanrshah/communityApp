@@ -377,7 +377,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                                 AppController.getInstance().lstGotra.add(mObject.getString("gotra"));
                             }
                             Collections.sort(AppController.getInstance().lstGotra);
-                            AppController.getInstance().lstGotra.add(Common.Constant_Class.TITLE_GOTRA);
+                            AppController.getInstance().lstGotra.add(0, Common.Constant_Class.TITLE_GOTRA);
                         } else if (type.equalsIgnoreCase(getString(R.string._native))) {
                             for (int i = 0; i < mArray.length(); i++) {
                                 JSONObject mObject = mArray.getJSONObject(i);
@@ -464,7 +464,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         final Dialog dialog = new Dialog(this, android.R.style.Theme_Translucent_NoTitleBar);
         dialog.setContentView(R.layout.overlay_activity);
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-        LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.llOverlay_activity);
+        LinearLayout layout = dialog.findViewById(R.id.llOverlay_activity);
         CheckBox chkOk = dialog.findViewById(R.id.chkOk);
         chkOk.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1392,7 +1392,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         if (!isConnected) {
             if (snackbar != null) {
                 View sbView = snackbar.getView();
-                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
                 textView.setTextColor(Color.WHITE);
                 snackbar.show();
             }

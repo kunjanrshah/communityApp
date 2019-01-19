@@ -55,14 +55,16 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
     public Spinner spinnerBlood, spinnerGotra;
     public RadioButton rbtnM;
     public RadioButton rbtnF;
-    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtMobile, edtAddress, edt_Eaddress, edt_phone,edt_Education;
+    public EditText edtFName, edtLName, edtFatherName, edtMotherName, edtMobile, edtAddress, edt_Eaddress, edt_phone, edt_Education;
     public TextView txtCity, txtBPlace, txtNPlace;
     public EditText edtbdateFrom, edtbdateTo;
     public Spinner sp_user_start_age;
     public Spinner sp_user_end_age;
 
     ArrayAdapter<String> dataAdapter;
-   // String[] titleGotra;
+    ArrayAdapter<String> BGAdapter;
+    ArrayAdapter<String> GotraAdapter;
+    // String[] titleGotra;
     private String TAG = PersonalSearch.class.getSimpleName();
     private SharedPreferences mSharedPreferences;
     private RadioButton rbtnB;
@@ -144,7 +146,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                                 edtbdateTo.setText(date);
                             }
                         });
-                    //    dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
+                        dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "Datepickerdialog");
                         return true;
                     }
                 }
@@ -196,7 +198,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
 
                             }
                         });
-                    //    dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+                        dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         return true;
                     }
                 }
@@ -319,10 +321,11 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
         sp_user_end_age.setAdapter(dataAdapter);
 
         spinnerGotra = rootView.findViewById(R.id.spinnerGotra);
-       // titleGotra = getActivity().getResources().getStringArray(R.array.yt_gotra);
-        ArrayAdapter aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, AppController.getInstance().lstGotra);
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerGotra.setAdapter(aa);
+        // titleGotra = getActivity().getResources().getStringArray(R.array.yt_gotra);
+        GotraAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, AppController.getInstance().lstGotra);
+        GotraAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerGotra.setAdapter(GotraAdapter);
+        // spinnerGotra.setSelection(AppController.getInstance().lstGotra.size() - 1);
         rbtnM = rootView.findViewById(R.id.rbtnM);
         rbtnF = rootView.findViewById(R.id.rbtnF);
         rbtnB = rootView.findViewById(R.id.rbtnB);
@@ -332,7 +335,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
         edtLName = rootView.findViewById(R.id.edtLName);
         edtFatherName = rootView.findViewById(R.id.edtFatherName);
         edtMotherName = rootView.findViewById(R.id.edtMotherName);
-        edt_Education = rootView.findViewById(R.id.txtEducation);
+        edt_Education = rootView.findViewById(R.id.edt_Education1);
         txtBPlace = rootView.findViewById(R.id.txtBPlace);
         txtNPlace = rootView.findViewById(R.id.txtNPlace);
         txtCity = rootView.findViewById(R.id.txtCity);
@@ -362,10 +365,23 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                 if (mjsonObject.has(Common.Constant_Class.BLOOD_GROUP)) {
                     String compareValue = mjsonObject.getString(Common.Constant_Class.BLOOD_GROUP);
                     if (!compareValue.isEmpty()) {
-                        int spinnerPosition = dataAdapter.getPosition(compareValue);
+                        int spinnerPosition = BGAdapter.getPosition(compareValue);
                         spinnerBlood.setSelection(spinnerPosition);
                     }
                 }
+
+                if (mjsonObject.has(Common.Constant_Class.GOTRA)) {
+                    String compareValue = mjsonObject.getString(Common.Constant_Class.GOTRA);
+                    if (!compareValue.isEmpty()) {
+                        int spinnerPosition = GotraAdapter.getPosition(compareValue);
+                        spinnerGotra.setSelection(spinnerPosition);
+                    } else {
+                        spinnerGotra.setSelection(AppController.getInstance().lstGotra.size() - 1);
+                    }
+                } else {
+                    spinnerGotra.setSelection(AppController.getInstance().lstGotra.size() - 1);
+                }
+
                 if (mjsonObject.has(Common.Constant_Class.GENDER)) {
                     String gender = mjsonObject.getString(Common.Constant_Class.GENDER);
                     if (gender.equals("both")) {
@@ -421,7 +437,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                 }
                 if (mjsonObject.has(Common.Constant_Class.GOTRA)) {
                     String gotra = mjsonObject.getString(Common.Constant_Class.GOTRA);
-                    int i=AppController.getInstance().lstGotra.indexOf(gotra);
+                    int i = AppController.getInstance().lstGotra.indexOf(gotra);
                     spinnerGotra.setSelection(i);
                 }
                 if (mjsonObject.has(Common.Constant_Class.MOBILE)) {
@@ -462,9 +478,9 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
         blood_cate.add(Common.Constant_Class.O_POSITIVE);
         blood_cate.add(Common.Constant_Class.O_NAGATIVE);
 
-        dataAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, blood_cate);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerBlood.setAdapter(dataAdapter);
+        BGAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, blood_cate);
+        BGAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerBlood.setAdapter(BGAdapter);
     }
 
 

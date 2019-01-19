@@ -274,7 +274,7 @@
                             android:drawableEnd="@drawable/clock"
                             android:hint="@string/hint_birth_time"
                             android:inputType="time"
-                            android:nextFocusDown="@id/txtEducation"
+                            android:nextFocusDown="@id/edtEducation"
                             android:singleLine="true" />
                     </android.support.design.widget.TextInputLayout>
 
@@ -289,40 +289,58 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
                 android:layout_marginLeft="10dp"
                 android:orientation="horizontal">
 
-
-                <LinearLayout
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dip"
-                    android:layout_marginRight="5dip"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/edtEducation"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dip"
-                        android:text="Education" />
-
-                    <TextView
-                        android:id="@+id/txtEducation"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/back"
-                        android:gravity="center_vertical"
-                        android:textColor="@android:color/black"
+                        android:layout_marginLeft="10dip"
+                        android:layout_marginRight="10dip"
                         android:hint="@string/hint_education"
                         android:inputType="textCapSentences"
-                        android:nextFocusDown="@id/txtBPlace"
-                        android:padding="5dp"
+                        android:nextFocusDown="@id/edtbdate"
                         android:singleLine="true" />
-                </LinearLayout>
+                </android.support.design.widget.TextInputLayout>
+
+
+                <!-- <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginLeft="5dip"
+                     android:layout_marginRight="5dip"
+                     android:layout_weight="1"
+                     android:orientation="vertical">
+
+                     <TextView
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_marginStart="5dip"
+                         android:text="Education" />
+
+                     <TextView
+                         android:id="@+id/txtEducation"
+                         android:layout_width="match_parent"
+                         android:layout_height="40dp"
+                         android:background="@drawable/back"
+                         android:gravity="center_vertical"
+                         android:textColor="@android:color/black"
+                         android:hint="@string/hint_education"
+                         android:inputType="textCapSentences"
+                         android:nextFocusDown="@id/txtBPlace"
+                         android:padding="5dp"
+                         android:singleLine="true" />
+                 </LinearLayout>-->
 
                 <RadioButton
                     android:id="@+id/rbtnM"
@@ -337,7 +355,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="10dip"
+                    android:layout_marginEnd="15dip"
                     android:text="F" />
             </LinearLayout>
 
