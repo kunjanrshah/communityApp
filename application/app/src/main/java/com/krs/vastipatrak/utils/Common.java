@@ -2424,8 +2424,8 @@ public class Common {
         public static final String IMG_SFATHER_URL = "img_sfather_url";
         public static final String IMG_SMOTHER_URL = "img_smother_url";
         public static final String CHILD_IMAGE_URL = "child_image_url";
-        private static final String BASE_URL = "http://www.superbinstruments.com/directory-dev";
-        //  private static final String BASE_URL = "http://www.superbinstruments.com/yadav";
+        // private static final String BASE_URL = "http://www.superbinstruments.com/directory-dev";
+        private static final String BASE_URL = "http://www.superbinstruments.com/yadav";
         public static final String LOGIN_URL = BASE_URL + "/API/login";
         public static final String SIGNUP_URL = BASE_URL + "/API/register";
         public static final String FORGOT_PASSWORD_URL = BASE_URL + "/API/forgotPassword";

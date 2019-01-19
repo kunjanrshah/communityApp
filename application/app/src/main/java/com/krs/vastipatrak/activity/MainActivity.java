@@ -433,7 +433,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         alertDialog.setMessage("Please update your app");
 
         // Setting Icon to Dialog
-        alertDialog.setIcon(R.drawable.app_icon);
+        alertDialog.setIcon(R.drawable.app_logo);
 
         // Setting Positive "Yes" Button
         alertDialog.setPositiveButton("Update", new DialogInterface.OnClickListener() {
