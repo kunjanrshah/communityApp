@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.krs.vastipatrak">
+    package="com.yadav.vastipatrak">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -17,7 +17,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
     <application
-        android:name=".app.AppController"
+        android:name="com.yadav.vastipatrak.app.AppController"
         android:icon="@drawable/app_logo"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -40,7 +40,7 @@
             android:theme="@style/Base.Theme.AppCompat" />
 
         <activity
-            android:name=".activity.LoginActivity"
+            android:name="com.yadav.vastipatrak.activity.LoginActivity"
             android:label="@string/theme_app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -51,7 +51,7 @@
         </activity>
 
         <activity
-            android:name=".activity.WelcomeActivity"
+            android:name="com.yadav.vastipatrak.activity.WelcomeActivity"
             android:label="@string/theme_app_name"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait">
@@ -64,7 +64,7 @@
 
 
         <activity
-            android:name=".activity.MainActivity"
+            android:name="com.yadav.vastipatrak.activity.MainActivity"
             android:label="@string/theme_app_name"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait">
@@ -76,42 +76,42 @@
         </activity>
 
         <activity
-            android:name=".activity.EventlistActivity"
+            android:name="com.yadav.vastipatrak.activity.EventlistActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/theme_app_name" />
         <activity
-            android:name=".activity.ProfileActivity"
+            android:name="com.yadav.vastipatrak.activity.ProfileActivity"
             android:label="@string/theme_app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
-            android:name=".activity.AdvanceSearchActivity"
+            android:name="com.yadav.vastipatrak.activity.AdvanceSearchActivity"
             android:label="@string/theme_app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
-            android:name=".activity.ShareEventActivity"
+            android:name="com.yadav.vastipatrak.activity.ShareEventActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_share_event"
             android:screenOrientation="portrait"
             android:theme="@style/MyMaterialTheme" />
         <activity
-            android:name=".activity.FamilyTreeActivity"
+            android:name="com.yadav.vastipatrak.activity.FamilyTreeActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.SelectionlistActivity"
+            android:name="com.yadav.vastipatrak.activity.SelectionlistActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
 
-        <service android:name=".service.MyLocationService" />
-        <service android:name=".service.LocationAlertService" />
+        <service android:name="com.yadav.vastipatrak.service.MyLocationService" />
+        <service android:name="com.yadav.vastipatrak.service.LocationAlertService" />
 
         <!-- Firebase Notifications -->
         <service
-            android:name=".service.MyFirebaseMessagingService"
+            android:name="com.yadav.vastipatrak.service.MyFirebaseMessagingService"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

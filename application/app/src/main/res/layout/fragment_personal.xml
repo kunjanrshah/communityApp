@@ -453,7 +453,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <Spinner
-                    android:id="@+id/spinnerGotra"
+                    android:id="@+id/spinnerGotra1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dip"
@@ -477,7 +477,7 @@
                     android:layout_weight="1">
 
                     <EditText
-                        android:id="@+id/edtMobile"
+                        android:id="@+id/edtMobile1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dip"

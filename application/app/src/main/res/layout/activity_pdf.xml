@@ -21,7 +21,7 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <com.krs.vastipatrak.utils.NonSwipeableViewPager
+    <com.yadav.vastipatrak.utils.NonSwipeableViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

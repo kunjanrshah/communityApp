@@ -217,13 +217,7 @@
 
     <string name="nice_html">
 <![CDATA[
- \nHi, This is %s from Vastipatrak App. \n જૈ જૈ શ્રી ગોકુલેશ %s
- \n\n => આપણે જોઇએ છે કે આપણી Vastipatrak એપને આપ સૌનો સારો પ્રતિસાદ મળી રહ્યો છે...
-  \n\n
-પણ અમે જોયું કે...
-
-\n\n૧) *એપ આપ સૌ એ ડાઉનલોડ કરી છે પણ આપની પ્રોફાઈલ અપડેટ નથી કરી..તો એ ખાસ કરવી..*
-\n\n
+ \nHi, This is %s from Vastipatrak App. \n
   *3 પ્રકારની માહિતી આપને ભરવી જરૂરી છે..*
 \n1. *પોતાની પ્રોફાઈલ*
 \n2. *Occupation (ધંધાને લગતી વિગતો)*
@@ -232,14 +226,13 @@
  \n\n*1.પરિણીત વ્યક્તિ કુટુંબના વડા ના નામ થી સાઇન અપ કરી શકે છે.*\n*2. અપરિણિત વ્યક્તિ પિતા નામ સાથે સાઇન અપ કરો.*\n*3. ચકાસણી કૉલ માટે રાહ જુઓ*.
 
 
-\n\n*આપનો data Secure છે તમે તમારો data MEDK ખડાયતા સમાજને  જ આપી રહ્યાં છો... એટલે નિશ્ચિંત બની તમામ ડેટા અપડેટ કરો....*
+\n\n*આપનો data Secure છે તમે તમારો data સમાજને  જ આપી રહ્યાં છો... એટલે નિશ્ચિંત બની તમામ ડેટા અપડેટ કરો....*
 
 \n\nકંઇ પણ query હોય તો જણાવેલ નંબર પર *whats app કે call કરો* જેથી આપણી એપમાં લેટેસ્ટ ડેટા આવી શકે અને સૌ એનો ઉપયોગ પણ કરી શકે...
 \n\n
+*Raju Yadav* +91 8000974974
 *Kunjan Shah* +91 9427051418
-\n *Ripal Shah* +91 9579230549
-\n *Kamlesh Shah* +91 9033300872
-\n *Akshay Shah* +91 9370317331
+
 \n\n
 
 એપના ઘણા ફિચર્સ active કરવાના હોઈ આપ પ્રથમ આટલી કાળજી રાખી ડેટા update કરવામાં મદદરૂપ બનશો...
@@ -290,8 +283,8 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="select_subcast">Select Subcast</string>
     <string name="select_ekdo">Select Ekdo</string>
 
-    <string name="marquee_text">Technical help: 9427051418 Kunjan R. Shah (Ahmedabad) </string>
-    <string name="_2_technical_help_9427051418_kunjan_r_shah_ahmedabad">2. Technical help: 9427051418 Kunjan R. Shah (Ahmedabad)</string>
+    <string name="marquee_text">Technical help: 8000974974 Raju Yadav (Ahmedabad) </string>
+    <string name="_2_technical_help_9427051418_kunjan_r_shah_ahmedabad">2. Technical help: 8000974974 Raju Yadav (Ahmedabad)</string>
     <string name="_1_if_you_have_xiomi_vivo_or_oppo_phone_then_please_enable_auto_start_option">1. If you have Xiomi,Vivo or Oppo Phone then Please Enable AutoStart Option</string>
     <string name="not_connected">Not connected to internet</string>
 
@@ -308,7 +301,7 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="near_by_office">Office</string>
     <string name="near_by_users">User</string>
     <string name="isEnable">isEnable</string>
-    <string name="ver">Ver. 1.15</string>
+    <string name="ver">Ver. 1.1</string>
     <string name="AGE">AGE</string>
     <string name="search_date_info">search_date_info</string>
     <string name="type">type</string>
