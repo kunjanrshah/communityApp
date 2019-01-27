@@ -2393,10 +2393,7 @@ public class Common {
         public static final String CHILD_NAME = "child_name";
 
         public static final String CHILD_BDATE_REMINDER_ID = "child_bdate_reminder_id";
-
-
         public static final String familyTree = "familyTree";
-
         public static final String CHILD_BDAY = "child_bday";
         public static final String FROM_CHILD_BDAY = "from_child_bday";
         public static final String TO_CHILD_BDAY = "to_child_bday";
@@ -2425,7 +2422,7 @@ public class Common {
         public static final String IMG_SMOTHER_URL = "img_smother_url";
         public static final String CHILD_IMAGE_URL = "child_image_url";
         // private static final String BASE_URL = "http://www.superbinstruments.com/directory-dev";
-        private static final String BASE_URL = "http://www.superbinstruments.com/yadav";
+        private static final String BASE_URL = "http://www.superbinstruments.com/yadav_dev";
         public static final String LOGIN_URL = BASE_URL + "/API/login";
         public static final String SIGNUP_URL = BASE_URL + "/API/register";
         public static final String FORGOT_PASSWORD_URL = BASE_URL + "/API/forgotPassword";

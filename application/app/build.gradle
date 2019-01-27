@@ -18,10 +18,10 @@ android {
     compileSdkVersion 27
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
-        applicationId "com.yadav.vastipatrak"
+        applicationId "com.yadav.samaj"
         minSdkVersion 21
-        versionCode 2
-        versionName "2.1.0"
+        versionCode 1
+        versionName "1.0.0"
         multiDexEnabled true
     }
     buildTypes {

@@ -295,13 +295,11 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="FT_PROFILE_ID">profile_id</string>
     <string name="FT_NAME">name</string>
 
-
-
     <string name="near_by_home">Home</string>
     <string name="near_by_office">Office</string>
     <string name="near_by_users">User</string>
     <string name="isEnable">isEnable</string>
-    <string name="ver">Ver. 1.1</string>
+    <string name="ver">Ver. 1.0</string>
     <string name="AGE">AGE</string>
     <string name="search_date_info">search_date_info</string>
     <string name="type">type</string>
