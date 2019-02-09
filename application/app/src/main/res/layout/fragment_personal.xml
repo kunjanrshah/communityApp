@@ -22,6 +22,7 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
@@ -70,6 +71,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/input_layout_user_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusableInTouchMode="false">
+
+                        <EditText
+                            android:id="@+id/edtUserCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dip"
+                            android:clickable="false"
+                            android:hint="@string/hint_code"
+                            android:inputType="textCapSentences"
+                            android:nextFocusDown="@id/edtFName"
+                            android:singleLine="true" />
+                    </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/input_layout_fname"

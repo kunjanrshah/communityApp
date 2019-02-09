@@ -14,6 +14,7 @@
     <string name="btn_add_new">ADD NEW</string>
     <string name="btn_sign_in">SIGN IN</string>
     <string name="hint_name">Family Head Name</string>
+    <string name="hint_code">Family Head Code</string>
     <string name="hint_surname">Surname</string>
     <string name="hint_father_name">Father Name</string>
     <string name="hint_mother_name">Mother Name</string>
