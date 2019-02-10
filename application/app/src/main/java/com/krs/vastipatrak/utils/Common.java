@@ -2220,6 +2220,9 @@ public class Common {
         public static final String ERROR_CODE = "errorcode";
         public static final String ERROR_13 = "-13";
 
+        public static final String GIRLS = "     GIRLS  ";
+        public static final String BOYS_P1 = "  BOYS PART-1  ";
+        public static final String BOYS_P2 = "   BOYS PART-2";
 
         public static final String SHARE_USER_IDS = "share_user_ids";
         public static final String IS_SHARE = "is_share";

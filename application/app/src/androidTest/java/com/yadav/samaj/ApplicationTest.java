@@ -1,4 +1,4 @@
-package com.krs.vastipatrak;
+package com.yadav.samaj;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

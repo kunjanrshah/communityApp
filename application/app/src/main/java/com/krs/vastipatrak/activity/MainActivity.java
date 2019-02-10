@@ -79,9 +79,9 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.fragments.CalendarFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
+import com.krs.vastipatrak.fragments.EventFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.HelpFragment;
-import com.krs.vastipatrak.fragments.HomeFragment;
 import com.krs.vastipatrak.fragments.MatrimonyFragment;
 import com.krs.vastipatrak.fragments.NearByFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
@@ -1102,7 +1102,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 }
                 break;
             case 0:
-                fragment = new HomeFragment();
+                fragment = new EventFragment();
                 break;
             case 1:
                 mEditor.putBoolean("myprofile", true);
@@ -1118,24 +1118,29 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new SharedUsersFragment();
                 break;
             case 4:
-                fragment = new MatrimonyFragment();
+                Intent mIntent = new Intent(MainActivity.this, PDFActivity.class);
+                startActivity(mIntent);
+                this.overridePendingTransition(0, 0);
                 break;
             case 5:
-                fragment = new CalendarFragment();
+                fragment = new MatrimonyFragment();
                 break;
             case 6:
-                Toast.makeText(MainActivity.this, "Language Coming Soon", Toast.LENGTH_SHORT).show();
+                fragment = new CalendarFragment();
                 break;
             case 7:
-                fragment = new ChangePasswordFragment();
+                Toast.makeText(MainActivity.this, "Language Coming Soon", Toast.LENGTH_SHORT).show();
                 break;
             case 8:
-                fragment = new TourFragment();
+                fragment = new ChangePasswordFragment();
                 break;
             case 9:
-                fragment = new HelpFragment();
+                fragment = new TourFragment();
                 break;
             case 10:
+                fragment = new HelpFragment();
+                break;
+            case 11:
                 ExitAlert();
                 break;
             default:

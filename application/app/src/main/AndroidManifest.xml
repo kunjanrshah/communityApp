@@ -105,6 +105,9 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PDFActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name=".service.MyLocationService" />
         <service android:name=".service.LocationAlertService" />

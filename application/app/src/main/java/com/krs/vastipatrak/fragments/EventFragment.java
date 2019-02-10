@@ -69,10 +69,10 @@ import static com.krs.vastipatrak.utils.Common.textAsBitmap;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
 
-public class HomeFragment extends Fragment {
+public class EventFragment extends Fragment {
 
     @NonNull
-    private final String TAG = "HomeFragment";
+    private final String TAG = "EventFragment";
     int page_count = 0;
     private RecyclerView mRecycleView;
     private Realm realm;
@@ -173,7 +173,7 @@ public class HomeFragment extends Fragment {
 
     private void MemoryAllocation(View rootView) {
         mRecycleView = rootView.findViewById(R.id.recycler_view);
-        videoRecyclerView = (RecyclerView) rootView.findViewById(R.id.list);
+        videoRecyclerView = rootView.findViewById(R.id.list);
         mFloatingActionButton = rootView.findViewById(R.id.floating_action_button);
         mSwipyRefreshLayout = rootView.findViewById(R.id.swipyrefreshlayout);
         realm = AppController.getInstance().realm;
@@ -183,7 +183,7 @@ public class HomeFragment extends Fragment {
         eventData = realm.where(ListEventData.class).findAll();
         mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
-        mEditor.putString(Common.Constant_Class.FragmentSp, HomeFragment.class.getSimpleName());
+        mEditor.putString(Common.Constant_Class.FragmentSp, EventFragment.class.getSimpleName());
         mEditor.apply();
         TextView tv = rootView.findViewById(R.id.txt_marquee);
         tv.setSelected(true);
@@ -421,7 +421,7 @@ public class HomeFragment extends Fragment {
             SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = null;
             try {
-                date = inFormat.parse(data.getEventDate().toString());
+                date = inFormat.parse(data.getEventDate());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
