@@ -1580,7 +1580,7 @@ public class Common {
 
             if (!pDialog.isShowing()) pDialog.show();
             ProgressBar progressbar = pDialog.findViewById(android.R.id.progress);
-            progressbar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#F50057"), android.graphics.PorterDuff.Mode.SRC_IN);
+            progressbar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#3b5998"), android.graphics.PorterDuff.Mode.SRC_IN);
         } catch (Exception e) {
             e.printStackTrace();
         }

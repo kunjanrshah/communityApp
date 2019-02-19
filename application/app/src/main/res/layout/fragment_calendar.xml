@@ -18,7 +18,7 @@
             custom:firstDayOfWeek="sunday"
             custom:showWeek="true"
             custom:state="collapsed"
-            custom:style="pink" />
+            custom:style="blue" />
 
         <ExpandableListView
             android:id="@+id/lvCustomList"

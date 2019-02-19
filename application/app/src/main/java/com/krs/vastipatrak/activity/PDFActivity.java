@@ -72,7 +72,7 @@ public class PDFActivity extends AppCompatActivity {
     }
 
     private void backNavigation() {
-        Intent mIntent = new Intent(PDFActivity.this, MainActivity.class);
+        Intent mIntent = new Intent(PDFActivity.this, HomeActivity.class);
         mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(mIntent);
         finish();

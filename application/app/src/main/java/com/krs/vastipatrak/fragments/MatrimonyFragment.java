@@ -58,7 +58,6 @@ import java.util.Objects;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 import static com.krs.vastipatrak.utils.Common.ExportProfile;
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
@@ -95,7 +94,7 @@ public class MatrimonyFragment extends Fragment {
         mSwipyRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(SwipyRefreshLayoutDirection direction) {
-                Log.d("MainActivity", "Refresh triggered at " + (direction == SwipyRefreshLayoutDirection.TOP ? "top" : "bottom"));
+                Log.d(TAG, "Refresh triggered at " + (direction == SwipyRefreshLayoutDirection.TOP ? "top" : "bottom"));
 
                 if (direction == SwipyRefreshLayoutDirection.TOP) {
                     if (page > 0) {

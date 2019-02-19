@@ -1,7 +1,6 @@
 package com.krs.vastipatrak.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -45,8 +44,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.HomeActivity;
 import com.krs.vastipatrak.activity.LoginActivity;
-import com.krs.vastipatrak.activity.MainActivity;
 import com.krs.vastipatrak.adapter.ExpandableListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.interfaces.IAdminControl;
@@ -216,7 +215,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
         mSwipyRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(SwipyRefreshLayoutDirection direction) {
-                Log.d("MainActivity", "Refresh triggered at " + (direction == SwipyRefreshLayoutDirection.TOP ? "top" : "bottom"));
+                Log.d(TAG, "Refresh triggered at " + (direction == SwipyRefreshLayoutDirection.TOP ? "top" : "bottom"));
 
                 if (direction == SwipyRefreshLayoutDirection.TOP) {
                     page--;
@@ -1019,7 +1018,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                             String message = response.getString(Common.Constant_Class.MESSAGE);
                             if (success) {
                                 if (isAdmin) {
-                                    ((MainActivity) getActivity()).moveToSearch(6);
+                                    ((HomeActivity) getActivity()).moveToSearch(6);
                                 }
                                 //  lvCustomList.setAdapter(mExpandableListAdapter);
                                 Common.alert(getActivity(), message);
@@ -1115,7 +1114,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        MainActivity.MOVE_TO_SEARCH = 0;
+        HomeActivity.MOVE_TO_SEARCH = 0;
     }
 
     @Override

@@ -163,12 +163,12 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         }
 
 
-        Button btn_add = (Button) findViewById(R.id.btn_add);
-        Button btn_save = (Button) findViewById(R.id.btn_save);
+        Button btn_add = findViewById(R.id.btn_add);
+        Button btn_save = findViewById(R.id.btn_save);
 
         root = new TreeNode(this);
-        draggableTreeView = (DraggableTreeView) findViewById(R.id.dtv);
-        spin = (Spinner) findViewById(R.id.simpleSpinner);
+        draggableTreeView = findViewById(R.id.dtv);
+        spin = findViewById(R.id.simpleSpinner);
 
         spin.setAdapter(new FtSpinnerAdapter(this, LstImages, LstNames));
 
@@ -283,7 +283,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                Intent mIntent = new Intent(FamilyTreeActivity.this, MainActivity.class);
+                Intent mIntent = new Intent(FamilyTreeActivity.this, HomeActivity.class);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 mIntent.putExtra(Common.Constant_Class.QUERY, query);
                 startActivity(mIntent);
@@ -636,7 +636,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         if (!isConnected) {
             if (snackbar != null) {
                 View sbView = snackbar.getView();
-                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
                 textView.setTextColor(Color.WHITE);
                 snackbar.show();
             }

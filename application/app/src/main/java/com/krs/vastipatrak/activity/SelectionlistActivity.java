@@ -317,7 +317,7 @@ public class SelectionlistActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                Intent mIntent = new Intent(SelectionlistActivity.this, MainActivity.class);
+                Intent mIntent = new Intent(SelectionlistActivity.this, HomeActivity.class);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 mIntent.putExtra(Common.Constant_Class.QUERY, query);
                 startActivity(mIntent);
@@ -450,9 +450,9 @@ public class SelectionlistActivity extends AppCompatActivity {
         }
 
         public interface OnItemClickListener {
-            public void onItemClick(View view, int position);
+            void onItemClick(View view, int position);
 
-            public void onLongItemClick(View view, int position);
+            void onLongItemClick(View view, int position);
         }
     }
 

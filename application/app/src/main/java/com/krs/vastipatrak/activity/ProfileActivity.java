@@ -171,7 +171,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                Intent mIntent = new Intent(ProfileActivity.this, MainActivity.class);
+                Intent mIntent = new Intent(ProfileActivity.this, HomeActivity.class);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 mIntent.putExtra(Common.Constant_Class.QUERY, query);
                 startActivity(mIntent);

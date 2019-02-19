@@ -582,7 +582,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
     }
 
     private void navigateActivity(JSONObject mJsonObject) {
-        Intent mIntent = new Intent(AdvanceSearchActivity.this, MainActivity.class);
+        Intent mIntent = new Intent(AdvanceSearchActivity.this, HomeActivity.class);
         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         mIntent.putExtra(Common.Constant_Class.QUERY_STRING, mJsonObject.toString());
 
@@ -606,7 +606,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                Intent mIntent = new Intent(AdvanceSearchActivity.this, MainActivity.class);
+                Intent mIntent = new Intent(AdvanceSearchActivity.this, HomeActivity.class);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 mIntent.putExtra(Common.Constant_Class.QUERY, query);
                 startActivity(mIntent);

@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.krs.vastipatrak.activity.MainActivity;
+import com.krs.vastipatrak.activity.HomeActivity;
 import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NotificationUtils;
@@ -158,7 +158,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 notificationUtils.playNotificationSound();
             } else {*/
             // app is in background, show the notification in notification tray
-            Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent resultIntent = new Intent(getApplicationContext(), HomeActivity.class);
             resultIntent.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
             resultIntent.putExtra(Common.Constant_Class.USER_ID, user_id);
 

@@ -39,6 +39,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,7 +81,6 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.fragments.CalendarFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
-import com.krs.vastipatrak.fragments.EventFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.HelpFragment;
 import com.krs.vastipatrak.fragments.MatrimonyFragment;
@@ -101,10 +102,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback, ConnectivityReceiver.ConnectivityReceiverListener {
+public class HomeActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback, ConnectivityReceiver.ConnectivityReceiverListener {
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
     public static final int CAMARA_REQUEST = 4;
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = HomeActivity.class.getSimpleName();
     public static int MOVE_TO_SEARCH = 0;
     private final int REQUEST_CHECK_SETTINGS = 199;
     private final int IMAGEREQUESTCODE = 1;
@@ -119,16 +120,18 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(action)) {
-                if (!Common.CheckGpsStatus(MainActivity.this)) {
-                    Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+                if (!Common.CheckGpsStatus(HomeActivity.this)) {
+                    Intent mIntent = new Intent(HomeActivity.this, MyLocationService.class);
                     startService(mIntent);
                 } else {
-                    Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+                    Intent mIntent = new Intent(HomeActivity.this, MyLocationService.class);
                     stopService(mIntent);
                 }
             }
         }
     };
+    FrameLayout fm_container_body;
+    LinearLayout ll_container_body;
     MenuItem deactiveItem;
     MenuItem deleteItem;
     MenuItem activeItem;
@@ -152,16 +155,20 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private MenuItem export;
     private MenuItem change_role;
     private Snackbar snackbar;
+    private ImageView img_my_profile;
+    private ImageView img_advance_search;
+    private ImageView img_calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_home);
         snackbar = Snackbar.make(findViewById(R.id.drawer_layout), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
         mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
-
+        fm_container_body = findViewById(R.id.fm_container_body);
+        ll_container_body = findViewById(R.id.ll_container_body);
         mPreferencesWelcome = getSharedPreferences(Common.Constant_Class.PREF_WELCOME, MODE_PRIVATE);
         mEditorWelcome = mPreferencesWelcome.edit();
         mEditorWelcome.apply();
@@ -189,9 +196,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
 
         if (Common.CheckGpsStatus(this)) {
-            displayLocationSettingsRequest(MainActivity.this);
+            displayLocationSettingsRequest(HomeActivity.this);
         } else {
-            Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+            Intent mIntent = new Intent(HomeActivity.this, MyLocationService.class);
             startService(mIntent);
         }
 
@@ -216,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         };
         Common.getDeviceId(this);
         logUser();
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this, new OnSuccessListener<InstanceIdResult>() {
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(HomeActivity.this, new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 String newToken = instanceIdResult.getToken();
@@ -228,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         if (mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase("")) {
             mEditor.putString(Common.Constant_Class.NOTIFICATION, "");
             mEditor.apply();
-            Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+            Intent mIntent = new Intent(HomeActivity.this, LoginActivity.class);
             mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(mIntent);
             finish();
@@ -252,13 +259,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     query = mBundle.getString(Common.Constant_Class.QUERY);
                     query_string = mBundle.getString(Common.Constant_Class.QUERY_STRING);
                 }
-                if (query == null && query_string == null && push_message == null) {
+                /*if (query == null && query_string == null && push_message == null) {
                     displayView(0);
                 } else if (query_string != null && query != null && query.isEmpty() && query_string.isEmpty()) {
                     displayView(0);
                 } else {
                     displayView(-1);
-                }
+                }*/
             }
         }
         checkConnection();
@@ -269,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             mEditorWelcome.apply();
         }
 
-        Log.d(TAG, "MainActivity Screen");
+        Log.d(TAG, "HomeActivity Screen");
         if (mSharedPreferences.getBoolean("app_create", false)) {
             mEditor.putBoolean("app_create", false);
             mEditor.apply();
@@ -278,6 +285,35 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             getList(getResources().getString(R.string._native));
             getList(getResources().getString(R.string._education));
         }
+
+        MemoryAllocation();
+        img_my_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayView(1);
+            }
+        });
+        img_advance_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mIntent = new Intent(HomeActivity.this, AdvanceSearchActivity.class);
+                startActivity(mIntent);
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+            }
+        });
+
+        img_calendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayView(6);
+            }
+        });
+    }
+
+    private void MemoryAllocation() {
+        img_my_profile = findViewById(R.id.img_my_profile);
+        img_advance_search = findViewById(R.id.img_advance_search);
+        img_calendar = findViewById(R.id.img_calendar);
     }
 
     private void get_updated_ver_ws() {
@@ -340,7 +376,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }
     }
-
 
 
     private void getList(final String type) {
@@ -514,15 +549,15 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                             }
                             Collections.sort(AppController.getInstance().lstGotra);
                             AppController.getInstance().lstGotra.add(0, Common.Constant_Class.TITLE_GOTRA);
-                            AppController.getInstance().dataAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, AppController.getInstance().lstGotra);
+                            AppController.getInstance().dataAdapter = new ArrayAdapter<>(HomeActivity.this, android.R.layout.simple_spinner_item, AppController.getInstance().lstGotra);
                             AppController.getInstance().dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
                         } else {
-                            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HomeActivity.this, message, Toast.LENGTH_SHORT).show();
                             if (response.has(Common.Constant_Class.ERROR_CODE)) {
                                 String error = response.getString(Common.Constant_Class.ERROR_CODE);
                                 if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
-                                    Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+                                    Intent mIntent = new Intent(HomeActivity.this, LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(mIntent);
                                     finish();
@@ -580,23 +615,23 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     Status status = result.getStatus();
                     switch (status.getStatusCode()) {
                         case LocationSettingsStatusCodes.SUCCESS:
-                            MainActivity.this.googleApiClient = null;
+                            HomeActivity.this.googleApiClient = null;
 
                             Log.i("Vastipatrak", "All location settings are satisfied.");
                             break;
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                             Log.i("Vastipatrak", "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
-                            MainActivity.this.googleApiClient = null;
+                            HomeActivity.this.googleApiClient = null;
                             try {
                                 // Show the dialog by calling startResolutionForResult(), and check the result
                                 // in onActivityResult().
-                                status.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
+                                status.startResolutionForResult(HomeActivity.this, REQUEST_CHECK_SETTINGS);
                             } catch (IntentSender.SendIntentException e) {
                                 Log.i("Vastipatrak", "PendingIntent unable to execute request.");
                             }
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            MainActivity.this.googleApiClient = null;
+                            HomeActivity.this.googleApiClient = null;
                             Log.i("Vastipatrak", "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
                             break;
                     }
@@ -609,6 +644,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     protected void onResume() {
         super.onResume();
+        fm_container_body.setVisibility(View.GONE);
+        ll_container_body.setVisibility(View.VISIBLE);
         AppController.getInstance().setConnectivityListener(this);
         // register GCM registration complete receiver
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(Config.REGISTRATION_COMPLETE));
@@ -675,7 +712,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     Toast.makeText(this, "You need to give permission to access location ! ", Toast.LENGTH_SHORT).show();
                 } else if (Common.canAccessLocation(this)) {
-                    Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+                    Intent mIntent = new Intent(HomeActivity.this, MyLocationService.class);
                     startService(mIntent);
                 }
 
@@ -692,7 +729,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 if (Common.canCallPhone(this) && !Common.canAccessLocation(this)) {
                     Toast.makeText(this, "You need to give permission to access phone and location ! ", Toast.LENGTH_SHORT).show();
                 } else if (Common.canAccessLocation(this)) {
-                    Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+                    Intent mIntent = new Intent(HomeActivity.this, MyLocationService.class);
                     startService(mIntent);
                 }
                 break;
@@ -711,7 +748,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         event.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent mIntent = new Intent(MainActivity.this, ShareEventActivity.class);
+                Intent mIntent = new Intent(HomeActivity.this, ShareEventActivity.class);
                 startActivity(mIntent);
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 return false;
@@ -722,7 +759,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         filter.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent mIntent = new Intent(MainActivity.this, AdvanceSearchActivity.class);
+                Intent mIntent = new Intent(HomeActivity.this, AdvanceSearchActivity.class);
                 startActivity(mIntent);
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 return false;
@@ -743,11 +780,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
                 searchFragment = new SearchFragment();
                 IAdminControl = (IAdminControl) searchFragment;
-                ((SearchFragment) searchFragment).setmContext(MainActivity.this);
+                ((SearchFragment) searchFragment).setmContext(HomeActivity.this);
                 mBundle.putString(Common.Constant_Class.QUERY, query);
                 searchFragment.setArguments(mBundle);
-                fragmentTransaction.replace(R.id.container_body, searchFragment).commit();
-
+                fragmentTransaction.replace(R.id.fm_container_body, searchFragment).commit();
+                fm_container_body.setVisibility(View.VISIBLE);
+                ll_container_body.setVisibility(View.GONE);
                 return true;
             }
 
@@ -764,7 +802,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                Common.promptSpeechInput(MainActivity.this);
+                Common.promptSpeechInput(HomeActivity.this);
                 return false;
             }
         });
@@ -864,7 +902,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         activeAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+                Intent mIntent = new Intent(HomeActivity.this, LoginActivity.class);
                 mIntent.putExtra(Common.Constant_Class.SCREEN, Common.Constant_Class.SEARCH_FRAGMENT);
                 startActivity(mIntent);
                 return false;
@@ -921,12 +959,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     public void moveToSearch(int menu) {
 
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragment = searchFragment;
         IAdminControl = (IAdminControl) fragment;
-        ((SearchFragment) searchFragment).setmContext(MainActivity.this);
+        ((SearchFragment) searchFragment).setmContext(HomeActivity.this);
         Handler mhandler = new Handler();
         if (menu == 1) {
             Bundle mBundle = new Bundle();
@@ -937,7 +974,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             mBundle.putInt(Common.Constant_Class.AdminControl, -1);
             fragment.setArguments(mBundle);
         }
-        fragmentTransaction.replace(R.id.container_body, fragment).commit();
+        fm_container_body.setVisibility(View.VISIBLE);
+        ll_container_body.setVisibility(View.GONE);
+        fragmentTransaction.replace(R.id.fm_container_body, fragment).commit();
 
         switch (menu) {
             case 1:
@@ -1075,11 +1114,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
     private void displayView(int position) {
-
+        fm_container_body.setVisibility(View.VISIBLE);
+        ll_container_body.setVisibility(View.GONE);
         switch (position) {
             case -1:
                 fragment = searchFragment;
-                ((SearchFragment) searchFragment).setmContext(MainActivity.this);
+                ((SearchFragment) searchFragment).setmContext(HomeActivity.this);
                 Bundle mBundle = new Bundle();
                 if (query != null) {
                     mBundle.putString(Common.Constant_Class.QUERY, query);
@@ -1101,13 +1141,17 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 }
                 break;
             case 0:
-                fragment = new EventFragment();
-
+                //fragment = new EventFragment();
+                mEditor.putBoolean("myprofile", false);
+                mEditor.apply();
+                Intent mIntent = new Intent(HomeActivity.this, HomeActivity.class);
+                startActivity(mIntent);
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 break;
             case 1:
                 mEditor.putBoolean("myprofile", true);
                 mEditor.apply();
-                Intent mIntent1 = new Intent(MainActivity.this, ProfileActivity.class);
+                Intent mIntent1 = new Intent(HomeActivity.this, ProfileActivity.class);
                 startActivity(mIntent1);
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 break;
@@ -1118,8 +1162,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new SharedUsersFragment();
                 break;
             case 4:
-                Intent mIntent = new Intent(MainActivity.this, PDFActivity.class);
-                startActivity(mIntent);
+                Intent mIntent2 = new Intent(HomeActivity.this, PDFActivity.class);
+                startActivity(mIntent2);
                 this.overridePendingTransition(0, 0);
                 break;
             case 5:
@@ -1129,7 +1173,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new CalendarFragment();
                 break;
             case 7:
-                Toast.makeText(MainActivity.this, "Language Coming Soon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, "Language Coming Soon", Toast.LENGTH_SHORT).show();
                 break;
             case 8:
                 fragment = new ChangePasswordFragment();
@@ -1151,7 +1195,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-            fragmentTransaction.replace(R.id.container_body, fragment);
+            fragmentTransaction.replace(R.id.fm_container_body, fragment);
             fragmentTransaction.commit();
             overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
         }
@@ -1207,7 +1251,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         if (success.equalsIgnoreCase("false")) {
-                            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HomeActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
                         // if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
 
@@ -1223,13 +1267,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                             AppController.getInstance().realm.deleteAll();
                             AppController.getInstance().realm.commitTransaction();
 
-                            Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+                            Intent mIntent = new Intent(HomeActivity.this, MyLocationService.class);
                             stopService(mIntent);
 
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+                        Intent mIntent = new Intent(HomeActivity.this, LoginActivity.class);
                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(mIntent);
                         finish();
@@ -1275,7 +1319,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     searchView.setQueryHint(result.get(0));
                     searchView.setQuery(result.get(0), true);
-                    Toast.makeText(MainActivity.this, "" + result.get(0), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, "" + result.get(0), Toast.LENGTH_SHORT).show();
                 }
                 break;
             }
@@ -1327,7 +1371,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
                 ProfileActivity.isEnable = false;
-                Intent mIntent = new Intent(MainActivity.this, ProfileActivity.class);
+                Intent mIntent = new Intent(HomeActivity.this, ProfileActivity.class);
                 startActivity(mIntent);
             }
             //byte[] rawBytes = result.getRawBytes();
@@ -1343,7 +1387,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private void manageImageFromUri(Uri imageUri) {
 
         try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), imageUri);
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(HomeActivity.this.getContentResolver(), imageUri);
             if (bitmap != null) {
                 readQRImage(bitmap);
             }

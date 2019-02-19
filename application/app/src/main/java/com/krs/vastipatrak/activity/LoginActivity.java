@@ -81,7 +81,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
 
     @NonNull
     private final String tag_json_obj = "jobj_req";
-    private final String TAG = MainActivity.class.getSimpleName();
+    private final String TAG = LoginActivity.class.getSimpleName();
     Resources resources;
     Context context;
     TextView txtLan;
@@ -146,7 +146,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         }
 
         if (mSharedPreferences != null && !mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase("") && screen == null) {
-            Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent mIntent = new Intent(LoginActivity.this, HomeActivity.class);
 
             mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
             startActivity(mIntent);
@@ -382,7 +382,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         final Dialog dialog = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
         dialog.setContentView(R.layout.overlay_activity);
 
-        LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.llOverlay_activity);
+        LinearLayout layout = dialog.findViewById(R.id.llOverlay_activity);
         layout.setBackgroundColor(Color.TRANSPARENT);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -678,7 +678,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                                    /* if (user_id.equalsIgnoreCase(Common.Constant_Class.ADMIN_1) || user_id.equalsIgnoreCase(Common.Constant_Class.ADMIN_2)) {
                                         AppController.isAdmin = true;
                                     }*/
-                                    Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
+                                    Intent mIntent = new Intent(LoginActivity.this, HomeActivity.class);
                                     if (mSharedPreferences != null) {
                                         mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
                                     }
@@ -921,7 +921,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         if (!isConnected) {
             if (snackbar != null) {
                 View sbView = snackbar.getView();
-                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
                 textView.setTextColor(Color.WHITE);
                 snackbar.show();
             }

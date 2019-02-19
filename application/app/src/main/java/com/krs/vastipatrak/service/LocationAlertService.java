@@ -18,30 +18,20 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.krs.vastipatrak.activity.MainActivity;
+import com.krs.vastipatrak.activity.HomeActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import static com.krs.vastipatrak.utils.Common.CalculationByDistance;
 import static com.krs.vastipatrak.utils.Common.round;
@@ -273,7 +263,7 @@ public class LocationAlertService extends Service {
                 notificationUtils.playNotificationSound();
             } else {*/
             // app is in background, show the notification in notification tray
-            Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent resultIntent = new Intent(getApplicationContext(), HomeActivity.class);
             resultIntent.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
             resultIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
             showNotificationMessage(getApplicationContext(), title, notification, timestamp, resultIntent, id);

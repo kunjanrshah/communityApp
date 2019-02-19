@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#ff2975</color>
-    <color name="colorPrimaryDark">#C51162</color>
+    <!-- <color name="colorPrimary">#ff2975</color>
+     <color name="colorPrimaryDark">#C51162</color>-->
 
-    <!--<color name="colorPrimary">#3b5998</color>
-    <color name="colorPrimaryDark">#8b9dc3</color>-->
+
+    <color name="colorPrimary">#3b5998</color>
+    <color name="colorPrimaryDark">#8b9dc3</color>
 
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
-    <color name="colorAccent">#FF80AB</color>
+    <!--<color name="colorAccent">#FF80AB</color>-->
+    <color name="colorAccent">#5f72a9</color>
 
-    <color name="ripple">#F06292</color>
+    <!--<color name="ripple">#F06292</color>
     <color name="accent">#E91E63</color>
-    <color name="accent_pressed">#C2185B</color>
+    <color name="accent_pressed">#C2185B</color>-->
+    <color name="ripple">#808cba</color>
+    <color name="accent">#5f72a9</color>
+    <color name="accent_pressed">#3b5998</color>
 
 
     <!-- Screens background color-->
