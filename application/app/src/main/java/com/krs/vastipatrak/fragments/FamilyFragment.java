@@ -285,7 +285,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     startImageActivity();
                 } else {
                     String Name = edtSpouseName.getText().toString();
-                    openImageDialog(Name, spouse_url);
+                    openImageDialog(Name, spouse_url, false);
                 }
 
             }
@@ -299,7 +299,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     startImageActivity();
                 } else {
                     String Name = edtSpouseFName.getText().toString();
-                    openImageDialog(Name, fspouse_url);
+                    openImageDialog(Name, fspouse_url, false);
                 }
 
             }
@@ -313,7 +313,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     startImageActivity();
                 } else {
                     String Name = edtMSpouseName.getText().toString();
-                    openImageDialog(Name, mspouse_url);
+                    openImageDialog(Name, mspouse_url, false);
                 }
 
             }
@@ -836,7 +836,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                 startImageActivity();
                             } else {
                                 String Name = mViewholder.edtchild_name.getText().toString();
-                                openImageDialog(Name, child_url);
+                                openImageDialog(Name, child_url, true);
                             }
                         }
                     });
@@ -845,7 +845,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         }
     }
 
-    private void openImageDialog(String name, final String url) {
+    private void openImageDialog(String name, final String url, boolean isChild) {
         Dialog dialog = new Dialog(mActivity);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setContentView(R.layout.image_dialog);
@@ -857,7 +857,12 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         } else {
 
             try {
-                Glide.with(mActivity).load(url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
+                if (isChild) {
+                    Glide.with(mActivity).load(url).apply(requestOptions).thumbnail(0.5f).into(image);
+                } else {
+                    Glide.with(mActivity).load(url).apply(requestOptions).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(image);
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1096,7 +1101,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     if (mObjChild != null) {
                         url = mObjChild.getChild_img_url();
                     }
-                    openImageDialog(Name, url);
+                    openImageDialog(Name, url, false);
                 }
             }
         });

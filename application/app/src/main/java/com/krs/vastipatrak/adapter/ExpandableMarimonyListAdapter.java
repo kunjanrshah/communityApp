@@ -102,7 +102,8 @@ public class ExpandableMarimonyListAdapter extends BaseExpandableListAdapter {
         dialog.setContentView(R.layout.image_dialog);
         dialog.setTitle(name);
         ImageView image = dialog.findViewById(R.id.img_dialog);
-        Glide.with(_context).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(image);
+        //Glide.with(_context).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(image);
+        Glide.with(_context).load(url).thumbnail(1f).into(image);
         dialog.show();
     }
 

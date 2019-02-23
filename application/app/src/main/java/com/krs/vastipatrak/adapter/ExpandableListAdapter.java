@@ -135,6 +135,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         dialog.setTitle(name);
         ImageView image = dialog.findViewById(R.id.img_dialog);
         Glide.with(_context).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(image);
+        // Glide.with(_context).load(url).thumbnail(1f).into(image);
         dialog.show();
     }
 
@@ -760,7 +761,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 // set the custom dialog components - text, image and button
                 final RadioButton radio_qr = dialog.findViewById(R.id.radio_qr);
                 final RadioButton radio_text = dialog.findViewById(R.id.radio_text);
-                ;
                 Button btn_ok = dialog.findViewById(R.id.btn_ok);
                 Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
                 radio_text.setChecked(true);
