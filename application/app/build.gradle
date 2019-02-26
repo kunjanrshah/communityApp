@@ -1,12 +1,3 @@
-buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
-
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.26.1'
-    }
-}
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
@@ -20,8 +11,8 @@ android {
     defaultConfig {
         applicationId "com.krs.vastipatrak"
         minSdkVersion 23
-        versionCode 15
-        versionName "1.15.0"
+        versionCode 17
+        versionName "1.17.0"
         multiDexEnabled true
     }
     buildTypes {

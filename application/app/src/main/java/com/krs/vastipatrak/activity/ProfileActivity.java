@@ -759,6 +759,8 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                     Common.hideProgressDialog();
+                    Toast.makeText(ProfileActivity.this,"Please try again Something went wrong!",Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }) {
                 @NonNull
@@ -772,6 +774,16 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                     return params;
                 }
             };
+
+           /* jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                    MY_SOCKET_TIMEOUT_MS,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));*/
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                    10000,
+                    3,
+                    2f));
+
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }

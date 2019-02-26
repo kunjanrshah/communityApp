@@ -342,7 +342,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
 
-
     private void getList(final String type) {
         if (Common.isOnline(this)) {
 
@@ -1210,30 +1209,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                             Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
                         // if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                        MovetoLoginScreen();
 
-                        try {
-                            mEditor.clear();
-                            mEditor.apply();
-                            mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_FILTER, MODE_PRIVATE);
-                            mEditor = mSharedPreferences.edit();
-                            mEditor.clear();
-                            mEditor.apply();
-
-                            AppController.getInstance().realm.beginTransaction();
-                            AppController.getInstance().realm.deleteAll();
-                            AppController.getInstance().realm.commitTransaction();
-
-                            Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
-                            stopService(mIntent);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
-                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(mIntent);
-                        finish();
-                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                         // }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1243,9 +1220,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
-                    VolleyLog.d(TAG, "Error: " + error.getMessage());
-
+                    VolleyLog.d(TAG, "logout Error: " + error.getMessage());
+                    Log.d(TAG, "Logout WS " + error.getMessage());
+                    Toast.makeText(MainActivity.this, "Error while Logout", Toast.LENGTH_SHORT).show();
                     Common.hideProgressDialog();
+                    MovetoLoginScreen();
                 }
             }) {
                 @NonNull
@@ -1262,6 +1241,34 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }
+    }
+
+    private void MovetoLoginScreen() {
+        try {
+            mEditor.clear();
+            mEditor.apply();
+            mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_FILTER, MODE_PRIVATE);
+            mEditor = mSharedPreferences.edit();
+            mEditor.clear();
+            mEditor.apply();
+
+            AppController.getInstance().realm.beginTransaction();
+            AppController.getInstance().realm.deleteAll();
+            AppController.getInstance().realm.commitTransaction();
+
+            Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
+            stopService(mIntent);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mIntent);
+        finish();
+        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+
+
     }
 
     @Override

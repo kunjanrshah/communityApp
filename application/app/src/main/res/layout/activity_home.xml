@@ -40,31 +40,77 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="40dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/img_my_profile"
+                <LinearLayout
+                    android:id="@+id/ll_my_profile"
                     android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@drawable/advance" />
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/img_advance_search"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:background="@drawable/advance" />
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/app_icon" />
 
-                <ImageView
-                    android:id="@+id/img_calendar"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="My Profile"
+                        android:textColor="@color/mdtp_white"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_advance_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/app_icon" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="Advance Search"
+                        android:textColor="@color/mdtp_white"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_calendar"
                     android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginLeft="15dp"
-                    android:background="@drawable/advance" />
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/app_icon" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="Calendar"
+                        android:textColor="@color/mdtp_white"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -155,9 +155,9 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private MenuItem export;
     private MenuItem change_role;
     private Snackbar snackbar;
-    private ImageView img_my_profile;
-    private ImageView img_advance_search;
-    private ImageView img_calendar;
+    private LinearLayout ll_my_profile;
+    private LinearLayout ll_advance_search;
+    private LinearLayout ll_calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -287,13 +287,13 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
 
         MemoryAllocation();
-        img_my_profile.setOnClickListener(new View.OnClickListener() {
+        ll_my_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 displayView(1);
             }
         });
-        img_advance_search.setOnClickListener(new View.OnClickListener() {
+        ll_advance_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent mIntent = new Intent(HomeActivity.this, AdvanceSearchActivity.class);
@@ -302,7 +302,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         });
 
-        img_calendar.setOnClickListener(new View.OnClickListener() {
+        ll_calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 displayView(6);
@@ -311,9 +311,9 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
     private void MemoryAllocation() {
-        img_my_profile = findViewById(R.id.img_my_profile);
-        img_advance_search = findViewById(R.id.img_advance_search);
-        img_calendar = findViewById(R.id.img_calendar);
+        ll_my_profile = findViewById(R.id.ll_my_profile);
+        ll_advance_search = findViewById(R.id.ll_advance_search);
+        ll_calendar = findViewById(R.id.ll_calendar);
     }
 
     private void get_updated_ver_ws() {
