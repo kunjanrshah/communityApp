@@ -40,7 +40,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,7 +81,6 @@ import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.fragments.CalendarFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
-import com.krs.vastipatrak.fragments.HelpFragment;
 import com.krs.vastipatrak.fragments.MatrimonyFragment;
 import com.krs.vastipatrak.fragments.NearByFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
@@ -142,8 +140,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private boolean doubleBackToExitPressedOnce = false;
     private GoogleApiClient googleApiClient;
     @Nullable
-    private Fragment fragment = null;
-    private Fragment searchFragment = null;
+    // private Fragment fragment = null;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
@@ -181,7 +178,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         FragmentDrawer drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
-        searchFragment = new SearchFragment();
+        // searchFragment = new SearchFragment();
 
         if (Build.VERSION.SDK_INT >= 23) {
             if (Common.canCallPhone(this) && !Common.canAccessLocation(this)) {
@@ -266,6 +263,11 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 } else {
                     displayView(-1);
                 }*/
+                if ((query == null || query.isEmpty()) && (query_string == null || query_string.isEmpty()) && (push_message == null || push_message.isEmpty())) {
+                    Toast.makeText(HomeActivity.this, "Home Screen", Toast.LENGTH_SHORT).show();
+                } else {
+                    displayView(-1);
+                }
             }
         }
         checkConnection();
@@ -644,8 +646,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     protected void onResume() {
         super.onResume();
-        fm_container_body.setVisibility(View.GONE);
-        ll_container_body.setVisibility(View.VISIBLE);
+        fm_container_body.setVisibility(View.VISIBLE);
+        ll_container_body.setVisibility(View.GONE);//visible
         AppController.getInstance().setConnectivityListener(this);
         // register GCM registration complete receiver
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(Config.REGISTRATION_COMPLETE));
@@ -778,7 +780,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                searchFragment = new SearchFragment();
+                SearchFragment searchFragment = new SearchFragment();
                 IAdminControl = (IAdminControl) searchFragment;
                 ((SearchFragment) searchFragment).setmContext(HomeActivity.this);
                 mBundle.putString(Common.Constant_Class.QUERY, query);
@@ -961,31 +963,31 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragment = searchFragment;
-        IAdminControl = (IAdminControl) fragment;
+        final SearchFragment searchFragment = new SearchFragment();
+        IAdminControl = (IAdminControl) searchFragment;
         ((SearchFragment) searchFragment).setmContext(HomeActivity.this);
         Handler mhandler = new Handler();
         if (menu == 1) {
             Bundle mBundle = new Bundle();
             mBundle.putInt(Common.Constant_Class.AdminControl, Common.Constant_Class.NonActive);
-            fragment.setArguments(mBundle);
+            searchFragment.setArguments(mBundle);
         } else if (menu == 6) {
             Bundle mBundle = new Bundle();
             mBundle.putInt(Common.Constant_Class.AdminControl, -1);
-            fragment.setArguments(mBundle);
+            searchFragment.setArguments(mBundle);
         }
         fm_container_body.setVisibility(View.VISIBLE);
         ll_container_body.setVisibility(View.GONE);
-        fragmentTransaction.replace(R.id.fm_container_body, fragment).commit();
+        fragmentTransaction.replace(R.id.fm_container_body, searchFragment).commit();
 
         switch (menu) {
             case 1:
                 try {
-                    if (fragment != null) {
+                    if (searchFragment != null) {
                         mhandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                ((SearchFragment) fragment).callNonActivesWS();
+                                ((SearchFragment) searchFragment).callNonActivesWS();
                             }
                         }, 500);
                     }
@@ -1118,27 +1120,50 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         ll_container_body.setVisibility(View.GONE);
         switch (position) {
             case -1:
-                fragment = searchFragment;
+
+
+                Bundle mBundle = new Bundle();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                SearchFragment searchFragment = new SearchFragment();
+                IAdminControl = (IAdminControl) searchFragment;
                 ((SearchFragment) searchFragment).setmContext(HomeActivity.this);
+                mBundle.putString(Common.Constant_Class.QUERY, query);
+                searchFragment.setArguments(mBundle);
+                fragmentTransaction.add(R.id.fm_container_body, searchFragment).commit();
+                fm_container_body.setVisibility(View.VISIBLE);
+                ll_container_body.setVisibility(View.GONE);
+
+
+               /* SearchFragment searchFragment = new SearchFragment();
+                IAdminControl = searchFragment;
+                searchFragment.setmContext(HomeActivity.this);
                 Bundle mBundle = new Bundle();
                 if (query != null) {
                     mBundle.putString(Common.Constant_Class.QUERY, query);
-                    fragment.setArguments(mBundle);
+                    searchFragment.setArguments(mBundle);
                 } else if (query_string != null) {
                     mBundle.putString(Common.Constant_Class.QUERY_STRING, query_string);
-                    fragment.setArguments(mBundle);
+                    searchFragment.setArguments(mBundle);
                 } else if (push_message != null) {
-                    IAdminControl = (IAdminControl) fragment;
                     mBundle.putString(Common.Constant_Class.PUSH_MESSAGE, push_message);
                     mBundle.putInt(Common.Constant_Class.AdminControl, Common.Constant_Class.NonActive);
-                    fragment.setArguments(mBundle);
+                    searchFragment.setArguments(mBundle);
+                    searchFragment.callNonActivesWS();
                     push_message = null;
-                    try {
-                        ((SearchFragment) fragment).callNonActivesWS();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 }
+                if (searchFragment != null) {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    //   fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                    fragmentTransaction.replace(R.id.fm_container_body, searchFragment);
+                    fragmentTransaction.commit();
+                    // overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                    fm_container_body.setVisibility(View.VISIBLE);
+                    ll_container_body.setVisibility(View.GONE);
+                }*/
+                //moveToFragment(searchFragment);
                 break;
             case 0:
                 //fragment = new EventFragment();
@@ -1146,6 +1171,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 mEditor.apply();
                 Intent mIntent = new Intent(HomeActivity.this, HomeActivity.class);
                 startActivity(mIntent);
+                finish();
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 break;
             case 1:
@@ -1153,13 +1179,15 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 mEditor.apply();
                 Intent mIntent1 = new Intent(HomeActivity.this, ProfileActivity.class);
                 startActivity(mIntent1);
+                finish();
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+
                 break;
             case 2:
-                fragment = new NearByFragment();
+                moveToFragment(new NearByFragment());
                 break;
             case 3:
-                fragment = new SharedUsersFragment();
+                moveToFragment(new SharedUsersFragment());
                 break;
             case 4:
                 Intent mIntent2 = new Intent(HomeActivity.this, PDFActivity.class);
@@ -1167,22 +1195,23 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 this.overridePendingTransition(0, 0);
                 break;
             case 5:
-                fragment = new MatrimonyFragment();
+                moveToFragment(new MatrimonyFragment());
                 break;
             case 6:
-                fragment = new CalendarFragment();
+
+                moveToFragment(new CalendarFragment());
                 break;
             case 7:
                 Toast.makeText(HomeActivity.this, "Language Coming Soon", Toast.LENGTH_SHORT).show();
                 break;
             case 8:
-                fragment = new ChangePasswordFragment();
+                moveToFragment(new ChangePasswordFragment());
                 break;
             case 9:
-                fragment = new TourFragment();
+                moveToFragment(new TourFragment());
                 break;
             case 10:
-                fragment = new HelpFragment();
+
                 break;
             case 11:
                 ExitAlert();
@@ -1191,6 +1220,10 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 break;
         }
 
+
+    }
+
+    private void moveToFragment(Fragment fragment) {
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -1198,6 +1231,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             fragmentTransaction.replace(R.id.fm_container_body, fragment);
             fragmentTransaction.commit();
             overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+            fm_container_body.setVisibility(View.VISIBLE);
+            ll_container_body.setVisibility(View.GONE);
         }
     }
 

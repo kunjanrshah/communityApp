@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -39,6 +40,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.krs.vastipatrak.utils.Common.Constant_Class.DEFAULT_BACKOFF_MULT;
+import static com.krs.vastipatrak.utils.Common.Constant_Class.DEFAULT_MAX_RETRIES;
+import static com.krs.vastipatrak.utils.Common.Constant_Class.INIT_TIMEOUT;
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 import static com.krs.vastipatrak.utils.Common.showProgressDialog;
 
@@ -158,6 +162,9 @@ public class RelativeFragment extends Fragment {
                     return params;
                 }
             };
+
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                    INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         }

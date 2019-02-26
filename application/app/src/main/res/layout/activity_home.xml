@@ -24,15 +24,16 @@
         <FrameLayout
             android:id="@+id/fm_container_body"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:visibility="gone" />
+             />
 
         <LinearLayout
             android:id="@+id/ll_container_body"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:visibility="gone"
             android:background="@color/colorPrimaryDark"
             android:orientation="vertical">
 

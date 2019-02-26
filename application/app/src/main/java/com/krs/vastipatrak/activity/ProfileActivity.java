@@ -61,6 +61,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.krs.vastipatrak.utils.Common.Constant_Class.DEFAULT_BACKOFF_MULT;
+import static com.krs.vastipatrak.utils.Common.Constant_Class.DEFAULT_MAX_RETRIES;
+import static com.krs.vastipatrak.utils.Common.Constant_Class.INIT_TIMEOUT;
 import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_SPOUSE_BLOOD_GROUP;
 
 public class ProfileActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, ConnectivityReceiver.ConnectivityReceiverListener {
@@ -171,14 +174,25 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
             @Override
             public boolean onQueryTextSubmit(String query) {
 
+                /*Bundle mBundle = new Bundle();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                SearchFragment searchFragment = new SearchFragment();
+               // IAdminControl = (IAdminControl) searchFragment;
+                ((SearchFragment) searchFragment).setmContext(ProfileActivity.this);
+                mBundle.putString(Common.Constant_Class.QUERY, query);
+                searchFragment.setArguments(mBundle);
+                fragmentTransaction.add(R.id.fm_container_body, searchFragment).commit();
+                finish();*/
+                Log.d(TAG, "step onQueryTextSubmit");
                 Intent mIntent = new Intent(ProfileActivity.this, HomeActivity.class);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 mIntent.putExtra(Common.Constant_Class.QUERY, query);
                 startActivity(mIntent);
-                Log.d(TAG, "step onQueryTextSubmit");
                 finish();
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-                return false;
+                return true;
             }
 
             @Override
@@ -698,7 +712,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                     return params;
                 }
             };
-            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(50000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         } else {
             Toast.makeText(ProfileActivity.this, "" + Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
@@ -759,7 +773,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                     Common.hideProgressDialog();
-                    Toast.makeText(ProfileActivity.this,"Please try again Something went wrong!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileActivity.this, "Please try again Something went wrong!", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }) {
@@ -775,14 +789,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                 }
             };
 
-           /* jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
-                    MY_SOCKET_TIMEOUT_MS,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));*/
-            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
-                    10000,
-                    3,
-                    2f));
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
 
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");

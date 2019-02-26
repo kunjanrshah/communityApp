@@ -2199,6 +2199,10 @@ public class Common {
         public static final String ADMIN = "ADMIN";
         public static final String USER = "USER";
 
+        public static final int INIT_TIMEOUT = 10000;
+        public static final int DEFAULT_MAX_RETRIES = 3;
+        public static final float DEFAULT_BACKOFF_MULT = 2f;
+
         public static final String LAN = "lan";
 
         public static final String YOUTUBE_API_KEY = "AIzaSyBOkoXTYsY32OQtLTxidxci5R3Zml84oUY";

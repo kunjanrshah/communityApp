@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -40,6 +41,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.krs.vastipatrak.utils.Common.Constant_Class.DEFAULT_BACKOFF_MULT;
+import static com.krs.vastipatrak.utils.Common.Constant_Class.DEFAULT_MAX_RETRIES;
+import static com.krs.vastipatrak.utils.Common.Constant_Class.INIT_TIMEOUT;
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 
 public class CalendarFragment extends Fragment {
@@ -196,6 +200,8 @@ public class CalendarFragment extends Fragment {
                     return params;
                 }
             };
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                    INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }
     }
