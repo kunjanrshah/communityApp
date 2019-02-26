@@ -7,6 +7,5 @@
 /build
 /captures
 .externalNativeBuild
-.idea
-.idea/workspace.xml
+/.idea
 app/src/androidTest/java/

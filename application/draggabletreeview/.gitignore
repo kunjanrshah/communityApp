@@ -1,2 +1,12 @@
 /build
 /src/main/gen
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/captures
+.externalNativeBuild
+/.idea
+app/src/androidTest/java/
