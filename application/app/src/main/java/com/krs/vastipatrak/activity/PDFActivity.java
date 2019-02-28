@@ -15,9 +15,6 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.fragments.Boys1Fragment;
-import com.krs.vastipatrak.fragments.Boys2Fragment;
-import com.krs.vastipatrak.fragments.GirlsFragment;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.NonSwipeableViewPager;
 
@@ -82,7 +79,7 @@ public class PDFActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setupViewPager(ViewPager viewPager) {
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        /*ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         Fragment girlsFragment = new GirlsFragment();
         Fragment boys1Fragment = new Boys1Fragment();
         Fragment boys2Fragment = new Boys2Fragment();
@@ -90,7 +87,7 @@ public class PDFActivity extends AppCompatActivity {
         adapter.addFrag(boys1Fragment, Common.Constant_Class.BOYS_P1);
         adapter.addFrag(boys2Fragment, Common.Constant_Class.BOYS_P2);
         viewPager.setOffscreenPageLimit(3);
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(adapter);*/
 
     }
 

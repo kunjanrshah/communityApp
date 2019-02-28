@@ -60,15 +60,16 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/my_profile" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="My Profile"
+                            android:text="માય પ્રોફાઈલ"
+                            android:textStyle="bold"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -82,15 +83,16 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/advance_search" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Advance Search"
+                            android:text="એડવાન્સ સેર્ચ"
+                            android:textStyle="bold"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -103,15 +105,16 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/calendar_blue" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Calendar"
+                            android:text="કૅલેન્ડર"
+                            android:textStyle="bold"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -135,15 +138,16 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/near_by_search" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="NearBy"
+                            android:text="સેર્ચ બાય અંતર "
+                            android:textStyle="bold"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -157,15 +161,15 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/matrimony_blue" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Matrimony"
+                            android:text="લગ્નવિષયક"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -178,15 +182,15 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/near_by" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Shared Users"
+                            android:text="સ્થાન શેરિંગ પ્રોફાઇલ"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -210,15 +214,15 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/change_password" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Change Password"
+                            android:text="પાસવર્ડ બદલો"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -232,15 +236,15 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/app_tour" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Tour"
+                            android:text="એપ્લિકેશન ટૂર"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -253,15 +257,15 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/help" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Help"
+                            android:text="મદદ"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -285,15 +289,15 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/scan_qr_code" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Scan QRCode"
+                            android:text="સ્કેન QR કોડ"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -307,15 +311,15 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/qr_code_image_blue" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="QRCode Image"
+                            android:text="QR કોડ ઇમેજ"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -328,15 +332,15 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/events" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Events"
+                            android:text="ઇવેન્ટ્સ"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -368,7 +372,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="MatriMony Form"
+                            android:text="લગ્નવિષયક ફોર્મ"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -390,7 +394,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Quick Search"
+                            android:text="ઝડપી સેર્ચ"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -411,7 +415,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Medical Form"
+                            android:text="તબીબી રાહત ફોર્મ"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -425,6 +429,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="40dp"
                     android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="40dp"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
@@ -436,15 +441,15 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/change_color" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Theme"
+                            android:text="થીમ બદલો"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -458,15 +463,15 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/add_new" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Add New"
+                            android:text="નવો ઉમેરો"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -479,15 +484,15 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/app_icon" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/admin" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Admins"
+                            android:text="સંચાલક"
                             android:textColor="@color/mdtp_white"
                             android:textSize="16sp" />
                     </LinearLayout>

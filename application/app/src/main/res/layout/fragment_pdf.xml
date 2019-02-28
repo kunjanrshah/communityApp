@@ -13,8 +13,12 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <com.github.barteksc.pdfviewer.PDFView
+    <WebView
+        android:id="@+id/myPersonalsite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <!--<com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pdfView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" />-->
 </LinearLayout>
