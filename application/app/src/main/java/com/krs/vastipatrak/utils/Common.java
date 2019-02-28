@@ -1577,7 +1577,6 @@ public class Common {
                 pDialog.setCancelable(false);
             }
 
-
             if (!pDialog.isShowing()) pDialog.show();
             ProgressBar progressbar = pDialog.findViewById(android.R.id.progress);
             progressbar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#3b5998"), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -1766,7 +1765,6 @@ public class Common {
     }
 
 
-
     public static Bitmap drawableToBitmap(Drawable drawable) {
         Bitmap bitmap = null;
 
@@ -1896,8 +1894,6 @@ public class Common {
         }
 
     }
-
-
 
 
     public static void getParentRandomColor(@NonNull Context context, int position, LinearLayout ll_event) {
@@ -2199,7 +2195,7 @@ public class Common {
         public static final String ADMIN = "ADMIN";
         public static final String USER = "USER";
 
-        public static final int INIT_TIMEOUT = 10000;
+        public static final int INIT_TIMEOUT = 4000;
         public static final int DEFAULT_MAX_RETRIES = 3;
         public static final float DEFAULT_BACKOFF_MULT = 2f;
 

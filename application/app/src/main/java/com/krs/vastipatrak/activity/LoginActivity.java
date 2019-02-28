@@ -67,6 +67,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.krs.vastipatrak.utils.Common.Constant_Class.DEFAULT_BACKOFF_MULT;
+import static com.krs.vastipatrak.utils.Common.Constant_Class.DEFAULT_MAX_RETRIES;
+import static com.krs.vastipatrak.utils.Common.Constant_Class.INIT_TIMEOUT;
 import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 import static com.krs.vastipatrak.utils.Common.watchYoutubeVideo;
 
@@ -379,7 +382,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
     }
 
     private void showActivityOverlay() {
-        final Dialog dialog = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
+        final Dialog dialog = new Dialog(this, android.R.style.Theme_Translucent_NoTitleBar);
         dialog.setContentView(R.layout.overlay_activity);
 
         LinearLayout layout = dialog.findViewById(R.id.llOverlay_activity);
@@ -545,7 +548,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
 
                     @Override
                     public void onResponse(@NonNull JSONObject response) {
-                        Log.d(TAG, response.toString());
+                        Log.d(TAG, "ForgotPasswordWS: " + response.toString());
 
                         try {
                             hideProgressDialog();
@@ -593,6 +596,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                     }
                 };
                 // Adding request to request queue
+                jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
                 AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
             } else {
@@ -623,7 +627,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
 
                     @Override
                     public void onResponse(@NonNull JSONObject response) {
-                        Log.d(TAG, response.toString());
+                        Log.d(TAG, "LoginWS: " + response.toString());
 
                         try {
                             hideProgressDialog();
@@ -733,7 +737,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                         return params;
                     }
                 };
-                jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
                 AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
             }
         } else {
@@ -788,7 +792,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
 
                             @Override
                             public void onResponse(@NonNull JSONObject response) {
-                                Log.d(TAG, response.toString());
+                                Log.d(TAG, "SignupWS: " + response.toString());
 
                                 try {
                                     hideProgressDialog();

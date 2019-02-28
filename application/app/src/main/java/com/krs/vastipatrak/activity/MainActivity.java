@@ -101,6 +101,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.krs.vastipatrak.utils.Common.Constant_Class.MYPROFILE_SP;
+
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback, ConnectivityReceiver.ConnectivityReceiverListener {
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
     public static final int CAMARA_REQUEST = 4;
@@ -264,14 +266,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         checkConnection();
 
         // showActivityOverlay();
-        if (mPreferencesWelcome.getBoolean("first_time_main", true)) {
-            mEditorWelcome.putBoolean("first_time_main", false);
+        if (mPreferencesWelcome.getBoolean(getString(R.string.first_time_main), true)) {
+            mEditorWelcome.putBoolean(getString(R.string.first_time_main), false);
             mEditorWelcome.apply();
         }
 
         Log.d(TAG, "MainActivity Screen");
-        if (mSharedPreferences.getBoolean("app_create", false)) {
-            mEditor.putBoolean("app_create", false);
+        if (mSharedPreferences.getBoolean(getString(R.string.app_create), false)) {
+            mEditor.putBoolean(getString(R.string.app_create), false);
             mEditor.apply();
             get_updated_ver_ws();
             getList(getResources().getString(R.string._gotra));
@@ -1104,7 +1106,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
                 break;
             case 1:
-                mEditor.putBoolean("myprofile", true);
+                mEditor.putBoolean(MYPROFILE_SP, true);
                 mEditor.apply();
                 Intent mIntent1 = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(mIntent1);

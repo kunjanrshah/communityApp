@@ -1,21 +1,25 @@
 package com.krs.vastipatrak.fragments;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,8 +57,8 @@ public class RelativeFragment extends Fragment {
     private TextView txtLable;
     private ArrayList<Relative> lstRelative = null;
     private SharedPreferences.Editor mEditor;
-
-
+    private String TAG = RelativeFragment.class.getSimpleName();
+    private ProgressDialog pDialog;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_relative, container, false);
@@ -69,6 +73,32 @@ public class RelativeFragment extends Fragment {
         mEditor = mSharedPreferences.edit();
         recycler_view = rootView.findViewById(R.id.recycler_view);
         txtLable = rootView.findViewById(R.id.txtLable);
+    }
+
+    public void showProgressDialog(Context mContext) {
+        try {
+
+            if (pDialog == null) {
+                pDialog = new ProgressDialog(mContext);
+                pDialog.setMessage(Common.Constant_Class.LOADING);
+                pDialog.setCancelable(false);
+            }
+
+            if (!pDialog.isShowing()) pDialog.show();
+            ProgressBar progressbar = pDialog.findViewById(android.R.id.progress);
+            progressbar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#3b5998"), android.graphics.PorterDuff.Mode.SRC_IN);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void hideProgressDialog() {
+        try {
+            if (pDialog != null && pDialog.isShowing()) pDialog.cancel();
+            pDialog = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void getRelationsWS() {
@@ -93,7 +123,7 @@ public class RelativeFragment extends Fragment {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
-
+                        Log.d(TAG, "RelationsWS: " + response.toString());
                         String success = response.getString(Common.Constant_Class.SUCCESS);
                         if (success.equalsIgnoreCase("true")) {
                             JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
@@ -111,8 +141,8 @@ public class RelativeFragment extends Fragment {
                                 String to_last_name = mJsonreldata.getString(Common.Constant_Class.TO_LAST_NAME);
                                 String from_first_name = mJsonreldata.getString(Common.Constant_Class.FROM_FIRST_NAME);
                                 String from_last_name = mJsonreldata.getString(Common.Constant_Class.FROM_LAST_NAME);
-                                String to_profile_pic=mJsonreldata.getString(Common.Constant_Class.FROM_PROFILE_PIC);
-                                String from_profile_pic=mJsonreldata.getString(Common.Constant_Class.TO_PROFILE_PIC);
+                                String to_profile_pic = mJsonreldata.getString(Common.Constant_Class.FROM_PROFILE_PIC);
+                                String from_profile_pic = mJsonreldata.getString(Common.Constant_Class.TO_PROFILE_PIC);
                                 Relative mRelative = new Relative();
                                 mRelative.setId(id);
                                 mRelative.setUser_id(user_id);
@@ -148,6 +178,7 @@ public class RelativeFragment extends Fragment {
 
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
+                    hideProgressDialog();
                     VolleyLog.d(getClass().getSimpleName(), "Error: " + error.getMessage());
                 }
             }) {
@@ -163,8 +194,7 @@ public class RelativeFragment extends Fragment {
                 }
             };
 
-            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
-                    INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         }
@@ -188,6 +218,7 @@ public class RelativeFragment extends Fragment {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
+                        Log.d(TAG, "ActionWS: " + response.toString());
                         String message = response.getString(Common.Constant_Class.MESSAGE);
                         try {
                             JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);

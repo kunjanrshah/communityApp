@@ -359,6 +359,9 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="_native">native</string>
     <string name="_education">occupation</string>
     <string name="FT_LEVEL">level</string>
+    <string name="app_create">app_create</string>
+    <string name="first_time_main">first_time_main</string>
+    <string name="location">location</string>
 
 
 </resources>

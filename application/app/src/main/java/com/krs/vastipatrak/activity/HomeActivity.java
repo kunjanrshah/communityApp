@@ -41,9 +41,11 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -81,6 +83,7 @@ import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.fragments.CalendarFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
+import com.krs.vastipatrak.fragments.HelpFragment;
 import com.krs.vastipatrak.fragments.MatrimonyFragment;
 import com.krs.vastipatrak.fragments.NearByFragment;
 import com.krs.vastipatrak.fragments.SearchFragment;
@@ -100,7 +103,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class HomeActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback, ConnectivityReceiver.ConnectivityReceiverListener {
+
+public class HomeActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback, ConnectivityReceiver.ConnectivityReceiverListener, View.OnClickListener {
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
     public static final int CAMARA_REQUEST = 4;
     private static final String TAG = HomeActivity.class.getSimpleName();
@@ -129,7 +133,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     };
     FrameLayout fm_container_body;
-    LinearLayout ll_container_body;
+    ScrollView scroll_container_body;
     MenuItem deactiveItem;
     MenuItem deleteItem;
     MenuItem activeItem;
@@ -139,8 +143,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private String query_string = "";
     private boolean doubleBackToExitPressedOnce = false;
     private GoogleApiClient googleApiClient;
-    @Nullable
-    // private Fragment fragment = null;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
@@ -152,9 +154,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private MenuItem export;
     private MenuItem change_role;
     private Snackbar snackbar;
-    private LinearLayout ll_my_profile;
-    private LinearLayout ll_advance_search;
-    private LinearLayout ll_calendar;
+    private LinearLayout ll_my_profile, ll_advance_search, ll_calendar, ll_nearby, ll_matrimony, ll_shared_users, ll_change_password, ll_tour, ll_help, ll_scanQrCode, ll_QRCodeImage, ll_language, ll_Matrimony_Form, ll_Quick_Search, ll_medical_form, ll_theme, ll_add_new, ll_Admins,ll_event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,20 +165,19 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
         fm_container_body = findViewById(R.id.fm_container_body);
-        ll_container_body = findViewById(R.id.ll_container_body);
+        scroll_container_body = findViewById(R.id.scroll_container_body);
         mPreferencesWelcome = getSharedPreferences(Common.Constant_Class.PREF_WELCOME, MODE_PRIVATE);
         mEditorWelcome = mPreferencesWelcome.edit();
         mEditorWelcome.apply();
 
         Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
-        //intializing scan object
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         qrScan = new IntentIntegrator(this);
         FragmentDrawer drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
-        // searchFragment = new SearchFragment();
 
         if (Build.VERSION.SDK_INT >= 23) {
             if (Common.canCallPhone(this) && !Common.canAccessLocation(this)) {
@@ -243,7 +242,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 mEditor.apply();
                 MOVE_TO_SEARCH = 1;
                 moveToSearch(MOVE_TO_SEARCH);
-            } else if (push.toLowerCase().contains("location")) {
+            } else if (push.toLowerCase().contains(getString(R.string.location))) {
                 ProfileActivity.isEnable = false;
                 mEditor.putString(Common.Constant_Class.NOTIFICATION, "");
                 mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
@@ -264,7 +263,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     displayView(-1);
                 }*/
                 if ((query == null || query.isEmpty()) && (query_string == null || query_string.isEmpty()) && (push_message == null || push_message.isEmpty())) {
-                    Toast.makeText(HomeActivity.this, "Home Screen", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "Home Screen");
                 } else {
                     displayView(-1);
                 }
@@ -273,14 +272,13 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         checkConnection();
 
         // showActivityOverlay();
-        if (mPreferencesWelcome.getBoolean("first_time_main", true)) {
-            mEditorWelcome.putBoolean("first_time_main", false);
+        if (mPreferencesWelcome.getBoolean(getString(R.string.first_time_main), true)) {
+            mEditorWelcome.putBoolean(getString(R.string.first_time_main), false);
             mEditorWelcome.apply();
         }
 
-        Log.d(TAG, "HomeActivity Screen");
-        if (mSharedPreferences.getBoolean("app_create", false)) {
-            mEditor.putBoolean("app_create", false);
+        if (mSharedPreferences.getBoolean(getString(R.string.app_create), false)) {
+            mEditor.putBoolean(getString(R.string.app_create), false);
             mEditor.apply();
             get_updated_ver_ws();
             getList(getResources().getString(R.string._gotra));
@@ -289,33 +287,113 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
 
         MemoryAllocation();
-        ll_my_profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                displayView(1);
-            }
-        });
-        ll_advance_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mIntent = new Intent(HomeActivity.this, AdvanceSearchActivity.class);
-                startActivity(mIntent);
-                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-            }
-        });
+        setLisners();
 
-        ll_calendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    }
+
+    private void setLisners() {
+        ll_my_profile.setOnClickListener(this);
+        ll_advance_search.setOnClickListener(this);
+        ll_calendar.setOnClickListener(this);
+        ll_nearby.setOnClickListener(this);
+        ll_matrimony.setOnClickListener(this);
+        ll_shared_users.setOnClickListener(this);
+        ll_change_password.setOnClickListener(this);
+        ll_tour.setOnClickListener(this);
+        ll_help.setOnClickListener(this);
+        ll_scanQrCode.setOnClickListener(this);
+        ll_QRCodeImage.setOnClickListener(this);
+        ll_event.setOnClickListener(this);
+        ll_Matrimony_Form.setOnClickListener(this);
+        ll_Quick_Search.setOnClickListener(this);
+        ll_medical_form.setOnClickListener(this);
+        ll_theme.setOnClickListener(this);
+        ll_add_new.setOnClickListener(this);
+        ll_Admins.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.ll_my_profile:
+                displayView(1);
+                break;
+            case R.id.ll_advance_search:
+                Intent intent_advance_search = new Intent(HomeActivity.this, AdvanceSearchActivity.class);
+                startActivity(intent_advance_search);
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                break;
+            case R.id.ll_calendar:
                 displayView(6);
-            }
-        });
+                break;
+            case R.id.ll_nearby:
+                moveToFragment(new NearByFragment());
+                break;
+            case R.id.ll_matrimony:
+                moveToFragment(new MatrimonyFragment());
+                break;
+            case R.id.ll_shared_users:
+                moveToFragment(new SharedUsersFragment());
+                break;
+            case R.id.ll_change_password:
+                moveToFragment(new ChangePasswordFragment());
+                break;
+            case R.id.ll_tour:
+                moveToFragment(new TourFragment());
+                break;
+            case R.id.ll_help:
+                moveToFragment(new HelpFragment());
+                break;
+            case R.id.ll_scanQrCode:
+                qrScan.initiateScan();
+                break;
+            case R.id.ll_QRCodeImage:
+                Intent intent_qr_image = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent_qr_image.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent_qr_image, "Select File"), IMAGEREQUESTCODE);
+                break;
+            case R.id.ll_event:
+                Intent mIntent1 = new Intent(HomeActivity.this, ShareEventActivity.class);
+                startActivity(mIntent1);
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                break;
+            case R.id.ll_Matrimony_Form:
+                break;
+            case R.id.ll_theme:
+                break;
+            case R.id.ll_add_new:
+                Intent mIntent2 = new Intent(HomeActivity.this, LoginActivity.class);
+                mIntent2.putExtra(Common.Constant_Class.SCREEN, Common.Constant_Class.SEARCH_FRAGMENT);
+                startActivity(mIntent2);
+                break;
+            case R.id.ll_Admins:
+                MOVE_TO_SEARCH = 6;
+                moveToSearch(MOVE_TO_SEARCH);
+                break;
+        }
+
     }
 
     private void MemoryAllocation() {
         ll_my_profile = findViewById(R.id.ll_my_profile);
         ll_advance_search = findViewById(R.id.ll_advance_search);
         ll_calendar = findViewById(R.id.ll_calendar);
+        ll_nearby = findViewById(R.id.ll_nearby);
+        ll_matrimony = findViewById(R.id.ll_matrimony);
+        ll_shared_users = findViewById(R.id.ll_shared_users);
+        ll_change_password = findViewById(R.id.ll_change_password);
+        ll_tour = findViewById(R.id.ll_tour);
+        ll_help = findViewById(R.id.ll_help);
+        ll_scanQrCode = findViewById(R.id.ll_scanQrCode);
+        ll_QRCodeImage = findViewById(R.id.ll_QRCodeImage);
+        ll_event = findViewById(R.id.ll_event);
+        ll_Matrimony_Form = findViewById(R.id.ll_Matrimony_Form);
+        ll_Quick_Search = findViewById(R.id.ll_Quick_Search);
+        ll_medical_form = findViewById(R.id.ll_medical_form);
+        ll_theme = findViewById(R.id.ll_theme);
+        ll_add_new = findViewById(R.id.ll_add_new);
+        ll_Admins = findViewById(R.id.ll_Admins);
     }
 
     private void get_updated_ver_ws() {
@@ -341,7 +419,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
-                    Log.d(TAG, "response: " + response.toString());
+                    Log.d(TAG, "UpdateVersionWS: " + response.toString());
                     Common.hideProgressDialog();
 
                     try {
@@ -374,6 +452,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     return params;
                 }
             };
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(Common.Constant_Class.INIT_TIMEOUT, Common.Constant_Class.DEFAULT_MAX_RETRIES, Common.Constant_Class.DEFAULT_BACKOFF_MULT));
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }
@@ -402,7 +481,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
-                    Log.d(TAG, "response: " + response.toString());
+                    Log.d(TAG, "getListWS:" + type + ": " + response.toString());
                     Common.hideProgressDialog();
 
                     try {
@@ -454,6 +533,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     return params;
                 }
             };
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(Common.Constant_Class.INIT_TIMEOUT, Common.Constant_Class.DEFAULT_MAX_RETRIES, Common.Constant_Class.DEFAULT_BACKOFF_MULT));
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }
@@ -532,69 +612,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         Crashlytics.setUserName(fname + " " + lname);
     }
 
-/*
-    private void getGotraWS() {
-        if (Common.isOnline(this)) {
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, Common.Constant_Class.GET_GOTRA_URL, null, new Response.Listener<JSONObject>() {
-
-                @Override
-                public void onResponse(@NonNull JSONObject response) {
-                    try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            JSONArray mJsonArray = response.getJSONArray("data");
-                            AppController.getInstance().lstGotra = new ArrayList<>();
-
-                            for (int i = 0; i < mJsonArray.length(); i++) {
-                                AppController.getInstance().lstGotra.add(mJsonArray.getString(i));
-                            }
-                            Collections.sort(AppController.getInstance().lstGotra);
-                            AppController.getInstance().lstGotra.add(0, Common.Constant_Class.TITLE_GOTRA);
-                            AppController.getInstance().dataAdapter = new ArrayAdapter<>(HomeActivity.this, android.R.layout.simple_spinner_item, AppController.getInstance().lstGotra);
-                            AppController.getInstance().dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                        } else {
-                            Toast.makeText(HomeActivity.this, message, Toast.LENGTH_SHORT).show();
-                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
-                                    Intent mIntent = new Intent(HomeActivity.this, LoginActivity.class);
-                                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(mIntent);
-                                    finish();
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(@NonNull VolleyError error) {
-                    VolleyLog.d(TAG, "Error: " + error.getMessage());
-                }
-            }) {
-                @NonNull
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
-                    return params;
-                }
-            };
-
-            // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
-        }
-    }
-*/
-
     private void displayLocationSettingsRequest(@NonNull Context context) {
         if (this.googleApiClient == null) {
             this.googleApiClient = new GoogleApiClient.Builder(context).addApi(LocationServices.API).build();
@@ -646,8 +663,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     protected void onResume() {
         super.onResume();
-        fm_container_body.setVisibility(View.VISIBLE);
-        ll_container_body.setVisibility(View.GONE);//visible
+        /*fm_container_body.setVisibility(View.VISIBLE);
+        scroll_container_body.setVisibility(View.GONE);//visible*/
         AppController.getInstance().setConnectivityListener(this);
         // register GCM registration complete receiver
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(Config.REGISTRATION_COMPLETE));
@@ -781,13 +798,13 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
                 SearchFragment searchFragment = new SearchFragment();
-                IAdminControl = (IAdminControl) searchFragment;
-                ((SearchFragment) searchFragment).setmContext(HomeActivity.this);
+                IAdminControl = searchFragment;
+                searchFragment.setmContext(HomeActivity.this);
                 mBundle.putString(Common.Constant_Class.QUERY, query);
                 searchFragment.setArguments(mBundle);
                 fragmentTransaction.replace(R.id.fm_container_body, searchFragment).commit();
                 fm_container_body.setVisibility(View.VISIBLE);
-                ll_container_body.setVisibility(View.GONE);
+                scroll_container_body.setVisibility(View.GONE);
                 return true;
             }
 
@@ -964,8 +981,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         final SearchFragment searchFragment = new SearchFragment();
-        IAdminControl = (IAdminControl) searchFragment;
-        ((SearchFragment) searchFragment).setmContext(HomeActivity.this);
+        IAdminControl = searchFragment;
+        searchFragment.setmContext(HomeActivity.this);
         Handler mhandler = new Handler();
         if (menu == 1) {
             Bundle mBundle = new Bundle();
@@ -977,7 +994,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             searchFragment.setArguments(mBundle);
         }
         fm_container_body.setVisibility(View.VISIBLE);
-        ll_container_body.setVisibility(View.GONE);
+        scroll_container_body.setVisibility(View.GONE);
         fragmentTransaction.replace(R.id.fm_container_body, searchFragment).commit();
 
         switch (menu) {
@@ -1116,27 +1133,12 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
     private void displayView(int position) {
-        fm_container_body.setVisibility(View.VISIBLE);
-        ll_container_body.setVisibility(View.GONE);
+
         switch (position) {
             case -1:
-
-
-                Bundle mBundle = new Bundle();
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                SearchFragment searchFragment = new SearchFragment();
-                IAdminControl = (IAdminControl) searchFragment;
-                ((SearchFragment) searchFragment).setmContext(HomeActivity.this);
-                mBundle.putString(Common.Constant_Class.QUERY, query);
-                searchFragment.setArguments(mBundle);
-                fragmentTransaction.add(R.id.fm_container_body, searchFragment).commit();
                 fm_container_body.setVisibility(View.VISIBLE);
-                ll_container_body.setVisibility(View.GONE);
-
-
-               /* SearchFragment searchFragment = new SearchFragment();
+                scroll_container_body.setVisibility(View.GONE);
+                SearchFragment searchFragment = new SearchFragment();
                 IAdminControl = searchFragment;
                 searchFragment.setmContext(HomeActivity.this);
                 Bundle mBundle = new Bundle();
@@ -1153,21 +1155,20 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     searchFragment.callNonActivesWS();
                     push_message = null;
                 }
-                if (searchFragment != null) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    //   fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-                    fragmentTransaction.replace(R.id.fm_container_body, searchFragment);
-                    fragmentTransaction.commit();
-                    // overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-                    fm_container_body.setVisibility(View.VISIBLE);
-                    ll_container_body.setVisibility(View.GONE);
-                }*/
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                fragmentTransaction.replace(R.id.fm_container_body, searchFragment);
+                fragmentTransaction.commit();
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+
+
                 //moveToFragment(searchFragment);
                 break;
             case 0:
                 //fragment = new EventFragment();
-                mEditor.putBoolean("myprofile", false);
+                mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
                 mEditor.apply();
                 Intent mIntent = new Intent(HomeActivity.this, HomeActivity.class);
                 startActivity(mIntent);
@@ -1175,13 +1176,11 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 break;
             case 1:
-                mEditor.putBoolean("myprofile", true);
+                mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, true);
                 mEditor.apply();
                 Intent mIntent1 = new Intent(HomeActivity.this, ProfileActivity.class);
                 startActivity(mIntent1);
-                finish();
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-
                 break;
             case 2:
                 moveToFragment(new NearByFragment());
@@ -1232,7 +1231,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             fragmentTransaction.commit();
             overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
             fm_container_body.setVisibility(View.VISIBLE);
-            ll_container_body.setVisibility(View.GONE);
+            scroll_container_body.setVisibility(View.GONE);
         }
     }
 
@@ -1279,7 +1278,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
-
+                    Log.d(TAG, "LogoutWS: " + response.toString());
                     Common.hideProgressDialog();
 
                     try {
@@ -1338,6 +1337,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     return params;
                 }
             };
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(Common.Constant_Class.INIT_TIMEOUT, Common.Constant_Class.DEFAULT_MAX_RETRIES, Common.Constant_Class.DEFAULT_BACKOFF_MULT));
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }
@@ -1494,4 +1494,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     public void onNetworkConnectionChanged(boolean isConnected) {
         showSnack(isConnected);
     }
+
+
 }

@@ -104,7 +104,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
             id = mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, "");
         }
         checkConnection();
-        SyncUser(id);
+        SyncUserWS(id);
     }
 
 
@@ -638,7 +638,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
-
+                    Log.d(TAG,"CallProfileWS: "+ response.toString());
                     try {
                         Common.hideProgressDialog();
                         String success = response.getString(Common.Constant_Class.SUCCESS);
@@ -720,7 +720,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
     }
 
 
-    private void SyncUser(String profile_id) {
+    private void SyncUserWS(String profile_id) {
         if (Common.isOnline(this)) {
             Common.showProgressDialog(this);
             JSONObject mJsonObject = null;
@@ -736,7 +736,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, sync_url, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
-                    Log.d(TAG, "response: " + response.toString());
+                    Log.d(TAG, "SyncUserWS Response: " + response.toString());
 
                     try {
                         String success = response.getString(Common.Constant_Class.SUCCESS);

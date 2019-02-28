@@ -76,7 +76,7 @@ public class AppController extends Application {
         registerReceiver(broadcastRevcevier, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
 
         Log.d(TAG,"AppController Screen");
-        mEditor.putBoolean("app_create",true);
+        mEditor.putBoolean(getString(R.string.app_create),true);
         mEditor.apply();
     }
 
