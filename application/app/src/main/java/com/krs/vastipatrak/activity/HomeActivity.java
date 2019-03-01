@@ -30,6 +30,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -78,6 +80,7 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.adapter.MenuAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.fragments.CalendarFragment;
@@ -133,7 +136,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     };
     FrameLayout fm_container_body;
-    ScrollView scroll_container_body;
+    RecyclerView rvMenuList;
+   // ScrollView scroll_container_body;
     MenuItem deactiveItem;
     MenuItem deleteItem;
     MenuItem activeItem;
@@ -165,7 +169,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
         fm_container_body = findViewById(R.id.fm_container_body);
-        scroll_container_body = findViewById(R.id.scroll_container_body);
+        rvMenuList = findViewById(R.id.rvMenuList);
         mPreferencesWelcome = getSharedPreferences(Common.Constant_Class.PREF_WELCOME, MODE_PRIVATE);
         mEditorWelcome = mPreferencesWelcome.edit();
         mEditorWelcome.apply();
@@ -289,6 +293,9 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         MemoryAllocation();
         setLisners();
 
+        int columnCount = 3;
+        rvMenuList.setLayoutManager(new GridLayoutManager(this, columnCount, GridLayoutManager.VERTICAL, false));
+        rvMenuList.setAdapter(new MenuAdapter(this));
     }
 
     private void setLisners() {
@@ -804,7 +811,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 searchFragment.setArguments(mBundle);
                 fragmentTransaction.replace(R.id.fm_container_body, searchFragment).commit();
                 fm_container_body.setVisibility(View.VISIBLE);
-                scroll_container_body.setVisibility(View.GONE);
+                rvMenuList.setVisibility(View.GONE);
                 return true;
             }
 
@@ -994,7 +1001,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             searchFragment.setArguments(mBundle);
         }
         fm_container_body.setVisibility(View.VISIBLE);
-        scroll_container_body.setVisibility(View.GONE);
+        rvMenuList.setVisibility(View.GONE);
         fragmentTransaction.replace(R.id.fm_container_body, searchFragment).commit();
 
         switch (menu) {
@@ -1137,7 +1144,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         switch (position) {
             case -1:
                 fm_container_body.setVisibility(View.VISIBLE);
-                scroll_container_body.setVisibility(View.GONE);
+                rvMenuList.setVisibility(View.GONE);
                 SearchFragment searchFragment = new SearchFragment();
                 IAdminControl = searchFragment;
                 searchFragment.setmContext(HomeActivity.this);
@@ -1231,7 +1238,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             fragmentTransaction.commit();
             overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
             fm_container_body.setVisibility(View.VISIBLE);
-            scroll_container_body.setVisibility(View.GONE);
+            rvMenuList.setVisibility(View.GONE);
         }
     }
 

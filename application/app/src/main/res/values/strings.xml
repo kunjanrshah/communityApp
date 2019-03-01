@@ -79,6 +79,30 @@
     <string name="nav_item_logout">Logout</string>
 
     <string name="event_url">http://www.superbinstruments.com/directory-dev/admin/events</string>
+    <string name="my_profile">માય પ્રોફાઈલ</string>
+    <string name="advance_search">એડવાન્સ સેર્ચ</string>
+    <string name="search_by_distance">અંતર દ્વારા સર્ચ</string>
+    <string name="quick_search">ઝડપી સેર્ચ</string>
+    <string name="search_by_city">શહેર દ્વારા સર્ચ</string>
+    <string name="alphabetic_search">મૂળાક્ષર દ્વારા સર્ચ</string>
+    <string name="calendar">કૅલેન્ડર</string>
+    <string name="matrimony">લગ્નવિષયક</string>
+    <string name="shared_profile">સ્થાન શેરિંગ પ્રોફાઇલ</string>
+    <string name="change_password">પાસવર્ડ બદલો</string>
+    <string name="app_tour">એપ્લિકેશન ટૂર</string>
+    <string name="help">મદદ</string>
+    <string name="scan_qr_code">સ્કેન QR કોડ</string>
+    <string name="qr_code_image">QR કોડ ઇમેજ</string>
+    <string name="events">ઇવેન્ટ્સ</string>
+    <string name="matrimony_form">લગ્નવિષયક ફોર્મ</string>
+    <string name="medical_form">તબીબી રાહત ફોર્મ</string>
+    <string name="app_theme">એપ્લિકેશન થીમ</string>
+    <string name="add_new">નવો ઉમેરો</string>
+    <string name="change_language">ભાષા બદલો</string>
+    <string name="nonActives">રજિસ્ટર પ્રોફાઇલ્સ</string>
+    <string name="share_events">શેર ઇવેન્ટ્સ</string>
+
+
 
 
     <string-array name="yt_gotra">
@@ -173,6 +197,10 @@
     <string name="calendar_11">wcS-2vvguhg</string>
     <string name="event_manage_12">-cuP2ICdQOQ</string>
     <string name="admin_manage_13">ie5uXjVdzPA</string>
+
+
+
+
 
 
     <!-- navigation drawer item labels  -->
@@ -362,6 +390,7 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="app_create">app_create</string>
     <string name="first_time_main">first_time_main</string>
     <string name="location">location</string>
+
 
 
 </resources>
