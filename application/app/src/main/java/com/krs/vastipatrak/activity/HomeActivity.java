@@ -295,7 +295,72 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         int columnCount = 3;
         rvMenuList.setLayoutManager(new GridLayoutManager(this, columnCount, GridLayoutManager.VERTICAL, false));
-        rvMenuList.setAdapter(new MenuAdapter(this));
+        rvMenuList.setAdapter(new MenuAdapter(this, new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+
+                switch (position)
+                {
+                    case 0:
+                        displayView(1);
+                        break;
+                    case 1:
+
+                        break;
+                    case 2:
+                        displayView(1);
+                        break;
+                    case 3:
+                        displayView(1);
+                        break;
+                    case 4:
+                        Intent intent_advance_search = new Intent(HomeActivity.this, AdvanceSearchActivity.class);
+                        startActivity(intent_advance_search);
+                        overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                        break;
+                    case 5:
+                        moveToFragment(new NearByFragment());
+                        break;
+                    case 6:
+                        displayView(6);
+                        break;
+                    case 7:
+                        moveToFragment(new MatrimonyFragment());
+                        break;
+                    case 8:
+                        moveToFragment(new SharedUsersFragment());
+                        break;
+                    case 9:
+                        displayView(1);
+                        break;
+                    case 10:
+                        displayView(1);
+                        break;
+                    case 11:
+                        displayView(1);
+                        break;
+                    case 12:
+                        displayView(1);
+                        break;
+                    case 13:
+                        displayView(1);
+                        break;
+                    case 14:
+                        displayView(1);
+                        break;
+                     default:
+                         break;
+
+                }
+
+            }
+        }));
+    }
+
+
+    public interface RecyclerViewClickListener {
+
+        void onClick(View view, int position);
     }
 
     private void setLisners() {
@@ -335,13 +400,13 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 displayView(6);
                 break;
             case R.id.ll_nearby:
-                moveToFragment(new NearByFragment());
+
                 break;
             case R.id.ll_matrimony:
-                moveToFragment(new MatrimonyFragment());
+
                 break;
             case R.id.ll_shared_users:
-                moveToFragment(new SharedUsersFragment());
+
                 break;
             case R.id.ll_change_password:
                 moveToFragment(new ChangePasswordFragment());

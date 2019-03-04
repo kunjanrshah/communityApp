@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.HomeActivity;
 
 import java.util.ArrayList;
 
@@ -20,11 +22,12 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     private Context mContext;
     private ArrayList<Drawable> lstMenuDrawables;
     private ArrayList<String> lstMenuNames;
-
-    public MenuAdapter(Context context) {
+    private HomeActivity.RecyclerViewClickListener mListener;
+    public MenuAdapter(Context context, HomeActivity.RecyclerViewClickListener mListener) {
         this.mContext = context;
-        lstMenuDrawables = new ArrayList<>();
-        lstMenuNames = new ArrayList<>();
+        this.mListener=mListener;
+        lstMenuDrawables=new ArrayList<>();
+        lstMenuNames=new ArrayList<>();
         addLstMenuDrawables();
         addLstMenuNames();
     }
@@ -98,14 +101,20 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         return lstMenuDrawables.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView ivMenu;
-        TextView txtMenuName;
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+            ImageView ivMenu;
+            TextView txtMenuName;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ivMenu = itemView.findViewById(R.id.ivMenu);
-            txtMenuName = itemView.findViewById(R.id.txtMenuName);
+            ivMenu=itemView.findViewById(R.id.ivMenu);
+            txtMenuName=itemView.findViewById(R.id.txtMenuName);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            mListener.onClick(view, getAdapterPosition());
         }
     }
 }
