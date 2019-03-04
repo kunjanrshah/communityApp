@@ -773,7 +773,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                 }
             }
 
-            if (!surname.isEmpty() &&!code.isEmpty() && !email.isEmpty() && !name.isEmpty() && !mobile.isEmpty() && !password.isEmpty() && !cpassword.isEmpty() && !spouse_name.isEmpty() && !address.isEmpty()) {
+            //  if (!surname.isEmpty() &&!code.isEmpty() && !email.isEmpty() && !name.isEmpty() && !mobile.isEmpty() && !password.isEmpty() && !cpassword.isEmpty() && !spouse_name.isEmpty() && !address.isEmpty()) {
                 if (password.equalsIgnoreCase(cpassword)) {
                     if (mobile.length() == 10) {
                         try {
@@ -870,9 +870,9 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                 } else {
                     Toast.makeText(LoginActivity.this, getString(R.string.err_msg_repeat_password), Toast.LENGTH_LONG).show();
                 }
-            } else {
+           /* } else {
                 Toast.makeText(LoginActivity.this, getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
-            }
+            }*/
         } else {
             Toast.makeText(LoginActivity.this, Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_LONG).show();
         }
