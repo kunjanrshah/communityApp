@@ -95,8 +95,11 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
     private boolean isShow1 = true;
     @Nullable
     private String screen = "";
-    private EditText inputEmail, inputPassword, inputName, inputConformPassword, inputForgotPassword, inputMobile, input_email_mobile, edt_spouse_name, edt_address;
-    private TextInputLayout inputLayoutName, inputLayoutEmail, input_layout_email_mobile, inputLayoutPassword, inputLayoutConformPassword, InputLayoutForgotPassword, inputLayoutMobile, input_layout_spouse_name, input_layout_address;
+    private EditText inputEmail, inputPassword, inputName, inputConformPassword, inputForgotPassword, inputMobile,
+            input_email_mobile, edt_spouse_name, edt_address, edt_code,edt_surname;
+    private TextInputLayout inputLayoutName, inputLayoutEmail, input_layout_email_mobile, inputLayoutPassword, inputLayoutConformPassword,
+            InputLayoutForgotPassword, inputLayoutMobile, input_layout_spouse_name,
+            input_layout_address,input_layout_id,input_layout_surname;
     @Nullable
     private SharedPreferences mSharedPreferences = null;
     private SharedPreferences.Editor mEditor;
@@ -271,6 +274,12 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         input_layout_address = findViewById(R.id.input_layout_address);
         edt_address = findViewById(R.id.edt_address);
 
+        input_layout_id = findViewById(R.id.input_layout_id);
+        edt_code = findViewById(R.id.edt_id);
+
+        input_layout_surname = findViewById(R.id.input_layout_surname);
+        edt_surname = findViewById(R.id.edt_surname);
+
 
         inputEmail = findViewById(R.id.input_email);
         inputLayoutEmail = findViewById(R.id.input_layout_email);
@@ -416,6 +425,8 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             img_profile.setVisibility(View.VISIBLE);
             img_cancel.setVisibility(View.VISIBLE);
             input_layout_address.setVisibility(View.VISIBLE);
+            input_layout_id.setVisibility(View.VISIBLE);
+            input_layout_surname.setVisibility(View.VISIBLE);
             input_layout_spouse_name.setVisibility(View.VISIBLE);
             // spinnerSubcast.setVisibility(View.GONE);
             // spinnerEkdo.setVisibility(View.GONE);
@@ -424,7 +435,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             txt_label.setVisibility(View.VISIBLE);
             txt_label.setText(R.string.nice_signup);
             SignupToggle = false;
-            inputPassword.setText("");
+           // inputPassword.setText("");
             inputName.requestFocus();
         } else {
             txtHow.setText(getResources().getString(R.string.how_to_login));
@@ -435,6 +446,8 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             txt_forgot.setVisibility(View.VISIBLE);
             inputLayoutConformPassword.setVisibility(View.GONE);
             inputLayoutEmail.setVisibility(View.GONE);
+            input_layout_id.setVisibility(View.GONE);
+            input_layout_surname.setVisibility(View.GONE);
             input_layout_email_mobile.setVisibility(View.VISIBLE);
             //  spinnerSubcast.setVisibility(View.GONE);
             //  spinnerEkdo.setVisibility(View.GONE);
@@ -554,7 +567,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
 
                             if (success) {
                                 if (response.has(Common.Constant_Class.PASSWORD) && response.has(Common.Constant_Class.MOBILE)) {
-                                    inputPassword.setText("");
+                                  //  inputPassword.setText("");
                                 }
                                 Common.alert(LoginActivity.this, message);
                             } else {
@@ -743,7 +756,9 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
 
     private void SignupWS() {
         if (Common.isOnline(this)) {
+            final String code = edt_code.getText().toString();
             final String name = inputName.getText().toString();
+            final String surname = edt_surname.getText().toString();
             final String email = inputEmail.getText().toString();
             final String mobile = inputMobile.getText().toString().trim();
             final String password = inputPassword.getText().toString();
@@ -758,13 +773,15 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                 }
             }
 
-            if (!email.equalsIgnoreCase("") && !name.equalsIgnoreCase("") && !mobile.equalsIgnoreCase("") && !password.equalsIgnoreCase("") && !cpassword.equalsIgnoreCase("") && !spouse_name.equalsIgnoreCase("") && !address.equalsIgnoreCase("")) {
+            if (!surname.isEmpty() &&!code.isEmpty() && !email.isEmpty() && !name.isEmpty() && !mobile.isEmpty() && !password.isEmpty() && !cpassword.isEmpty() && !spouse_name.isEmpty() && !address.isEmpty()) {
                 if (password.equalsIgnoreCase(cpassword)) {
                     if (mobile.length() == 10) {
                         try {
                             json = new JSONObject();
                             Common.showProgressDialog(this);
+                            json.put(Common.Constant_Class.USER_CODE, code);
                             json.put(Common.Constant_Class.FIRST_NAME, name);
+                            json.put(Common.Constant_Class.LAST_NAME, surname);
                             json.put(Common.Constant_Class.SPOUSE_NAME, spouse_name);
                             json.put(Common.Constant_Class.EMAIL_ADDRESS, email);
                             json.put(Common.Constant_Class.MOBILE, mobile);
@@ -799,9 +816,8 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                                             inputName.setText("");
                                             inputEmail.setText("");
                                             inputMobile.setText("");
-                                            inputPassword.setText("");
+                                          //  inputPassword.setText("");
                                             inputConformPassword.setText("");
-                                            inputPassword.setText("");
                                             edt_spouse_name.setText("");
                                             edt_address.setText("");
                                             togglePage();

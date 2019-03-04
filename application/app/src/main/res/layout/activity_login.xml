@@ -92,6 +92,21 @@
 
                 </FrameLayout>
 
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <EditText
+                        android:id="@+id/edt_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_code"
+                        android:inputType="textCapSentences"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/input_layout_name"
@@ -107,6 +122,24 @@
                         android:inputType="textCapSentences"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_surname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <EditText
+                        android:id="@+id/edt_surname"
+                        android:text="Yadav"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_surname"
+                        android:inputType="textCapSentences"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/input_layout_spouse_name"
@@ -150,6 +183,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_email"
+                        android:text="yadav1@gmail.com"
                         android:inputType="textEmailAddress"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
@@ -183,6 +217,7 @@
                         android:layout_height="wrap_content"
                         android:drawableEnd="@drawable/password_hide"
                         android:hint="@string/hint_password"
+                        android:text="admin"
                         android:inputType="textPassword"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
@@ -199,6 +234,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_conform_password"
+                        android:text="admin"
                         android:inputType="textPassword"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
