@@ -708,7 +708,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        MenuItem event = menu.findItem(R.id.action_event);
+       /* MenuItem event = menu.findItem(R.id.action_event);
         event.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -717,9 +717,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 return false;
             }
-        });
+        });*/
 
-        MenuItem filter = menu.findItem(R.id.action_filter);
+       /* MenuItem filter = menu.findItem(R.id.action_filter);
         filter.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -728,7 +728,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 return false;
             }
-        });
+        });*/
 
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -770,7 +770,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         });
 
-        MenuItem action_scan = menu.findItem(R.id.action_scan);
+        /*MenuItem action_scan = menu.findItem(R.id.action_scan);
         action_scan.setVisible(true);
         action_scan.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -779,9 +779,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 qrScan.initiateScan();
                 return false;
             }
-        });
+        });*/
 
-        MenuItem action_scan_image = menu.findItem(R.id.action_scan_image);
+       /* MenuItem action_scan_image = menu.findItem(R.id.action_scan_image);
         action_scan_image.setVisible(true);
         action_scan_image.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -793,20 +793,20 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
                 return false;
             }
-        });
+        });*/
 
 
-        MenuItem activeAdd = menu.findItem(R.id.action_add);
+       /* MenuItem activeAdd = menu.findItem(R.id.action_add);
         MenuItem nonActives = menu.findItem(R.id.action_nonActives);
-        MenuItem block_users = menu.findItem(R.id.action_block_users);
+        MenuItem block_users = menu.findItem(R.id.action_block_users);*/
         change_role = menu.findItem(R.id.action_change_role);
         deactiveItem = menu.findItem(R.id.action_deactive);
         deleteItem = menu.findItem(R.id.action_delete);
         activeItem = menu.findItem(R.id.action_activate);
-        MenuItem menu_admins = menu.findItem(R.id.action_admins);
+        // MenuItem menu_admins = menu.findItem(R.id.action_admins);
 
-        nonActives.setVisible(false);
-        activeAdd.setVisible(false);
+       /* nonActives.setVisible(false);
+        activeAdd.setVisible(false);*/
         activeItem.setVisible(false);
         deactiveItem.setVisible(false);
         export.setVisible(false);
@@ -821,10 +821,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
             if (Common.isOnline(this)) {
-                nonActives.setVisible(true);
+                /*nonActives.setVisible(true);
                 event.setVisible(true);
 
-                activeAdd.setVisible(true);
+                activeAdd.setVisible(true);*/
                 if (MOVE_TO_POSITION == 5) {
                     change_role.setVisible(true);
                     deleteItem.setVisible(true);
@@ -843,14 +843,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         }
 
-        block_users.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+       /* block_users.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 return false;
             }
-        });
+        });*/
 
-        nonActives.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+       /* nonActives.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 MOVE_TO_SEARCH = 1;
@@ -860,9 +860,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 moveToSearch(MOVE_TO_SEARCH);
                 return false;
             }
-        });
+        });*/
 
-        activeAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+       /* activeAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
@@ -870,7 +870,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 startActivity(mIntent);
                 return false;
             }
-        });
+        });*/
 
         activeItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -908,14 +908,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         });
 
-        menu_admins.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        /*menu_admins.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 MOVE_TO_SEARCH = 6;
                 moveToSearch(MOVE_TO_SEARCH);
                 return false;
             }
-        });
+        });*/
         return true;
     }
 

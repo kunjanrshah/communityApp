@@ -241,6 +241,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         }
         resources = context.getResources();
         checkConnection();
+        Common.hideKeyboard(this);
         //showActivityOverlay();
     }
 

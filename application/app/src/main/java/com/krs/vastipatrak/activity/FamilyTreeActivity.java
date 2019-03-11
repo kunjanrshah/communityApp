@@ -302,7 +302,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         MenuItem export = menu.findItem(R.id.action_export);
         export.setVisible(false);
 
-        MenuItem admins = menu.findItem(R.id.action_admins);
+        /*MenuItem admins = menu.findItem(R.id.action_admins);
         admins.setVisible(false);
 
         MenuItem scan_image = menu.findItem(R.id.action_scan_image);
@@ -323,7 +323,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 return false;
             }
-        });
+        });*/
 
 
         MenuItem voiceItem = menu.findItem(R.id.action_voice);

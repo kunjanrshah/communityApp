@@ -596,11 +596,10 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        MenuItem filterAdmins = menu.findItem(R.id.action_admins);
-        filterAdmins.setVisible(false);
-
-        MenuItem filterItem = menu.findItem(R.id.action_filter);
-        filterItem.setVisible(false);
+       /* MenuItem filterAdmins = menu.findItem(R.id.action_admins);
+        filterAdmins.setVisible(false);*/
+        /*MenuItem filterItem = menu.findItem(R.id.action_filter);
+        filterItem.setVisible(false);*/
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -623,10 +622,10 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
 
         MenuItem export = menu.findItem(R.id.action_export);
         export.setVisible(false);
-        MenuItem action_scan = menu.findItem(R.id.action_scan);
+       /* MenuItem action_scan = menu.findItem(R.id.action_scan);
         action_scan.setVisible(false);
         MenuItem action_scan_image = menu.findItem(R.id.action_scan_image);
-        action_scan_image.setVisible(false);
+        action_scan_image.setVisible(false);*/
 
         /*export.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override

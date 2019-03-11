@@ -62,6 +62,8 @@ public class CalendarFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.title_calendar);
         setHasOptionsMenu(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_topback);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initCalendar(rootView);
 
 
@@ -133,7 +135,7 @@ public class CalendarFragment extends Fragment {
         mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
         mFloatingActionButton = rootView.findViewById(R.id.floating_action_button);
         lvCustomList = rootView.findViewById(R.id.lvCustomList);
-        viewCalendar = (FlexibleCalendar) rootView.findViewById(R.id.calendar);
+        viewCalendar = rootView.findViewById(R.id.calendar);
         Calendar cal = Calendar.getInstance();
         CalendarAdapter adapter = new CalendarAdapter(getActivity(), cal);
         viewCalendar.setAdapter(adapter);

@@ -189,6 +189,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
             adminControl = args.getInt(Common.Constant_Class.AdminControl, -1);
         }
         Memory_Allocation(rootView);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_topback);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         isAdmin = false;
         if (query != null && !query.equalsIgnoreCase("")) {
             Common.Title = query;

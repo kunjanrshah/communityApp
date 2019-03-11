@@ -336,7 +336,7 @@ public class SelectionlistActivity extends AppCompatActivity {
         MenuItem export = menu.findItem(R.id.action_export);
         export.setVisible(false);
 
-        MenuItem admins = menu.findItem(R.id.action_admins);
+       /* MenuItem admins = menu.findItem(R.id.action_admins);
         admins.setVisible(false);
 
         MenuItem scan_image = menu.findItem(R.id.action_scan_image);
@@ -346,7 +346,7 @@ public class SelectionlistActivity extends AppCompatActivity {
         scan_qr.setVisible(false);
 
         MenuItem filterItem = menu.findItem(R.id.action_filter);
-        filterItem.setVisible(false);
+        filterItem.setVisible(false);*/
 
         MenuItem voiceItem = menu.findItem(R.id.action_voice);
         voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {

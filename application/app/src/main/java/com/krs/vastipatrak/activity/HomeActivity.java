@@ -43,7 +43,6 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,6 +84,7 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.app.Config;
 import com.krs.vastipatrak.fragments.CalendarFragment;
 import com.krs.vastipatrak.fragments.ChangePasswordFragment;
+import com.krs.vastipatrak.fragments.EventFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.HelpFragment;
 import com.krs.vastipatrak.fragments.MatrimonyFragment;
@@ -107,7 +107,7 @@ import java.util.Map;
 import java.util.Objects;
 
 
-public class HomeActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback, ConnectivityReceiver.ConnectivityReceiverListener, View.OnClickListener {
+public class HomeActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback, ConnectivityReceiver.ConnectivityReceiverListener {
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
     public static final int CAMARA_REQUEST = 4;
     private static final String TAG = HomeActivity.class.getSimpleName();
@@ -137,10 +137,11 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     };
     FrameLayout fm_container_body;
     RecyclerView rvMenuList;
-   // ScrollView scroll_container_body;
+    // ScrollView scroll_container_body;
     MenuItem deactiveItem;
     MenuItem deleteItem;
     MenuItem activeItem;
+    FragmentDrawer drawerFragment;
     private int MOVE_TO_POSITION = 0;
     private String query = "";
     private String push_message = null;
@@ -158,7 +159,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private MenuItem export;
     private MenuItem change_role;
     private Snackbar snackbar;
-    private LinearLayout ll_my_profile, ll_advance_search, ll_calendar, ll_nearby, ll_matrimony, ll_shared_users, ll_change_password, ll_tour, ll_help, ll_scanQrCode, ll_QRCodeImage, ll_language, ll_Matrimony_Form, ll_Quick_Search, ll_medical_form, ll_theme, ll_add_new, ll_Admins,ll_event;
+
+    //private LinearLayout ll_my_profile, ll_advance_search, ll_calendar, ll_nearby, ll_matrimony, ll_shared_users, ll_change_password, ll_tour, ll_help, ll_scanQrCode, ll_QRCodeImage, ll_language, ll_Matrimony_Form, ll_Quick_Search, ll_medical_form, ll_theme, ll_add_new, ll_Admins,ll_event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,13 +178,17 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         qrScan = new IntentIntegrator(this);
-        FragmentDrawer drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
-
+        drawerFragment.mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SlideView(0);
+            }
+        });
         if (Build.VERSION.SDK_INT >= 23) {
             if (Common.canCallPhone(this) && !Common.canAccessLocation(this)) {
                 requestPermissions(INIT_PERMS, INIT_REQUEST);
@@ -269,7 +275,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 if ((query == null || query.isEmpty()) && (query_string == null || query_string.isEmpty()) && (push_message == null || push_message.isEmpty())) {
                     Log.d(TAG, "Home Screen");
                 } else {
-                    displayView(-1);
+                    MoveToSearch();
                 }
             }
         }
@@ -290,8 +296,20 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             getList(getResources().getString(R.string._education));
         }
 
-        MemoryAllocation();
-        setLisners();
+        /*MemoryAllocation();*/
+        /*setLisners();*/
+
+       /* mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+                mEditor.apply();
+                Intent mIntent = new Intent(HomeActivity.this, HomeActivity.class);
+                startActivity(mIntent);
+                finish();
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+            }
+        });*/
 
         int columnCount = 3;
         rvMenuList.setLayoutManager(new GridLayoutManager(this, columnCount, GridLayoutManager.VERTICAL, false));
@@ -299,173 +317,101 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             @Override
             public void onClick(View view, int position) {
 
-                switch (position)
-                {
-                    case 0:
-                        displayView(1);
+                switch (position) {
+                    case 0: // my profile
+                        mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, true);
+                        mEditor.apply();
+                        Intent my_profile_intent = new Intent(HomeActivity.this, ProfileActivity.class);
+                        startActivity(my_profile_intent);
+                        overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                         break;
-                    case 1:
-
+                    case 1: // quick search
+                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
                         break;
-                    case 2:
-                        displayView(1);
+                    case 2: //favorite search
+                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
                         break;
-                    case 3:
-                        displayView(1);
+                    case 3: //calendar
+                        moveToFragment(new CalendarFragment());
                         break;
-                    case 4:
+                    case 4: //alphabetic search
+                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 5: // city wise search
+                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 6: // advance search
                         Intent intent_advance_search = new Intent(HomeActivity.this, AdvanceSearchActivity.class);
                         startActivity(intent_advance_search);
                         overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                         break;
-                    case 5:
+                    case 7: // search by distance
                         moveToFragment(new NearByFragment());
                         break;
-                    case 6:
-                        displayView(6);
-                        break;
-                    case 7:
-                        moveToFragment(new MatrimonyFragment());
-                        break;
-                    case 8:
+                    case 8: // shared profiles
                         moveToFragment(new SharedUsersFragment());
                         break;
-                    case 9:
-                        displayView(1);
+                    case 9: // scan qr code
+                        qrScan.initiateScan();
                         break;
-                    case 10:
-                        displayView(1);
+                    case 10: //qr code image
+                        Intent intent_qr_image = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        intent_qr_image.setType("image/*");
+                        startActivityForResult(Intent.createChooser(intent_qr_image, "Select File"), IMAGEREQUESTCODE);
                         break;
-                    case 11:
-                        displayView(1);
+                    case 11: //  events
+                        moveToFragment(new EventFragment());
                         break;
-                    case 12:
-                        displayView(1);
+                    case 12: // matrimony
+                        moveToFragment(new MatrimonyFragment());
                         break;
-                    case 13:
-                        displayView(1);
+                    case 13: //matrimony form
+                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
                         break;
-                    case 14:
-                        displayView(1);
+                    case 14: //medical form
+                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
                         break;
-                     default:
-                         break;
-
+                    case 15: //add new
+                        Intent mIntent2 = new Intent(HomeActivity.this, LoginActivity.class);
+                        mIntent2.putExtra(Common.Constant_Class.SCREEN, Common.Constant_Class.SEARCH_FRAGMENT);
+                        startActivity(mIntent2);
+                        break;
+                    case 16: //registerd profiles
+                        MOVE_TO_SEARCH = 1;
+                       /* activeItem.setVisible(true);
+                        deactiveItem.setVisible(true);
+                        deleteItem.setVisible(true);*/
+                        moveToSearch(MOVE_TO_SEARCH);
+                        break;
+                    case 17: //share events
+                        Intent mIntent1 = new Intent(HomeActivity.this, ShareEventActivity.class);
+                        startActivity(mIntent1);
+                        overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                        break;
+                    case 18: //change language
+                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 19: //change color
+                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 20: //change password
+                        moveToFragment(new ChangePasswordFragment());
+                        break;
+                    case 21: //app tour
+                        moveToFragment(new TourFragment());
+                        break;
+                    case 22: //help
+                        moveToFragment(new HelpFragment());
+                        break;
+                    case 23: // admin list
+                        MOVE_TO_SEARCH = 6;
+                        moveToSearch(MOVE_TO_SEARCH);
+                        break;
+                    default:
+                        break;
                 }
-
             }
         }));
-    }
-
-
-    public interface RecyclerViewClickListener {
-
-        void onClick(View view, int position);
-    }
-
-    private void setLisners() {
-        ll_my_profile.setOnClickListener(this);
-        ll_advance_search.setOnClickListener(this);
-        ll_calendar.setOnClickListener(this);
-        ll_nearby.setOnClickListener(this);
-        ll_matrimony.setOnClickListener(this);
-        ll_shared_users.setOnClickListener(this);
-        ll_change_password.setOnClickListener(this);
-        ll_tour.setOnClickListener(this);
-        ll_help.setOnClickListener(this);
-        ll_scanQrCode.setOnClickListener(this);
-        ll_QRCodeImage.setOnClickListener(this);
-        ll_event.setOnClickListener(this);
-        ll_Matrimony_Form.setOnClickListener(this);
-        ll_Quick_Search.setOnClickListener(this);
-        ll_medical_form.setOnClickListener(this);
-        ll_theme.setOnClickListener(this);
-        ll_add_new.setOnClickListener(this);
-        ll_Admins.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.ll_my_profile:
-                displayView(1);
-                break;
-            case R.id.ll_advance_search:
-                Intent intent_advance_search = new Intent(HomeActivity.this, AdvanceSearchActivity.class);
-                startActivity(intent_advance_search);
-                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-                break;
-            case R.id.ll_calendar:
-                displayView(6);
-                break;
-            case R.id.ll_nearby:
-
-                break;
-            case R.id.ll_matrimony:
-
-                break;
-            case R.id.ll_shared_users:
-
-                break;
-            case R.id.ll_change_password:
-                moveToFragment(new ChangePasswordFragment());
-                break;
-            case R.id.ll_tour:
-                moveToFragment(new TourFragment());
-                break;
-            case R.id.ll_help:
-                moveToFragment(new HelpFragment());
-                break;
-            case R.id.ll_scanQrCode:
-                qrScan.initiateScan();
-                break;
-            case R.id.ll_QRCodeImage:
-                Intent intent_qr_image = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent_qr_image.setType("image/*");
-                startActivityForResult(Intent.createChooser(intent_qr_image, "Select File"), IMAGEREQUESTCODE);
-                break;
-            case R.id.ll_event:
-                Intent mIntent1 = new Intent(HomeActivity.this, ShareEventActivity.class);
-                startActivity(mIntent1);
-                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-                break;
-            case R.id.ll_Matrimony_Form:
-                break;
-            case R.id.ll_theme:
-                break;
-            case R.id.ll_add_new:
-                Intent mIntent2 = new Intent(HomeActivity.this, LoginActivity.class);
-                mIntent2.putExtra(Common.Constant_Class.SCREEN, Common.Constant_Class.SEARCH_FRAGMENT);
-                startActivity(mIntent2);
-                break;
-            case R.id.ll_Admins:
-                MOVE_TO_SEARCH = 6;
-                moveToSearch(MOVE_TO_SEARCH);
-                break;
-        }
-
-    }
-
-    private void MemoryAllocation() {
-        ll_my_profile = findViewById(R.id.ll_my_profile);
-        ll_advance_search = findViewById(R.id.ll_advance_search);
-        ll_calendar = findViewById(R.id.ll_calendar);
-        ll_nearby = findViewById(R.id.ll_nearby);
-        ll_matrimony = findViewById(R.id.ll_matrimony);
-        ll_shared_users = findViewById(R.id.ll_shared_users);
-        ll_change_password = findViewById(R.id.ll_change_password);
-        ll_tour = findViewById(R.id.ll_tour);
-        ll_help = findViewById(R.id.ll_help);
-        ll_scanQrCode = findViewById(R.id.ll_scanQrCode);
-        ll_QRCodeImage = findViewById(R.id.ll_QRCodeImage);
-        ll_event = findViewById(R.id.ll_event);
-        ll_Matrimony_Form = findViewById(R.id.ll_Matrimony_Form);
-        ll_Quick_Search = findViewById(R.id.ll_Quick_Search);
-        ll_medical_form = findViewById(R.id.ll_medical_form);
-        ll_theme = findViewById(R.id.ll_theme);
-        ll_add_new = findViewById(R.id.ll_add_new);
-        ll_Admins = findViewById(R.id.ll_Admins);
     }
 
     private void get_updated_ver_ws() {
@@ -530,6 +476,110 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     }
 
+    /*private void setLisners() {
+        ll_my_profile.setOnClickListener(this);
+        ll_advance_search.setOnClickListener(this);
+        ll_calendar.setOnClickListener(this);
+        ll_nearby.setOnClickListener(this);
+        ll_matrimony.setOnClickListener(this);
+        ll_shared_users.setOnClickListener(this);
+        ll_change_password.setOnClickListener(this);
+        ll_tour.setOnClickListener(this);
+        ll_help.setOnClickListener(this);
+        ll_scanQrCode.setOnClickListener(this);
+        ll_QRCodeImage.setOnClickListener(this);
+        ll_event.setOnClickListener(this);
+        ll_Matrimony_Form.setOnClickListener(this);
+        ll_Quick_Search.setOnClickListener(this);
+        ll_medical_form.setOnClickListener(this);
+        ll_theme.setOnClickListener(this);
+        ll_add_new.setOnClickListener(this);
+        ll_Admins.setOnClickListener(this);
+    }*/
+
+   /* @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.ll_my_profile:
+                displayView(1);
+                break;
+            case R.id.ll_advance_search:
+                Intent intent_advance_search = new Intent(HomeActivity.this, AdvanceSearchActivity.class);
+                startActivity(intent_advance_search);
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                break;
+            case R.id.ll_calendar:
+                displayView(6);
+                break;
+            case R.id.ll_nearby:
+
+                break;
+            case R.id.ll_matrimony:
+
+                break;
+            case R.id.ll_shared_users:
+
+                break;
+            case R.id.ll_change_password:
+                moveToFragment(new ChangePasswordFragment());
+                break;
+            case R.id.ll_tour:
+                moveToFragment(new TourFragment());
+                break;
+            case R.id.ll_help:
+                moveToFragment(new HelpFragment());
+                break;
+            case R.id.ll_scanQrCode:
+                qrScan.initiateScan();
+                break;
+            case R.id.ll_QRCodeImage:
+                Intent intent_qr_image = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent_qr_image.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent_qr_image, "Select File"), IMAGEREQUESTCODE);
+                break;
+            case R.id.ll_event:
+                Intent mIntent1 = new Intent(HomeActivity.this, ShareEventActivity.class);
+                startActivity(mIntent1);
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                break;
+            case R.id.ll_Matrimony_Form:
+                break;
+            case R.id.ll_theme:
+                break;
+            case R.id.ll_add_new:
+                Intent mIntent2 = new Intent(HomeActivity.this, LoginActivity.class);
+                mIntent2.putExtra(Common.Constant_Class.SCREEN, Common.Constant_Class.SEARCH_FRAGMENT);
+                startActivity(mIntent2);
+                break;
+            case R.id.ll_Admins:
+                MOVE_TO_SEARCH = 6;
+                moveToSearch(MOVE_TO_SEARCH);
+                break;
+        }
+
+    }*/
+
+    /*private void MemoryAllocation() {
+        ll_my_profile = findViewById(R.id.ll_my_profile);
+        ll_advance_search = findViewById(R.id.ll_advance_search);
+        ll_calendar = findViewById(R.id.ll_calendar);
+        ll_nearby = findViewById(R.id.ll_nearby);
+        ll_matrimony = findViewById(R.id.ll_matrimony);
+        ll_shared_users = findViewById(R.id.ll_shared_users);
+        ll_change_password = findViewById(R.id.ll_change_password);
+        ll_tour = findViewById(R.id.ll_tour);
+        ll_help = findViewById(R.id.ll_help);
+        ll_scanQrCode = findViewById(R.id.ll_scanQrCode);
+        ll_QRCodeImage = findViewById(R.id.ll_QRCodeImage);
+        ll_event = findViewById(R.id.ll_event);
+        ll_Matrimony_Form = findViewById(R.id.ll_Matrimony_Form);
+        ll_Quick_Search = findViewById(R.id.ll_Quick_Search);
+        ll_medical_form = findViewById(R.id.ll_medical_form);
+        ll_theme = findViewById(R.id.ll_theme);
+        ll_add_new = findViewById(R.id.ll_add_new);
+        ll_Admins = findViewById(R.id.ll_Admins);
+    }*/
 
     private void getList(final String type) {
         if (Common.isOnline(this)) {
@@ -731,7 +781,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -752,7 +801,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             moveToSearch(MOVE_TO_SEARCH);
         }
     }
-
 
     @Override
     protected void onPause() {
@@ -833,9 +881,10 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
 
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        MenuItem event = menu.findItem(R.id.action_event);
+       /* MenuItem event = menu.findItem(R.id.action_event);
         event.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -844,9 +893,9 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 return false;
             }
-        });
+        });*/
 
-        MenuItem filter = menu.findItem(R.id.action_filter);
+       /* MenuItem filter = menu.findItem(R.id.action_filter);
         filter.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -855,11 +904,9 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 return false;
             }
-        });
-
+        });*/
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
-
         searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -868,7 +915,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 Bundle mBundle = new Bundle();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
+                drawerFragment.mDrawerToggle.setDrawerIndicatorEnabled(false);
                 SearchFragment searchFragment = new SearchFragment();
                 IAdminControl = searchFragment;
                 searchFragment.setmContext(HomeActivity.this);
@@ -898,7 +945,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         });
 
-        MenuItem action_scan = menu.findItem(R.id.action_scan);
+        /*MenuItem action_scan = menu.findItem(R.id.action_scan);
         action_scan.setVisible(true);
         action_scan.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -907,9 +954,9 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 qrScan.initiateScan();
                 return false;
             }
-        });
+        });*/
 
-        MenuItem action_scan_image = menu.findItem(R.id.action_scan_image);
+       /* MenuItem action_scan_image = menu.findItem(R.id.action_scan_image);
         action_scan_image.setVisible(true);
         action_scan_image.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -921,20 +968,20 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
                 return false;
             }
-        });
+        });*/
 
 
-        MenuItem activeAdd = menu.findItem(R.id.action_add);
-        MenuItem nonActives = menu.findItem(R.id.action_nonActives);
-        MenuItem block_users = menu.findItem(R.id.action_block_users);
+        //  MenuItem activeAdd = menu.findItem(R.id.action_add);
+        // MenuItem nonActives = menu.findItem(R.id.action_nonActives);
+        // MenuItem block_users = menu.findItem(R.id.action_block_users);
         change_role = menu.findItem(R.id.action_change_role);
         deactiveItem = menu.findItem(R.id.action_deactive);
         deleteItem = menu.findItem(R.id.action_delete);
         activeItem = menu.findItem(R.id.action_activate);
-        MenuItem menu_admins = menu.findItem(R.id.action_admins);
+        //MenuItem menu_admins = menu.findItem(R.id.action_admins);
 
-        nonActives.setVisible(false);
-        activeAdd.setVisible(false);
+        /*nonActives.setVisible(false);
+        activeAdd.setVisible(false);*/
         activeItem.setVisible(false);
         deactiveItem.setVisible(false);
         export.setVisible(false);
@@ -949,10 +996,10 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
             if (Common.isOnline(this)) {
-                nonActives.setVisible(true);
-                event.setVisible(true);
+                // nonActives.setVisible(true);
+                //event.setVisible(true);
 
-                activeAdd.setVisible(true);
+                // activeAdd.setVisible(true);
                 if (MOVE_TO_POSITION == 5) {
                     change_role.setVisible(true);
                     deleteItem.setVisible(true);
@@ -971,7 +1018,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         }
 
-        block_users.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+      /*  block_users.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 return false;
@@ -998,7 +1045,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 startActivity(mIntent);
                 return false;
             }
-        });
+        });*/
 
         activeItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -1036,20 +1083,19 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         });
 
-        menu_admins.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+       /* menu_admins.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 MOVE_TO_SEARCH = 6;
                 moveToSearch(MOVE_TO_SEARCH);
                 return false;
             }
-        });
+        });*/
         return true;
     }
 
-
     public void moveToSearch(int menu) {
-
+        drawerFragment.mDrawerToggle.setDrawerIndicatorEnabled(false);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         final SearchFragment searchFragment = new SearchFragment();
@@ -1076,7 +1122,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                         mhandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                ((SearchFragment) searchFragment).callNonActivesWS();
+                                searchFragment.callNonActivesWS();
                             }
                         }, 500);
                     }
@@ -1159,7 +1205,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     }
 
-
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
         if (featureId == AppCompatDelegate.FEATURE_SUPPORT_ACTION_BAR && menu != null) {
@@ -1191,7 +1236,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     public void onDrawerItemSelected(View view, int position) {
         MOVE_TO_POSITION = position;
-        displayView(position);
+        SlideView(position);
     }
 
     @Override
@@ -1204,7 +1249,74 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     }
 
-    private void displayView(int position) {
+    private void SlideView(int position) {
+        switch (position) {
+            case 0:
+
+                mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+                mEditor.apply();
+                Intent mIntent = new Intent(HomeActivity.this, HomeActivity.class);
+                startActivity(mIntent);
+                finish();
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+
+                break;
+            case 1:
+                ExitAlert();
+                break;
+        }
+    }
+
+    private void MoveToSearch() {
+        fm_container_body.setVisibility(View.VISIBLE);
+        rvMenuList.setVisibility(View.GONE);
+
+        SearchFragment searchFragment = new SearchFragment();
+        IAdminControl = searchFragment;
+        searchFragment.setmContext(HomeActivity.this);
+        Bundle mBundle = new Bundle();
+        if (query != null) {
+            mBundle.putString(Common.Constant_Class.QUERY, query);
+            searchFragment.setArguments(mBundle);
+        } else if (query_string != null) {
+            mBundle.putString(Common.Constant_Class.QUERY_STRING, query_string);
+            searchFragment.setArguments(mBundle);
+        } else if (push_message != null) {
+            mBundle.putString(Common.Constant_Class.PUSH_MESSAGE, push_message);
+            mBundle.putInt(Common.Constant_Class.AdminControl, Common.Constant_Class.NonActive);
+            searchFragment.setArguments(mBundle);
+            searchFragment.callNonActivesWS();
+            push_message = null;
+        }
+        drawerFragment.mDrawerToggle.setDrawerIndicatorEnabled(false);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+        fragmentTransaction.replace(R.id.fm_container_body, searchFragment);
+        fragmentTransaction.commit();
+        overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+    }
+
+    private void moveToFragment(Fragment fragment) {
+        if (fragment != null) {
+            drawerFragment.mDrawerToggle.setDrawerIndicatorEnabled(false);
+            //drawerFragment.mDrawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            //drawerFragment.mDrawerToggle.setDrawerIndicatorEnabled(true);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+            fragmentTransaction.replace(R.id.fm_container_body, fragment);
+            fragmentTransaction.commit();
+            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+            fm_container_body.setVisibility(View.VISIBLE);
+            rvMenuList.setVisibility(View.GONE);
+           /* if (drawerFragment.mDrawerToggle != null) {
+                drawerFragment.mDrawerLayout.removeDrawerListener(drawerFragment.mDrawerToggle);
+            }*/
+        }
+    }
+
+   /* private void displayView(int position) {
 
         switch (position) {
             case -1:
@@ -1248,11 +1360,12 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 break;
             case 1:
-                mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, true);
+                ExitAlert();
+                *//*mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, true);
                 mEditor.apply();
                 Intent mIntent1 = new Intent(HomeActivity.this, ProfileActivity.class);
                 startActivity(mIntent1);
-                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);*//*
                 break;
             case 2:
                 moveToFragment(new NearByFragment());
@@ -1269,7 +1382,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 moveToFragment(new MatrimonyFragment());
                 break;
             case 6:
-
                 moveToFragment(new CalendarFragment());
                 break;
             case 7:
@@ -1292,20 +1404,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
 
 
-    }
-
-    private void moveToFragment(Fragment fragment) {
-        if (fragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-            fragmentTransaction.replace(R.id.fm_container_body, fragment);
-            fragmentTransaction.commit();
-            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-            fm_container_body.setVisibility(View.VISIBLE);
-            rvMenuList.setVisibility(View.GONE);
-        }
-    }
+    }*/
 
     private void ExitAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
@@ -1490,7 +1589,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     }
 
-
     private void manageImageFromUri(Uri imageUri) {
 
         try {
@@ -1502,7 +1600,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void onBackPressed() {
@@ -1542,7 +1639,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     }
 
-
     private void showSnack(boolean isConnected) {
 
         if (!isConnected) {
@@ -1561,10 +1657,14 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     }
 
-
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         showSnack(isConnected);
+    }
+
+
+    public interface RecyclerViewClickListener {
+        void onClick(View view, int position);
     }
 
 

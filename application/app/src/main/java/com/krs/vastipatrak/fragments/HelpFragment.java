@@ -36,7 +36,8 @@ public class HelpFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_help, container, false);
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(R.string.title_help);
-
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_topback);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Button btn_auto_start = rootView.findViewById(R.id.btn_auto_start);
         btn_auto_start.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -36,13 +36,12 @@ import java.util.Objects;
 
 public class FragmentDrawer extends Fragment {
 
-
     @Nullable
     private static String[] titles = null;
     @Nullable
-    private ActionBarDrawerToggle mDrawerToggle;
-    private DrawerLayout mDrawerLayout;
-    private View containerView;
+    public ActionBarDrawerToggle mDrawerToggle;
+    public DrawerLayout mDrawerLayout;
+    public View containerView;
     private ImageView img_profile;
     private TextView txt_name;
     private SharedPreferences mSharedPreferences;
@@ -117,6 +116,7 @@ public class FragmentDrawer extends Fragment {
     public void setUp(int fragmentId, DrawerLayout drawerLayout, @NonNull final Toolbar toolbar) {
         containerView = Objects.requireNonNull(getActivity()).findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
+
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -132,15 +132,14 @@ public class FragmentDrawer extends Fragment {
                     String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
                     txt_name.setText(name);
                 }
-                getActivity().invalidateOptionsMenu();
+                //  getActivity().invalidateOptionsMenu();
                 Common.hideKeyboard(getActivity());
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-
-                getActivity().invalidateOptionsMenu();
+                //getActivity().invalidateOptionsMenu();
             }
 
             @Override
@@ -158,6 +157,12 @@ public class FragmentDrawer extends Fragment {
             }
         });
 
+       /* mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "sdf", Toast.LENGTH_SHORT).show();
+            }
+        });*/
     }
 
     interface ClickListener {

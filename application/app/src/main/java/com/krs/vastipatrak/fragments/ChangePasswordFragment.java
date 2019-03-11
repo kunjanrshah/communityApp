@@ -58,6 +58,8 @@ public class ChangePasswordFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_change_password, container, false);
         Memory_Allocation(rootView);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_topback);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Objects.requireNonNull(((AppCompatActivity) mActivity).getSupportActionBar()).setSubtitle("Change Password");
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

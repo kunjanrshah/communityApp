@@ -208,7 +208,8 @@
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">
         <item>@string/nav_item_home</item>
-        <item>@string/nav_item_my_profile</item>
+        <item>@string/nav_item_logout</item>
+        <!--<item>@string/nav_item_my_profile</item>
         <item>@string/nav_item_near_by</item>
         <item>@string/nav_item_shared_users</item>
         <item>@string/nav_item_2017_matrimony</item>
@@ -217,8 +218,8 @@
         <item>@string/nav_item_language</item>
         <item>@string/nav_item_change_password</item>
         <item>@string/nav_item_intro</item>
-        <item>@string/nav_item_help</item>
-        <item>@string/nav_item_logout</item>
+        <item>@string/nav_item_help</item>-->
+
 
     </string-array>
 

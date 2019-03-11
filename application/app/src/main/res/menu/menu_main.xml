@@ -21,23 +21,23 @@
         android:title="@string/action_voice"
         app:showAsAction="ifRoom|collapseActionView" />
 
-    <item
+    <!--<item
         android:id="@+id/action_filter"
         android:icon="@drawable/filter_icon"
         android:title="@string/action_advsearch"
-        app:showAsAction="ifRoom|collapseActionView" />
+        app:showAsAction="ifRoom|collapseActionView" />-->
 
-    <item
-        android:id="@+id/action_scan"
-        android:icon="@drawable/qr_code"
-        android:title="@string/action_scan"
-        app:showAsAction="ifRoom|collapseActionView" />
+    <!-- <item
+         android:id="@+id/action_scan"
+         android:icon="@drawable/qr_code"
+         android:title="@string/action_scan"
+         app:showAsAction="ifRoom|collapseActionView" />-->
 
-    <item
+    <!--<item
         android:id="@+id/action_scan_image"
         android:icon="@drawable/qr_code_image"
         android:title="@string/action_scan_img"
-        app:showAsAction="ifRoom|collapseActionView" />
+        app:showAsAction="ifRoom|collapseActionView" />-->
 
     <item
         android:id="@+id/action_export"
@@ -45,11 +45,11 @@
         android:title="@string/action_export"
         app:showAsAction="ifRoom|collapseActionView" />
 
-    <item
+    <!--<item
         android:id="@+id/action_block_users"
         android:title="@string/action_block_users"
         android:visible="false"
-        app:showAsAction="ifRoom|collapseActionView" />
+        app:showAsAction="ifRoom|collapseActionView" />-->
 
     <item
         android:id="@+id/action_change_role"
@@ -57,11 +57,11 @@
         android:visible="false"
         app:showAsAction="ifRoom|collapseActionView" />
 
-    <item
+    <!--<item
         android:id="@+id/action_nonActives"
         android:title="@string/action_nonActives"
         android:visible="false"
-        app:showAsAction="ifRoom|collapseActionView" />
+        app:showAsAction="ifRoom|collapseActionView" />-->
 
     <item
         android:id="@+id/action_activate"
@@ -81,11 +81,11 @@
         android:visible="false"
         app:showAsAction="ifRoom|collapseActionView" />
 
-    <item
-        android:id="@+id/action_add"
-        android:title="@string/action_add"
-        android:visible="false"
-        app:showAsAction="ifRoom|collapseActionView" />
+    <!-- <item
+         android:id="@+id/action_add"
+         android:title="@string/action_add"
+         android:visible="false"
+         app:showAsAction="ifRoom|collapseActionView" />-->
 
     <item
         android:id="@+id/action_clear_search"
@@ -98,15 +98,15 @@
         android:visible="false"
         app:showAsAction="ifRoom|collapseActionView" />
 
-    <item
+    <!--<item
         android:id="@+id/action_admins"
         android:title="@string/action_admin"
-        app:showAsAction="ifRoom|collapseActionView" />
+        app:showAsAction="ifRoom|collapseActionView" />-->
 
-    <item
+    <!--<item
         android:id="@+id/action_event"
         android:title="@string/action_share_event"
         android:visible="false"
-        app:showAsAction="ifRoom|collapseActionView" />
+        app:showAsAction="ifRoom|collapseActionView" />-->
 
 </menu>
