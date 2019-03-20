@@ -72,6 +72,7 @@
     <string name="nav_item_change_password">Change Password</string>
     <string name="nav_item_help">Help</string>
     <string name="nav_item_2017_matrimony">2017 Matrimony</string>
+    <string name="nav_item_medical_form">Medical Relief form</string>
     <string name="nav_item_matrimony">Matrimony</string>
     <string name="nav_item_calendar">Calendar</string>
     <string name="nav_item_language">Language</string>
@@ -181,7 +182,7 @@
         <item>@string/nav_item_my_profile</item>
         <item>@string/nav_item_near_by</item>
         <item>@string/nav_item_shared_users</item>
-        <item>@string/nav_item_2017_matrimony</item>
+        <item>@string/nav_item_medical_form</item>
         <item>@string/nav_item_matrimony</item>
         <item>@string/nav_item_calendar</item>
         <item>@string/nav_item_language</item>

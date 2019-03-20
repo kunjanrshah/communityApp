@@ -2128,6 +2128,12 @@ public class Common {
         }
     }
 
+    public static boolean isSDCardPresent() {
+        return Environment.getExternalStorageState().equals(
+
+                Environment.MEDIA_MOUNTED);
+    }
+
     public static int getAppVersion(Context context) {
         int verCode = 0;
         try {
@@ -2430,7 +2436,7 @@ public class Common {
         private static final String BASE_URL = "http://www.superbinstruments.com/directory-dev";
         //  private static final String BASE_URL = "http://www.superbinstruments.com/yadav";
         public static final String LOGIN_URL = BASE_URL + "/API/login";
-        public static final String SIGNUP_URL = BASE_URL + "/API/register";
+        public static final String SIGNUP_URL = BASE_URL + "/API/userreg";
         public static final String FORGOT_PASSWORD_URL = BASE_URL + "/API/forgotPassword";
         public static final String ADVANCE_SEARCH_URL = BASE_URL + "/API/searchUsers";
         public static final String GLOBAL_SEARCH_URL = BASE_URL + "/API/globalSearch";

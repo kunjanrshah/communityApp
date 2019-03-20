@@ -1118,7 +1118,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new SharedUsersFragment();
                 break;
             case 4:
-                Intent mIntent = new Intent(MainActivity.this, PDFActivity.class);
+                Intent mIntent = new Intent(MainActivity.this, MedicalReliefActivity.class);
                 startActivity(mIntent);
                 this.overridePendingTransition(0, 0);
                 break;

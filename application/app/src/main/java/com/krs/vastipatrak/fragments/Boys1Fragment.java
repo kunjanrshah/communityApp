@@ -1,3 +1,4 @@
+/*
 package com.krs.vastipatrak.fragments;
 
 
@@ -33,8 +34,10 @@ public class Boys1Fragment extends Fragment implements OnPageChangeListener, OnL
         View rootView = inflater.inflate(R.layout.fragment_pdf, container, false);
         pdfView = rootView.findViewById(R.id.pdfView);
         tv_header = rootView.findViewById(R.id.tv_header);
-        /*TextView txt_marquee = rootView.findViewById(R.id.txt_marquee);
-        txt_marquee.setSelected(true);*/
+        */
+/*TextView txt_marquee = rootView.findViewById(R.id.txt_marquee);
+        txt_marquee.setSelected(true);*//*
+
         displayFromAsset(SAMPLE_FILE);
         return rootView;
     }
@@ -67,3 +70,4 @@ public class Boys1Fragment extends Fragment implements OnPageChangeListener, OnL
         }
     }
 }
+*/
