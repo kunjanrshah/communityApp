@@ -336,7 +336,7 @@ public class HomeFragment extends Fragment {
         mFloatingActionButton.hide();
         mRecycleView.setVisibility(View.GONE);
         mSwipyRefreshLayout.setVisibility(View.GONE);
-        videoRecyclerView.setVisibility(View.VISIBLE);
+        videoRecyclerView.setVisibility(View.GONE);
         videoRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

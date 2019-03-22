@@ -432,7 +432,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             // spinnerEkdo.setVisibility(View.GONE);
             btn_signup.setText(getResources().getString(R.string.btn_sign_up));
             txtHow.setText(getResources().getString(R.string.how_to_signup));
-            txt_label.setVisibility(View.VISIBLE);
+            txt_label.setVisibility(View.GONE);
             txt_label.setText(R.string.nice_signup);
             SignupToggle = false;
            // inputPassword.setText("");
