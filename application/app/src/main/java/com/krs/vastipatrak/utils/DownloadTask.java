@@ -41,6 +41,7 @@ public class DownloadTask {
             super.onPreExecute();
             progressDialog = new ProgressDialog(context);
             progressDialog.setMessage("Downloading...");
+            progressDialog.setCancelable(false);
             progressDialog.show();
         }
 
@@ -102,7 +103,7 @@ public class DownloadTask {
 
                     apkStorage = new File(
                             Environment.getExternalStorageDirectory() + "/"
-                                    + "NKDROID FILES");
+                                    + "Vastipatrak");
                 } else
                     Toast.makeText(context, "Oops!! There is no SD Card.", Toast.LENGTH_SHORT).show();
 

@@ -1722,7 +1722,7 @@ public class Common {
                 }
                 workbook.write();
                 workbook.close();
-                ExportAlert(mActiviy, file);
+                ExportAlert(mActiviy, file, true);
                 //Toast.makeText(mActiviy, "Data Exported in a Excel Sheet", Toast.LENGTH_SHORT).show();
 
                 hideProgressDialog();
@@ -1734,7 +1734,7 @@ public class Common {
         }
     }
 
-    private static void ExportAlert(@NonNull final Activity mActivity, @NonNull final File file) {
+    public static void ExportAlert(@NonNull final Activity mActivity, @NonNull final File file, final boolean isExcel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(mActivity.getString(R.string.app_name));
         builder.setMessage("Data Exported in a Excel Sheet");
@@ -1748,7 +1748,11 @@ public class Common {
                 intentShareFile.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                 if (file.exists()) {
-                    intentShareFile.setType("application/xls");
+                    if (isExcel) {
+                        intentShareFile.setType("application/xls");
+                    } else {
+                        intentShareFile.setType("application/pdf");
+                    }
                     intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
                     intentShareFile.putExtra(Intent.EXTRA_SUBJECT, "Sharing File...");
                     intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...");
@@ -1759,12 +1763,15 @@ public class Common {
         builder.setPositiveButton("View", new DialogInterface.OnClickListener() {
             public void onClick(@NonNull DialogInterface dialog, int which) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
+                if (isExcel) {
+                    intent.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
+                } else {
+                    intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+                }
                 mActivity.startActivity(intent);
             }
         }).show();
     }
-
 
 
     public static Bitmap drawableToBitmap(Drawable drawable) {
@@ -1896,8 +1903,6 @@ public class Common {
         }
 
     }
-
-
 
 
     public static void getParentRandomColor(@NonNull Context context, int position, LinearLayout ll_event) {
