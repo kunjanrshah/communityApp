@@ -1737,7 +1737,12 @@ public class Common {
     public static void ExportAlert(@NonNull final Activity mActivity, @NonNull final File file, final boolean isExcel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(mActivity.getString(R.string.app_name));
-        builder.setMessage("Data Exported in a Excel Sheet");
+        if (isExcel) {
+            builder.setMessage("Data Exported in a Excel Sheet");
+        } else {
+            builder.setMessage("Medical form downloaded in 'Vastipatrak' folder in your mobile");
+        }
+
 
         builder.setNegativeButton("Share", new DialogInterface.OnClickListener() {
             @Override
@@ -1768,7 +1773,13 @@ public class Common {
                 } else {
                     intent.setDataAndType(Uri.fromFile(file), "application/pdf");
                 }
-                mActivity.startActivity(intent);
+                try {
+                    mActivity.startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(mActivity, "You have not supported app to view pdf file", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+
             }
         }).show();
     }
