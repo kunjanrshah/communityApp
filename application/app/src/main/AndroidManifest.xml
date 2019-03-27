@@ -46,7 +46,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
@@ -111,6 +111,16 @@
         <activity
             android:name=".activity.HomeActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.SplashScreen"
+            android:screenOrientation="portrait"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
 
         <service android:name=".service.MyLocationService" />
         <service android:name=".service.LocationAlertService" />
