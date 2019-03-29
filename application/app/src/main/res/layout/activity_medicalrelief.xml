@@ -43,4 +43,12 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <TextView
+        android:layout_margin="10dp"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:text="@string/steps_medical_form"
+        android:layout_height="wrap_content" />
+
+
 </LinearLayout>

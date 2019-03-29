@@ -261,7 +261,6 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
 </string>
 
 
-
     <string name="gotra">Gotra :</string>
     <string name="blood_group">Blood Group :</string>
     <string name="mobile">Mobile :</string>
@@ -305,7 +304,11 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="FT_PROFILE_ID">profile_id</string>
     <string name="FT_NAME">name</string>
 
-
+    <string name="steps_medical_form">Steps\n\n1.Please click on download button
+        \n2.Medical form download process will start
+        \n3.Form will be downloaded in "Vastipatrak" folder in your mobile
+        \n4.Then click on view/share button
+        \n5.Then you can share the form for print</string>
 
     <string name="near_by_home">Home</string>
     <string name="near_by_office">Office</string>
