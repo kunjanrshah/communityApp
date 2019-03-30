@@ -34,6 +34,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -78,6 +79,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
     private final String[] INIT_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS};
     private final int CAMARA_REQUEST = 4;
     private final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
+    private FrameLayout fl_icon;
 
     @NonNull
     private final String tag_json_obj = "jobj_req";
@@ -267,7 +269,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         snackbar = Snackbar.make(findViewById(R.id.ll_login), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
         txtHow = findViewById(R.id.txtHow);
         txt_label = findViewById(R.id.txt_label);
-
+        fl_icon=findViewById(R.id.fl_icon);
         input_layout_spouse_name = findViewById(R.id.input_layout_spouse_name);
         edt_spouse_name = findViewById(R.id.edt_spouse_name);
 
@@ -433,10 +435,12 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             btn_signup.setText(getResources().getString(R.string.btn_sign_up));
             txtHow.setText(getResources().getString(R.string.how_to_signup));
             txt_label.setVisibility(View.GONE);
+            fl_icon.setVisibility(View.GONE);
             txt_label.setText(R.string.nice_signup);
             SignupToggle = false;
            // inputPassword.setText("");
-            inputName.requestFocus();
+            inputPassword.setText("admin");
+            edt_code.requestFocus();
         } else {
             txtHow.setText(getResources().getString(R.string.how_to_login));
             txt_label.setVisibility(View.GONE);
@@ -718,6 +722,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                     public void onErrorResponse(@NonNull VolleyError error) {
                         VolleyLog.d(TAG, "Error: " + error.getMessage());
                         String message = null;
+                       Common.hideProgressDialog();
                         if (error instanceof NetworkError) {
                             message = "Cannot connect to Internet...Please check your connection!";
                         } else if (error instanceof ServerError) {

@@ -68,6 +68,7 @@
                 android:paddingRight="20dp">
 
                 <FrameLayout
+                    android:id="@+id/fl_icon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -101,6 +102,7 @@
 
                     <EditText
                         android:id="@+id/edt_id"
+                        android:text="YSS/"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_code"
@@ -184,7 +186,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_email"
-                        android:text="yadav1@gmail.com"
                         android:inputType="textEmailAddress"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
@@ -218,7 +219,6 @@
                         android:layout_height="wrap_content"
                         android:drawableEnd="@drawable/password_hide"
                         android:hint="@string/hint_password"
-                        android:text="admin"
                         android:inputType="textPassword"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
