@@ -17,3 +17,5 @@
 #}
 -ignorewarnings
 -keep class android.support.v7.widget.SearchView { *; }
+-keepattributes Signature
+-keepattributes *Annotation*

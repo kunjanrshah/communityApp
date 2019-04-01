@@ -394,6 +394,9 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="first_time_main">first_time_main</string>
     <string name="location">location</string>
 
+    <string name="facebook_app_id">1749295805152367</string>
+    <string name="fb_login_protocol_scheme">fb1749295805152367</string>
+    <string name="web_client_id">900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com</string>
 
 
 </resources>
