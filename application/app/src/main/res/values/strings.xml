@@ -1,13 +1,12 @@
 <resources>
     <string name="theme_app_name">વસ્તીપત્રક</string>
     <string name="app_name">વસ્તીપત્રક</string>
-    <string name="hint_email">Email</string>
+    <string name="hint_email">Email ID</string>
     <string name="hint_other">If Other (Please Specify)</string>
     <string name="hint_email_mobile">Email or Mobile</string>
-    <string name="hint_mobile">Mobile</string>
+    <string name="hint_mobile">Mobile No</string>
     <string name="hint_password">Password</string>
     <string name="hint_conform_password">Confirm Password</string>
-    <string name="hint_address">Address</string>
     <string name="hint_city">City</string>
     <string name="hint_native">Native Place</string>
     <string name="btn_sign_up">SIGN UP</string>
@@ -318,7 +317,7 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="hindi">Hindi</string>
     <string name="tour_video">Tour Video</string>
     <string name="how_to_login">How to login?</string>
-    <string name="how_to_signup">How to Signup?</string>
+    <string name="how_to_register">How to Register?</string>
     <string name="language">Language</string>
     <string name="select_subcast">Select Subcast</string>
     <string name="select_ekdo">Select Ekdo</string>
@@ -397,6 +396,9 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="facebook_app_id">1749295805152367</string>
     <string name="fb_login_protocol_scheme">fb1749295805152367</string>
     <string name="web_client_id">900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com</string>
+    <string name="hint_address">Address</string>
+    <string name="already_have_a_account_sign_in">Already have a account?</string>
+    <string name="do_you_have_an_account_register_now">Do you have an account?</string>
 
 
 </resources>

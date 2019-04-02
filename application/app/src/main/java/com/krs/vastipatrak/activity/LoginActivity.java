@@ -62,7 +62,6 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -627,7 +626,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             // spinnerSubcast.setVisibility(View.GONE);
             // spinnerEkdo.setVisibility(View.GONE);
             btn_signup.setText(getResources().getString(R.string.btn_sign_up));
-            txtHow.setText(getResources().getString(R.string.how_to_signup));
+            txtHow.setText(getResources().getString(R.string.how_to_register));
             txt_label.setVisibility(View.VISIBLE);
             txt_label.setText(R.string.nice_signup);
             SignupToggle = false;

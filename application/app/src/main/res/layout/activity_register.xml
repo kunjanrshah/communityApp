@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/img_header_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:background="#d3d3d3"
+        android:layout_height="1dp"/>
+
+    <FrameLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="30dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img_profile"
+            android:layout_width="70dip"
+            android:layout_height="70dip"
+            android:src="@drawable/user_profile"
+             />
+
+        <ImageView
+            android:id="@+id/img_cancel"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:layout_marginLeft="50dp"
+            android:padding="5dp"
+            android:src="@drawable/cancel"
+             />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="Register Now"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginRight="30dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:orientation="vertical">
+
+
+        <EditText
+            android:id="@+id/edt_head_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"
+            android:hint="@string/hint_name"
+            android:inputType="textCapSentences"
+            android:paddingLeft="10dp"
+            android:singleLine="true" />
+
+
+        <EditText
+            android:id="@+id/edt_spouse_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"
+            android:hint="@string/hint_spouse_name"
+            android:inputType="textCapSentences"
+            android:paddingLeft="10dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/edt_email_id"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"
+            android:hint="@string/hint_email"
+            android:inputType="textCapSentences"
+            android:paddingLeft="10dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/edt_mobile"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"
+            android:hint="@string/hint_mobile"
+            android:inputType="textCapSentences"
+            android:paddingLeft="10dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/edt_password"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"
+            android:hint="@string/hint_password"
+            android:inputType="textCapSentences"
+            android:paddingLeft="10dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/edt_cpassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"
+            android:hint="@string/hint_conform_password"
+            android:inputType="textCapSentences"
+            android:paddingLeft="10dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/edt_address"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"
+            android:hint="@string/hint_address"
+            android:inputType="textCapSentences"
+            android:paddingLeft="10dp"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/txt_how_register"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:text="@string/how_to_register"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:text="Register"
+            android:background="@drawable/btn_registration"
+            android:textStyle="bold"
+            android:textColor="@color/mdtp_white"
+            android:gravity="center"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/txt_already"
+            android:layout_margin="10dp"
+            android:textSize="16sp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:text="@string/already_have_a_account_sign_in"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</LinearLayout>
