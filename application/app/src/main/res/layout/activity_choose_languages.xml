@@ -2,7 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/mdtp_white"
     android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/img_group_change_lan"
+        android:layout_height="200dp" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/app_icon_512"
+        android:layout_height="100dp" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_gravity="center_horizontal"
+        android:text="VASTI PATRAK"
+        android:layout_height="wrap_content" />
 
 
     <LinearLayout
@@ -10,6 +31,10 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
+
+
+
+
 
         <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
             android:id="@+id/splanguage"
