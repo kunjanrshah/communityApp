@@ -6,24 +6,17 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="250dp"
+        android:layout_width="300dp"
         android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/img_group_change_lan"
-        android:layout_height="200dp" />
+        android:layout_height="250dp" />
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/app_icon_512"
-        android:layout_height="100dp" />
-
-    <TextView
-        android:layout_width="100dp"
-        android:layout_gravity="center_horizontal"
-        android:text="VASTI PATRAK"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_margin="20dp"
+        android:background="@drawable/group1"
+        android:layout_height="180dp" />
 
 
     <LinearLayout
@@ -32,16 +25,12 @@
         android:gravity="center"
         android:orientation="vertical">
 
-
-
-
-
         <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
             android:id="@+id/splanguage"
             android:layout_width="200dp"
             android:layout_height="60dp"
             android:gravity="center"
-            android:text="choose Language" />
+            android:text="@string/choose_language" />
 
         <Button
             android:id="@+id/btn_login"
@@ -49,19 +38,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:textColor="@color/mdtp_white"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:background="@color/colorPrimaryDark"
-            android:text="Login" />
+            android:text="@string/login" />
 
         <Button
             android:id="@+id/btn_register"
             android:layout_width="250dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:background="@drawable/dark_border"
             android:textColor="@color/colorPrimaryDark"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Register" />
+            android:text="@string/register" />
     </LinearLayout>
 
 

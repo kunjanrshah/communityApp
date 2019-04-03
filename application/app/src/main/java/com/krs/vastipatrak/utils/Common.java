@@ -2138,6 +2138,22 @@ public class Common {
         return verCode;
     }
 
+    public static void changeLang(Context context, String lang) {
+        String loc = "en";
+        if (lang.equals(context.getResources().getString(R.string._english))) {
+            loc = "en";
+        } else if (lang.equals(context.getResources().getString(R.string._gujarati))) {
+            loc = "de";
+        } else if (lang.equals(context.getResources().getString(R.string._hindi))) {
+            loc = "hi";
+        }
+        Locale myLocale = new Locale(loc);
+        Locale.setDefault(myLocale);
+        android.content.res.Configuration config = new android.content.res.Configuration();
+        config.locale = myLocale;
+        context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
+    }
+
     private boolean checktimings(String time, String endtime) {
 
         String pattern = "HH:mm";

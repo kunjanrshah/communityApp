@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login">लॉगइन</string>
+    <string name="register">रजिस्टर</string>
+    <string name="choose_language">भाषा बदलें</string>
+
+</resources>

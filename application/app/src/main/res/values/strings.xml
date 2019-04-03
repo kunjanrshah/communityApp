@@ -202,8 +202,17 @@
 
 
 
+    <string-array name="languages">
+    <item>Choose Language</item>
+    <item>@string/_english</item>
+    <item>@string/_gujarati</item>
+    <item>@string/_hindi</item>
+    </string-array>
 
-
+    <string name="_english">English</string>
+    <string name="_gujarati">ગુજરાતી</string>
+    <string name="_hindi">हिन्दी</string>
+    
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">
         <item>@string/nav_item_home</item>
@@ -312,9 +321,7 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="female">Female</string>
     <string name="no_records_found">No records found!</string>
     <string name="title_activity_share_event">ShareEventActivity</string>
-    <string name="english">English</string>
-    <string name="gujarati">Gujarati</string>
-    <string name="hindi">Hindi</string>
+
     <string name="tour_video">Tour Video</string>
     <string name="how_to_login">How to login?</string>
     <string name="how_to_register">How to Register?</string>
@@ -399,6 +406,9 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="hint_address">Address</string>
     <string name="already_have_a_account_sign_in">Already have a account?</string>
     <string name="do_you_have_an_account_register_now">Do you have an account?</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="choose_language">Change Language</string>
 
 
 </resources>

@@ -10,13 +10,16 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.utils.Common;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
+
+import java.util.Objects;
 
 public class ChooseLanguage extends Activity implements AdapterView.OnItemSelectedListener {
 
     private Button btn_login,btn_register;
     private MaterialBetterSpinner spinner;
-    String[] languages = { "English", "Gujarati", "Hindi"};
+    String[] languages ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +27,7 @@ public class ChooseLanguage extends Activity implements AdapterView.OnItemSelect
 
         setContentView(R.layout.activity_choose_languages);
         MemoryAllocation();
-
+        languages = Objects.requireNonNull(this).getResources().getStringArray(R.array.languages);
         ArrayAdapter<String> aa = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line, languages);
         spinner.setAdapter(aa);
 
@@ -46,6 +49,7 @@ public class ChooseLanguage extends Activity implements AdapterView.OnItemSelect
     }
 
     private void MemoryAllocation() {
+
         spinner=findViewById(R.id.splanguage);
         spinner.setOnItemSelectedListener(this);
         btn_login=findViewById(R.id.btn_login);
@@ -54,7 +58,9 @@ public class ChooseLanguage extends Activity implements AdapterView.OnItemSelect
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+        Common.changeLang(ChooseLanguage.this,languages[position]);
+        btn_login.setText(getResources().getString(R.string.login));
+        btn_register.setText(getResources().getString(R.string.register));
     }
 
     @Override
