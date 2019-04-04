@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Login page-->
     <string name="login">લોગઈન</string>
     <string name="register">રજિસ્ટર</string>
     <string name="choose_language">ભાષા બદલો</string>
+    <string name="login_now">હમણાં જ લોગઇન કરો</string>
+    <string name="please_login_to_continue_using_our_app">કૃપા કરીને તમારી એપ્લિકેશન ચાલુ રાખવા માટે લૉગિન કરો</string>
+    <string name="login_with">લોગઇન વિથ</string>
+    <string name="_mobile">મોબાઈલ</string>
+    <string name="email">ઇમેઇલ</string>
+    <string name="enter_mobile_no">એન્ટર મોબાઈલ નંબર</string>
+    <string name="enter_email_id">એન્ટર ઇમેઇલ આઈડી</string>
+    <string name="password">પાસવર્ડ</string>
+    <string name="_forgot_password">પાસવર્ડ ભૂલી ગયા છો?</string>
+    <string name="or_login_with">ઓર લોગઇન વિથ</string>
+    <string name="already_have_a_account_sign_in">પહેલેથી જ એકાઉન્ટ છે?</string>
+    <string name="do_you_have_an_account_register_now">શું તમારી પાસે એકાઉન્ટ છે?</string>
+    <string name="register_now">હમણાં જ રેજિસ્ટર કરો</string>
+    <string name="send_otp">OTP મોકલો</string>
+    <string name="send_email">ઈ-મેલ મોકલો</string>
 
+    <!--Registraion page-->
+    <string name="hint_name">ફેમિલી હેડ નું  નામ </string>
+    <string name="hint_spouse_name">જીવનસાથી નું નામ</string>
+    <string name="hint_email">ઇમેઇલ આઈડી</string>
+    <string name="hint_mobile">મોબાઇલ નંબર</string>
+    <string name="hint_password">પાસવર્ડ</string>
+    <string name="hint_conform_password">પાસવર્ડની ખાતરી કરો</string>
+    <string name="hint_address">સરનામું</string>
+    <string name="how_to_register">રજીસ્ટર કેવી રીતે કરવું?</string>
 </resources>

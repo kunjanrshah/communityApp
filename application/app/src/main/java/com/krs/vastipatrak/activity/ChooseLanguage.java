@@ -3,11 +3,12 @@ package com.krs.vastipatrak.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.utils.Common;
@@ -15,10 +16,10 @@ import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.util.Objects;
 
-public class ChooseLanguage extends Activity implements AdapterView.OnItemSelectedListener {
+public class ChooseLanguage extends Activity  {
 
     private Button btn_login,btn_register;
-    private MaterialBetterSpinner spinner;
+    private MaterialBetterSpinner spinner1;
     String[] languages ;
 
     @Override
@@ -29,7 +30,7 @@ public class ChooseLanguage extends Activity implements AdapterView.OnItemSelect
         MemoryAllocation();
         languages = Objects.requireNonNull(this).getResources().getStringArray(R.array.languages);
         ArrayAdapter<String> aa = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line, languages);
-        spinner.setAdapter(aa);
+        spinner1.setAdapter(aa);
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,21 +51,27 @@ public class ChooseLanguage extends Activity implements AdapterView.OnItemSelect
 
     private void MemoryAllocation() {
 
-        spinner=findViewById(R.id.splanguage);
-        spinner.setOnItemSelectedListener(this);
+        spinner1 =findViewById(R.id.splanguage);
         btn_login=findViewById(R.id.btn_login);
         btn_register=findViewById(R.id.btn_register);
-    }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Common.changeLang(ChooseLanguage.this,languages[position]);
-        btn_login.setText(getResources().getString(R.string.login));
-        btn_register.setText(getResources().getString(R.string.register));
-    }
+        spinner1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Common.changeLang(ChooseLanguage.this,spinner1.getText().toString());
+                btn_login.setText(getResources().getString(R.string.login));
+                btn_register.setText(getResources().getString(R.string.register));
+            }
+        });
     }
 }

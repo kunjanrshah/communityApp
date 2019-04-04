@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--Login page-->
     <string name="login">लॉगइन</string>
     <string name="register">रजिस्टर</string>
     <string name="choose_language">भाषा बदलें</string>
+    <string name="login_now">अब लॉगिन करें</string>
+    <string name="please_login_to_continue_using_our_app">कृप्या एप्लिकेशन जारी रखने के लिए लॉगिन करे</string>
+    <string name="login_with">के साथ लॉगिन करें</string>
+    <string name="_mobile">मोबाइल</string>
+    <string name="email">ई-मेल</string>
+    <string name="enter_email_id">ईमेल आईडी दर्ज करें</string>
+    <string name="enter_mobile_no">मोबाइल नंबर दर्ज करें</string>
+    <string name="password">पासवर्ड</string>
+    <string name="_forgot_password">पासवर्ड भूल गए ?</string>
+    <string name="or_login_with">या लॉगिन करें</string>
+    <string name="already_have_a_account_sign_in">क्या आपके पास पहले से एक खाता मौजूद है? </string>
+    <string name="do_you_have_an_account_register_now">क्या आपका अकाउंट है??</string>
+    <string name="register_now">रजिस्टर करें</string>
+    <string name="send_otp">OTP भेजें</string>
+    <string name="send_email">ईमेल भेजें</string>
+
+    <!--Registraion page-->
+    <string name="hint_name">परिवार के मुखिया का नाम</string>
+    <string name="hint_spouse_name">जीवनसाथी का नाम</string>
+    <string name="hint_email">ईमेल आईडी</string>
+    <string name="hint_mobile">मोबाइल नंबर</string>
+    <string name="hint_password">पासवर्ड</string>
+    <string name="hint_conform_password">पासवर्ड की पुष्टि कीजिये</string>
+    <string name="hint_address">पता</string>
+    <string name="how_to_register">कैसे करें रजिस्टर?</string>
 
 </resources>

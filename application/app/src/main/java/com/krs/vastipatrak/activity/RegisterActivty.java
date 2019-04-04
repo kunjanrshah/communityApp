@@ -33,6 +33,13 @@ public class RegisterActivty extends Activity {
                 finish();
             }
         });
+
+        img_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void MemoryAllocation() {
@@ -50,7 +57,7 @@ public class RegisterActivty extends Activity {
         edt_cpassword=findViewById(R.id.edt_cpassword);
         edt_address=findViewById(R.id.edt_address);
         btn_register=findViewById(R.id.btn_register);
-        String str=getResources().getString(R.string.already_have_a_account_sign_in)+ "<b>" +" LOGIN " +"</b>";
+        String str=getResources().getString(R.string.already_have_a_account_sign_in)+ "<b>" +" "+ getString(R.string.login) +"</b>";
         txt_already.setText(Html.fromHtml(str));
     }
 

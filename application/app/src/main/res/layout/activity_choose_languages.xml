@@ -7,16 +7,18 @@
 
     <ImageView
         android:layout_width="300dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="250dp"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/img_group_change_lan"
-        android:layout_height="250dp" />
+        android:layout_marginTop="20dp"
+        android:background="@drawable/img_group_change_lan" />
 
     <ImageView
-        android:layout_width="match_parent"
+        android:id="@+id/logo"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
         android:layout_margin="20dp"
-        android:background="@drawable/group1"
-        android:layout_height="180dp" />
+        android:background="@drawable/group1" />
 
 
     <LinearLayout
@@ -37,20 +39,20 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:textColor="@color/mdtp_white"
-            android:textSize="20sp"
             android:background="@color/colorPrimaryDark"
-            android:text="@string/login" />
+            android:text="@string/login"
+            android:textColor="@color/mdtp_white"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/btn_register"
             android:layout_width="250dp"
-            android:textSize="20sp"
-            android:background="@drawable/dark_border"
-            android:textColor="@color/colorPrimaryDark"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="@string/register" />
+            android:background="@drawable/dark_border"
+            android:text="@string/register"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp" />
     </LinearLayout>
 
 
