@@ -23,7 +23,8 @@ import com.krs.vastipatrak.activity.FamilyTreeActivity;
 import com.krs.vastipatrak.activity.ProfileActivity;
 import com.krs.vastipatrak.model.ListFamilyTreeData;
 import com.krs.vastipatrak.model.ListProfileData;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +39,7 @@ import de.blox.graphview.tree.BuchheimWalkerAlgorithm;
 import de.blox.graphview.tree.BuchheimWalkerConfiguration;
 import io.realm.RealmList;
 
-import static com.krs.vastipatrak.utils.Common.ShareScreenShot;
+import static com.krs.vastipatrak.utils.Utility.ShareScreenShot;
 
 
 public class FamilyTreeFragment extends Fragment {
@@ -94,8 +95,8 @@ public class FamilyTreeFragment extends Fragment {
                     public void onClick(View v) {
 
                         Log.d(FamilyTreeActivity.class.getSimpleName(), "name: " + builder);
-                        mEditor.putString(Common.Constant_Class.PROFILE_ID, finalId);
-                        mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+                        mEditor.putString(AppConstants.PROFILE_ID, finalId);
+                        mEditor.putBoolean(AppConstants.MYPROFILE_SP, false);
                         mEditor.apply();
                         try {
                             ProfileActivity.isEnable = false;
@@ -107,7 +108,7 @@ public class FamilyTreeFragment extends Fragment {
                     }
                 });
 
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
+                if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true)) {
                     viewHolder.imglink.setVisibility(View.GONE);
                 } else {
                     viewHolder.imglink.setVisibility(View.VISIBLE);
@@ -215,7 +216,7 @@ public class FamilyTreeFragment extends Fragment {
         graph = new Graph();
         graphView = rootView.findViewById(R.id.graph);
         imgShare = rootView.findViewById(R.id.imgShare);
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
     }
 

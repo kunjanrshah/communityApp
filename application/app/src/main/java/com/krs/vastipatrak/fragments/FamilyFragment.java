@@ -61,7 +61,8 @@ import com.krs.vastipatrak.activity.SelectionlistActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListProfileData;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -82,8 +83,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
 import static com.krs.vastipatrak.activity.ProfileActivity.chooseFragment;
-import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
-import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
+import static com.krs.vastipatrak.utils.Utility.ddMMMyyyy;
+import static com.krs.vastipatrak.utils.Utility.yyyy_MM_dd;
 
 public class FamilyFragment extends Fragment implements Serializable, AdapterView.OnItemSelectedListener {
 
@@ -142,10 +143,10 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         super.onCreateOptionsMenu(menu, inflater);
 
         final MenuItem saveItem = menu.findItem(R.id.action_save);
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
+        if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true)) {
             saveItem.setVisible(true);
         } else {
-            if (ProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+            if (ProfileActivity.isEnable && mSharedPreferences.getString(AppConstants.ROLE, AppConstants.USER).equals(AppConstants.ADMIN)) {
                 saveItem.setVisible(true);
             } else {
                 saveItem.setVisible(false);
@@ -199,7 +200,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                 edtsponse_bdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
 
                             dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         }
@@ -244,7 +245,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                 edt_mdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
@@ -261,7 +262,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if ((event.getRawX()) >= (edtsponse_mobile.getRight() - edtsponse_mobile.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         if (Build.VERSION.SDK_INT >= 23) {
-                            if (Common.canReadContacts(Objects.requireNonNull(getActivity()))) {
+                            if (Utility.canReadContacts(Objects.requireNonNull(getActivity()))) {
                                 Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                                 startActivityForResult(it, CONTACT_PICKER_RESULT);
                             }
@@ -280,7 +281,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         img_spouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
+                if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
                     img_selection = "spouse";
                     startImageActivity();
                 } else {
@@ -294,7 +295,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         img_fspouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
+                if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
                     img_selection = "fspouse";
                     startImageActivity();
                 } else {
@@ -308,7 +309,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         img_mspouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
+                if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
                     img_selection = "mspouse";
                     startImageActivity();
                 } else {
@@ -349,7 +350,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             @Override
             public void onClick(View v) {
 
-                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) && !ProfileActivity.isEnable) {
+                if (!mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true) && !ProfileActivity.isEnable) {
 
                 } else {
                     add_child_layout(null);
@@ -366,7 +367,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 builder.setTitle(mActivity.getString(R.string.app_name));
 
                 if (!mdate.isEmpty()) {
-                    final String date = Common.parseDateToddMMyyyy(mdate, ddMMMyyyy, yyyy_MM_dd);
+                    final String date = Utility.parseDateToddMMyyyy(mdate, ddMMMyyyy, yyyy_MM_dd);
                     if (chk_marriage_bdate_rem.isChecked()) {
                         msg = "Do you want to set Reminder for Marriage Date ? Type Message to wish ";
                         builder.setMessage(msg);
@@ -374,13 +375,13 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         final EditText input = new EditText(getActivity());
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         input.setLayoutParams(lp);
-                        String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
+                        String name = mSharedPreferences.getString(AppConstants.FIRST_NAME, "") + " " + mSharedPreferences.getString(AppConstants.LAST_NAME, "");
                         input.setText("Happy Marriage Anniversary from " + name);
                         builder.setView(input);
                         builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder(input.getText().toString(), date, Common.Constant_Class.MARRIAGE_DATE, "0", 0);
+                                setReminder(input.getText().toString(), date, AppConstants.MARRIAGE_DATE, "0", 0);
                             }
                         });
                         builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -396,7 +397,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder("", date, Common.Constant_Class.MARRIAGE_DATE, mdate_rem, 0);
+                                setReminder("", date, AppConstants.MARRIAGE_DATE, mdate_rem, 0);
                             }
                         });
                         builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -422,7 +423,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
                 builder.setTitle(mActivity.getString(R.string.app_name));
                 if (!sbdate.isEmpty()) {
-                    final String date = Common.parseDateToddMMyyyy(sbdate, ddMMMyyyy, yyyy_MM_dd);
+                    final String date = Utility.parseDateToddMMyyyy(sbdate, ddMMMyyyy, yyyy_MM_dd);
                     if (chk_spouse_bdate_rem.isChecked()) {
                         msg = "Do you want to set Reminder for Spouse BirthDate ? Type Message to wish ";
                         builder.setMessage(msg);
@@ -430,13 +431,13 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         final EditText input = new EditText(getActivity());
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         input.setLayoutParams(lp);
-                        String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
+                        String name = mSharedPreferences.getString(AppConstants.FIRST_NAME, "") + " " + mSharedPreferences.getString(AppConstants.LAST_NAME, "");
                         input.setText("Happy Birthday from " + name);
                         builder.setView(input);
                         builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder(input.getText().toString(), date, Common.Constant_Class.WIFE_BIRTH_DATE, "0", 0);
+                                setReminder(input.getText().toString(), date, AppConstants.WIFE_BIRTH_DATE, "0", 0);
                             }
                         });
                         builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -452,7 +453,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder("", date, Common.Constant_Class.WIFE_BIRTH_DATE, sbdate_rem, 0);
+                                setReminder("", date, AppConstants.WIFE_BIRTH_DATE, sbdate_rem, 0);
                             }
                         });
                         builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -470,7 +471,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             }
         });
 
-        if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
+        if (!mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true)) {
             if (!ProfileActivity.isEnable) {
                 DisableAll();
             }
@@ -479,11 +480,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         edtsponse_mobile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
+                if (!mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
                     try {
                         boolean flag = true;
                         if (Build.VERSION.SDK_INT >= 23) {
-                            if (Common.canCallPhone(getActivity())) {
+                            if (Utility.canCallPhone(getActivity())) {
                                 flag = false;
                             }
                         }
@@ -506,7 +507,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 img_spouse.setImageResource(R.drawable.user_profile);
                 Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.user_profile);
                 if (icon != null) {
-                    str_spouse_hash = Common.getBase64(icon);
+                    str_spouse_hash = Utility.getBase64(icon);
                 }
             }
         });
@@ -517,7 +518,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 img_fspouse.setImageResource(R.drawable.user_profile);
                 Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.user_profile);
                 if (icon != null) {
-                    str_fspouse_hash = Common.getBase64(icon);
+                    str_fspouse_hash = Utility.getBase64(icon);
                 }
             }
         });
@@ -528,7 +529,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 img_mspouse.setImageResource(R.drawable.user_profile);
                 Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.user_profile);
                 if (icon != null) {
-                    str_mspouse_hash = Common.getBase64(icon);
+                    str_mspouse_hash = Utility.getBase64(icon);
                 }
             }
         });
@@ -572,15 +573,15 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
     private void setAdapterBGlist() {
         blood = new ArrayList<>();
-        blood.add(Common.Constant_Class.TITLE_SPOUSE_BLOOD_GROUP);
-        blood.add(Common.Constant_Class.A_POSITIVE);
-        blood.add(Common.Constant_Class.A_NAGATIVE);
-        blood.add(Common.Constant_Class.B_POSITIVE);
-        blood.add(Common.Constant_Class.B_NAGATIVE);
-        blood.add(Common.Constant_Class.AB_POSITIVE);
-        blood.add(Common.Constant_Class.AB_NAGATIVE);
-        blood.add(Common.Constant_Class.O_POSITIVE);
-        blood.add(Common.Constant_Class.O_NAGATIVE);
+        blood.add(AppConstants.TITLE_SPOUSE_BLOOD_GROUP);
+        blood.add(AppConstants.A_POSITIVE);
+        blood.add(AppConstants.A_NAGATIVE);
+        blood.add(AppConstants.B_POSITIVE);
+        blood.add(AppConstants.B_NAGATIVE);
+        blood.add(AppConstants.AB_POSITIVE);
+        blood.add(AppConstants.AB_NAGATIVE);
+        blood.add(AppConstants.O_POSITIVE);
+        blood.add(AppConstants.O_NAGATIVE);
 
         dataAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, blood);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -590,7 +591,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     private void Memory_Allocation(View root) {
         hashMap = new HashMap<>();
         mActivity = Objects.requireNonNull(getActivity());
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         edt_mdate = root.findViewById(R.id.edt_mdate);
         edtsponse_bdate = root.findViewById(R.id.edtsponse_bdate);
         edt_spouse_edu = root.findViewById(R.id.edt_spouse_edu);
@@ -681,7 +682,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
     private void SetOfflineData(ListProfileData mListProfileData) {
 
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+        if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
             EnableAll();
         } else {
             DisableAll();
@@ -746,7 +747,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     if (i == 0) {
                         rbtnChildYes.setChecked(true);
                         rbtnChildNo.setChecked(false);
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             btn_add.setVisibility(View.VISIBLE);
                         } else {
                             btn_add.setVisibility(View.GONE);
@@ -772,17 +773,17 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     }
                     String blood = mObjChild.getBlood_group();
                     if (blood != null && !blood.isEmpty()) {
-                        if (blood.equalsIgnoreCase(Common.Constant_Class.A_POSITIVE)) {
+                        if (blood.equalsIgnoreCase(AppConstants.A_POSITIVE)) {
                             Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(1);
-                        } else if (blood.equalsIgnoreCase(Common.Constant_Class.A_NAGATIVE)) {
+                        } else if (blood.equalsIgnoreCase(AppConstants.A_NAGATIVE)) {
                             Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(2);
-                        } else if (blood.equalsIgnoreCase(Common.Constant_Class.B_POSITIVE)) {
+                        } else if (blood.equalsIgnoreCase(AppConstants.B_POSITIVE)) {
                             Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(3);
-                        } else if (blood.equalsIgnoreCase(Common.Constant_Class.B_NAGATIVE)) {
+                        } else if (blood.equalsIgnoreCase(AppConstants.B_NAGATIVE)) {
                             Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(4);
-                        } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_POSITIVE)) {
+                        } else if (blood.equalsIgnoreCase(AppConstants.O_POSITIVE)) {
                             Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(5);
-                        } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_NAGATIVE)) {
+                        } else if (blood.equalsIgnoreCase(AppConstants.O_NAGATIVE)) {
                             Objects.requireNonNull(mViewholder.spinnerBlood).setSelection(6);
                         }
                     }
@@ -801,7 +802,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                     Objects.requireNonNull(mViewholder.edtchild_work).setText(mObjChild.getChild_work());
 
 
-                    if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                    if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                         mViewholder.edtchild_name.setEnabled(true);
 
                         mViewholder.edtchild_bdate.setEnabled(true);
@@ -831,7 +832,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         @Override
                         public void onClick(View v) {
 
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                            if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                                 mViewholder.ImgHash = "selectImage";
                                 startImageActivity();
                             } else {
@@ -897,13 +898,13 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
 
         List<String> blood_cate = new ArrayList<>();
-        blood_cate.add(Common.Constant_Class.TITLE_BLOOD_GROUP);
-        blood_cate.add(Common.Constant_Class.A_POSITIVE);
-        blood_cate.add(Common.Constant_Class.A_NAGATIVE);
-        blood_cate.add(Common.Constant_Class.B_POSITIVE);
-        blood_cate.add(Common.Constant_Class.B_NAGATIVE);
-        blood_cate.add(Common.Constant_Class.O_POSITIVE);
-        blood_cate.add(Common.Constant_Class.O_NAGATIVE);
+        blood_cate.add(AppConstants.TITLE_BLOOD_GROUP);
+        blood_cate.add(AppConstants.A_POSITIVE);
+        blood_cate.add(AppConstants.A_NAGATIVE);
+        blood_cate.add(AppConstants.B_POSITIVE);
+        blood_cate.add(AppConstants.B_NAGATIVE);
+        blood_cate.add(AppConstants.O_POSITIVE);
+        blood_cate.add(AppConstants.O_NAGATIVE);
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, blood_cate);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -953,7 +954,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
                 builder.setTitle(mActivity.getString(R.string.app_name));
                 if (!bdate.isEmpty()) {
-                    final String date = Common.parseDateToddMMyyyy(bdate, ddMMMyyyy, yyyy_MM_dd);
+                    final String date = Utility.parseDateToddMMyyyy(bdate, ddMMMyyyy, yyyy_MM_dd);
                     if (mViewholder.chk_child_bdate_rem.isChecked()) {
                         msg = "Do you want to set Reminder for Child Birthdate ? Type Message to wish ";
                         builder.setMessage(msg);
@@ -961,13 +962,13 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         final EditText input = new EditText(getActivity());
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         input.setLayoutParams(lp);
-                        String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
+                        String name = mSharedPreferences.getString(AppConstants.FIRST_NAME, "") + " " + mSharedPreferences.getString(AppConstants.LAST_NAME, "");
                         input.setText("Happy Birthday from " + name);
                         builder.setView(input);
                         builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder(input.getText().toString(), date, Common.Constant_Class.CHILD_BIRTH_DATE, "0", mViewholder.child_id);
+                                setReminder(input.getText().toString(), date, AppConstants.CHILD_BIRTH_DATE, "0", mViewholder.child_id);
                             }
                         });
                         builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -983,7 +984,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                setReminder("", date, Common.Constant_Class.CHILD_BIRTH_DATE, lstchild.get(mViewholder.child_id), mViewholder.child_id);
+                                setReminder("", date, AppConstants.CHILD_BIRTH_DATE, lstchild.get(mViewholder.child_id), mViewholder.child_id);
                             }
                         });
                         builder.setNegativeButton(mActivity.getString(R.string.mdtp_cancel), new DialogInterface.OnClickListener() {
@@ -1087,7 +1088,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             @Override
             public void onClick(View v) {
 
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                     mViewholder.ImgHash = "selectImage";
                     startImageActivity();
                 } else {
@@ -1107,13 +1108,13 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 mViewholder.img_child.setImageResource(R.drawable.user_profile);
                 Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.user_profile);
                 if (icon != null) {
-                    mViewholder.ImgHash = Common.getBase64(icon);
+                    mViewholder.ImgHash = Utility.getBase64(icon);
                 }
             }
         });
 
 
-        if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
+        if (!mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
             Objects.requireNonNull(mViewholder.btn_remove).setVisibility(View.GONE);
             Objects.requireNonNull(mViewholder.edtchild_name).setKeyListener(null);
             mViewholder.edtchild_name.setCursorVisible(false);
@@ -1143,11 +1144,11 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
         mViewholder.edtMobile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
+                if (!mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
                     try {
                         boolean flag = true;
                         if (Build.VERSION.SDK_INT >= 23) {
-                            if (Common.canCallPhone(getActivity())) {
+                            if (Utility.canCallPhone(getActivity())) {
                                 flag = false;
                             }
                         }
@@ -1199,7 +1200,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                 mViewholder.edtchild_bdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
@@ -1235,7 +1236,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                             }
                         });
 
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             timePicker.showNow(getChildFragmentManager(), null);
                         }
                         /*Calendar now = Calendar.getInstance();
@@ -1260,7 +1261,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                                 mViewholder.edtchild_btime.setText(time);
                             }
                         });*/
-                        /*if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                        /*if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                            tpd.show(mActivity.getFragmentManager(), "Timepickerdialog");
                         }*/
                         return true;
@@ -1301,7 +1302,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
     }
 
     private void startImageActivity() {
-        if (Common.hasPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) && Common.hasPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (Utility.hasPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) && Utility.hasPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
             chooseFragment = TAG;
             CropImage.startPickImageActivity(getActivity());
         }
@@ -1317,7 +1318,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             @Override
             public void onClick(@NonNull DialogInterface dialog, int item) {
                 if (items[item].equals("Take Photo")) {
-                    if (Common.canCAMARA(mActivity)) {
+                    if (Utility.canCAMARA(mActivity)) {
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         startActivityForResult(intent, 0);
                     } else {
@@ -1337,31 +1338,31 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 */
 
     private void MatrimonyUpdateWS(JSONArray jsonArray) {
-        if (Common.isOnline(mActivity)) {
+        if (Utility.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
                 mJsonObject.put("childs", jsonArray);
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                if (ProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
-                    mJsonObject.put(Common.Constant_Class.UPDATE_USER_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""));
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                if (ProfileActivity.isEnable && mSharedPreferences.getString(AppConstants.ROLE, AppConstants.USER).equals(AppConstants.ADMIN)) {
+                    mJsonObject.put(AppConstants.UPDATE_USER_ID, mSharedPreferences.getString(AppConstants.PROFILE_ID, ""));
                 }
-                mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.IS_UPDATE, "1");
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
             Log.d(TAG, "MatrimonyUpdateWS: " + mJsonObject.toString());
-            Common.showProgressDialog(getActivity());
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            Utility.showProgressDialog(getActivity());
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
-                        Common.hideProgressDialog();
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                        Utility.hideProgressDialog();
+                        String success = response.getString(AppConstants.SUCCESS);
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
                             Toast.makeText(getActivity(), "Matrimony Updated", Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(getActivity(), "Something went wrong!", Toast.LENGTH_LONG).show();
@@ -1375,17 +1376,17 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -1397,44 +1398,44 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
 
 
     private void setReminder(String msg, String rem_date, final String rem_type, String rem_value, final int child_id) {
-        if (Common.isOnline(mActivity)) {
+        if (Utility.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.PROFILE_ID, profile_id);
-                mJsonObject.put(Common.Constant_Class.REMINDER_DATE, rem_date);
-                mJsonObject.put(Common.Constant_Class.REMINDER_TYPE, rem_type);
-                mJsonObject.put(Common.Constant_Class.REMINDER_ID, rem_value);
-                mJsonObject.put(Common.Constant_Class.MESSAGE, msg);
-                mJsonObject.put(Common.Constant_Class._CHILD_ID, child_id);
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.PROFILE_ID, profile_id);
+                mJsonObject.put(AppConstants.REMINDER_DATE, rem_date);
+                mJsonObject.put(AppConstants.REMINDER_TYPE, rem_type);
+                mJsonObject.put(AppConstants.REMINDER_ID, rem_value);
+                mJsonObject.put(AppConstants.MESSAGE, msg);
+                mJsonObject.put(AppConstants._CHILD_ID, child_id);
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Common.showProgressDialog(getActivity());
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SET_REMINDER_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            Utility.showProgressDialog(getActivity());
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.SET_REMINDER_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
-                        Common.hideProgressDialog();
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            JSONObject mObject = response.getJSONObject(Common.Constant_Class.DATA);
+                        Utility.hideProgressDialog();
+                        String success = response.getString(AppConstants.SUCCESS);
+                        String message = response.getString(AppConstants.MESSAGE);
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
+                            JSONObject mObject = response.getJSONObject(AppConstants.DATA);
                             String rem = mObject.getString("reminder_id");
-                            if (rem_type.equalsIgnoreCase(Common.Constant_Class.MARRIAGE_DATE)) {
+                            if (rem_type.equalsIgnoreCase(AppConstants.MARRIAGE_DATE)) {
                                 mdate_rem = rem;
-                            } else if (rem_type.equalsIgnoreCase(Common.Constant_Class.WIFE_BIRTH_DATE)) {
+                            } else if (rem_type.equalsIgnoreCase(AppConstants.WIFE_BIRTH_DATE)) {
                                 sbdate_rem = rem;
-                            } else if (rem_type.equalsIgnoreCase(Common.Constant_Class.CHILD_BIRTH_DATE)) {
+                            } else if (rem_type.equalsIgnoreCase(AppConstants.CHILD_BIRTH_DATE)) {
                                 lstchild.put(child_id, rem);
                             }
                         } else {
-                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                            if (response.has(AppConstants.ERROR_CODE)) {
+                                String error = response.getString(AppConstants.ERROR_CODE);
+                                if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                     Intent mIntent = new Intent(getActivity(), LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(mIntent);
@@ -1452,17 +1453,17 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(FamilyFragment.class.getSimpleName(), "Error: " + error.getMessage());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -1550,17 +1551,17 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             img_spouse.setImageURI(resultUri);
             BitmapDrawable drawable = (BitmapDrawable) img_spouse.getDrawable();
             bmp = drawable.getBitmap();
-            str_spouse_hash = Common.getBase64(bmp);
+            str_spouse_hash = Utility.getBase64(bmp);
         } else if (img_selection.equalsIgnoreCase("fspouse")) {
             img_fspouse.setImageURI(resultUri);
             BitmapDrawable drawable = (BitmapDrawable) img_fspouse.getDrawable();
             bmp = drawable.getBitmap();
-            str_fspouse_hash = Common.getBase64(bmp);
+            str_fspouse_hash = Utility.getBase64(bmp);
         } else if (img_selection.equalsIgnoreCase("mspouse")) {
             img_mspouse.setImageURI(resultUri);
             BitmapDrawable drawable = (BitmapDrawable) img_mspouse.getDrawable();
             bmp = drawable.getBitmap();
-            str_mspouse_hash = Common.getBase64(bmp);
+            str_mspouse_hash = Utility.getBase64(bmp);
         }
         img_selection = "";
         for (int i = 0; i < child_container.getChildCount(); i++) {
@@ -1569,7 +1570,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                 cViewholder.img_child.setImageURI(resultUri);
                 BitmapDrawable drawable = (BitmapDrawable) cViewholder.img_child.getDrawable();
                 bmp = drawable.getBitmap();
-                cViewholder.ImgHash = Common.getBase64(bmp);
+                cViewholder.ImgHash = Utility.getBase64(bmp);
                 break;
             }
         }

@@ -43,7 +43,8 @@ import com.krs.vastipatrak.adapter.VideoListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.interfaces.OnItemClickListener;
 import com.krs.vastipatrak.model.ListEventData;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 
@@ -62,11 +63,11 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
-import static com.krs.vastipatrak.utils.Common.getRandomColor;
-import static com.krs.vastipatrak.utils.Common.parseDateToddMMyyyy;
-import static com.krs.vastipatrak.utils.Common.textAsBitmap;
-import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
+import static com.krs.vastipatrak.utils.Utility.dd_MMM_yyyy;
+import static com.krs.vastipatrak.utils.Utility.getRandomColor;
+import static com.krs.vastipatrak.utils.Utility.parseDateToddMMyyyy;
+import static com.krs.vastipatrak.utils.Utility.textAsBitmap;
+import static com.krs.vastipatrak.utils.Utility.yyyy_MM_dd;
 
 
 public class EventFragment extends Fragment {
@@ -183,9 +184,9 @@ public class EventFragment extends Fragment {
             AppController.getInstance().initRealm();
         }
         eventData = realm.where(ListEventData.class).findAll();
-        mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
-        mEditor.putString(Common.Constant_Class.FragmentSp, EventFragment.class.getSimpleName());
+        mEditor.putString(AppConstants.FragmentSp, EventFragment.class.getSimpleName());
         mEditor.apply();
         TextView tv = rootView.findViewById(R.id.txt_marquee);
         tv.setSelected(true);
@@ -193,22 +194,22 @@ public class EventFragment extends Fragment {
 
     private void getEvents() {
 
-        if (Common.isOnline(Objects.requireNonNull(getActivity()))) {
+        if (Utility.isOnline(Objects.requireNonNull(getActivity()))) {
             mSwipyRefreshLayout.setRefreshing(true);
             JSONObject mJsonObject = new JSONObject();
             try {
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
                 /*if (eventData.size() > 1) {
                     String date = eventData.get(eventData.size() - 1).getEventDate();
-                    mJsonObject.put(Common.Constant_Class.EVENT_DATE, date);
+                    mJsonObject.put(AppConstants.EVENT_DATE, date);
                 }*/
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-                mJsonObject.put(Common.Constant_Class.PAGE, String.valueOf(page));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.PAGE, String.valueOf(page));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Common.showProgressDialog(getActivity());
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.EVENTS_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            Utility.showProgressDialog(getActivity());
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.EVENTS_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
@@ -217,10 +218,10 @@ public class EventFragment extends Fragment {
                     try {
                         mSwipyRefreshLayout.setRefreshing(false);
                         String total_records = "0";
-                        boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
-                        if (response.has(Common.Constant_Class.TOTAL_RECORDS)) {
-                            total_records = response.getString(Common.Constant_Class.TOTAL_RECORDS);
+                        boolean success = response.getBoolean(AppConstants.SUCCESS);
+                        String message = response.getString(AppConstants.MESSAGE);
+                        if (response.has(AppConstants.TOTAL_RECORDS)) {
+                            total_records = response.getString(AppConstants.TOTAL_RECORDS);
                         }
                         if (success) {
                             JSONArray mJsonArray = response.getJSONArray("data");
@@ -274,9 +275,9 @@ public class EventFragment extends Fragment {
                             }
                             setEventAdapter();
                         } else {
-                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                            if (response.has(AppConstants.ERROR_CODE)) {
+                                String error = response.getString(AppConstants.ERROR_CODE);
+                                if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                     Intent mIntent = new Intent(getActivity(), LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(mIntent);
@@ -286,7 +287,7 @@ public class EventFragment extends Fragment {
                                 setVideoAdapter();
                             }
                         }
-                        Common.hideProgressDialog();
+                        Utility.hideProgressDialog();
                         Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -296,7 +297,7 @@ public class EventFragment extends Fragment {
 
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                     String message = null;
                     if (error instanceof NetworkError) {
@@ -317,10 +318,10 @@ public class EventFragment extends Fragment {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -389,7 +390,7 @@ public class EventFragment extends Fragment {
         private final OnItemClickListener listener;
 
         EventAdapter(OnItemClickListener listener) {
-            eventData = realm.where(ListEventData.class).sort(Common.Constant_Class.EVENT_DATE, Sort.DESCENDING).findAll();
+            eventData = realm.where(ListEventData.class).sort(AppConstants.EVENT_DATE, Sort.DESCENDING).findAll();
             this.listener = listener;
         }
 
@@ -417,7 +418,7 @@ public class EventFragment extends Fragment {
             holder.txtTitle.setText(data.getTitle());
             holder.txtDesc.setText(data.getDescription());
             holder.txtLocation.setText(data.getLocation());
-            Date mdate = Common.StringToDate(data.getEventDate());
+            Date mdate = Utility.StringToDate(data.getEventDate());
 
 
             SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -446,12 +447,12 @@ public class EventFragment extends Fragment {
                 public void onClick(View v) {
                     String lat = data.getLat();
                     String lng = data.getLng();
-                    String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                    String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                    String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+                    String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
                     final double clat = Double.valueOf(curr_lat);
                     final double clng = Double.valueOf(curr_lng);
                     if (clat != 0 && clng != 0 && !lat.isEmpty() && !lng.isEmpty()) {
-                        Common.showDirections(getActivity(), clat, clng, Double.parseDouble(data.getLat()), Double.parseDouble(data.getLng()), data.getLocation());
+                        Utility.showDirections(getActivity(), clat, clng, Double.parseDouble(data.getLat()), Double.parseDouble(data.getLng()), data.getLocation());
                     } else {
                         Toast.makeText(getActivity(), "Location not found!", Toast.LENGTH_SHORT).show();
                     }
@@ -460,10 +461,10 @@ public class EventFragment extends Fragment {
 
             String lat = data.getLat();
             String lng = data.getLng();
-            String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-            String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+            String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+            String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
             if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !lat.isEmpty() && !lng.isEmpty()) {
-                new Common.getDistance(getActivity(), holder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, curr_lat, curr_lng, lat, lng);
+                new Utility.getDistance(getActivity(), holder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, curr_lat, curr_lng, lat, lng);
             }
         }
 

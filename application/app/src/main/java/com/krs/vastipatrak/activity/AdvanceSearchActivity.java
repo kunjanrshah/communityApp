@@ -36,7 +36,8 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.fragments.BusinessSearch;
 import com.krs.vastipatrak.fragments.FamilySearch;
 import com.krs.vastipatrak.fragments.PersonalSearch;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -47,10 +48,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_CHILD_BLOOD_GROUP;
-import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_SPOUSE_BLOOD_GROUP;
-import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
-import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
+import static com.krs.vastipatrak.utils.AppConstants.TITLE_CHILD_BLOOD_GROUP;
+import static com.krs.vastipatrak.utils.AppConstants.TITLE_SPOUSE_BLOOD_GROUP;
+import static com.krs.vastipatrak.utils.Utility.ddMMMyyyy;
+import static com.krs.vastipatrak.utils.Utility.yyyy_MM_dd;
 
 public class AdvanceSearchActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
@@ -78,7 +79,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         if (Build.VERSION.SDK_INT >= 23) {
-            if (!Common.canReadContacts(this)) {
+            if (!Utility.canReadContacts(this)) {
                 requestPermissions(READ_CONTACT_PERMS, READ_CONTACT_REQUEST);
             }
         }
@@ -95,7 +96,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
         viewPager = findViewById(R.id.viewpager);
         toolbar = findViewById(R.id.toolbar);
         tabLayout = findViewById(R.id.tabs);
-        SharedPreferences mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_FILTER, Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = getSharedPreferences(AppConstants.PREF_FILTER, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
     }
@@ -164,9 +165,9 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
         business = new BusinessSearch();
 
         family = new FamilySearch();
-        adapter.addFrag(personal, Common.Constant_Class._PERSONAL);
-        adapter.addFrag(business, Common.Constant_Class._BUSINESS);
-        adapter.addFrag(family, Common.Constant_Class._FAMILY);
+        adapter.addFrag(personal, AppConstants._PERSONAL);
+        adapter.addFrag(business, AppConstants._BUSINESS);
+        adapter.addFrag(family, AppConstants._FAMILY);
 
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);
@@ -196,9 +197,9 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                 String strAddress = ((PersonalSearch) personal).edtAddress.getText().toString().trim();
                 String strphone = ((PersonalSearch) personal).edt_phone.getText().toString().trim();
                 String strbdateFrom = ((PersonalSearch) personal).edtbdateFrom.getText().toString().trim();
-                strbdateFrom = Common.parseDateToddMMyyyy(strbdateFrom, ddMMMyyyy, yyyy_MM_dd);
+                strbdateFrom = Utility.parseDateToddMMyyyy(strbdateFrom, ddMMMyyyy, yyyy_MM_dd);
                 String strbdateTo = ((PersonalSearch) personal).edtbdateTo.getText().toString().trim();
-                strbdateTo = Common.parseDateToddMMyyyy(strbdateTo, ddMMMyyyy, yyyy_MM_dd);
+                strbdateTo = Utility.parseDateToddMMyyyy(strbdateTo, ddMMMyyyy, yyyy_MM_dd);
 
                 String strEaddress = ((PersonalSearch) personal).edt_Eaddress.getText().toString().trim();
                 String strCity = ((PersonalSearch) personal).txtCity.getText().toString().trim();
@@ -212,9 +213,9 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                     String start = sp_user_start_age.replace("Age ", "");
                     String end = sp_user_end_age.replace("Age ", "");
                     if (Integer.parseInt(start) <= Integer.parseInt(end)) {
-                        mJsonObject.put(Common.Constant_Class.USER_START_AGE, sp_user_start_age.replace("Age ", ""));
+                        mJsonObject.put(AppConstants.USER_START_AGE, sp_user_start_age.replace("Age ", ""));
                         lstProceed.add("User Age From: " + sp_user_start_age);
-                        mJsonObject.put(Common.Constant_Class.USER_END_AGE, sp_user_end_age.replace("Age ", ""));
+                        mJsonObject.put(AppConstants.USER_END_AGE, sp_user_end_age.replace("Age ", ""));
                         lstProceed.add("User Age To: " + sp_user_end_age);
                     } else {
                         valid = "User 'From' Age is larger than 'End' Age";
@@ -223,7 +224,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
 
                 String gender;
 
-                if (bgroup.equalsIgnoreCase(Common.Constant_Class.TITLE_BLOOD_GROUP)) {
+                if (bgroup.equalsIgnoreCase(AppConstants.TITLE_BLOOD_GROUP)) {
                     bgroup = "";
                 }
 
@@ -237,11 +238,11 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
 
 
                 if (!strbdateFrom.equalsIgnoreCase("")) {
-                    if (!Common.isThisDateValid(strbdateFrom, "yyyy-MM-dd")) {
+                    if (!Utility.isThisDateValid(strbdateFrom, "yyyy-MM-dd")) {
                         valid = "Birth Date From is not valid Format";
                     }
                     if (!strbdateTo.equalsIgnoreCase("")) {
-                        if (!Common.isThisDateValid(strbdateTo, "yyyy-MM-dd")) {
+                        if (!Utility.isThisDateValid(strbdateTo, "yyyy-MM-dd")) {
                             valid = "Birth Date To is not valid Format";
                         }
                     } else {
@@ -250,25 +251,25 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                 }
 
                 if (!strFName.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.FIRST_NAME, strFName);
+                    mJsonObject.put(AppConstants.FIRST_NAME, strFName);
                     lstProceed.add("FirstName: " + strFName);
                 }
                 if (!strLName.equalsIgnoreCase("")) {
                     lstProceed.add("LastName: " + strLName);
-                    mJsonObject.put(Common.Constant_Class.LAST_NAME, strLName);
+                    mJsonObject.put(AppConstants.LAST_NAME, strLName);
                 }
                 if (!strFatherName.equalsIgnoreCase("")) {
                     lstProceed.add("FatherName: " + strFatherName);
-                    mJsonObject.put(Common.Constant_Class.FATHER_NAME, strFatherName);
+                    mJsonObject.put(AppConstants.FATHER_NAME, strFatherName);
                 }
                 if (!strMotherName.equalsIgnoreCase("")) {
                     lstProceed.add("MotherName: " + strMotherName);
-                    mJsonObject.put(Common.Constant_Class.MOTHER_NAME, strMotherName);
+                    mJsonObject.put(AppConstants.MOTHER_NAME, strMotherName);
                 }
                 if (!strbdateFrom.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.FROM_BIRTH_DATE, strbdateFrom);
+                    mJsonObject.put(AppConstants.FROM_BIRTH_DATE, strbdateFrom);
                     if (!strbdateTo.equalsIgnoreCase("")) {
-                        mJsonObject.put(Common.Constant_Class.TO_BIRTH_DATE, strbdateTo);
+                        mJsonObject.put(AppConstants.TO_BIRTH_DATE, strbdateTo);
                     } else {
                         valid = "Enter birth date To";
                     }
@@ -276,58 +277,58 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                     lstProceed.add("Birthdate To: " + ((PersonalSearch) personal).edtbdateTo.getText().toString());
                 }
                 if (!strBPlace.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.BIRTH_PLACE, strBPlace);
+                    mJsonObject.put(AppConstants.BIRTH_PLACE, strBPlace);
                     lstProceed.add("BirthPalace: " + strBPlace);
                 }
 
                 if (!strMobile.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.MOBILE, strMobile);
+                    mJsonObject.put(AppConstants.MOBILE, strMobile);
                     lstProceed.add("Mobile: " + strMobile);
                 }
                 if (!strphone.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.PHONE, strphone);
+                    mJsonObject.put(AppConstants.PHONE, strphone);
                     lstProceed.add("Phone: " + strphone);
                 }
                 if (!strGotra.equalsIgnoreCase("") && !strGotra.equalsIgnoreCase("Gotra")) {
-                    mJsonObject.put(Common.Constant_Class.GOTRA, strGotra);
+                    mJsonObject.put(AppConstants.GOTRA, strGotra);
                     lstProceed.add("Gotra: " + strGotra);
                 }
                 if (!strNPlace.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.NATIVE_PLACE, strNPlace);
+                    mJsonObject.put(AppConstants.NATIVE_PLACE, strNPlace);
                     lstProceed.add("Native Place: " + strNPlace);
                 }
                 if (!strCity.equalsIgnoreCase("") && !strCity.toLowerCase().contains(getResources().getString(R.string.press_for_city))) {
                     String city = strCity.replace("City: ", "");
-                    mJsonObject.put(Common.Constant_Class.CITY, city);
+                    mJsonObject.put(AppConstants.CITY, city);
                     lstProceed.add("City: " + city);
                 }
                 if (!strEducation.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.EDUCATION, strEducation);
+                    mJsonObject.put(AppConstants.EDUCATION, strEducation);
                     lstProceed.add("Education: " + strEducation);
                 }
                 if (!strEaddress.equalsIgnoreCase("")) {
-                    if (Common.isValidEmail(strEaddress)) {
+                    if (Utility.isValidEmail(strEaddress)) {
                         valid = "Email is not valid Format";
                     } else {
-                        mJsonObject.put(Common.Constant_Class.EMAIL_ADDRESS, strEaddress);
+                        mJsonObject.put(AppConstants.EMAIL_ADDRESS, strEaddress);
                         lstProceed.add("Email: " + strEaddress);
                     }
                 }
                 if (!strAddress.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.ADDRESS, strAddress);
+                    mJsonObject.put(AppConstants.ADDRESS, strAddress);
                     lstProceed.add("Address: " + strAddress);
                 }
                 if (!bgroup.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.BLOOD_GROUP, bgroup);
+                    mJsonObject.put(AppConstants.BLOOD_GROUP, bgroup);
                     lstProceed.add("BloodGroup: " + bgroup);
                 }
                 if (!gender.equalsIgnoreCase("")) {
                     if (gender.equalsIgnoreCase("male")) {
                         lstProceed.add("Gender: " + "Male");
-                        mJsonObject.put(Common.Constant_Class.GENDER, gender);
+                        mJsonObject.put(AppConstants.GENDER, gender);
                     } else if (gender.equalsIgnoreCase("female")) {
                         lstProceed.add("Gender: " + "Female");
-                        mJsonObject.put(Common.Constant_Class.GENDER, gender);
+                        mJsonObject.put(AppConstants.GENDER, gender);
                     } else {
                         lstProceed.add("Gender: " + "Both");
                     }
@@ -343,19 +344,19 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                 strOAddress = ((BusinessSearch) business).edtOAddress.getText().toString().trim();
 
                 if (!strOccupation.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.OCCUPATION, strOccupation);
+                    mJsonObject.put(AppConstants.OCCUPATION, strOccupation);
                     lstProceed.add("Occupation: " + strOccupation);
                 }
                 if (!strWork.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.WORK, strWork);
+                    mJsonObject.put(AppConstants.WORK, strWork);
                     lstProceed.add("Work: " + strWork);
                 }
                 if (!strOMobile.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.OFFICE_MOBILE, strOMobile);
+                    mJsonObject.put(AppConstants.OFFICE_MOBILE, strOMobile);
                     lstProceed.add("Office Mobile: " + strOMobile);
                 }
                 if (!strOAddress.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.OFFICE_ADDRESS, strOAddress);
+                    mJsonObject.put(AppConstants.OFFICE_ADDRESS, strOAddress);
                     lstProceed.add("Office Address: " + strOAddress);
                 }
             }
@@ -365,16 +366,16 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                 boolean child_married = ((FamilySearch) family).chk_child_marriage.isChecked();
 
                 String strmdate_from = ((FamilySearch) family).edt_mdate_from.getText().toString().trim();
-                strmdate_from = Common.parseDateToddMMyyyy(strmdate_from, ddMMMyyyy, yyyy_MM_dd);
+                strmdate_from = Utility.parseDateToddMMyyyy(strmdate_from, ddMMMyyyy, yyyy_MM_dd);
 
                 String strmdate_to = ((FamilySearch) family).edt_mdate_to.getText().toString().trim();
-                strmdate_to = Common.parseDateToddMMyyyy(strmdate_to, ddMMMyyyy, yyyy_MM_dd);
+                strmdate_to = Utility.parseDateToddMMyyyy(strmdate_to, ddMMMyyyy, yyyy_MM_dd);
 
                 String childBdateFrom = ((FamilySearch) family).edt_cdate_from.getText().toString().trim();
-                childBdateFrom = Common.parseDateToddMMyyyy(childBdateFrom, ddMMMyyyy, yyyy_MM_dd);
+                childBdateFrom = Utility.parseDateToddMMyyyy(childBdateFrom, ddMMMyyyy, yyyy_MM_dd);
 
                 String childBdateTo = ((FamilySearch) family).edt_cdate_to.getText().toString().trim();
-                childBdateTo = Common.parseDateToddMMyyyy(childBdateTo, ddMMMyyyy, yyyy_MM_dd);
+                childBdateTo = Utility.parseDateToddMMyyyy(childBdateTo, ddMMMyyyy, yyyy_MM_dd);
 
                 String strSpouseName = ((FamilySearch) family).edtSpouseName.getText().toString().trim();
                 String strSpouseFName = ((FamilySearch) family).edtSpouseFName.getText().toString().trim();
@@ -395,12 +396,12 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                 String childGender = ((FamilySearch) family).gender;
 
                 if (!sp_spouse_blood.equalsIgnoreCase(TITLE_SPOUSE_BLOOD_GROUP)) {
-                    mJsonObject.put(Common.Constant_Class.SPOUSE_BG, sp_spouse_blood);
+                    mJsonObject.put(AppConstants.SPOUSE_BG, sp_spouse_blood);
                     lstProceed.add("Spouse BG: " + sp_spouse_blood);
                 }
 
                 if (!edtSpouseEdu.isEmpty()) {
-                    mJsonObject.put(Common.Constant_Class.SPOUSE_EDU, edtSpouseEdu);
+                    mJsonObject.put(AppConstants.SPOUSE_EDU, edtSpouseEdu);
                     lstProceed.add("Spouse Education: " + edtSpouseEdu);
                 }
 
@@ -409,9 +410,9 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                     String start = sp_spouse_start_age.replace("Age ", "");
                     String end = sp_spouse_end_age.replace("Age ", "");
                     if (Integer.parseInt(start) <= Integer.parseInt(end)) {
-                        mJsonObject.put(Common.Constant_Class.SPOUSE_START_AGE, sp_spouse_start_age.replace("Age ", ""));
+                        mJsonObject.put(AppConstants.SPOUSE_START_AGE, sp_spouse_start_age.replace("Age ", ""));
                         lstProceed.add("Spouse Age From: " + sp_spouse_start_age);
-                        mJsonObject.put(Common.Constant_Class.SPOUSE_END_AGE, sp_spouse_end_age.replace("Age ", ""));
+                        mJsonObject.put(AppConstants.SPOUSE_END_AGE, sp_spouse_end_age.replace("Age ", ""));
                         lstProceed.add("Spouse Age To: " + sp_spouse_end_age);
                     } else {
                         valid = "Spouse 'From' Age is larger than 'End' Age";
@@ -422,9 +423,9 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                     String start = sp_child_start_age.replace("Age ", "");
                     String end = sp_child_end_age.replace("Age ", "");
                     if (Integer.parseInt(start) <= Integer.parseInt(end)) {
-                        mJsonObject.put(Common.Constant_Class.CHILD_START_AGE, sp_child_start_age.replace("Age ", ""));
+                        mJsonObject.put(AppConstants.CHILD_START_AGE, sp_child_start_age.replace("Age ", ""));
                         lstProceed.add("Child Age From: " + sp_child_start_age);
-                        mJsonObject.put(Common.Constant_Class.CHILD_END_AGE, sp_child_end_age.replace("Age ", ""));
+                        mJsonObject.put(AppConstants.CHILD_END_AGE, sp_child_end_age.replace("Age ", ""));
                         lstProceed.add("Child Age To: " + sp_child_end_age);
                     } else {
                         valid = "Child 'From' Age is larger than 'End' Age";
@@ -432,72 +433,72 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
                 }
 
                 if (child_married) {
-                    mJsonObject.put(Common.Constant_Class.CHILD_MARRIAGE, child_married);
+                    mJsonObject.put(AppConstants.CHILD_MARRIAGE, child_married);
                     lstProceed.add("Child Marriage: " + child_married);
                 }
 
                 if (!bgroup.equalsIgnoreCase("") && !bgroup.equalsIgnoreCase(TITLE_CHILD_BLOOD_GROUP)) {
-                    mJsonObject.put(Common.Constant_Class.CHILD_BLOOD_GROUP, bgroup);
+                    mJsonObject.put(AppConstants.CHILD_BLOOD_GROUP, bgroup);
                     lstProceed.add("Child BloodGroup: " + bgroup);
                 }
 
                 if (!childBplace.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.CHILD_BPLACE, childBplace);
+                    mJsonObject.put(AppConstants.CHILD_BPLACE, childBplace);
                     lstProceed.add("Child BirthPlace: " + childBplace);
                 }
 
                 if (!childGender.equalsIgnoreCase("")) {
                     if (!childGender.equalsIgnoreCase("both")) {
-                        mJsonObject.put(Common.Constant_Class.CHILD_GENDER, childGender);
+                        mJsonObject.put(AppConstants.CHILD_GENDER, childGender);
                     }
                     lstProceed.add("Child Gender: " + childGender);
                 }
 
                 if (!strmdate_from.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.FROM_MARRIAGE_DATE, strmdate_from);
+                    mJsonObject.put(AppConstants.FROM_MARRIAGE_DATE, strmdate_from);
                     lstProceed.add("Marriage From: " + ((FamilySearch) family).edt_mdate_from.getText().toString());
                 }
 
                 if (!strmdate_to.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.TO_MARRIAGE_DATE, strmdate_to);
+                    mJsonObject.put(AppConstants.TO_MARRIAGE_DATE, strmdate_to);
                     lstProceed.add("Marriage To: " + ((FamilySearch) family).edt_mdate_to.getText().toString());
                 }
 
                 if (!childBdateFrom.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.FROM_CHILD_BDAY, childBdateFrom);
+                    mJsonObject.put(AppConstants.FROM_CHILD_BDAY, childBdateFrom);
                     lstProceed.add("Child BDay From: " + ((FamilySearch) family).edt_cdate_from.getText().toString());
                 }
                 if (!childBdateTo.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.TO_CHILD_BDAY, childBdateTo);
+                    mJsonObject.put(AppConstants.TO_CHILD_BDAY, childBdateTo);
                     lstProceed.add("Child BDay To: " + ((FamilySearch) family).edt_cdate_to.getText().toString());
                 }
                 if (!strSpouseName.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.SPOUSE_NAME, strSpouseName);
+                    mJsonObject.put(AppConstants.SPOUSE_NAME, strSpouseName);
                     lstProceed.add("Spouse Name: " + strSpouseName);
                 }
                 if (!strSpouseFName.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.SPOUSE_FATHER_NAME, strSpouseFName);
+                    mJsonObject.put(AppConstants.SPOUSE_FATHER_NAME, strSpouseFName);
                     lstProceed.add("Spouse Father Name: " + strSpouseFName);
                 }
                 if (!strSpouseMName.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.SPOUSE_MOTHER_NAME, strSpouseMName);
+                    mJsonObject.put(AppConstants.SPOUSE_MOTHER_NAME, strSpouseMName);
                     lstProceed.add("Spouse Mother Name: " + strSpouseMName);
                 }
                 if (!strchild_name.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.CHILD_NAME, strchild_name);
+                    mJsonObject.put(AppConstants.CHILD_NAME, strchild_name);
                     lstProceed.add("Child Name: " + strchild_name);
                 }
                 if (!strcedu.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.CHILD_EDU, strcedu);
+                    mJsonObject.put(AppConstants.CHILD_EDU, strcedu);
                     lstProceed.add("Child Education: " + strcedu);
                 }
                 if (!strchild_work.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.CHILD_WORK, strchild_work);
+                    mJsonObject.put(AppConstants.CHILD_WORK, strchild_work);
                     lstProceed.add("Child Work: " + strchild_work);
                 }
 
                 if (!childMobile.equalsIgnoreCase("")) {
-                    mJsonObject.put(Common.Constant_Class.CHILD_MOBILE, childMobile);
+                    mJsonObject.put(AppConstants.CHILD_MOBILE, childMobile);
                     lstProceed.add("Child Mobile: " + childMobile);
                 }
             }
@@ -584,7 +585,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
     private void navigateActivity(JSONObject mJsonObject) {
         Intent mIntent = new Intent(AdvanceSearchActivity.this, HomeActivity.class);
         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        mIntent.putExtra(Common.Constant_Class.QUERY_STRING, mJsonObject.toString());
+        mIntent.putExtra(AppConstants.QUERY_STRING, mJsonObject.toString());
 
         startActivity(mIntent);
         finish();
@@ -607,7 +608,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
 
                 Intent mIntent = new Intent(AdvanceSearchActivity.this, HomeActivity.class);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                mIntent.putExtra(Common.Constant_Class.QUERY, query);
+                mIntent.putExtra(AppConstants.QUERY, query);
                 startActivity(mIntent);
                 finish();
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
@@ -630,7 +631,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
         /*export.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Common.ExportSearchData(AdvanceSearchActivity.this);
+                Utility.ExportSearchData(AdvanceSearchActivity.this);
                 return false;
             }
         });*/
@@ -639,7 +640,7 @@ public class AdvanceSearchActivity extends AppCompatActivity implements TimePick
         voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Common.promptSpeechInput(AdvanceSearchActivity.this);
+                Utility.promptSpeechInput(AdvanceSearchActivity.this);
                 return false;
             }
         });

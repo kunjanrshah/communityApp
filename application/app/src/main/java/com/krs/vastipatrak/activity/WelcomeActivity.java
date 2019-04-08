@@ -20,7 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -69,8 +70,8 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Checking for first time launch - before calling setContentView()
-        mPreferencesWelcome = getSharedPreferences(Common.Constant_Class.PREF_WELCOME, MODE_PRIVATE);
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
+        mPreferencesWelcome = getSharedPreferences(AppConstants.PREF_WELCOME, MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, MODE_PRIVATE);
         mEditor = mPreferencesWelcome.edit();
         if (!mPreferencesWelcome.getBoolean(getString(R.string.is_first_time), true)) {
             launchHomeScreen();
@@ -151,7 +152,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private void launchHomeScreen() {
         mEditor.putBoolean(getString(R.string.is_first_time), false);
         mEditor.apply();
-        if (mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase("")) {
+        if (mSharedPreferences.getString(AppConstants.USER_ID, "").equalsIgnoreCase("")) {
             Intent mIntent = new Intent(WelcomeActivity.this, LoginActivity.class);
             startActivity(mIntent);
         } else {

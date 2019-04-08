@@ -15,7 +15,7 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.Utility;
 import com.krs.vastipatrak.utils.NonSwipeableViewPager;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class PDFActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (!(isFinishing())) {
-                    Common.showProgressDialog(PDFActivity.this);
+                    Utility.showProgressDialog(PDFActivity.this);
                 }
             }
         });
@@ -83,9 +83,9 @@ public class PDFActivity extends AppCompatActivity {
         Fragment girlsFragment = new GirlsFragment();
         Fragment boys1Fragment = new Boys1Fragment();
         Fragment boys2Fragment = new Boys2Fragment();
-        adapter.addFrag(girlsFragment, Common.Constant_Class.GIRLS);
-        adapter.addFrag(boys1Fragment, Common.Constant_Class.BOYS_P1);
-        adapter.addFrag(boys2Fragment, Common.Constant_Class.BOYS_P2);
+        adapter.addFrag(girlsFragment, AppConstants.GIRLS);
+        adapter.addFrag(boys1Fragment, AppConstants.BOYS_P1);
+        adapter.addFrag(boys2Fragment, AppConstants.BOYS_P2);
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);*/
 

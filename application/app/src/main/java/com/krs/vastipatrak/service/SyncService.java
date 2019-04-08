@@ -20,7 +20,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -50,7 +51,7 @@ public class SyncService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
 
     }
 
@@ -64,7 +65,7 @@ public class SyncService extends Service {
 
         if (intent != null) {
             ArrayList<String> selectedCities = intent.getStringArrayListExtra("selectedCities");
-            is_reset = intent.getBooleanExtra(Common.Constant_Class.IS_RESET, false);
+            is_reset = intent.getBooleanExtra(AppConstants.IS_RESET, false);
             callSyncWS(selectedCities);
         }
         return START_REDELIVER_INTENT;
@@ -84,17 +85,17 @@ public class SyncService extends Service {
 
     private void callSyncWS(@NonNull ArrayList<String> selectedCities) {
 
-        if (Common.isOnline(this)) {
+        if (Utility.isOnline(this)) {
 
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
                 if (selectedCities.size() > 0) {
-                    mJsonObject.put(Common.Constant_Class.CITY, android.text.TextUtils.join(",", selectedCities));
+                    mJsonObject.put(AppConstants.CITY, android.text.TextUtils.join(",", selectedCities));
                 }
-                mJsonObject.put(Common.Constant_Class.IS_RESET, is_reset);
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.IS_RESET, is_reset);
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -106,7 +107,7 @@ public class SyncService extends Service {
             mHandler.sendMessage(msg);
             isProcessing = true;
 
-            jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SYNC_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.SYNC_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
@@ -116,17 +117,17 @@ public class SyncService extends Service {
                     try {
                         Message msg = mHandler.obtainMessage();
                         Bundle bundle = new Bundle();
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        String success = response.getString(AppConstants.SUCCESS);
+                        String message = response.getString(AppConstants.MESSAGE);
 
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
 
-                            JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                            JSONArray mJsonArray = response.getJSONArray(AppConstants.DATA);
 
                             for (int i = 0; i < mJsonArray.length(); i++) {
 
                                 JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                Common.SaveProfile(mJsondata);
+                                Utility.SaveProfile(mJsondata);
                             }
 
                             Date c = Calendar.getInstance().getTime();
@@ -155,10 +156,10 @@ public class SyncService extends Service {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };

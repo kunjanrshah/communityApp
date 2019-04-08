@@ -15,7 +15,8 @@ import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.VideoInfoHolder> {
 
@@ -56,7 +57,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         };
 
 
-        holder.youTubeThumbnailView.initialize(Common.Constant_Class.YOUTUBE_API_KEY, new YouTubeThumbnailView.OnInitializedListener() {
+        holder.youTubeThumbnailView.initialize(AppConstants.YOUTUBE_API_KEY, new YouTubeThumbnailView.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
 
@@ -93,7 +94,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         @Override
         public void onClick(View v) {
 
-            Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) ctx, Common.Constant_Class.YOUTUBE_API_KEY, VideoID[getLayoutPosition()]);
+            Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) ctx, AppConstants.YOUTUBE_API_KEY, VideoID[getLayoutPosition()]);
             ctx.startActivity(intent);
         }
     }

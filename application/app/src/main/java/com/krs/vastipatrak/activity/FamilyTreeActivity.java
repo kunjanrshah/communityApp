@@ -31,7 +31,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.FtSpinnerAdapter;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 
 import org.json.JSONArray;
@@ -72,7 +73,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
 
         snackbar = Snackbar.make(findViewById(R.id.ll_ftree), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
 
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         String json = getIntent().getExtras().getString(getString(R.string.ft_intent));
         JSONObject mObj = null;
@@ -102,60 +103,60 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
             LstImages.clear();
             LstLevel.clear();
             mObj = new JSONObject(json);
-            id = mObj.getString(Common.Constant_Class.ID);
-            first_name = mObj.getString(Common.Constant_Class.FIRST_NAME);
-            profile_url = mObj.getString(Common.Constant_Class.PROFILE_PIC_URL);
+            id = mObj.getString(AppConstants.ID);
+            first_name = mObj.getString(AppConstants.FIRST_NAME);
+            profile_url = mObj.getString(AppConstants.PROFILE_PIC_URL);
 
             LstNames.add(first_name);
             LstImages.add(profile_url);
             LstIdentifier.add("profile");
 
-            father = mObj.getString(Common.Constant_Class.FATHER_NAME);
-            father_url = mObj.getString(Common.Constant_Class.IMG_FATHER_URL);
+            father = mObj.getString(AppConstants.FATHER_NAME);
+            father_url = mObj.getString(AppConstants.IMG_FATHER_URL);
             LstNames.add(father);
             LstImages.add(father_url);
             LstIdentifier.add("father");
 
-            mother = mObj.getString(Common.Constant_Class.MOTHER_NAME);
-            mother_url = mObj.getString(Common.Constant_Class.IMG_MOTHER_URL);
+            mother = mObj.getString(AppConstants.MOTHER_NAME);
+            mother_url = mObj.getString(AppConstants.IMG_MOTHER_URL);
             LstNames.add(mother);
             LstImages.add(mother_url);
             LstIdentifier.add("mother");
 
-            spouse = mObj.getString(Common.Constant_Class.SPOUSE_NAME);
-            spouse_url = mObj.getString(Common.Constant_Class.IMG_SPOUSE_URL);
+            spouse = mObj.getString(AppConstants.SPOUSE_NAME);
+            spouse_url = mObj.getString(AppConstants.IMG_SPOUSE_URL);
             LstNames.add(spouse);
             LstImages.add(spouse_url);
             LstIdentifier.add("spouse");
 
-            sfather = mObj.getString(Common.Constant_Class.SPOUSE_FATHER_NAME);
-            sfather_url = mObj.getString(Common.Constant_Class.IMG_SFATHER_URL);
+            sfather = mObj.getString(AppConstants.SPOUSE_FATHER_NAME);
+            sfather_url = mObj.getString(AppConstants.IMG_SFATHER_URL);
             LstNames.add(sfather);
             LstImages.add(sfather_url);
             LstIdentifier.add("sfather");
 
-            smother = mObj.getString(Common.Constant_Class.SPOUSE_MOTHER_NAME);
-            smother_url = mObj.getString(Common.Constant_Class.IMG_SMOTHER_URL);
+            smother = mObj.getString(AppConstants.SPOUSE_MOTHER_NAME);
+            smother_url = mObj.getString(AppConstants.IMG_SMOTHER_URL);
             LstNames.add(smother);
             LstImages.add(smother_url);
             LstIdentifier.add("smother");
 
 
-            if (mObj.has(Common.Constant_Class.CHILDS)) {
-                JSONArray jsonArray = mObj.getJSONArray(Common.Constant_Class.CHILDS);
+            if (mObj.has(AppConstants.CHILDS)) {
+                JSONArray jsonArray = mObj.getJSONArray(AppConstants.CHILDS);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject mJsonObj = jsonArray.getJSONObject(i);
                     String chlid_url = "";
                     String child_name = "";
-                    if (mJsonObj.has(Common.Constant_Class.CHILD_IMAGE_URL)) {
-                        chlid_url = mJsonObj.getString(Common.Constant_Class.CHILD_IMAGE_URL);
+                    if (mJsonObj.has(AppConstants.CHILD_IMAGE_URL)) {
+                        chlid_url = mJsonObj.getString(AppConstants.CHILD_IMAGE_URL);
                     }
-                    if (mJsonObj.has(Common.Constant_Class.CHILD_NAME)) {
-                        child_name = mJsonObj.getString(Common.Constant_Class.CHILD_NAME);
+                    if (mJsonObj.has(AppConstants.CHILD_NAME)) {
+                        child_name = mJsonObj.getString(AppConstants.CHILD_NAME);
                     }
                     LstImages.add(chlid_url);
                     LstNames.add(child_name);
-                    LstIdentifier.add("child_" + mJsonObj.getString(Common.Constant_Class.CHILD_ID));
+                    LstIdentifier.add("child_" + mJsonObj.getString(AppConstants.CHILD_ID));
                 }
             }
         } catch (JSONException e) {
@@ -267,7 +268,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
     }
 
     private void backNavigation() {
-        Common.hideKeyboard(this);
+        Utility.hideKeyboard(this);
         finish();
         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
@@ -285,7 +286,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
 
                 Intent mIntent = new Intent(FamilyTreeActivity.this, HomeActivity.class);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                mIntent.putExtra(Common.Constant_Class.QUERY, query);
+                mIntent.putExtra(AppConstants.QUERY, query);
                 startActivity(mIntent);
                 Log.d(TAG, "step onQueryTextSubmit");
                 finish();
@@ -330,7 +331,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Common.promptSpeechInput(FamilyTreeActivity.this);
+                Utility.promptSpeechInput(FamilyTreeActivity.this);
                 return false;
             }
         });
@@ -345,7 +346,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case Common.REQ_CODE_SPEECH_INPUT: {
+            case Utility.REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     searchView.setQueryHint(result.get(0));
@@ -446,29 +447,29 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
     }
 
     private void fetchProfileData() {
-        if (Common.isOnline(this)) {
-            Common.showProgressDialog(this);
+        if (Utility.isOnline(this)) {
+            Utility.showProgressDialog(this);
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-                mJsonObject.put(Common.Constant_Class.PROFILE_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.PROFILE_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            String sync_url = Common.Constant_Class.SYNC_URL;
+            String sync_url = AppConstants.SYNC_URL;
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, sync_url, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
 
                     try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        String success = response.getString(AppConstants.SUCCESS);
+                        String message = response.getString(AppConstants.MESSAGE);
 
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
+                            JSONArray mJsonArray = response.getJSONArray(AppConstants.DATA);
                             JSONObject mJsondata = mJsonArray.getJSONObject(0);
                             JSONArray mjArray = mJsondata.getJSONArray("familyTree");
                             ArrayList<TreeNode> lstNode = new ArrayList<>();
@@ -509,9 +510,9 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
 
                         } else {
                             Toast.makeText(FamilyTreeActivity.this, message, Toast.LENGTH_SHORT).show();
-                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                            if (response.has(AppConstants.ERROR_CODE)) {
+                                String error = response.getString(AppConstants.ERROR_CODE);
+                                if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                     Intent mIntent = new Intent(FamilyTreeActivity.this, LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(mIntent);
@@ -523,24 +524,24 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }, new Response.ErrorListener() {
 
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -559,35 +560,35 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
             e.printStackTrace();
         }
 
-        if (Common.isOnline(this)) {
-            Common.showProgressDialog(this);
+        if (Utility.isOnline(this)) {
+            Utility.showProgressDialog(this);
             try {
-                JSONObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                JSONObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                JSONObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                JSONObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SET_TREE_URL, JSONObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.SET_TREE_URL, JSONObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
 
                     try {
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                        String message = response.getString(AppConstants.MESSAGE);
+                        String success = response.getString(AppConstants.SUCCESS);
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
                             if (lstDupName != null) {
                                 lstDupName.clear();
                             }
                             Toast.makeText(FamilyTreeActivity.this, message, Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(FamilyTreeActivity.this, message, Toast.LENGTH_SHORT).show();
-                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                            if (response.has(AppConstants.ERROR_CODE)) {
+                                String error = response.getString(AppConstants.ERROR_CODE);
+                                if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                     Intent mIntent = new Intent(FamilyTreeActivity.this, LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(mIntent);
@@ -597,7 +598,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Common.hideProgressDialog();
+                        Utility.hideProgressDialog();
                     }
                 }
             }, new Response.ErrorListener() {
@@ -606,17 +607,17 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
 
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };

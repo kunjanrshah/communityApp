@@ -22,7 +22,8 @@ import android.widget.EditText;
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.AdvanceSearchActivity;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ObservableScrollView;
 
@@ -59,7 +60,7 @@ public class BusinessSearch extends Fragment {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (edtOMobile.getRight() - edtOMobile.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         if (Build.VERSION.SDK_INT >= 23) {
-                            if (Common.canReadContacts(Objects.requireNonNull(getActivity()))) {
+                            if (Utility.canReadContacts(Objects.requireNonNull(getActivity()))) {
                                 Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                                 startActivityForResult(it, CONTACT_PICKER_RESULT);
                             }
@@ -87,24 +88,24 @@ public class BusinessSearch extends Fragment {
     }
 
     private void setPreferenceData() {
-        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_FILTER, Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(AppConstants.PREF_FILTER, Context.MODE_PRIVATE);
         String json = mSharedPreferences.getString("adv_search", "");
 
         if (!json.isEmpty()) {
             JSONObject mjsonObject = null;
             try {
                 mjsonObject = new JSONObject(json);
-                if (mjsonObject.has(Common.Constant_Class.OCCUPATION)) {
-                    edtOccupation.setText(mjsonObject.getString(Common.Constant_Class.OCCUPATION));
+                if (mjsonObject.has(AppConstants.OCCUPATION)) {
+                    edtOccupation.setText(mjsonObject.getString(AppConstants.OCCUPATION));
                 }
-                if (mjsonObject.has(Common.Constant_Class.WORK)) {
-                    edtWork.setText(mjsonObject.getString(Common.Constant_Class.WORK));
+                if (mjsonObject.has(AppConstants.WORK)) {
+                    edtWork.setText(mjsonObject.getString(AppConstants.WORK));
                 }
-                if (mjsonObject.has(Common.Constant_Class.OFFICE_MOBILE)) {
-                    edtOMobile.setText(mjsonObject.getString(Common.Constant_Class.OFFICE_MOBILE));
+                if (mjsonObject.has(AppConstants.OFFICE_MOBILE)) {
+                    edtOMobile.setText(mjsonObject.getString(AppConstants.OFFICE_MOBILE));
                 }
-                if (mjsonObject.has(Common.Constant_Class.OFFICE_ADDRESS)) {
-                    edtOAddress.setText(mjsonObject.getString(Common.Constant_Class.OFFICE_ADDRESS));
+                if (mjsonObject.has(AppConstants.OFFICE_ADDRESS)) {
+                    edtOAddress.setText(mjsonObject.getString(AppConstants.OFFICE_ADDRESS));
                 }
 
             } catch (Exception e) {

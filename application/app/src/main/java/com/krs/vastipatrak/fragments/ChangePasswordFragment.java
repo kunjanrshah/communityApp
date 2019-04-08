@@ -27,7 +27,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.LoginActivity;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 import org.json.JSONObject;
 
@@ -66,10 +67,10 @@ public class ChangePasswordFragment extends Fragment {
             public void onClick(View v) {
                 if (!input_password.getText().toString().equalsIgnoreCase("") && !input_repeat.getText().toString().equalsIgnoreCase("")) {
                     if (input_password.getText().toString().equalsIgnoreCase(input_repeat.getText().toString())) {
-                        if (Common.isOnline(mActivity)) {
+                        if (Utility.isOnline(mActivity)) {
                             call_change_password_ws();
                         } else {
-                            Toast.makeText(mActivity, Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, AppConstants.NO_CONNECTION, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(mActivity, "Password does not match !!", Toast.LENGTH_SHORT).show();
@@ -137,24 +138,24 @@ public class ChangePasswordFragment extends Fragment {
 
     private void call_change_password_ws() {
 
-        if (Common.isOnline(mActivity)) {
+        if (Utility.isOnline(mActivity)) {
 
-            Common.showProgressDialog(getActivity());
+            Utility.showProgressDialog(getActivity());
             JSONObject mJsonObject = null;
 
             try {
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-                mJsonObject.put(Common.Constant_Class.PASSWORD, input_password.getText());
-                mJsonObject.put(Common.Constant_Class.REPEAT_PASSWORD, input_repeat.getText());
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.PASSWORD, input_password.getText());
+                mJsonObject.put(AppConstants.REPEAT_PASSWORD, input_repeat.getText());
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
 
-            final String password_url = Common.Constant_Class.CHANGE_PASSWORD_URL;
+            final String password_url = AppConstants.CHANGE_PASSWORD_URL;
 
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, password_url, mJsonObject, new Response.Listener<JSONObject>() {
 
@@ -162,19 +163,19 @@ public class ChangePasswordFragment extends Fragment {
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "profile_url: " + password_url);
                     Log.d(TAG, "response: " + response.toString());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
 
                     try {
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            Common.UpdateProfilePassword(input_password.getText().toString(), mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                        String message = response.getString(AppConstants.MESSAGE);
+                        String success = response.getString(AppConstants.SUCCESS);
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
+                            Utility.UpdateProfilePassword(input_password.getText().toString(), mSharedPreferences.getString(AppConstants.USER_ID, ""));
                             Toast.makeText(mActivity, message, Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                            if (response.has(AppConstants.ERROR_CODE)) {
+                                String error = response.getString(AppConstants.ERROR_CODE);
+                                if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                     Intent mIntent = new Intent(getActivity(), LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(mIntent);
@@ -184,7 +185,7 @@ public class ChangePasswordFragment extends Fragment {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Common.hideProgressDialog();
+                        Utility.hideProgressDialog();
                     }
                 }
             }, new Response.ErrorListener() {
@@ -193,17 +194,17 @@ public class ChangePasswordFragment extends Fragment {
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
 
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -221,6 +222,6 @@ public class ChangePasswordFragment extends Fragment {
         input_repeat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
 
         fab = rootView.findViewById(R.id.fab);
-        mSharedPreferences = mActivity.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = mActivity.getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
     }
 }

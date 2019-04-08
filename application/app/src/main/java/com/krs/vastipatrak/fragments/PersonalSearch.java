@@ -32,7 +32,8 @@ import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.AdvanceSearchActivity;
 import com.krs.vastipatrak.activity.SelectionlistActivity;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.melnykov.fab.FloatingActionButton;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -45,8 +46,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
-import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
-import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
+import static com.krs.vastipatrak.utils.Utility.ddMMMyyyy;
+import static com.krs.vastipatrak.utils.Utility.yyyy_MM_dd;
 
 public class PersonalSearch extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -184,7 +185,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                                 String date = str_day + "/" + str_month + "/" + year;
 
                                 try {
-                                    if (Common.CompareTwoDates(edtbdateFrom.getText().toString(), date)) {
+                                    if (Utility.CompareTwoDates(edtbdateFrom.getText().toString(), date)) {
                                         edtbdateTo.setText(date);
                                         //date= year + "-" + str_month + "-" +str_day;
                                         //  bdateTo=date;
@@ -220,7 +221,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if ((event.getRawX() - 500) >= (edtMobile.getRight() - edtMobile.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         if (Build.VERSION.SDK_INT >= 23) {
-                            if (Common.canReadContacts(Objects.requireNonNull(getActivity()))) {
+                            if (Utility.canReadContacts(Objects.requireNonNull(getActivity()))) {
                                 Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                                 startActivityForResult(it, CONTACT_PICKER_RESULT);
                             }
@@ -299,7 +300,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
     private void MemoryAllocation(@NonNull View rootView) {
 
         //  scroll_pdetails = rootView.findViewById(R.id.scroll_pdetails);
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         floatingActionButton = rootView.findViewById(R.id.fab_psave);
         spinnerBlood = rootView.findViewById(R.id.spinnerBlood);
         sp_user_start_age = rootView.findViewById(R.id.sp_start_age);
@@ -356,22 +357,22 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
     }
 
     private void setPreferenceData() {
-        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_FILTER, Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(AppConstants.PREF_FILTER, Context.MODE_PRIVATE);
         String json = mSharedPreferences.getString("adv_search", "");
         if (!json.isEmpty()) {
             JSONObject mjsonObject = null;
             try {
                 mjsonObject = new JSONObject(json);
-                if (mjsonObject.has(Common.Constant_Class.BLOOD_GROUP)) {
-                    String compareValue = mjsonObject.getString(Common.Constant_Class.BLOOD_GROUP);
+                if (mjsonObject.has(AppConstants.BLOOD_GROUP)) {
+                    String compareValue = mjsonObject.getString(AppConstants.BLOOD_GROUP);
                     if (!compareValue.isEmpty()) {
                         int spinnerPosition = BGAdapter.getPosition(compareValue);
                         spinnerBlood.setSelection(spinnerPosition);
                     }
                 }
 
-                if (mjsonObject.has(Common.Constant_Class.GOTRA)) {
-                    String compareValue = mjsonObject.getString(Common.Constant_Class.GOTRA);
+                if (mjsonObject.has(AppConstants.GOTRA)) {
+                    String compareValue = mjsonObject.getString(AppConstants.GOTRA);
                     if (!compareValue.isEmpty()) {
                         int spinnerPosition = GotraAdapter.getPosition(compareValue);
                         spinnerGotra.setSelection(spinnerPosition);
@@ -382,8 +383,8 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                     spinnerGotra.setSelection(AppController.getInstance().lstGotra.size() - 1);
                 }
 
-                if (mjsonObject.has(Common.Constant_Class.GENDER)) {
-                    String gender = mjsonObject.getString(Common.Constant_Class.GENDER);
+                if (mjsonObject.has(AppConstants.GENDER)) {
+                    String gender = mjsonObject.getString(AppConstants.GENDER);
                     if (gender.equals("both")) {
                         rbtnM.setChecked(false);
                         rbtnF.setChecked(false);
@@ -398,67 +399,67 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
                         rbtnF.setChecked(true);
                     }
                 }
-                if (mjsonObject.has(Common.Constant_Class.FROM_BIRTH_DATE)) {
-                    String bdate = mjsonObject.getString(Common.Constant_Class.FROM_BIRTH_DATE);
-                    bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
+                if (mjsonObject.has(AppConstants.FROM_BIRTH_DATE)) {
+                    String bdate = mjsonObject.getString(AppConstants.FROM_BIRTH_DATE);
+                    bdate = Utility.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
                     edtbdateFrom.setText(bdate);
                 }
-                if (mjsonObject.has(Common.Constant_Class.TO_BIRTH_DATE)) {
-                    String bdate = mjsonObject.getString(Common.Constant_Class.TO_BIRTH_DATE);
-                    bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
+                if (mjsonObject.has(AppConstants.TO_BIRTH_DATE)) {
+                    String bdate = mjsonObject.getString(AppConstants.TO_BIRTH_DATE);
+                    bdate = Utility.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
                     edtbdateTo.setText(bdate);
                 }
 
-                if (mjsonObject.has(Common.Constant_Class.FIRST_NAME)) {
-                    String fname = mjsonObject.getString(Common.Constant_Class.FIRST_NAME);
+                if (mjsonObject.has(AppConstants.FIRST_NAME)) {
+                    String fname = mjsonObject.getString(AppConstants.FIRST_NAME);
                     edtFName.setText(fname);
                 }
-                if (mjsonObject.has(Common.Constant_Class.LAST_NAME)) {
-                    edtLName.setText(mjsonObject.getString(Common.Constant_Class.LAST_NAME));
+                if (mjsonObject.has(AppConstants.LAST_NAME)) {
+                    edtLName.setText(mjsonObject.getString(AppConstants.LAST_NAME));
                 }
-                if (mjsonObject.has(Common.Constant_Class.FATHER_NAME)) {
-                    edtFatherName.setText(mjsonObject.getString(Common.Constant_Class.FATHER_NAME));
+                if (mjsonObject.has(AppConstants.FATHER_NAME)) {
+                    edtFatherName.setText(mjsonObject.getString(AppConstants.FATHER_NAME));
                 }
-                if (mjsonObject.has(Common.Constant_Class.MOTHER_NAME)) {
-                    edtMotherName.setText(mjsonObject.getString(Common.Constant_Class.MOTHER_NAME));
+                if (mjsonObject.has(AppConstants.MOTHER_NAME)) {
+                    edtMotherName.setText(mjsonObject.getString(AppConstants.MOTHER_NAME));
                 }
-                if (mjsonObject.has(Common.Constant_Class.EDUCATION)) {
-                    edt_Education.setText(mjsonObject.getString(Common.Constant_Class.EDUCATION));
+                if (mjsonObject.has(AppConstants.EDUCATION)) {
+                    edt_Education.setText(mjsonObject.getString(AppConstants.EDUCATION));
                 }
 
-                if (mjsonObject.has(Common.Constant_Class.BIRTH_PLACE)) {
-                    txtBPlace.setText(mjsonObject.getString(Common.Constant_Class.BIRTH_PLACE));
+                if (mjsonObject.has(AppConstants.BIRTH_PLACE)) {
+                    txtBPlace.setText(mjsonObject.getString(AppConstants.BIRTH_PLACE));
                 }
-                if (mjsonObject.has(Common.Constant_Class.NATIVE_PLACE)) {
-                    txtNPlace.setText(mjsonObject.getString(Common.Constant_Class.NATIVE_PLACE));
+                if (mjsonObject.has(AppConstants.NATIVE_PLACE)) {
+                    txtNPlace.setText(mjsonObject.getString(AppConstants.NATIVE_PLACE));
                 }
-                if (mjsonObject.has(Common.Constant_Class.CITY)) {
-                    txtCity.setText(mjsonObject.getString(Common.Constant_Class.CITY));
+                if (mjsonObject.has(AppConstants.CITY)) {
+                    txtCity.setText(mjsonObject.getString(AppConstants.CITY));
                 }
-                if (mjsonObject.has(Common.Constant_Class.GOTRA)) {
-                    String gotra = mjsonObject.getString(Common.Constant_Class.GOTRA);
+                if (mjsonObject.has(AppConstants.GOTRA)) {
+                    String gotra = mjsonObject.getString(AppConstants.GOTRA);
                     int i = AppController.getInstance().lstGotra.indexOf(gotra);
                     spinnerGotra.setSelection(i);
                 }
-                if (mjsonObject.has(Common.Constant_Class.MOBILE)) {
-                    edtMobile.setText(mjsonObject.getString(Common.Constant_Class.MOBILE));
+                if (mjsonObject.has(AppConstants.MOBILE)) {
+                    edtMobile.setText(mjsonObject.getString(AppConstants.MOBILE));
                 }
-                if (mjsonObject.has(Common.Constant_Class.ADDRESS)) {
-                    edtAddress.setText(mjsonObject.getString(Common.Constant_Class.ADDRESS));
+                if (mjsonObject.has(AppConstants.ADDRESS)) {
+                    edtAddress.setText(mjsonObject.getString(AppConstants.ADDRESS));
                 }
-                if (mjsonObject.has(Common.Constant_Class.EMAIL_ADDRESS)) {
-                    edt_Eaddress.setText(mjsonObject.getString(Common.Constant_Class.EMAIL_ADDRESS));
+                if (mjsonObject.has(AppConstants.EMAIL_ADDRESS)) {
+                    edt_Eaddress.setText(mjsonObject.getString(AppConstants.EMAIL_ADDRESS));
                 }
-                if (mjsonObject.has(Common.Constant_Class.PHONE)) {
-                    edt_phone.setText(mjsonObject.getString(Common.Constant_Class.PHONE));
-                }
-
-                if (mjsonObject.has(Common.Constant_Class.USER_START_AGE)) {
-                    sp_user_start_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.USER_START_AGE)) + 1);
+                if (mjsonObject.has(AppConstants.PHONE)) {
+                    edt_phone.setText(mjsonObject.getString(AppConstants.PHONE));
                 }
 
-                if (mjsonObject.has(Common.Constant_Class.USER_END_AGE)) {
-                    sp_user_end_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.USER_END_AGE)) + 1);
+                if (mjsonObject.has(AppConstants.USER_START_AGE)) {
+                    sp_user_start_age.setSelection(Integer.parseInt(mjsonObject.getString(AppConstants.USER_START_AGE)) + 1);
+                }
+
+                if (mjsonObject.has(AppConstants.USER_END_AGE)) {
+                    sp_user_end_age.setSelection(Integer.parseInt(mjsonObject.getString(AppConstants.USER_END_AGE)) + 1);
                 }
 
             } catch (JSONException e) {
@@ -470,13 +471,13 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
 
     private void setAdapterBGlist() {
         List<String> blood_cate = new ArrayList<>();
-        blood_cate.add(Common.Constant_Class.TITLE_BLOOD_GROUP);
-        blood_cate.add(Common.Constant_Class.A_POSITIVE);
-        blood_cate.add(Common.Constant_Class.A_NAGATIVE);
-        blood_cate.add(Common.Constant_Class.B_POSITIVE);
-        blood_cate.add(Common.Constant_Class.B_NAGATIVE);
-        blood_cate.add(Common.Constant_Class.O_POSITIVE);
-        blood_cate.add(Common.Constant_Class.O_NAGATIVE);
+        blood_cate.add(AppConstants.TITLE_BLOOD_GROUP);
+        blood_cate.add(AppConstants.A_POSITIVE);
+        blood_cate.add(AppConstants.A_NAGATIVE);
+        blood_cate.add(AppConstants.B_POSITIVE);
+        blood_cate.add(AppConstants.B_NAGATIVE);
+        blood_cate.add(AppConstants.O_POSITIVE);
+        blood_cate.add(AppConstants.O_NAGATIVE);
 
         BGAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, blood_cate);
         BGAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -487,7 +488,7 @@ public class PersonalSearch extends Fragment implements AdapterView.OnItemSelect
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        Common.hideKeyboard(getActivity());
+        Utility.hideKeyboard(getActivity());
         if (requestCode == CONTACT_PICKER_RESULT && resultCode == Activity.RESULT_OK && null != data) {
             Uri contactUri = data.getData();
             Cursor contactCursor = Objects.requireNonNull(getActivity()).getContentResolver().query(Objects.requireNonNull(contactUri), new String[]{ContactsContract.Contacts._ID}, null, null, null);

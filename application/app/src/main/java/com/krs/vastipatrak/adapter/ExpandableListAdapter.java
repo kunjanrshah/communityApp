@@ -56,7 +56,8 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
 import com.krs.vastipatrak.service.LocationAlertService;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,12 +70,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.krs.vastipatrak.utils.Common.Constant_Class.BIRTH_DATE;
-import static com.krs.vastipatrak.utils.Common.Constant_Class.MARRIAGE_DATE;
-import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
-import static com.krs.vastipatrak.utils.Common.getChildRandomColor;
-import static com.krs.vastipatrak.utils.Common.getParentRandomColor;
-import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
+import static com.krs.vastipatrak.utils.AppConstants.BIRTH_DATE;
+import static com.krs.vastipatrak.utils.AppConstants.MARRIAGE_DATE;
+import static com.krs.vastipatrak.utils.Utility.dd_MMM_yyyy;
+import static com.krs.vastipatrak.utils.Utility.getChildRandomColor;
+import static com.krs.vastipatrak.utils.Utility.getParentRandomColor;
+import static com.krs.vastipatrak.utils.Utility.yyyy_MM_dd;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -99,7 +100,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         this._listDataChild = listDataChild;
         this.sharedUsers = sharedUsers;
         remHashMap = new HashMap<>();
-        mSharedPreferences = _context.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = _context.getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
         checkboxMap = new HashMap<>();
@@ -193,7 +194,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String name = mListChildData.getName();
         String address = mListChildData.getAddress();
         String birth_date = mListChildData.getbirth_date();
-        birth_date = Common.parseDateToddMMyyyy(birth_date, yyyy_MM_dd, dd_MMM_yyyy);
+        birth_date = Utility.parseDateToddMMyyyy(birth_date, yyyy_MM_dd, dd_MMM_yyyy);
         String spouse_name = mListChildData.getSpouse_name();
         String blood_group = mListChildData.getBlood_Group();
         String gender = mListChildData.getGender();
@@ -223,7 +224,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 try {
                     boolean flag = true;
                     if (Build.VERSION.SDK_INT >= 23) {
-                        if (Common.canCallPhone(_context)) {
+                        if (Utility.canCallPhone(_context)) {
                             flag = false;
                         }
                     }
@@ -241,7 +242,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         });
 
 
-        if (mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase(id)) {
+        if (mSharedPreferences.getString(AppConstants.USER_ID, "").equalsIgnoreCase(id)) {
             childViewHolder.imgROR.setVisibility(View.GONE);
             childViewHolder.imgNudge.setVisibility(View.GONE);
             childViewHolder.tbtn_share.setVisibility(View.GONE);
@@ -251,7 +252,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             childViewHolder.imgROR.setVisibility(View.VISIBLE);
         }
         childViewHolder.img_details.setVisibility(View.VISIBLE);
-        String bool = mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0");
+        String bool = mSharedPreferences.getString(AppConstants.TBTN_SHARE, "0");
         if (bool.equalsIgnoreCase("1")) {
             if (can_share.equalsIgnoreCase("1")) {
                 childViewHolder.tbtn_share.setChecked(true);
@@ -316,8 +317,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        childViewHolder.txt_address.setText(Common.camelCase(address));
-        childViewHolder.txt_native.setText(Common.camelCase(str_native));
+        childViewHolder.txt_address.setText(Utility.camelCase(address));
+        childViewHolder.txt_native.setText(Utility.camelCase(str_native));
         childViewHolder.txt_mother.setText(Mother);
 
         childViewHolder.txt_phone.setText(phone);
@@ -330,7 +331,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             gender = "Female";
         }
         childViewHolder.txt_gender.setText(gender);
-        childViewHolder.txt_gotra.setText(Common.camelCase(gotra));
+        childViewHolder.txt_gotra.setText(Utility.camelCase(gotra));
         childViewHolder.txt_bdate.setText(birth_date);
         childViewHolder.txt_spouse.setText(spouse_name);
 
@@ -339,8 +340,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View v) {
 
-                mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
-                mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+                mEditor.putString(AppConstants.PROFILE_ID, id);
+                mEditor.putBoolean(AppConstants.MYPROFILE_SP, false);
                 mEditor.apply();
                 ProfileActivity.isEnable = false;
                 Intent mIntent = new Intent(_context, ProfileActivity.class);
@@ -383,10 +384,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 builder.setMessage(_context.getResources().getString(R.string.go_to_whatsapp));
                 builder.setPositiveButton(_context.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                     public void onClick(@NonNull DialogInterface dialog, int which) {
-                        String fname = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "");
-                        String lname = mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
+                        String fname = mSharedPreferences.getString(AppConstants.FIRST_NAME, "");
+                        String lname = mSharedPreferences.getString(AppConstants.LAST_NAME, "");
                         String uname = fname + " " + lname;
-                        Common.SendWhatsappMessage(_context, mobile, String.format(_context.getResources().getString(R.string.nice_html), uname, name));
+                        Utility.SendWhatsappMessage(_context, mobile, String.format(_context.getResources().getString(R.string.nice_html), uname, name));
                         dialog.dismiss();
                     }
                 });
@@ -465,7 +466,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             groupViewHolder.ll_lable = convertView.findViewById(R.id.ll_lable);
 
 
-            if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN) && !sharedUsers && !isNearby) {
+            if (mSharedPreferences.getString(AppConstants.ROLE, AppConstants.USER).equals(AppConstants.ADMIN) && !sharedUsers && !isNearby) {
                 groupViewHolder.checkbox.setVisibility(View.VISIBLE);
             } else {
                 groupViewHolder.checkbox.setVisibility(View.GONE);
@@ -508,12 +509,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
         // Rounded corners
-        //Glide.with(_context).load(imgURL).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(_context, Common.Constant_Class.sCorner, Common.Constant_Class.sMargin, Common.Constant_Class.sColor, Common.Constant_Class.sBorder))).thumbnail(0.5f).into(groupViewHolder.ivIcon);
+        //Glide.with(_context).load(imgURL).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(_context, AppConstants.sCorner, AppConstants.sMargin, AppConstants.sColor, AppConstants.sBorder))).thumbnail(0.5f).into(groupViewHolder.ivIcon);
         Glide.with(_context).load(imgURL).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(groupViewHolder.ivIcon);
 
-        groupViewHolder.tvCity.setText(Common.camelCase(city));
-        groupViewHolder.tvName.setText(Common.camelCase(Name));
-        groupViewHolder.tvFatherName.setText(Common.camelCase(FatherName));
+        groupViewHolder.tvCity.setText(Utility.camelCase(city));
+        groupViewHolder.tvName.setText(Utility.camelCase(Name));
+        groupViewHolder.tvFatherName.setText(Utility.camelCase(FatherName));
         groupViewHolder.tvMobile.setText("" + Mobile);
         if (mail == null || mail.equalsIgnoreCase("null")) {
             groupViewHolder.tvMail.setVisibility(View.GONE);
@@ -526,8 +527,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             public void onClick(View v) {
 
                 String lat = "", lng = "", curr_lat = "", curr_lng = "";
-                curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+                curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
                 if (mListParentData.getType().isEmpty() || mListParentData.getType().equalsIgnoreCase("home")) {
                     lat = mListParentData.getHome_lat();
                     lng = mListParentData.getHome_lng();
@@ -539,7 +540,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     lng = mListParentData.getUser_lng();
                 }
                 if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !lat.isEmpty() && !lng.isEmpty()) {
-                    Common.showDirections((Activity) _context, Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(lat), Double.parseDouble(lng), "");
+                    Utility.showDirections((Activity) _context, Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(lat), Double.parseDouble(lng), "");
                 } else {
                     Toast.makeText(_context, "Something went wrong", Toast.LENGTH_SHORT).show();
                 }
@@ -553,7 +554,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 try {
                     boolean flag = true;
                     if (Build.VERSION.SDK_INT >= 23) {
-                        if (Common.canCallPhone(_context)) {
+                        if (Utility.canCallPhone(_context)) {
                             flag = false;
                         }
                     }
@@ -588,7 +589,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 openImageDialog(Name, imgURL);
             }
         });
-        String user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+        String user_id = mSharedPreferences.getString(AppConstants.USER_ID, "");
         if (user_id.equalsIgnoreCase("4345")) {
             String password = mListParentData.getPassword();
             groupViewHolder.tvPassword.setVisibility(View.VISIBLE);
@@ -601,18 +602,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if (updated_time.equalsIgnoreCase("0")) {
             groupViewHolder.tvUpdatedTime.setText("Not Updated");
         } else {
-            groupViewHolder.tvUpdatedTime.setText("Updated: " + Common.getUpdatedTime(updated_time));
+            groupViewHolder.tvUpdatedTime.setText("Updated: " + Utility.getUpdatedTime(updated_time));
         }
 
         final String user_lat = mListParentData.getUser_lat();
         final String user_lng = mListParentData.getUser_lng();
 
         if (is_share.equalsIgnoreCase("1") && mListParentData.isIs_location_enable().equalsIgnoreCase("1")) {
-            String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-            String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+            String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+            String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
             if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !user_lat.equalsIgnoreCase("null") && !user_lng.equalsIgnoreCase("null")) {
                 groupViewHolder.txt_distance.setVisibility(View.VISIBLE);
-                new Common.getDistance((Activity) _context, groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, curr_lat, curr_lng, user_lat, user_lng);
+                new Utility.getDistance((Activity) _context, groupViewHolder.txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, curr_lat, curr_lng, user_lat, user_lng);
             } else {
                 groupViewHolder.txt_distance.setText("Not found");
                 groupViewHolder.txt_distance.setClickable(false);
@@ -722,10 +723,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 btn_map.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                        String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                        String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+                        String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
                         if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !user_lat.isEmpty() && !user_lng.isEmpty()) {
-                            Common.showDirections((Activity) _context, Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(user_lat), Double.parseDouble(user_lng), "");
+                            Utility.showDirections((Activity) _context, Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), Double.parseDouble(user_lat), Double.parseDouble(user_lng), "");
                         } else {
                             Toast.makeText(_context, "Something went wrong", Toast.LENGTH_SHORT).show();
                         }
@@ -793,7 +794,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                 BitMatrix bitMatrix = multiFormatWriter.encode(id, BarcodeFormat.QR_CODE, 200, 200);
                                 BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                                 bitmap = barcodeEncoder.createBitmap(bitMatrix);
-                                bitmap = Common.drawTextToBitmap(bitmap, Name);
+                                bitmap = Utility.drawTextToBitmap(bitmap, Name);
                                 imageView.setImageBitmap(bitmap);
                             } catch (WriterException e) {
                                 e.printStackTrace();
@@ -900,7 +901,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             mViewholder.txtyear.setText(jsonObject.getString(_context.getString(R.string.age)) + "Y");
             String rdate = jsonObject.getString(_context.getString(R.string.date));
             if (!rdate.isEmpty()) {
-                rdate = Common.parseDateToddMMyyyy(rdate, yyyy_MM_dd, dd_MMM_yyyy);
+                rdate = Utility.parseDateToddMMyyyy(rdate, yyyy_MM_dd, dd_MMM_yyyy);
                 mViewholder.txtDate.setText(rdate);
             }
 
@@ -915,7 +916,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             mViewholder.chk_rem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final String date = Common.parseDateToddMMyyyy(finalRdate, dd_MMM_yyyy, yyyy_MM_dd);
+                    final String date = Utility.parseDateToddMMyyyy(finalRdate, dd_MMM_yyyy, yyyy_MM_dd);
                     android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(_context, R.style.AppCompatAlertDialogStyle);
                     builder.setTitle(_context.getString(R.string.app_name));
                     builder.setCancelable(false);
@@ -937,8 +938,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         input.setLayoutParams(lp);
                         String name = "";
-                        name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "");
-                        name = name + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
+                        name = mSharedPreferences.getString(AppConstants.FIRST_NAME, "");
+                        name = name + " " + mSharedPreferences.getString(AppConstants.LAST_NAME, "");
                         input.setText(msg + name);
                         builder.setView(input);
                         final String finalStatus = status;
@@ -995,32 +996,32 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     private void setReminder(final String profile_id, String rem_date, String rem_type, String msg, final String child_id, final int rem_id) {
-        if (Common.isOnline(_context)) {
+        if (Utility.isOnline(_context)) {
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.PROFILE_ID, profile_id);
-                mJsonObject.put(Common.Constant_Class.REMINDER_DATE, rem_date);
-                mJsonObject.put(Common.Constant_Class.REMINDER_TYPE, rem_type);
-                mJsonObject.put(Common.Constant_Class.REMINDER_ID, rem_id);
-                mJsonObject.put(Common.Constant_Class.MESSAGE, msg);
-                mJsonObject.put(Common.Constant_Class._CHILD_ID, child_id);
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.PROFILE_ID, profile_id);
+                mJsonObject.put(AppConstants.REMINDER_DATE, rem_date);
+                mJsonObject.put(AppConstants.REMINDER_TYPE, rem_type);
+                mJsonObject.put(AppConstants.REMINDER_ID, rem_id);
+                mJsonObject.put(AppConstants.MESSAGE, msg);
+                mJsonObject.put(AppConstants._CHILD_ID, child_id);
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Common.showProgressDialog(_context);
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SET_REMINDER_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            Utility.showProgressDialog(_context);
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.SET_REMINDER_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
-                        Common.hideProgressDialog();
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            JSONObject mObject = response.getJSONObject(Common.Constant_Class.DATA);
+                        Utility.hideProgressDialog();
+                        String success = response.getString(AppConstants.SUCCESS);
+                        String message = response.getString(AppConstants.MESSAGE);
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
+                            JSONObject mObject = response.getJSONObject(AppConstants.DATA);
                             String rem = mObject.getString("reminder_id");
                             if (rem_id == 0) {
                                 if (child_id.equalsIgnoreCase("0")) {
@@ -1038,9 +1039,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                 }
                             }
                         } else {
-                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                            if (response.has(AppConstants.ERROR_CODE)) {
+                                String error = response.getString(AppConstants.ERROR_CODE);
+                                if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                     Intent mIntent = new Intent(_context, LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     _context.startActivity(mIntent);
@@ -1058,17 +1059,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -1079,31 +1080,31 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 
     private void userLocationShareWS(String share_id, final String name, final String is_share) {
-        if (Common.isOnline(_context)) {
+        if (Utility.isOnline(_context)) {
             JSONObject mJsonObject = null;
             try {
 
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.SHARE_USER_IDS, share_id);
-                mJsonObject.put(Common.Constant_Class.IS_SHARE, is_share);
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.SHARE_USER_IDS, share_id);
+                mJsonObject.put(AppConstants.IS_SHARE, is_share);
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SHARED_USERS_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.SHARED_USERS_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
+                        String success = response.getString(AppConstants.SUCCESS);
                         String message = "";
-                        if (response.has(Common.Constant_Class.MESSAGE)) {
-                            message = response.getString(Common.Constant_Class.MESSAGE);
+                        if (response.has(AppConstants.MESSAGE)) {
+                            message = response.getString(AppConstants.MESSAGE);
                         }
 
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
                             if (is_share.equalsIgnoreCase("1")) {
                                 Toast.makeText(_context, "You have shared your location to " + name, Toast.LENGTH_LONG).show();
                             } else {
@@ -1111,9 +1112,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             }
                         } else {
                             Toast.makeText(_context, message, Toast.LENGTH_SHORT).show();
-                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                            if (response.has(AppConstants.ERROR_CODE)) {
+                                String error = response.getString(AppConstants.ERROR_CODE);
+                                if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                     Intent mIntent = new Intent(_context, LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     _context.startActivity(mIntent);
@@ -1136,10 +1137,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -1150,29 +1151,29 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     private void requestOfRelationWS(String relation, String to_user_id) {
-        if (Common.isOnline(_context)) {
+        if (Utility.isOnline(_context)) {
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.TO_USER_ID, to_user_id);
-                mJsonObject.put(Common.Constant_Class.RELATION, relation);
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.TO_USER_ID, to_user_id);
+                mJsonObject.put(AppConstants.RELATION, relation);
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SEND_REQUEST_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.SEND_REQUEST_URL, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        String success = response.getString(AppConstants.SUCCESS);
+                        String message = response.getString(AppConstants.MESSAGE);
                         Toast.makeText(_context, message, Toast.LENGTH_SHORT).show();
-                        if (!success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                        if (!success.equalsIgnoreCase(AppConstants.TRUE)) {
 
-                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                            if (response.has(AppConstants.ERROR_CODE)) {
+                                String error = response.getString(AppConstants.ERROR_CODE);
+                                if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                     Intent mIntent = new Intent(_context, LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     _context.startActivity(mIntent);
@@ -1195,10 +1196,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };

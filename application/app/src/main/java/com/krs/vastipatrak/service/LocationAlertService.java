@@ -20,7 +20,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.activity.HomeActivity;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
 import org.json.JSONArray;
@@ -33,8 +34,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.krs.vastipatrak.utils.Common.CalculationByDistance;
-import static com.krs.vastipatrak.utils.Common.round;
+import static com.krs.vastipatrak.utils.Utility.CalculationByDistance;
+import static com.krs.vastipatrak.utils.Utility.round;
 
 public class LocationAlertService extends Service {
 
@@ -48,7 +49,7 @@ public class LocationAlertService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
          mlstMapTimer = new HashMap<>();
     }
 
@@ -86,46 +87,46 @@ public class LocationAlertService extends Service {
     }
 
     private void SyncUser(final String profile_id) {
-        if (Common.isOnline(this)) {
+        if (Utility.isOnline(this)) {
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-                mJsonObject.put(Common.Constant_Class.PROFILE_ID, profile_id);
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.PROFILE_ID, profile_id);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            String sync_url = Common.Constant_Class.SYNC_URL;
+            String sync_url = AppConstants.SYNC_URL;
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, sync_url, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
 
                     try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        String success = response.getString(AppConstants.SUCCESS);
+                        String message = response.getString(AppConstants.MESSAGE);
 
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
+                            JSONArray mJsonArray = response.getJSONArray(AppConstants.DATA);
                             for (int i = 0; i < mJsonArray.length(); i++) {
                                 JSONObject mJsondata = mJsonArray.getJSONObject(i);
                                 String user_lat = "", user_lng = "", name = "";
-                                if (mJsondata.has(Common.Constant_Class.USER_LAT)) {
-                                    user_lat = mJsondata.getString(Common.Constant_Class.USER_LAT);
+                                if (mJsondata.has(AppConstants.USER_LAT)) {
+                                    user_lat = mJsondata.getString(AppConstants.USER_LAT);
                                 }
-                                if (mJsondata.has(Common.Constant_Class.USER_LNG)) {
-                                    user_lng = mJsondata.getString(Common.Constant_Class.USER_LNG);
+                                if (mJsondata.has(AppConstants.USER_LNG)) {
+                                    user_lng = mJsondata.getString(AppConstants.USER_LNG);
                                 }
-                                if (mJsondata.has(Common.Constant_Class.FIRST_NAME)) {
-                                      name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
+                                if (mJsondata.has(AppConstants.FIRST_NAME)) {
+                                      name = mJsondata.getString(AppConstants.FIRST_NAME);
                                 }
-                                if (mJsondata.has(Common.Constant_Class.LAST_NAME)) {
-                                    name = name + " " + mJsondata.getString(Common.Constant_Class.LAST_NAME);
+                                if (mJsondata.has(AppConstants.LAST_NAME)) {
+                                    name = name + " " + mJsondata.getString(AppConstants.LAST_NAME);
                                 }
 
-                                String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                                String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                                String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+                                String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
 
                                 if (user_lat != null && user_lng != null && !user_lat.isEmpty() && !user_lng.isEmpty() && !curr_lat.isEmpty() && !curr_lng.isEmpty()) {
                                     new getDistance(profile_id, name).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Double.parseDouble(user_lat), Double.parseDouble(user_lng), Double.parseDouble(curr_lat), Double.parseDouble(curr_lng));
@@ -141,17 +142,17 @@ public class LocationAlertService extends Service {
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -255,7 +256,7 @@ public class LocationAlertService extends Service {
          /*   if (NotificationUtils.isAppIsInBackground(getApplicationContext())) {
                 // app is in foreground, broadcast the push message
                 Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-                pushNotification.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
+                pushNotification.putExtra(AppConstants.PUSH_MESSAGE, notification);
                 LocalBroadcastManager.getInstance(LocationAlertService.this).sendBroadcast(pushNotification);
 
                 // play notification sound
@@ -264,8 +265,8 @@ public class LocationAlertService extends Service {
             } else {*/
             // app is in background, show the notification in notification tray
             Intent resultIntent = new Intent(getApplicationContext(), HomeActivity.class);
-            resultIntent.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
-            resultIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+            resultIntent.putExtra(AppConstants.PUSH_MESSAGE, notification);
+            resultIntent.putExtra(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
             showNotificationMessage(getApplicationContext(), title, notification, timestamp, resultIntent, id);
             // }
         }

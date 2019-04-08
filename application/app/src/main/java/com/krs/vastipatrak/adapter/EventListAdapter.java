@@ -23,7 +23,8 @@ import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.model.ListEventData;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 import java.util.ArrayList;
 
@@ -91,7 +92,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             };
 
 
-            holder.youTubeThumbnailView.initialize(Common.Constant_Class.YOUTUBE_API_KEY, new YouTubeThumbnailView.OnInitializedListener() {
+            holder.youTubeThumbnailView.initialize(AppConstants.YOUTUBE_API_KEY, new YouTubeThumbnailView.OnInitializedListener() {
                 @Override
                 public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
 
@@ -153,7 +154,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             String url = listUrls.get(getLayoutPosition());
             int i = url.indexOf("v=");
             url = url.substring(i + 2);
-            Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) context, Common.Constant_Class.YOUTUBE_API_KEY, url);
+            Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) context, AppConstants.YOUTUBE_API_KEY, url);
             context.startActivity(intent);
         }
     }

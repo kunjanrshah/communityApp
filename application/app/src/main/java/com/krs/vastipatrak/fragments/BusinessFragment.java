@@ -32,7 +32,8 @@ import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.ProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListProfileData;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 import org.json.JSONObject;
 
@@ -85,15 +86,15 @@ public class BusinessFragment extends Fragment implements Serializable {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (edtOAddress.getRight() - edtOAddress.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
 
-                        String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                        String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                        String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+                        String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
                         final double lat = Double.valueOf(curr_lat);
                         final double lng = Double.valueOf(curr_lng);
 
                         if (lat == 0 && lng == 0) {
-                            Common.showSettingsAlert(mActivity);
+                            Utility.showSettingsAlert(mActivity);
                         } else {
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
+                            if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                 builder.setTitle(getString(R.string.app_name));
@@ -114,7 +115,7 @@ public class BusinessFragment extends Fragment implements Serializable {
 
                             } else {
                                 if (lat != 0 && lng != 0 && office_lat != 0 && office_lng != 0) {
-                                    Common.showDirections(getActivity(),lat, lng,office_lat,office_lng,"");
+                                    Utility.showDirections(getActivity(),lat, lng,office_lat,office_lng,"");
                                 } else {
                                     Toast.makeText(mActivity, "Something wrong went!", Toast.LENGTH_SHORT).show();
                                 }
@@ -134,7 +135,7 @@ public class BusinessFragment extends Fragment implements Serializable {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if ((event.getRawX()) >= (edtOMobile.getRight() - edtOMobile.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         if (Build.VERSION.SDK_INT >= 23) {
-                            if (Common.canReadContacts(Objects.requireNonNull(getActivity()))) {
+                            if (Utility.canReadContacts(Objects.requireNonNull(getActivity()))) {
                                 Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                                 startActivityForResult(it, CONTACT_PICKER_RESULT);
                             }
@@ -144,11 +145,11 @@ public class BusinessFragment extends Fragment implements Serializable {
                         }
                         return true;
                     } else {
-                        if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
+                        if (!mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
                             try {
                                 boolean flag = true;
                                 if (Build.VERSION.SDK_INT >= 23) {
-                                    if (Common.canCallPhone(getActivity())) {
+                                    if (Utility.canCallPhone(getActivity())) {
                                         flag = false;
                                     }
                                 }
@@ -168,8 +169,8 @@ public class BusinessFragment extends Fragment implements Serializable {
             }
         });
 
-        if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-            if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {
+        if (!mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true)) {
+            if (mSharedPreferences.getString(AppConstants.ROLE, AppConstants.USER).equals(AppConstants.USER)) {
                 DisableAll();
             }
         }
@@ -178,36 +179,36 @@ public class BusinessFragment extends Fragment implements Serializable {
     }
 
     private void officeLocUpdateWS() {
-        if (Common.isOnline(mActivity)) {
+        if (Utility.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
-            String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-            String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+            String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+            String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
             final double lat = Double.valueOf(curr_lat);
             final double lng = Double.valueOf(curr_lng);
             try {
                 mJsonObject = new JSONObject();
                 if (lat != 0 && lng != 0) {
-                    mJsonObject.put(Common.Constant_Class.OFFICE_LAT, lat);
-                    mJsonObject.put(Common.Constant_Class.OFFICE_LNG, lng);
-                    if (ProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
-                        mJsonObject.put(Common.Constant_Class.UPDATE_USER_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""));
+                    mJsonObject.put(AppConstants.OFFICE_LAT, lat);
+                    mJsonObject.put(AppConstants.OFFICE_LNG, lng);
+                    if (ProfileActivity.isEnable && mSharedPreferences.getString(AppConstants.ROLE, AppConstants.USER).equals(AppConstants.ADMIN)) {
+                        mJsonObject.put(AppConstants.UPDATE_USER_ID, mSharedPreferences.getString(AppConstants.PROFILE_ID, ""));
                     }
-                    mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                    mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
-                    mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                    mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                    mJsonObject.put(AppConstants.IS_UPDATE, "1");
+                    mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
                     try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            mEditor.putString(Common.Constant_Class.OFFICE_LAT, String.valueOf(lat));
-                            mEditor.putString(Common.Constant_Class.OFFICE_LNG, String.valueOf(lng));
+                        String success = response.getString(AppConstants.SUCCESS);
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
+                            mEditor.putString(AppConstants.OFFICE_LAT, String.valueOf(lat));
+                            mEditor.putString(AppConstants.OFFICE_LNG, String.valueOf(lng));
                             mEditor.apply();
                             alert("Office location updated!");
                         } else {
@@ -230,10 +231,10 @@ public class BusinessFragment extends Fragment implements Serializable {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -249,10 +250,10 @@ public class BusinessFragment extends Fragment implements Serializable {
         edtWork = rootView.findViewById(R.id.edtWork);
         edtOMobile = rootView.findViewById(R.id.edtOMobile);
         edtOAddress = rootView.findViewById(R.id.edtOAddress);
-        mSharedPreferences = mActivity.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = mActivity.getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
-       // user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+       // user_id = mSharedPreferences.getString(AppConstants.USER_ID, "");
         txt_office = rootView.findViewById(R.id.txt_office);
     }
 
@@ -325,16 +326,16 @@ public class BusinessFragment extends Fragment implements Serializable {
         if (!mListProfileData.getOffice_lng().equalsIgnoreCase("null") && !mListProfileData.getOffice_lng().equalsIgnoreCase("")) {
             office_lng = Double.parseDouble(mListProfileData.getOffice_lng());
         }
-        if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
+        if (!mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true)) {
             if (office_lat != 0 && office_lng != 0) {
-                final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                final String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+                final String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
                 // double lat = Double.valueOf(curr_lat);
                 //double lng = Double.valueOf(curr_lng);
 
-                new Common.getDistance(getActivity(), txt_office).execute(curr_lat, curr_lng, String.valueOf(office_lat), String.valueOf(office_lng));
+                new Utility.getDistance(getActivity(), txt_office).execute(curr_lat, curr_lng, String.valueOf(office_lat), String.valueOf(office_lng));
 
-               /* int distance = (int) Common.getDistance(mActivity, office_lat, office_lng);
+               /* int distance = (int) Utility.getDistance(mActivity, office_lat, office_lng);
                 if (distance == -1) {
                     txt_office.setText(R.string.enable_location);
                 } else {
@@ -345,7 +346,7 @@ public class BusinessFragment extends Fragment implements Serializable {
             }
         }
 
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+        if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
             EnableAll();
         } else {
             DisableAll();

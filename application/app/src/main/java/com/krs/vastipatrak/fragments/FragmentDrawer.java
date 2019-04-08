@@ -27,7 +27,8 @@ import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.NavigationDrawerAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.NavDrawerItem;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +83,7 @@ public class FragmentDrawer extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         // Inflating view layout
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         RecyclerView recyclerView = layout.findViewById(R.id.drawerList);
@@ -90,12 +91,12 @@ public class FragmentDrawer extends Fragment {
         img_profile = layout.findViewById(R.id.img_profile);
         txt_name = layout.findViewById(R.id.txt_name);
         try {
-            Glide.with(getActivity()).load(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+            Glide.with(getActivity()).load(mSharedPreferences.getString(AppConstants.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
         } catch (Exception e) {
             e.getMessage();
         }
 
-        String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
+        String name = mSharedPreferences.getString(AppConstants.FIRST_NAME, "") + " " + mSharedPreferences.getString(AppConstants.LAST_NAME, "");
         txt_name.setText(name);
         NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(getActivity(), getData());
         recyclerView.setAdapter(adapter);
@@ -125,15 +126,15 @@ public class FragmentDrawer extends Fragment {
                 if (AppController.getInstance().isUpdate) {
                     AppController.getInstance().isUpdate = false;
                     try {
-                        Glide.with(getActivity()).load(mSharedPreferences.getString(Common.Constant_Class.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+                        Glide.with(getActivity()).load(mSharedPreferences.getString(AppConstants.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
                     } catch (Exception e) {
                         e.getMessage();
                     }
-                    String name = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "") + " " + mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
+                    String name = mSharedPreferences.getString(AppConstants.FIRST_NAME, "") + " " + mSharedPreferences.getString(AppConstants.LAST_NAME, "");
                     txt_name.setText(name);
                 }
                 //  getActivity().invalidateOptionsMenu();
-                Common.hideKeyboard(getActivity());
+                Utility.hideKeyboard(getActivity());
             }
 
             @Override

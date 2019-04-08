@@ -99,6 +99,19 @@
             android:paddingLeft="20dp"
             android:singleLine="true" />
 
+        <EditText
+            android:id="@+id/edt_head_surname"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"
+            android:drawableLeft="@drawable/man_user"
+            android:gravity="center"
+            android:hint="@string/hint_surname"
+            android:inputType="textCapSentences"
+            android:paddingLeft="20dp"
+            android:singleLine="true" />
+
 
         <EditText
             android:id="@+id/edt_spouse_name"
@@ -176,6 +189,27 @@
             android:drawableLeft="@drawable/home_address"
             android:paddingLeft="20dp"
             android:singleLine="true" />
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtCity"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/back"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/black"
+                android:hint="@string/hint_city"
+                android:inputType="textCapSentences"
+                android:nextFocusForward="@id/edtAddress"
+                android:padding="5dp"
+                android:singleLine="true" />
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/txt_how_register"

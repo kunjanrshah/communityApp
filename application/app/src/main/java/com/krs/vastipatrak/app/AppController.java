@@ -18,12 +18,12 @@ import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.model.ListProfileData;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.krs.vastipatrak.utils.LocaleHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
@@ -66,7 +66,7 @@ public class AppController extends Application {
         lstGotra =new ArrayList<>();
         lstNative =new ArrayList<>();
         lstEducation =new ArrayList<>();
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         initRealm();
         initFirebaseAnalytics();

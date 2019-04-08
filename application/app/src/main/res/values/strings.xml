@@ -13,6 +13,7 @@
     <string name="btn_add_new">ADD NEW</string>
     <string name="btn_sign_in">SIGN IN</string>
     <string name="hint_name">Family Head Name</string>
+    <string name="hint_head_surname">Family Head SurName</string>
     <string name="hint_surname">Surname</string>
     <string name="hint_father_name">Father Name</string>
     <string name="hint_mother_name">Mother Name</string>
@@ -422,8 +423,7 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="enter_email_id">Enter Email ID</string>
     <string name="send_otp">send OTP</string>
     <string name="send_email">send email</string>
-
-
+    <string name="city">City</string>
 
 
 </resources>

@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.Utility;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.util.Objects;
@@ -68,7 +67,7 @@ public class ChooseLanguage extends Activity  {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Common.changeLang(ChooseLanguage.this,spinner1.getText().toString());
+                Utility.changeLang(ChooseLanguage.this,spinner1.getText().toString());
                 btn_login.setText(getResources().getString(R.string.login));
                 btn_register.setText(getResources().getString(R.string.register));
             }

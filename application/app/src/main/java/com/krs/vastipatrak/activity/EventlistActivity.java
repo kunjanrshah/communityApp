@@ -3,12 +3,10 @@ package com.krs.vastipatrak.activity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -16,19 +14,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.youtube.player.YouTubeBaseActivity;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.EventListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListEventData;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 
 import java.text.ParseException;
@@ -37,9 +32,9 @@ import java.util.Date;
 
 import io.realm.Realm;
 
-import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
-import static com.krs.vastipatrak.utils.Common.parseDateToddMMyyyy;
-import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
+import static com.krs.vastipatrak.utils.Utility.dd_MMM_yyyy;
+import static com.krs.vastipatrak.utils.Utility.parseDateToddMMyyyy;
+import static com.krs.vastipatrak.utils.Utility.yyyy_MM_dd;
 
 public class EventlistActivity extends Activity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
@@ -92,22 +87,22 @@ public class EventlistActivity extends Activity implements ConnectivityReceiver.
             @Override
             public void onClick(View v) {
 
-                String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+                String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
                 final double clat = Double.valueOf(curr_lat);
                 final double clng = Double.valueOf(curr_lng);
                 if (clat != 0 && clng != 0 && !lat.isEmpty() && !lng.isEmpty()) {
-                    Common.showDirections(EventlistActivity.this, clat, clng, Double.parseDouble(lat), Double.parseDouble(lat), eventLocation);
+                    Utility.showDirections(EventlistActivity.this, clat, clng, Double.parseDouble(lat), Double.parseDouble(lat), eventLocation);
                 } else {
                     Toast.makeText(EventlistActivity.this, "Location not found!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-        String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+        String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+        String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
         if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && !lat.isEmpty() && !lng.isEmpty()) {
-            new Common.getDistance(this, txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, curr_lat, curr_lng, lat, lng);
+            new Utility.getDistance(this, txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, curr_lat, curr_lng, lat, lng);
         }
         checkConnection();
     }
@@ -154,7 +149,7 @@ public class EventlistActivity extends Activity implements ConnectivityReceiver.
         tvEventDate = findViewById(R.id.tvEventDate);
         img_back = findViewById(R.id.img_back);
         txt_distance = findViewById(R.id.txt_distance);
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
 
         Realm realm = AppController.getInstance().realm;
         ListEventData eventData = realm.where(ListEventData.class).endsWith("id", eventId).findFirst();

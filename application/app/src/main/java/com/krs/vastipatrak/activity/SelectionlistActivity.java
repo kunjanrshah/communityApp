@@ -37,7 +37,8 @@ import com.krs.vastipatrak.adapter.ItemsAdapter;
 import com.krs.vastipatrak.adapter.SelectionListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.Items;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -78,7 +79,7 @@ public class SelectionlistActivity extends AppCompatActivity {
         edt_other = findViewById(R.id.edt_other);
         btnSave = findViewById(R.id.btnSave);
         btnClear= findViewById(R.id.btnClear);
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, MODE_PRIVATE);
         Bundle mBundle = new Bundle();
         boolean listview = false;
         String title = "";
@@ -191,35 +192,35 @@ public class SelectionlistActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Common.hideKeyboard(this);
+        Utility.hideKeyboard(this);
     }
 
     private void getStateList() {
-        if (Common.isOnline(this)) {
+        if (Utility.isOnline(this)) {
 
-            Common.showProgressDialog(this);
+            Utility.showProgressDialog(this);
             JSONObject mJsonObject = null;
 
             try {
                 mJsonObject = new JSONObject();
-                String user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
-                String token = mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, "");
-                mJsonObject.put(Common.Constant_Class.USER_ID, user_id);
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, token);
-                mJsonObject.put(Common.Constant_Class.RESPONSE_DATA, "city_state");
+                String user_id = mSharedPreferences.getString(AppConstants.USER_ID, "");
+                String token = mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, "");
+                mJsonObject.put(AppConstants.USER_ID, user_id);
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, token);
+                mJsonObject.put(AppConstants.RESPONSE_DATA, "city_state");
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.GET_MASTER_DATA_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.GET_MASTER_DATA_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
 
                     try {
-                        JSONArray mArray = response.getJSONArray(Common.Constant_Class.DATA);
+                        JSONArray mArray = response.getJSONArray(AppConstants.DATA);
                         for (int i = 0; i < mArray.length(); i++) {
                             JSONObject mObject = mArray.getJSONObject(i);
                             listDataHeader.add(mObject.getString("state"));
@@ -234,7 +235,7 @@ public class SelectionlistActivity extends AppCompatActivity {
                         expListView.setAdapter(listAdapter);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Common.hideProgressDialog();
+                        Utility.hideProgressDialog();
                     }
                 }
             }, new Response.ErrorListener() {
@@ -242,17 +243,17 @@ public class SelectionlistActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -263,7 +264,7 @@ public class SelectionlistActivity extends AppCompatActivity {
 
 
     private void finishActivity(String value) {
-        Common.hideKeyboard(this);
+        Utility.hideKeyboard(this);
         Intent mIntent = new Intent();
         mIntent.putExtra(getString(R.string.selection), value);
         setResult(RESULT_OK, mIntent);
@@ -289,7 +290,7 @@ public class SelectionlistActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case Common.REQ_CODE_SPEECH_INPUT: {
+            case Utility.REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     searchView.setQueryHint(result.get(0));
@@ -301,7 +302,7 @@ public class SelectionlistActivity extends AppCompatActivity {
     }
 
     private void backNavigation() {
-        Common.hideKeyboard(this);
+        Utility.hideKeyboard(this);
         finish();
         overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
     }
@@ -319,7 +320,7 @@ public class SelectionlistActivity extends AppCompatActivity {
 
                 Intent mIntent = new Intent(SelectionlistActivity.this, HomeActivity.class);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                mIntent.putExtra(Common.Constant_Class.QUERY, query);
+                mIntent.putExtra(AppConstants.QUERY, query);
                 startActivity(mIntent);
                 Log.d(TAG, "step onQueryTextSubmit");
                 finish();
@@ -352,7 +353,7 @@ public class SelectionlistActivity extends AppCompatActivity {
         voiceItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Common.promptSpeechInput(SelectionlistActivity.this);
+                Utility.promptSpeechInput(SelectionlistActivity.this);
                 return false;
             }
         });

@@ -16,7 +16,7 @@ import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.Utility;
 import com.shockwave.pdfium.PdfDocument;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class Boys2Fragment extends Fragment implements OnPageChangeListener, OnL
     public void loadComplete(int nbPages) {
         PdfDocument.Meta meta = pdfView.getDocumentMeta();
         printBookmarksTree(pdfView.getTableOfContents(), "-");
-        Common.hideProgressDialog();
+        Utility.hideProgressDialog();
     }
 
     @Override

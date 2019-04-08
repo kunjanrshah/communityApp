@@ -29,7 +29,8 @@ import com.krs.vastipatrak.adapter.ExpandableListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,10 +40,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.krs.vastipatrak.utils.Common.Constant_Class.LOCATION_TYPE;
-import static com.krs.vastipatrak.utils.Common.hideKeyboard;
-import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
-import static com.krs.vastipatrak.utils.Common.showProgressDialog;
+import static com.krs.vastipatrak.utils.AppConstants.LOCATION_TYPE;
+import static com.krs.vastipatrak.utils.Utility.hideKeyboard;
+import static com.krs.vastipatrak.utils.Utility.hideProgressDialog;
+import static com.krs.vastipatrak.utils.Utility.showProgressDialog;
 
 public class NearByFragment extends Fragment {
 
@@ -106,7 +107,7 @@ public class NearByFragment extends Fragment {
     }
 
     private void MemoryAllocation(View rootView) {
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
@@ -168,22 +169,22 @@ public class NearByFragment extends Fragment {
 
 
     private void NearByUsers() {
-        if (Common.isOnline(getActivity())) {
-            Common.showProgressDialog(getActivity());
+        if (Utility.isOnline(getActivity())) {
+            Utility.showProgressDialog(getActivity());
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-                mJsonObject.put(Common.Constant_Class.NEAR_BY, type);
-                mJsonObject.put(Common.Constant_Class.LAT, mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, ""));
-                mJsonObject.put(Common.Constant_Class.LNG, mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, ""));
-                mJsonObject.put(Common.Constant_Class.KM, edt_distance.getText().toString());
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.NEAR_BY, type);
+                mJsonObject.put(AppConstants.LAT, mSharedPreferences.getString(AppConstants.CURR_LAT, ""));
+                mJsonObject.put(AppConstants.LNG, mSharedPreferences.getString(AppConstants.CURR_LNG, ""));
+                mJsonObject.put(AppConstants.KM, edt_distance.getText().toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
             showProgressDialog(getActivity());
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.NEAR_BY_USERS_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.NEAR_BY_USERS_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
@@ -191,34 +192,34 @@ public class NearByFragment extends Fragment {
                         listDataHeader.clear();
                         listDataChild.clear();
                         hideKeyboard(getActivity());
-                        if (response.has(Common.Constant_Class.DATA)) {
-                            JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                        if (response.has(AppConstants.DATA)) {
+                            JSONArray mJsonArray = response.getJSONArray(AppConstants.DATA);
                             for (int i = 0; i < mJsonArray.length(); i++) {
                                 JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                String profile_id = mJsondata.getString(Common.Constant_Class.ID);
+                                String profile_id = mJsondata.getString(AppConstants.ID);
                                 String distance = "";
-                                if (mJsondata.has(Common.Constant_Class.DISTANCE)) {
-                                    distance = mJsondata.getString(Common.Constant_Class.DISTANCE);
+                                if (mJsondata.has(AppConstants.DISTANCE)) {
+                                    distance = mJsondata.getString(AppConstants.DISTANCE);
                                 }
-                                String email = mJsondata.getString(Common.Constant_Class.EMAIL_ADDRESS);
-                                String profile_pic_url = mJsondata.getString(Common.Constant_Class.PROFILE_PIC_URL);
-                                String first_name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
-                                String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
-                                String father_name = mJsondata.getString(Common.Constant_Class.FATHER_NAME);
-                                String mother_name = mJsondata.getString(Common.Constant_Class.MOTHER_NAME);
-                                String status = mJsondata.getString(Common.Constant_Class.STATUS);
-                                String city = mJsondata.getString(Common.Constant_Class.CITY);
-                                String mobile = mJsondata.getString(Common.Constant_Class.MOBILE);
-                                String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
-                                String is_location_enable = mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE);
-                                String user_lat = mJsondata.getString(Common.Constant_Class.USER_LAT);
-                                String user_lng = mJsondata.getString(Common.Constant_Class.USER_LNG);
+                                String email = mJsondata.getString(AppConstants.EMAIL_ADDRESS);
+                                String profile_pic_url = mJsondata.getString(AppConstants.PROFILE_PIC_URL);
+                                String first_name = mJsondata.getString(AppConstants.FIRST_NAME);
+                                String last_name = mJsondata.getString(AppConstants.LAST_NAME);
+                                String father_name = mJsondata.getString(AppConstants.FATHER_NAME);
+                                String mother_name = mJsondata.getString(AppConstants.MOTHER_NAME);
+                                String status = mJsondata.getString(AppConstants.STATUS);
+                                String city = mJsondata.getString(AppConstants.CITY);
+                                String mobile = mJsondata.getString(AppConstants.MOBILE);
+                                String updated_time = mJsondata.getString(AppConstants.UPDATED_TIME);
+                                String is_location_enable = mJsondata.getString(AppConstants.IS_LOCATION_ENABLE);
+                                String user_lat = mJsondata.getString(AppConstants.USER_LAT);
+                                String user_lng = mJsondata.getString(AppConstants.USER_LNG);
 
-                                String home_lat = mJsondata.getString(Common.Constant_Class.HOME_LAT);
-                                String home_lng = mJsondata.getString(Common.Constant_Class.HOME_LNG);
+                                String home_lat = mJsondata.getString(AppConstants.HOME_LAT);
+                                String home_lng = mJsondata.getString(AppConstants.HOME_LNG);
 
-                                String office_lat = mJsondata.getString(Common.Constant_Class.OFFICE_LAT);
-                                String office_lng = mJsondata.getString(Common.Constant_Class.OFFICE_LNG);
+                                String office_lat = mJsondata.getString(AppConstants.OFFICE_LAT);
+                                String office_lng = mJsondata.getString(AppConstants.OFFICE_LNG);
                                 ListParentData lpd = new ListParentData();
                                 lpd.setName(first_name + " " + last_name);
                                 lpd.setFatherName(father_name);
@@ -239,18 +240,18 @@ public class NearByFragment extends Fragment {
                                 lpd.setHome_lat(home_lat);
                                 lpd.setHome_lng(home_lng);
                                 lpd.setType(type);
-                                String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
-                                String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
-                                String birth_date = mJsondata.getString(Common.Constant_Class.BIRTH_DATE);
-                                String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
+                                String native_place = mJsondata.getString(AppConstants.NATIVE_PLACE);
+                                String address = mJsondata.getString(AppConstants.ADDRESS);
+                                String birth_date = mJsondata.getString(AppConstants.BIRTH_DATE);
+                                String blood_group = mJsondata.getString(AppConstants.BLOOD_GROUP);
                                 String is_share = "0";
-                                if (mJsondata.has(Common.Constant_Class.IS_SHARE)) {
-                                    is_share = mJsondata.getString(Common.Constant_Class.IS_SHARE);
+                                if (mJsondata.has(AppConstants.IS_SHARE)) {
+                                    is_share = mJsondata.getString(AppConstants.IS_SHARE);
                                 }
                                 lpd.setIs_share(is_share);
-                                String phone = mJsondata.getString(Common.Constant_Class.PHONE);
-                                String gender = mJsondata.getString(Common.Constant_Class.GENDER);
-                                String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
+                                String phone = mJsondata.getString(AppConstants.PHONE);
+                                String gender = mJsondata.getString(AppConstants.GENDER);
+                                String gotra = mJsondata.getString(AppConstants.GOTRA);
 
                                 ListChildData lcd = new ListChildData();
                                 lcd.setID(profile_id);
@@ -285,7 +286,7 @@ public class NearByFragment extends Fragment {
                         }*/
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Common.hideProgressDialog();
+                        Utility.hideProgressDialog();
                     }
                 }
             }, new Response.ErrorListener() {
@@ -293,17 +294,17 @@ public class NearByFragment extends Fragment {
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };

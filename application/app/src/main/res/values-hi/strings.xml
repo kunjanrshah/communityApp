@@ -23,6 +23,7 @@
 
     <!--Registraion page-->
     <string name="hint_name">परिवार के मुखिया का नाम</string>
+    <string name="hint_head_surname">परिवार के मुखिया का उपनाम</string>
     <string name="hint_spouse_name">जीवनसाथी का नाम</string>
     <string name="hint_email">ईमेल आईडी</string>
     <string name="hint_mobile">मोबाइल नंबर</string>

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -51,7 +50,8 @@ import com.krs.vastipatrak.adapter.CityAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.City;
 import com.krs.vastipatrak.service.SyncService;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,7 +63,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
+import static com.krs.vastipatrak.utils.Utility.hideProgressDialog;
 
 public class SyncFragment extends Fragment {
 
@@ -131,7 +131,7 @@ public class SyncFragment extends Fragment {
                 if (actionId == 0) {
                     if (!edt_sync.getText().toString().isEmpty()) {
                         assert mEditor != null;
-                        mEditor.putString(Common.Constant_Class.SYNC_TIME, edt_sync.getText().toString());
+                        mEditor.putString(AppConstants.SYNC_TIME, edt_sync.getText().toString());
                         mEditor.apply();
                     }
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -171,7 +171,7 @@ public class SyncFragment extends Fragment {
                             boolean is_reset = radioSelButton.getId() == R.id.radioResetSync;
                             Intent mIntent = new Intent(getActivity(), SyncService.class);
                             mIntent.putStringArrayListExtra("selectedCities", selectedList);
-                            mIntent.putExtra(Common.Constant_Class.IS_RESET, is_reset);
+                            mIntent.putExtra(AppConstants.IS_RESET, is_reset);
                             getActivity().startService(mIntent);
                             btn_sync.setText("Stop");
                             sync_dialog.cancel();
@@ -198,9 +198,9 @@ public class SyncFragment extends Fragment {
                 PendingIntent servicePendingIntent = PendingIntent.getService(getActivity(), 0, serviceIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                 assert am != null;
                 assert mEditor != null;
-                mEditor.putString(Common.Constant_Class.SYNC_TIME, edt_sync.getText().toString());
+                mEditor.putString(AppConstants.SYNC_TIME, edt_sync.getText().toString());
                 if (isChecked) {
-                    mEditor.putBoolean(Common.Constant_Class.TBTN_SYNC, true);
+                    mEditor.putBoolean(AppConstants.TBTN_SYNC, true);
                     mEditor.apply();
                     long interval = 0;
                     if (!edt_sync.getText().toString().isEmpty()) {
@@ -216,7 +216,7 @@ public class SyncFragment extends Fragment {
                         Toast.makeText(getActivity(), "Enter Days!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    mEditor.putBoolean(Common.Constant_Class.TBTN_SYNC, false);
+                    mEditor.putBoolean(AppConstants.TBTN_SYNC, false);
                     mEditor.apply();
                     am.cancel(servicePendingIntent);
                     Toast.makeText(getActivity(), "Cancelled Sync!", Toast.LENGTH_SHORT).show();
@@ -231,19 +231,19 @@ public class SyncFragment extends Fragment {
         JSONObject json = new JSONObject();
         try {
             assert mSharedPreferences != null;
-            json.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-            Common.showProgressDialog(getActivity());
+            json.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
+            Utility.showProgressDialog(getActivity());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.GET_CITIES_URL, json, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.GET_CITIES_URL, json, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(@NonNull JSONObject response) {
                 Log.d(TAG, "response: " + response);
                 hideProgressDialog();
                 try {
-                    boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
+                    boolean success = response.getBoolean(AppConstants.SUCCESS);
 
                     if (success) {
                         JSONArray mJsonArray = response.getJSONArray("data");
@@ -282,10 +282,10 @@ public class SyncFragment extends Fragment {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> params = new HashMap<>();
-                params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                params.put(Common.Constant_Class.DEVICE_TOKEN,mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN,""));
+                params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                params.put(AppConstants.DEVICE_TOKEN,mSharedPreferences.getString(AppConstants.DEVICE_TOKEN,""));
                 return params;
             }
         };
@@ -310,7 +310,7 @@ public class SyncFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void MemoryAllocation(View rootView) {
 
-        mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
         tvUpdatedTime = rootView.findViewById(R.id.tvUpdatedTime1);
@@ -322,15 +322,15 @@ public class SyncFragment extends Fragment {
         }
         edt_sync = rootView.findViewById(R.id.edt_sync);
         tbtn_sync = rootView.findViewById(R.id.tbtn_sync);
-        tbtn_sync.setChecked(mSharedPreferences.getBoolean(Common.Constant_Class.TBTN_SYNC, false));
+        tbtn_sync.setChecked(mSharedPreferences.getBoolean(AppConstants.TBTN_SYNC, false));
         tbtn_sync.setTextOff(null);
         tbtn_sync.setTextOn(null);
         tbtn_sync.setText(null);
-        String val = mSharedPreferences.getString(Common.Constant_Class.SYNC_TIME, "0");
+        String val = mSharedPreferences.getString(AppConstants.SYNC_TIME, "0");
         edt_sync.setText("" + val);
         edt_sync.setSelection(edt_sync.getText().length());
         //  edt_sync.setCursorVisible(false);
-        String date = Common.getUpdatedTime(mSharedPreferences.getString(Common.Constant_Class.UPDATED_TIME, "0"));
+        String date = Utility.getUpdatedTime(mSharedPreferences.getString(AppConstants.UPDATED_TIME, "0"));
         tvUpdatedTime.setText(date);
        /* pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage("Fetching Cities...");

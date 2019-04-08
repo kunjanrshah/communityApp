@@ -52,7 +52,8 @@ import com.krs.vastipatrak.interfaces.IAdminControl;
 import com.krs.vastipatrak.model.ExportProfileData;
 import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
@@ -70,10 +71,10 @@ import java.util.Objects;
 
 import io.realm.RealmResults;
 
-import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
-import static com.krs.vastipatrak.utils.Common.isOnline;
-import static com.krs.vastipatrak.utils.Common.showProgressDialog;
-import static com.krs.vastipatrak.utils.Common.textAsBitmap;
+import static com.krs.vastipatrak.utils.Utility.hideProgressDialog;
+import static com.krs.vastipatrak.utils.Utility.isOnline;
+import static com.krs.vastipatrak.utils.Utility.showProgressDialog;
+import static com.krs.vastipatrak.utils.Utility.textAsBitmap;
 
 
 public class SearchFragment extends Fragment implements IAdminControl {
@@ -160,7 +161,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case CALL_PHONE_REQUEST:
-                if (Common.canCallPhone(Objects.requireNonNull(getActivity()))) {
+                if (Utility.canCallPhone(Objects.requireNonNull(getActivity()))) {
                     Toast.makeText(getActivity(), "You need to give permission to access phone ! ", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -173,7 +174,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        if (Common.canCallPhone(Objects.requireNonNull(getActivity()))) {
+        if (Utility.canCallPhone(Objects.requireNonNull(getActivity()))) {
             requestPermissions(CALL_PHONE_PERMS, CALL_PHONE_REQUEST);
         }
     }
@@ -184,20 +185,20 @@ public class SearchFragment extends Fragment implements IAdminControl {
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle("Search");
         Bundle args = getArguments();
         if (args != null) {
-            query = args.getString(Common.Constant_Class.QUERY, "");
-            query_string = args.getString(Common.Constant_Class.QUERY_STRING, "");
-            adminControl = args.getInt(Common.Constant_Class.AdminControl, -1);
+            query = args.getString(AppConstants.QUERY, "");
+            query_string = args.getString(AppConstants.QUERY_STRING, "");
+            adminControl = args.getInt(AppConstants.AdminControl, -1);
         }
         Memory_Allocation(rootView);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_topback);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         isAdmin = false;
         if (query != null && !query.equalsIgnoreCase("")) {
-            Common.Title = query;
-            OnlineSearch(query, Common.Constant_Class.GLOBAL_SEARCH_URL);
+            Utility.Title = query;
+            OnlineSearch(query, AppConstants.GLOBAL_SEARCH_URL);
         } else if (query_string != null && !query_string.equalsIgnoreCase("")) {
-            OnlineSearch(query_string, Common.Constant_Class.ADVANCE_SEARCH_URL);
-        } else if (adminControl == Common.Constant_Class.NonActive && query.isEmpty() && query_string.isEmpty()) {
+            OnlineSearch(query_string, AppConstants.ADVANCE_SEARCH_URL);
+        } else if (adminControl == AppConstants.NonActive && query.isEmpty() && query_string.isEmpty()) {
           //  callNonActivesWS();
         } else {
             lvCustomList.setVisibility(View.GONE);
@@ -310,7 +311,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
     private void Memory_Allocation(View root) {
 
-        mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         lvCustomList = root.findViewById(R.id.lvCustomList);
         mFloatingActionButton = root.findViewById(R.id.floating_action_button);
         txtLable = root.findViewById(R.id.txtLable);
@@ -346,8 +347,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 query = str;
                 page = 1;
                 isAdmin = false;
-                OnlineSearch(str, Common.Constant_Class.GLOBAL_SEARCH_URL);
-                //callSearchWS(str, Common.Constant_Class.GLOBAL_SEARCH_URL);
+                OnlineSearch(str, AppConstants.GLOBAL_SEARCH_URL);
+                //callSearchWS(str, AppConstants.GLOBAL_SEARCH_URL);
                 return false;
             }
 
@@ -370,7 +371,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
             lvCustomList.setVisibility(View.VISIBLE);
 
             if (query_string != null && !query_string.equalsIgnoreCase("")) {
-                Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(Common.Title);
+                Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(Utility.Title);
                 //  OfflineSearch(str_search, 2);
                 OnlineSearch(str_search,url);
             } else {
@@ -456,23 +457,23 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
                     try {
                         mSwipyRefreshLayout.setRefreshing(false);
-                        boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        boolean success = response.getBoolean(AppConstants.SUCCESS);
+                        String message = response.getString(AppConstants.MESSAGE);
                         if (success) {
                             AppController.getInstance().realm.beginTransaction();
                             RealmResults<ExportProfileData> mlistData = AppController.getInstance().realm.where(ExportProfileData.class).findAll();
                             mlistData.deleteAllFromRealm();
                             AppController.getInstance().realm.commitTransaction();
 
-                            JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                            JSONArray mJsonArray = response.getJSONArray(AppConstants.DATA);
                             for (int i = 0; i < mJsonArray.length(); i++) {
                                 JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                Common.ExportProfile(mJsondata, getActivity());
+                                Utility.ExportProfile(mJsondata, getActivity());
                             }
-                            Common.ExportSearchData(getActivity());
+                            Utility.ExportSearchData(getActivity());
                         }
                         hideProgressDialog();
-                        //Common.alert(getActivity(), message);
+                        //Utility.alert(getActivity(), message);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -490,8 +491,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
                     return params;
                 }
             };
@@ -517,14 +518,14 @@ public class SearchFragment extends Fragment implements IAdminControl {
         if (getActivity() != null) {
             setmContext(getActivity());
         }
-        if (Common.isOnline(getmContext())) {
+        if (Utility.isOnline(getmContext())) {
 
             if (!search.equalsIgnoreCase("")) {
                 JSONObject mJsonObject = null;
                 try {
                     this.search = search;
                     this.search_url = search_url;
-                    if (search_url.equalsIgnoreCase(Common.Constant_Class.GLOBAL_SEARCH_URL)) {
+                    if (search_url.equalsIgnoreCase(AppConstants.GLOBAL_SEARCH_URL)) {
                         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(search);
                         JSONObject globalObj = new JSONObject();
                         globalObj.put("search_str", search.toLowerCase().trim());
@@ -533,10 +534,10 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     }
                     SearchString = search;
                     mJsonObject = new JSONObject(search);
-                    mJsonObject.put(Common.Constant_Class.PAGE, String.valueOf(page));
+                    mJsonObject.put(AppConstants.PAGE, String.valueOf(page));
                     if (mSharedPreferences != null) {
-                        mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                        mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                        mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                        mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -578,8 +579,8 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     @Override
                     public Map<String, String> getHeaders() {
                         Map<String, String> params = new HashMap<>();
-                        params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                        params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                        params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                        params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
                         return params;
                     }
                 };
@@ -593,23 +594,23 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 Toast.makeText(getActivity(), getString(R.string.err_msg_search), Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(getActivity(), Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), AppConstants.NO_CONNECTION, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void displayData(@NonNull JSONObject response, boolean isNonActive) {
         try {
             iSearchCallback = (ISearchCallback) getActivity();
-            String success = response.getString(Common.Constant_Class.SUCCESS);
-            String message = response.getString(Common.Constant_Class.MESSAGE);
+            String success = response.getString(AppConstants.SUCCESS);
+            String message = response.getString(AppConstants.MESSAGE);
             String total_records = "0";
-            if (response.has(Common.Constant_Class.TOTAL_RECORDS)) {
-                total_records = response.getString(Common.Constant_Class.TOTAL_RECORDS);
+            if (response.has(AppConstants.TOTAL_RECORDS)) {
+                total_records = response.getString(AppConstants.TOTAL_RECORDS);
             }
 
             Objects.requireNonNull(listDataHeader).clear();
             Objects.requireNonNull(listDataChild).clear();
-            if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+            if (success.equalsIgnoreCase(AppConstants.TRUE)) {
                 int total = 0;
                 lvCustomList.setVisibility(View.VISIBLE);
                 try {
@@ -624,28 +625,28 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     e.printStackTrace();
                 }
                 Objects.requireNonNull(txtLable).setVisibility(View.GONE);
-                JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                JSONArray mJsonArray = response.getJSONArray(AppConstants.DATA);
                 for (int i = 0; i < mJsonArray.length(); i++) {
                     JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                    String profile_id = mJsondata.getString(Common.Constant_Class.ID);
-                    String email = mJsondata.getString(Common.Constant_Class.EMAIL_ADDRESS);
-                    String profile_pic_url = mJsondata.getString(Common.Constant_Class.PROFILE_PIC_URL);
-                    String first_name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
-                    String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
-                    String father_name = mJsondata.getString(Common.Constant_Class.FATHER_NAME);
-                    String mother_name = mJsondata.getString(Common.Constant_Class.MOTHER_NAME);
-                    String status = mJsondata.getString(Common.Constant_Class.STATUS);
-                    String city = mJsondata.getString(Common.Constant_Class.CITY);
-                    String mobile = mJsondata.getString(Common.Constant_Class.MOBILE);
-                    String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
-                    String is_location_enable = mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE);
-                    String user_lat = mJsondata.getString(Common.Constant_Class.USER_LAT);
-                    String user_lng = mJsondata.getString(Common.Constant_Class.USER_LNG);
-                    String password = mJsondata.getString(Common.Constant_Class.PLAIN_PASSWORD);
-                    String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
+                    String profile_id = mJsondata.getString(AppConstants.ID);
+                    String email = mJsondata.getString(AppConstants.EMAIL_ADDRESS);
+                    String profile_pic_url = mJsondata.getString(AppConstants.PROFILE_PIC_URL);
+                    String first_name = mJsondata.getString(AppConstants.FIRST_NAME);
+                    String last_name = mJsondata.getString(AppConstants.LAST_NAME);
+                    String father_name = mJsondata.getString(AppConstants.FATHER_NAME);
+                    String mother_name = mJsondata.getString(AppConstants.MOTHER_NAME);
+                    String status = mJsondata.getString(AppConstants.STATUS);
+                    String city = mJsondata.getString(AppConstants.CITY);
+                    String mobile = mJsondata.getString(AppConstants.MOBILE);
+                    String updated_time = mJsondata.getString(AppConstants.UPDATED_TIME);
+                    String is_location_enable = mJsondata.getString(AppConstants.IS_LOCATION_ENABLE);
+                    String user_lat = mJsondata.getString(AppConstants.USER_LAT);
+                    String user_lng = mJsondata.getString(AppConstants.USER_LNG);
+                    String password = mJsondata.getString(AppConstants.PLAIN_PASSWORD);
+                    String address = mJsondata.getString(AppConstants.ADDRESS);
                     String can_share = "0";
-                    if (mJsondata.has(Common.Constant_Class.CAN_SHARE)) {
-                        can_share = mJsondata.getString(Common.Constant_Class.CAN_SHARE);
+                    if (mJsondata.has(AppConstants.CAN_SHARE)) {
+                        can_share = mJsondata.getString(AppConstants.CAN_SHARE);
                     }
                     ListParentData lpd = new ListParentData();
                     lpd.setName(first_name + " " + last_name);
@@ -664,20 +665,20 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     lpd.setUser_lng(user_lng);
                     lpd.setPassword(password);
 
-                    String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
+                    String native_place = mJsondata.getString(AppConstants.NATIVE_PLACE);
 
-                    String birth_date = mJsondata.getString(Common.Constant_Class.BIRTH_DATE);
-                    String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
+                    String birth_date = mJsondata.getString(AppConstants.BIRTH_DATE);
+                    String blood_group = mJsondata.getString(AppConstants.BLOOD_GROUP);
                     String is_share = "0";
-                    if (mJsondata.has(Common.Constant_Class.IS_SHARE)) {
-                        is_share = mJsondata.getString(Common.Constant_Class.IS_SHARE);
+                    if (mJsondata.has(AppConstants.IS_SHARE)) {
+                        is_share = mJsondata.getString(AppConstants.IS_SHARE);
                     }
                     lpd.setIs_share(is_share);
 
-                    String phone = mJsondata.getString(Common.Constant_Class.PHONE);
-                    String gender = mJsondata.getString(Common.Constant_Class.GENDER);
-                    String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
-                    String spouse = mJsondata.getString(Common.Constant_Class.SPOUSE_NAME);
+                    String phone = mJsondata.getString(AppConstants.PHONE);
+                    String gender = mJsondata.getString(AppConstants.GENDER);
+                    String gotra = mJsondata.getString(AppConstants.GOTRA);
+                    String spouse = mJsondata.getString(AppConstants.SPOUSE_NAME);
 
                     ListChildData lcd = new ListChildData();
                     lcd.setID(profile_id);
@@ -708,9 +709,9 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     lstSelectedIDs.clear();
                 }
                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                    String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                    if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                if (response.has(AppConstants.ERROR_CODE)) {
+                    String error = response.getString(AppConstants.ERROR_CODE);
+                    if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                         Intent mIntent = new Intent(getActivity(), LoginActivity.class);
                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(mIntent);
@@ -721,7 +722,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     if (isNonActive) {
                         lvCustomList.setVisibility(View.GONE);
                         Objects.requireNonNull(txtLable).setVisibility(View.VISIBLE);
-                        Common.alert(Objects.requireNonNull(getActivity()), message);
+                        Utility.alert(Objects.requireNonNull(getActivity()), message);
                     } else {
                         Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
                     }
@@ -736,18 +737,18 @@ public class SearchFragment extends Fragment implements IAdminControl {
     }
 
     public void callNonActivesWS() {
-        if (Common.isOnline(Objects.requireNonNull(getActivity()))) {
+        if (Utility.isOnline(Objects.requireNonNull(getActivity()))) {
             showProgressDialog(getActivity());
             Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setSubtitle(getString(R.string.action_nonActives));
 
             JSONObject mJsonObject = new JSONObject();
             try {
-                mJsonObject.put(Common.Constant_Class.USER_ID, Objects.requireNonNull(mSharedPreferences).getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.USER_ID, Objects.requireNonNull(mSharedPreferences).getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            String NonActives_url = Common.Constant_Class.INACTIVES_URL;
+            String NonActives_url = AppConstants.INACTIVES_URL;
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, NonActives_url, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
@@ -768,51 +769,51 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
         } else {
-            Toast.makeText(getActivity(), Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), AppConstants.NO_CONNECTION, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void callStatusChangeWS(final int mode) {
-        if (Common.isOnline(Objects.requireNonNull(getActivity()))) {
+        if (Utility.isOnline(Objects.requireNonNull(getActivity()))) {
             showProgressDialog(getActivity());
             JSONObject mJsonObject = new JSONObject();
             try {
-                mJsonObject.put(Common.Constant_Class.USER_ID, Objects.requireNonNull(mSharedPreferences).getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.IDList, android.text.TextUtils.join(",", Objects.requireNonNull(lstSelectedIDs)));
-                mJsonObject.put(Common.Constant_Class.STATUS, String.valueOf(mode));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.USER_ID, Objects.requireNonNull(mSharedPreferences).getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.IDList, android.text.TextUtils.join(",", Objects.requireNonNull(lstSelectedIDs)));
+                mJsonObject.put(AppConstants.STATUS, String.valueOf(mode));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            String status_url = Common.Constant_Class.STATUS_URL;
+            String status_url = AppConstants.STATUS_URL;
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, status_url, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
                     hideProgressDialog();
                     try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        String success = response.getString(AppConstants.SUCCESS);
+                        String message = response.getString(AppConstants.MESSAGE);
 
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            Common.UpdateProfileStatus(lstSelectedIDs, String.valueOf(mode));
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
+                            Utility.UpdateProfileStatus(lstSelectedIDs, String.valueOf(mode));
                             alert(message);
                         }else {
                             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                            if (response.has(AppConstants.ERROR_CODE)) {
+                                String error = response.getString(AppConstants.ERROR_CODE);
+                                if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                     Intent mIntent = new Intent(getActivity(), LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(mIntent);
@@ -838,10 +839,10 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -849,20 +850,20 @@ public class SearchFragment extends Fragment implements IAdminControl {
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
         } else {
-            Toast.makeText(getActivity(), Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), AppConstants.NO_CONNECTION, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void callDeleteWS() {
-        if (Common.isOnline(Objects.requireNonNull(getActivity()))) {
+        if (Utility.isOnline(Objects.requireNonNull(getActivity()))) {
             showProgressDialog(getActivity());
-            String delete_url = Common.Constant_Class.DELETE_URL;
+            String delete_url = AppConstants.DELETE_URL;
             JSONObject mJsonObject = new JSONObject();
             try {
                 assert mSharedPreferences != null;
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.IDList, android.text.TextUtils.join(",", Objects.requireNonNull(lstSelectedIDs)));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.IDList, android.text.TextUtils.join(",", Objects.requireNonNull(lstSelectedIDs)));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -872,16 +873,16 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     Log.d(TAG, "response: " + response.toString());
                     hideProgressDialog();
                     try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                        String success = response.getString(AppConstants.SUCCESS);
+                        String message = response.getString(AppConstants.MESSAGE);
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
                             alert(message);
-                            Common.DeleteProfiles(lstSelectedIDs);
+                            Utility.DeleteProfiles(lstSelectedIDs);
                         }else {
                             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                            if (response.has(AppConstants.ERROR_CODE)) {
+                                String error = response.getString(AppConstants.ERROR_CODE);
+                                if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                     Intent mIntent = new Intent(getActivity(), LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(mIntent);
@@ -906,17 +907,17 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
         } else {
-            Toast.makeText(getActivity(), Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), AppConstants.NO_CONNECTION, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -935,7 +936,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                 } else {
                     page = 1;
                     isAdmin = false;
-                    OnlineSearch(Common.Title, Common.Constant_Class.GLOBAL_SEARCH_URL);
+                    OnlineSearch(Utility.Title, AppConstants.GLOBAL_SEARCH_URL);
                 }
                 dialog.dismiss();
             }
@@ -997,38 +998,38 @@ public class SearchFragment extends Fragment implements IAdminControl {
 
     private void changeRoleWS(String ids, String role) {
         if (!ids.equalsIgnoreCase("") && !role.equalsIgnoreCase("")) {
-            if (Common.isOnline(getActivity())) {
+            if (Utility.isOnline(getActivity())) {
                 JSONObject json = null;
                 try {
                     json = new JSONObject();
-                    json.put(Common.Constant_Class.ID, ids);
-                    json.put(Common.Constant_Class.ROLE, role);
-                    json.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                    json.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                    json.put(AppConstants.ID, ids);
+                    json.put(AppConstants.ROLE, role);
+                    json.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                    json.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Common.showProgressDialog(getActivity());
-                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.CHANGE_ROLE_URL, json, new Response.Listener<JSONObject>() {
+                Utility.showProgressDialog(getActivity());
+                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.CHANGE_ROLE_URL, json, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(@NonNull JSONObject response) {
                         Log.d(TAG, response.toString());
                         try {
-                            Common.hideProgressDialog();
-                            boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
-                            String message = response.getString(Common.Constant_Class.MESSAGE);
+                            Utility.hideProgressDialog();
+                            boolean success = response.getBoolean(AppConstants.SUCCESS);
+                            String message = response.getString(AppConstants.MESSAGE);
                             if (success) {
                                 if (isAdmin) {
                                     ((HomeActivity) getActivity()).moveToSearch(6);
                                 }
                                 //  lvCustomList.setAdapter(mExpandableListAdapter);
-                                Common.alert(getActivity(), message);
+                                Utility.alert(getActivity(), message);
                             }else {
                                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                                if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                    String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                    if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                if (response.has(AppConstants.ERROR_CODE)) {
+                                    String error = response.getString(AppConstants.ERROR_CODE);
+                                    if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                         Intent mIntent = new Intent(getActivity(), LoginActivity.class);
                                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(mIntent);
@@ -1047,7 +1048,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     public void onErrorResponse(@NonNull VolleyError error) {
                         VolleyLog.d(TAG, "Error: " + error.getMessage());
                         String message = null;
-                        Common.hideProgressDialog();
+                        Utility.hideProgressDialog();
                         if (error instanceof NetworkError) {
                             message = "Cannot connect to Internet...Please check your connection!";
                         } else if (error instanceof ServerError) {
@@ -1066,12 +1067,12 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     @Override
                     public Map<String, String> getHeaders() {
                         Map<String, String> params = new HashMap<>();
-                        params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                        params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                        params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                        params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                        params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                        params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                        params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                        params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                         if (mSharedPreferences != null) {
-                            params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                            params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                         }
                         return params;
                     }
@@ -1141,12 +1142,12 @@ public class SearchFragment extends Fragment implements IAdminControl {
             JSONObject mjson = new JSONObject();
             try {
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(getResources().getString(R.string.title_admins));
-                mjson.put(Common.Constant_Class.ROLE, "ADMIN");
+                mjson.put(AppConstants.ROLE, "ADMIN");
             } catch (Exception e) {
                 e.printStackTrace();
             }
             isAdmin = true;
-            OnlineSearch(mjson.toString(), Common.Constant_Class.ADVANCE_SEARCH_URL);
+            OnlineSearch(mjson.toString(), AppConstants.ADVANCE_SEARCH_URL);
         }
     }
 

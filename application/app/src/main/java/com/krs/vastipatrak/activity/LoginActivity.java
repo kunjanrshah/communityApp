@@ -1,7 +1,6 @@
 package com.krs.vastipatrak.activity;
 
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -81,7 +80,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.krs.vastipatrak.utils.LocaleHelper;
 
@@ -94,20 +94,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.krs.vastipatrak.utils.Common.Constant_Class.DEFAULT_BACKOFF_MULT;
-import static com.krs.vastipatrak.utils.Common.Constant_Class.DEFAULT_MAX_RETRIES;
-import static com.krs.vastipatrak.utils.Common.Constant_Class.INIT_TIMEOUT;
-import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
-import static com.krs.vastipatrak.utils.Common.watchYoutubeVideo;
+import static com.krs.vastipatrak.utils.AppConstants.DEFAULT_BACKOFF_MULT;
+import static com.krs.vastipatrak.utils.AppConstants.DEFAULT_MAX_RETRIES;
+import static com.krs.vastipatrak.utils.AppConstants.INIT_TIMEOUT;
+import static com.krs.vastipatrak.utils.Utility.hideProgressDialog;
+import static com.krs.vastipatrak.utils.Utility.watchYoutubeVideo;
 
 
 public class LoginActivity extends Activity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
 
     final boolean[] isLogin = {false};
-    private final String[] INIT_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS};
+    /*private final String[] INIT_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS};
     private final int CAMARA_REQUEST = 4;
-    private final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
+    private final String[] CALL_CAMARA = {Manifest.permission.CAMERA};*/
 
     @NonNull
     private final String tag_json_obj = "jobj_req";
@@ -159,22 +159,21 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 String newToken = instanceIdResult.getToken();
                 Log.e("newToken", newToken);
-                mEditor.putString(Common.Constant_Class.DEVICE_TOKEN, newToken);
+                mEditor.putString(AppConstants.DEVICE_TOKEN, newToken);
                 mEditor.apply();
             }
         });
         if (Build.VERSION.SDK_INT >= 23) {
-
-            if (Common.canCallPhone(this) || !Common.canAccessLocation(this) || !Common.canSMS(this)) {
+            if (Utility.canCallPhone(this) || !Utility.canAccessLocation(this) || !Utility.canSMS(this)) {
                 int INIT_REQUEST = 1;
-                requestPermissions(INIT_PERMS, INIT_REQUEST);
+                requestPermissions(AppConstants.INIT_PERMS, INIT_REQUEST);
             }
         }
 
         Bundle mBundle = getIntent().getExtras();
         if (mBundle != null) {
-            screen = mBundle.getString(Common.Constant_Class.SCREEN);
-            if (screen != null && screen.equalsIgnoreCase(Common.Constant_Class.SEARCH_FRAGMENT)) {
+            screen = mBundle.getString(AppConstants.SCREEN);
+            if (screen != null && screen.equalsIgnoreCase(AppConstants.SEARCH_FRAGMENT)) {
                 SignupToggle = true;
                 togglePage();
                 txtSignup.setVisibility(View.GONE);
@@ -182,10 +181,10 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             }
         }
 
-        if (mSharedPreferences != null && !mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase("") && screen == null) {
+        if (mSharedPreferences != null && !mSharedPreferences.getString(AppConstants.USER_ID, "").equalsIgnoreCase("") && screen == null) {
             Intent mIntent = new Intent(LoginActivity.this, HomeActivity.class);
 
-            mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+            mIntent.putExtra(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
             startActivity(mIntent);
             finish();
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
@@ -267,15 +266,15 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                 watchYoutubeVideo(LoginActivity.this, getResources().getString(R.string.login_1));
             }
         });
-        Common.getDeviceId(this);
-        if (mSharedPreferences.getString(Common.Constant_Class.LAN, "en").equalsIgnoreCase("de")) {
+        Utility.getDeviceId(this);
+        if (mSharedPreferences.getString(AppConstants.LAN, "en").equalsIgnoreCase("de")) {
             context = LocaleHelper.setLocale(LoginActivity.this, "de");
         } else {
             context = LocaleHelper.setLocale(LoginActivity.this, "en");
         }
         resources = context.getResources();
         checkConnection();
-        Common.hideKeyboard(this);
+        Utility.hideKeyboard(this);
         //showActivityOverlay();
 
 
@@ -413,7 +412,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         // [START_EXCLUDE silent]
-        Common.showProgressDialog(this);
+        Utility.showProgressDialog(this);
         // [END_EXCLUDE]
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -462,10 +461,10 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
     private void Memory_Allocation() {
         mAuth = FirebaseAuth.getInstance();
         login_google=findViewById(R.id.login_google);
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
-        mEditor.putString(Common.Constant_Class.NOTIFICATION, "");
+        mEditor.putString(AppConstants.NOTIFICATION, "");
         mEditor.apply();
         snackbar = Snackbar.make(findViewById(R.id.ll_login), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
         txtHow = findViewById(R.id.txtHow);
@@ -733,20 +732,20 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
 
 
     private void ForgotPasswordWS(Dialog d) {
-        if (Common.isOnline(this)) {
+        if (Utility.isOnline(this)) {
 
             String forgot_email = inputForgotPassword.getText().toString();
             if (!forgot_email.equalsIgnoreCase("")) {
                 d.dismiss();
                 JSONObject json = new JSONObject();
                 try {
-                    json.put(Common.Constant_Class.EMAIL_ADDRESS, forgot_email);
+                    json.put(AppConstants.EMAIL_ADDRESS, forgot_email);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                String url = Common.Constant_Class.FORGOT_PASSWORD_URL;
-                Common.showProgressDialog(this);
+                String url = AppConstants.FORGOT_PASSWORD_URL;
+                Utility.showProgressDialog(this);
                 JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
 
                     @Override
@@ -755,19 +754,19 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
 
                         try {
                             hideProgressDialog();
-                            boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
-                            String message = response.getString(Common.Constant_Class.MESSAGE);
+                            boolean success = response.getBoolean(AppConstants.SUCCESS);
+                            String message = response.getString(AppConstants.MESSAGE);
 
                             if (success) {
-                                if (response.has(Common.Constant_Class.PASSWORD) && response.has(Common.Constant_Class.MOBILE)) {
+                                if (response.has(AppConstants.PASSWORD) && response.has(AppConstants.MOBILE)) {
                                     inputPassword.setText("");
                                 }
-                                Common.alert(LoginActivity.this, message);
+                                Utility.alert(LoginActivity.this, message);
                             } else {
                                 Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
-                                if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                    String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                    if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                if (response.has(AppConstants.ERROR_CODE)) {
+                                    String error = response.getString(AppConstants.ERROR_CODE);
+                                    if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                         Intent mIntent = new Intent(LoginActivity.this, LoginActivity.class);
                                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(mIntent);
@@ -793,8 +792,8 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                     @Override
                     public Map<String, String> getHeaders() {
                         Map<String, String> params = new HashMap<>();
-                        params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                        params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                        params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                        params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
                         return params;
                     }
                 };
@@ -806,7 +805,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                 Toast.makeText(LoginActivity.this, getString(R.string.err_msg_email), Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(LoginActivity.this, Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, AppConstants.NO_CONNECTION, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -816,17 +815,17 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         final String password = inputPassword.getText().toString();
 
         if (!email.equalsIgnoreCase("") && !password.equalsIgnoreCase("")) {
-            if (Common.isOnline(this)) {
+            if (Utility.isOnline(this)) {
 
                 try {
                     json = new JSONObject();
-                    json.put(Common.Constant_Class.USERNAME, email);
-                    json.put(Common.Constant_Class.PASSWORD, password);
+                    json.put(AppConstants.USERNAME, email);
+                    json.put(AppConstants.PASSWORD, password);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Common.showProgressDialog(this);
-                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.LOGIN_URL, json, new Response.Listener<JSONObject>() {
+                Utility.showProgressDialog(this);
+                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.LOGIN_URL, json, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(@NonNull JSONObject response) {
@@ -834,46 +833,46 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
 
                         try {
                             hideProgressDialog();
-                            boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
-                            String message = response.getString(Common.Constant_Class.MESSAGE);
+                            boolean success = response.getBoolean(AppConstants.SUCCESS);
+                            String message = response.getString(AppConstants.MESSAGE);
 
                             if (success) {
-                                String data = response.getString(Common.Constant_Class.DATA);
+                                String data = response.getString(AppConstants.DATA);
                                 JSONObject mjson_data = new JSONObject(data);
 
-                                String status = mjson_data.getString(Common.Constant_Class.STATUS);
+                                String status = mjson_data.getString(AppConstants.STATUS);
                                 if (status.equalsIgnoreCase("1")) {
-                                    Common.SaveProfile(mjson_data);
+                                    Utility.SaveProfile(mjson_data);
 
-                                    String user_id = mjson_data.getString(Common.Constant_Class.ID);
-                                    String profile_url = mjson_data.getString(Common.Constant_Class.PROFILE_PIC_URL);
-                                    String first_name = mjson_data.getString(Common.Constant_Class.FIRST_NAME);
-                                    String last_name = mjson_data.getString(Common.Constant_Class.LAST_NAME);
+                                    String user_id = mjson_data.getString(AppConstants.ID);
+                                    String profile_url = mjson_data.getString(AppConstants.PROFILE_PIC_URL);
+                                    String first_name = mjson_data.getString(AppConstants.FIRST_NAME);
+                                    String last_name = mjson_data.getString(AppConstants.LAST_NAME);
 
-                                    String office_lat = mjson_data.getString(Common.Constant_Class.OFFICE_LAT);
-                                    String office_lng = mjson_data.getString(Common.Constant_Class.OFFICE_LNG);
-                                    String home_lat = mjson_data.getString(Common.Constant_Class.HOME_LAT);
-                                    String home_lng = mjson_data.getString(Common.Constant_Class.HOME_LNG);
+                                    String office_lat = mjson_data.getString(AppConstants.OFFICE_LAT);
+                                    String office_lng = mjson_data.getString(AppConstants.OFFICE_LNG);
+                                    String home_lat = mjson_data.getString(AppConstants.HOME_LAT);
+                                    String home_lng = mjson_data.getString(AppConstants.HOME_LNG);
 
-                                    String access_token = mjson_data.getString(Common.Constant_Class.ACCESS_TOKEN);
-                                    String updated_time = mjson_data.getString(Common.Constant_Class.UPDATED_TIME);
-                                    String role = mjson_data.getString(Common.Constant_Class.ROLE);
-                                    String is_location_enable = mjson_data.getString(Common.Constant_Class.IS_LOCATION_ENABLE);
+                                    String access_token = mjson_data.getString(AppConstants.ACCESS_TOKEN);
+                                    String updated_time = mjson_data.getString(AppConstants.UPDATED_TIME);
+                                    String role = mjson_data.getString(AppConstants.ROLE);
+                                    String is_location_enable = mjson_data.getString(AppConstants.IS_LOCATION_ENABLE);
 
-                                    mEditor.putString(Common.Constant_Class.EMAIL, email);
-                                    mEditor.putString(Common.Constant_Class.PASSWORD, password);
-                                    mEditor.putString(Common.Constant_Class.USER_ID, user_id);
-                                    mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, profile_url);
-                                    mEditor.putString(Common.Constant_Class.FIRST_NAME, first_name);
-                                    mEditor.putString(Common.Constant_Class.LAST_NAME, last_name);
-                                    mEditor.putString(Common.Constant_Class.ACCESS_TOKEN, access_token);
-                                    mEditor.putString(Common.Constant_Class.UPDATED_TIME, updated_time);
-                                    mEditor.putString(Common.Constant_Class.ROLE, role);
-                                    mEditor.putString(Common.Constant_Class.TBTN_SHARE, is_location_enable);
-                                    mEditor.putString(Common.Constant_Class.OFFICE_LAT, office_lat);
-                                    mEditor.putString(Common.Constant_Class.OFFICE_LNG, office_lng);
-                                    mEditor.putString(Common.Constant_Class.HOME_LAT, home_lat);
-                                    mEditor.putString(Common.Constant_Class.HOME_LNG, home_lng);
+                                    mEditor.putString(AppConstants.EMAIL, email);
+                                    mEditor.putString(AppConstants.PASSWORD, password);
+                                    mEditor.putString(AppConstants.USER_ID, user_id);
+                                    mEditor.putString(AppConstants.PROFILE_PIC_URL, profile_url);
+                                    mEditor.putString(AppConstants.FIRST_NAME, first_name);
+                                    mEditor.putString(AppConstants.LAST_NAME, last_name);
+                                    mEditor.putString(AppConstants.ACCESS_TOKEN, access_token);
+                                    mEditor.putString(AppConstants.UPDATED_TIME, updated_time);
+                                    mEditor.putString(AppConstants.ROLE, role);
+                                    mEditor.putString(AppConstants.TBTN_SHARE, is_location_enable);
+                                    mEditor.putString(AppConstants.OFFICE_LAT, office_lat);
+                                    mEditor.putString(AppConstants.OFFICE_LNG, office_lng);
+                                    mEditor.putString(AppConstants.HOME_LAT, home_lat);
+                                    mEditor.putString(AppConstants.HOME_LNG, home_lng);
                                     mEditor.apply();
 
                                     /*Bundle fb_bundle = new Bundle();
@@ -882,12 +881,12 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                                     AppController.getInstance().firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, fb_bundle);
 */
 
-                                   /* if (user_id.equalsIgnoreCase(Common.Constant_Class.ADMIN_1) || user_id.equalsIgnoreCase(Common.Constant_Class.ADMIN_2)) {
+                                   /* if (user_id.equalsIgnoreCase(AppConstants.ADMIN_1) || user_id.equalsIgnoreCase(AppConstants.ADMIN_2)) {
                                         AppController.isAdmin = true;
                                     }*/
                                     Intent mIntent = new Intent(LoginActivity.this, HomeActivity.class);
                                     if (mSharedPreferences != null) {
-                                        mIntent.putExtra(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
+                                        mIntent.putExtra(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
                                     }
                                     if (!isLogin[0]) {
                                         isLogin[0] = true;
@@ -895,10 +894,10 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                                         finish();
                                     }
                                 } else {
-                                    Common.alert(LoginActivity.this, "Registration request is pending. Please contact to Admin !!");
+                                    Utility.alert(LoginActivity.this, "Registration request is pending. Please contact to Admin !!");
                                 }
                             } else {
-                                Common.alert(LoginActivity.this, message);
+                                Utility.alert(LoginActivity.this, message);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -930,12 +929,12 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                     @Override
                     public Map<String, String> getHeaders() {
                         Map<String, String> params = new HashMap<>();
-                        params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                        params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                        params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                        params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences != null ? mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, "") : null);
+                        params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                        params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                        params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                        params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences != null ? mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, "") : null);
                         if (mSharedPreferences != null) {
-                            params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                            params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                         }
                         return params;
                     }
@@ -949,7 +948,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
     }
 
     private void SignupWS() {
-        if (Common.isOnline(this)) {
+        if (Utility.isOnline(this)) {
             final String name = inputName.getText().toString();
             final String email = inputEmail.getText().toString();
             final String mobile = inputMobile.getText().toString().trim();
@@ -959,7 +958,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             final String address = edt_address.getText().toString();
 
             if (!email.equalsIgnoreCase("")) {
-                if (Common.isValidEmail(email)) {
+                if (Utility.isValidEmail(email)) {
                     Toast.makeText(LoginActivity.this, "Type Valid Email Address!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -970,28 +969,28 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                     if (mobile.length() == 10) {
                         try {
                             json = new JSONObject();
-                            Common.showProgressDialog(this);
-                            json.put(Common.Constant_Class.FIRST_NAME, name);
-                            json.put(Common.Constant_Class.SPOUSE_NAME, spouse_name);
-                            json.put(Common.Constant_Class.EMAIL_ADDRESS, email);
-                            json.put(Common.Constant_Class.MOBILE, mobile);
-                            json.put(Common.Constant_Class.PASSWORD, password);
-                            json.put(Common.Constant_Class.REPEAT_PASSWORD, cpassword);
-                            json.put(Common.Constant_Class.ADDRESS, address);
+                            Utility.showProgressDialog(this);
+                            json.put(AppConstants.FIRST_NAME, name);
+                            json.put(AppConstants.SPOUSE_NAME, spouse_name);
+                            json.put(AppConstants.EMAIL_ADDRESS, email);
+                            json.put(AppConstants.MOBILE, mobile);
+                            json.put(AppConstants.PASSWORD, password);
+                            json.put(AppConstants.REPEAT_PASSWORD, cpassword);
+                            json.put(AppConstants.ADDRESS, address);
 
-                            if (screen != null && screen.equalsIgnoreCase(Common.Constant_Class.SEARCH_FRAGMENT)) {
-                                json.put(Common.Constant_Class.STATUS, "1");
+                            if (screen != null && screen.equalsIgnoreCase(AppConstants.SEARCH_FRAGMENT)) {
+                                json.put(AppConstants.STATUS, "1");
                             } else {
-                                json.put(Common.Constant_Class.STATUS, "0");
+                                json.put(AppConstants.STATUS, "0");
                             }
                             if (!str_profile_hash.isEmpty()) {
-                                json.put(Common.Constant_Class.PROFILE_PIC, str_profile_hash);
+                                json.put(AppConstants.PROFILE_PIC, str_profile_hash);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
-                        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SIGNUP_URL, json, new Response.Listener<JSONObject>() {
+                        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.SIGNUP_URL, json, new Response.Listener<JSONObject>() {
 
                             @Override
                             public void onResponse(@NonNull JSONObject response) {
@@ -999,8 +998,8 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
 
                                 try {
                                     hideProgressDialog();
-                                    boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
-                                    String message = response.getString(Common.Constant_Class.MESSAGE);
+                                    boolean success = response.getBoolean(AppConstants.SUCCESS);
+                                    String message = response.getString(AppConstants.MESSAGE);
                                     if (success) {
                                         if (message.contains("admin")) {
                                             inputName.setText("");
@@ -1014,7 +1013,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                                             togglePage();
                                         }
                                     }
-                                    Common.alert(LoginActivity.this, message);
+                                    Utility.alert(LoginActivity.this, message);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -1045,11 +1044,11 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                             @Override
                             public Map<String, String> getHeaders() {
                                 Map<String, String> params = new HashMap<>();
-                                params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                                params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                                params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
+                                params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                                params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                                params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
                                 assert mSharedPreferences != null;
-                                params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                                params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                                 return params;
                             }
                         };
@@ -1065,7 +1064,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                 Toast.makeText(LoginActivity.this, getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(LoginActivity.this, Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, AppConstants.NO_CONNECTION, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -1079,12 +1078,12 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             @Override
             public void onClick(@NonNull DialogInterface dialog, int item) {
                 if (items[item].equals("Take Photo")) {
-                    if (Common.canCAMARA(LoginActivity.this)) {
+                    if (Utility.hasCAMARA(LoginActivity.this)) {
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         startActivityForResult(intent, 0);
                     } else {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            requestPermissions(CALL_CAMARA, CAMARA_REQUEST);
+                            requestPermissions(AppConstants.CALL_CAMARA, AppConstants.CAMARA_REQUEST);
                         }
                     }
                 } else if (items[item].equals("Choose from Library")) {
@@ -1129,7 +1128,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                     bmp = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
                 } else {
                     Uri selectedImage = data.getData();
-                    bmp = Common.scaleImage(this, selectedImage);
+                    bmp = Utility.scaleImage(this, selectedImage);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1138,7 +1137,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             if (bmp != null) {
                 if (resultCode == RESULT_OK) {
                     Glide.with(this).load(bmp).thumbnail(0.5f).apply(RequestOptions.circleCropTransform()).into(img_profile);
-                    str_profile_hash = Common.getBase64(bmp);
+                    str_profile_hash = Utility.getBase64(bmp);
                 }
             }
         }

@@ -88,7 +88,8 @@ import com.krs.vastipatrak.fragments.SearchFragment;
 import com.krs.vastipatrak.fragments.SharedUsersFragment;
 import com.krs.vastipatrak.interfaces.IAdminControl;
 import com.krs.vastipatrak.service.MyLocationService;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
@@ -101,7 +102,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.krs.vastipatrak.utils.Common.Constant_Class.MYPROFILE_SP;
+
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback, ConnectivityReceiver.ConnectivityReceiverListener {
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(action)) {
-                if (!Common.CheckGpsStatus(MainActivity.this)) {
+                if (!Utility.CheckGpsStatus(MainActivity.this)) {
                     Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
                     startService(mIntent);
                 } else {
@@ -160,11 +161,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         snackbar = Snackbar.make(findViewById(R.id.drawer_layout), R.string.not_connected, Snackbar.LENGTH_INDEFINITE);
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
 
-        mPreferencesWelcome = getSharedPreferences(Common.Constant_Class.PREF_WELCOME, MODE_PRIVATE);
+        mPreferencesWelcome = getSharedPreferences(AppConstants.PREF_WELCOME, MODE_PRIVATE);
         mEditorWelcome = mPreferencesWelcome.edit();
         mEditorWelcome.apply();
 
@@ -179,18 +180,18 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         searchFragment = new SearchFragment();
 
         if (Build.VERSION.SDK_INT >= 23) {
-            if (Common.canCallPhone(this) && !Common.canAccessLocation(this)) {
+            if (Utility.canCallPhone(this) && !Utility.canAccessLocation(this)) {
                 requestPermissions(INIT_PERMS, INIT_REQUEST);
-            } else if (!Common.canAccessLocation(this)) {
+            } else if (!Utility.canAccessLocation(this)) {
                 requestPermissions(LOCATION_PERMS, LOCATION_REQUEST);
-            } else if (Common.canCallPhone(this)) {
+            } else if (Utility.canCallPhone(this)) {
                 requestPermissions(CALL_PERMS, CALL_REQUEST);
-            } else if (Common.canCallPhone(this)) {
+            } else if (Utility.canCallPhone(this)) {
                 requestPermissions(CALL_CAMARA, CAMARA_REQUEST);
             }
         }
 
-        if (Common.CheckGpsStatus(this)) {
+        if (Utility.CheckGpsStatus(this)) {
             displayLocationSettingsRequest(MainActivity.this);
         } else {
             Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
@@ -210,49 +211,49 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
 
                 } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
-                    String message = intent.getStringExtra(Common.Constant_Class.PUSH_MESSAGE);
+                    String message = intent.getStringExtra(AppConstants.PUSH_MESSAGE);
                     Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
                     Log.d(TAG, "Push notification: " + message);
                 }
             }
         };
-        Common.getDeviceId(this);
+        Utility.getDeviceId(this);
         logUser();
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this, new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 String newToken = instanceIdResult.getToken();
                 Log.e("newToken", newToken);
-                mEditor.putString(Common.Constant_Class.DEVICE_TOKEN, newToken);
+                mEditor.putString(AppConstants.DEVICE_TOKEN, newToken);
                 mEditor.apply();
             }
         });
-        if (mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase("")) {
-            mEditor.putString(Common.Constant_Class.NOTIFICATION, "");
+        if (mSharedPreferences.getString(AppConstants.USER_ID, "").equalsIgnoreCase("")) {
+            mEditor.putString(AppConstants.NOTIFICATION, "");
             mEditor.apply();
             Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
             mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(mIntent);
             finish();
         } else {
-            String push = mSharedPreferences.getString(Common.Constant_Class.NOTIFICATION, "");
+            String push = mSharedPreferences.getString(AppConstants.NOTIFICATION, "");
             if (push.toLowerCase().contains("approve") && !push.toLowerCase().contains("admin")) {
-                mEditor.putString(Common.Constant_Class.NOTIFICATION, "");
+                mEditor.putString(AppConstants.NOTIFICATION, "");
                 mEditor.apply();
                 MOVE_TO_SEARCH = 1;
                 moveToSearch(MOVE_TO_SEARCH);
             } else if (push.toLowerCase().contains("location")) {
                 ProfileActivity.isEnable = false;
-                mEditor.putString(Common.Constant_Class.NOTIFICATION, "");
-                mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+                mEditor.putString(AppConstants.NOTIFICATION, "");
+                mEditor.putBoolean(AppConstants.MYPROFILE_SP, false);
                 mEditor.apply();
                 Intent mIntent = new Intent(this, ProfileActivity.class);
                 startActivity(mIntent);
             } else {
                 Bundle mBundle = getIntent().getExtras();
                 if (mBundle != null) {
-                    query = mBundle.getString(Common.Constant_Class.QUERY);
-                    query_string = mBundle.getString(Common.Constant_Class.QUERY_STRING);
+                    query = mBundle.getString(AppConstants.QUERY);
+                    query_string = mBundle.getString(AppConstants.QUERY_STRING);
                 }
                 if (query == null && query_string == null && push_message == null) {
                     displayView(0);
@@ -284,38 +285,38 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     private void get_updated_ver_ws() {
 
-        if (Common.isOnline(this)) {
+        if (Utility.isOnline(this)) {
 
-            Common.showProgressDialog(this);
+            Utility.showProgressDialog(this);
             JSONObject mJsonObject = null;
 
             try {
                 mJsonObject = new JSONObject();
-                String user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
-                String token = mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, "");
-                mJsonObject.put(Common.Constant_Class.USER_ID, user_id);
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, token);
-                mJsonObject.put(Common.Constant_Class.INSERT, "0");
-                mJsonObject.put(Common.Constant_Class.VERSION, Common.getAppVersion(this));
+                String user_id = mSharedPreferences.getString(AppConstants.USER_ID, "");
+                String token = mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, "");
+                mJsonObject.put(AppConstants.USER_ID, user_id);
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, token);
+                mJsonObject.put(AppConstants.INSERT, "0");
+                mJsonObject.put(AppConstants.VERSION, Utility.getAppVersion(this));
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SET_UPDATED_VERSION_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.SET_UPDATED_VERSION_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
 
                     try {
-                        String data = response.getString(Common.Constant_Class.DATA);
+                        String data = response.getString(AppConstants.DATA);
                         if (data.equals("0")) {
                             displayAlert();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Common.hideProgressDialog();
+                        Utility.hideProgressDialog();
                     }
                 }
             }, new Response.ErrorListener() {
@@ -324,17 +325,17 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
 
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -345,58 +346,58 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
 
     private void getList(final String type) {
-        if (Common.isOnline(this)) {
+        if (Utility.isOnline(this)) {
 
-            Common.showProgressDialog(this);
+            Utility.showProgressDialog(this);
             JSONObject mJsonObject = null;
 
             try {
                 mJsonObject = new JSONObject();
-                String user_id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
-                String token = mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, "");
-                mJsonObject.put(Common.Constant_Class.USER_ID, user_id);
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, token);
-                mJsonObject.put(Common.Constant_Class.RESPONSE_DATA, type);
+                String user_id = mSharedPreferences.getString(AppConstants.USER_ID, "");
+                String token = mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, "");
+                mJsonObject.put(AppConstants.USER_ID, user_id);
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, token);
+                mJsonObject.put(AppConstants.RESPONSE_DATA, type);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.GET_MASTER_DATA_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.GET_MASTER_DATA_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     Log.d(TAG, "response: " + response.toString());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
 
                     try {
-                        JSONArray mArray = response.getJSONArray(Common.Constant_Class.DATA);
+                        JSONArray mArray = response.getJSONArray(AppConstants.DATA);
                         if (type.equalsIgnoreCase(getResources().getString(R.string._gotra))) {
                             for (int i = 0; i < mArray.length(); i++) {
                                 JSONObject mObject = mArray.getJSONObject(i);
                                 AppController.getInstance().lstGotra.add(mObject.getString("gotra"));
                             }
                             Collections.sort(AppController.getInstance().lstGotra);
-                            AppController.getInstance().lstGotra.add(0, Common.Constant_Class.TITLE_GOTRA);
+                            AppController.getInstance().lstGotra.add(0, AppConstants.TITLE_GOTRA);
                         } else if (type.equalsIgnoreCase(getString(R.string._native))) {
                             for (int i = 0; i < mArray.length(); i++) {
                                 JSONObject mObject = mArray.getJSONObject(i);
                                 AppController.getInstance().lstNative.add(mObject.getString(getString(R.string._native)));
                             }
                             Collections.sort(AppController.getInstance().lstNative);
-                            AppController.getInstance().lstNative.add(Common.Constant_Class.TITLE_NATIVE);
+                            AppController.getInstance().lstNative.add(AppConstants.TITLE_NATIVE);
                         } else if (type.equalsIgnoreCase(getString(R.string._education))) {
                             for (int i = 0; i < mArray.length(); i++) {
                                 JSONObject mObject = mArray.getJSONObject(i);
                                 AppController.getInstance().lstEducation.add(mObject.getString(getString(R.string._education)));
                             }
                             Collections.sort(AppController.getInstance().lstEducation);
-                            AppController.getInstance().lstEducation.add(Common.Constant_Class.TITLE_EDUCATION);
+                            AppController.getInstance().lstEducation.add(AppConstants.TITLE_EDUCATION);
                         }
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Common.hideProgressDialog();
+                        Utility.hideProgressDialog();
                     }
                 }
             }, new Response.ErrorListener() {
@@ -404,17 +405,17 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -489,24 +490,24 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
     private void logUser() {
-        Crashlytics.setUserIdentifier(mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-        Crashlytics.setUserEmail(mSharedPreferences.getString(Common.Constant_Class.EMAIL, ""));
-        String fname = mSharedPreferences.getString(Common.Constant_Class.FIRST_NAME, "");
-        String lname = mSharedPreferences.getString(Common.Constant_Class.LAST_NAME, "");
+        Crashlytics.setUserIdentifier(mSharedPreferences.getString(AppConstants.USER_ID, ""));
+        Crashlytics.setUserEmail(mSharedPreferences.getString(AppConstants.EMAIL, ""));
+        String fname = mSharedPreferences.getString(AppConstants.FIRST_NAME, "");
+        String lname = mSharedPreferences.getString(AppConstants.LAST_NAME, "");
         Crashlytics.setUserName(fname + " " + lname);
     }
 
 /*
     private void getGotraWS() {
-        if (Common.isOnline(this)) {
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, Common.Constant_Class.GET_GOTRA_URL, null, new Response.Listener<JSONObject>() {
+        if (Utility.isOnline(this)) {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, AppConstants.GET_GOTRA_URL, null, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                        String success = response.getString(AppConstants.SUCCESS);
+                        String message = response.getString(AppConstants.MESSAGE);
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
                             JSONArray mJsonArray = response.getJSONArray("data");
                             AppController.getInstance().lstGotra = new ArrayList<>();
 
@@ -514,15 +515,15 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                                 AppController.getInstance().lstGotra.add(mJsonArray.getString(i));
                             }
                             Collections.sort(AppController.getInstance().lstGotra);
-                            AppController.getInstance().lstGotra.add(0, Common.Constant_Class.TITLE_GOTRA);
+                            AppController.getInstance().lstGotra.add(0, AppConstants.TITLE_GOTRA);
                             AppController.getInstance().dataAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, AppController.getInstance().lstGotra);
                             AppController.getInstance().dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
                         } else {
                             Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                            if (response.has(AppConstants.ERROR_CODE)) {
+                                String error = response.getString(AppConstants.ERROR_CODE);
+                                if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                     Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(mIntent);
@@ -545,10 +546,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -675,7 +676,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     Toast.makeText(this, "You need to give permission to access location ! ", Toast.LENGTH_SHORT).show();
-                } else if (Common.canAccessLocation(this)) {
+                } else if (Utility.canAccessLocation(this)) {
                     Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
                     startService(mIntent);
                 }
@@ -690,9 +691,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
                 break;
             case INIT_REQUEST:
-                if (Common.canCallPhone(this) && !Common.canAccessLocation(this)) {
+                if (Utility.canCallPhone(this) && !Utility.canAccessLocation(this)) {
                     Toast.makeText(this, "You need to give permission to access phone and location ! ", Toast.LENGTH_SHORT).show();
-                } else if (Common.canAccessLocation(this)) {
+                } else if (Utility.canAccessLocation(this)) {
                     Intent mIntent = new Intent(MainActivity.this, MyLocationService.class);
                     startService(mIntent);
                 }
@@ -745,7 +746,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 searchFragment = new SearchFragment();
                 IAdminControl = (IAdminControl) searchFragment;
                 ((SearchFragment) searchFragment).setmContext(MainActivity.this);
-                mBundle.putString(Common.Constant_Class.QUERY, query);
+                mBundle.putString(AppConstants.QUERY, query);
                 searchFragment.setArguments(mBundle);
                 fragmentTransaction.replace(R.id.container_body, searchFragment).commit();
 
@@ -765,7 +766,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                Common.promptSpeechInput(MainActivity.this);
+                Utility.promptSpeechInput(MainActivity.this);
                 return false;
             }
         });
@@ -819,8 +820,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             export.setVisible(false);
         }
 
-        if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
-            if (Common.isOnline(this)) {
+        if (mSharedPreferences.getString(AppConstants.ROLE, AppConstants.USER).equals(AppConstants.ADMIN)) {
+            if (Utility.isOnline(this)) {
                 /*nonActives.setVisible(true);
                 event.setVisible(true);
 
@@ -839,7 +840,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     deleteItem.setVisible(true);
                 }
             } else {
-                Toast.makeText(this, "" + Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "" + AppConstants.NO_CONNECTION, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -866,7 +867,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
-                mIntent.putExtra(Common.Constant_Class.SCREEN, Common.Constant_Class.SEARCH_FRAGMENT);
+                mIntent.putExtra(AppConstants.SCREEN, AppConstants.SEARCH_FRAGMENT);
                 startActivity(mIntent);
                 return false;
             }
@@ -931,11 +932,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         Handler mhandler = new Handler();
         if (menu == 1) {
             Bundle mBundle = new Bundle();
-            mBundle.putInt(Common.Constant_Class.AdminControl, Common.Constant_Class.NonActive);
+            mBundle.putInt(AppConstants.AdminControl, AppConstants.NonActive);
             fragment.setArguments(mBundle);
         } else if (menu == 6) {
             Bundle mBundle = new Bundle();
-            mBundle.putInt(Common.Constant_Class.AdminControl, -1);
+            mBundle.putInt(AppConstants.AdminControl, -1);
             fragment.setArguments(mBundle);
         }
         fragmentTransaction.replace(R.id.container_body, fragment).commit();
@@ -1070,8 +1071,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         super.onNewIntent(intent);
         Bundle mBundle = intent.getExtras();
         if (mBundle != null) {
-            push_message = mBundle.getString(Common.Constant_Class.PUSH_MESSAGE);
-            String user_id = mBundle.getString(Common.Constant_Class.USER_ID);
+            push_message = mBundle.getString(AppConstants.PUSH_MESSAGE);
+            String user_id = mBundle.getString(AppConstants.USER_ID);
         }
     }
 
@@ -1083,15 +1084,15 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 ((SearchFragment) searchFragment).setmContext(MainActivity.this);
                 Bundle mBundle = new Bundle();
                 if (query != null) {
-                    mBundle.putString(Common.Constant_Class.QUERY, query);
+                    mBundle.putString(AppConstants.QUERY, query);
                     fragment.setArguments(mBundle);
                 } else if (query_string != null) {
-                    mBundle.putString(Common.Constant_Class.QUERY_STRING, query_string);
+                    mBundle.putString(AppConstants.QUERY_STRING, query_string);
                     fragment.setArguments(mBundle);
                 } else if (push_message != null) {
                     IAdminControl = (IAdminControl) fragment;
-                    mBundle.putString(Common.Constant_Class.PUSH_MESSAGE, push_message);
-                    mBundle.putInt(Common.Constant_Class.AdminControl, Common.Constant_Class.NonActive);
+                    mBundle.putString(AppConstants.PUSH_MESSAGE, push_message);
+                    mBundle.putInt(AppConstants.AdminControl, AppConstants.NonActive);
                     fragment.setArguments(mBundle);
                     push_message = null;
                     try {
@@ -1106,7 +1107,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
                 break;
             case 1:
-                mEditor.putBoolean(MYPROFILE_SP, true);
+                mEditor.putBoolean(AppConstants.MYPROFILE_SP, true);
                 mEditor.apply();
                 Intent mIntent1 = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(mIntent1);
@@ -1180,37 +1181,37 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     private void call_log_out_ws() {
 
-        if (Common.isOnline(this)) {
+        if (Utility.isOnline(this)) {
 
-            Common.showProgressDialog(this);
+            Utility.showProgressDialog(this);
             JSONObject mJsonObject = null;
 
             try {
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
 
-            final String password_url = Common.Constant_Class.LOGOUT_URL;
+            final String password_url = AppConstants.LOGOUT_URL;
 
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, password_url, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
 
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
 
                     try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        String success = response.getString(AppConstants.SUCCESS);
+                        String message = response.getString(AppConstants.MESSAGE);
                         if (success.equalsIgnoreCase("false")) {
                             Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
-                        // if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                        // if (success.equalsIgnoreCase(AppConstants.TRUE)) {
                         MovetoLoginScreen();
 
                         // }
@@ -1225,7 +1226,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     VolleyLog.d(TAG, "logout Error: " + error.getMessage());
                     Log.d(TAG, "Logout WS " + error.getMessage());
                     Toast.makeText(MainActivity.this, "Error while Logout", Toast.LENGTH_SHORT).show();
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                     MovetoLoginScreen();
                 }
             }) {
@@ -1233,10 +1234,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -1249,7 +1250,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         try {
             mEditor.clear();
             mEditor.apply();
-            mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_FILTER, MODE_PRIVATE);
+            mSharedPreferences = getSharedPreferences(AppConstants.PREF_FILTER, MODE_PRIVATE);
             mEditor = mSharedPreferences.edit();
             mEditor.clear();
             mEditor.apply();
@@ -1307,8 +1308,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             } else {
                 //if qr contains data
                 String id = result.getContents();
-                mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
-                mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+                mEditor.putString(AppConstants.PROFILE_ID, id);
+                mEditor.putBoolean(AppConstants.MYPROFILE_SP, false);
                 mEditor.apply();
                 ProfileActivity.isEnable = false;
                 Intent mIntent = new Intent(this, ProfileActivity.class);
@@ -1332,8 +1333,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             Result result = reader.decode(bitmap);
             id = result.getText();
             if (id != null) {
-                mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
-                mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+                mEditor.putString(AppConstants.PROFILE_ID, id);
+                mEditor.putBoolean(AppConstants.MYPROFILE_SP, false);
                 mEditor.apply();
                 ProfileActivity.isEnable = false;
                 Intent mIntent = new Intent(MainActivity.this, ProfileActivity.class);
@@ -1386,7 +1387,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             if (export != null) {
                 export.setVisible(true);
             }
-            if (change_role != null && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
+            if (change_role != null && mSharedPreferences.getString(AppConstants.ROLE, AppConstants.USER).equals(AppConstants.ADMIN)) {
                 change_role.setVisible(true);
                 if (deleteItem != null) {
                     deleteItem.setVisible(true);

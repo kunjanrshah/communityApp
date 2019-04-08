@@ -12,7 +12,8 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.krs.vastipatrak.activity.HomeActivity;
 import com.krs.vastipatrak.app.Config;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.krs.vastipatrak.utils.NotificationUtils;
 
 import org.json.JSONException;
@@ -47,16 +48,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void storeRegIdInPref(String token) {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(AppConstants.PREF_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putString(Common.Constant_Class.DEVICE_TOKEN, token);
+        editor.putString(AppConstants.DEVICE_TOKEN, token);
         editor.apply();
     }
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         Log.e(TAG, "From: " + remoteMessage.getFrom());
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         /*if (remoteMessage == null)
             return;*/
@@ -83,8 +84,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if (title == null || title.isEmpty()) {
                 title = "MEDK Vastipatrak";
             }
-            mEditor.putString(Common.Constant_Class.NOTIFICATION,notification);
-            mEditor.putString(Common.Constant_Class.PROFILE_ID,user_id);
+            mEditor.putString(AppConstants.NOTIFICATION,notification);
+            mEditor.putString(AppConstants.PROFILE_ID,user_id);
             mEditor.apply();
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
@@ -150,7 +151,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             /*if (NotificationUtils.isAppIsInBackground(getApplicationContext())) {
                 // app is in foreground, broadcast the push message
                 Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-                pushNotification.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
+                pushNotification.putExtra(AppConstants.PUSH_MESSAGE, notification);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
                 // play notification sound
@@ -159,8 +160,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             } else {*/
             // app is in background, show the notification in notification tray
             Intent resultIntent = new Intent(getApplicationContext(), HomeActivity.class);
-            resultIntent.putExtra(Common.Constant_Class.PUSH_MESSAGE, notification);
-            resultIntent.putExtra(Common.Constant_Class.USER_ID, user_id);
+            resultIntent.putExtra(AppConstants.PUSH_MESSAGE, notification);
+            resultIntent.putExtra(AppConstants.USER_ID, user_id);
 
             // check for image attachment
             if (TextUtils.isEmpty(imageUrl)) {

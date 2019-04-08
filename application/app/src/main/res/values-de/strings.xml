@@ -22,6 +22,7 @@
 
     <!--Registraion page-->
     <string name="hint_name">ફેમિલી હેડ નું  નામ </string>
+    <string name="hint_head_surname">ફેમિલી હેડ અટક</string>
     <string name="hint_spouse_name">જીવનસાથી નું નામ</string>
     <string name="hint_email">ઇમેઇલ આઈડી</string>
     <string name="hint_mobile">મોબાઇલ નંબર</string>

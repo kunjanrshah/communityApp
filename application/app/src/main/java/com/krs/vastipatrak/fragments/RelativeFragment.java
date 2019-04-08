@@ -35,7 +35,8 @@ import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.ProfileActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.interfaces.OnItemClickListener;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,11 +45,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.krs.vastipatrak.utils.Common.Constant_Class.DEFAULT_BACKOFF_MULT;
-import static com.krs.vastipatrak.utils.Common.Constant_Class.DEFAULT_MAX_RETRIES;
-import static com.krs.vastipatrak.utils.Common.Constant_Class.INIT_TIMEOUT;
-import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
-import static com.krs.vastipatrak.utils.Common.showProgressDialog;
+import static com.krs.vastipatrak.utils.AppConstants.DEFAULT_BACKOFF_MULT;
+import static com.krs.vastipatrak.utils.AppConstants.DEFAULT_MAX_RETRIES;
+import static com.krs.vastipatrak.utils.AppConstants.INIT_TIMEOUT;
 
 public class RelativeFragment extends Fragment {
 
@@ -69,7 +68,7 @@ public class RelativeFragment extends Fragment {
     }
 
     private void MemoryAllocation(View rootView) {
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         recycler_view = rootView.findViewById(R.id.recycler_view);
         txtLable = rootView.findViewById(R.id.txtLable);
@@ -80,7 +79,7 @@ public class RelativeFragment extends Fragment {
 
             if (pDialog == null) {
                 pDialog = new ProgressDialog(mContext);
-                pDialog.setMessage(Common.Constant_Class.LOADING);
+                pDialog.setMessage(AppConstants.LOADING);
                 pDialog.setCancelable(false);
             }
 
@@ -102,47 +101,47 @@ public class RelativeFragment extends Fragment {
     }
 
     private void getRelationsWS() {
-        if (Common.isOnline(getActivity())) {
+        if (Utility.isOnline(getActivity())) {
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
                 String id = "";
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
-                    id = mSharedPreferences.getString(Common.Constant_Class.USER_ID, "");
+                if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true)) {
+                    id = mSharedPreferences.getString(AppConstants.USER_ID, "");
                 } else {
-                    id = mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, "");
+                    id = mSharedPreferences.getString(AppConstants.PROFILE_ID, "");
                 }
-                mJsonObject.put(Common.Constant_Class.PROFILE_ID, id);
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.PROFILE_ID, id);
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
             showProgressDialog(getActivity());
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.GET_RELATIONS_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.GET_RELATIONS_URL, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
                         Log.d(TAG, "RelationsWS: " + response.toString());
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
+                        String success = response.getString(AppConstants.SUCCESS);
                         if (success.equalsIgnoreCase("true")) {
-                            JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                            JSONArray mJsonArray = response.getJSONArray(AppConstants.DATA);
                             if (mJsonArray.length() > 0) {
                                 lstRelative = new ArrayList<>();
                             }
                             for (int i = 0; i < mJsonArray.length(); i++) {
                                 JSONObject mJsonreldata = mJsonArray.getJSONObject(i);
-                                String id = mJsonreldata.getString(Common.Constant_Class.ID);
-                                String user_id = mJsonreldata.getString(Common.Constant_Class.USER_ID);
-                                String to_user_id = mJsonreldata.getString(Common.Constant_Class.TO_USER_ID);
-                                String relation = mJsonreldata.getString(Common.Constant_Class.RELATION);
-                                String status = mJsonreldata.getString(Common.Constant_Class.RELATIONSHIP_STATUS);
-                                String to_first_name = mJsonreldata.getString(Common.Constant_Class.TO_FIRST_NAME);
-                                String to_last_name = mJsonreldata.getString(Common.Constant_Class.TO_LAST_NAME);
-                                String from_first_name = mJsonreldata.getString(Common.Constant_Class.FROM_FIRST_NAME);
-                                String from_last_name = mJsonreldata.getString(Common.Constant_Class.FROM_LAST_NAME);
-                                String to_profile_pic = mJsonreldata.getString(Common.Constant_Class.FROM_PROFILE_PIC);
-                                String from_profile_pic = mJsonreldata.getString(Common.Constant_Class.TO_PROFILE_PIC);
+                                String id = mJsonreldata.getString(AppConstants.ID);
+                                String user_id = mJsonreldata.getString(AppConstants.USER_ID);
+                                String to_user_id = mJsonreldata.getString(AppConstants.TO_USER_ID);
+                                String relation = mJsonreldata.getString(AppConstants.RELATION);
+                                String status = mJsonreldata.getString(AppConstants.RELATIONSHIP_STATUS);
+                                String to_first_name = mJsonreldata.getString(AppConstants.TO_FIRST_NAME);
+                                String to_last_name = mJsonreldata.getString(AppConstants.TO_LAST_NAME);
+                                String from_first_name = mJsonreldata.getString(AppConstants.FROM_FIRST_NAME);
+                                String from_last_name = mJsonreldata.getString(AppConstants.FROM_LAST_NAME);
+                                String to_profile_pic = mJsonreldata.getString(AppConstants.FROM_PROFILE_PIC);
+                                String from_profile_pic = mJsonreldata.getString(AppConstants.TO_PROFILE_PIC);
                                 Relative mRelative = new Relative();
                                 mRelative.setId(id);
                                 mRelative.setUser_id(user_id);
@@ -186,10 +185,10 @@ public class RelativeFragment extends Fragment {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -201,41 +200,41 @@ public class RelativeFragment extends Fragment {
     }
 
     private void setActionWS(String id, String status) {
-        if (Common.isOnline(getActivity())) {
+        if (Utility.isOnline(getActivity())) {
             JSONObject mJsonObject = null;
             try {
                 showProgressDialog(getActivity());
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
-                mJsonObject.put(Common.Constant_Class.RELATIONSHIP_ID, id);
-                mJsonObject.put(Common.Constant_Class.RELATIONSHIP_STATUS, status);
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.RELATIONSHIP_ID, id);
+                mJsonObject.put(AppConstants.RELATIONSHIP_STATUS, status);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.REQUEST_ACTION_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.REQUEST_ACTION_URL, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
                         Log.d(TAG, "ActionWS: " + response.toString());
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
+                        String message = response.getString(AppConstants.MESSAGE);
                         try {
-                            JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                            JSONArray mJsonArray = response.getJSONArray(AppConstants.DATA);
                             if (mJsonArray.length() > 0) {
                                 lstRelative = new ArrayList<>();
                             }
                             for (int i = 0; i < mJsonArray.length(); i++) {
                                 JSONObject mJsonreldata = mJsonArray.getJSONObject(i);
-                                String id = mJsonreldata.getString(Common.Constant_Class.ID);
-                                String user_id = mJsonreldata.getString(Common.Constant_Class.USER_ID);
-                                String to_user_id = mJsonreldata.getString(Common.Constant_Class.TO_USER_ID);
-                                String relation = mJsonreldata.getString(Common.Constant_Class.RELATION);
-                                String status = mJsonreldata.getString(Common.Constant_Class.RELATIONSHIP_STATUS);
-                                String to_first_name = mJsonreldata.getString(Common.Constant_Class.TO_FIRST_NAME);
-                                String to_last_name = mJsonreldata.getString(Common.Constant_Class.TO_LAST_NAME);
-                                String from_first_name = mJsonreldata.getString(Common.Constant_Class.FROM_FIRST_NAME);
-                                String from_last_name = mJsonreldata.getString(Common.Constant_Class.FROM_LAST_NAME);
+                                String id = mJsonreldata.getString(AppConstants.ID);
+                                String user_id = mJsonreldata.getString(AppConstants.USER_ID);
+                                String to_user_id = mJsonreldata.getString(AppConstants.TO_USER_ID);
+                                String relation = mJsonreldata.getString(AppConstants.RELATION);
+                                String status = mJsonreldata.getString(AppConstants.RELATIONSHIP_STATUS);
+                                String to_first_name = mJsonreldata.getString(AppConstants.TO_FIRST_NAME);
+                                String to_last_name = mJsonreldata.getString(AppConstants.TO_LAST_NAME);
+                                String from_first_name = mJsonreldata.getString(AppConstants.FROM_FIRST_NAME);
+                                String from_last_name = mJsonreldata.getString(AppConstants.FROM_LAST_NAME);
                                 Relative mRelative = new Relative();
                                 mRelative.setId(id);
                                 mRelative.setUser_id(user_id);
@@ -280,10 +279,10 @@ public class RelativeFragment extends Fragment {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -296,8 +295,8 @@ public class RelativeFragment extends Fragment {
         RelativeAdapter mRelativeAdapter = new RelativeAdapter(new OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                /*mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
-                mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+                /*mEditor.putString(AppConstants.PROFILE_ID, id);
+                mEditor.putBoolean(AppConstants.MYPROFILE_SP, false);
                 mEditor.apply();
                 ProfileActivity.isEnable = false;
                 Intent mIntent = new Intent(getActivity(), ProfileActivity.class);
@@ -437,8 +436,8 @@ public class RelativeFragment extends Fragment {
         }
 
         private void moveToprofile(String id) {
-            mEditor.putString(Common.Constant_Class.PROFILE_ID, id);
-            mEditor.putBoolean(Common.Constant_Class.MYPROFILE_SP, false);
+            mEditor.putString(AppConstants.PROFILE_ID, id);
+            mEditor.putBoolean(AppConstants.MYPROFILE_SP, false);
             mEditor.apply();
             ProfileActivity.isEnable = false;
             Intent mIntent = new Intent(getActivity(), ProfileActivity.class);
@@ -450,13 +449,13 @@ public class RelativeFragment extends Fragment {
             final Relative reldata = lstRelative.get(position);
 
             String from_name = reldata.getFrom_first_name();// + " " + reldata.getFrom_last_name();
-            from_name = Common.camelCase(from_name);
+            from_name = Utility.camelCase(from_name);
 
             Glide.with(getActivity()).load(reldata.getTo_profile_pic()).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(holder.img_request);
             Glide.with(getActivity()).load(reldata.getFrom_profile_pic()).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(holder.img_approve);
 
             String to_name = reldata.getToFirst_name(); //+ " " + reldata.getToLast_name();
-            to_name = Common.camelCase(to_name);
+            to_name = Utility.camelCase(to_name);
 
             String status = reldata.getStatus();
             final String rel_id = reldata.getId();
@@ -465,9 +464,9 @@ public class RelativeFragment extends Fragment {
 
             holder.txt_from.setText(from_name);
             holder.txt_to.setText(to_name);
-            holder.txt_msg.setText(Common.getCapsSentences(relation));
+            holder.txt_msg.setText(Utility.getCapsSentences(relation));
             holder.img_delete.setImageDrawable(getResources().getDrawable(R.drawable.cancel));
-            if (status.contains(Common.Constant_Class.ACCEPTED)) {
+            if (status.contains(AppConstants.ACCEPTED)) {
                 holder.txt_request.setText("Requested");
                 holder.txt_approve.setText("Approved");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.primary_blue));
@@ -477,7 +476,7 @@ public class RelativeFragment extends Fragment {
                 String output = input.substring(0, 1).toUpperCase() + input.substring(1);
                 holder.txt_status.setText(output);
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape1));
-            } else if (status.contains(Common.Constant_Class.REQUESTED)) {
+            } else if (status.contains(AppConstants.REQUESTED)) {
                 holder.txt_request.setText("Requested");
                 holder.txt_approve.setText("To ");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -489,7 +488,7 @@ public class RelativeFragment extends Fragment {
                 holder.txt_status.setBackground(getResources().getDrawable(R.drawable.mybutton1));
                 holder.txt_status.setClickable(false);
                 holder.ll_relative.setBackground(getActivity().getDrawable(R.drawable.shape10));
-            } else if (status.contains(Common.Constant_Class.REJECTED)) {
+            } else if (status.contains(AppConstants.REJECTED)) {
                 holder.txt_request.setText("Requested");
                 holder.txt_approve.setText("Rejected");
                 holder.txt_from.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -503,7 +502,7 @@ public class RelativeFragment extends Fragment {
 
             }
 
-            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
+            if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false)) {
                 holder.txt_status.setEnabled(true);
                 holder.img_delete.setEnabled(true);
                 holder.txt_status.setClickable(true);
@@ -521,7 +520,7 @@ public class RelativeFragment extends Fragment {
                 public void onClick(View v) {
                     String message = "";
                     String status = "";
-                    if (!mSharedPreferences.getString(Common.Constant_Class.USER_ID, "").equalsIgnoreCase(user_id)) {
+                    if (!mSharedPreferences.getString(AppConstants.USER_ID, "").equalsIgnoreCase(user_id)) {
                         if (reldata.getStatus().equalsIgnoreCase("ACCEPTED")) {
                             message = "Do you want to REJECT relation ?";
                             status = "REJECTED";

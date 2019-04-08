@@ -59,7 +59,8 @@ import com.krs.vastipatrak.activity.SelectionlistActivity;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.service.MyLocationService;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -76,9 +77,9 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.krs.vastipatrak.activity.ProfileActivity.chooseFragment;
-import static com.krs.vastipatrak.utils.Common.Constant_Class.BIRTH_DATE;
-import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
-import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
+import static com.krs.vastipatrak.utils.AppConstants.BIRTH_DATE;
+import static com.krs.vastipatrak.utils.Utility.ddMMMyyyy;
+import static com.krs.vastipatrak.utils.Utility.yyyy_MM_dd;
 
 
 public class PersonalFragment extends Fragment implements AdapterView.OnItemSelectedListener {
@@ -154,7 +155,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             @Override
             public void onClick(View v) {
 
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
+                if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
                     img_selection = "profile";
                     startImageActivity();
                 } else {
@@ -171,7 +172,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 img_profile.setImageResource(R.drawable.user_profile);
                 Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.user_profile);
                 if (icon != null) {
-                    str_profile_hash = Common.getBase64(icon);
+                    str_profile_hash = Utility.getBase64(icon);
                 }
             }
         });
@@ -182,7 +183,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 img_father.setImageResource(R.drawable.user_profile);
                 Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.user_profile);
                 if (icon != null) {
-                    str_father_hash = Common.getBase64(icon);
+                    str_father_hash = Utility.getBase64(icon);
                 }
             }
         });
@@ -193,7 +194,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 img_mother.setImageResource(R.drawable.user_profile);
                 Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.user_profile);
                 if (icon != null) {
-                    str_mother_hash = Common.getBase64(icon);
+                    str_mother_hash = Utility.getBase64(icon);
                 }
             }
         });
@@ -203,7 +204,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             @Override
             public void onClick(View v) {
 
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
+                if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
                     img_selection = "father";
                     startImageActivity();
                 } else {
@@ -217,7 +218,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
             @Override
             public void onClick(View v) {
-                if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
+                if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
                     img_selection = "mother";
                     startImageActivity();
                 } else {
@@ -289,7 +290,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 edtbTime.setText(time);
                             }*//*
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             tpd.show(mActivity.getFragmentManager(), "Timepickerdialog");
                         }
 
@@ -354,7 +355,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 edtbTime.setText(time);
                             }*//*
                         });*/
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             timePicker.showNow(getChildFragmentManager(), null);
                         }
 
@@ -395,7 +396,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 edtbdate.setText(date);
                             }
                         });
-                        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
+                        if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) || ProfileActivity.isEnable) {
                             dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                         }
                         return true;
@@ -413,12 +414,12 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (edtAddress.getRight() - edtAddress.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                        final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                        final String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+                        final String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
                         if (curr_lat.isEmpty() && curr_lng.isEmpty()) {
-                            Common.showSettingsAlert(mActivity);
+                            Utility.showSettingsAlert(mActivity);
                         } else {
-                            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
+                            if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true) || ProfileActivity.isEnable) {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                 builder.setTitle(getString(R.string.app_name));
@@ -444,7 +445,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                                 double lat = Double.valueOf(curr_lat);
                                 double lng = Double.valueOf(curr_lng);
                                 if (lat != 0 && lng != 0 && home_lat != 0 && home_lng != 0) {
-                                    Common.showDirections(getActivity(), lat, lng, home_lat, home_lng, edtAddress.getText().toString());
+                                    Utility.showDirections(getActivity(), lat, lng, home_lat, home_lng, edtAddress.getText().toString());
                                 }
                             }
                         }
@@ -465,7 +466,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     builder.setMessage(message);
                     builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                         public void onClick(@NonNull DialogInterface dialog, int which) {
-                            mEditor.putString(Common.Constant_Class.TBTN_SHARE, "1");
+                            mEditor.putString(AppConstants.TBTN_SHARE, "1");
                             mEditor.apply();
                             mActivity.startService(new Intent(mActivity, MyLocationService.class));
                             toggle = true;
@@ -486,7 +487,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     builder.setMessage(message);
                     builder.setPositiveButton(mActivity.getString(R.string.mdtp_ok), new DialogInterface.OnClickListener() {
                         public void onClick(@NonNull DialogInterface dialog, int which) {
-                            mEditor.putString(Common.Constant_Class.TBTN_SHARE, "0");
+                            mEditor.putString(AppConstants.TBTN_SHARE, "0");
                             mEditor.apply();
                             mActivity.startService(new Intent(mActivity, MyLocationService.class));
                             toggle = true;
@@ -511,7 +512,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             public void onClick(View v) {
                 String bdate = edtbdate.getText().toString().trim();
                 if (!bdate.isEmpty()) {
-                    final String date = Common.parseDateToddMMyyyy(bdate, ddMMMyyyy, yyyy_MM_dd);
+                    final String date = Utility.parseDateToddMMyyyy(bdate, ddMMMyyyy, yyyy_MM_dd);
                     android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
                     builder.setTitle(mActivity.getString(R.string.app_name));
                     builder.setCancelable(false);
@@ -562,7 +563,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         });
 
 
-        if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, true)) {
+        if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true)) {
             EnableAll();
         } else {
             if (ProfileActivity.isEnable) {
@@ -584,11 +585,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edtMobile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
+                if (!mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
                     try {
                         boolean flag = true;
                         if (Build.VERSION.SDK_INT >= 23) {
-                            if (Common.canCallPhone(getActivity())) {
+                            if (Utility.canCallPhone(getActivity())) {
                                 flag = false;
                             }
                         }
@@ -608,11 +609,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         edt_phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
+                if (!mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false) && !ProfileActivity.isEnable) {
                     try {
                         boolean flag = true;
                         if (Build.VERSION.SDK_INT >= 23) {
-                            if (Common.canCallPhone(getActivity())) {
+                            if (Utility.canCallPhone(getActivity())) {
                                 flag = false;
                             }
                         }
@@ -632,10 +633,10 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         txt_distance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+                String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
                 if (!curr_lat.isEmpty() && !curr_lng.isEmpty() && user_lat != 0 && user_lng != 0) {
-                    Common.showDirections(getActivity(), Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), user_lat, user_lng, "");
+                    Utility.showDirections(getActivity(), Double.parseDouble(curr_lat), Double.parseDouble(curr_lng), user_lat, user_lng, "");
                 }
             }
         });
@@ -698,10 +699,10 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
         String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Common.hasPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (!Utility.hasPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 requestPermissions(permissions, REQUEST_CODE);
             }
-            if (!Common.hasPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (!Utility.hasPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 requestPermissions(permissions, REQUEST_CODE);
             }
         }
@@ -709,7 +710,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     private void startImageActivity() {
-        if (Common.hasPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) && Common.hasPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (Utility.hasPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) && Utility.hasPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
             chooseFragment = TAG;
             CropImage.startPickImageActivity(getActivity());
         }
@@ -738,7 +739,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
     private void MemoryAllocation(View rootView) {
 
-        mSharedPreferences = mActivity.getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = mActivity.getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
 
@@ -787,15 +788,15 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
 
         List<String> blood_cate = new ArrayList<>();
-        blood_cate.add(Common.Constant_Class.TITLE_BLOOD_GROUP);
-        blood_cate.add(Common.Constant_Class.A_POSITIVE);
-        blood_cate.add(Common.Constant_Class.A_NAGATIVE);
-        blood_cate.add(Common.Constant_Class.B_POSITIVE);
-        blood_cate.add(Common.Constant_Class.B_NAGATIVE);
-        blood_cate.add(Common.Constant_Class.O_POSITIVE);
-        blood_cate.add(Common.Constant_Class.O_NAGATIVE);
-        blood_cate.add(Common.Constant_Class.AB_POSITIVE);
-        blood_cate.add(Common.Constant_Class.AB_NAGATIVE);
+        blood_cate.add(AppConstants.TITLE_BLOOD_GROUP);
+        blood_cate.add(AppConstants.A_POSITIVE);
+        blood_cate.add(AppConstants.A_NAGATIVE);
+        blood_cate.add(AppConstants.B_POSITIVE);
+        blood_cate.add(AppConstants.B_NAGATIVE);
+        blood_cate.add(AppConstants.O_POSITIVE);
+        blood_cate.add(AppConstants.O_NAGATIVE);
+        blood_cate.add(AppConstants.AB_POSITIVE);
+        blood_cate.add(AppConstants.AB_NAGATIVE);
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, blood_cate);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -927,21 +928,21 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             String blood = mListProfileData.getBlood_group();
 
 
-            if (blood.equalsIgnoreCase(Common.Constant_Class.A_POSITIVE)) {
+            if (blood.equalsIgnoreCase(AppConstants.A_POSITIVE)) {
                 spinnerBlood.setSelection(1);
-            } else if (blood.equalsIgnoreCase(Common.Constant_Class.A_NAGATIVE)) {
+            } else if (blood.equalsIgnoreCase(AppConstants.A_NAGATIVE)) {
                 spinnerBlood.setSelection(2);
-            } else if (blood.equalsIgnoreCase(Common.Constant_Class.B_POSITIVE)) {
+            } else if (blood.equalsIgnoreCase(AppConstants.B_POSITIVE)) {
                 spinnerBlood.setSelection(3);
-            } else if (blood.equalsIgnoreCase(Common.Constant_Class.B_NAGATIVE)) {
+            } else if (blood.equalsIgnoreCase(AppConstants.B_NAGATIVE)) {
                 spinnerBlood.setSelection(4);
-            } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_POSITIVE)) {
+            } else if (blood.equalsIgnoreCase(AppConstants.O_POSITIVE)) {
                 spinnerBlood.setSelection(5);
-            } else if (blood.equalsIgnoreCase(Common.Constant_Class.O_NAGATIVE)) {
+            } else if (blood.equalsIgnoreCase(AppConstants.O_NAGATIVE)) {
                 spinnerBlood.setSelection(6);
-            } else if (blood.equalsIgnoreCase(Common.Constant_Class.AB_POSITIVE)) {
+            } else if (blood.equalsIgnoreCase(AppConstants.AB_POSITIVE)) {
                 spinnerBlood.setSelection(7);
-            } else if (blood.equalsIgnoreCase(Common.Constant_Class.AB_NAGATIVE)) {
+            } else if (blood.equalsIgnoreCase(AppConstants.AB_NAGATIVE)) {
                 spinnerBlood.setSelection(8);
             }
             if (mListProfileData.getGender().equalsIgnoreCase("male") || mListProfileData.getGender().equalsIgnoreCase("")) {
@@ -968,13 +969,13 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 home_lng = Double.parseDouble(mListProfileData.getHome_lng());
             }
 
-            if (mSharedPreferences.getBoolean(Common.Constant_Class.MYPROFILE_SP, false)) {
+            if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false)) {
 
                 EnableAll();
                 Objects.requireNonNull(((AppCompatActivity) mActivity).getSupportActionBar()).setSubtitle("My Profile");
-                mEditor.putString(Common.Constant_Class.PROFILE_PIC_URL, mListProfileData.getProfile_pic_url());
-                mEditor.putString(Common.Constant_Class.FIRST_NAME, mListProfileData.getFirst_name());
-                mEditor.putString(Common.Constant_Class.LAST_NAME, mListProfileData.getLast_name());
+                mEditor.putString(AppConstants.PROFILE_PIC_URL, mListProfileData.getProfile_pic_url());
+                mEditor.putString(AppConstants.FIRST_NAME, mListProfileData.getFirst_name());
+                mEditor.putString(AppConstants.LAST_NAME, mListProfileData.getLast_name());
                 mEditor.apply();
                 txt_distance.setVisibility(View.GONE);
                 tbtn_share.setVisibility(View.VISIBLE);
@@ -990,18 +991,18 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 }
 
             } else {
-                if (mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.USER)) {
+                if (mSharedPreferences.getString(AppConstants.ROLE, AppConstants.USER).equals(AppConstants.USER)) {
                     DisableAll();
                 }
-                final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                final String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+                final String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
                 // double lat = Double.valueOf(curr_lat);
                 // double lng = Double.valueOf(curr_lng);
 
                 Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(mActivity)).getSupportActionBar()).setSubtitle(name + " Profile");
                 if (home_lat != 0 && home_lng != 0) {
                     Log.d(TAG, "step home_lat: " + home_lat + "home_lng: " + home_lng);
-                    new Common.getDistance(getActivity(), txt_home).execute(String.valueOf(home_lat), String.valueOf(home_lng), curr_lat, curr_lng);
+                    new Utility.getDistance(getActivity(), txt_home).execute(String.valueOf(home_lat), String.valueOf(home_lng), curr_lat, curr_lng);
                 } else {
                     txt_home.setText("User has not set location");
                 }
@@ -1010,7 +1011,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 if (is_loc_enable.equalsIgnoreCase("1")) {
                     txt_distance.setVisibility(View.VISIBLE);
                     if (user_lat != 0 && user_lng != 0) {
-                        new Common.getDistance(getActivity(), txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, String.valueOf(user_lat), String.valueOf(user_lng), curr_lat, curr_lng);
+                        new Utility.getDistance(getActivity(), txt_distance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, String.valueOf(user_lat), String.valueOf(user_lng), curr_lat, curr_lng);
                     }
                 } else {
                     txt_distance.setVisibility(View.GONE);
@@ -1047,37 +1048,37 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     private void setReminder(String rem_date, String rem_type, String msg, int rem_id) {
-        if (Common.isOnline(mActivity)) {
+        if (Utility.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.PROFILE_ID, profile_id);
-                mJsonObject.put(Common.Constant_Class.REMINDER_DATE, rem_date);
-                mJsonObject.put(Common.Constant_Class.REMINDER_TYPE, rem_type);
-                mJsonObject.put(Common.Constant_Class.REMINDER_ID, rem_id);
-                mJsonObject.put(Common.Constant_Class.MESSAGE, msg);
-                mJsonObject.put(Common.Constant_Class._CHILD_ID, "0");
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.PROFILE_ID, profile_id);
+                mJsonObject.put(AppConstants.REMINDER_DATE, rem_date);
+                mJsonObject.put(AppConstants.REMINDER_TYPE, rem_type);
+                mJsonObject.put(AppConstants.REMINDER_ID, rem_id);
+                mJsonObject.put(AppConstants.MESSAGE, msg);
+                mJsonObject.put(AppConstants._CHILD_ID, "0");
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.getMessage();
             }
-            Common.showProgressDialog(getActivity());
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SET_REMINDER_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            Utility.showProgressDialog(getActivity());
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.SET_REMINDER_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
-                        Common.hideProgressDialog();
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        String message = response.getString(Common.Constant_Class.MESSAGE);
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            JSONObject mObject = response.getJSONObject(Common.Constant_Class.DATA);
+                        Utility.hideProgressDialog();
+                        String success = response.getString(AppConstants.SUCCESS);
+                        String message = response.getString(AppConstants.MESSAGE);
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
+                            JSONObject mObject = response.getJSONObject(AppConstants.DATA);
                             profile_bdate_rem = mObject.getString("reminder_id");
                         } else {
-                            if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                            if (response.has(AppConstants.ERROR_CODE)) {
+                                String error = response.getString(AppConstants.ERROR_CODE);
+                                if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                     Intent mIntent = new Intent(getActivity(), LoginActivity.class);
                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(mIntent);
@@ -1095,17 +1096,17 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -1115,41 +1116,41 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     private void homeLocationUpdateWS() {
-        if (Common.isOnline(mActivity)) {
+        if (Utility.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
-            String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-            String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+            String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+            String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
             final double lat = Double.valueOf(curr_lat);
             final double lng = Double.valueOf(curr_lng);
             try {
                 mJsonObject = new JSONObject();
                 if (lat != 0 && lng != 0) {
-                    mJsonObject.put(Common.Constant_Class.HOME_LAT, lat);
-                    mJsonObject.put(Common.Constant_Class.HOME_LNG, lng);
-                    mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                    if (ProfileActivity.isEnable && mSharedPreferences.getString(Common.Constant_Class.ROLE, Common.Constant_Class.USER).equals(Common.Constant_Class.ADMIN)) {
-                        mJsonObject.put(Common.Constant_Class.UPDATE_USER_ID, mSharedPreferences.getString(Common.Constant_Class.PROFILE_ID, ""));
+                    mJsonObject.put(AppConstants.HOME_LAT, lat);
+                    mJsonObject.put(AppConstants.HOME_LNG, lng);
+                    mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                    if (ProfileActivity.isEnable && mSharedPreferences.getString(AppConstants.ROLE, AppConstants.USER).equals(AppConstants.ADMIN)) {
+                        mJsonObject.put(AppConstants.UPDATE_USER_ID, mSharedPreferences.getString(AppConstants.PROFILE_ID, ""));
                     }
-                    mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
-                    mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                    mJsonObject.put(AppConstants.IS_UPDATE, "1");
+                    mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
                 }
             } catch (Exception e) {
                 e.getMessage();
             }
-            Common.showProgressDialog(getActivity());
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            Utility.showProgressDialog(getActivity());
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
-                        Common.hideProgressDialog();
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
+                        Utility.hideProgressDialog();
+                        String success = response.getString(AppConstants.SUCCESS);
 
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
                             alert("Home location updated!");
                             if (!ProfileActivity.isEnable) {
-                                mEditor.putString(Common.Constant_Class.HOME_LAT, String.valueOf(lat));
-                                mEditor.putString(Common.Constant_Class.HOME_LNG, String.valueOf(lng));
+                                mEditor.putString(AppConstants.HOME_LAT, String.valueOf(lat));
+                                mEditor.putString(AppConstants.HOME_LNG, String.valueOf(lng));
                                 mEditor.apply();
                             }
                         } else {
@@ -1164,17 +1165,17 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -1185,11 +1186,11 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     private void userLocationUpdateWS(String is_location_enable) {
-        if (Common.isOnline(mActivity)) {
+        if (Utility.isOnline(mActivity)) {
             JSONObject mJsonObject = null;
             try {
-                final String curr_lat = mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "");
-                final String curr_lng = mSharedPreferences.getString(Common.Constant_Class.CURR_LNG, "");
+                final String curr_lat = mSharedPreferences.getString(AppConstants.CURR_LAT, "");
+                final String curr_lng = mSharedPreferences.getString(AppConstants.CURR_LNG, "");
                 if (curr_lat.isEmpty() || curr_lng.isEmpty()) {
                     Toast.makeText(getActivity(), "Vastipatrak could not found your location!", Toast.LENGTH_SHORT).show();
                     return;
@@ -1198,26 +1199,26 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 double lng = Double.valueOf(curr_lng);
                 mJsonObject = new JSONObject();
                 if (lat != 0 && lng != 0) {
-                    mJsonObject.put(Common.Constant_Class.USER_LAT, lat);
-                    mJsonObject.put(Common.Constant_Class.USER_LNG, lng);
-                    mJsonObject.put(Common.Constant_Class.IS_LOCATION_ENABLE, is_location_enable);
-                    mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                    mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
-                    mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                    mJsonObject.put(AppConstants.USER_LAT, lat);
+                    mJsonObject.put(AppConstants.USER_LNG, lng);
+                    mJsonObject.put(AppConstants.IS_LOCATION_ENABLE, is_location_enable);
+                    mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                    mJsonObject.put(AppConstants.IS_UPDATE, "1");
+                    mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
                 }
             } catch (Exception e) {
                 e.getMessage();
             }
-            Common.showProgressDialog(getActivity());
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            Utility.showProgressDialog(getActivity());
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
-                        Common.hideProgressDialog();
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
+                        Utility.hideProgressDialog();
+                        String success = response.getString(AppConstants.SUCCESS);
 
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
                             alert("Your location updated!");
                         } else {
                             alert("Something went wrong!");
@@ -1231,17 +1232,17 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -1342,19 +1343,19 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
             img_profile.setImageURI(resultUri);
             BitmapDrawable drawable = (BitmapDrawable) img_profile.getDrawable();
             bmp = drawable.getBitmap();
-            str_profile_hash = Common.getBase64(bmp);
+            str_profile_hash = Utility.getBase64(bmp);
         } else if (img_selection.equalsIgnoreCase("father")) {
             img_father.setImageURI(resultUri);
             img_father.invalidate();
             BitmapDrawable drawable = (BitmapDrawable) img_father.getDrawable();
             bmp = drawable.getBitmap();
-            str_father_hash = Common.getBase64(bmp);
+            str_father_hash = Utility.getBase64(bmp);
         } else if (img_selection.equalsIgnoreCase("mother")) {
             img_mother.setImageURI(resultUri);
             img_mother.invalidate();
             BitmapDrawable drawable = (BitmapDrawable) img_mother.getDrawable();
             bmp = drawable.getBitmap();
-            str_mother_hash = Common.getBase64(bmp);
+            str_mother_hash = Utility.getBase64(bmp);
         }
     }
 

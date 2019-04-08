@@ -41,7 +41,8 @@ import com.krs.vastipatrak.model.ListChildrenData;
 import com.krs.vastipatrak.model.ListMatrimonyChildData;
 import com.krs.vastipatrak.model.ListMatrimonyParentData;
 import com.krs.vastipatrak.model.MatrimonyProfileData;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 
@@ -59,10 +60,10 @@ import java.util.Objects;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-import static com.krs.vastipatrak.utils.Common.ExportProfile;
-import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
-import static com.krs.vastipatrak.utils.Common.showProgressDialog;
-import static com.krs.vastipatrak.utils.Common.textAsBitmap;
+import static com.krs.vastipatrak.utils.Utility.ExportProfile;
+import static com.krs.vastipatrak.utils.Utility.hideProgressDialog;
+import static com.krs.vastipatrak.utils.Utility.showProgressDialog;
+import static com.krs.vastipatrak.utils.Utility.textAsBitmap;
 
 public class MatrimonyFragment extends Fragment {
 
@@ -171,7 +172,7 @@ public class MatrimonyFragment extends Fragment {
 
     private void MemoryAllocation(View rootView) {
         lvMatrimonyList = rootView.findViewById(R.id.lvMatrimonyList);
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
         realm = AppController.getInstance().realm;
@@ -221,33 +222,33 @@ public class MatrimonyFragment extends Fragment {
             gender = "male";
         }
 
-        if (Common.isOnline(getActivity())) {
+        if (Utility.isOnline(getActivity())) {
             final JSONObject mjsonObject = new JSONObject();
             try {
-                mjsonObject.put(Common.Constant_Class.IS_INTERESTED, is_interested);
-                mjsonObject.put(Common.Constant_Class.CHILD_GENDER, gender);
-                mjsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mjsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mjsonObject.put(AppConstants.IS_INTERESTED, is_interested);
+                mjsonObject.put(AppConstants.CHILD_GENDER, gender);
+                mjsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mjsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
                 if (!isExport) {
                     if (page < 1) {
                         page = 1;
                     }
-                    mjsonObject.put(Common.Constant_Class.PAGE, String.valueOf(page));
+                    mjsonObject.put(AppConstants.PAGE, String.valueOf(page));
                 }
                 showProgressDialog(getActivity());
                 mSwipyRefreshLayout.setRefreshing(true);
-                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.ADVANCE_SEARCH_URL, mjsonObject, new Response.Listener<JSONObject>() {
+                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.ADVANCE_SEARCH_URL, mjsonObject, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(@NonNull JSONObject response) {
                         Log.d(TAG, response.toString());
 
                         try {
-                            boolean success = response.getBoolean(Common.Constant_Class.SUCCESS);
-                            String message = response.getString(Common.Constant_Class.MESSAGE);
+                            boolean success = response.getBoolean(AppConstants.SUCCESS);
+                            String message = response.getString(AppConstants.MESSAGE);
                             String total_records = "0";
-                            if (response.has(Common.Constant_Class.TOTAL_RECORDS)) {
-                                total_records = response.getString(Common.Constant_Class.TOTAL_RECORDS);
+                            if (response.has(AppConstants.TOTAL_RECORDS)) {
+                                total_records = response.getString(AppConstants.TOTAL_RECORDS);
                             }
 
                             if (success) {
@@ -271,10 +272,10 @@ public class MatrimonyFragment extends Fragment {
                                         e.printStackTrace();
                                     }
 
-                                    JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                                    JSONArray mJsonArray = response.getJSONArray(AppConstants.DATA);
                                     for (int i = 0; i < mJsonArray.length(); i++) {
                                         JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                        Common.MatrimonyProfile(mJsondata, gender, is_interested, false);
+                                        Utility.MatrimonyProfile(mJsondata, gender, is_interested, false);
                                     }
                                     if (!isExport) {
                                         getChildRecords1();
@@ -289,7 +290,7 @@ public class MatrimonyFragment extends Fragment {
                                         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
-                                    JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                                    JSONArray mJsonArray = response.getJSONArray(AppConstants.DATA);
                                     Realm realm = AppController.getInstance().realm;
                                     RealmResults<ExportProfileData> results = realm.where(ExportProfileData.class).findAll();
                                     realm.beginTransaction();
@@ -298,19 +299,19 @@ public class MatrimonyFragment extends Fragment {
 
                                     for (int i = 0; i < mJsonArray.length(); i++) {
                                         JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                                        Common.MatrimonyProfile(mJsondata, gender, is_interested, false);
+                                        Utility.MatrimonyProfile(mJsondata, gender, is_interested, false);
                                         if (isExport) {
                                             ExportProfile(mJsondata, getActivity());
                                         }
                                     }
-                                    Common.ExportSearchData(getActivity());
+                                    Utility.ExportSearchData(getActivity());
                                     btnSearch.performClick();
                                 }
                             } else {
                                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                                if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                                    String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                                    if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                                if (response.has(AppConstants.ERROR_CODE)) {
+                                    String error = response.getString(AppConstants.ERROR_CODE);
+                                    if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                                         Intent mIntent = new Intent(getActivity(), LoginActivity.class);
                                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(mIntent);
@@ -336,8 +337,8 @@ public class MatrimonyFragment extends Fragment {
                     @Override
                     public Map<String, String> getHeaders() {
                         Map<String, String> params = new HashMap<>();
-                        params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                        params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
+                        params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                        params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
                         return params;
                     }
                 };
@@ -357,7 +358,7 @@ public class MatrimonyFragment extends Fragment {
     private void getChildRecords1() {
         RealmResults<MatrimonyProfileData> profileData = realm.where(MatrimonyProfileData.class).findAll();
         if (profileData != null && profileData.size() > 0) {
-            //profileData = profileData.sort(Common.Constant_Class.CHILD_NAME, Sort.ASCENDING);
+            //profileData = profileData.sort(AppConstants.CHILD_NAME, Sort.ASCENDING);
             for (MatrimonyProfileData data : profileData) {
 
                 for (ListChildrenData childrenData : data.getmListChildrenData()) {

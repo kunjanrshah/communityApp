@@ -19,7 +19,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.vastipatrak.app.AppController;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 import org.json.JSONObject;
 
@@ -55,7 +56,7 @@ public class MyLocationService extends Service {
         if (intent != null) {
             Bundle mBundle = intent.getExtras();
             if (mBundle != null) {
-                tbtn_shre = mBundle.getBoolean(Common.Constant_Class.TBTN_SHARE);
+                tbtn_shre = mBundle.getBoolean(AppConstants.TBTN_SHARE);
             }
         }
 
@@ -69,8 +70,8 @@ public class MyLocationService extends Service {
                 if (mLocationManager != null) {
                     loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     if (loc != null) {
-                        mEditor.putString(Common.Constant_Class.CURR_LAT, String.valueOf(loc.getLatitude()));
-                        mEditor.putString(Common.Constant_Class.CURR_LNG, String.valueOf(loc.getLongitude()));
+                        mEditor.putString(AppConstants.CURR_LAT, String.valueOf(loc.getLatitude()));
+                        mEditor.putString(AppConstants.CURR_LNG, String.valueOf(loc.getLongitude()));
                         mEditor.apply();
                     }
                 }
@@ -85,8 +86,8 @@ public class MyLocationService extends Service {
                 mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListeners[1]);
                 loc = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 if (loc != null) {
-                    mEditor.putString(Common.Constant_Class.CURR_LAT, String.valueOf(loc.getLatitude()));
-                    mEditor.putString(Common.Constant_Class.CURR_LNG, String.valueOf(loc.getLongitude()));
+                    mEditor.putString(AppConstants.CURR_LAT, String.valueOf(loc.getLatitude()));
+                    mEditor.putString(AppConstants.CURR_LNG, String.valueOf(loc.getLongitude()));
                     mEditor.apply();
                 }
             } catch (java.lang.SecurityException ex) {
@@ -104,7 +105,7 @@ public class MyLocationService extends Service {
     @Override
     public void onCreate() {
         Log.e(TAG, "onCreate");
-        mSharedPreferences = getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
     }
@@ -123,7 +124,7 @@ public class MyLocationService extends Service {
             }
             mLocationManager = null;
         }
-        /*if (!mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0").equalsIgnoreCase("")) {
+        /*if (!mSharedPreferences.getString(AppConstants.TBTN_SHARE, "0").equalsIgnoreCase("")) {
           //  userLocationUpdateWS();
         }*/
     }
@@ -137,33 +138,33 @@ public class MyLocationService extends Service {
 
     private void userLocationUpdateWS() {
 
-        if (Common.isOnline(MyLocationService.this)) {
+        if (Utility.isOnline(MyLocationService.this)) {
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.USER_LAT, mLastLocation.getLatitude());
-                mJsonObject.put(Common.Constant_Class.USER_LNG, mLastLocation.getLongitude());
+                mJsonObject.put(AppConstants.USER_LAT, mLastLocation.getLatitude());
+                mJsonObject.put(AppConstants.USER_LNG, mLastLocation.getLongitude());
                 String is_loc = "0";
-                if (mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "").equalsIgnoreCase("1")) {
+                if (mSharedPreferences.getString(AppConstants.TBTN_SHARE, "").equalsIgnoreCase("1")) {
                     is_loc = "1";
-                } else if (mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "").equalsIgnoreCase("0")) {
+                } else if (mSharedPreferences.getString(AppConstants.TBTN_SHARE, "").equalsIgnoreCase("0")) {
                     is_loc = "0";
                 }
-                mJsonObject.put(Common.Constant_Class.IS_LOCATION_ENABLE, is_loc);
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.IS_UPDATE, "1");
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.IS_LOCATION_ENABLE, is_loc);
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.IS_UPDATE, "1");
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
-                        String success = response.getString(Common.Constant_Class.SUCCESS);
-                        if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
-                            if (mSharedPreferences.getString(Common.Constant_Class.TBTN_SHARE, "0").equalsIgnoreCase("1")) {
+                        String success = response.getString(AppConstants.SUCCESS);
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
+                            if (mSharedPreferences.getString(AppConstants.TBTN_SHARE, "0").equalsIgnoreCase("1")) {
                                 Log.d(TAG, "step yes");
                                 Toast.makeText(MyLocationService.this, "Vastipatrak is sharing your location!", Toast.LENGTH_SHORT).show();
                             } else {
@@ -186,10 +187,10 @@ public class MyLocationService extends Service {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -210,8 +211,8 @@ public class MyLocationService extends Service {
         public void onLocationChanged(Location location) {
             Log.e(TAG, "onLocationChanged: " + location);
             mLastLocation.set(location);
-            mEditor.putString(Common.Constant_Class.CURR_LAT, String.valueOf(mLastLocation.getLatitude()));
-            mEditor.putString(Common.Constant_Class.CURR_LNG, String.valueOf(mLastLocation.getLongitude()));
+            mEditor.putString(AppConstants.CURR_LAT, String.valueOf(mLastLocation.getLatitude()));
+            mEditor.putString(AppConstants.CURR_LNG, String.valueOf(mLastLocation.getLongitude()));
             mEditor.apply();
             if (tbtn_shre) {
                 userLocationUpdateWS();

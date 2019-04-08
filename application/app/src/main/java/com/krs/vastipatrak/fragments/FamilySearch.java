@@ -30,7 +30,8 @@ import android.widget.Toast;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.activity.AdvanceSearchActivity;
 import com.krs.vastipatrak.activity.SelectionlistActivity;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ObservableScrollView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -43,8 +44,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
-import static com.krs.vastipatrak.utils.Common.ddMMMyyyy;
-import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
+import static com.krs.vastipatrak.utils.Utility.ddMMMyyyy;
+import static com.krs.vastipatrak.utils.Utility.yyyy_MM_dd;
 
 public class FamilySearch extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -194,7 +195,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                                 }
                                 String date = str_day + "/" + str_month + "/" + year;
                                 try {
-                                    if (Common.CompareTwoDates(edt_mdate_from.getText().toString(), date)) {
+                                    if (Utility.CompareTwoDates(edt_mdate_from.getText().toString(), date)) {
                                         //  to_mdate = year + "-" + str_month + "-" + str_day;
                                         edt_mdate_to.setText(date);
                                     } else {
@@ -283,7 +284,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                                 String date = str_day + "/" + str_month + "/" + year;
 
                                 try {
-                                    if (Common.CompareTwoDates(edt_cdate_from.getText().toString(), date)) {
+                                    if (Utility.CompareTwoDates(edt_cdate_from.getText().toString(), date)) {
                                         edt_cdate_to.setText(date);
                                         //    to_cdate = year + "-" + str_month + "-" + str_day;
                                     } else {
@@ -330,7 +331,7 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if ((event.getRawX() - 500) >= (edtcmobile.getRight() - edtcmobile.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         if (Build.VERSION.SDK_INT >= 23) {
-                            if (Common.canReadContacts(Objects.requireNonNull(getActivity()))) {
+                            if (Utility.canReadContacts(Objects.requireNonNull(getActivity()))) {
                                 Intent it = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                                 startActivityForResult(it, CONTACT_PICKER_RESULT);
                             }
@@ -414,25 +415,25 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
     private void setAdapterBGlist() {
         List<String> blood_cate = new ArrayList<>();
         List<String> blood_sate = new ArrayList<>();
-        blood_cate.add(Common.Constant_Class.TITLE_CHILD_BLOOD_GROUP);
-        blood_cate.add(Common.Constant_Class.A_POSITIVE);
-        blood_cate.add(Common.Constant_Class.A_NAGATIVE);
-        blood_cate.add(Common.Constant_Class.B_POSITIVE);
-        blood_cate.add(Common.Constant_Class.B_NAGATIVE);
-        blood_cate.add(Common.Constant_Class.AB_POSITIVE);
-        blood_cate.add(Common.Constant_Class.AB_NAGATIVE);
-        blood_cate.add(Common.Constant_Class.O_POSITIVE);
-        blood_cate.add(Common.Constant_Class.O_NAGATIVE);
+        blood_cate.add(AppConstants.TITLE_CHILD_BLOOD_GROUP);
+        blood_cate.add(AppConstants.A_POSITIVE);
+        blood_cate.add(AppConstants.A_NAGATIVE);
+        blood_cate.add(AppConstants.B_POSITIVE);
+        blood_cate.add(AppConstants.B_NAGATIVE);
+        blood_cate.add(AppConstants.AB_POSITIVE);
+        blood_cate.add(AppConstants.AB_NAGATIVE);
+        blood_cate.add(AppConstants.O_POSITIVE);
+        blood_cate.add(AppConstants.O_NAGATIVE);
 
-        blood_sate.add(Common.Constant_Class.TITLE_SPOUSE_BLOOD_GROUP);
-        blood_sate.add(Common.Constant_Class.A_POSITIVE);
-        blood_sate.add(Common.Constant_Class.A_NAGATIVE);
-        blood_sate.add(Common.Constant_Class.B_POSITIVE);
-        blood_sate.add(Common.Constant_Class.B_NAGATIVE);
-        blood_sate.add(Common.Constant_Class.AB_POSITIVE);
-        blood_sate.add(Common.Constant_Class.AB_NAGATIVE);
-        blood_sate.add(Common.Constant_Class.O_POSITIVE);
-        blood_sate.add(Common.Constant_Class.O_NAGATIVE);
+        blood_sate.add(AppConstants.TITLE_SPOUSE_BLOOD_GROUP);
+        blood_sate.add(AppConstants.A_POSITIVE);
+        blood_sate.add(AppConstants.A_NAGATIVE);
+        blood_sate.add(AppConstants.B_POSITIVE);
+        blood_sate.add(AppConstants.B_NAGATIVE);
+        blood_sate.add(AppConstants.AB_POSITIVE);
+        blood_sate.add(AppConstants.AB_NAGATIVE);
+        blood_sate.add(AppConstants.O_POSITIVE);
+        blood_sate.add(AppConstants.O_NAGATIVE);
 
         dataCAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, blood_cate);
         dataCAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -444,66 +445,66 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
     }
 
     private void setPreferenceData() {
-        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_FILTER, Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(AppConstants.PREF_FILTER, Context.MODE_PRIVATE);
         String json = mSharedPreferences.getString("adv_search", "");
         if (!json.isEmpty()) {
             JSONObject mjsonObject = null;
             try {
                 mjsonObject = new JSONObject(json);
-                if (mjsonObject.has(Common.Constant_Class.CHILD_BLOOD_GROUP)) {
-                    String compareValue = mjsonObject.getString(Common.Constant_Class.CHILD_BLOOD_GROUP);
+                if (mjsonObject.has(AppConstants.CHILD_BLOOD_GROUP)) {
+                    String compareValue = mjsonObject.getString(AppConstants.CHILD_BLOOD_GROUP);
                     if (!compareValue.isEmpty()) {
                         int spinnerPosition = dataSAdapter.getPosition(compareValue);
                         spinnerBlood.setSelection(spinnerPosition);
                     }
                 }
-                if (mjsonObject.has(Common.Constant_Class.FROM_MARRIAGE_DATE)) {
-                    String bdate = mjsonObject.getString(Common.Constant_Class.FROM_MARRIAGE_DATE);
-                    bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
+                if (mjsonObject.has(AppConstants.FROM_MARRIAGE_DATE)) {
+                    String bdate = mjsonObject.getString(AppConstants.FROM_MARRIAGE_DATE);
+                    bdate = Utility.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
                     edt_mdate_from.setText(bdate);
                 }
-                if (mjsonObject.has(Common.Constant_Class.TO_MARRIAGE_DATE)) {
-                    String bdate = mjsonObject.getString(Common.Constant_Class.TO_MARRIAGE_DATE);
-                    bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
+                if (mjsonObject.has(AppConstants.TO_MARRIAGE_DATE)) {
+                    String bdate = mjsonObject.getString(AppConstants.TO_MARRIAGE_DATE);
+                    bdate = Utility.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
                     edt_mdate_to.setText(bdate);
                 }
-                if (mjsonObject.has(Common.Constant_Class.CHILD_MOBILE)) {
-                    edtcmobile.setText(mjsonObject.getString(Common.Constant_Class.CHILD_MOBILE));
+                if (mjsonObject.has(AppConstants.CHILD_MOBILE)) {
+                    edtcmobile.setText(mjsonObject.getString(AppConstants.CHILD_MOBILE));
                 }
 
-                if (mjsonObject.has(Common.Constant_Class.SPOUSE_NAME)) {
-                    edtSpouseName.setText(mjsonObject.getString(Common.Constant_Class.SPOUSE_NAME));
+                if (mjsonObject.has(AppConstants.SPOUSE_NAME)) {
+                    edtSpouseName.setText(mjsonObject.getString(AppConstants.SPOUSE_NAME));
                 }
-                if (mjsonObject.has(Common.Constant_Class.SPOUSE_FATHER_NAME)) {
-                    edtSpouseFName.setText(mjsonObject.getString(Common.Constant_Class.SPOUSE_FATHER_NAME));
+                if (mjsonObject.has(AppConstants.SPOUSE_FATHER_NAME)) {
+                    edtSpouseFName.setText(mjsonObject.getString(AppConstants.SPOUSE_FATHER_NAME));
                 }
-                if (mjsonObject.has(Common.Constant_Class.SPOUSE_MOTHER_NAME)) {
-                    edtSpouseMName.setText(mjsonObject.getString(Common.Constant_Class.SPOUSE_MOTHER_NAME));
+                if (mjsonObject.has(AppConstants.SPOUSE_MOTHER_NAME)) {
+                    edtSpouseMName.setText(mjsonObject.getString(AppConstants.SPOUSE_MOTHER_NAME));
                 }
-                if (mjsonObject.has(Common.Constant_Class.CHILD_NAME)) {
-                    edtchild_name.setText(mjsonObject.getString(Common.Constant_Class.CHILD_NAME));
+                if (mjsonObject.has(AppConstants.CHILD_NAME)) {
+                    edtchild_name.setText(mjsonObject.getString(AppConstants.CHILD_NAME));
                 }
-                if (mjsonObject.has(Common.Constant_Class.CHILD_EDU)) {
-                    edtchildEdu.setText(mjsonObject.getString(Common.Constant_Class.CHILD_EDU));
+                if (mjsonObject.has(AppConstants.CHILD_EDU)) {
+                    edtchildEdu.setText(mjsonObject.getString(AppConstants.CHILD_EDU));
                 }
-                if (mjsonObject.has(Common.Constant_Class.CHILD_WORK)) {
-                    edtchild_work.setText(mjsonObject.getString(Common.Constant_Class.CHILD_WORK));
+                if (mjsonObject.has(AppConstants.CHILD_WORK)) {
+                    edtchild_work.setText(mjsonObject.getString(AppConstants.CHILD_WORK));
                 }
-                if (mjsonObject.has(Common.Constant_Class.FROM_CHILD_BDAY)) {
-                    String bdate = mjsonObject.getString(Common.Constant_Class.FROM_CHILD_BDAY);
-                    bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
+                if (mjsonObject.has(AppConstants.FROM_CHILD_BDAY)) {
+                    String bdate = mjsonObject.getString(AppConstants.FROM_CHILD_BDAY);
+                    bdate = Utility.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
                     edt_cdate_from.setText(bdate);
                 }
-                if (mjsonObject.has(Common.Constant_Class.TO_CHILD_BDAY)) {
-                    String bdate = mjsonObject.getString(Common.Constant_Class.TO_CHILD_BDAY);
-                    bdate = Common.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
+                if (mjsonObject.has(AppConstants.TO_CHILD_BDAY)) {
+                    String bdate = mjsonObject.getString(AppConstants.TO_CHILD_BDAY);
+                    bdate = Utility.parseDateToddMMyyyy(bdate, yyyy_MM_dd, ddMMMyyyy);
                     edt_cdate_to.setText(bdate);
                 }
-                if (mjsonObject.has(Common.Constant_Class.CHILD_BPLACE)) {
-                    txtchildBplace.setText(mjsonObject.getString(Common.Constant_Class.CHILD_BPLACE));
+                if (mjsonObject.has(AppConstants.CHILD_BPLACE)) {
+                    txtchildBplace.setText(mjsonObject.getString(AppConstants.CHILD_BPLACE));
                 }
-                if (mjsonObject.has(Common.Constant_Class.CHILD_GENDER)) {
-                    String gender = mjsonObject.getString(Common.Constant_Class.CHILD_GENDER);
+                if (mjsonObject.has(AppConstants.CHILD_GENDER)) {
+                    String gender = mjsonObject.getString(AppConstants.CHILD_GENDER);
                     if (gender.equals("both")) {
                         radioM.setChecked(false);
                         radioF.setChecked(false);
@@ -524,20 +525,20 @@ public class FamilySearch extends Fragment implements AdapterView.OnItemSelected
                     radioB.setChecked(true);
                 }
 
-                if (mjsonObject.has(Common.Constant_Class.SPOUSE_START_AGE)) {
-                    sp_spouse_start_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.SPOUSE_START_AGE)) + 1);
+                if (mjsonObject.has(AppConstants.SPOUSE_START_AGE)) {
+                    sp_spouse_start_age.setSelection(Integer.parseInt(mjsonObject.getString(AppConstants.SPOUSE_START_AGE)) + 1);
                 }
 
-                if (mjsonObject.has(Common.Constant_Class.SPOUSE_END_AGE)) {
-                    sp_spouse_end_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.SPOUSE_END_AGE)) + 1);
+                if (mjsonObject.has(AppConstants.SPOUSE_END_AGE)) {
+                    sp_spouse_end_age.setSelection(Integer.parseInt(mjsonObject.getString(AppConstants.SPOUSE_END_AGE)) + 1);
                 }
 
-                if (mjsonObject.has(Common.Constant_Class.CHILD_START_AGE)) {
-                    sp_child_start_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.CHILD_START_AGE)) + 1);
+                if (mjsonObject.has(AppConstants.CHILD_START_AGE)) {
+                    sp_child_start_age.setSelection(Integer.parseInt(mjsonObject.getString(AppConstants.CHILD_START_AGE)) + 1);
                 }
 
-                if (mjsonObject.has(Common.Constant_Class.CHILD_END_AGE)) {
-                    sp_child_end_age.setSelection(Integer.parseInt(mjsonObject.getString(Common.Constant_Class.CHILD_END_AGE)) + 1);
+                if (mjsonObject.has(AppConstants.CHILD_END_AGE)) {
+                    sp_child_end_age.setSelection(Integer.parseInt(mjsonObject.getString(AppConstants.CHILD_END_AGE)) + 1);
                 }
 
             } catch (Exception e) {

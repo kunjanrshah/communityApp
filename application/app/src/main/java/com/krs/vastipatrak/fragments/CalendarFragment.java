@@ -30,7 +30,8 @@ import com.krs.vastipatrak.adapter.ExpandableListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,10 +42,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.krs.vastipatrak.utils.Common.Constant_Class.DEFAULT_BACKOFF_MULT;
-import static com.krs.vastipatrak.utils.Common.Constant_Class.DEFAULT_MAX_RETRIES;
-import static com.krs.vastipatrak.utils.Common.Constant_Class.INIT_TIMEOUT;
-import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
+import static com.krs.vastipatrak.utils.AppConstants.DEFAULT_BACKOFF_MULT;
+import static com.krs.vastipatrak.utils.AppConstants.DEFAULT_MAX_RETRIES;
+import static com.krs.vastipatrak.utils.AppConstants.INIT_TIMEOUT;
+import static com.krs.vastipatrak.utils.Utility.hideProgressDialog;
 
 public class CalendarFragment extends Fragment {
 
@@ -132,7 +133,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void initCalendar(View rootView) {
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         mFloatingActionButton = rootView.findViewById(R.id.floating_action_button);
         lvCustomList = rootView.findViewById(R.id.lvCustomList);
         viewCalendar = rootView.findViewById(R.id.calendar);
@@ -167,38 +168,38 @@ public class CalendarFragment extends Fragment {
     }
 
     private void CalendarWS(String date) {
-        if (Common.isOnline(getActivity())) {
-            Common.showProgressDialog(getActivity());
+        if (Utility.isOnline(getActivity())) {
+            Utility.showProgressDialog(getActivity());
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.DATE, date);
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.DATE, date);
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.GET_USERS_BY_DATE_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.GET_USERS_BY_DATE_URL, mJsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     displayData(response);
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(getClass().getName(), "Error: " + error.getMessage());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
@@ -210,40 +211,40 @@ public class CalendarFragment extends Fragment {
 
     private void displayData(JSONObject response) {
         try {
-            String success = response.getString(Common.Constant_Class.SUCCESS);
-            String message = response.getString(Common.Constant_Class.MESSAGE);
+            String success = response.getString(AppConstants.SUCCESS);
+            String message = response.getString(AppConstants.MESSAGE);
             listDataHeader.clear();
             listDataChild.clear();
-            if (success.equalsIgnoreCase(Common.Constant_Class.TRUE)) {
+            if (success.equalsIgnoreCase(AppConstants.TRUE)) {
 
                 lvCustomList.setVisibility(View.VISIBLE);
-                JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                JSONArray mJsonArray = response.getJSONArray(AppConstants.DATA);
                 for (int i = 0; i < mJsonArray.length(); i++) {
                     JSONObject mJsondata = mJsonArray.getJSONObject(i);
-                    String profile_id = mJsondata.getString(Common.Constant_Class.ID);
-                    String email = mJsondata.getString(Common.Constant_Class.EMAIL_ADDRESS);
-                    String profile_pic_url = mJsondata.getString(Common.Constant_Class.PROFILE_PIC_URL);
-                    String first_name = mJsondata.getString(Common.Constant_Class.FIRST_NAME);
-                    String last_name = mJsondata.getString(Common.Constant_Class.LAST_NAME);
-                    String father_name = mJsondata.getString(Common.Constant_Class.FATHER_NAME);
-                    String mother_name = mJsondata.getString(Common.Constant_Class.MOTHER_NAME);
-                    String status = mJsondata.getString(Common.Constant_Class.STATUS);
-                    String city = mJsondata.getString(Common.Constant_Class.CITY);
-                    String mobile = mJsondata.getString(Common.Constant_Class.MOBILE);
-                    String updated_time = mJsondata.getString(Common.Constant_Class.UPDATED_TIME);
-                    String is_location_enable = mJsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE);
-                    String user_lat = mJsondata.getString(Common.Constant_Class.USER_LAT);
-                    String user_lng = mJsondata.getString(Common.Constant_Class.USER_LNG);
+                    String profile_id = mJsondata.getString(AppConstants.ID);
+                    String email = mJsondata.getString(AppConstants.EMAIL_ADDRESS);
+                    String profile_pic_url = mJsondata.getString(AppConstants.PROFILE_PIC_URL);
+                    String first_name = mJsondata.getString(AppConstants.FIRST_NAME);
+                    String last_name = mJsondata.getString(AppConstants.LAST_NAME);
+                    String father_name = mJsondata.getString(AppConstants.FATHER_NAME);
+                    String mother_name = mJsondata.getString(AppConstants.MOTHER_NAME);
+                    String status = mJsondata.getString(AppConstants.STATUS);
+                    String city = mJsondata.getString(AppConstants.CITY);
+                    String mobile = mJsondata.getString(AppConstants.MOBILE);
+                    String updated_time = mJsondata.getString(AppConstants.UPDATED_TIME);
+                    String is_location_enable = mJsondata.getString(AppConstants.IS_LOCATION_ENABLE);
+                    String user_lat = mJsondata.getString(AppConstants.USER_LAT);
+                    String user_lng = mJsondata.getString(AppConstants.USER_LNG);
 
-                    String bdate_rem_id = mJsondata.getString(Common.Constant_Class.BDATE_REMINDER_ID);
-                    String spouse_rem_id = mJsondata.getString(Common.Constant_Class.SPOUSE_BDATE_REMINDER_ID);
-                    String mdate_rem_id = mJsondata.getString(Common.Constant_Class.MDATE_REMINDER_ID);
+                    String bdate_rem_id = mJsondata.getString(AppConstants.BDATE_REMINDER_ID);
+                    String spouse_rem_id = mJsondata.getString(AppConstants.SPOUSE_BDATE_REMINDER_ID);
+                    String mdate_rem_id = mJsondata.getString(AppConstants.MDATE_REMINDER_ID);
                     JSONArray childs = mJsondata.getJSONArray("childs");
 
 
                     String can_share = "0";
-                    if (mJsondata.has(Common.Constant_Class.CAN_SHARE)) {
-                        can_share = mJsondata.getString(Common.Constant_Class.CAN_SHARE);
+                    if (mJsondata.has(AppConstants.CAN_SHARE)) {
+                        can_share = mJsondata.getString(AppConstants.CAN_SHARE);
                     }
 
                     ListParentData lpd = new ListParentData();
@@ -271,20 +272,20 @@ public class CalendarFragment extends Fragment {
                     lpd.setUser_lat(user_lat);
                     lpd.setUser_lng(user_lng);
 
-                    String native_place = mJsondata.getString(Common.Constant_Class.NATIVE_PLACE);
-                    String address = mJsondata.getString(Common.Constant_Class.ADDRESS);
-                    String birth_date = mJsondata.getString(Common.Constant_Class.BIRTH_DATE);
-                    String blood_group = mJsondata.getString(Common.Constant_Class.BLOOD_GROUP);
+                    String native_place = mJsondata.getString(AppConstants.NATIVE_PLACE);
+                    String address = mJsondata.getString(AppConstants.ADDRESS);
+                    String birth_date = mJsondata.getString(AppConstants.BIRTH_DATE);
+                    String blood_group = mJsondata.getString(AppConstants.BLOOD_GROUP);
                     String is_share = "0";
-                    if (mJsondata.has(Common.Constant_Class.IS_SHARE)) {
-                        is_share = mJsondata.getString(Common.Constant_Class.IS_SHARE);
+                    if (mJsondata.has(AppConstants.IS_SHARE)) {
+                        is_share = mJsondata.getString(AppConstants.IS_SHARE);
                     }
                     lpd.setIs_share(is_share);
 
-                    String phone = mJsondata.getString(Common.Constant_Class.PHONE);
-                    String gender = mJsondata.getString(Common.Constant_Class.GENDER);
-                    String gotra = mJsondata.getString(Common.Constant_Class.GOTRA);
-                    String spouse = mJsondata.getString(Common.Constant_Class.SPOUSE_NAME);
+                    String phone = mJsondata.getString(AppConstants.PHONE);
+                    String gender = mJsondata.getString(AppConstants.GENDER);
+                    String gotra = mJsondata.getString(AppConstants.GOTRA);
+                    String spouse = mJsondata.getString(AppConstants.SPOUSE_NAME);
 
                     ListChildData lcd = new ListChildData();
                     lcd.setID(profile_id);
@@ -307,9 +308,9 @@ public class CalendarFragment extends Fragment {
                     listDataChild.put(lpd, mlstChildData);
                 }
             } else {
-                if (response.has(Common.Constant_Class.ERROR_CODE)) {
-                    String error = response.getString(Common.Constant_Class.ERROR_CODE);
-                    if (error.equalsIgnoreCase(Common.Constant_Class.ERROR_13)) {
+                if (response.has(AppConstants.ERROR_CODE)) {
+                    String error = response.getString(AppConstants.ERROR_CODE);
+                    if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
                         Intent mIntent = new Intent(getActivity(), LoginActivity.class);
                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(mIntent);

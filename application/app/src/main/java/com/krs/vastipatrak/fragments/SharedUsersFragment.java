@@ -24,7 +24,8 @@ import com.krs.vastipatrak.adapter.ExpandableListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.ListChildData;
 import com.krs.vastipatrak.model.ListParentData;
-import com.krs.vastipatrak.utils.Common;
+import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,8 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
-import static com.krs.vastipatrak.utils.Common.showProgressDialog;
+import static com.krs.vastipatrak.utils.Utility.hideProgressDialog;
+import static com.krs.vastipatrak.utils.Utility.showProgressDialog;
 
 public class SharedUsersFragment extends Fragment {
 
@@ -69,7 +70,7 @@ public class SharedUsersFragment extends Fragment {
     }
 
     private void MemoryAllocation(View rootView) {
-        mSharedPreferences = getActivity().getSharedPreferences(Common.Constant_Class.PREF_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
         txt_sharedUsers = rootView.findViewById(R.id.txt_sharedUsers);
@@ -81,20 +82,20 @@ public class SharedUsersFragment extends Fragment {
     private void setAdapter(JSONArray mJsonarr, String shared) throws Exception {
         for (int j = 0; j < mJsonarr.length(); j++) {
             JSONObject mjsondata = mJsonarr.getJSONObject(j);
-            String profile_id = mjsondata.getString(Common.Constant_Class.ID);
-            String email = mjsondata.getString(Common.Constant_Class.EMAIL_ADDRESS);
-            String profile_pic_url = mjsondata.getString(Common.Constant_Class.PROFILE_PIC_URL);
-            String first_name = mjsondata.getString(Common.Constant_Class.FIRST_NAME);
-            String last_name = mjsondata.getString(Common.Constant_Class.LAST_NAME);
-            String father_name = mjsondata.getString(Common.Constant_Class.FATHER_NAME);
-            String mother_name = mjsondata.getString(Common.Constant_Class.MOTHER_NAME);
-            String status = mjsondata.getString(Common.Constant_Class.STATUS);
-            String city = mjsondata.getString(Common.Constant_Class.CITY);
-            String mobile = mjsondata.getString(Common.Constant_Class.MOBILE);
-            String updated_time = mjsondata.getString(Common.Constant_Class.UPDATED_TIME);
-            String is_location_enable = mjsondata.getString(Common.Constant_Class.IS_LOCATION_ENABLE);
-            String user_lat = mjsondata.getString(Common.Constant_Class.USER_LAT);
-            String user_lng = mjsondata.getString(Common.Constant_Class.USER_LNG);
+            String profile_id = mjsondata.getString(AppConstants.ID);
+            String email = mjsondata.getString(AppConstants.EMAIL_ADDRESS);
+            String profile_pic_url = mjsondata.getString(AppConstants.PROFILE_PIC_URL);
+            String first_name = mjsondata.getString(AppConstants.FIRST_NAME);
+            String last_name = mjsondata.getString(AppConstants.LAST_NAME);
+            String father_name = mjsondata.getString(AppConstants.FATHER_NAME);
+            String mother_name = mjsondata.getString(AppConstants.MOTHER_NAME);
+            String status = mjsondata.getString(AppConstants.STATUS);
+            String city = mjsondata.getString(AppConstants.CITY);
+            String mobile = mjsondata.getString(AppConstants.MOBILE);
+            String updated_time = mjsondata.getString(AppConstants.UPDATED_TIME);
+            String is_location_enable = mjsondata.getString(AppConstants.IS_LOCATION_ENABLE);
+            String user_lat = mjsondata.getString(AppConstants.USER_LAT);
+            String user_lng = mjsondata.getString(AppConstants.USER_LNG);
             ListParentData lpd = new ListParentData();
             lpd.setName(first_name + " " + last_name);
             lpd.setFatherName(father_name);
@@ -110,22 +111,22 @@ public class SharedUsersFragment extends Fragment {
             lpd.setUser_lat(user_lat);
             lpd.setUser_lng(user_lng);
             lpd.setShared(shared);
-            String native_place = mjsondata.getString(Common.Constant_Class.NATIVE_PLACE);
-            String address = mjsondata.getString(Common.Constant_Class.ADDRESS);
-            String birth_date = mjsondata.getString(Common.Constant_Class.BIRTH_DATE);
-            String blood_group = mjsondata.getString(Common.Constant_Class.BLOOD_GROUP);
+            String native_place = mjsondata.getString(AppConstants.NATIVE_PLACE);
+            String address = mjsondata.getString(AppConstants.ADDRESS);
+            String birth_date = mjsondata.getString(AppConstants.BIRTH_DATE);
+            String blood_group = mjsondata.getString(AppConstants.BLOOD_GROUP);
             String is_share = "0";
-            if (mjsondata.has(Common.Constant_Class.IS_SHARE)) {
-                is_share = mjsondata.getString(Common.Constant_Class.IS_SHARE);
+            if (mjsondata.has(AppConstants.IS_SHARE)) {
+                is_share = mjsondata.getString(AppConstants.IS_SHARE);
             }
             if (shared.equalsIgnoreCase("from")) {
                 lpd.setIs_share("1");
             } else {
                 lpd.setIs_share(is_share);
             }
-            String phone = mjsondata.getString(Common.Constant_Class.PHONE);
-            String gender = mjsondata.getString(Common.Constant_Class.GENDER);
-            String gotra = mjsondata.getString(Common.Constant_Class.GOTRA);
+            String phone = mjsondata.getString(AppConstants.PHONE);
+            String gender = mjsondata.getString(AppConstants.GENDER);
+            String gotra = mjsondata.getString(AppConstants.GOTRA);
 
             ListChildData lcd = new ListChildData();
             lcd.setID(profile_id);
@@ -176,24 +177,24 @@ public class SharedUsersFragment extends Fragment {
     }
 
     private void SharedUsers() {
-        if (Common.isOnline(getActivity())) {
-            Common.showProgressDialog(getActivity());
+        if (Utility.isOnline(getActivity())) {
+            Utility.showProgressDialog(getActivity());
 
             JSONObject mJsonObject = null;
             try {
                 mJsonObject = new JSONObject();
-                mJsonObject.put(Common.Constant_Class.USER_ID, mSharedPreferences.getString(Common.Constant_Class.USER_ID, ""));
-                mJsonObject.put(Common.Constant_Class.ACCESS_TOKEN, mSharedPreferences.getString(Common.Constant_Class.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
             showProgressDialog(getActivity());
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, Common.Constant_Class.SHARED_USERS_URL, mJsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.SHARED_USERS_URL, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(@NonNull JSONObject response) {
                     try {
-                        JSONArray mJsonArray = response.getJSONArray(Common.Constant_Class.DATA);
+                        JSONArray mJsonArray = response.getJSONArray(AppConstants.DATA);
                         JSONObject mJsondata = mJsonArray.getJSONObject(0);
                         JSONArray mJsonarr1 = mJsondata.getJSONArray("sharedUsers");
                         JSONArray mJsonarr2 = mJsondata.getJSONArray("sharedFromUsers");
@@ -204,7 +205,7 @@ public class SharedUsersFragment extends Fragment {
                         hideProgressDialog();
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Common.hideProgressDialog();
+                        Utility.hideProgressDialog();
                     }
                 }
             }, new Response.ErrorListener() {
@@ -212,17 +213,17 @@ public class SharedUsersFragment extends Fragment {
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    Common.hideProgressDialog();
+                    Utility.hideProgressDialog();
                 }
             }) {
                 @NonNull
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put(Common.Constant_Class.API_KEY, Common.Constant_Class.API_KEY_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TYPE, Common.Constant_Class.DEVICE_TYPE_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_ID, Common.Constant_Class.DEVICE_ID_VALUE);
-                    params.put(Common.Constant_Class.DEVICE_TOKEN, mSharedPreferences.getString(Common.Constant_Class.DEVICE_TOKEN, ""));
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
                     return params;
                 }
             };
