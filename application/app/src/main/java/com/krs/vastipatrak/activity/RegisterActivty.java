@@ -3,6 +3,7 @@ package com.krs.vastipatrak.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -32,6 +33,7 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.AppConstants;
 import com.krs.vastipatrak.utils.Utility;
 import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.json.JSONObject;
 
@@ -50,7 +52,8 @@ public class RegisterActivty extends Activity {
     private JSONObject json = null;
     private String str_profile_hash = "";
     private static String TAG=RegisterActivty.class.getSimpleName();
-
+    private Uri mCropImageUri;
+    final int REQUEST_PERMISSION_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,13 @@ public class RegisterActivty extends Activity {
             cropImageActivity();
         });
 
+        txtCity.setOnClickListener(v -> {
+            Intent mIntent = new Intent(RegisterActivty.this, SelectionlistActivity.class);
+            mIntent.putExtra(getString(R.string.listview), false);
+            mIntent.putExtra(getString(R.string.title), R.string.city);
+            startActivityForResult(mIntent, 14);
+        });
+
         if (Build.VERSION.SDK_INT >= 23) {
             if (Utility.canCallPhone(this) || !Utility.canAccessLocation(this) || !Utility.canSMS(this)) {
                 int INIT_REQUEST = 1;
@@ -79,12 +89,16 @@ public class RegisterActivty extends Activity {
             }
         }
 
-        txtCity.setOnClickListener(v -> {
-            Intent mIntent = new Intent(RegisterActivty.this, SelectionlistActivity.class);
-            mIntent.putExtra(getString(R.string.listview), false);
-            mIntent.putExtra(getString(R.string.title), R.string.city);
-            startActivityForResult(mIntent, 14);
-        });
+        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Utility.hasPermission(RegisterActivty.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                requestPermissions(permissions, REQUEST_PERMISSION_CODE);
+            }
+            if (!Utility.hasPermission(RegisterActivty.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                requestPermissions(permissions, REQUEST_PERMISSION_CODE);
+            }
+        }
+
     }
 
     private void MemoryAllocation() {
@@ -116,9 +130,45 @@ public class RegisterActivty extends Activity {
         }
     }
 
+    private void startCropImageActivity(Uri imageUri) {
+        CropImage.activity(imageUri).setGuidelines(CropImageView.Guidelines.ON).setMultiTouchEnabled(true).start(RegisterActivty.this);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (mCropImageUri != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // required permissions granted, start crop image activity
+            startCropImageActivity(mCropImageUri);
+        } else {
+            Toast.makeText(RegisterActivty.this, "Cancelling, required permissions are not granted", Toast.LENGTH_LONG).show();
+        }
+
+        if (REQUEST_PERMISSION_CODE == requestCode && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            CropImage.startPickImageActivity(RegisterActivty.this);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        Uri imageUri = null;
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            imageUri = CropImage.getPickImageResultUri(RegisterActivty.this, data);
+            if (CropImage.hasPermissionInManifest(RegisterActivty.this, Manifest.permission.READ_EXTERNAL_STORAGE) && CropImage.hasPermissionInManifest(RegisterActivty.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                startCropImageActivity(imageUri);
+            }
+        }
+
+        if (CropImage.isReadExternalStoragePermissionsRequired(RegisterActivty.this, imageUri)) {
+            // request permissions and handle the result in onRequestPermissionsResult()
+            mCropImageUri = imageUri;
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        } else {
+            // no permissions required or already grunted, can start crop image activity
+        }
+
 
         Bitmap bmp = null;
         if (data != null) {
