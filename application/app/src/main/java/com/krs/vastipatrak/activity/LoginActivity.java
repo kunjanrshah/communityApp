@@ -286,7 +286,6 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
 
-
                 mGoogleSignInClient.signOut().addOnCompleteListener(LoginActivity.this,
                         new OnCompleteListener<Void>() {
                             @Override
@@ -326,12 +325,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             }
         });
 
-        login_google.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
-            }
-        });
+        login_google.setOnClickListener((View.OnClickListener) v -> signIn());
 
         // [START config_signin]
         // Configure Google Sign In
@@ -507,80 +501,61 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         tv = findViewById(R.id.TextView03);
         tv.setSelected(true);
         txtLan = findViewById(R.id.txtLan);
-        txtLan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        txtLan.setOnClickListener(v -> Toast.makeText(LoginActivity.this, "Work in Progress", Toast.LENGTH_SHORT).show());
 
-                Toast.makeText(LoginActivity.this, "Work in Progress", Toast.LENGTH_SHORT).show();
+        inputPassword.setOnTouchListener((v, event) -> {
 
+            final int DRAWABLE_RIGHT = 2;
 
-            }
-        });
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getRawX() >= (inputPassword.getRight() - inputPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if (isShow) {
+                        inputPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
+                        inputPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
-        inputPassword.setOnTouchListener(new EditText.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, @NonNull MotionEvent event) {
+                        isShow = false;
+                    } else {
+                        inputPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
+                        inputPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
-                final int DRAWABLE_RIGHT = 2;
-
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (inputPassword.getRight() - inputPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        if (isShow) {
-                            inputPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
-                            inputPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-
-                            isShow = false;
-                        } else {
-                            inputPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
-                            inputPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-
-                            isShow = true;
-                        }
-                        inputPassword.setSelection(inputPassword.length());
-
-                        return true;
+                        isShow = true;
                     }
+                    inputPassword.setSelection(inputPassword.length());
+
+                    return true;
                 }
-                return false;
             }
+            return false;
         });
 
 
-        inputConformPassword.setOnTouchListener(new EditText.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, @NonNull MotionEvent event) {
+        inputConformPassword.setOnTouchListener((v, event) -> {
 
-                final int DRAWABLE_RIGHT = 2;
+            final int DRAWABLE_RIGHT = 2;
 
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (inputConformPassword.getRight() - inputConformPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        if (isShow1) {
-                            inputConformPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
-                            inputConformPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                            isShow1 = false;
-                        } else {
-                            inputConformPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
-                            inputConformPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                            isShow1 = true;
-                        }
-                        try {
-                            inputConformPassword.setSelection(inputPassword.length());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        return true;
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getRawX() >= (inputConformPassword.getRight() - inputConformPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if (isShow1) {
+                        inputConformPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
+                        inputConformPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        isShow1 = false;
+                    } else {
+                        inputConformPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
+                        inputConformPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        isShow1 = true;
                     }
+                    try {
+                        inputConformPassword.setSelection(inputPassword.length());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
                 }
-                return false;
             }
+            return false;
         });
 
-        img_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                img_profile.setImageDrawable(getDrawable(R.drawable.user_profile));
-            }
-        });
+        img_cancel.setOnClickListener(v -> img_profile.setImageDrawable(getDrawable(R.drawable.user_profile)));
     }
 
     private void showActivityOverlay() {

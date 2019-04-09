@@ -2,6 +2,7 @@ package com.krs.vastipatrak.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.utils.AppConstants;
 import com.krs.vastipatrak.utils.Utility;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
@@ -31,21 +33,21 @@ public class ChooseLanguage extends Activity  {
         ArrayAdapter<String> aa = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line, languages);
         spinner1.setAdapter(aa);
 
-        btn_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mIntent=new Intent(ChooseLanguage.this,LoginActivity1.class);
-                startActivity(mIntent);
-            }
+        btn_login.setOnClickListener(v -> {
+            Intent mIntent=new Intent(ChooseLanguage.this,LoginActivity1.class);
+            startActivity(mIntent);
         });
 
-        btn_register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mIntent=new Intent(ChooseLanguage.this,RegisterActivty.class);
-                startActivity(mIntent);
-            }
+        btn_register.setOnClickListener(v -> {
+            Intent mIntent=new Intent(ChooseLanguage.this,RegisterActivty.class);
+            startActivity(mIntent);
         });
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (Utility.canCallPhone(this) || !Utility.canAccessLocation(this) || !Utility.canSMS(this)) {
+                requestPermissions(AppConstants.INIT_PERMS, AppConstants.INIT_REQUEST);
+            }
+        }
     }
 
     private void MemoryAllocation() {

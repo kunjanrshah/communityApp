@@ -3,14 +3,18 @@ package com.krs.vastipatrak.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Html;
+import android.text.InputType;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,21 +43,22 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Utility.hideProgressDialog;
+import static com.krs.vastipatrak.utils.Utility.watchYoutubeVideo;
 
 public class RegisterActivty extends Activity {
 
-    private TextView txt_already,txt_how_register,txtCity;
-    private ImageView img_back,img_header_logo,img_profile,img_cancel;
-    private EditText edt_head_name,edt_spouse_name,edt_email_id,edt_mobile,edt_password,edt_cpassword,edt_address,edt_head_surname;
+    private static String TAG = RegisterActivty.class.getSimpleName();
+    private TextView txt_already, txt_how_register, txtCity;
+    private ImageView img_back, img_header_logo, img_profile, img_cancel;
+    private EditText edt_head_name, edt_spouse_name, edt_email_id, edt_mobile, edt_password, edt_cpassword, edt_address, edt_head_surname;
     private Button btn_register;
     private JSONObject json = null;
     private String str_profile_hash = "";
-    private static String TAG=RegisterActivty.class.getSimpleName();
-    private Uri mCropImageUri;
-    final int REQUEST_PERMISSION_CODE = 100;
+    private boolean is_first = true;
+    private boolean isShow = true;
+    private boolean isShow1 = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,34 +67,103 @@ public class RegisterActivty extends Activity {
         MemoryAllocation();
 
         txt_already.setOnClickListener(v -> {
-            Intent mIntent=new Intent(RegisterActivty.this,LoginActivity1.class);
+            Intent mIntent = new Intent(RegisterActivty.this, LoginActivity1.class);
             startActivity(mIntent);
             finish();
         });
 
         img_back.setOnClickListener(v -> finish());
 
-        btn_register.setOnClickListener(v -> SignupWS());
+        btn_register.setOnClickListener(v -> RegistraionWS());
 
         img_profile.setOnClickListener(v -> {
             cropImageActivity();
         });
 
         txtCity.setOnClickListener(v -> {
-            Intent mIntent = new Intent(RegisterActivty.this, SelectionlistActivity.class);
-            mIntent.putExtra(getString(R.string.listview), false);
-            mIntent.putExtra(getString(R.string.title), R.string.city);
-            startActivityForResult(mIntent, 14);
+            if (is_first) {
+                is_first = false;
+                Intent mIntent = new Intent(RegisterActivty.this, SelectionlistActivity.class);
+                mIntent.putExtra(getString(R.string.listview), false);
+                mIntent.putExtra(getString(R.string.title), R.string.city);
+                startActivityForResult(mIntent, AppConstants.REQEUST_CODE_CITY);
+            }
         });
+
+        img_cancel.setOnClickListener(v -> {
+            img_profile.setImageResource(R.drawable.man_reg);
+            Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.man_reg);
+            if (icon != null) {
+                str_profile_hash = Utility.getBase64(icon);
+            }
+            img_cancel.setVisibility(View.GONE);
+        });
+
+        txt_how_register.setOnClickListener(v -> {
+            watchYoutubeVideo(RegisterActivty.this, getResources().getString(R.string.login_1));
+        });
+
+
+        edt_password.setOnTouchListener((v, event) -> {
+
+            final int DRAWABLE_RIGHT = 2;
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getRawX() >= (edt_password.getRight() - edt_password.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if (isShow) {
+                        edt_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
+                        edt_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+
+                        isShow = false;
+                    } else {
+                        edt_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
+                        edt_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+                        isShow = true;
+                    }
+                    edt_password.setSelection(edt_password.length());
+
+                    return true;
+                }
+            }
+            return false;
+        });
+
+
+        edt_cpassword.setOnTouchListener((v, event) -> {
+
+            final int DRAWABLE_RIGHT = 2;
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getRawX() >= (edt_cpassword.getRight() - edt_cpassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if (isShow1) {
+                        edt_cpassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
+                        edt_cpassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        isShow1 = false;
+                    } else {
+                        edt_cpassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
+                        edt_cpassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        isShow1 = true;
+                    }
+                    try {
+                        edt_cpassword.setSelection(edt_cpassword.length());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                }
+            }
+            return false;
+        });
+
 
         if (Build.VERSION.SDK_INT >= 23) {
             if (Utility.canCallPhone(this) || !Utility.canAccessLocation(this) || !Utility.canSMS(this)) {
-                int INIT_REQUEST = 1;
-                requestPermissions(AppConstants.INIT_PERMS, INIT_REQUEST);
+                requestPermissions(AppConstants.INIT_PERMS, AppConstants.INIT_REQUEST);
             }
         }
 
-        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+        /*String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Utility.hasPermission(RegisterActivty.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 requestPermissions(permissions, REQUEST_PERMISSION_CODE);
@@ -97,30 +171,31 @@ public class RegisterActivty extends Activity {
             if (!Utility.hasPermission(RegisterActivty.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 requestPermissions(permissions, REQUEST_PERMISSION_CODE);
             }
-        }
+        }*/
 
     }
 
     private void MemoryAllocation() {
-        img_back=findViewById(R.id.img_back);
-        img_header_logo=findViewById(R.id.img_header_logo);
-        img_profile=findViewById(R.id.img_profile);
-        img_cancel=findViewById(R.id.img_cancel);
-        txt_how_register=findViewById(R.id.txt_how_register);
-        txt_already=findViewById(R.id.txt_already);
+        img_back = findViewById(R.id.img_back);
+        img_header_logo = findViewById(R.id.img_header_logo);
+        img_profile = findViewById(R.id.img_profile);
+        img_cancel = findViewById(R.id.img_cancel);
 
-        edt_head_name=findViewById(R.id.edt_head_name);
-        edt_head_surname=findViewById(R.id.edt_head_surname);
-        edt_spouse_name=findViewById(R.id.edt_spouse_name);
-        edt_email_id=findViewById(R.id.edt_email_id);
-        edt_mobile=findViewById(R.id.edt_mobile);
-        edt_password=findViewById(R.id.edt_password);
-        edt_cpassword=findViewById(R.id.edt_cpassword);
-        edt_address=findViewById(R.id.edt_address);
-        btn_register=findViewById(R.id.btn_register);
-        txtCity=findViewById(R.id.txtCity);
+        txt_how_register = findViewById(R.id.txt_how_register);
+        txt_already = findViewById(R.id.txt_already);
 
-        String str=getResources().getString(R.string.already_have_a_account_sign_in)+ "<b>" +" "+ getString(R.string.login) +"</b>";
+        edt_head_name = findViewById(R.id.edt_head_name);
+        edt_head_surname = findViewById(R.id.edt_head_surname);
+        edt_spouse_name = findViewById(R.id.edt_spouse_name);
+        edt_email_id = findViewById(R.id.edt_email_id);
+        edt_mobile = findViewById(R.id.edt_mobile);
+        edt_password = findViewById(R.id.edt_password);
+        edt_cpassword = findViewById(R.id.edt_cpassword);
+        edt_address = findViewById(R.id.edt_address);
+        btn_register = findViewById(R.id.btn_register);
+        txtCity = findViewById(R.id.txtCity);
+
+        String str = getResources().getString(R.string.already_have_a_account_sign_in) + "<b>" + " " + getString(R.string.login) + "</b>";
         txt_already.setText(Html.fromHtml(str));
     }
 
@@ -134,24 +209,15 @@ public class RegisterActivty extends Activity {
         CropImage.activity(imageUri).setGuidelines(CropImageView.Guidelines.ON).setMultiTouchEnabled(true).start(RegisterActivty.this);
     }
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (mCropImageUri != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // required permissions granted, start crop image activity
-            startCropImageActivity(mCropImageUri);
-        } else {
-            Toast.makeText(RegisterActivty.this, "Cancelling, required permissions are not granted", Toast.LENGTH_LONG).show();
-        }
-
-        if (REQUEST_PERMISSION_CODE == requestCode && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            CropImage.startPickImageActivity(RegisterActivty.this);
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AppConstants.REQEUST_CODE_CITY) {
+            if (data != null) {
+                is_first = true;
+                txtCity.setText(data.getStringExtra(getString(R.string.selection)));
+            }
+        }
 
         Uri imageUri = null;
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
@@ -161,40 +227,22 @@ public class RegisterActivty extends Activity {
             }
         }
 
-        if (CropImage.isReadExternalStoragePermissionsRequired(RegisterActivty.this, imageUri)) {
-            // request permissions and handle the result in onRequestPermissionsResult()
-            mCropImageUri = imageUri;
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-        } else {
-            // no permissions required or already grunted, can start crop image activity
-        }
-
-
-        Bitmap bmp = null;
-        if (data != null) {
-            try {
-                if (data.getData() == null) {
-                    bmp = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
-                } else {
-                    Uri selectedImage = data.getData();
-                    bmp = Utility.scaleImage(this, selectedImage);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (bmp != null) {
-                if (resultCode == RESULT_OK) {
-                    Glide.with(this).load(bmp).thumbnail(0.5f).apply(RequestOptions.circleCropTransform()).into(img_profile);
-                    str_profile_hash = Utility.getBase64(bmp);
-                }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                BitmapDrawable drawable = (BitmapDrawable) img_profile.getDrawable();
+                Bitmap bmp = drawable.getBitmap();
+                Glide.with(this).load(result.getUri()).thumbnail(0.5f).apply(RequestOptions.circleCropTransform()).into(img_profile);
+                str_profile_hash = Utility.getBase64(bmp);
+                img_cancel.setVisibility(View.VISIBLE);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(RegisterActivty.this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
             }
         }
     }
 
 
-
-    private void SignupWS() {
+    private void RegistraionWS() {
         if (Utility.isOnline(this)) {
             final String name = edt_head_name.getText().toString().trim();
             final String surname = edt_head_surname.getText().toString().trim();
@@ -206,9 +254,21 @@ public class RegisterActivty extends Activity {
             final String address = edt_address.getText().toString().trim();
             final String city = txtCity.getText().toString().trim();
 
-            if (!email.equalsIgnoreCase("")) {
+            if (mobile.length() != 10) {
+                Toast.makeText(RegisterActivty.this, "Mobile number must be 10 digit", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!email.isEmpty()) {
                 if (Utility.isValidEmail(email)) {
-                    Toast.makeText(RegisterActivty.this, "Type Valid Email Address!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivty.this, "Ivalid Email Address!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            if (!password.isEmpty() && !cpassword.isEmpty()) {
+                if (!password.equals(cpassword)) {
+                    Toast.makeText(RegisterActivty.this, "Password mismatch!", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -229,11 +289,11 @@ public class RegisterActivty extends Activity {
                             json.put(AppConstants.ADDRESS, address);
                             json.put(AppConstants.CITY, city);
 
-                          //  if (screen != null && screen.equalsIgnoreCase(AppConstants.SEARCH_FRAGMENT)) {
-                           //     json.put(AppConstants.STATUS, "1");
-                           // } else {
-                                json.put(AppConstants.STATUS, "0");
-                          //  }
+                            //  if (screen != null && screen.equalsIgnoreCase(AppConstants.SEARCH_FRAGMENT)) {
+                            //     json.put(AppConstants.STATUS, "1");
+                            // } else {
+                            json.put(AppConstants.STATUS, "0");
+                            //  }
                             if (!str_profile_hash.isEmpty()) {
                                 json.put(AppConstants.PROFILE_PIC, str_profile_hash);
                             }
