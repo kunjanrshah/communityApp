@@ -67,7 +67,7 @@ public class RegisterActivty extends Activity {
         MemoryAllocation();
 
         txt_already.setOnClickListener(v -> {
-            Intent mIntent = new Intent(RegisterActivty.this, LoginActivity1.class);
+            Intent mIntent = new Intent(RegisterActivty.this, LoginActivity.class);
             startActivity(mIntent);
             finish();
         });

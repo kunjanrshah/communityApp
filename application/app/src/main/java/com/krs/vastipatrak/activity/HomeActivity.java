@@ -63,6 +63,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -1472,6 +1473,9 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                             AppController.getInstance().realm.beginTransaction();
                             AppController.getInstance().realm.deleteAll();
                             AppController.getInstance().realm.commitTransaction();
+
+                            FirebaseAuth.getInstance().signOut();
+                            AppController.getInstance().mGoogleSignInClient.signOut().addOnCompleteListener(HomeActivity.this, task -> Toast.makeText(HomeActivity.this, "Logout", Toast.LENGTH_SHORT).show());
 
                             Intent mIntent = new Intent(HomeActivity.this, MyLocationService.class);
                             stopService(mIntent);

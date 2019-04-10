@@ -1571,15 +1571,18 @@ public class Utility {
     public static void showProgressDialog(Context mContext) {
         try {
 
-            if (pDialog == null) {
-                pDialog = new ProgressDialog(mContext);
-                pDialog.setMessage(AppConstants.LOADING);
-                pDialog.setCancelable(false);
+            if (!((Activity) mContext).isFinishing()) {
+                if (pDialog == null) {
+                    pDialog = new ProgressDialog(mContext);
+                    pDialog.setMessage(AppConstants.LOADING);
+                    pDialog.setCancelable(false);
+                }
+                if (!pDialog.isShowing()) pDialog.show();
+                ProgressBar progressbar = pDialog.findViewById(android.R.id.progress);
+                progressbar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#3b5998"), android.graphics.PorterDuff.Mode.SRC_IN);
             }
 
-            if (!pDialog.isShowing()) pDialog.show();
-            ProgressBar progressbar = pDialog.findViewById(android.R.id.progress);
-            progressbar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#3b5998"), android.graphics.PorterDuff.Mode.SRC_IN);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

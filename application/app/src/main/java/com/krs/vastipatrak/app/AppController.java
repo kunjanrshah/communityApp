@@ -16,6 +16,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.AppConstants;
@@ -50,6 +53,7 @@ public class AppController extends Application {
     public SharedPreferences.Editor mEditor;
     ConnectivityReceiver broadcastRevcevier;
     private RequestQueue mRequestQueue;
+    public GoogleSignInClient mGoogleSignInClient;
 
     public static synchronized AppController getInstance() {
         return mInstance;
@@ -78,6 +82,9 @@ public class AppController extends Application {
         Log.d(TAG,"AppController Screen");
         mEditor.putBoolean(getString(R.string.app_create),true);
         mEditor.apply();
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.web_client_id)).requestEmail().build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     @Override

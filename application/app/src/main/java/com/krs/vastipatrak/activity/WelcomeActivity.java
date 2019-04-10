@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.utils.AppConstants;
-import com.krs.vastipatrak.utils.Utility;
 
 public class WelcomeActivity extends AppCompatActivity {
 

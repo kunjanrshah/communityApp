@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
@@ -34,7 +33,7 @@ public class ChooseLanguage extends Activity  {
         spinner1.setAdapter(aa);
 
         btn_login.setOnClickListener(v -> {
-            Intent mIntent=new Intent(ChooseLanguage.this,LoginActivity1.class);
+            Intent mIntent=new Intent(ChooseLanguage.this, LoginActivity.class);
             startActivity(mIntent);
         });
 
