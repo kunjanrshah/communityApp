@@ -167,7 +167,7 @@ public class Common {
     }
 
     public static boolean canReadContacts(@NonNull Context mContext) {
-        return (Common.hasPermission(mContext, Manifest.permission.READ_CONTACTS));
+        return (hasPermission(mContext, Manifest.permission.READ_CONTACTS));
     }
 
     public static boolean hasPermission(@NonNull Context mContext, @NonNull String perm) {
@@ -480,39 +480,39 @@ public class Common {
                 query = query.toLowerCase();
 
                 RealmResults<ListProfileData> profileData = AppController.getInstance().realm.where(ListProfileData.class).
-                        contains(Constant_Class.FIRST_NAME, query).or().
-                        contains(Constant_Class.LAST_NAME, query).or().
-                        contains(Constant_Class.FATHER_NAME, query).or().
-                        contains(Constant_Class.MOTHER_NAME, query).or().
-                        contains(Constant_Class.EMAIL_ADDRESS, query).or().
-                        contains(Constant_Class.MOBILE, query).or().
-                        contains(Constant_Class.PHONE, query).or().
-                        contains(Constant_Class.BLOOD_GROUP, query).or().
-                        contains(Constant_Class.GENDER, query).or().
-                        contains(Constant_Class.CITY, query).or().
-                        contains(Constant_Class.GOTRA, query).or().
-                        contains(Constant_Class.EKDO, query).or().
-                        contains(Constant_Class.NATIVE_PLACE, query).or().
-                        contains(Constant_Class.BIRTH_PLACE, query).or().
-                        contains(Constant_Class.BIRTH_DATE, query).or().
-                        contains(Constant_Class.BIRTH_TIME, query).or().
-                        contains(Constant_Class.EDUCATION, query).or().
-                        contains(Constant_Class.OCCUPATION, query).or().
-                        contains(Constant_Class.WORK, query).or().
-                        contains(Constant_Class.ADDRESS, query).or().
-                        contains(Constant_Class.OFFICE_MOBILE, query).or().
-                        contains(Constant_Class.OFFICE_ADDRESS, query).or().
-                        contains(Constant_Class.SPOUSE_NAME, query).or().
-                        contains(Constant_Class.MARRIAGE_DATE, query).or().
-                        contains(Constant_Class.SPOUSE_FATHER_NAME, query).or().
-                        contains(Constant_Class.SPOUSE_MOTHER_NAME, query).or().
-                        contains(Constant_Class.STATUS, query).findAll();
-                profileData.sort(Constant_Class.CITY, Sort.ASCENDING);
+                        contains(AppConstants.FIRST_NAME, query).or().
+                        contains(AppConstants.LAST_NAME, query).or().
+                        contains(AppConstants.FATHER_NAME, query).or().
+                        contains(AppConstants.MOTHER_NAME, query).or().
+                        contains(AppConstants.EMAIL_ADDRESS, query).or().
+                        contains(AppConstants.MOBILE, query).or().
+                        contains(AppConstants.PHONE, query).or().
+                        contains(AppConstants.BLOOD_GROUP, query).or().
+                        contains(AppConstants.GENDER, query).or().
+                        contains(AppConstants.CITY, query).or().
+                        contains(AppConstants.GOTRA, query).or().
+                        contains(AppConstants.EKDO, query).or().
+                        contains(AppConstants.NATIVE_PLACE, query).or().
+                        contains(AppConstants.BIRTH_PLACE, query).or().
+                        contains(AppConstants.BIRTH_DATE, query).or().
+                        contains(AppConstants.BIRTH_TIME, query).or().
+                        contains(AppConstants.EDUCATION, query).or().
+                        contains(AppConstants.OCCUPATION, query).or().
+                        contains(AppConstants.WORK, query).or().
+                        contains(AppConstants.ADDRESS, query).or().
+                        contains(AppConstants.OFFICE_MOBILE, query).or().
+                        contains(AppConstants.OFFICE_ADDRESS, query).or().
+                        contains(AppConstants.SPOUSE_NAME, query).or().
+                        contains(AppConstants.MARRIAGE_DATE, query).or().
+                        contains(AppConstants.SPOUSE_FATHER_NAME, query).or().
+                        contains(AppConstants.SPOUSE_MOTHER_NAME, query).or().
+                        contains(AppConstants.STATUS, query).findAll();
+                profileData.sort(AppConstants.CITY, Sort.ASCENDING);
                 mlistProfileData.addAll(profileData);
                 break;
             }
             case 3: {
-                ListProfileData profileData = realm.where(ListProfileData.class).equalTo(Constant_Class.PROFILE_ID, query).findFirst();
+                ListProfileData profileData = realm.where(ListProfileData.class).equalTo(AppConstants.PROFILE_ID, query).findFirst();
                 mlistProfileData.add(profileData);
                 break;
             }
@@ -521,158 +521,158 @@ public class Common {
                 try {
 
                     JSONObject mJsonObject = new JSONObject(query);
-                    if (mJsonObject.has(Constant_Class.FIRST_NAME)) {
-                        first_name = mJsonObject.getString(Constant_Class.FIRST_NAME);
-                        RealmResults<ListProfileData> first_name_data = realm.where(ListProfileData.class).contains(Constant_Class.FIRST_NAME, first_name.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.FIRST_NAME)) {
+                        first_name = mJsonObject.getString(AppConstants.FIRST_NAME);
+                        RealmResults<ListProfileData> first_name_data = realm.where(ListProfileData.class).contains(AppConstants.FIRST_NAME, first_name.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
 
                         mlistProfileData.addAll(first_name_data);
 
                     }
-                    if (mJsonObject.has(Constant_Class.LAST_NAME)) {
-                        last_name = mJsonObject.getString(Constant_Class.LAST_NAME);
-                        RealmResults<ListProfileData> last_name_data = realm.where(ListProfileData.class).contains(Constant_Class.LAST_NAME, last_name.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.LAST_NAME)) {
+                        last_name = mJsonObject.getString(AppConstants.LAST_NAME);
+                        RealmResults<ListProfileData> last_name_data = realm.where(ListProfileData.class).contains(AppConstants.LAST_NAME, last_name.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
 
                         mlistProfileData.addAll(last_name_data);
                     }
-                    if (mJsonObject.has(Constant_Class.FATHER_NAME)) {
-                        father_name = mJsonObject.getString(Constant_Class.FATHER_NAME);
-                        RealmResults<ListProfileData> father_name_data = realm.where(ListProfileData.class).contains(Constant_Class.FATHER_NAME, father_name.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.FATHER_NAME)) {
+                        father_name = mJsonObject.getString(AppConstants.FATHER_NAME);
+                        RealmResults<ListProfileData> father_name_data = realm.where(ListProfileData.class).contains(AppConstants.FATHER_NAME, father_name.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(father_name_data);
 
                     }
-                    if (mJsonObject.has(Constant_Class.MOTHER_NAME)) {
-                        mother_name = mJsonObject.getString(Constant_Class.MOTHER_NAME);
-                        RealmResults<ListProfileData> mother_name_data = realm.where(ListProfileData.class).contains(Constant_Class.MOTHER_NAME, mother_name.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.MOTHER_NAME)) {
+                        mother_name = mJsonObject.getString(AppConstants.MOTHER_NAME);
+                        RealmResults<ListProfileData> mother_name_data = realm.where(ListProfileData.class).contains(AppConstants.MOTHER_NAME, mother_name.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
 
                         mlistProfileData.addAll(mother_name_data);
                     }
-                    if (mJsonObject.has(Constant_Class.EMAIL_ADDRESS)) {
-                        email_address = mJsonObject.getString(Constant_Class.EMAIL_ADDRESS);
-                        RealmResults<ListProfileData> email_data = realm.where(ListProfileData.class).contains(Constant_Class.EMAIL_ADDRESS, email_address.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.EMAIL_ADDRESS)) {
+                        email_address = mJsonObject.getString(AppConstants.EMAIL_ADDRESS);
+                        RealmResults<ListProfileData> email_data = realm.where(ListProfileData.class).contains(AppConstants.EMAIL_ADDRESS, email_address.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
 
                         mlistProfileData.addAll(email_data);
                     }
 
-                    if (mJsonObject.has(Constant_Class.MOBILE)) {
-                        mobile = mJsonObject.getString(Constant_Class.MOBILE);
-                        RealmResults<ListProfileData> mobile_data = realm.where(ListProfileData.class).contains(Constant_Class.MOBILE, mobile.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.MOBILE)) {
+                        mobile = mJsonObject.getString(AppConstants.MOBILE);
+                        RealmResults<ListProfileData> mobile_data = realm.where(ListProfileData.class).contains(AppConstants.MOBILE, mobile.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
 
                         mlistProfileData.addAll(mobile_data);
                     }
-                    if (mJsonObject.has(Constant_Class.PHONE)) {
-                        phone = mJsonObject.getString(Constant_Class.PHONE);
-                        RealmResults<ListProfileData> phone_data = realm.where(ListProfileData.class).contains(Constant_Class.PHONE, phone.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.PHONE)) {
+                        phone = mJsonObject.getString(AppConstants.PHONE);
+                        RealmResults<ListProfileData> phone_data = realm.where(ListProfileData.class).contains(AppConstants.PHONE, phone.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
 
                         mlistProfileData.addAll(phone_data);
                     }
-                    if (mJsonObject.has(Constant_Class.BLOOD_GROUP)) {
-                        blood_group = mJsonObject.getString(Constant_Class.BLOOD_GROUP);
-                        RealmResults<ListProfileData> blood_group_data = realm.where(ListProfileData.class).contains(Constant_Class.BLOOD_GROUP, blood_group.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.BLOOD_GROUP)) {
+                        blood_group = mJsonObject.getString(AppConstants.BLOOD_GROUP);
+                        RealmResults<ListProfileData> blood_group_data = realm.where(ListProfileData.class).contains(AppConstants.BLOOD_GROUP, blood_group.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
 
                         mlistProfileData.addAll(blood_group_data);
                     }
-                    if (mJsonObject.has(Constant_Class.GENDER)) {
-                        gender = mJsonObject.getString(Constant_Class.GENDER);
-                        RealmResults<ListProfileData> gender_data = realm.where(ListProfileData.class).contains(Constant_Class.GENDER, gender.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.GENDER)) {
+                        gender = mJsonObject.getString(AppConstants.GENDER);
+                        RealmResults<ListProfileData> gender_data = realm.where(ListProfileData.class).contains(AppConstants.GENDER, gender.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(gender_data);
 
                     }
-                    if (mJsonObject.has(Constant_Class.GOTRA)) {
-                        gotra = mJsonObject.getString(Constant_Class.GOTRA);
-                        RealmResults<ListProfileData> gotra_data = realm.where(ListProfileData.class).contains(Constant_Class.GOTRA, gotra.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.GOTRA)) {
+                        gotra = mJsonObject.getString(AppConstants.GOTRA);
+                        RealmResults<ListProfileData> gotra_data = realm.where(ListProfileData.class).contains(AppConstants.GOTRA, gotra.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(gotra_data);
 
                     }
 
-                    if (mJsonObject.has(Constant_Class.EKDO)) {
-                        ekdo = mJsonObject.getString(Constant_Class.EKDO);
-                        RealmResults<ListProfileData> ekdo_data = realm.where(ListProfileData.class).contains(Constant_Class.EKDO, ekdo.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.EKDO)) {
+                        ekdo = mJsonObject.getString(AppConstants.EKDO);
+                        RealmResults<ListProfileData> ekdo_data = realm.where(ListProfileData.class).contains(AppConstants.EKDO, ekdo.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
 
                         mlistProfileData.addAll(ekdo_data);
                     }
-                    if (mJsonObject.has(Constant_Class.NATIVE_PLACE)) {
-                        native_place = mJsonObject.getString(Constant_Class.NATIVE_PLACE);
-                        RealmResults<ListProfileData> native_place_data = realm.where(ListProfileData.class).contains(Constant_Class.NATIVE_PLACE, native_place.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.NATIVE_PLACE)) {
+                        native_place = mJsonObject.getString(AppConstants.NATIVE_PLACE);
+                        RealmResults<ListProfileData> native_place_data = realm.where(ListProfileData.class).contains(AppConstants.NATIVE_PLACE, native_place.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(native_place_data);
                     }
 
-                    if (mJsonObject.has(Constant_Class.CITY)) {
-                        city = mJsonObject.getString(Constant_Class.CITY);
-                        RealmResults<ListProfileData> city_data = realm.where(ListProfileData.class).contains(Constant_Class.NATIVE_PLACE, city.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.CITY)) {
+                        city = mJsonObject.getString(AppConstants.CITY);
+                        RealmResults<ListProfileData> city_data = realm.where(ListProfileData.class).contains(AppConstants.NATIVE_PLACE, city.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(city_data);
                     }
 
-                    if (mJsonObject.has(Constant_Class.BIRTH_PLACE)) {
-                        birth_place = mJsonObject.getString(Constant_Class.BIRTH_PLACE);
-                        RealmResults<ListProfileData> birth_place_data = realm.where(ListProfileData.class).contains(Constant_Class.BIRTH_PLACE, birth_place.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.BIRTH_PLACE)) {
+                        birth_place = mJsonObject.getString(AppConstants.BIRTH_PLACE);
+                        RealmResults<ListProfileData> birth_place_data = realm.where(ListProfileData.class).contains(AppConstants.BIRTH_PLACE, birth_place.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
 
                         mlistProfileData.addAll(birth_place_data);
                     }
 
-                    if (mJsonObject.has(Constant_Class.BIRTH_DATE)) {
-                        birth_date = mJsonObject.getString(Constant_Class.BIRTH_DATE);
-                        RealmResults<ListProfileData> birth_date_data = realm.where(ListProfileData.class).contains(Constant_Class.BIRTH_DATE, birth_date.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.BIRTH_DATE)) {
+                        birth_date = mJsonObject.getString(AppConstants.BIRTH_DATE);
+                        RealmResults<ListProfileData> birth_date_data = realm.where(ListProfileData.class).contains(AppConstants.BIRTH_DATE, birth_date.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(birth_date_data);
 
                     }
-                    if (mJsonObject.has(Constant_Class.BIRTH_TIME)) {
-                        birth_time = mJsonObject.getString(Constant_Class.BIRTH_TIME);
-                        RealmResults<ListProfileData> birth_time_data = realm.where(ListProfileData.class).contains(Constant_Class.BIRTH_TIME, birth_time.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.BIRTH_TIME)) {
+                        birth_time = mJsonObject.getString(AppConstants.BIRTH_TIME);
+                        RealmResults<ListProfileData> birth_time_data = realm.where(ListProfileData.class).contains(AppConstants.BIRTH_TIME, birth_time.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(birth_time_data);
                     }
-                    if (mJsonObject.has(Constant_Class.EDUCATION)) {
-                        education = mJsonObject.getString(Constant_Class.EDUCATION);
-                        RealmResults<ListProfileData> education_data = realm.where(ListProfileData.class).contains(Constant_Class.EDUCATION, education.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.EDUCATION)) {
+                        education = mJsonObject.getString(AppConstants.EDUCATION);
+                        RealmResults<ListProfileData> education_data = realm.where(ListProfileData.class).contains(AppConstants.EDUCATION, education.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(education_data);
 
                     }
-                    if (mJsonObject.has(Constant_Class.OCCUPATION)) {
-                        occupation = mJsonObject.getString(Constant_Class.OCCUPATION);
-                        RealmResults<ListProfileData> occupation_data = realm.where(ListProfileData.class).contains(Constant_Class.OCCUPATION, occupation.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.OCCUPATION)) {
+                        occupation = mJsonObject.getString(AppConstants.OCCUPATION);
+                        RealmResults<ListProfileData> occupation_data = realm.where(ListProfileData.class).contains(AppConstants.OCCUPATION, occupation.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(occupation_data);
 
                     }
-                    if (mJsonObject.has(Constant_Class.WORK)) {
-                        work = mJsonObject.getString(Constant_Class.WORK);
-                        RealmResults<ListProfileData> work_data = realm.where(ListProfileData.class).contains(Constant_Class.WORK, work.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.WORK)) {
+                        work = mJsonObject.getString(AppConstants.WORK);
+                        RealmResults<ListProfileData> work_data = realm.where(ListProfileData.class).contains(AppConstants.WORK, work.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
 
                         mlistProfileData.addAll(work_data);
                     }
 
-                    if (mJsonObject.has(Constant_Class.ADDRESS)) {
-                        address = mJsonObject.getString(Constant_Class.ADDRESS);
-                        RealmResults<ListProfileData> address_data = realm.where(ListProfileData.class).contains(Constant_Class.ADDRESS, address.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.ADDRESS)) {
+                        address = mJsonObject.getString(AppConstants.ADDRESS);
+                        RealmResults<ListProfileData> address_data = realm.where(ListProfileData.class).contains(AppConstants.ADDRESS, address.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
 
                         mlistProfileData.addAll(address_data);
                     }
-                    if (mJsonObject.has(Constant_Class.OFFICE_MOBILE)) {
-                        office_mobile = mJsonObject.getString(Constant_Class.OFFICE_MOBILE);
-                        RealmResults<ListProfileData> office_mobile_data = realm.where(ListProfileData.class).contains(Constant_Class.OFFICE_MOBILE, office_mobile.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.OFFICE_MOBILE)) {
+                        office_mobile = mJsonObject.getString(AppConstants.OFFICE_MOBILE);
+                        RealmResults<ListProfileData> office_mobile_data = realm.where(ListProfileData.class).contains(AppConstants.OFFICE_MOBILE, office_mobile.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(office_mobile_data);
                     }
-                    if (mJsonObject.has(Constant_Class.OFFICE_ADDRESS)) {
-                        office_address = mJsonObject.getString(Constant_Class.OFFICE_ADDRESS);
-                        RealmResults<ListProfileData> office_address_data = realm.where(ListProfileData.class).contains(Constant_Class.OFFICE_ADDRESS, office_address.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.OFFICE_ADDRESS)) {
+                        office_address = mJsonObject.getString(AppConstants.OFFICE_ADDRESS);
+                        RealmResults<ListProfileData> office_address_data = realm.where(ListProfileData.class).contains(AppConstants.OFFICE_ADDRESS, office_address.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(office_address_data);
                     }
-                    if (mJsonObject.has(Constant_Class.SPOUSE_NAME)) {
-                        spouse_name = mJsonObject.getString(Constant_Class.SPOUSE_NAME);
-                        RealmResults<ListProfileData> spouse_name_data = realm.where(ListProfileData.class).contains(Constant_Class.SPOUSE_NAME, spouse_name.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.SPOUSE_NAME)) {
+                        spouse_name = mJsonObject.getString(AppConstants.SPOUSE_NAME);
+                        RealmResults<ListProfileData> spouse_name_data = realm.where(ListProfileData.class).contains(AppConstants.SPOUSE_NAME, spouse_name.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(spouse_name_data);
                     }
-                    if (mJsonObject.has(Constant_Class.MARRIAGE_DATE)) {
-                        marriage_date = mJsonObject.getString(Constant_Class.MARRIAGE_DATE);
-                        RealmResults<ListProfileData> marriage_date_data = realm.where(ListProfileData.class).contains(Constant_Class.MARRIAGE_DATE, marriage_date.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.MARRIAGE_DATE)) {
+                        marriage_date = mJsonObject.getString(AppConstants.MARRIAGE_DATE);
+                        RealmResults<ListProfileData> marriage_date_data = realm.where(ListProfileData.class).contains(AppConstants.MARRIAGE_DATE, marriage_date.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(marriage_date_data);
                     }
-                    if (mJsonObject.has(Constant_Class.SPOUSE_FATHER_NAME)) {
-                        spouse_father_name = mJsonObject.getString(Constant_Class.SPOUSE_FATHER_NAME);
-                        RealmResults<ListProfileData> spouse_father_name_data = realm.where(ListProfileData.class).contains(Constant_Class.SPOUSE_FATHER_NAME, spouse_father_name.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.SPOUSE_FATHER_NAME)) {
+                        spouse_father_name = mJsonObject.getString(AppConstants.SPOUSE_FATHER_NAME);
+                        RealmResults<ListProfileData> spouse_father_name_data = realm.where(ListProfileData.class).contains(AppConstants.SPOUSE_FATHER_NAME, spouse_father_name.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(spouse_father_name_data);
                     }
-                    if (mJsonObject.has(Constant_Class.SPOUSE_MOTHER_NAME)) {
-                        spouse_mother_name = mJsonObject.getString(Constant_Class.SPOUSE_MOTHER_NAME);
-                        RealmResults<ListProfileData> spouse_mother_name_data = realm.where(ListProfileData.class).contains(Constant_Class.SPOUSE_MOTHER_NAME, spouse_mother_name.toLowerCase()).equalTo(Constant_Class.STATUS, "1").findAll();
+                    if (mJsonObject.has(AppConstants.SPOUSE_MOTHER_NAME)) {
+                        spouse_mother_name = mJsonObject.getString(AppConstants.SPOUSE_MOTHER_NAME);
+                        RealmResults<ListProfileData> spouse_mother_name_data = realm.where(ListProfileData.class).contains(AppConstants.SPOUSE_MOTHER_NAME, spouse_mother_name.toLowerCase()).equalTo(AppConstants.STATUS, "1").findAll();
                         mlistProfileData.addAll(spouse_mother_name_data);
                     }
                 } catch (Exception e) {
@@ -690,48 +690,48 @@ public class Common {
         Realm realm = AppController.getInstance().realm;
         if (search == 1) {
             query = query.toLowerCase();
-            RealmResults<ListChildrenData> childrenData = realm.where(ListChildrenData.class).contains(Constant_Class.CHILD_NAME, query).or().contains(Constant_Class.CHILD_EDU, query).or().contains(Constant_Class.CHILD_WORK, query).or().contains(Constant_Class.CHILD_BDAY, query).contains(Constant_Class.CHILD_BPLACE, query).contains(Constant_Class.CHILD_BTIME, query).findAll();
+            RealmResults<ListChildrenData> childrenData = realm.where(ListChildrenData.class).contains(AppConstants.CHILD_NAME, query).or().contains(AppConstants.CHILD_EDU, query).or().contains(AppConstants.CHILD_WORK, query).or().contains(AppConstants.CHILD_BDAY, query).contains(AppConstants.CHILD_BPLACE, query).contains(AppConstants.CHILD_BTIME, query).findAll();
             mListChildrenData.addAll(childrenData);
         } else {
             try {
                 JSONObject mJsonObject = new JSONObject(query);
-                if (mJsonObject.has(Common.Constant_Class.CHILD_BDAY)) {
-                    String child_bday = mJsonObject.getString(Common.Constant_Class.CHILD_BDAY);
-                    RealmResults<ListChildrenData> child_bday_data = realm.where(ListChildrenData.class).contains(Constant_Class.CHILD_BDAY, child_bday.toLowerCase()).findAll();
+                if (mJsonObject.has(AppConstants.CHILD_BDAY)) {
+                    String child_bday = mJsonObject.getString(AppConstants.CHILD_BDAY);
+                    RealmResults<ListChildrenData> child_bday_data = realm.where(ListChildrenData.class).contains(AppConstants.CHILD_BDAY, child_bday.toLowerCase()).findAll();
                     mListChildrenData.addAll(child_bday_data);
                 }
 
-                if (mJsonObject.has(Common.Constant_Class.CHILD_EDU)) {
-                    String child_edu = mJsonObject.getString(Common.Constant_Class.CHILD_EDU);
-                    RealmResults<ListChildrenData> child_edu_data = realm.where(ListChildrenData.class).contains(Constant_Class.CHILD_EDU, child_edu.toLowerCase()).findAll();
+                if (mJsonObject.has(AppConstants.CHILD_EDU)) {
+                    String child_edu = mJsonObject.getString(AppConstants.CHILD_EDU);
+                    RealmResults<ListChildrenData> child_edu_data = realm.where(ListChildrenData.class).contains(AppConstants.CHILD_EDU, child_edu.toLowerCase()).findAll();
                     mListChildrenData.addAll(child_edu_data);
                 }
-                if (mJsonObject.has(Common.Constant_Class.CHILD_WORK)) {
-                    String child_work = mJsonObject.getString(Common.Constant_Class.CHILD_WORK);
-                    RealmResults<ListChildrenData> child_work_data = realm.where(ListChildrenData.class).contains(Constant_Class.CHILD_WORK, child_work.toLowerCase()).findAll();
+                if (mJsonObject.has(AppConstants.CHILD_WORK)) {
+                    String child_work = mJsonObject.getString(AppConstants.CHILD_WORK);
+                    RealmResults<ListChildrenData> child_work_data = realm.where(ListChildrenData.class).contains(AppConstants.CHILD_WORK, child_work.toLowerCase()).findAll();
                     mListChildrenData.addAll(child_work_data);
                 }
-                if (mJsonObject.has(Common.Constant_Class.CHILD_NAME)) {
-                    String child_name = mJsonObject.getString(Common.Constant_Class.CHILD_NAME);
-                    RealmResults<ListChildrenData> child_name_data = realm.where(ListChildrenData.class).contains(Constant_Class.CHILD_NAME, child_name.toLowerCase()).findAll();
+                if (mJsonObject.has(AppConstants.CHILD_NAME)) {
+                    String child_name = mJsonObject.getString(AppConstants.CHILD_NAME);
+                    RealmResults<ListChildrenData> child_name_data = realm.where(ListChildrenData.class).contains(AppConstants.CHILD_NAME, child_name.toLowerCase()).findAll();
                     mListChildrenData.addAll(child_name_data);
                 }
 
-                if (mJsonObject.has(Constant_Class.CHILD_BPLACE)) {
-                    String child_bplace = mJsonObject.getString(Constant_Class.CHILD_BPLACE);
-                    RealmResults<ListChildrenData> child_bplace_data = realm.where(ListChildrenData.class).contains(Constant_Class.CHILD_BPLACE, child_bplace.toLowerCase()).findAll();
+                if (mJsonObject.has(AppConstants.CHILD_BPLACE)) {
+                    String child_bplace = mJsonObject.getString(AppConstants.CHILD_BPLACE);
+                    RealmResults<ListChildrenData> child_bplace_data = realm.where(ListChildrenData.class).contains(AppConstants.CHILD_BPLACE, child_bplace.toLowerCase()).findAll();
                     mListChildrenData.addAll(child_bplace_data);
                 }
 
-                if (mJsonObject.has(Constant_Class.CHILD_BTIME)) {
-                    String child_btime = mJsonObject.getString(Constant_Class.CHILD_BTIME);
-                    RealmResults<ListChildrenData> child_btime_data = realm.where(ListChildrenData.class).contains(Constant_Class.CHILD_BTIME, child_btime.toLowerCase()).findAll();
+                if (mJsonObject.has(AppConstants.CHILD_BTIME)) {
+                    String child_btime = mJsonObject.getString(AppConstants.CHILD_BTIME);
+                    RealmResults<ListChildrenData> child_btime_data = realm.where(ListChildrenData.class).contains(AppConstants.CHILD_BTIME, child_btime.toLowerCase()).findAll();
                     mListChildrenData.addAll(child_btime_data);
                 }
 
-                if (mJsonObject.has(Constant_Class.CHILD_GENDER)) {
-                    String child_gender = mJsonObject.getString(Constant_Class.CHILD_GENDER);
-                    RealmResults<ListChildrenData> child_gender_data = realm.where(ListChildrenData.class).contains(Constant_Class.CHILD_GENDER, child_gender.toLowerCase()).findAll();
+                if (mJsonObject.has(AppConstants.CHILD_GENDER)) {
+                    String child_gender = mJsonObject.getString(AppConstants.CHILD_GENDER);
+                    RealmResults<ListChildrenData> child_gender_data = realm.where(ListChildrenData.class).contains(AppConstants.CHILD_GENDER, child_gender.toLowerCase()).findAll();
                     mListChildrenData.addAll(child_gender_data);
                 }
 
@@ -741,7 +741,7 @@ public class Common {
         }
 
         for (int i = 0; i < mListChildrenData.size(); i++) {
-            ListProfileData profile_data = realm.where(ListProfileData.class).equalTo(Constant_Class.PROFILE_ID, Objects.requireNonNull(mListChildrenData.get(i)).getProfile_id()).findFirst();
+            ListProfileData profile_data = realm.where(ListProfileData.class).equalTo(AppConstants.PROFILE_ID, Objects.requireNonNull(mListChildrenData.get(i)).getProfile_id()).findFirst();
             if (!mlistProfileData.contains(profile_data)) {
                 mlistProfileData.add(profile_data);
             }
@@ -775,7 +775,7 @@ public class Common {
 
     public static void UpdateProfilePassword(String password, String id) {
 
-        ListProfileData mListProfile = AppController.getInstance().realm.where(ListProfileData.class).equalTo(Common.Constant_Class.PROFILE_ID, id).findFirst();
+        ListProfileData mListProfile = AppController.getInstance().realm.where(ListProfileData.class).equalTo(AppConstants.PROFILE_ID, id).findFirst();
         AppController.getInstance().realm.beginTransaction();
         Objects.requireNonNull(mListProfile).setPassword(password);
         AppController.getInstance().realm.commitTransaction();
@@ -786,7 +786,7 @@ public class Common {
         try {
             Realm realm = AppController.getInstance().realm;
             for (int i = 0; i < lstSelectedIDs.size(); i++) {
-                ListProfileData mListProfile = realm.where(ListProfileData.class).equalTo(Common.Constant_Class.PROFILE_ID, lstSelectedIDs.get(i)).findFirst();
+                ListProfileData mListProfile = realm.where(ListProfileData.class).equalTo(AppConstants.PROFILE_ID, lstSelectedIDs.get(i)).findFirst();
                 realm.beginTransaction();
                 Objects.requireNonNull(mListProfile).setStatus(status);
                 realm.commitTransaction();
@@ -801,7 +801,7 @@ public class Common {
         Realm realm = AppController.getInstance().realm;
         try {
             for (int i = 0; i < lstSelectedIDs.size(); i++) {
-                RealmResults<ListProfileData> results = realm.where(ListProfileData.class).equalTo(Constant_Class.PROFILE_ID, lstSelectedIDs.get(i)).findAll();
+                RealmResults<ListProfileData> results = realm.where(ListProfileData.class).equalTo(AppConstants.PROFILE_ID, lstSelectedIDs.get(i)).findAll();
                 if (!realm.isInTransaction()) {
                     realm.beginTransaction();
                     results.deleteAllFromRealm();
@@ -817,212 +817,212 @@ public class Common {
         try {
 
             final ListProfileData mListProfileData = new ListProfileData();
-            if (mJsonObject.has(Constant_Class.ID)) {
-                mListProfileData.setProfile_id(mJsonObject.getString(Constant_Class.ID));
+            if (mJsonObject.has(AppConstants.ID)) {
+                mListProfileData.setProfile_id(mJsonObject.getString(AppConstants.ID));
             }
 
-            if (mJsonObject.has(Constant_Class.USER_CODE)) {
-                mListProfileData.setUser_code(mJsonObject.getString(Constant_Class.USER_CODE));
+            if (mJsonObject.has(AppConstants.USER_CODE)) {
+                mListProfileData.setUser_code(mJsonObject.getString(AppConstants.USER_CODE));
             }
 
-            if (mJsonObject.has(Constant_Class.BDATE_REMINDER_ID)) {
-                mListProfileData.setBdate_reminder_id(mJsonObject.getString(Constant_Class.BDATE_REMINDER_ID));
+            if (mJsonObject.has(AppConstants.BDATE_REMINDER_ID)) {
+                mListProfileData.setBdate_reminder_id(mJsonObject.getString(AppConstants.BDATE_REMINDER_ID));
             }
-            if (mJsonObject.has(Constant_Class.SPOUSE_BDATE_REMINDER_ID)) {
-                mListProfileData.setSpouse_bdate_reminder_id(mJsonObject.getString(Constant_Class.SPOUSE_BDATE_REMINDER_ID));
+            if (mJsonObject.has(AppConstants.SPOUSE_BDATE_REMINDER_ID)) {
+                mListProfileData.setSpouse_bdate_reminder_id(mJsonObject.getString(AppConstants.SPOUSE_BDATE_REMINDER_ID));
             }
-            if (mJsonObject.has(Constant_Class.MDATE_REMINDER_ID)) {
-                mListProfileData.setMdate_reminder_id(mJsonObject.getString(Constant_Class.MDATE_REMINDER_ID));
-            }
-
-            if (mJsonObject.has(Common.Constant_Class.FIRST_NAME)) {
-                mListProfileData.setFirst_name(mJsonObject.getString(Common.Constant_Class.FIRST_NAME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.LAST_NAME)) {
-                mListProfileData.setLast_name(mJsonObject.getString(Common.Constant_Class.LAST_NAME));
-            }
-            if (mJsonObject.has(Constant_Class.CITY)) {
-                mListProfileData.setCity(mJsonObject.getString(Constant_Class.CITY));
-            }
-            if (mJsonObject.has(Constant_Class.IS_SHARE)) {
-                mListProfileData.setIs_block(mJsonObject.getString(Constant_Class.IS_SHARE));
-            }
-            if (mJsonObject.has(Constant_Class.IS_LOCATION_ENABLE)) {
-                mListProfileData.setIs_location_enable(mJsonObject.getString(Constant_Class.IS_LOCATION_ENABLE));
+            if (mJsonObject.has(AppConstants.MDATE_REMINDER_ID)) {
+                mListProfileData.setMdate_reminder_id(mJsonObject.getString(AppConstants.MDATE_REMINDER_ID));
             }
 
-            if (mJsonObject.has(Common.Constant_Class.FATHER_NAME)) {
-                mListProfileData.setFather_name(mJsonObject.getString(Common.Constant_Class.FATHER_NAME));
+            if (mJsonObject.has(AppConstants.FIRST_NAME)) {
+                mListProfileData.setFirst_name(mJsonObject.getString(AppConstants.FIRST_NAME));
             }
-            if (mJsonObject.has(Common.Constant_Class.MOTHER_NAME)) {
-                mListProfileData.setMother_name(mJsonObject.getString(Common.Constant_Class.MOTHER_NAME));
+            if (mJsonObject.has(AppConstants.LAST_NAME)) {
+                mListProfileData.setLast_name(mJsonObject.getString(AppConstants.LAST_NAME));
             }
-            if (mJsonObject.has(Common.Constant_Class.BIRTH_DATE)) {
-                mListProfileData.setBirth_date(ChangedateFormat(mJsonObject.getString(Common.Constant_Class.BIRTH_DATE)));
+            if (mJsonObject.has(AppConstants.CITY)) {
+                mListProfileData.setCity(mJsonObject.getString(AppConstants.CITY));
             }
-            if (mJsonObject.has(Common.Constant_Class.BIRTH_TIME)) {
-                mListProfileData.setBirth_time(mJsonObject.getString(Common.Constant_Class.BIRTH_TIME));
+            if (mJsonObject.has(AppConstants.IS_SHARE)) {
+                mListProfileData.setIs_block(mJsonObject.getString(AppConstants.IS_SHARE));
             }
-            if (mJsonObject.has(Common.Constant_Class.BIRTH_PLACE)) {
-                mListProfileData.setBirth_place(mJsonObject.getString(Common.Constant_Class.BIRTH_PLACE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.MOBILE)) {
-                mListProfileData.setMobile(mJsonObject.getString(Common.Constant_Class.MOBILE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.PHONE)) {
-                mListProfileData.setPhone(mJsonObject.getString(Common.Constant_Class.PHONE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.BLOOD_GROUP)) {
-                mListProfileData.setBlood_group(mJsonObject.getString(Common.Constant_Class.BLOOD_GROUP));
-            }
-            if (mJsonObject.has(Common.Constant_Class.GENDER)) {
-                mListProfileData.setGender(mJsonObject.getString(Common.Constant_Class.GENDER));
-            }
-            if (mJsonObject.has(Common.Constant_Class.GOTRA)) {
-                mListProfileData.setGotra(mJsonObject.getString(Common.Constant_Class.GOTRA));
-            }
-            if (mJsonObject.has(Common.Constant_Class.EMAIL_ADDRESS)) {
-                mListProfileData.setEmail_address(mJsonObject.getString(Common.Constant_Class.EMAIL_ADDRESS));
-            }
-            if (mJsonObject.has(Common.Constant_Class.ADDRESS)) {
-                mListProfileData.setAddress(mJsonObject.getString(Common.Constant_Class.ADDRESS));
-            }
-            if (mJsonObject.has(Common.Constant_Class.NATIVE_PLACE)) {
-                mListProfileData.setNative_place(mJsonObject.getString(Common.Constant_Class.NATIVE_PLACE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.EDUCATION)) {
-                mListProfileData.setEducation(mJsonObject.getString(Common.Constant_Class.EDUCATION));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OCCUPATION)) {
-                mListProfileData.setOccupation(mJsonObject.getString(Common.Constant_Class.OCCUPATION));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OFFICE_MOBILE)) {
-                mListProfileData.setOffice_mobile(mJsonObject.getString(Common.Constant_Class.OFFICE_MOBILE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.WORK)) {
-                mListProfileData.setWork(mJsonObject.getString(Common.Constant_Class.WORK));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OFFICE_ADDRESS)) {
-                mListProfileData.setOffice_address(mJsonObject.getString(Constant_Class.OFFICE_ADDRESS));
-            }
-            if (mJsonObject.has(Common.Constant_Class.MARRIAGE_DATE)) {
-                mListProfileData.setMarriage_date(ChangedateFormat(mJsonObject.getString(Constant_Class.MARRIAGE_DATE)));
-            }
-            if (mJsonObject.has(Common.Constant_Class.SPOUSE_NAME)) {
-                mListProfileData.setSpouse_name(mJsonObject.getString(Common.Constant_Class.SPOUSE_NAME));
+            if (mJsonObject.has(AppConstants.IS_LOCATION_ENABLE)) {
+                mListProfileData.setIs_location_enable(mJsonObject.getString(AppConstants.IS_LOCATION_ENABLE));
             }
 
-            if (mJsonObject.has(Constant_Class.SPOUSE_MOBILE)) {
-                mListProfileData.setSponse_mobile(mJsonObject.getString(Common.Constant_Class.SPOUSE_MOBILE));
+            if (mJsonObject.has(AppConstants.FATHER_NAME)) {
+                mListProfileData.setFather_name(mJsonObject.getString(AppConstants.FATHER_NAME));
+            }
+            if (mJsonObject.has(AppConstants.MOTHER_NAME)) {
+                mListProfileData.setMother_name(mJsonObject.getString(AppConstants.MOTHER_NAME));
+            }
+            if (mJsonObject.has(AppConstants.BIRTH_DATE)) {
+                mListProfileData.setBirth_date(ChangedateFormat(mJsonObject.getString(AppConstants.BIRTH_DATE)));
+            }
+            if (mJsonObject.has(AppConstants.BIRTH_TIME)) {
+                mListProfileData.setBirth_time(mJsonObject.getString(AppConstants.BIRTH_TIME));
+            }
+            if (mJsonObject.has(AppConstants.BIRTH_PLACE)) {
+                mListProfileData.setBirth_place(mJsonObject.getString(AppConstants.BIRTH_PLACE));
+            }
+            if (mJsonObject.has(AppConstants.MOBILE)) {
+                mListProfileData.setMobile(mJsonObject.getString(AppConstants.MOBILE));
+            }
+            if (mJsonObject.has(AppConstants.PHONE)) {
+                mListProfileData.setPhone(mJsonObject.getString(AppConstants.PHONE));
+            }
+            if (mJsonObject.has(AppConstants.BLOOD_GROUP)) {
+                mListProfileData.setBlood_group(mJsonObject.getString(AppConstants.BLOOD_GROUP));
+            }
+            if (mJsonObject.has(AppConstants.GENDER)) {
+                mListProfileData.setGender(mJsonObject.getString(AppConstants.GENDER));
+            }
+            if (mJsonObject.has(AppConstants.GOTRA)) {
+                mListProfileData.setGotra(mJsonObject.getString(AppConstants.GOTRA));
+            }
+            if (mJsonObject.has(AppConstants.EMAIL_ADDRESS)) {
+                mListProfileData.setEmail_address(mJsonObject.getString(AppConstants.EMAIL_ADDRESS));
+            }
+            if (mJsonObject.has(AppConstants.ADDRESS)) {
+                mListProfileData.setAddress(mJsonObject.getString(AppConstants.ADDRESS));
+            }
+            if (mJsonObject.has(AppConstants.NATIVE_PLACE)) {
+                mListProfileData.setNative_place(mJsonObject.getString(AppConstants.NATIVE_PLACE));
+            }
+            if (mJsonObject.has(AppConstants.EDUCATION)) {
+                mListProfileData.setEducation(mJsonObject.getString(AppConstants.EDUCATION));
+            }
+            if (mJsonObject.has(AppConstants.OCCUPATION)) {
+                mListProfileData.setOccupation(mJsonObject.getString(AppConstants.OCCUPATION));
+            }
+            if (mJsonObject.has(AppConstants.OFFICE_MOBILE)) {
+                mListProfileData.setOffice_mobile(mJsonObject.getString(AppConstants.OFFICE_MOBILE));
+            }
+            if (mJsonObject.has(AppConstants.WORK)) {
+                mListProfileData.setWork(mJsonObject.getString(AppConstants.WORK));
+            }
+            if (mJsonObject.has(AppConstants.OFFICE_ADDRESS)) {
+                mListProfileData.setOffice_address(mJsonObject.getString(AppConstants.OFFICE_ADDRESS));
+            }
+            if (mJsonObject.has(AppConstants.MARRIAGE_DATE)) {
+                mListProfileData.setMarriage_date(ChangedateFormat(mJsonObject.getString(AppConstants.MARRIAGE_DATE)));
+            }
+            if (mJsonObject.has(AppConstants.SPOUSE_NAME)) {
+                mListProfileData.setSpouse_name(mJsonObject.getString(AppConstants.SPOUSE_NAME));
             }
 
-            if (mJsonObject.has(Constant_Class.SPOUSE_NATIVE)) {
-                mListProfileData.setSponse_native(mJsonObject.getString(Common.Constant_Class.SPOUSE_NATIVE));
-            }
-            if (mJsonObject.has(Constant_Class.SPOUSE_EDU)) {
-                mListProfileData.setSpouse_education(mJsonObject.getString(Common.Constant_Class.SPOUSE_EDU));
-            }
-            if (mJsonObject.has(Constant_Class.SPOUSE_BG)) {
-                mListProfileData.setSponse_bg(mJsonObject.getString(Common.Constant_Class.SPOUSE_BG));
+            if (mJsonObject.has(AppConstants.SPOUSE_MOBILE)) {
+                mListProfileData.setSponse_mobile(mJsonObject.getString(AppConstants.SPOUSE_MOBILE));
             }
 
-            if (mJsonObject.has(Constant_Class.SPOUSE_BDATE)) {
-                mListProfileData.setSponse_bdate(ChangedateFormat(mJsonObject.getString(Common.Constant_Class.SPOUSE_BDATE)));
+            if (mJsonObject.has(AppConstants.SPOUSE_NATIVE)) {
+                mListProfileData.setSponse_native(mJsonObject.getString(AppConstants.SPOUSE_NATIVE));
+            }
+            if (mJsonObject.has(AppConstants.SPOUSE_EDU)) {
+                mListProfileData.setSpouse_education(mJsonObject.getString(AppConstants.SPOUSE_EDU));
+            }
+            if (mJsonObject.has(AppConstants.SPOUSE_BG)) {
+                mListProfileData.setSponse_bg(mJsonObject.getString(AppConstants.SPOUSE_BG));
             }
 
-            if (mJsonObject.has(Common.Constant_Class.SPOUSE_FATHER_NAME)) {
-                mListProfileData.setSfather_name(mJsonObject.getString(Common.Constant_Class.SPOUSE_FATHER_NAME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.SPOUSE_MOTHER_NAME)) {
-                mListProfileData.setSmother_name(mJsonObject.getString(Common.Constant_Class.SPOUSE_MOTHER_NAME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OFFICE_LAT)) {
-                mListProfileData.setOffice_lat(mJsonObject.getString(Common.Constant_Class.OFFICE_LAT));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OFFICE_LNG)) {
-                mListProfileData.setOffice_lng(mJsonObject.getString(Common.Constant_Class.OFFICE_LNG));
-            }
-            if (mJsonObject.has(Common.Constant_Class.HOME_LAT)) {
-                mListProfileData.setHome_lat(mJsonObject.getString(Common.Constant_Class.HOME_LAT));
-            }
-            if (mJsonObject.has(Common.Constant_Class.HOME_LNG)) {
-                mListProfileData.setHome_lng(mJsonObject.getString(Common.Constant_Class.HOME_LNG));
-            }
-            if (mJsonObject.has(Common.Constant_Class.USER_LAT)) {
-                mListProfileData.setUser_lat(mJsonObject.getString(Common.Constant_Class.USER_LAT));
-            }
-            if (mJsonObject.has(Common.Constant_Class.USER_LNG)) {
-                mListProfileData.setUser_lng(mJsonObject.getString(Common.Constant_Class.USER_LNG));
+            if (mJsonObject.has(AppConstants.SPOUSE_BDATE)) {
+                mListProfileData.setSponse_bdate(ChangedateFormat(mJsonObject.getString(AppConstants.SPOUSE_BDATE)));
             }
 
-            if (mJsonObject.has(Constant_Class.PROFILE_PIC_URL)) {
-                mListProfileData.setProfile_pic_url(mJsonObject.getString(Constant_Class.PROFILE_PIC_URL));
+            if (mJsonObject.has(AppConstants.SPOUSE_FATHER_NAME)) {
+                mListProfileData.setSfather_name(mJsonObject.getString(AppConstants.SPOUSE_FATHER_NAME));
             }
-            if (mJsonObject.has(Constant_Class.IMG_FATHER_URL)) {
-                mListProfileData.setImg_father_url(mJsonObject.getString(Constant_Class.IMG_FATHER_URL));
+            if (mJsonObject.has(AppConstants.SPOUSE_MOTHER_NAME)) {
+                mListProfileData.setSmother_name(mJsonObject.getString(AppConstants.SPOUSE_MOTHER_NAME));
             }
-            if (mJsonObject.has(Constant_Class.IMG_MOTHER_URL)) {
-                mListProfileData.setImg_mother_url(mJsonObject.getString(Constant_Class.IMG_MOTHER_URL));
+            if (mJsonObject.has(AppConstants.OFFICE_LAT)) {
+                mListProfileData.setOffice_lat(mJsonObject.getString(AppConstants.OFFICE_LAT));
             }
-            if (mJsonObject.has(Constant_Class.IMG_SPOUSE_URL)) {
-                mListProfileData.setImg_spouse_url(mJsonObject.getString(Constant_Class.IMG_SPOUSE_URL));
+            if (mJsonObject.has(AppConstants.OFFICE_LNG)) {
+                mListProfileData.setOffice_lng(mJsonObject.getString(AppConstants.OFFICE_LNG));
             }
-            if (mJsonObject.has(Constant_Class.IMG_SFATHER_URL)) {
-                mListProfileData.setImg_sfather_url(mJsonObject.getString(Constant_Class.IMG_SFATHER_URL));
+            if (mJsonObject.has(AppConstants.HOME_LAT)) {
+                mListProfileData.setHome_lat(mJsonObject.getString(AppConstants.HOME_LAT));
             }
-            if (mJsonObject.has(Constant_Class.IMG_SMOTHER_URL)) {
-                mListProfileData.setImg_smother_url(mJsonObject.getString(Constant_Class.IMG_SMOTHER_URL));
+            if (mJsonObject.has(AppConstants.HOME_LNG)) {
+                mListProfileData.setHome_lng(mJsonObject.getString(AppConstants.HOME_LNG));
+            }
+            if (mJsonObject.has(AppConstants.USER_LAT)) {
+                mListProfileData.setUser_lat(mJsonObject.getString(AppConstants.USER_LAT));
+            }
+            if (mJsonObject.has(AppConstants.USER_LNG)) {
+                mListProfileData.setUser_lng(mJsonObject.getString(AppConstants.USER_LNG));
             }
 
-            if (mJsonObject.has(Constant_Class.UPDATED_TIME)) {
-                mListProfileData.setUpdated_time(mJsonObject.getString(Constant_Class.UPDATED_TIME));
+            if (mJsonObject.has(AppConstants.PROFILE_PIC_URL)) {
+                mListProfileData.setProfile_pic_url(mJsonObject.getString(AppConstants.PROFILE_PIC_URL));
             }
-            if (mJsonObject.has(Constant_Class.SYNC_TIME)) {
-                mListProfileData.setSync_time(mJsonObject.getString(Constant_Class.SYNC_TIME));
+            if (mJsonObject.has(AppConstants.IMG_FATHER_URL)) {
+                mListProfileData.setImg_father_url(mJsonObject.getString(AppConstants.IMG_FATHER_URL));
+            }
+            if (mJsonObject.has(AppConstants.IMG_MOTHER_URL)) {
+                mListProfileData.setImg_mother_url(mJsonObject.getString(AppConstants.IMG_MOTHER_URL));
+            }
+            if (mJsonObject.has(AppConstants.IMG_SPOUSE_URL)) {
+                mListProfileData.setImg_spouse_url(mJsonObject.getString(AppConstants.IMG_SPOUSE_URL));
+            }
+            if (mJsonObject.has(AppConstants.IMG_SFATHER_URL)) {
+                mListProfileData.setImg_sfather_url(mJsonObject.getString(AppConstants.IMG_SFATHER_URL));
+            }
+            if (mJsonObject.has(AppConstants.IMG_SMOTHER_URL)) {
+                mListProfileData.setImg_smother_url(mJsonObject.getString(AppConstants.IMG_SMOTHER_URL));
             }
 
-            if (mJsonObject.has(Common.Constant_Class.CHILDS)) {
+            if (mJsonObject.has(AppConstants.UPDATED_TIME)) {
+                mListProfileData.setUpdated_time(mJsonObject.getString(AppConstants.UPDATED_TIME));
+            }
+            if (mJsonObject.has(AppConstants.SYNC_TIME)) {
+                mListProfileData.setSync_time(mJsonObject.getString(AppConstants.SYNC_TIME));
+            }
 
-                JSONArray mJsonArray = new JSONArray(mJsonObject.getString(Common.Constant_Class.CHILDS));
+            if (mJsonObject.has(AppConstants.CHILDS)) {
+
+                JSONArray mJsonArray = new JSONArray(mJsonObject.getString(AppConstants.CHILDS));
                 RealmList<ListChildrenData> mlistchilds = new RealmList<>();
 
                 for (int i = 0; i < mJsonArray.length(); i++) {
                     JSONObject mJsonObj = mJsonArray.getJSONObject(i);
                     ListChildrenData mListChildrendata = new ListChildrenData();
 
-                    if (mJsonObj.has(Constant_Class.CHILD_ID)) {
-                        mListChildrendata.setChild_id(mJsonObj.getString(Common.Constant_Class.CHILD_ID));
+                    if (mJsonObj.has(AppConstants.CHILD_ID)) {
+                        mListChildrendata.setChild_id(mJsonObj.getString(AppConstants.CHILD_ID));
                     }
-                    if (mJsonObj.has(Constant_Class.CHILD_IMAGE_URL)) {
-                        mListChildrendata.setChild_img_url(mJsonObj.getString(Common.Constant_Class.CHILD_IMAGE_URL));
-                    }
-
-                    if (mJsonObj.has(Common.Constant_Class.CHILD_NAME)) {
-                        mListChildrendata.setChild_name(mJsonObj.getString(Common.Constant_Class.CHILD_NAME));
+                    if (mJsonObj.has(AppConstants.CHILD_IMAGE_URL)) {
+                        mListChildrendata.setChild_img_url(mJsonObj.getString(AppConstants.CHILD_IMAGE_URL));
                     }
 
-                    if (mJsonObj.has(Constant_Class.MOBILE)) {
-                        mListChildrendata.setMobile(mJsonObj.getString(Common.Constant_Class.MOBILE));
-                    }
-                    if (mJsonObj.has(Constant_Class.BLOOD_GROUP)) {
-                        mListChildrendata.setBlood_group(mJsonObj.getString(Common.Constant_Class.BLOOD_GROUP));
+                    if (mJsonObj.has(AppConstants.CHILD_NAME)) {
+                        mListChildrendata.setChild_name(mJsonObj.getString(AppConstants.CHILD_NAME));
                     }
 
-                    if (mJsonObj.has(Constant_Class.CHILD_BDATE_REMINDER_ID)) {
-                        mListChildrendata.setChild_bdate_reminder_id(mJsonObj.getString(Common.Constant_Class.CHILD_BDATE_REMINDER_ID));
+                    if (mJsonObj.has(AppConstants.MOBILE)) {
+                        mListChildrendata.setMobile(mJsonObj.getString(AppConstants.MOBILE));
+                    }
+                    if (mJsonObj.has(AppConstants.BLOOD_GROUP)) {
+                        mListChildrendata.setBlood_group(mJsonObj.getString(AppConstants.BLOOD_GROUP));
                     }
 
-                    if (mJsonObj.has(Constant_Class.GENDER)) {
-                        mListChildrendata.setGender(mJsonObj.getString(Common.Constant_Class.GENDER));
+                    if (mJsonObj.has(AppConstants.CHILD_BDATE_REMINDER_ID)) {
+                        mListChildrendata.setChild_bdate_reminder_id(mJsonObj.getString(AppConstants.CHILD_BDATE_REMINDER_ID));
                     }
-                    if (mJsonObj.has(Constant_Class.BIRTH_PLACE)) {
-                        mListChildrendata.setBirth_place(mJsonObj.getString(Constant_Class.BIRTH_PLACE));
+
+                    if (mJsonObj.has(AppConstants.GENDER)) {
+                        mListChildrendata.setGender(mJsonObj.getString(AppConstants.GENDER));
                     }
-                    if (mJsonObj.has(Constant_Class.BIRTH_TIME)) {
-                        mListChildrendata.setBirth_time(mJsonObj.getString(Constant_Class.BIRTH_TIME));
+                    if (mJsonObj.has(AppConstants.BIRTH_PLACE)) {
+                        mListChildrendata.setBirth_place(mJsonObj.getString(AppConstants.BIRTH_PLACE));
                     }
-                    if (mJsonObj.has(Constant_Class.IS_INTERESTED)) {
-                        String isInterest = mJsonObj.getString(Common.Constant_Class.IS_INTERESTED);
+                    if (mJsonObj.has(AppConstants.BIRTH_TIME)) {
+                        mListChildrendata.setBirth_time(mJsonObj.getString(AppConstants.BIRTH_TIME));
+                    }
+                    if (mJsonObj.has(AppConstants.IS_INTERESTED)) {
+                        String isInterest = mJsonObj.getString(AppConstants.IS_INTERESTED);
                         if (isInterest.equals("1")) {
                             mListChildrendata.setInterest(true);
                         } else {
@@ -1030,8 +1030,8 @@ public class Common {
                         }
                     }
 
-                    if (mJsonObj.has(Constant_Class.IS_MARRIED)) {
-                        String isInterest = mJsonObj.getString(Common.Constant_Class.IS_MARRIED);
+                    if (mJsonObj.has(AppConstants.IS_MARRIED)) {
+                        String isInterest = mJsonObj.getString(AppConstants.IS_MARRIED);
                         if (isInterest.equals("1")) {
                             mListChildrendata.setIs_married(true);
                         } else {
@@ -1039,23 +1039,23 @@ public class Common {
                         }
                     }
 
-                    if (mJsonObj.has(Common.Constant_Class.CHILD_BDAY)) {
-                        mListChildrendata.setChild_bday(ChangedateFormat(mJsonObj.getString(Common.Constant_Class.CHILD_BDAY)));
+                    if (mJsonObj.has(AppConstants.CHILD_BDAY)) {
+                        mListChildrendata.setChild_bday(ChangedateFormat(mJsonObj.getString(AppConstants.CHILD_BDAY)));
                     }
-                    if (mJsonObj.has(Common.Constant_Class.CHILD_EDU)) {
-                        mListChildrendata.setChild_edu(mJsonObj.getString(Common.Constant_Class.CHILD_EDU));
+                    if (mJsonObj.has(AppConstants.CHILD_EDU)) {
+                        mListChildrendata.setChild_edu(mJsonObj.getString(AppConstants.CHILD_EDU));
                     }
-                    if (mJsonObj.has(Common.Constant_Class.CHILD_WORK)) {
-                        mListChildrendata.setChild_work(mJsonObj.getString(Common.Constant_Class.CHILD_WORK));
+                    if (mJsonObj.has(AppConstants.CHILD_WORK)) {
+                        mListChildrendata.setChild_work(mJsonObj.getString(AppConstants.CHILD_WORK));
                     }
-                    mListChildrendata.setProfile_id(mJsonObject.getString(Constant_Class.ID));
+                    mListChildrendata.setProfile_id(mJsonObject.getString(AppConstants.ID));
                     mlistchilds.add(mListChildrendata);
                 }
                 mListProfileData.setmListChildrenData(mlistchilds);
             }
 
-            if (mJsonObject.has(Constant_Class.familyTree)) {
-                JSONArray mjsonarray = mJsonObject.getJSONArray(Constant_Class.familyTree);
+            if (mJsonObject.has(AppConstants.familyTree)) {
+                JSONArray mjsonarray = mJsonObject.getJSONArray(AppConstants.familyTree);
 
                 RealmList<ListFamilyTreeData> listFamilyTreeDataRealmList = new RealmList<>();
                 for (int i = 0; i < mjsonarray.length(); i++) {
@@ -1108,188 +1108,188 @@ public class Common {
         try {
 
             ExportProfileData mListProfileData = new ExportProfileData();
-            if (mJsonObject.has(Constant_Class.ID)) {
-                mListProfileData.setProfile_id(mJsonObject.getString(Constant_Class.ID));
+            if (mJsonObject.has(AppConstants.ID)) {
+                mListProfileData.setProfile_id(mJsonObject.getString(AppConstants.ID));
             }
-            if (mJsonObject.has(Common.Constant_Class.FIRST_NAME)) {
-                mListProfileData.setFirst_name(mJsonObject.getString(Common.Constant_Class.FIRST_NAME));
+            if (mJsonObject.has(AppConstants.FIRST_NAME)) {
+                mListProfileData.setFirst_name(mJsonObject.getString(AppConstants.FIRST_NAME));
             }
-            if (mJsonObject.has(Common.Constant_Class.LAST_NAME)) {
-                mListProfileData.setLast_name(mJsonObject.getString(Common.Constant_Class.LAST_NAME));
+            if (mJsonObject.has(AppConstants.LAST_NAME)) {
+                mListProfileData.setLast_name(mJsonObject.getString(AppConstants.LAST_NAME));
             }
-            if (mJsonObject.has(Constant_Class.CITY)) {
-                mListProfileData.setCity(mJsonObject.getString(Constant_Class.CITY));
-            }
-
-            if (mJsonObject.has(Common.Constant_Class.FATHER_NAME)) {
-                mListProfileData.setFather_name(mJsonObject.getString(Common.Constant_Class.FATHER_NAME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.MOTHER_NAME)) {
-                mListProfileData.setMother_name(mJsonObject.getString(Common.Constant_Class.MOTHER_NAME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.BIRTH_DATE)) {
-                mListProfileData.setBirth_date(ChangedateFormat(mJsonObject.getString(Common.Constant_Class.BIRTH_DATE)));
-            }
-            if (mJsonObject.has(Common.Constant_Class.BIRTH_TIME)) {
-                mListProfileData.setBirth_time(mJsonObject.getString(Common.Constant_Class.BIRTH_TIME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.BIRTH_PLACE)) {
-                mListProfileData.setBirth_place(mJsonObject.getString(Common.Constant_Class.BIRTH_PLACE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.MOBILE)) {
-                mListProfileData.setMobile(mJsonObject.getString(Common.Constant_Class.MOBILE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.PHONE)) {
-                mListProfileData.setPhone(mJsonObject.getString(Common.Constant_Class.PHONE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.BLOOD_GROUP)) {
-                mListProfileData.setBlood_group(mJsonObject.getString(Common.Constant_Class.BLOOD_GROUP));
-            }
-            if (mJsonObject.has(Common.Constant_Class.GENDER)) {
-                mListProfileData.setGender(mJsonObject.getString(Common.Constant_Class.GENDER));
-            }
-            if (mJsonObject.has(Common.Constant_Class.GOTRA)) {
-                mListProfileData.setGotra(mJsonObject.getString(Common.Constant_Class.GOTRA));
-            }
-            if (mJsonObject.has(Common.Constant_Class.EMAIL_ADDRESS)) {
-                mListProfileData.setEmail_address(mJsonObject.getString(Common.Constant_Class.EMAIL_ADDRESS));
-            }
-            if (mJsonObject.has(Common.Constant_Class.ADDRESS)) {
-                mListProfileData.setAddress(mJsonObject.getString(Common.Constant_Class.ADDRESS));
-            }
-            if (mJsonObject.has(Common.Constant_Class.NATIVE_PLACE)) {
-                mListProfileData.setNative_place(mJsonObject.getString(Common.Constant_Class.NATIVE_PLACE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.EDUCATION)) {
-                mListProfileData.setEducation(mJsonObject.getString(Common.Constant_Class.EDUCATION));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OCCUPATION)) {
-                mListProfileData.setOccupation(mJsonObject.getString(Common.Constant_Class.OCCUPATION));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OFFICE_MOBILE)) {
-                mListProfileData.setOffice_mobile(mJsonObject.getString(Common.Constant_Class.OFFICE_MOBILE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.WORK)) {
-                mListProfileData.setWork(mJsonObject.getString(Common.Constant_Class.WORK));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OFFICE_ADDRESS)) {
-                mListProfileData.setOffice_address(mJsonObject.getString(Common.Constant_Class.OCCUPATION));
-            }
-            if (mJsonObject.has(Common.Constant_Class.MARRIAGE_DATE)) {
-                mListProfileData.setMarriage_date(ChangedateFormat(mJsonObject.getString(Constant_Class.MARRIAGE_DATE)));
-            }
-            if (mJsonObject.has(Common.Constant_Class.SPOUSE_NAME)) {
-                mListProfileData.setSpouse_name(mJsonObject.getString(Common.Constant_Class.SPOUSE_NAME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.SPOUSE_FATHER_NAME)) {
-                mListProfileData.setSfather_name(mJsonObject.getString(Common.Constant_Class.SPOUSE_FATHER_NAME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.SPOUSE_MOTHER_NAME)) {
-                mListProfileData.setSmother_name(mJsonObject.getString(Common.Constant_Class.SPOUSE_MOTHER_NAME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OFFICE_LAT)) {
-                mListProfileData.setOffice_lat(mJsonObject.getString(Common.Constant_Class.OFFICE_LAT));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OFFICE_LNG)) {
-                mListProfileData.setOffice_lng(mJsonObject.getString(Common.Constant_Class.OFFICE_LNG));
-            }
-            if (mJsonObject.has(Common.Constant_Class.HOME_LAT)) {
-                mListProfileData.setHome_lat(mJsonObject.getString(Common.Constant_Class.HOME_LAT));
-            }
-            if (mJsonObject.has(Common.Constant_Class.HOME_LNG)) {
-                mListProfileData.setHome_lng(mJsonObject.getString(Common.Constant_Class.HOME_LNG));
-            }
-            if (mJsonObject.has(Common.Constant_Class.USER_LAT)) {
-                mListProfileData.setUser_lat(mJsonObject.getString(Common.Constant_Class.USER_LAT));
-            }
-            if (mJsonObject.has(Common.Constant_Class.USER_LNG)) {
-                mListProfileData.setUser_lng(mJsonObject.getString(Common.Constant_Class.USER_LNG));
+            if (mJsonObject.has(AppConstants.CITY)) {
+                mListProfileData.setCity(mJsonObject.getString(AppConstants.CITY));
             }
 
-            if (mJsonObject.has(Constant_Class.PROFILE_PIC_URL)) {
-                mListProfileData.setProfile_pic_url(mJsonObject.getString(Constant_Class.PROFILE_PIC_URL));
+            if (mJsonObject.has(AppConstants.FATHER_NAME)) {
+                mListProfileData.setFather_name(mJsonObject.getString(AppConstants.FATHER_NAME));
             }
-            if (mJsonObject.has(Constant_Class.IMG_FATHER_URL)) {
-                mListProfileData.setImg_father_url(mJsonObject.getString(Constant_Class.IMG_FATHER_URL));
+            if (mJsonObject.has(AppConstants.MOTHER_NAME)) {
+                mListProfileData.setMother_name(mJsonObject.getString(AppConstants.MOTHER_NAME));
             }
-            if (mJsonObject.has(Constant_Class.IMG_MOTHER_URL)) {
-                mListProfileData.setImg_mother_url(mJsonObject.getString(Constant_Class.IMG_MOTHER_URL));
+            if (mJsonObject.has(AppConstants.BIRTH_DATE)) {
+                mListProfileData.setBirth_date(ChangedateFormat(mJsonObject.getString(AppConstants.BIRTH_DATE)));
             }
-            if (mJsonObject.has(Constant_Class.IMG_SPOUSE_URL)) {
-                mListProfileData.setImg_spouse_url(mJsonObject.getString(Constant_Class.IMG_SPOUSE_URL));
+            if (mJsonObject.has(AppConstants.BIRTH_TIME)) {
+                mListProfileData.setBirth_time(mJsonObject.getString(AppConstants.BIRTH_TIME));
             }
-            if (mJsonObject.has(Constant_Class.IMG_SFATHER_URL)) {
-                mListProfileData.setImg_sfather_url(mJsonObject.getString(Constant_Class.IMG_SFATHER_URL));
+            if (mJsonObject.has(AppConstants.BIRTH_PLACE)) {
+                mListProfileData.setBirth_place(mJsonObject.getString(AppConstants.BIRTH_PLACE));
             }
-            if (mJsonObject.has(Constant_Class.IMG_SMOTHER_URL)) {
-                mListProfileData.setImg_smother_url(mJsonObject.getString(Constant_Class.IMG_SMOTHER_URL));
+            if (mJsonObject.has(AppConstants.MOBILE)) {
+                mListProfileData.setMobile(mJsonObject.getString(AppConstants.MOBILE));
+            }
+            if (mJsonObject.has(AppConstants.PHONE)) {
+                mListProfileData.setPhone(mJsonObject.getString(AppConstants.PHONE));
+            }
+            if (mJsonObject.has(AppConstants.BLOOD_GROUP)) {
+                mListProfileData.setBlood_group(mJsonObject.getString(AppConstants.BLOOD_GROUP));
+            }
+            if (mJsonObject.has(AppConstants.GENDER)) {
+                mListProfileData.setGender(mJsonObject.getString(AppConstants.GENDER));
+            }
+            if (mJsonObject.has(AppConstants.GOTRA)) {
+                mListProfileData.setGotra(mJsonObject.getString(AppConstants.GOTRA));
+            }
+            if (mJsonObject.has(AppConstants.EMAIL_ADDRESS)) {
+                mListProfileData.setEmail_address(mJsonObject.getString(AppConstants.EMAIL_ADDRESS));
+            }
+            if (mJsonObject.has(AppConstants.ADDRESS)) {
+                mListProfileData.setAddress(mJsonObject.getString(AppConstants.ADDRESS));
+            }
+            if (mJsonObject.has(AppConstants.NATIVE_PLACE)) {
+                mListProfileData.setNative_place(mJsonObject.getString(AppConstants.NATIVE_PLACE));
+            }
+            if (mJsonObject.has(AppConstants.EDUCATION)) {
+                mListProfileData.setEducation(mJsonObject.getString(AppConstants.EDUCATION));
+            }
+            if (mJsonObject.has(AppConstants.OCCUPATION)) {
+                mListProfileData.setOccupation(mJsonObject.getString(AppConstants.OCCUPATION));
+            }
+            if (mJsonObject.has(AppConstants.OFFICE_MOBILE)) {
+                mListProfileData.setOffice_mobile(mJsonObject.getString(AppConstants.OFFICE_MOBILE));
+            }
+            if (mJsonObject.has(AppConstants.WORK)) {
+                mListProfileData.setWork(mJsonObject.getString(AppConstants.WORK));
+            }
+            if (mJsonObject.has(AppConstants.OFFICE_ADDRESS)) {
+                mListProfileData.setOffice_address(mJsonObject.getString(AppConstants.OCCUPATION));
+            }
+            if (mJsonObject.has(AppConstants.MARRIAGE_DATE)) {
+                mListProfileData.setMarriage_date(ChangedateFormat(mJsonObject.getString(AppConstants.MARRIAGE_DATE)));
+            }
+            if (mJsonObject.has(AppConstants.SPOUSE_NAME)) {
+                mListProfileData.setSpouse_name(mJsonObject.getString(AppConstants.SPOUSE_NAME));
+            }
+            if (mJsonObject.has(AppConstants.SPOUSE_FATHER_NAME)) {
+                mListProfileData.setSfather_name(mJsonObject.getString(AppConstants.SPOUSE_FATHER_NAME));
+            }
+            if (mJsonObject.has(AppConstants.SPOUSE_MOTHER_NAME)) {
+                mListProfileData.setSmother_name(mJsonObject.getString(AppConstants.SPOUSE_MOTHER_NAME));
+            }
+            if (mJsonObject.has(AppConstants.OFFICE_LAT)) {
+                mListProfileData.setOffice_lat(mJsonObject.getString(AppConstants.OFFICE_LAT));
+            }
+            if (mJsonObject.has(AppConstants.OFFICE_LNG)) {
+                mListProfileData.setOffice_lng(mJsonObject.getString(AppConstants.OFFICE_LNG));
+            }
+            if (mJsonObject.has(AppConstants.HOME_LAT)) {
+                mListProfileData.setHome_lat(mJsonObject.getString(AppConstants.HOME_LAT));
+            }
+            if (mJsonObject.has(AppConstants.HOME_LNG)) {
+                mListProfileData.setHome_lng(mJsonObject.getString(AppConstants.HOME_LNG));
+            }
+            if (mJsonObject.has(AppConstants.USER_LAT)) {
+                mListProfileData.setUser_lat(mJsonObject.getString(AppConstants.USER_LAT));
+            }
+            if (mJsonObject.has(AppConstants.USER_LNG)) {
+                mListProfileData.setUser_lng(mJsonObject.getString(AppConstants.USER_LNG));
             }
 
-            if (mJsonObject.has(Constant_Class.UPDATED_TIME)) {
-                mListProfileData.setUpdated_time(mJsonObject.getString(Constant_Class.UPDATED_TIME));
+            if (mJsonObject.has(AppConstants.PROFILE_PIC_URL)) {
+                mListProfileData.setProfile_pic_url(mJsonObject.getString(AppConstants.PROFILE_PIC_URL));
             }
-            if (mJsonObject.has(Constant_Class.SYNC_TIME)) {
-                mListProfileData.setSync_time(mJsonObject.getString(Constant_Class.SYNC_TIME));
+            if (mJsonObject.has(AppConstants.IMG_FATHER_URL)) {
+                mListProfileData.setImg_father_url(mJsonObject.getString(AppConstants.IMG_FATHER_URL));
+            }
+            if (mJsonObject.has(AppConstants.IMG_MOTHER_URL)) {
+                mListProfileData.setImg_mother_url(mJsonObject.getString(AppConstants.IMG_MOTHER_URL));
+            }
+            if (mJsonObject.has(AppConstants.IMG_SPOUSE_URL)) {
+                mListProfileData.setImg_spouse_url(mJsonObject.getString(AppConstants.IMG_SPOUSE_URL));
+            }
+            if (mJsonObject.has(AppConstants.IMG_SFATHER_URL)) {
+                mListProfileData.setImg_sfather_url(mJsonObject.getString(AppConstants.IMG_SFATHER_URL));
+            }
+            if (mJsonObject.has(AppConstants.IMG_SMOTHER_URL)) {
+                mListProfileData.setImg_smother_url(mJsonObject.getString(AppConstants.IMG_SMOTHER_URL));
+            }
+
+            if (mJsonObject.has(AppConstants.UPDATED_TIME)) {
+                mListProfileData.setUpdated_time(mJsonObject.getString(AppConstants.UPDATED_TIME));
+            }
+            if (mJsonObject.has(AppConstants.SYNC_TIME)) {
+                mListProfileData.setSync_time(mJsonObject.getString(AppConstants.SYNC_TIME));
             }
 
 
-            //   String strWhere = "" + Common.Constant_Class.PROFILE_ID + "=" + mJsonObject.getString(Common.Constant_Class.PROFILE_ID);
-            //   db.update(Common.Constant_Class.TABLE_PROFILE, values, strWhere, null);
+            //   String strWhere = "" + AppConstants.PROFILE_ID + "=" + mJsonObject.getString(AppConstants.PROFILE_ID);
+            //   db.update(AppConstants.TABLE_PROFILE, values, strWhere, null);
 
-            if (mJsonObject.has(Common.Constant_Class.CHILDS)) {
+            if (mJsonObject.has(AppConstants.CHILDS)) {
 
-                JSONArray mJsonArray = new JSONArray(mJsonObject.getString(Common.Constant_Class.CHILDS));
+                JSONArray mJsonArray = new JSONArray(mJsonObject.getString(AppConstants.CHILDS));
                 RealmList<ListChildrenData> mlistchilds = new RealmList<>();
 
                 for (int i = 0; i < mJsonArray.length(); i++) {
                     JSONObject mJsonObj = mJsonArray.getJSONObject(i);
                     ListChildrenData mListChildrendata = new ListChildrenData();
 
-                    if (mJsonObj.has(Constant_Class.CHILD_ID)) {
-                        mListChildrendata.setChild_id(mJsonObj.getString(Common.Constant_Class.CHILD_ID));
+                    if (mJsonObj.has(AppConstants.CHILD_ID)) {
+                        mListChildrendata.setChild_id(mJsonObj.getString(AppConstants.CHILD_ID));
                     }
-                    if (mJsonObj.has(Constant_Class.CHILD_IMAGE_URL)) {
-                        mListChildrendata.setChild_img_url(mJsonObj.getString(Common.Constant_Class.CHILD_IMAGE_URL));
-                    }
-
-                    if (mJsonObj.has(Common.Constant_Class.CHILD_NAME)) {
-                        mListChildrendata.setChild_name(mJsonObj.getString(Common.Constant_Class.CHILD_NAME));
+                    if (mJsonObj.has(AppConstants.CHILD_IMAGE_URL)) {
+                        mListChildrendata.setChild_img_url(mJsonObj.getString(AppConstants.CHILD_IMAGE_URL));
                     }
 
-                    if (mJsonObj.has(Constant_Class.MOBILE)) {
-                        mListChildrendata.setMobile(mJsonObj.getString(Common.Constant_Class.MOBILE));
-                    }
-                    if (mJsonObj.has(Constant_Class.BLOOD_GROUP)) {
-                        mListChildrendata.setBlood_group(mJsonObj.getString(Common.Constant_Class.BLOOD_GROUP));
+                    if (mJsonObj.has(AppConstants.CHILD_NAME)) {
+                        mListChildrendata.setChild_name(mJsonObj.getString(AppConstants.CHILD_NAME));
                     }
 
-                    if (mJsonObj.has(Constant_Class.GENDER)) {
-                        mListChildrendata.setGender(mJsonObj.getString(Common.Constant_Class.GENDER));
+                    if (mJsonObj.has(AppConstants.MOBILE)) {
+                        mListChildrendata.setMobile(mJsonObj.getString(AppConstants.MOBILE));
                     }
-                    if (mJsonObj.has(Constant_Class.BIRTH_PLACE)) {
-                        mListChildrendata.setBirth_place(mJsonObj.getString(Constant_Class.BIRTH_PLACE));
+                    if (mJsonObj.has(AppConstants.BLOOD_GROUP)) {
+                        mListChildrendata.setBlood_group(mJsonObj.getString(AppConstants.BLOOD_GROUP));
                     }
-                    if (mJsonObj.has(Constant_Class.BIRTH_TIME)) {
-                        mListChildrendata.setBirth_time(mJsonObj.getString(Constant_Class.BIRTH_TIME));
+
+                    if (mJsonObj.has(AppConstants.GENDER)) {
+                        mListChildrendata.setGender(mJsonObj.getString(AppConstants.GENDER));
                     }
-                    if (mJsonObj.has(Constant_Class.IS_INTERESTED)) {
-                        String isInterest = mJsonObj.getString(Common.Constant_Class.IS_INTERESTED);
+                    if (mJsonObj.has(AppConstants.BIRTH_PLACE)) {
+                        mListChildrendata.setBirth_place(mJsonObj.getString(AppConstants.BIRTH_PLACE));
+                    }
+                    if (mJsonObj.has(AppConstants.BIRTH_TIME)) {
+                        mListChildrendata.setBirth_time(mJsonObj.getString(AppConstants.BIRTH_TIME));
+                    }
+                    if (mJsonObj.has(AppConstants.IS_INTERESTED)) {
+                        String isInterest = mJsonObj.getString(AppConstants.IS_INTERESTED);
                         if (isInterest.equals("1")) {
                             mListChildrendata.setInterest(true);
                         } else {
                             mListChildrendata.setInterest(false);
                         }
                     }
-                    if (mJsonObj.has(Common.Constant_Class.CHILD_BDAY)) {
-                        mListChildrendata.setChild_bday(ChangedateFormat(mJsonObj.getString(Common.Constant_Class.CHILD_BDAY)));
+                    if (mJsonObj.has(AppConstants.CHILD_BDAY)) {
+                        mListChildrendata.setChild_bday(ChangedateFormat(mJsonObj.getString(AppConstants.CHILD_BDAY)));
                     }
-                    if (mJsonObj.has(Common.Constant_Class.CHILD_EDU)) {
-                        mListChildrendata.setChild_edu(mJsonObj.getString(Common.Constant_Class.CHILD_EDU));
+                    if (mJsonObj.has(AppConstants.CHILD_EDU)) {
+                        mListChildrendata.setChild_edu(mJsonObj.getString(AppConstants.CHILD_EDU));
                     }
-                    if (mJsonObj.has(Common.Constant_Class.CHILD_WORK)) {
-                        mListChildrendata.setChild_work(mJsonObj.getString(Common.Constant_Class.CHILD_WORK));
+                    if (mJsonObj.has(AppConstants.CHILD_WORK)) {
+                        mListChildrendata.setChild_work(mJsonObj.getString(AppConstants.CHILD_WORK));
                     }
-                    mListChildrendata.setProfile_id(mJsonObject.getString(Constant_Class.ID));
+                    mListChildrendata.setProfile_id(mJsonObject.getString(AppConstants.ID));
                     mlistchilds.add(mListChildrendata);
                 }
                 mListProfileData.setmListChildrenData(mlistchilds);
@@ -1310,137 +1310,137 @@ public class Common {
         try {
 
             MatrimonyProfileData mListProfileData = new MatrimonyProfileData();
-            if (mJsonObject.has(Constant_Class.ID)) {
-                mListProfileData.setProfile_id(mJsonObject.getString(Constant_Class.ID));
+            if (mJsonObject.has(AppConstants.ID)) {
+                mListProfileData.setProfile_id(mJsonObject.getString(AppConstants.ID));
             }
-            if (mJsonObject.has(Common.Constant_Class.FIRST_NAME)) {
-                mListProfileData.setFirst_name(mJsonObject.getString(Common.Constant_Class.FIRST_NAME));
+            if (mJsonObject.has(AppConstants.FIRST_NAME)) {
+                mListProfileData.setFirst_name(mJsonObject.getString(AppConstants.FIRST_NAME));
             }
-            if (mJsonObject.has(Common.Constant_Class.LAST_NAME)) {
-                mListProfileData.setLast_name(mJsonObject.getString(Common.Constant_Class.LAST_NAME));
+            if (mJsonObject.has(AppConstants.LAST_NAME)) {
+                mListProfileData.setLast_name(mJsonObject.getString(AppConstants.LAST_NAME));
             }
-            if (mJsonObject.has(Constant_Class.CITY)) {
-                mListProfileData.setCity(mJsonObject.getString(Constant_Class.CITY));
-            }
-
-            if (mJsonObject.has(Common.Constant_Class.FATHER_NAME)) {
-                mListProfileData.setFather_name(mJsonObject.getString(Common.Constant_Class.FATHER_NAME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.MOTHER_NAME)) {
-                mListProfileData.setMother_name(mJsonObject.getString(Common.Constant_Class.MOTHER_NAME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.BIRTH_DATE)) {
-                mListProfileData.setBirth_date(ChangedateFormat(mJsonObject.getString(Common.Constant_Class.BIRTH_DATE)));
-            }
-            if (mJsonObject.has(Common.Constant_Class.BIRTH_TIME)) {
-                mListProfileData.setBirth_time(mJsonObject.getString(Common.Constant_Class.BIRTH_TIME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.BIRTH_PLACE)) {
-                mListProfileData.setBirth_place(mJsonObject.getString(Common.Constant_Class.BIRTH_PLACE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.MOBILE)) {
-                mListProfileData.setMobile(mJsonObject.getString(Common.Constant_Class.MOBILE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.PHONE)) {
-                mListProfileData.setPhone(mJsonObject.getString(Common.Constant_Class.PHONE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.BLOOD_GROUP)) {
-                mListProfileData.setBlood_group(mJsonObject.getString(Common.Constant_Class.BLOOD_GROUP));
-            }
-            if (mJsonObject.has(Common.Constant_Class.GENDER)) {
-                mListProfileData.setGender(mJsonObject.getString(Common.Constant_Class.GENDER));
-            }
-            if (mJsonObject.has(Common.Constant_Class.GOTRA)) {
-                mListProfileData.setGotra(mJsonObject.getString(Common.Constant_Class.GOTRA));
-            }
-            if (mJsonObject.has(Common.Constant_Class.EMAIL_ADDRESS)) {
-                mListProfileData.setEmail_address(mJsonObject.getString(Common.Constant_Class.EMAIL_ADDRESS));
-            }
-            if (mJsonObject.has(Common.Constant_Class.ADDRESS)) {
-                mListProfileData.setAddress(mJsonObject.getString(Common.Constant_Class.ADDRESS));
-            }
-            if (mJsonObject.has(Common.Constant_Class.NATIVE_PLACE)) {
-                mListProfileData.setNative_place(mJsonObject.getString(Common.Constant_Class.NATIVE_PLACE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.EDUCATION)) {
-                mListProfileData.setEducation(mJsonObject.getString(Common.Constant_Class.EDUCATION));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OCCUPATION)) {
-                mListProfileData.setOccupation(mJsonObject.getString(Common.Constant_Class.OCCUPATION));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OFFICE_MOBILE)) {
-                mListProfileData.setOffice_mobile(mJsonObject.getString(Common.Constant_Class.OFFICE_MOBILE));
-            }
-            if (mJsonObject.has(Common.Constant_Class.WORK)) {
-                mListProfileData.setWork(mJsonObject.getString(Common.Constant_Class.WORK));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OFFICE_ADDRESS)) {
-                mListProfileData.setOffice_address(mJsonObject.getString(Common.Constant_Class.OCCUPATION));
-            }
-            if (mJsonObject.has(Common.Constant_Class.MARRIAGE_DATE)) {
-                mListProfileData.setMarriage_date(ChangedateFormat(mJsonObject.getString(Constant_Class.MARRIAGE_DATE)));
-            }
-            if (mJsonObject.has(Common.Constant_Class.SPOUSE_NAME)) {
-                mListProfileData.setSpouse_name(mJsonObject.getString(Common.Constant_Class.SPOUSE_NAME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.SPOUSE_FATHER_NAME)) {
-                mListProfileData.setSfather_name(mJsonObject.getString(Common.Constant_Class.SPOUSE_FATHER_NAME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.SPOUSE_MOTHER_NAME)) {
-                mListProfileData.setSmother_name(mJsonObject.getString(Common.Constant_Class.SPOUSE_MOTHER_NAME));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OFFICE_LAT)) {
-                mListProfileData.setOffice_lat(mJsonObject.getString(Common.Constant_Class.OFFICE_LAT));
-            }
-            if (mJsonObject.has(Common.Constant_Class.OFFICE_LNG)) {
-                mListProfileData.setOffice_lng(mJsonObject.getString(Common.Constant_Class.OFFICE_LNG));
-            }
-            if (mJsonObject.has(Common.Constant_Class.HOME_LAT)) {
-                mListProfileData.setHome_lat(mJsonObject.getString(Common.Constant_Class.HOME_LAT));
-            }
-            if (mJsonObject.has(Common.Constant_Class.HOME_LNG)) {
-                mListProfileData.setHome_lng(mJsonObject.getString(Common.Constant_Class.HOME_LNG));
-            }
-            if (mJsonObject.has(Common.Constant_Class.USER_LAT)) {
-                mListProfileData.setUser_lat(mJsonObject.getString(Common.Constant_Class.USER_LAT));
-            }
-            if (mJsonObject.has(Common.Constant_Class.USER_LNG)) {
-                mListProfileData.setUser_lng(mJsonObject.getString(Common.Constant_Class.USER_LNG));
+            if (mJsonObject.has(AppConstants.CITY)) {
+                mListProfileData.setCity(mJsonObject.getString(AppConstants.CITY));
             }
 
-            if (mJsonObject.has(Constant_Class.PROFILE_PIC_URL)) {
-                mListProfileData.setProfile_pic_url(mJsonObject.getString(Constant_Class.PROFILE_PIC_URL));
+            if (mJsonObject.has(AppConstants.FATHER_NAME)) {
+                mListProfileData.setFather_name(mJsonObject.getString(AppConstants.FATHER_NAME));
             }
-            if (mJsonObject.has(Constant_Class.IMG_FATHER_URL)) {
-                mListProfileData.setImg_father_url(mJsonObject.getString(Constant_Class.IMG_FATHER_URL));
+            if (mJsonObject.has(AppConstants.MOTHER_NAME)) {
+                mListProfileData.setMother_name(mJsonObject.getString(AppConstants.MOTHER_NAME));
             }
-            if (mJsonObject.has(Constant_Class.IMG_MOTHER_URL)) {
-                mListProfileData.setImg_mother_url(mJsonObject.getString(Constant_Class.IMG_MOTHER_URL));
+            if (mJsonObject.has(AppConstants.BIRTH_DATE)) {
+                mListProfileData.setBirth_date(ChangedateFormat(mJsonObject.getString(AppConstants.BIRTH_DATE)));
             }
-            if (mJsonObject.has(Constant_Class.IMG_SPOUSE_URL)) {
-                mListProfileData.setImg_spouse_url(mJsonObject.getString(Constant_Class.IMG_SPOUSE_URL));
+            if (mJsonObject.has(AppConstants.BIRTH_TIME)) {
+                mListProfileData.setBirth_time(mJsonObject.getString(AppConstants.BIRTH_TIME));
             }
-            if (mJsonObject.has(Constant_Class.IMG_SFATHER_URL)) {
-                mListProfileData.setImg_sfather_url(mJsonObject.getString(Constant_Class.IMG_SFATHER_URL));
+            if (mJsonObject.has(AppConstants.BIRTH_PLACE)) {
+                mListProfileData.setBirth_place(mJsonObject.getString(AppConstants.BIRTH_PLACE));
             }
-            if (mJsonObject.has(Constant_Class.IMG_SMOTHER_URL)) {
-                mListProfileData.setImg_smother_url(mJsonObject.getString(Constant_Class.IMG_SMOTHER_URL));
+            if (mJsonObject.has(AppConstants.MOBILE)) {
+                mListProfileData.setMobile(mJsonObject.getString(AppConstants.MOBILE));
+            }
+            if (mJsonObject.has(AppConstants.PHONE)) {
+                mListProfileData.setPhone(mJsonObject.getString(AppConstants.PHONE));
+            }
+            if (mJsonObject.has(AppConstants.BLOOD_GROUP)) {
+                mListProfileData.setBlood_group(mJsonObject.getString(AppConstants.BLOOD_GROUP));
+            }
+            if (mJsonObject.has(AppConstants.GENDER)) {
+                mListProfileData.setGender(mJsonObject.getString(AppConstants.GENDER));
+            }
+            if (mJsonObject.has(AppConstants.GOTRA)) {
+                mListProfileData.setGotra(mJsonObject.getString(AppConstants.GOTRA));
+            }
+            if (mJsonObject.has(AppConstants.EMAIL_ADDRESS)) {
+                mListProfileData.setEmail_address(mJsonObject.getString(AppConstants.EMAIL_ADDRESS));
+            }
+            if (mJsonObject.has(AppConstants.ADDRESS)) {
+                mListProfileData.setAddress(mJsonObject.getString(AppConstants.ADDRESS));
+            }
+            if (mJsonObject.has(AppConstants.NATIVE_PLACE)) {
+                mListProfileData.setNative_place(mJsonObject.getString(AppConstants.NATIVE_PLACE));
+            }
+            if (mJsonObject.has(AppConstants.EDUCATION)) {
+                mListProfileData.setEducation(mJsonObject.getString(AppConstants.EDUCATION));
+            }
+            if (mJsonObject.has(AppConstants.OCCUPATION)) {
+                mListProfileData.setOccupation(mJsonObject.getString(AppConstants.OCCUPATION));
+            }
+            if (mJsonObject.has(AppConstants.OFFICE_MOBILE)) {
+                mListProfileData.setOffice_mobile(mJsonObject.getString(AppConstants.OFFICE_MOBILE));
+            }
+            if (mJsonObject.has(AppConstants.WORK)) {
+                mListProfileData.setWork(mJsonObject.getString(AppConstants.WORK));
+            }
+            if (mJsonObject.has(AppConstants.OFFICE_ADDRESS)) {
+                mListProfileData.setOffice_address(mJsonObject.getString(AppConstants.OCCUPATION));
+            }
+            if (mJsonObject.has(AppConstants.MARRIAGE_DATE)) {
+                mListProfileData.setMarriage_date(ChangedateFormat(mJsonObject.getString(AppConstants.MARRIAGE_DATE)));
+            }
+            if (mJsonObject.has(AppConstants.SPOUSE_NAME)) {
+                mListProfileData.setSpouse_name(mJsonObject.getString(AppConstants.SPOUSE_NAME));
+            }
+            if (mJsonObject.has(AppConstants.SPOUSE_FATHER_NAME)) {
+                mListProfileData.setSfather_name(mJsonObject.getString(AppConstants.SPOUSE_FATHER_NAME));
+            }
+            if (mJsonObject.has(AppConstants.SPOUSE_MOTHER_NAME)) {
+                mListProfileData.setSmother_name(mJsonObject.getString(AppConstants.SPOUSE_MOTHER_NAME));
+            }
+            if (mJsonObject.has(AppConstants.OFFICE_LAT)) {
+                mListProfileData.setOffice_lat(mJsonObject.getString(AppConstants.OFFICE_LAT));
+            }
+            if (mJsonObject.has(AppConstants.OFFICE_LNG)) {
+                mListProfileData.setOffice_lng(mJsonObject.getString(AppConstants.OFFICE_LNG));
+            }
+            if (mJsonObject.has(AppConstants.HOME_LAT)) {
+                mListProfileData.setHome_lat(mJsonObject.getString(AppConstants.HOME_LAT));
+            }
+            if (mJsonObject.has(AppConstants.HOME_LNG)) {
+                mListProfileData.setHome_lng(mJsonObject.getString(AppConstants.HOME_LNG));
+            }
+            if (mJsonObject.has(AppConstants.USER_LAT)) {
+                mListProfileData.setUser_lat(mJsonObject.getString(AppConstants.USER_LAT));
+            }
+            if (mJsonObject.has(AppConstants.USER_LNG)) {
+                mListProfileData.setUser_lng(mJsonObject.getString(AppConstants.USER_LNG));
             }
 
-            if (mJsonObject.has(Constant_Class.UPDATED_TIME)) {
-                mListProfileData.setUpdated_time(mJsonObject.getString(Constant_Class.UPDATED_TIME));
+            if (mJsonObject.has(AppConstants.PROFILE_PIC_URL)) {
+                mListProfileData.setProfile_pic_url(mJsonObject.getString(AppConstants.PROFILE_PIC_URL));
             }
-            if (mJsonObject.has(Constant_Class.SYNC_TIME)) {
-                mListProfileData.setSync_time(mJsonObject.getString(Constant_Class.SYNC_TIME));
+            if (mJsonObject.has(AppConstants.IMG_FATHER_URL)) {
+                mListProfileData.setImg_father_url(mJsonObject.getString(AppConstants.IMG_FATHER_URL));
+            }
+            if (mJsonObject.has(AppConstants.IMG_MOTHER_URL)) {
+                mListProfileData.setImg_mother_url(mJsonObject.getString(AppConstants.IMG_MOTHER_URL));
+            }
+            if (mJsonObject.has(AppConstants.IMG_SPOUSE_URL)) {
+                mListProfileData.setImg_spouse_url(mJsonObject.getString(AppConstants.IMG_SPOUSE_URL));
+            }
+            if (mJsonObject.has(AppConstants.IMG_SFATHER_URL)) {
+                mListProfileData.setImg_sfather_url(mJsonObject.getString(AppConstants.IMG_SFATHER_URL));
+            }
+            if (mJsonObject.has(AppConstants.IMG_SMOTHER_URL)) {
+                mListProfileData.setImg_smother_url(mJsonObject.getString(AppConstants.IMG_SMOTHER_URL));
+            }
+
+            if (mJsonObject.has(AppConstants.UPDATED_TIME)) {
+                mListProfileData.setUpdated_time(mJsonObject.getString(AppConstants.UPDATED_TIME));
+            }
+            if (mJsonObject.has(AppConstants.SYNC_TIME)) {
+                mListProfileData.setSync_time(mJsonObject.getString(AppConstants.SYNC_TIME));
             }
 
 
-            //   String strWhere = "" + Common.Constant_Class.PROFILE_ID + "=" + mJsonObject.getString(Common.Constant_Class.PROFILE_ID);
-            //   db.update(Common.Constant_Class.TABLE_PROFILE, values, strWhere, null);
+            //   String strWhere = "" + AppConstants.PROFILE_ID + "=" + mJsonObject.getString(AppConstants.PROFILE_ID);
+            //   db.update(AppConstants.TABLE_PROFILE, values, strWhere, null);
 
-            if (mJsonObject.has(Common.Constant_Class.CHILDS)) {
+            if (mJsonObject.has(AppConstants.CHILDS)) {
 
-                JSONArray mJsonArray = new JSONArray(mJsonObject.getString(Common.Constant_Class.CHILDS));
+                JSONArray mJsonArray = new JSONArray(mJsonObject.getString(AppConstants.CHILDS));
                 RealmList<ListChildrenData> mlistchilds = new RealmList<>();
 
                 for (int i = 0; i < mJsonArray.length(); i++) {
@@ -1449,56 +1449,56 @@ public class Common {
                     JSONObject mJsonObj = mJsonArray.getJSONObject(i);
                     ListChildrenData mListChildrendata = new ListChildrenData();
 
-                    if (mJsonObj.has(Constant_Class.CHILD_ID)) {
-                        mListChildrendata.setChild_id(mJsonObj.getString(Common.Constant_Class.CHILD_ID));
+                    if (mJsonObj.has(AppConstants.CHILD_ID)) {
+                        mListChildrendata.setChild_id(mJsonObj.getString(AppConstants.CHILD_ID));
                     }
-                    if (mJsonObj.has(Constant_Class.CHILD_IMAGE_URL)) {
-                        mListChildrendata.setChild_img_url(mJsonObj.getString(Common.Constant_Class.CHILD_IMAGE_URL));
-                    }
-
-                    if (mJsonObj.has(Common.Constant_Class.CHILD_NAME)) {
-                        mListChildrendata.setChild_name(mJsonObj.getString(Common.Constant_Class.CHILD_NAME));
+                    if (mJsonObj.has(AppConstants.CHILD_IMAGE_URL)) {
+                        mListChildrendata.setChild_img_url(mJsonObj.getString(AppConstants.CHILD_IMAGE_URL));
                     }
 
-                    if (mJsonObj.has(Constant_Class.MOBILE)) {
-                        mListChildrendata.setMobile(mJsonObj.getString(Common.Constant_Class.MOBILE));
-                    }
-                    if (mJsonObj.has(Constant_Class.BLOOD_GROUP)) {
-                        mListChildrendata.setBlood_group(mJsonObj.getString(Common.Constant_Class.BLOOD_GROUP));
+                    if (mJsonObj.has(AppConstants.CHILD_NAME)) {
+                        mListChildrendata.setChild_name(mJsonObj.getString(AppConstants.CHILD_NAME));
                     }
 
-                    if (mJsonObj.has(Constant_Class.GENDER)) {
-
-                        childgender = mJsonObj.getString(Common.Constant_Class.GENDER);
-                        mListChildrendata.setGender(mJsonObj.getString(Common.Constant_Class.GENDER));
+                    if (mJsonObj.has(AppConstants.MOBILE)) {
+                        mListChildrendata.setMobile(mJsonObj.getString(AppConstants.MOBILE));
                     }
-                    if (mJsonObj.has(Constant_Class.BIRTH_PLACE)) {
-                        mListChildrendata.setBirth_place(mJsonObj.getString(Constant_Class.BIRTH_PLACE));
-                    }
-                    if (mJsonObj.has(Constant_Class.BIRTH_TIME)) {
-                        mListChildrendata.setBirth_time(mJsonObj.getString(Constant_Class.BIRTH_TIME));
+                    if (mJsonObj.has(AppConstants.BLOOD_GROUP)) {
+                        mListChildrendata.setBlood_group(mJsonObj.getString(AppConstants.BLOOD_GROUP));
                     }
 
-                    if (mJsonObj.has(Constant_Class.IS_INTERESTED)) {
-                        isInterest = mJsonObj.getString(Common.Constant_Class.IS_INTERESTED);
+                    if (mJsonObj.has(AppConstants.GENDER)) {
+
+                        childgender = mJsonObj.getString(AppConstants.GENDER);
+                        mListChildrendata.setGender(mJsonObj.getString(AppConstants.GENDER));
+                    }
+                    if (mJsonObj.has(AppConstants.BIRTH_PLACE)) {
+                        mListChildrendata.setBirth_place(mJsonObj.getString(AppConstants.BIRTH_PLACE));
+                    }
+                    if (mJsonObj.has(AppConstants.BIRTH_TIME)) {
+                        mListChildrendata.setBirth_time(mJsonObj.getString(AppConstants.BIRTH_TIME));
+                    }
+
+                    if (mJsonObj.has(AppConstants.IS_INTERESTED)) {
+                        isInterest = mJsonObj.getString(AppConstants.IS_INTERESTED);
                         if (isInterest.equals("1")) {
                             mListChildrendata.setInterest(true);
                         } else {
                             mListChildrendata.setInterest(false);
                         }
                     }
-                    if (mJsonObj.has(Common.Constant_Class.CHILD_BDAY)) {
-                        mListChildrendata.setChild_bday(ChangedateFormat(mJsonObj.getString(Common.Constant_Class.CHILD_BDAY)));
+                    if (mJsonObj.has(AppConstants.CHILD_BDAY)) {
+                        mListChildrendata.setChild_bday(ChangedateFormat(mJsonObj.getString(AppConstants.CHILD_BDAY)));
                     }
-                    if (mJsonObj.has(Common.Constant_Class.CHILD_EDU)) {
-                        mListChildrendata.setChild_edu(mJsonObj.getString(Common.Constant_Class.CHILD_EDU));
+                    if (mJsonObj.has(AppConstants.CHILD_EDU)) {
+                        mListChildrendata.setChild_edu(mJsonObj.getString(AppConstants.CHILD_EDU));
                     }
-                    if (mJsonObj.has(Common.Constant_Class.CHILD_WORK)) {
-                        mListChildrendata.setChild_work(mJsonObj.getString(Common.Constant_Class.CHILD_WORK));
+                    if (mJsonObj.has(AppConstants.CHILD_WORK)) {
+                        mListChildrendata.setChild_work(mJsonObj.getString(AppConstants.CHILD_WORK));
                     }
                     if (!isShared) {
                         if (child_gender.equalsIgnoreCase(childgender) && is_interested.equalsIgnoreCase(isInterest)) {
-                            mListChildrendata.setProfile_id(mJsonObject.getString(Constant_Class.ID));
+                            mListChildrendata.setProfile_id(mJsonObject.getString(AppConstants.ID));
                             mlistchilds.add(mListChildrendata);
                         }
                     }
@@ -1558,7 +1558,7 @@ public class Common {
 
     public static void getDeviceId(Context mContext) {
         @SuppressLint("HardwareIds") String m_androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
-        Constant_Class.DEVICE_ID_VALUE = m_androidId;
+        AppConstants.DEVICE_ID_VALUE = m_androidId;
     }
 
     @NonNull
@@ -1577,7 +1577,7 @@ public class Common {
 
             if (pDialog == null) {
                 pDialog = new ProgressDialog(mContext);
-                pDialog.setMessage(Constant_Class.LOADING);
+                pDialog.setMessage(AppConstants.LOADING);
                 pDialog.setCancelable(false);
             }
 
@@ -2198,262 +2198,5 @@ public class Common {
         }
     }
 
-    public static class Constant_Class {
-
-        public static final String ADMIN = "ADMIN";
-        public static final String USER = "USER";
-
-        public static final String LAN = "lan";
-
-        public static final String YOUTUBE_API_KEY = "AIzaSyBOkoXTYsY32OQtLTxidxci5R3Zml84oUY";
-
-        public static final String PERSONAL = "PERSONAL";
-        public static final String BUSINESS = " PROFESSIONAL ";
-        public static final String FAMILY = "FAMILY";
-        public static final String FAMILY_TREE = "FAMILY TREE";
-        public static final String RELATIVES = " RELATIVES ";
-
-        public static final String _PERSONAL = "     PERSONAL     ";
-        public static final String _BUSINESS = " PROFESSIONAL";
-        public static final String _FAMILY = "      FAMILY      ";
-
-        public static final String NOTIFICATION = "notification";
-        public static final int NonActive = 0;
-        public static final String AdminControl = "AdminControl";
-
-        public static final String ERROR_CODE = "errorcode";
-        public static final String ERROR_13 = "-13";
-
-
-        public static final String SHARE_USER_IDS = "share_user_ids";
-        public static final String IS_SHARE = "is_share";
-        public static final String CAN_SHARE = "can_share";
-        public static final String API_KEY = "api_key";
-        public static final String DEVICE_TYPE = "device_type";
-        public static final String DEVICE_TOKEN = "device_token";
-        public static final String DEVICE_ID = "int_udid";
-        public static final String ACCESS_TOKEN = "access_token";
-        public static final String RESPONSE_DATA = "response_data";
-        public static final String NEAR_BY = "nearBy";
-        public static final String DISTANCE = "distance";
-
-        public static final String DATE = "date";
-        public static final String BIRTH_DATE = "birth_date";
-        public static final String CHILD_BIRTH_DATE = "child_birth_date";
-        public static final String WIFE_BIRTH_DATE = "spouse_birth_date";
-        public static final String MARRIAGE_DATE = "marriage_date";
-        public static final String RELATION = "relation";
-        public static final String TO_USER_ID = "to_user_id";
-        public static final String RELATIONSHIP_STATUS = "relationship_status";
-        public static final String RELATIONSHIP_ID = "relationship_id";
-        public static final String PAGE = "page";
-        public static final String API_KEY_VALUE = "q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
-        public static final String DEVICE_TYPE_VALUE = "Android";
-        public static final String PREF_NAME = "Vastipatrak";
-        public static final String PREF_WELCOME = "Welcome";
-        public static final String PREF_FILTER = "Vastipatrak_Filter";
-        public static final String PREF_TOKEN = "Pref_Token";
-        public static final String SCREEN = "screen";
-        public static final String SEARCH_FRAGMENT = "SearchFragment";
-        public static final String IS_UPDATE = "is_update";
-        public static final String IS_RESET = "is_reset";
-        public static final String USER_ID = "user_id";
-
-        public static final String UPDATE_USER_ID = "update_user_id";
-        public static final String EVENT_DATE = "event_date";
-        public static final String LOADING = "Loading...";
-        public static final String NO_CONNECTION = "No internet connection!";
-        public static final String EMAIL = "email";
-        public static final String FIRST_NAME = "first_name";
-        public static final String LAST_NAME = "last_name";
-        public static final String USER_CODE = "user_code";
-
-        public static final String TO_FIRST_NAME = "to_first_name";
-        public static final String TO_LAST_NAME = "to_last_name";
-        public static final String FROM_FIRST_NAME = "from_first_name";
-        public static final String FROM_LAST_NAME = "from_last_name";
-
-        public static final String FROM_PROFILE_PIC = "from_profile_pic";
-        public static final String TO_PROFILE_PIC = "to_profile_pic";
-
-        public static final String REQUESTED = "REQUESTED";
-        public static final String ACCEPTED = "ACCEPTED";
-        public static final String REJECTED = "REJECTED";
-
-        public static final String EMAIL_ADDRESS = "email_address";
-        public static final String PASSWORD = "password";
-        public static final String INSERT = "insert";
-        public static final String VERSION = "version";
-
-        public static final String PLAIN_PASSWORD = "plain_password";
-
-        public static final String REPEAT_PASSWORD = "repeat_password";
-        public static final String SUCCESS = "success";
-        public static final String MESSAGE = "message";
-        public static final String TOTAL_RECORDS = "totalRecords";
-        public static final String TRUE = "true";
-        public static final String USERNAME = "username";
-        public static final String MOBILE = "mobile";
-        public static final String DATA = "data";
-        public static final String LAT = "lat";
-        public static final String LNG = "lng";
-        public static final String KM = "km";
-        public static final String USER_LAT = "user_lat";
-        public static final String USER_LNG = "user_lng";
-        public static final String CURR_LAT = "curr_lat";
-        public static final String CURR_LNG = "curr_lng";
-        public static final String HOME_LAT = "home_lat";
-        public static final String HOME_LNG = "home_lng";
-        public static final String OFFICE_LAT = "office_lat";
-        public static final String OFFICE_LNG = "office_lng";
-        public static final String LOCATION_TYPE = "location_type";
-        public static final String MYPROFILE_SP = "myprofile";
-        public static final String OFFICE_ADDRESS = "office_address";
-        public static final String ADDRESS = "address";
-        public static final String SUB_CAST = "sub_cast";
-        public static final String EKDO = "ekdo";
-        public static final String OCCUPATION = "occupation";
-        public static final String OFFICE_MOBILE = "office_mobile";
-        public static final String WORK = "work";
-        public static final String QUERY = "query";
-        public static final String QUERY_STRING = "query_string";
-        public static final String PUSH_MESSAGE = "push_message";
-        public static final String ID = "id";
-
-        public static final String BDATE_REMINDER_ID = "bdate_reminder_id";
-        public static final String SPOUSE_BDATE_REMINDER_ID = "spouse_bdate_reminder_id";
-        public static final String MDATE_REMINDER_ID = "mdate_reminder_id";
-
-        public static final String IDList = "idList";
-        public static final String STATUS = "status";
-        public static final String PROFILE_PIC_URL = "profile_pic_url";
-        public static final int sCorner = 25;
-        public static final int sMargin = 1;
-        public static final String FATHER_NAME = "father_name";
-        public static final String MOTHER_NAME = "mother_name";
-        public static final String NATIVE_PLACE = "native_place";
-        public static final String FROM_BIRTH_DATE = "from_birth_date";
-        public static final String TO_BIRTH_DATE = "to_birth_date";
-        public static final String BIRTH_TIME = "birth_time";
-        public static final String BIRTH_PLACE = "birth_place";
-        public static final String BLOOD_GROUP = "blood_group";
-        public static final String CHILD_BLOOD_GROUP = "child_blood_group";
-        public static final String PHONE = "phone";
-        public static final String GENDER = "gender";
-        public static final String CHILD_GENDER = "child_gender";
-        public static final String CHILD_MOBILE = "child_mobile";
-        public static final String GOTRA = "gotra";
-        public static final String IS_LOCATION_ENABLE = "is_location_enable";
-        public static final String UPDATED_TIME = "updated_time";
-        public static final String ROLE = "role";
-        public static final String SYNC_TIME = "sync_time";
-        public static final String CITY = "city";
-        public static final String TITLE_BLOOD_GROUP = "Blood Group";
-        public static final String TITLE_GOTRA = "Gotra";
-        public static final String TITLE_NATIVE = "Native";
-        public static final String TITLE_EDUCATION = "Education";
-        public static final String TITLE_CHILD_BLOOD_GROUP = "Child BG";
-        public static final String TITLE_SPOUSE_BLOOD_GROUP = "SPOUSE BG";
-        public static final String A_POSITIVE = "A +VE";
-        public static final String A_NAGATIVE = "A -VE";
-        public static final String B_POSITIVE = "B +VE";
-        public static final String B_NAGATIVE = "B -VE";
-        public static final String O_POSITIVE = "O +VE";
-        public static final String O_NAGATIVE = "O -VE";
-        public static final String AB_POSITIVE = "AB +VE";
-        public static final String AB_NAGATIVE = "AB -VE";
-        public static final String EDUCATION = "education";
-        public static final String PROFILE_PIC = "profile_pic";
-        public static final String PROFILE_PIC_HASH = "profile_pic_hash";
-        public static final String IMG_MOTHER = "img_mother";
-        public static final String IMG_FATHER = "img_father";
-        public static final String SPOUSE_NAME = "spouse_name";
-
-        public static final String SPOUSE_BG = "spouse_blood_group";
-        public static final String SPOUSE_EDU = "spouse_education";
-        public static final String SPOUSE_START_AGE = "spouse_start_age";
-        public static final String SPOUSE_END_AGE = "spouse_end_age";
-        public static final String CHILD_START_AGE = "child_start_age";
-        public static final String CHILD_END_AGE = "child_end_age";
-        public static final String USER_START_AGE = "user_start_age";
-        public static final String USER_END_AGE = "user_end_age";
-
-
-        public static final String SPOUSE_NATIVE = "spouse_native_place";
-        public static final String SPOUSE_BDATE = "spouse_birth_place";
-        public static final String SPOUSE_MOBILE = "spouse_mobile";
-        public static final String FROM_MARRIAGE_DATE = "from_marriage_date";
-        public static final String TO_MARRIAGE_DATE = "to_marriage_date";
-        public static final String MARRIED = "1";
-        public static final String UNMARRIED = "0";
-        public static final String SPOUSE_FATHER_NAME = "spouse_father_name";
-        public static final String SPOUSE_MOTHER_NAME = "spouse_mother_name";
-        public static final int sBorder = 5;
-        public static final String sColor = "#FFC0CB";
-        //public static final long LOCATION_INTERVAL = 1000 * 30;
-        public static final String CHILDS = "childs";
-        public static final String CHILD_DELETE = "delete";
-        public static final String CHILD_ID = "id";
-        public static final String _CHILD_ID = "child_id";
-        public static final String CHILD_NAME = "child_name";
-
-        public static final String CHILD_BDATE_REMINDER_ID = "child_bdate_reminder_id";
-        public static final String familyTree = "familyTree";
-        public static final String CHILD_BDAY = "child_bday";
-        public static final String FROM_CHILD_BDAY = "from_child_bday";
-        public static final String TO_CHILD_BDAY = "to_child_bday";
-        public static final String CHILD_BTIME = "birth_time";
-        public static final String CHILD_BPLACE = "child_birth_place";
-        public static final String CHILD_MARRIAGE = "isMarried";
-        public static final String IS_INTERESTED = "is_interested";
-        public static final String IS_MARRIED = "isMarried";
-        public static final String CHILD_EDU = "child_edu";
-        public static final String CHILD_WORK = "child_work";
-        public static final String FragmentSp = "fragment";
-        public static final String CHILD_IMAGE = "child_image";
-        public static final String IMG_SPOUSE = "img_spouse";
-        public static final String IMG_SMOTHER = "img_smother";
-        public static final String IMG_SFATHER = "img_sfather";
-        public static final String PROFILE_ID = "profile_id";
-        public static final String REMINDER_DATE = "reminder_date";
-        public static final String REMINDER_TYPE = "reminder_type";
-        public static final String REMINDER_ID = "reminder_id";
-        public static final String TBTN_SHARE = "tbtn_share";
-        public static final String TBTN_SYNC = "tbtn_sync";
-        public static final String IMG_FATHER_URL = "img_father_url";
-        public static final String IMG_MOTHER_URL = "img_mother_url";
-        public static final String IMG_SPOUSE_URL = "img_spouse_url";
-        public static final String IMG_SFATHER_URL = "img_sfather_url";
-        public static final String IMG_SMOTHER_URL = "img_smother_url";
-        public static final String CHILD_IMAGE_URL = "child_image_url";
-        // private static final String BASE_URL = "http://www.superbinstruments.com/directory-dev";
-        private static final String BASE_URL = "http://www.superbinstruments.com/yadav_dev";
-        public static final String LOGIN_URL = BASE_URL + "/API/login";
-        public static final String SIGNUP_URL = BASE_URL + "/API/userreg";
-        public static final String FORGOT_PASSWORD_URL = BASE_URL + "/API/forgotPassword";
-        public static final String ADVANCE_SEARCH_URL = BASE_URL + "/API/searchUsers";
-        public static final String GLOBAL_SEARCH_URL = BASE_URL + "/API/globalSearch";
-        public static final String CHANGE_PASSWORD_URL = BASE_URL + "/API/changePassword";
-        public static final String LOGOUT_URL = BASE_URL + "/API/logout";
-        public static final String DELETE_URL = BASE_URL + "/API/delete";
-        public static final String STATUS_URL = BASE_URL + "/API/StatusChange";
-        public static final String SYNC_URL = BASE_URL + "/API/sync";
-        public static final String INACTIVES_URL = BASE_URL + "/API/getInactiveUsers";
-        public static final String PROFILE_URL = BASE_URL + "/API/profile";
-        public static final String EVENTS_URL = BASE_URL + "/API/getEvents";
-        public static final String GET_CITIES_URL = BASE_URL + "/API/getCities";
-        public static final String CHANGE_ROLE_URL = BASE_URL + "/API/changeRole";
-        //public static final String GET_GOTRA_URL = BASE_URL + "/API/getGotra";
-        public static final String SHARED_USERS_URL = BASE_URL + "/API/shareUsers";
-        public static final String NEAR_BY_USERS_URL = BASE_URL + "/API/getNearByUsers";
-        public static final String SEND_REQUEST_URL = BASE_URL + "/API/sendRequest";
-        public static final String REQUEST_ACTION_URL = BASE_URL + "/API/requestAction";
-        public static final String GET_RELATIONS_URL = BASE_URL + "/API/getRelations";
-        public static final String SET_REMINDER_URL = BASE_URL + "/API/setReminder";
-        public static final String SET_TREE_URL = BASE_URL + "/API/saveTree";
-        public static final String SET_UPDATED_VERSION_URL = BASE_URL + "/API/getUpdatedVersion";
-        public static final String GET_MASTER_DATA_URL = BASE_URL + "/API/getMasterData";
-        public static final String GET_USERS_BY_DATE_URL = BASE_URL + "/API/getUsersByDate";
-        public static String DEVICE_ID_VALUE = "";
-    }
+    
 }
