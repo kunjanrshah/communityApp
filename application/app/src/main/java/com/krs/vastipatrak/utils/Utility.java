@@ -107,6 +107,9 @@ public class Utility {
 
     }
 
+    public static boolean isValidMobile(String phone) {
+        return android.util.Patterns.PHONE.matcher(phone).matches();
+    }
 
     public static boolean isValidDate(String bdate) {
         SimpleDateFormat sdf = new SimpleDateFormat(yyyy_MM_dd);
@@ -1579,7 +1582,7 @@ public class Utility {
                 }
                 if (!pDialog.isShowing()) pDialog.show();
                 ProgressBar progressbar = pDialog.findViewById(android.R.id.progress);
-                progressbar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#3b5998"), android.graphics.PorterDuff.Mode.SRC_IN);
+                progressbar.getIndeterminateDrawable().setColorFilter(mContext.getColor(R.color.colorPrimaryDark), android.graphics.PorterDuff.Mode.SRC_IN);
             }
 
 

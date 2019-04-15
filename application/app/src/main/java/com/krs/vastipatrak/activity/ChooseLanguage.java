@@ -6,8 +6,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.utils.AppConstants;
@@ -19,7 +22,7 @@ import java.util.Objects;
 public class ChooseLanguage extends Activity  {
 
     private Button btn_login,btn_register;
-    private MaterialBetterSpinner spinner1;
+    private Spinner spinner1;
     String[] languages ;
 
     @Override
@@ -31,6 +34,7 @@ public class ChooseLanguage extends Activity  {
         languages = Objects.requireNonNull(this).getResources().getStringArray(R.array.languages);
         ArrayAdapter<String> aa = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line, languages);
         spinner1.setAdapter(aa);
+        spinner1.setSelection(1);
 
         btn_login.setOnClickListener(v -> {
             Intent mIntent=new Intent(ChooseLanguage.this, LoginActivity.class);
@@ -55,6 +59,20 @@ public class ChooseLanguage extends Activity  {
         btn_login=findViewById(R.id.btn_login);
         btn_register=findViewById(R.id.btn_register);
 
+        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Utility.changeLang(ChooseLanguage.this,spinner1.getSelectedItem().toString());
+                btn_login.setText(getResources().getString(R.string.login));
+                btn_register.setText(getResources().getString(R.string.register));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+/*
         spinner1.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -72,6 +90,6 @@ public class ChooseLanguage extends Activity  {
                 btn_login.setText(getResources().getString(R.string.login));
                 btn_register.setText(getResources().getString(R.string.register));
             }
-        });
+        });*/
     }
 }
