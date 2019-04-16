@@ -23,6 +23,8 @@ public class ChooseLanguage extends Activity  {
 
     private Button btn_login,btn_register;
     private Spinner spinner1;
+    private boolean is_login=false;
+    private boolean is_register=false;
     String[] languages ;
 
     @Override
@@ -37,13 +39,20 @@ public class ChooseLanguage extends Activity  {
         spinner1.setSelection(1);
 
         btn_login.setOnClickListener(v -> {
-            Intent mIntent=new Intent(ChooseLanguage.this, LoginActivity.class);
-            startActivity(mIntent);
+            if(!is_login){
+                is_login=true;
+                Intent mIntent=new Intent(ChooseLanguage.this, LoginActivity.class);
+                startActivity(mIntent);
+            }
         });
 
         btn_register.setOnClickListener(v -> {
-            Intent mIntent=new Intent(ChooseLanguage.this,RegisterActivty.class);
-            startActivity(mIntent);
+            if(!is_register)
+            {
+                is_register=true;
+                Intent mIntent=new Intent(ChooseLanguage.this,RegisterActivty.class);
+                startActivity(mIntent);
+            }
         });
 
         if (Build.VERSION.SDK_INT >= 23) {
@@ -51,6 +60,13 @@ public class ChooseLanguage extends Activity  {
                 requestPermissions(AppConstants.INIT_PERMS, AppConstants.INIT_REQUEST);
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        is_login=false;
+        is_register=false;
     }
 
     private void MemoryAllocation() {

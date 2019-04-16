@@ -259,7 +259,7 @@ public class LoginActivity extends Activity {
                 if (event.getRawX() >= (edt_pass.getRight() - edt_pass.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                     if (isShow) {
                         edt_pass.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_show, 0);
-                        edt_pass.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        edt_pass.setInputType(InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
                         isShow = false;
                     } else {

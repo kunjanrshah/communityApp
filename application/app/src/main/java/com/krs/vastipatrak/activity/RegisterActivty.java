@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -44,6 +45,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
+import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
+import static com.krs.vastipatrak.utils.AppConstants.INIT_TIMEOUT;
 import static com.krs.vastipatrak.utils.Utility.hideProgressDialog;
 import static com.krs.vastipatrak.utils.Utility.watchYoutubeVideo;
 
@@ -246,7 +250,6 @@ public class RegisterActivty extends Activity {
         if (Utility.isOnline(this)) {
             final String name = edt_head_name.getText().toString().trim();
             final String surname = edt_head_surname.getText().toString().trim();
-            final String spouse_name = edt_spouse_name.getText().toString().trim();
             final String email = edt_email_id.getText().toString().trim();
             final String mobile = edt_mobile.getText().toString().trim();
             final String password = edt_password.getText().toString().trim();
@@ -273,7 +276,7 @@ public class RegisterActivty extends Activity {
                 }
             }
 
-            if (!surname.isEmpty() && !city.isEmpty() && !email.isEmpty() && !name.isEmpty() && !mobile.isEmpty() && !password.isEmpty() && !cpassword.isEmpty() && !spouse_name.isEmpty() && !address.isEmpty()) {
+            if (!surname.isEmpty() && !city.isEmpty() && !email.isEmpty() && !name.isEmpty() && !mobile.isEmpty() && !password.isEmpty() && !cpassword.isEmpty() &&  !address.isEmpty()) {
                 if (password.equalsIgnoreCase(cpassword)) {
                     if (mobile.length() == 10) {
                         try {
@@ -281,7 +284,6 @@ public class RegisterActivty extends Activity {
                             Utility.showProgressDialog(this);
                             json.put(AppConstants.FIRST_NAME, name);
                             json.put(AppConstants.LAST_NAME, surname);
-                            json.put(AppConstants.SPOUSE_NAME, spouse_name);
                             json.put(AppConstants.EMAIL_ADDRESS, email);
                             json.put(AppConstants.MOBILE, mobile);
                             json.put(AppConstants.PASSWORD, password);
@@ -301,33 +303,29 @@ public class RegisterActivty extends Activity {
                             e.printStackTrace();
                         }
 
-                        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.SIGNUP_URL, json, new Response.Listener<JSONObject>() {
+                        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.SIGNUP_URL, json, response -> {
+                            Log.d(TAG, "SignupWS: " + response.toString());
 
-                            @Override
-                            public void onResponse(@NonNull JSONObject response) {
-                                Log.d(TAG, "SignupWS: " + response.toString());
-
-                                try {
-                                    hideProgressDialog();
-                                    boolean success = response.getBoolean(AppConstants.SUCCESS);
-                                    String message = response.getString(AppConstants.MESSAGE);
+                            try {
+                                hideProgressDialog();
+                                boolean success = response.getBoolean(AppConstants.SUCCESS);
+                                String message = response.getString(AppConstants.MESSAGE);
 /*                                    if (success) {
-                                        if (message.contains("admin")) {
-                                            inputName.setText("");
-                                            inputEmail.setText("");
-                                            inputMobile.setText("");
-                                            inputPassword.setText("");
-                                            inputConformPassword.setText("");
-                                            inputPassword.setText("");
-                                            edt_spouse_name.setText("");
-                                            edt_address.setText("");
-                                            togglePage();
-                                        }
-                                    }*/
-                                    Utility.alert(RegisterActivty.this, message);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                                    if (message.contains("admin")) {
+                                        inputName.setText("");
+                                        inputEmail.setText("");
+                                        inputMobile.setText("");
+                                        inputPassword.setText("");
+                                        inputConformPassword.setText("");
+                                        inputPassword.setText("");
+                                        edt_spouse_name.setText("");
+                                        edt_address.setText("");
+                                        togglePage();
+                                    }
+                                }*/
+                                Utility.alert(RegisterActivty.this, message);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }, error -> {
                             hideProgressDialog();
@@ -359,7 +357,8 @@ public class RegisterActivty extends Activity {
                                 return params;
                             }
                         };
-                        // Adding request to request queue
+
+                        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
                         AppController.getInstance().addToRequestQueue(jsonObjReq, "");
                     } else {
                         Toast.makeText(RegisterActivty.this, getString(R.string.err_msg_invalid_mobile), Toast.LENGTH_LONG).show();

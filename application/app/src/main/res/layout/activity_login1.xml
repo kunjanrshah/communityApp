@@ -12,11 +12,11 @@
 
         <ImageView
             android:id="@+id/img_back"
-            android:layout_width="20dp"
+            android:layout_width="22dp"
             android:layout_height="15dp"
             android:layout_marginLeft="10dp"
             android:background="@drawable/left_arrow"
-            android:padding="10dp" />
+            android:padding="15dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -96,12 +96,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
+            android:weightSum="1"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_mobile"
-                android:layout_width="120dp"
-                android:layout_height="40dp"
+                android:layout_width="0dp"
+                android:layout_weight="0.40"
+                android:layout_height="45dp"
                 android:background="@color/colorPrimaryDark"
                 android:text="@string/_mobile"
                 android:textColor="@color/mdtp_white"
@@ -109,8 +111,9 @@
 
             <Button
                 android:id="@+id/btn_email"
-                android:layout_width="120dp"
-                android:layout_height="40dp"
+                android:layout_width="0dp"
+                android:layout_weight="0.40"
+                android:layout_height="45dp"
                 android:layout_marginLeft="50dp"
                 android:background="@drawable/border"
                 android:text="@string/email"
@@ -136,9 +139,10 @@
             <EditText
                 android:id="@+id/edt_username"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="45dp"
                 android:paddingRight="10dp"
                 android:paddingLeft="5dp"
+                android:singleLine="true"
                 android:drawableEnd="@drawable/icon"
                 android:background="@drawable/border"
                 android:gravity="center"
@@ -148,13 +152,14 @@
         <EditText
             android:id="@+id/edt_pass"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="45dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/border"
             android:drawableEnd="@drawable/password_hide"
             android:gravity="center"
+            android:singleLine="true"
             android:hint="@string/password"
             android:inputType="textPassword"
             android:paddingLeft="5dp"
@@ -179,8 +184,7 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="20dp"
                 android:text="Cancel"
-                android:visibility="gone"
-                 />
+                android:visibility="gone"   />
 
         </LinearLayout>
 
@@ -188,7 +192,7 @@
         <Button
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="5dp"
@@ -251,22 +255,22 @@
         <ImageView
             android:id="@+id/img_login_fb"
             android:layout_width="120dp"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:background="@color/mdtp_white"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:src="@drawable/btn_fb" />
 
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/btn_login_google"
             android:layout_width="120dp"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:background="@color/mdtp_white"
             android:paddingLeft="10dp"
             android:paddingRight="10dp" />
@@ -274,10 +278,10 @@
         <ImageView
             android:id="@+id/img_login_google"
             android:layout_width="120dp"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:background="@color/mdtp_white"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
