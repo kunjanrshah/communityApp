@@ -111,7 +111,7 @@ public class RegisterActivty extends Activity {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (event.getRawX() >= (edt_password.getRight() - edt_password.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                     if (isShow) {
-                        edt_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
+                        edt_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_show, 0);
                         edt_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
                         isShow = false;
@@ -137,7 +137,7 @@ public class RegisterActivty extends Activity {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (event.getRawX() >= (edt_cpassword.getRight() - edt_cpassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                     if (isShow1) {
-                        edt_cpassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
+                        edt_cpassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_show, 0);
                         edt_cpassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                         isShow1 = false;
                     } else {

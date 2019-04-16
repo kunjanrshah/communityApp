@@ -45,8 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.krs.vastipatrak.utils.AppConstants.DEFAULT_BACKOFF_MULT;
-import static com.krs.vastipatrak.utils.AppConstants.DEFAULT_MAX_RETRIES;
+import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
 import static com.krs.vastipatrak.utils.AppConstants.INIT_TIMEOUT;
 
 public class RelativeFragment extends Fragment {
@@ -193,7 +192,7 @@ public class RelativeFragment extends Fragment {
                 }
             };
 
-            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,  DEFAULT_BACKOFF_MULT));
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         }

@@ -12,10 +12,11 @@
 
         <ImageView
             android:id="@+id/img_back"
-            android:layout_width="40dp"
-            android:layout_height="30dp"
-            android:background="@drawable/left_arrow_black"
-            android:padding="5dp" />
+            android:layout_width="20dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/left_arrow"
+            android:padding="10dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,7 +28,7 @@
             <ImageView
                 android:id="@+id/img_header_logo"
                 android:layout_width="250dp"
-                android:layout_height="25dp"
+                android:layout_height="22dp"
                 android:background="@drawable/group1copy" />
         </LinearLayout>
 
@@ -48,7 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="60dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
 
         <TextView
@@ -74,10 +75,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="40dp"
         android:layout_marginRight="15dp"
         android:layout_weight="0.35"
+        android:gravity="center"
         android:orientation="vertical">
+
 
         <TextView
             android:id="@+id/login_with"
@@ -120,21 +122,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:orientation="vertical">
 
             <Spinner
                 android:id="@+id/spinnerCountries"
                 android:layout_width="wrap_content"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_height="45dp" />
+                android:gravity="center" />
 
             <EditText
                 android:id="@+id/edt_username"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="40dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="5dp"
+                android:drawableEnd="@drawable/icon"
                 android:background="@drawable/border"
                 android:gravity="center"
                 android:hint="@string/enter_mobile_no" />
@@ -143,22 +148,23 @@
         <EditText
             android:id="@+id/edt_pass"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/border"
             android:drawableEnd="@drawable/password_hide"
             android:gravity="center"
             android:hint="@string/password"
             android:inputType="textPassword"
-            android:paddingLeft="5dp" />
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
             <TextView
@@ -170,10 +176,11 @@
             <TextView
                 android:id="@+id/txt_cancel"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:layout_marginLeft="20dp"
                 android:text="Cancel"
-                android:visibility="gone" />
+                android:visibility="gone"
+                 />
 
         </LinearLayout>
 
@@ -181,10 +188,10 @@
         <Button
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="15dp"
             android:background="@color/colorPrimaryDark"
             android:text="@string/login"
@@ -197,7 +204,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:text="@string/do_you_have_an_account_register_now" />
 
     </LinearLayout>
@@ -246,7 +253,7 @@
             android:layout_width="120dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:background="@color/mdtp_white"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"

@@ -42,8 +42,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.krs.vastipatrak.utils.AppConstants.DEFAULT_BACKOFF_MULT;
-import static com.krs.vastipatrak.utils.AppConstants.DEFAULT_MAX_RETRIES;
+import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
+import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
 import static com.krs.vastipatrak.utils.AppConstants.INIT_TIMEOUT;
 import static com.krs.vastipatrak.utils.Utility.hideProgressDialog;
 

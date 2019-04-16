@@ -31,6 +31,14 @@
           }
         },
         {
+          "client_id": "900336668958-gdm42jrfhf5kb36d27jg68qjh2rvm5qk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.krs.vastipatrak",
+            "certificate_hash": "808f04ac7223825e66de31ce260fa63a072ef6b6"
+          }
+        },
+        {
           "client_id": "900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -501,7 +501,7 @@ public class LoginActivity2 extends Activity implements ConnectivityReceiver.Con
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (event.getRawX() >= (inputPassword.getRight() - inputPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                     if (isShow) {
-                        inputPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
+                        inputPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_show, 0);
                         inputPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
                         isShow = false;
@@ -527,7 +527,7 @@ public class LoginActivity2 extends Activity implements ConnectivityReceiver.Con
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (event.getRawX() >= (inputConformPassword.getRight() - inputConformPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                     if (isShow1) {
-                        inputConformPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
+                        inputConformPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_show, 0);
                         inputConformPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                         isShow1 = false;
                     } else {

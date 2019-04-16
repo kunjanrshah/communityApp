@@ -3,6 +3,7 @@ package com.krs.vastipatrak.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -100,6 +101,10 @@ public class LoginActivity extends Activity {
     private FirebaseAuth mAuth;
     private String verificationId;
     private Spinner spinnerCountries;
+    private final int is_from_normal=0;
+    private final int is_from_fb=1;
+    private final int is_from_google=2;
+
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         @Override
@@ -144,6 +149,7 @@ public class LoginActivity extends Activity {
         btn_mobile.setOnClickListener(v -> {
             spinnerCountries.setVisibility(View.VISIBLE);
             edt_username.setHint(getString(R.string.enter_mobile_no));
+            edt_username.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon, 0);
             btn_mobile.setBackgroundColor(getColor(R.color.colorPrimaryDark));
             btn_mobile.setTextColor(getColor(R.color.mdtp_white));
             btn_email.setBackground(getDrawable(R.drawable.border));
@@ -159,7 +165,8 @@ public class LoginActivity extends Activity {
         });
 
         btn_email.setOnClickListener(v -> {
-            spinnerCountries.setVisibility(View.GONE);
+            spinnerCountries.setVisibility(View.INVISIBLE);
+            edt_username.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.close_envelope, 0);
             edt_username.setHint(R.string.enter_email_id);
             txt_cancel.performClick();
             btn_email.setBackgroundColor(getColor(R.color.colorPrimaryDark));
@@ -193,6 +200,7 @@ public class LoginActivity extends Activity {
                             // Application code
                             try {
                                 String email = object.getString("email");
+                                LoginWS(null,email,is_from_fb);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -204,7 +212,7 @@ public class LoginActivity extends Activity {
                     request.executeAsync();
 
 
-                    handleFacebookAccessToken(loginResult.getAccessToken());
+                    //handleFacebookAccessToken(loginResult.getAccessToken());
                 }
 
                 @Override
@@ -240,7 +248,7 @@ public class LoginActivity extends Activity {
         img_back.setOnClickListener(v -> finish());
 
         btn_login.setOnClickListener(v -> {
-            LoginWS(null);
+            LoginWS(null,"",is_from_normal);
         });
 
         edt_pass.setOnTouchListener((v, event) -> {
@@ -250,7 +258,7 @@ public class LoginActivity extends Activity {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (event.getRawX() >= (edt_pass.getRight() - edt_pass.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                     if (isShow) {
-                        edt_pass.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
+                        edt_pass.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_show, 0);
                         edt_pass.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
                         isShow = false;
@@ -329,6 +337,12 @@ public class LoginActivity extends Activity {
         AppController.getInstance().mGoogleSignInClient.signOut().addOnCompleteListener(LoginActivity.this, task -> {
             Toast.makeText(LoginActivity.this, "Logout", Toast.LENGTH_SHORT).show();
         });*/
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (Utility.canCallPhone(this) || !Utility.canAccessLocation(this) || !Utility.canSMS(this)) {
+                requestPermissions(AppConstants.INIT_PERMS, AppConstants.INIT_REQUEST);
+            }
+        }
 
     }
 
@@ -412,7 +426,7 @@ public class LoginActivity extends Activity {
                 img_login_fb.setEnabled(true);
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
-                    LoginWS(user);
+                    LoginWS(user,"",is_from_fb);
                 }
 
             } else {
@@ -465,7 +479,7 @@ public class LoginActivity extends Activity {
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
                     Log.d(TAG, "email: " + user.getEmail() + " phone: " + user.getPhoneNumber());
-                    LoginWS(user);
+                    LoginWS(user,"",is_from_google);
                 }
             } else {
                 Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -637,29 +651,14 @@ public class LoginActivity extends Activity {
         AppController.getInstance().addToRequestQueue(jsonObjReq, "");
     }
 
-    private void LoginWS(FirebaseUser user) {
+    private void LoginWS(FirebaseUser user,String email,int is_from) {
         String username = "";
         String email_or_mobile = "";
         String password = "";
         JSONObject json = new JSONObject();
-        if (user != null) {
-            Log.e(TAG, " email: " + user.getEmail() + " phone: " + user.getPhoneNumber() + " Id: " + user.getUid() + " Name: " + user.getDisplayName());
-            username = user.getEmail();
-            if (username != null && !username.isEmpty()) {
-            } else {
-                username = user.getPhoneNumber();
-                if (username != null && !username.isEmpty()) {
-                } else {
-                    Toast.makeText(LoginActivity.this, "Not able to get your details from Social account", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-            try {
-                json.put(AppConstants.USERNAME, username);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
+
+        if(is_from==is_from_normal)
+        {
             email_or_mobile = edt_username.getText().toString().trim();
             password = edt_pass.getText().toString();
             if (!email_or_mobile.isEmpty() && !password.isEmpty()) {
@@ -688,7 +687,40 @@ public class LoginActivity extends Activity {
                 Toast.makeText(LoginActivity.this, getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
                 return;
             }
+        }else if(is_from==is_from_fb)
+        {
+            if(!email.isEmpty())
+            {
+                try {
+                    json.put(AppConstants.USERNAME, email);
+                    json.put(AppConstants.IS_SOCIAL, "1");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }else if(is_from==is_from_google)
+        {
+            if (user != null) {
+                Log.e(TAG, " email: " + user.getEmail() + " phone: " + user.getPhoneNumber() + " Id: " + user.getUid() + " Name: " + user.getDisplayName());
+                username = user.getEmail();
+                if (username != null && !username.isEmpty()) {
+                } else {
+                    username = user.getPhoneNumber();
+                    if (username != null && !username.isEmpty()) {
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Not able to get your details from Social account", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                try {
+                    json.put(AppConstants.USERNAME, username);
+                    json.put(AppConstants.IS_SOCIAL, "1");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
 
         if (Utility.isOnline(this)) {
 

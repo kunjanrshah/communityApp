@@ -4,7 +4,7 @@ import android.Manifest;
 
 public class AppConstants {
 
-    public static final String[] INIT_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS};
+    public static final String[] INIT_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS};
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
     public static final int CAMARA_REQUEST = 4;
     public static final int INIT_REQUEST = 1;
@@ -108,6 +108,7 @@ public class AppConstants {
     public static final String TOTAL_RECORDS = "totalRecords";
     public static final String TRUE = "true";
     public static final String USERNAME = "username";
+    public static final String IS_SOCIAL = "is_social";
     public static final String MOBILE = "mobile";
     public static final String DATA = "data";
     public static final String LAT = "lat";

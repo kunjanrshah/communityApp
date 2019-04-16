@@ -89,7 +89,7 @@ public class ChangePasswordFragment extends Fragment {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (input_password.getRight() - input_password.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         if (isShow) {
-                            input_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
+                            input_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_show, 0);
                             input_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
                             isShow = false;
@@ -115,7 +115,7 @@ public class ChangePasswordFragment extends Fragment {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (input_repeat.getRight() - input_repeat.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         if (isShow1) {
-                            input_repeat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_view, 0);
+                            input_repeat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_show, 0);
                             input_repeat.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
                             isShow1 = false;

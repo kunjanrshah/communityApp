@@ -108,6 +108,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
+import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
+
 
 public class HomeActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener, SearchFragment.ISearchCallback, ConnectivityReceiver.ConnectivityReceiverListener {
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
@@ -472,7 +475,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     return params;
                 }
             };
-            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(AppConstants.INIT_TIMEOUT, AppConstants.DEFAULT_MAX_RETRIES, AppConstants.DEFAULT_BACKOFF_MULT));
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(AppConstants.INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }
@@ -657,7 +660,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     return params;
                 }
             };
-            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(AppConstants.INIT_TIMEOUT, AppConstants.DEFAULT_MAX_RETRIES, AppConstants.DEFAULT_BACKOFF_MULT));
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(AppConstants.INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }
@@ -1513,7 +1516,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                     return params;
                 }
             };
-            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(AppConstants.INIT_TIMEOUT, AppConstants.DEFAULT_MAX_RETRIES, AppConstants.DEFAULT_BACKOFF_MULT));
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(AppConstants.INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }
