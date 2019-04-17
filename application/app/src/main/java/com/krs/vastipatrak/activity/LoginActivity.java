@@ -236,7 +236,7 @@ public class LoginActivity extends Activity {
         btn_login_google.setOnClickListener(v -> signIn());
 
         img_login_google.setOnClickListener(v -> {
-
+            signIn();
         });
 
         txt_do_you_have.setOnClickListener(v -> {
