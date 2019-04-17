@@ -74,7 +74,7 @@ public class AppConstants {
     public static final String IS_UPDATE = "is_update";
     public static final String IS_RESET = "is_reset";
     public static final String USER_ID = "user_id";
-
+    public static final String IS_HOME = "is_home";
     public static final String UPDATE_USER_ID = "update_user_id";
     public static final String EVENT_DATE = "event_date";
     public static final String LOADING = "Loading...";

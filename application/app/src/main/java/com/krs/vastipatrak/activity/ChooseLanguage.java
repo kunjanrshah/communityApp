@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,19 +11,19 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.AppConstants;
 import com.krs.vastipatrak.utils.Utility;
-import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.util.Objects;
 
-public class ChooseLanguage extends Activity  {
+public class ChooseLanguage extends Activity {
 
-    private Button btn_login,btn_register;
+    String[] languages;
+    private Button btn_login, btn_register;
     private Spinner spinner1;
-    private boolean is_login=false;
-    private boolean is_register=false;
-    String[] languages ;
+    private boolean is_login = false;
+    private boolean is_register = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,23 +32,22 @@ public class ChooseLanguage extends Activity  {
         setContentView(R.layout.activity_choose_languages);
         MemoryAllocation();
         languages = Objects.requireNonNull(this).getResources().getStringArray(R.array.languages);
-        ArrayAdapter<String> aa = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line, languages);
+        ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, languages);
         spinner1.setAdapter(aa);
         spinner1.setSelection(1);
 
         btn_login.setOnClickListener(v -> {
-            if(!is_login){
-                is_login=true;
-                Intent mIntent=new Intent(ChooseLanguage.this, LoginActivity.class);
+            if (!is_login) {
+                is_login = true;
+                Intent mIntent = new Intent(ChooseLanguage.this, LoginActivity.class);
                 startActivity(mIntent);
             }
         });
 
         btn_register.setOnClickListener(v -> {
-            if(!is_register)
-            {
-                is_register=true;
-                Intent mIntent=new Intent(ChooseLanguage.this,RegisterActivty.class);
+            if (!is_register) {
+                is_register = true;
+                Intent mIntent = new Intent(ChooseLanguage.this, RegisterActivty.class);
                 startActivity(mIntent);
             }
         });
@@ -63,22 +60,35 @@ public class ChooseLanguage extends Activity  {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        boolean is_home = AppController.getInstance().mSharedPreferences.getBoolean(AppConstants.IS_HOME, false);
+        if (!is_home) {
+            return;
+        }
+        Intent mIntent = new Intent(ChooseLanguage.this, HomeActivity.class);
+        mIntent.putExtra(AppConstants.USER_ID, AppController.getInstance().mSharedPreferences.getString(AppConstants.USER_ID, ""));
+        startActivity(mIntent);
+        finish();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-        is_login=false;
-        is_register=false;
+        is_login = false;
+        is_register = false;
     }
 
     private void MemoryAllocation() {
 
-        spinner1 =findViewById(R.id.splanguage);
-        btn_login=findViewById(R.id.btn_login);
-        btn_register=findViewById(R.id.btn_register);
+        spinner1 = findViewById(R.id.splanguage);
+        btn_login = findViewById(R.id.btn_login);
+        btn_register = findViewById(R.id.btn_register);
 
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Utility.changeLang(ChooseLanguage.this,spinner1.getSelectedItem().toString());
+                Utility.changeLang(ChooseLanguage.this, spinner1.getSelectedItem().toString());
                 btn_login.setText(getResources().getString(R.string.login));
                 btn_register.setText(getResources().getString(R.string.register));
             }

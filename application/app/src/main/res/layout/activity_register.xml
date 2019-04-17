@@ -13,8 +13,8 @@
 
         <ImageView
             android:id="@+id/img_back"
-            android:layout_width="22dp"
-            android:layout_height="15dp"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="10dp"
             android:background="@drawable/left_arrow"
             android:padding="15dp" />

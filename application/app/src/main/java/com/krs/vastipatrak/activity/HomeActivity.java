@@ -213,6 +213,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             startService(mIntent);
         }
 
+        mEditor.putBoolean(AppConstants.IS_HOME,true);
+        mEditor.apply();
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -377,7 +379,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                         Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
                         break;
                     case 15: //add new
-                        Intent mIntent2 = new Intent(HomeActivity.this, LoginActivity.class);
+                        Intent mIntent2 = new Intent(HomeActivity.this, RegisterActivty.class);
                         mIntent2.putExtra(AppConstants.SCREEN, AppConstants.SEARCH_FRAGMENT);
                         startActivity(mIntent2);
                         break;

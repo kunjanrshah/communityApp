@@ -263,15 +263,15 @@ public class SyncFragment extends Fragment {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 String message = null;
                 if (error instanceof NetworkError) {
-                    message = "Cannot connect to Internet...Please check your connection!";
+                    message = getString(R.string.can_not_connect_to_internet);
                 } else if (error instanceof ServerError) {
-                    message = "The server could not be found. Please try again after some time!!";
+                    message = getString(R.string.server_could_not_found);
                 } else if (error instanceof AuthFailureError) {
-                    message = "Cannot connect to Internet...Please check your connection!";
+                    message = getString(R.string.can_not_connect_to_internet);
                 } else if (error instanceof ParseError) {
-                    message = "Parsing error! Please try again after some time!!";
+                    message = getString(R.string.parsing_error);
                 } else if (error instanceof TimeoutError) {
-                    message = "Connection TimeOut! Please check your internet connection.";
+                    message = getString(R.string.connection_timeout);
                 }
                 Toast.makeText(getActivity(), "" + message, Toast.LENGTH_LONG).show();
 

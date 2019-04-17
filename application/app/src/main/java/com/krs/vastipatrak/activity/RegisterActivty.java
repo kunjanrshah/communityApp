@@ -26,7 +26,6 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyLog;
@@ -63,6 +62,7 @@ public class RegisterActivty extends Activity {
     private boolean is_first = true;
     private boolean isShow = true;
     private boolean isShow1 = true;
+    private String add_new = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +70,22 @@ public class RegisterActivty extends Activity {
         setContentView(R.layout.activity_register);
         MemoryAllocation();
 
+        Bundle mBundle = getIntent().getExtras();
+        if (mBundle != null) {
+            add_new = mBundle.getString(AppConstants.SCREEN);
+        }
+
         txt_already.setOnClickListener(v -> {
             Intent mIntent = new Intent(RegisterActivty.this, LoginActivity.class);
             startActivity(mIntent);
             finish();
         });
 
-        img_back.setOnClickListener(v -> finish());
+        img_back.setOnClickListener(v -> {
+            Intent mIntent = new Intent(RegisterActivty.this, ChooseLanguage.class);
+            startActivity(mIntent);
+            finish();
+        });
 
         btn_register.setOnClickListener(v -> RegistraionWS());
 
@@ -276,7 +285,7 @@ public class RegisterActivty extends Activity {
                 }
             }
 
-            if (!surname.isEmpty() && !city.isEmpty() && !email.isEmpty() && !name.isEmpty() && !mobile.isEmpty() && !password.isEmpty() && !cpassword.isEmpty() &&  !address.isEmpty()) {
+            if (!surname.isEmpty() && !city.isEmpty() && !email.isEmpty() && !name.isEmpty() && !mobile.isEmpty() && !password.isEmpty() && !cpassword.isEmpty() && !address.isEmpty()) {
                 if (password.equalsIgnoreCase(cpassword)) {
                     if (mobile.length() == 10) {
                         try {
@@ -291,11 +300,11 @@ public class RegisterActivty extends Activity {
                             json.put(AppConstants.ADDRESS, address);
                             json.put(AppConstants.CITY, city);
 
-                            //  if (screen != null && screen.equalsIgnoreCase(AppConstants.SEARCH_FRAGMENT)) {
-                            //     json.put(AppConstants.STATUS, "1");
-                            // } else {
-                            json.put(AppConstants.STATUS, "0");
-                            //  }
+                            if (add_new != null && add_new.equalsIgnoreCase(AppConstants.SEARCH_FRAGMENT)) {
+                                json.put(AppConstants.STATUS, "1");
+                            } else {
+                                json.put(AppConstants.STATUS, "0");
+                            }
                             if (!str_profile_hash.isEmpty()) {
                                 json.put(AppConstants.PROFILE_PIC, str_profile_hash);
                             }
@@ -332,15 +341,15 @@ public class RegisterActivty extends Activity {
                             VolleyLog.d(TAG, "Error: " + error.getMessage());
                             String message = null;
                             if (error instanceof NetworkError) {
-                                message = "Cannot connect to Internet...Please check your connection!";
+                                message = getString(R.string.can_not_connect_to_internet);
                             } else if (error instanceof ServerError) {
-                                message = "The server could not be found. Please try again after some time!!";
+                                message = getString(R.string.server_could_not_found);
                             } else if (error instanceof AuthFailureError) {
-                                message = "Cannot connect to Internet...Please check your connection!";
+                                message = getString(R.string.can_not_connect_to_internet);
                             } else if (error instanceof ParseError) {
-                                message = "Parsing error! Please try again after some time!!";
+                                message = getString(R.string.parsing_error);
                             } else if (error instanceof TimeoutError) {
-                                message = "Connection TimeOut! Please check your internet connection.";
+                                message = getString(R.string.connection_timeout);
                             }
                             Toast.makeText(RegisterActivty.this, "" + message, Toast.LENGTH_LONG).show();
 

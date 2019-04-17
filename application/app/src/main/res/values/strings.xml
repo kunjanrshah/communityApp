@@ -421,9 +421,14 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="or_login_with">Or Login with</string>
     <string name="register_now">REGISTER NOW</string>
     <string name="enter_email_id">Enter Email ID</string>
-    <string name="send_otp">send OTP</string>
+    <string name="get_otp">Get OTP</string>
     <string name="send_email">send email</string>
     <string name="city">City</string>
-
-
+    <string name="type_otp">Type OTP</string>
+    <string name="registraion_request_pending">Registration request is pending. Please contact to Admin !!</string>
+    <string name="invalid_username">Invalid username</string>
+    <string name="can_not_connect_to_internet">Cannot connect to Internet...Please check your connection!</string>
+    <string name="server_could_not_found">The server could not be found. Please try again after some time!!</string>
+    <string name="parsing_error">Parsing error! Please try again after some time!!</string>
+    <string name="connection_timeout">Connection TimeOut! Please check your internet connection.</string>
 </resources>

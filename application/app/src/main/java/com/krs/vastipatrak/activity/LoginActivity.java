@@ -1,5 +1,6 @@
 package com.krs.vastipatrak.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -89,8 +90,13 @@ public class LoginActivity extends Activity {
     private static final int RC_SIGN_IN = 9001;
     private final String TAG = LoginActivity.class.getSimpleName();
     private final boolean[] isLogin = {false};
+    private final int is_from_normal = 0;
+    private final int is_from_fb = 1;
+    private final int is_from_google = 2;
+    private final String Mobile = "M";
+    private final String Email = "E";
     private ImageView img_back, img_login_fb, img_login_google;
-    private TextView txt_login_now, txt_pls_login, login_with, txt_forgot_pass, txt_do_you_have, txt_cancel, txt_or_login_with;
+    private TextView txt_forgot_pass, txt_do_you_have, txt_cancel;
     private Button btn_mobile, btn_email, btn_login;
     private EditText edt_username, edt_pass;
     private boolean isShow = true;
@@ -101,10 +107,7 @@ public class LoginActivity extends Activity {
     private FirebaseAuth mAuth;
     private String verificationId;
     private Spinner spinnerCountries;
-    private final int is_from_normal=0;
-    private final int is_from_fb=1;
-    private final int is_from_google=2;
-
+    private String isSelected = Mobile;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         @Override
@@ -128,6 +131,7 @@ public class LoginActivity extends Activity {
         }
     };
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,39 +151,65 @@ public class LoginActivity extends Activity {
         });
 
         btn_mobile.setOnClickListener(v -> {
+            isSelected = Mobile;
             spinnerCountries.setVisibility(View.VISIBLE);
             edt_username.setHint(getString(R.string.enter_mobile_no));
+            edt_username.setInputType(InputType.TYPE_CLASS_PHONE | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
             edt_username.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon, 0);
+
             btn_mobile.setBackgroundColor(getColor(R.color.colorPrimaryDark));
             btn_mobile.setTextColor(getColor(R.color.mdtp_white));
+
             btn_email.setBackground(getDrawable(R.drawable.border));
             btn_email.setTextColor(getColor(R.color.mdtp_transparent_black));
-            txt_cancel.performClick();
-            if (txt_forgot_pass.getText().toString().contains("Email")) {
-                txt_forgot_pass.setText("Send OTP");
-            }
 
-            /*String sourcestr = getString(R.string._forgot_password);
-            sourcestr = sourcestr + "<b>" + " " + getString(R.string.send_otp) + "</b>";
-            txt_forgot_pass.setText(Html.fromHtml(sourcestr));*/
+            edt_pass.setHint(getString(R.string.password));
+            edt_pass.setVisibility(View.VISIBLE);
+
+            txt_cancel.setVisibility(View.GONE);
+            btn_login.setText(getString(R.string.login));
+
+            txt_forgot_pass.setVisibility(View.VISIBLE);
+            txt_forgot_pass.setText(getResources().getString(R.string._forgot_password));
+
         });
 
         btn_email.setOnClickListener(v -> {
+            isSelected = Email;
             spinnerCountries.setVisibility(View.INVISIBLE);
+            edt_username.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
             edt_username.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.close_envelope, 0);
             edt_username.setHint(R.string.enter_email_id);
-            txt_cancel.performClick();
+
             btn_email.setBackgroundColor(getColor(R.color.colorPrimaryDark));
             btn_email.setTextColor(getColor(R.color.mdtp_white));
+
             btn_mobile.setBackground(getDrawable(R.drawable.border));
             btn_mobile.setTextColor(getColor(R.color.mdtp_transparent_black));
 
-            if (txt_forgot_pass.getText().toString().contains("OTP")) {
-                txt_forgot_pass.setText("Send Email");
+            edt_pass.setHint(getString(R.string.password));
+            edt_pass.setVisibility(View.VISIBLE);
+            txt_cancel.setVisibility(View.GONE);
+            btn_login.setText(getString(R.string.login));
+            txt_forgot_pass.setVisibility(View.VISIBLE);
+            txt_forgot_pass.setText(getResources().getString(R.string._forgot_password));
+
+        });
+
+
+        txt_cancel.setOnClickListener(v -> {
+
+            if (isSelected.equalsIgnoreCase(Email)) {
+                btn_email.performClick();
+            } else {
+                btn_mobile.performClick();
             }
-            /*String sourcestr = getString(R.string._forgot_password);
-            sourcestr = sourcestr + "<b>" + " " + getString(R.string.send_email) + "</b>";
-            txt_forgot_pass.setText(Html.fromHtml(sourcestr));*/
+            edt_pass.setHint(getString(R.string.password));
+            edt_pass.setVisibility(View.VISIBLE);
+            txt_cancel.setVisibility(View.GONE);
+            btn_login.setText(getString(R.string.login));
+            txt_forgot_pass.setVisibility(View.VISIBLE);
+            txt_forgot_pass.setText(getResources().getString(R.string._forgot_password));
         });
 
         img_login_fb.setOnClickListener(v -> {
@@ -195,12 +225,12 @@ public class LoginActivity extends Activity {
                     GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                         @Override
                         public void onCompleted(JSONObject object, GraphResponse response) {
-                            Log.v("LoginActivity", response.toString());
+                            Log.v(TAG, response.toString());
 
                             // Application code
                             try {
                                 String email = object.getString("email");
-                                LoginWS(null,email,is_from_fb);
+                                LoginWS(null, email, is_from_fb);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -210,15 +240,12 @@ public class LoginActivity extends Activity {
                     parameters.putString("fields", "id,email");
                     request.setParameters(parameters);
                     request.executeAsync();
-
-
                     //handleFacebookAccessToken(loginResult.getAccessToken());
                 }
 
                 @Override
                 public void onCancel() {
                     Log.d(TAG, "facebook:onCancel");
-                    // ...
                     img_login_fb.setEnabled(true);
                 }
 
@@ -226,7 +253,6 @@ public class LoginActivity extends Activity {
                 public void onError(FacebookException error) {
                     Log.d(TAG, "facebook:onError", error);
                     img_login_fb.setEnabled(true);
-                    // ...
                 }
             });
 
@@ -245,10 +271,47 @@ public class LoginActivity extends Activity {
             finish();
         });
 
-        img_back.setOnClickListener(v -> finish());
+        img_back.setOnClickListener(v -> {
+            Intent mIntent = new Intent(LoginActivity.this, ChooseLanguage.class);
+            startActivity(mIntent);
+            finish();
+        });
 
         btn_login.setOnClickListener(v -> {
-            LoginWS(null,"",is_from_normal);
+            String str = edt_username.getText().toString().trim();
+            if (btn_login.getText().toString().contains(getString(R.string.get_otp))) {
+                if (str.isEmpty() || str.length() < 10 || !isValidMobile(str)) {
+                    edt_username.requestFocus();
+                    Toast.makeText(this, getString(R.string.err_msg_invalid_mobile), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                verifyValidUser(str, false);
+            } else if (btn_login.getText().toString().contains(getString(R.string.email))) {
+                if (str.isEmpty() || isValidEmail(str)) {
+                    edt_username.requestFocus();
+                    Toast.makeText(this, getString(R.string.err_msg_email), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                verifyValidUser(str, true);
+            } else if (btn_login.getText().toString().contains(getString(R.string.password))) {
+                String str1 = edt_username.getText().toString().trim();
+                String str2 = edt_pass.getText().toString().trim();
+                if (!str1.isEmpty() && !str2.isEmpty()) {
+                    if (str1.equals(str2)) {
+                        call_change_password_ws();
+                    } else {
+                        Toast.makeText(this, getString(R.string.err_msg_repeat_password), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, getString(R.string.err_msg_password), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                if (edt_pass.isShown()) {
+                    LoginWS(null, "", is_from_normal);
+                } else {
+                    txt_cancel.performClick();
+                }
+            }
         });
 
         edt_pass.setOnTouchListener((v, event) -> {
@@ -259,12 +322,12 @@ public class LoginActivity extends Activity {
                 if (event.getRawX() >= (edt_pass.getRight() - edt_pass.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                     if (isShow) {
                         edt_pass.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_show, 0);
-                        edt_pass.setInputType(InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        edt_pass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
                         isShow = false;
                     } else {
                         edt_pass.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
-                        edt_pass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        edt_pass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
                         isShow = true;
                     }
@@ -278,65 +341,35 @@ public class LoginActivity extends Activity {
 
 
         txt_forgot_pass.setOnClickListener(v -> {
-
-            String str = edt_username.getText().toString().trim();
-            if (txt_forgot_pass.getText().toString().contains("OTP")) {
-                if (str.isEmpty() || str.length() < 10) {
-                    edt_username.requestFocus();
-                    Toast.makeText(this, "Valid number is required", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                verifyValidUser(str, false);
-            } else if (txt_forgot_pass.getText().toString().contains("Email")) {
-                verifyValidUser(str, true);
+            txt_forgot_pass.setVisibility(View.GONE);
+            edt_pass.setVisibility(View.GONE);
+            txt_cancel.setVisibility(View.VISIBLE);
+            String hint = edt_username.getHint().toString();
+            if (hint.contains(getString(R.string.email))) {
+                btn_login.setText(getString(R.string.send_email));
             } else {
-                edt_pass.setVisibility(View.GONE);
-                txt_cancel.setVisibility(View.VISIBLE);
-                if (edt_username.getHint().toString().contains("Email")) {
-                    txt_forgot_pass.setText("Send Email");
-                } else {
-                    txt_forgot_pass.setText("Send OTP");
-                }
+                btn_login.setText(getString(R.string.get_otp));
             }
         });
 
-        txt_cancel.setOnClickListener(v -> {
-            edt_pass.setVisibility(View.VISIBLE);
-            txt_cancel.setVisibility(View.GONE);
-            txt_forgot_pass.setText(getResources().getString(R.string._forgot_password));
-        });
 
-
-        spinnerCountries.setAdapter(new ArrayAdapter<String>(LoginActivity.this, R.layout.my_spinner_style,CountryData.countryNames) {
+        spinnerCountries.setAdapter(new ArrayAdapter<String>(LoginActivity.this, R.layout.my_spinner_style, CountryData.countryNames) {
 
             public View getView(int position, View convertView, ViewGroup parent) {
-
                 View v = super.getView(position, convertView, parent);
-
                 ((TextView) v).setTextSize(18);
                 ((TextView) v).setGravity(Gravity.CENTER);
-
                 return v;
-
             }
 
-            public View getDropDownView(int position, View convertView,ViewGroup parent) {
-
-                View v = super.getDropDownView(position, convertView,parent);
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView, parent);
                 ((TextView) v).setTextSize(20);
-                //((TextView) v).setGravity(Gravity.CENTER);
-
                 return v;
-
             }
 
         });
 
-       /* LoginManager.getInstance().logOut();
-        FirebaseAuth.getInstance().signOut();
-        AppController.getInstance().mGoogleSignInClient.signOut().addOnCompleteListener(LoginActivity.this, task -> {
-            Toast.makeText(LoginActivity.this, "Logout", Toast.LENGTH_SHORT).show();
-        });*/
 
         if (Build.VERSION.SDK_INT >= 23) {
             if (Utility.canCallPhone(this) || !Utility.canAccessLocation(this) || !Utility.canSMS(this)) {
@@ -367,22 +400,10 @@ public class LoginActivity extends Activity {
         btn_login_google = findViewById(R.id.btn_login_google);
         img_login_fb = findViewById(R.id.img_login_fb);
         img_login_google = findViewById(R.id.img_login_google);
-
-        txt_login_now = findViewById(R.id.txt_login_now);
-        txt_pls_login = findViewById(R.id.txt_pls_login);
-        login_with = findViewById(R.id.login_with);
         txt_forgot_pass = findViewById(R.id.txt_forgot_pass);
-
-
-
-        String sourcestr = getString(R.string._forgot_password);
-        //sourcestr = sourcestr + "<b>" + " " + getString(R.string.send_otp) + "</b>";
-        // txt_forgot_pass.setText(Html.fromHtml(sourcestr));
-
         txt_do_you_have = findViewById(R.id.txt_do_you_have);
-        txt_or_login_with = findViewById(R.id.txt_or_login_with);
 
-        sourcestr = getResources().getString(R.string.do_you_have_an_account_register_now);
+        String sourcestr = getResources().getString(R.string.do_you_have_an_account_register_now);
         sourcestr = sourcestr + "<b>" + " " + getString(R.string.register_now) + "</b>";
         txt_do_you_have.setText(Html.fromHtml(sourcestr));
     }
@@ -391,10 +412,22 @@ public class LoginActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            updateUI();
+        /*FirebaseUser currentUser = mAuth.getCurrentUser();*/
+
+        boolean is_home = mSharedPreferences.getBoolean(AppConstants.IS_HOME, false);
+        if (!is_home) {
+            return;
         }
+        Intent mIntent = new Intent(LoginActivity.this, HomeActivity.class);
+        if (mSharedPreferences != null) {
+            mIntent.putExtra(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+        }
+        if (!isLogin[0]) {
+            isLogin[0] = true;
+            startActivity(mIntent);
+            finish();
+        }
+
     }
 
     @Override
@@ -426,7 +459,7 @@ public class LoginActivity extends Activity {
                 img_login_fb.setEnabled(true);
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
-                    LoginWS(user,"",is_from_fb);
+                    LoginWS(user, "", is_from_fb);
                 }
 
             } else {
@@ -442,9 +475,7 @@ public class LoginActivity extends Activity {
 
                     if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                         FirebaseAuthUserCollisionException exception = (FirebaseAuthUserCollisionException) task.getException();
-
                         //exception.getErrorCode()
-
                         mAuth.fetchProvidersForEmail("kunjanrshah@gmail.com").addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
                             @Override
                             public void onComplete(@NonNull Task<ProviderQueryResult> task) {
@@ -457,8 +488,6 @@ public class LoginActivity extends Activity {
                                 }
                             }
                         });
-
-
                         Toast.makeText(getApplicationContext(), "User with Email id already exists", Toast.LENGTH_SHORT).show();
                     }
                     LoginManager.getInstance().logOut();
@@ -479,7 +508,7 @@ public class LoginActivity extends Activity {
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
                     Log.d(TAG, "email: " + user.getEmail() + " phone: " + user.getPhoneNumber());
-                    LoginWS(user,"",is_from_google);
+                    LoginWS(user, "", is_from_google);
                 }
             } else {
                 Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -489,24 +518,6 @@ public class LoginActivity extends Activity {
         });
     }
 
-    private void updateUI() {
-
-        String userId = mSharedPreferences.getString(AppConstants.USER_ID, "");
-
-        if (userId.isEmpty()) {
-            // Toast.makeText(LoginActivity.this, "User not found Please login again.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Intent mIntent = new Intent(LoginActivity.this, HomeActivity.class);
-        if (mSharedPreferences != null) {
-            mIntent.putExtra(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
-        }
-        if (!isLogin[0]) {
-            isLogin[0] = true;
-            startActivity(mIntent);
-            finish();
-        }
-    }
 
     private void sendVerificationCode(String number) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(number, 60, TimeUnit.SECONDS, TaskExecutors.MAIN_THREAD, mCallBack);
@@ -521,7 +532,13 @@ public class LoginActivity extends Activity {
     private void signInWithCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Toast.makeText(LoginActivity.this, "OTP Success", Toast.LENGTH_LONG).show();
+                edt_username.setText("");
+                edt_pass.setText("");
+                edt_pass.setVisibility(View.VISIBLE);
+                edt_username.setHint(getString(R.string.password));
+                edt_pass.setHint(getString(R.string.hint_conform_password));
+                btn_login.setText(getString(R.string.nav_item_change_password));
+                edt_username.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
             } else {
                 Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
             }
@@ -531,28 +548,39 @@ public class LoginActivity extends Activity {
     private void verifyValidUser(String username, boolean isEmail) {
         JSONObject json = new JSONObject();
         try {
-            json.put(AppConstants.USERNAME, username);
-            json.put(AppConstants.PASSWORD, "kunj");
+            json.put(AppConstants.USERNAME, username.trim());
+            json.put(AppConstants.IS_SOCIAL, "1");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        Utility.showProgressDialog(this);
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.LOGIN_URL, json, response -> {
             hideProgressDialog();
-            boolean success = false;
+            boolean success;
             try {
                 success = response.getBoolean(AppConstants.SUCCESS);
-                if (isEmail && success) {
-                    ForgotPassword(username);
-                } else if (success) {
-                    String code = CountryData.countryAreaCodes[spinnerCountries.getSelectedItemPosition()];
-                    String number = "+" + code + username;
-                    sendVerificationCode(number);
+                if (success) {
+                    if (isEmail) {
+                        ForgotPassword(username);
+                    } else {
+                        String data = response.getString(AppConstants.DATA);
+                        JSONObject mjson_data = new JSONObject(data);
+                        String status = mjson_data.getString(AppConstants.STATUS);
+                        if (status.equalsIgnoreCase("1")) {
+                            AfterValidCheck(response, false);
+                            String code = CountryData.countryAreaCodes[spinnerCountries.getSelectedItemPosition()];
+                            String number = "+" + code + username;
+                            edt_username.setText("");
+                            spinnerCountries.setVisibility(View.GONE);
+                            edt_username.setHint(R.string.type_otp);
+                            sendVerificationCode(number);
+                        } else {
+                            Utility.alert(LoginActivity.this, getString(R.string.registraion_request_pending));
+                        }
+                    }
                 } else {
-                    Toast.makeText(LoginActivity.this, "Invalid username", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.invalid_username, Toast.LENGTH_SHORT).show();
                 }
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -561,15 +589,15 @@ public class LoginActivity extends Activity {
             VolleyLog.d(TAG, "Error: " + error.getMessage());
             String message = null;
             if (error instanceof NetworkError) {
-                message = "Cannot connect to Internet...Please check your connection!";
+                message = getString(R.string.can_not_connect_to_internet);
             } else if (error instanceof ServerError) {
-                message = "The server could not be found. Please try again after some time!!";
+                message = getString(R.string.server_could_not_found);
             } else if (error instanceof AuthFailureError) {
-                message = "Cannot connect to Internet...Please check your connection!";
+                message = getString(R.string.can_not_connect_to_internet);
             } else if (error instanceof ParseError) {
-                message = "Parsing error! Please try again after some time!!";
+                message = getString(R.string.parsing_error);
             } else if (error instanceof TimeoutError) {
-                message = "Connection TimeOut! Please check your internet connection.";
+                message = getString(R.string.connection_timeout);
             }
             Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_LONG).show();
         }) {
@@ -590,6 +618,88 @@ public class LoginActivity extends Activity {
         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(jsonObjReq, "");
     }
+
+    private void call_change_password_ws() {
+
+        if (Utility.isOnline(this)) {
+
+            Utility.showProgressDialog(this);
+            JSONObject mJsonObject = null;
+
+            try {
+                mJsonObject = new JSONObject();
+                mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
+                mJsonObject.put(AppConstants.PASSWORD, edt_username.getText());
+                mJsonObject.put(AppConstants.REPEAT_PASSWORD, edt_pass.getText());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            final String password_url = AppConstants.CHANGE_PASSWORD_URL;
+
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, password_url, mJsonObject, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(@NonNull JSONObject response) {
+                    Log.d(TAG, "profile_url: " + password_url);
+                    Log.d(TAG, "response: " + response.toString());
+                    Utility.hideProgressDialog();
+
+                    try {
+                        String message = response.getString(AppConstants.MESSAGE);
+                        String success = response.getString(AppConstants.SUCCESS);
+                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
+                            Utility.UpdateProfilePassword(edt_pass.getText().toString(), mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                            String userid = mSharedPreferences.getString(AppConstants.USER_ID, "");
+                            if (userid.isEmpty()) {
+                                return;
+                            }
+                            Intent mIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                            if (mSharedPreferences != null) {
+                                mIntent.putExtra(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                            }
+                            if (!isLogin[0]) {
+                                isLogin[0] = true;
+                                startActivity(mIntent);
+                                finish();
+                            }
+                        } else {
+                            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                            if (response.has(AppConstants.ERROR_CODE)) {
+                                String error = response.getString(AppConstants.ERROR_CODE);
+                                /*if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
+                                }*/
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Utility.hideProgressDialog();
+                    }
+                }
+            }, error -> {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Utility.hideProgressDialog();
+            }) {
+                @NonNull
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
+                    return params;
+                }
+            };
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "");
+        }
+    }
+
 
     private void ForgotPassword(String forgot_email) {
         JSONObject json = new JSONObject();
@@ -651,14 +761,13 @@ public class LoginActivity extends Activity {
         AppController.getInstance().addToRequestQueue(jsonObjReq, "");
     }
 
-    private void LoginWS(FirebaseUser user,String email,int is_from) {
+    private void LoginWS(FirebaseUser user, String email, int is_from) {
         String username = "";
         String email_or_mobile = "";
         String password = "";
         JSONObject json = new JSONObject();
 
-        if(is_from==is_from_normal)
-        {
+        if (is_from == is_from_normal) {
             email_or_mobile = edt_username.getText().toString().trim();
             password = edt_pass.getText().toString();
             if (!email_or_mobile.isEmpty() && !password.isEmpty()) {
@@ -687,10 +796,8 @@ public class LoginActivity extends Activity {
                 Toast.makeText(LoginActivity.this, getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
                 return;
             }
-        }else if(is_from==is_from_fb)
-        {
-            if(!email.isEmpty())
-            {
+        } else if (is_from == is_from_fb) {
+            if (!email.isEmpty()) {
                 try {
                     json.put(AppConstants.USERNAME, email);
                     json.put(AppConstants.IS_SOCIAL, "1");
@@ -698,8 +805,7 @@ public class LoginActivity extends Activity {
                     e.printStackTrace();
                 }
             }
-        }else if(is_from==is_from_google)
-        {
+        } else if (is_from == is_from_google) {
             if (user != null) {
                 Log.e(TAG, " email: " + user.getEmail() + " phone: " + user.getPhoneNumber() + " Id: " + user.getUid() + " Name: " + user.getDisplayName());
                 username = user.getEmail();
@@ -721,12 +827,8 @@ public class LoginActivity extends Activity {
             }
         }
 
-
         if (Utility.isOnline(this)) {
-
             Utility.showProgressDialog(this);
-            String finalEmail = email_or_mobile;
-            String finalPassword = password;
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.LOGIN_URL, json, new Response.Listener<JSONObject>() {
 
                 @Override
@@ -737,65 +839,8 @@ public class LoginActivity extends Activity {
                         hideProgressDialog();
                         boolean success = response.getBoolean(AppConstants.SUCCESS);
                         String message = response.getString(AppConstants.MESSAGE);
-
                         if (success) {
-                            String data = response.getString(AppConstants.DATA);
-                            JSONObject mjson_data = new JSONObject(data);
-
-                            String status = mjson_data.getString(AppConstants.STATUS);
-                            if (status.equalsIgnoreCase("1")) {
-                                Utility.SaveProfile(mjson_data);
-
-                                String user_id = mjson_data.getString(AppConstants.ID);
-                                String profile_url = mjson_data.getString(AppConstants.PROFILE_PIC_URL);
-                                String first_name = mjson_data.getString(AppConstants.FIRST_NAME);
-                                String last_name = mjson_data.getString(AppConstants.LAST_NAME);
-
-                                String office_lat = mjson_data.getString(AppConstants.OFFICE_LAT);
-                                String office_lng = mjson_data.getString(AppConstants.OFFICE_LNG);
-                                String home_lat = mjson_data.getString(AppConstants.HOME_LAT);
-                                String home_lng = mjson_data.getString(AppConstants.HOME_LNG);
-
-                                String access_token = mjson_data.getString(AppConstants.ACCESS_TOKEN);
-                                String updated_time = mjson_data.getString(AppConstants.UPDATED_TIME);
-                                String role = mjson_data.getString(AppConstants.ROLE);
-                                String is_location_enable = mjson_data.getString(AppConstants.IS_LOCATION_ENABLE);
-
-                                mEditor.putString(AppConstants.EMAIL, finalEmail);
-                                mEditor.putString(AppConstants.PASSWORD, finalPassword);
-                                mEditor.putString(AppConstants.USER_ID, user_id);
-                                mEditor.putString(AppConstants.PROFILE_PIC_URL, profile_url);
-                                mEditor.putString(AppConstants.FIRST_NAME, first_name);
-                                mEditor.putString(AppConstants.LAST_NAME, last_name);
-                                mEditor.putString(AppConstants.ACCESS_TOKEN, access_token);
-                                mEditor.putString(AppConstants.UPDATED_TIME, updated_time);
-                                mEditor.putString(AppConstants.ROLE, role);
-                                mEditor.putString(AppConstants.TBTN_SHARE, is_location_enable);
-                                mEditor.putString(AppConstants.OFFICE_LAT, office_lat);
-                                mEditor.putString(AppConstants.OFFICE_LNG, office_lng);
-                                mEditor.putString(AppConstants.HOME_LAT, home_lat);
-                                mEditor.putString(AppConstants.HOME_LNG, home_lng);
-                                mEditor.apply();
-
-                                Bundle fb_bundle = new Bundle();
-                                fb_bundle.putInt(FirebaseAnalytics.Param.ITEM_ID, Integer.parseInt(user_id));
-                                fb_bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, first_name + " " + last_name);
-                                  /*  AppController.getInstance().firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, fb_bundle);
-                                    if (user_id.equalsIgnoreCase(AppConstants.ADMIN_1) || user_id.equalsIgnoreCase(AppConstants.ADMIN_2)) {
-                                        AppController.isAdmin = true;
-                                    }*/
-                                Intent mIntent = new Intent(LoginActivity.this, HomeActivity.class);
-                                if (mSharedPreferences != null) {
-                                    mIntent.putExtra(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
-                                }
-                                if (!isLogin[0]) {
-                                    isLogin[0] = true;
-                                    startActivity(mIntent);
-                                    finish();
-                                }
-                            } else {
-                                Utility.alert(LoginActivity.this, "Registration request is pending. Please contact to Admin !!");
-                            }
+                            AfterValidCheck(response, true);
                         } else {
                             Utility.alert(LoginActivity.this, message);
                         }
@@ -810,15 +855,15 @@ public class LoginActivity extends Activity {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 String message = null;
                 if (error instanceof NetworkError) {
-                    message = "Cannot connect to Internet...Please check your connection!";
+                    message = getString(R.string.can_not_connect_to_internet);
                 } else if (error instanceof ServerError) {
-                    message = "The server could not be found. Please try again after some time!!";
+                    message = getString(R.string.server_could_not_found);
                 } else if (error instanceof AuthFailureError) {
-                    message = "Cannot connect to Internet...Please check your connection!";
+                    message = getString(R.string.can_not_connect_to_internet);
                 } else if (error instanceof ParseError) {
-                    message = "Parsing error! Please try again after some time!!";
+                    message = getString(R.string.parsing_error);
                 } else if (error instanceof TimeoutError) {
-                    message = "Connection TimeOut! Please check your internet connection.";
+                    message = getString(R.string.connection_timeout);
                 }
                 Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_LONG).show();
             }) {
@@ -842,5 +887,68 @@ public class LoginActivity extends Activity {
 
     }
 
+    private void AfterValidCheck(JSONObject response, boolean isLoginSuccess) throws Exception {
+        String data = response.getString(AppConstants.DATA);
+        JSONObject mjson_data = new JSONObject(data);
+
+        String status = mjson_data.getString(AppConstants.STATUS);
+        if (status.equalsIgnoreCase("1")) {
+            Utility.SaveProfile(mjson_data);
+
+            String user_id = mjson_data.getString(AppConstants.ID);
+            String email = mjson_data.getString(AppConstants.EMAIL_ADDRESS);
+            String password = mjson_data.getString(AppConstants.PLAIN_PASSWORD);
+            String profile_url = mjson_data.getString(AppConstants.PROFILE_PIC_URL);
+            String first_name = mjson_data.getString(AppConstants.FIRST_NAME);
+            String last_name = mjson_data.getString(AppConstants.LAST_NAME);
+
+            String office_lat = mjson_data.getString(AppConstants.OFFICE_LAT);
+            String office_lng = mjson_data.getString(AppConstants.OFFICE_LNG);
+            String home_lat = mjson_data.getString(AppConstants.HOME_LAT);
+            String home_lng = mjson_data.getString(AppConstants.HOME_LNG);
+
+            String access_token = mjson_data.getString(AppConstants.ACCESS_TOKEN);
+            String updated_time = mjson_data.getString(AppConstants.UPDATED_TIME);
+            String role = mjson_data.getString(AppConstants.ROLE);
+            String is_location_enable = mjson_data.getString(AppConstants.IS_LOCATION_ENABLE);
+
+            mEditor.putString(AppConstants.EMAIL, email);
+            mEditor.putString(AppConstants.PASSWORD, password);
+            mEditor.putString(AppConstants.USER_ID, user_id);
+            mEditor.putString(AppConstants.PROFILE_PIC_URL, profile_url);
+            mEditor.putString(AppConstants.FIRST_NAME, first_name);
+            mEditor.putString(AppConstants.LAST_NAME, last_name);
+            mEditor.putString(AppConstants.ACCESS_TOKEN, access_token);
+            mEditor.putString(AppConstants.UPDATED_TIME, updated_time);
+            mEditor.putString(AppConstants.ROLE, role);
+            mEditor.putString(AppConstants.TBTN_SHARE, is_location_enable);
+            mEditor.putString(AppConstants.OFFICE_LAT, office_lat);
+            mEditor.putString(AppConstants.OFFICE_LNG, office_lng);
+            mEditor.putString(AppConstants.HOME_LAT, home_lat);
+            mEditor.putString(AppConstants.HOME_LNG, home_lng);
+            mEditor.apply();
+
+            Bundle fb_bundle = new Bundle();
+            fb_bundle.putInt(FirebaseAnalytics.Param.ITEM_ID, Integer.parseInt(user_id));
+            fb_bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, first_name + " " + last_name);
+            /*  AppController.getInstance().firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, fb_bundle);
+                if (user_id.equalsIgnoreCase(AppConstants.ADMIN_1) || user_id.equalsIgnoreCase(AppConstants.ADMIN_2)) {
+                AppController.isAdmin = true;
+              }*/
+            if (isLoginSuccess) {
+                Intent mIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                if (mSharedPreferences != null) {
+                    mIntent.putExtra(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
+                }
+                if (!isLogin[0]) {
+                    isLogin[0] = true;
+                    startActivity(mIntent);
+                    finish();
+                }
+            }
+        } else {
+            Utility.alert(LoginActivity.this, getString(R.string.registraion_request_pending));
+        }
+    }
 
 }
