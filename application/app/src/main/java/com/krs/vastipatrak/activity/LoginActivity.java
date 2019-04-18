@@ -140,14 +140,11 @@ public class LoginActivity extends Activity {
 
         MemoryAllocation();
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(LoginActivity.this, new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String newToken = instanceIdResult.getToken();
-                Log.e("newToken", newToken);
-                mEditor.putString(AppConstants.DEVICE_TOKEN, newToken);
-                mEditor.apply();
-            }
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(LoginActivity.this, instanceIdResult -> {
+            String newToken = instanceIdResult.getToken();
+            Log.e("newToken", newToken);
+            mEditor.putString(AppConstants.DEVICE_TOKEN, newToken);
+            mEditor.apply();
         });
 
         btn_mobile.setOnClickListener(v -> {
@@ -358,7 +355,7 @@ public class LoginActivity extends Activity {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
                 ((TextView) v).setTextSize(18);
-                ((TextView) v).setGravity(Gravity.CENTER);
+                ((TextView) v).setGravity(Gravity.RIGHT);
                 return v;
             }
 

@@ -1,6 +1,7 @@
 package com.krs.vastipatrak.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,11 +14,15 @@ import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +40,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.AppConstants;
+import com.krs.vastipatrak.utils.CountryData;
 import com.krs.vastipatrak.utils.Utility;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -63,7 +69,9 @@ public class RegisterActivty extends Activity {
     private boolean isShow = true;
     private boolean isShow1 = true;
     private String add_new = "";
+    private Spinner spinnerCountries;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,15 +184,22 @@ public class RegisterActivty extends Activity {
             }
         }
 
-        /*String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Utility.hasPermission(RegisterActivty.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                requestPermissions(permissions, REQUEST_PERMISSION_CODE);
+        spinnerCountries.setAdapter(new ArrayAdapter<String>(RegisterActivty.this, R.layout.my_spinner_style, CountryData.countryNames) {
+
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                ((TextView) v).setTextSize(18);
+                ((TextView) v).setGravity(Gravity.RIGHT);
+                return v;
             }
-            if (!Utility.hasPermission(RegisterActivty.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                requestPermissions(permissions, REQUEST_PERMISSION_CODE);
+
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView, parent);
+                ((TextView) v).setTextSize(20);
+                return v;
             }
-        }*/
+
+        });
 
     }
 
@@ -193,7 +208,7 @@ public class RegisterActivty extends Activity {
         img_header_logo = findViewById(R.id.img_header_logo);
         img_profile = findViewById(R.id.img_profile);
         img_cancel = findViewById(R.id.img_cancel);
-
+        spinnerCountries = findViewById(R.id.spinnerCountries);
         txt_how_register = findViewById(R.id.txt_how_register);
         txt_already = findViewById(R.id.txt_already);
 
@@ -257,19 +272,21 @@ public class RegisterActivty extends Activity {
 
     private void RegistraionWS() {
         if (Utility.isOnline(this)) {
-            final String name = edt_head_name.getText().toString().trim();
-            final String surname = edt_head_surname.getText().toString().trim();
-            final String email = edt_email_id.getText().toString().trim();
-            final String mobile = edt_mobile.getText().toString().trim();
-            final String password = edt_password.getText().toString().trim();
+            String name = edt_head_name.getText().toString().trim();
+            String surname = edt_head_surname.getText().toString().trim();
+            String email = edt_email_id.getText().toString().trim();
+            String mobile = edt_mobile.getText().toString().trim();
+            String password = edt_password.getText().toString().trim();
             String cpassword = edt_cpassword.getText().toString().trim();
-            final String address = edt_address.getText().toString().trim();
-            final String city = txtCity.getText().toString().trim();
+            String address = edt_address.getText().toString().trim();
+            String city = txtCity.getText().toString().trim();
 
             if (mobile.length() != 10) {
                 Toast.makeText(RegisterActivty.this, "Mobile number must be 10 digit", Toast.LENGTH_SHORT).show();
                 return;
             }
+            /*String code = CountryData.countryAreaCodes[spinnerCountries.getSelectedItemPosition()];
+            mobile=code+mobile;*/
 
             if (!email.isEmpty()) {
                 if (Utility.isValidEmail(email)) {
