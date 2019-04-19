@@ -164,7 +164,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private MenuItem export;
     private MenuItem change_role;
     private Snackbar snackbar;
-
+    private LinearLayout ll_menulist;
     //private LinearLayout ll_my_profile, ll_advance_search, ll_calendar, ll_nearby, ll_matrimony, ll_shared_users, ll_change_password, ll_tour, ll_help, ll_scanQrCode, ll_QRCodeImage, ll_language, ll_Matrimony_Form, ll_Quick_Search, ll_medical_form, ll_theme, ll_add_new, ll_Admins,ll_event;
 
     @Override
@@ -175,6 +175,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
+
+        ll_menulist= findViewById(R.id.ll_menulist);
         fm_container_body = findViewById(R.id.fm_container_body);
         rvMenuList = findViewById(R.id.rvMenuList);
         mPreferencesWelcome = getSharedPreferences(AppConstants.PREF_WELCOME, MODE_PRIVATE);
@@ -320,103 +322,100 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         int columnCount = 3;
         rvMenuList.setLayoutManager(new GridLayoutManager(this, columnCount, GridLayoutManager.VERTICAL, false));
-        rvMenuList.setAdapter(new MenuAdapter(this, new RecyclerViewClickListener() {
-            @Override
-            public void onClick(View view, int position) {
+        rvMenuList.setAdapter(new MenuAdapter(this, (view, position) -> {
 
-                switch (position) {
-                    case 0: // my profile
-                        mEditor.putBoolean(AppConstants.MYPROFILE_SP, true);
-                        mEditor.apply();
-                        Intent my_profile_intent = new Intent(HomeActivity.this, ProfileActivity.class);
-                        startActivity(my_profile_intent);
-                        overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-                        break;
-                    case 1: // quick search
-                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 2: //favorite search
-                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 3: //calendar
-                        moveToFragment(new CalendarFragment());
-                        break;
-                    case 4: //alphabetic search
-                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 5: // city wise search
-                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 6: // advance search
-                        Intent intent_advance_search = new Intent(HomeActivity.this, AdvanceSearchActivity.class);
-                        startActivity(intent_advance_search);
-                        overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-                        break;
-                    case 7: // search by distance
-                        moveToFragment(new NearByFragment());
-                        break;
-                    case 8: // shared profiles
-                        moveToFragment(new SharedUsersFragment());
-                        break;
-                    case 9: // scan qr code
-                        qrScan.initiateScan();
-                        break;
-                    case 10: //qr code image
-                        Intent intent_qr_image = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        intent_qr_image.setType("image/*");
-                        startActivityForResult(Intent.createChooser(intent_qr_image, "Select File"), IMAGEREQUESTCODE);
-                        break;
-                    case 11: //  events
-                        moveToFragment(new EventFragment());
-                        break;
-                    case 12: // matrimony
-                        moveToFragment(new MatrimonyFragment());
-                        break;
-                    case 13: //matrimony form
-                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 14: //medical form
-                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 15: //add new
-                        Intent mIntent2 = new Intent(HomeActivity.this, RegisterActivty.class);
-                        mIntent2.putExtra(AppConstants.SCREEN, AppConstants.SEARCH_FRAGMENT);
-                        startActivity(mIntent2);
-                        break;
-                    case 16: //registerd profiles
-                        MOVE_TO_SEARCH = 1;
-                       /* activeItem.setVisible(true);
-                        deactiveItem.setVisible(true);
-                        deleteItem.setVisible(true);*/
-                        moveToSearch(MOVE_TO_SEARCH);
-                        break;
-                    case 17: //share events
-                        Intent mIntent1 = new Intent(HomeActivity.this, ShareEventActivity.class);
-                        startActivity(mIntent1);
-                        overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-                        break;
-                    case 18: //change language
-                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 19: //change color
-                        Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 20: //change password
-                        moveToFragment(new ChangePasswordFragment());
-                        break;
-                    case 21: //app tour
-                        moveToFragment(new TourFragment());
-                        break;
-                    case 22: //help
-                        moveToFragment(new HelpFragment());
-                        break;
-                    case 23: // admin list
-                        MOVE_TO_SEARCH = 6;
-                        moveToSearch(MOVE_TO_SEARCH);
-                        break;
-                    default:
-                        break;
-                }
+            switch (position) {
+                case 0: // my profile
+                    mEditor.putBoolean(AppConstants.MYPROFILE_SP, true);
+                    mEditor.apply();
+                    Intent my_profile_intent = new Intent(HomeActivity.this, ProfileActivity.class);
+                    startActivity(my_profile_intent);
+                    overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                    break;
+                case 1: // quick search
+                    Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
+                    break;
+                case 2: //favorite search
+                    Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
+                    break;
+                case 3: //calendar
+                    moveToFragment(new CalendarFragment());
+                    break;
+                case 4: //alphabetic search
+                    Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
+                    break;
+                case 5: // city wise search
+                    Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
+                    break;
+                case 6: // advance search
+                    Intent intent_advance_search = new Intent(HomeActivity.this, AdvanceSearchActivity.class);
+                    startActivity(intent_advance_search);
+                    overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                    break;
+                case 7: // search by distance
+                    moveToFragment(new NearByFragment());
+                    break;
+                case 8: // shared profiles
+                    moveToFragment(new SharedUsersFragment());
+                    break;
+                case 9: // scan qr code
+                    qrScan.initiateScan();
+                    break;
+                case 10: //qr code image
+                    Intent intent_qr_image = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent_qr_image.setType("image/*");
+                    startActivityForResult(Intent.createChooser(intent_qr_image, "Select File"), IMAGEREQUESTCODE);
+                    break;
+                case 11: //  events
+                    moveToFragment(new EventFragment());
+                    break;
+                case 12: // matrimony
+                    moveToFragment(new MatrimonyFragment());
+                    break;
+                case 13: //matrimony form
+                    Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
+                    break;
+                case 14: //medical form
+                    Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
+                    break;
+                case 15: //add new
+                    Intent mIntent2 = new Intent(HomeActivity.this, RegisterActivty.class);
+                    mIntent2.putExtra(AppConstants.SCREEN, AppConstants.SEARCH_FRAGMENT);
+                    startActivity(mIntent2);
+                    break;
+                case 16: //registerd profiles
+                    MOVE_TO_SEARCH = 1;
+                   /* activeItem.setVisible(true);
+                    deactiveItem.setVisible(true);
+                    deleteItem.setVisible(true);*/
+                    moveToSearch(MOVE_TO_SEARCH);
+                    break;
+                case 17: //share events
+                    Intent mIntent1 = new Intent(HomeActivity.this, ShareEventActivity.class);
+                    startActivity(mIntent1);
+                    overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                    break;
+                case 18: //change language
+                    Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
+                    break;
+                case 19: //change color
+                    Toast.makeText(HomeActivity.this, "Comming Soon..", Toast.LENGTH_SHORT).show();
+                    break;
+                case 20: //change password
+                    moveToFragment(new ChangePasswordFragment());
+                    break;
+                case 21: //app tour
+                    moveToFragment(new TourFragment());
+                    break;
+                case 22: //help
+                    moveToFragment(new HelpFragment());
+                    break;
+                case 23: // admin list
+                    MOVE_TO_SEARCH = 6;
+                    moveToSearch(MOVE_TO_SEARCH);
+                    break;
+                default:
+                    break;
             }
         }));
     }
@@ -930,7 +929,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 searchFragment.setArguments(mBundle);
                 fragmentTransaction.replace(R.id.fm_container_body, searchFragment).commit();
                 fm_container_body.setVisibility(View.VISIBLE);
-                rvMenuList.setVisibility(View.GONE);
+                ll_menulist.setVisibility(View.GONE);
                 return true;
             }
 
@@ -1119,7 +1118,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             searchFragment.setArguments(mBundle);
         }
         fm_container_body.setVisibility(View.VISIBLE);
-        rvMenuList.setVisibility(View.GONE);
+        ll_menulist.setVisibility(View.GONE);
         fragmentTransaction.replace(R.id.fm_container_body, searchFragment).commit();
 
         switch (menu) {
@@ -1276,7 +1275,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     private void MoveToSearch() {
         fm_container_body.setVisibility(View.VISIBLE);
-        rvMenuList.setVisibility(View.GONE);
+        ll_menulist.setVisibility(View.GONE);
 
         SearchFragment searchFragment = new SearchFragment();
         IAdminControl = searchFragment;
@@ -1316,7 +1315,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             fragmentTransaction.commit();
             overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
             fm_container_body.setVisibility(View.VISIBLE);
-            rvMenuList.setVisibility(View.GONE);
+            ll_menulist.setVisibility(View.GONE);
            /* if (drawerFragment.mDrawerToggle != null) {
                 drawerFragment.mDrawerLayout.removeDrawerListener(drawerFragment.mDrawerToggle);
             }*/
@@ -1328,7 +1327,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         switch (position) {
             case -1:
                 fm_container_body.setVisibility(View.VISIBLE);
-                rvMenuList.setVisibility(View.GONE);
+                ll_menulist.setVisibility(View.GONE);
                 SearchFragment searchFragment = new SearchFragment();
                 IAdminControl = searchFragment;
                 searchFragment.setmContext(HomeActivity.this);

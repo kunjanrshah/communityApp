@@ -33,7 +33,27 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     }
 
     private void addLstMenuDrawables() {
-        lstMenuDrawables.add(mContext.getDrawable(R.drawable.my_profile));
+
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.icon_menu));
+
+
+        /*lstMenuDrawables.add(mContext.getDrawable(R.drawable.my_profile));
         lstMenuDrawables.add(mContext.getDrawable(R.drawable.advance_search)); //quick search
         lstMenuDrawables.add(mContext.getDrawable(R.drawable.advance_search)); //favorite search
         lstMenuDrawables.add(mContext.getDrawable(R.drawable.calendar_blue));
@@ -55,7 +75,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         lstMenuDrawables.add(mContext.getDrawable(R.drawable.change_color));
         lstMenuDrawables.add(mContext.getDrawable(R.drawable.change_password));
         lstMenuDrawables.add(mContext.getDrawable(R.drawable.app_tour));
-        lstMenuDrawables.add(mContext.getDrawable(R.drawable.help));
+        lstMenuDrawables.add(mContext.getDrawable(R.drawable.help));*/
     }
 
     private void addLstMenuNames() {
