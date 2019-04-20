@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -45,8 +46,11 @@ import com.krs.vastipatrak.utils.Utility;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,19 +74,21 @@ public class RegisterActivty extends Activity {
     private boolean isShow1 = true;
     private String add_new = "";
     private Spinner spinnerCountries;
+    private AutoCompleteTextView autoCompleteTextView;
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        MemoryAllocation();
-
         Bundle mBundle = getIntent().getExtras();
         if (mBundle != null) {
             add_new = mBundle.getString(AppConstants.SCREEN);
         }
 
+        MemoryAllocation();
+        setCityListAdapter();
         txt_already.setOnClickListener(v -> {
             Intent mIntent = new Intent(RegisterActivty.this, LoginActivity.class);
             startActivity(mIntent);
@@ -198,12 +204,34 @@ public class RegisterActivty extends Activity {
                 ((TextView) v).setTextSize(20);
                 return v;
             }
-
         });
+    }
 
+    private void setCityListAdapter()
+    {
+        String citylist=AppController.getInstance().mSharedPreferences.getString(getString(R.string.CityList_SP),"");
+        ArrayList<String> lstCities = new ArrayList<>();
+        try
+            {
+                JSONObject response=new JSONObject(citylist);
+                JSONArray mArray = response.getJSONArray(AppConstants.DATA);
+
+                for (int i = 0; i < mArray.length(); i++) {
+                    JSONObject mObject = mArray.getJSONObject(i);
+                    lstCities.add(mObject.getString("city_name"));
+                }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, lstCities);
+        autoCompleteTextView.setThreshold(2);
+        autoCompleteTextView.setAdapter(adapter);
     }
 
     private void MemoryAllocation() {
+        autoCompleteTextView= findViewById(R.id.autoCompleteTextView);
         img_back = findViewById(R.id.img_back);
         img_header_logo = findViewById(R.id.img_header_logo);
         img_profile = findViewById(R.id.img_profile);
