@@ -210,31 +210,29 @@ public class LoginActivity extends Activity {
         });
 
         img_login_fb.setOnClickListener(v -> {
-
+            Utility.showProgressDialog(this);
             img_login_fb.setEnabled(false);
-            LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
+            LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email","user_birthday", "public_profile"));
             LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
+                    Utility.hideProgressDialog();
                     Log.d(TAG, "facebook:onSuccess:" + loginResult);
 
                     // App code
-                    GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                        @Override
-                        public void onCompleted(JSONObject object, GraphResponse response) {
-                            Log.v(TAG, response.toString());
-
-                            // Application code
-                            try {
-                                String email = object.getString("email");
-                                LoginWS(null, email, is_from_fb);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                    GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), (object, response) -> {
+                        Log.v(TAG, response.toString());
+                        // Application code
+                        try {
+                            String email = object.getString("email");
+                           String url= object.getJSONObject("picture").getJSONObject("data").getString("url");
+                            LoginWS(null, email, is_from_fb);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     });
                     Bundle parameters = new Bundle();
-                    parameters.putString("fields", "id,email");
+                    parameters.putString("fields", "id,name,email,picture.width(200)");
                     request.setParameters(parameters);
                     request.executeAsync();
                     //handleFacebookAccessToken(loginResult.getAccessToken());
@@ -242,12 +240,14 @@ public class LoginActivity extends Activity {
 
                 @Override
                 public void onCancel() {
+                    Utility.hideProgressDialog();
                     Log.d(TAG, "facebook:onCancel");
                     img_login_fb.setEnabled(true);
                 }
 
                 @Override
                 public void onError(FacebookException error) {
+                    Utility.hideProgressDialog();
                     Log.d(TAG, "facebook:onError", error);
                     img_login_fb.setEnabled(true);
                 }
@@ -504,6 +504,7 @@ public class LoginActivity extends Activity {
                 Log.d(TAG, "signInWithCredential:success");
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
+                    user.getPhotoUrl();
                     Log.d(TAG, "email: " + user.getEmail() + " phone: " + user.getPhoneNumber());
                     LoginWS(user, "", is_from_google);
                 }

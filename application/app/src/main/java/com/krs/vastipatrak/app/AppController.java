@@ -85,7 +85,10 @@ public class AppController extends Application {
         mEditor.putBoolean(getString(R.string.app_create),true);
         mEditor.apply();
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.web_client_id)).requestEmail().build();
+        GoogleSignInOptions gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.web_client_id))
+                .requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
