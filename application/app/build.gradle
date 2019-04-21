@@ -19,16 +19,21 @@ android {
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.krs.vastipatrak"
-        minSdkVersion 23
-        versionCode 18
-        versionName "1.18.0"
+        minSdkVersion 21
+        versionCode 19
+        versionName "1.19.0"
         multiDexEnabled true
+        resConfigs "en"
     }
     buildTypes {
         release {
-            shrinkResources true
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            zipAlignEnabled true
+            pseudoLocalesEnabled false
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     sourceSets {

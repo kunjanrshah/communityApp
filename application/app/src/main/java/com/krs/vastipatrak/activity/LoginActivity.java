@@ -12,9 +12,11 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -60,6 +62,8 @@ import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.Common;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.krs.vastipatrak.utils.LocaleHelper;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.json.JSONObject;
 
@@ -206,7 +210,8 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
             @Override
             public void onClick(View v) {
                 if (!SignupToggle) {
-                    selectImage(LoginActivity.this);
+                    startImageActivity();
+                    //selectImage(LoginActivity.this);
                 }
             }
         });
@@ -253,6 +258,11 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         AppController.getInstance().setConnectivityListener(this);
     }
 
+    private void startImageActivity() {
+        if (Common.hasPermission(LoginActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) && Common.hasPermission(LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            CropImage.startPickImageActivity(LoginActivity.this);
+        }
+    }
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     private void Memory_Allocation() {
@@ -373,7 +383,11 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         img_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                img_profile.setImageDrawable(getDrawable(R.drawable.user_profile));
+                try {
+                    Glide.with(LoginActivity.this).load(getDrawable(R.drawable.user_profile)).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+                } catch (Exception e) {
+                    e.getMessage();
+                }
             }
         });
     }
@@ -892,9 +906,59 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
         builder.show();
     }
 
+    private void startCropImageActivity(Uri imageUri) {
+        CropImage.activity(imageUri).setGuidelines(CropImageView.Guidelines.ON).setMultiTouchEnabled(true).start(LoginActivity.this);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Bitmap bmp = null;
+        // handle result of pick image chooser
+        Uri imageUri = null;
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            imageUri = CropImage.getPickImageResultUri(LoginActivity.this, data);
+
+            if (CropImage.hasPermissionInManifest(LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) && CropImage.hasPermissionInManifest(LoginActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                startCropImageActivity(imageUri);
+            }
+        }
+
+        if (CropImage.isReadExternalStoragePermissionsRequired(LoginActivity.this, imageUri)) {
+            // request permissions and handle the result in onRequestPermissionsResult()
+          //  mCropImageUri = imageUri;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+            }
+        } else {
+            // no permissions required or already grunted, can start crop image activity
+        }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                try {
+                    Glide.with(LoginActivity.this).load(result.getUri()).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
+
+                   new Handler().postDelayed(new Runnable() {
+                       @Override
+                       public void run() {
+                           BitmapDrawable drawable = (BitmapDrawable) img_profile.getDrawable();
+                           Bitmap bmp = drawable.getBitmap();
+                           str_profile_hash = Common.getBase64(bmp);
+                       }
+                   },2500);
+
+                } catch (Exception e) {
+                    e.getMessage();
+                }
+
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(LoginActivity.this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
+            }
+        }
+
+
+
+        /*Bitmap bmp = null;
         if (data != null) {
             try {
                 if (data.getData() == null) {
@@ -913,7 +977,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                     str_profile_hash = Common.getBase64(bmp);
                 }
             }
-        }
+        }*/
     }
 
     private void showSnack(boolean isConnected) {
