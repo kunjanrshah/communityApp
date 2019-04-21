@@ -44,6 +44,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -1109,7 +1110,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                     return params;
                 }
             };
-            // Adding request to request queue
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(Common.Constant_Class.INIT_TIMEOUT, Common.Constant_Class.DEFAULT_MAX_RETRIES, Common.Constant_Class.DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         }
     }
@@ -1179,7 +1180,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 }
             };
 
-            // Adding request to request queue
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(Common.Constant_Class.INIT_TIMEOUT, Common.Constant_Class.DEFAULT_MAX_RETRIES, Common.Constant_Class.DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         }
     }
@@ -1246,7 +1247,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 }
             };
 
-            // Adding request to request queue
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(Common.Constant_Class.INIT_TIMEOUT, Common.Constant_Class.DEFAULT_MAX_RETRIES, Common.Constant_Class.DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         }
     }

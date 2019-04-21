@@ -698,7 +698,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                     return params;
                 }
             };
-            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(50000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(Common.Constant_Class.INIT_TIMEOUT, Common.Constant_Class.DEFAULT_MAX_RETRIES, Common.Constant_Class.DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(jsonObjReq, "jobj_req");
         } else {
             Toast.makeText(ProfileActivity.this, "" + Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();
@@ -772,7 +772,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                     return params;
                 }
             };
-            // Adding request to request queue
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(Common.Constant_Class.INIT_TIMEOUT, Common.Constant_Class.DEFAULT_MAX_RETRIES, Common.Constant_Class.DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
         }
     }

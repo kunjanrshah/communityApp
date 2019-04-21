@@ -583,7 +583,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     }
                 };
 
-                jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(50000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(Common.Constant_Class.INIT_TIMEOUT, Common.Constant_Class.DEFAULT_MAX_RETRIES, Common.Constant_Class.DEFAULT_BACKOFF_MULT));
 
                 // Adding request to request queue
                 AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
@@ -774,6 +774,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     return params;
                 }
             };
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(Common.Constant_Class.INIT_TIMEOUT, Common.Constant_Class.DEFAULT_MAX_RETRIES, Common.Constant_Class.DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
         } else {
@@ -844,7 +845,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     return params;
                 }
             };
-            // Adding request to request queue
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(Common.Constant_Class.INIT_TIMEOUT, Common.Constant_Class.DEFAULT_MAX_RETRIES, Common.Constant_Class.DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
         } else {
@@ -912,7 +913,7 @@ public class SearchFragment extends Fragment implements IAdminControl {
                     return params;
                 }
             };
-            // Adding request to request queue
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(Common.Constant_Class.INIT_TIMEOUT, Common.Constant_Class.DEFAULT_MAX_RETRIES, Common.Constant_Class.DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
         } else {
             Toast.makeText(getActivity(), Common.Constant_Class.NO_CONNECTION, Toast.LENGTH_SHORT).show();

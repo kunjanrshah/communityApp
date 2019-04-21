@@ -592,7 +592,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                         return params;
                     }
                 };
-                // Adding request to request queue
+                jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(Common.Constant_Class.INIT_TIMEOUT, Common.Constant_Class.DEFAULT_MAX_RETRIES, Common.Constant_Class.DEFAULT_BACKOFF_MULT));
                 AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
             } else {
@@ -846,7 +846,7 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                                 return params;
                             }
                         };
-                        // Adding request to request queue
+                        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(Common.Constant_Class.INIT_TIMEOUT, Common.Constant_Class.DEFAULT_MAX_RETRIES, Common.Constant_Class.DEFAULT_BACKOFF_MULT));
                         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
                     } else {
                         Toast.makeText(LoginActivity.this, getString(R.string.err_msg_invalid_mobile), Toast.LENGTH_LONG).show();

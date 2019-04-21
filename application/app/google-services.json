@@ -23,6 +23,22 @@
           }
         },
         {
+          "client_id": "900336668958-jl3sl5u1e5nefcqeocj3mq08h5kdd9dn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.krs.vastipatrak",
+            "certificate_hash": "3c85f9a35af74d3cef2e586b98692e610083f8a4"
+          }
+        },
+        {
+          "client_id": "900336668958-gdm42jrfhf5kb36d27jg68qjh2rvm5qk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.krs.vastipatrak",
+            "certificate_hash": "808f04ac7223825e66de31ce260fa63a072ef6b6"
+          }
+        },
+        {
           "client_id": "900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -33,15 +49,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       },
       "admob_app_id": "ca-app-pub-8416782517840563~2944903715"
