@@ -4,21 +4,28 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.text.Editable;
 import android.text.Html;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +45,6 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -46,7 +52,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
 import com.google.firebase.FirebaseException;
@@ -62,7 +67,6 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.AppConstants;
@@ -107,6 +111,7 @@ public class LoginActivity extends Activity {
     private FirebaseAuth mAuth;
     private String verificationId;
     private Spinner spinnerCountries;
+    private RelativeLayout rl_spinner;
     private String isSelected = Mobile;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
@@ -127,7 +132,8 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            Utility.alert(LoginActivity.this, e.getMessage());
+            //Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     };
 
@@ -149,10 +155,15 @@ public class LoginActivity extends Activity {
 
         btn_mobile.setOnClickListener(v -> {
             isSelected = Mobile;
-            spinnerCountries.setVisibility(View.VISIBLE);
+            rl_spinner.setVisibility(View.VISIBLE);
             edt_username.setHint(getString(R.string.enter_mobile_no));
             edt_username.setInputType(InputType.TYPE_CLASS_PHONE | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-            edt_username.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon, 0);
+            edt_username.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon, 0, 0, 0);
+            edt_username.setText("");
+
+            InputFilter[] filters = new InputFilter[1];
+            filters[0] = new InputFilter.LengthFilter(10); //Filter to 10 characters
+            edt_username.setFilters(filters);
 
             btn_mobile.setBackgroundColor(getColor(R.color.colorPrimaryDark));
             btn_mobile.setTextColor(getColor(R.color.mdtp_white));
@@ -173,10 +184,11 @@ public class LoginActivity extends Activity {
 
         btn_email.setOnClickListener(v -> {
             isSelected = Email;
-            spinnerCountries.setVisibility(View.INVISIBLE);
+            rl_spinner.setVisibility(View.GONE);
             edt_username.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-            edt_username.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.close_envelope, 0);
+            edt_username.setCompoundDrawablesWithIntrinsicBounds(R.drawable.close_envelope, 0, 0, 0);
             edt_username.setHint(R.string.enter_email_id);
+            edt_username.setText("");
 
             btn_email.setBackgroundColor(getColor(R.color.colorPrimaryDark));
             btn_email.setTextColor(getColor(R.color.mdtp_white));
@@ -193,6 +205,36 @@ public class LoginActivity extends Activity {
 
         });
 
+        edt_pass.setOnEditorActionListener((v, actionId, event) -> {
+            if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+
+                btn_login.performClick();
+            }
+            return false;
+        });
+
+        edt_username.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isSelected.equalsIgnoreCase(Mobile)) {
+                    if (edt_username.getText().length() > 10) {
+                        String str = edt_username.getText().toString().substring(0, 10);
+                        edt_username.setText(str);
+                        edt_username.setSelection(str.length());
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         txt_cancel.setOnClickListener(v -> {
 
@@ -210,23 +252,25 @@ public class LoginActivity extends Activity {
         });
 
         img_login_fb.setOnClickListener(v -> {
-            Utility.showProgressDialog(this);
+
             img_login_fb.setEnabled(false);
-            LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email","user_birthday", "public_profile"));
+            LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "user_birthday", "public_profile"));
             LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
                     Utility.hideProgressDialog();
                     Log.d(TAG, "facebook:onSuccess:" + loginResult);
-
                     // App code
                     GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), (object, response) -> {
                         Log.v(TAG, response.toString());
                         // Application code
                         try {
                             String email = object.getString("email");
-                           String url= object.getJSONObject("picture").getJSONObject("data").getString("url");
-                            LoginWS(null, email, is_from_fb);
+                            String url = object.getJSONObject("picture").getJSONObject("data").getString("url");
+                            JSONObject mJsonObject = new JSONObject();
+                            mJsonObject.put("email", email);
+                            mJsonObject.put("url", url);
+                            LoginWS(null, mJsonObject, is_from_fb);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -279,14 +323,16 @@ public class LoginActivity extends Activity {
             if (btn_login.getText().toString().contains(getString(R.string.get_otp))) {
                 if (str.isEmpty() || str.length() < 10 || !isValidMobile(str)) {
                     edt_username.requestFocus();
-                    Toast.makeText(this, getString(R.string.err_msg_invalid_mobile), Toast.LENGTH_SHORT).show();
+                    Utility.alert(this, getString(R.string.err_msg_invalid_mobile));
+                    // Toast.makeText(this, getString(R.string.err_msg_invalid_mobile), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 verifyValidUser(str, false);
             } else if (btn_login.getText().toString().contains(getString(R.string.email))) {
                 if (str.isEmpty() || isValidEmail(str)) {
                     edt_username.requestFocus();
-                    Toast.makeText(this, getString(R.string.err_msg_email), Toast.LENGTH_SHORT).show();
+                    Utility.alert(this, getString(R.string.err_msg_email));
+                    //Toast.makeText(this, getString(R.string.err_msg_email), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 verifyValidUser(str, true);
@@ -297,14 +343,16 @@ public class LoginActivity extends Activity {
                     if (str1.equals(str2)) {
                         call_change_password_ws();
                     } else {
-                        Toast.makeText(this, getString(R.string.err_msg_repeat_password), Toast.LENGTH_SHORT).show();
+                        Utility.alert(this, getString(R.string.err_msg_repeat_password));
+                        //Toast.makeText(this, getString(R.string.err_msg_repeat_password), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(this, getString(R.string.err_msg_password), Toast.LENGTH_SHORT).show();
+                    Utility.alert(this, getString(R.string.err_msg_password));
+                    //Toast.makeText(this, getString(R.string.err_msg_password), Toast.LENGTH_SHORT).show();
                 }
             } else {
                 if (edt_pass.isShown()) {
-                    LoginWS(null, "", is_from_normal);
+                    LoginWS(null, null, is_from_normal);
                 } else {
                     txt_cancel.performClick();
                 }
@@ -318,14 +366,12 @@ public class LoginActivity extends Activity {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (event.getRawX() >= (edt_pass.getRight() - edt_pass.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                     if (isShow) {
-                        edt_pass.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_show, 0);
+                        edt_pass.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.password_show, 0);
                         edt_pass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-
                         isShow = false;
                     } else {
-                        edt_pass.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
+                        edt_pass.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.password_hide, 0);
                         edt_pass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-
                         isShow = true;
                     }
                     edt_pass.setSelection(edt_pass.length());
@@ -354,14 +400,14 @@ public class LoginActivity extends Activity {
 
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
-                ((TextView) v).setTextSize(18);
-                ((TextView) v).setGravity(Gravity.RIGHT);
+                ((TextView) v).setTextSize(14);
+                ((TextView) v).setGravity(Gravity.LEFT);
                 return v;
             }
 
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView, parent);
-                ((TextView) v).setTextSize(20);
+                ((TextView) v).setTextSize(16);
                 return v;
             }
 
@@ -394,6 +440,7 @@ public class LoginActivity extends Activity {
         btn_login = findViewById(R.id.btn_login);
         txt_cancel = findViewById(R.id.txt_cancel);
         spinnerCountries = findViewById(R.id.spinnerCountries);
+        rl_spinner = findViewById(R.id.rl_spinner);
         btn_login_google = findViewById(R.id.btn_login_google);
         img_login_fb = findViewById(R.id.img_login_fb);
         img_login_google = findViewById(R.id.img_login_google);
@@ -456,7 +503,7 @@ public class LoginActivity extends Activity {
                 img_login_fb.setEnabled(true);
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
-                    LoginWS(user, "", is_from_fb);
+                    LoginWS(user, null, is_from_fb);
                 }
 
             } else {
@@ -504,9 +551,8 @@ public class LoginActivity extends Activity {
                 Log.d(TAG, "signInWithCredential:success");
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
-                    user.getPhotoUrl();
-                    Log.d(TAG, "email: " + user.getEmail() + " phone: " + user.getPhoneNumber());
-                    LoginWS(user, "", is_from_google);
+                    Log.d(TAG, "email: " + user.getEmail() + " phone: " + user.getPhoneNumber() + " photo: " + user.getPhotoUrl());
+                    LoginWS(user, null, is_from_google);
                 }
             } else {
                 Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -569,7 +615,7 @@ public class LoginActivity extends Activity {
                             String code = CountryData.countryAreaCodes[spinnerCountries.getSelectedItemPosition()];
                             String number = "+" + code + username;
                             edt_username.setText("");
-                            spinnerCountries.setVisibility(View.GONE);
+                            rl_spinner.setVisibility(View.GONE);
                             edt_username.setHint(R.string.type_otp);
                             sendVerificationCode(number);
                         } else {
@@ -577,7 +623,8 @@ public class LoginActivity extends Activity {
                         }
                     }
                 } else {
-                    Toast.makeText(LoginActivity.this, R.string.invalid_username, Toast.LENGTH_SHORT).show();
+                    Utility.alert(this, getString(R.string.invalid_username));
+                    //Toast.makeText(LoginActivity.this, R.string.invalid_username, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -597,7 +644,8 @@ public class LoginActivity extends Activity {
             } else if (error instanceof TimeoutError) {
                 message = getString(R.string.connection_timeout);
             }
-            Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_LONG).show();
+            Utility.alert(this, message);
+            //Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_LONG).show();
         }) {
             @NonNull
             @Override
@@ -651,7 +699,7 @@ public class LoginActivity extends Activity {
                         String success = response.getString(AppConstants.SUCCESS);
                         if (success.equalsIgnoreCase(AppConstants.TRUE)) {
                             Utility.UpdateProfilePassword(edt_pass.getText().toString(), mSharedPreferences.getString(AppConstants.USER_ID, ""));
-                            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                             String userid = mSharedPreferences.getString(AppConstants.USER_ID, "");
                             if (userid.isEmpty()) {
                                 return;
@@ -666,7 +714,8 @@ public class LoginActivity extends Activity {
                                 finish();
                             }
                         } else {
-                            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                            Utility.alert(LoginActivity.this, message);
+                            //Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                             if (response.has(AppConstants.ERROR_CODE)) {
                                 String error = response.getString(AppConstants.ERROR_CODE);
                                 /*if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
@@ -693,7 +742,8 @@ public class LoginActivity extends Activity {
                     return params;
                 }
             };
-            // Adding request to request queue
+
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(jsonObjReq, "");
         }
     }
@@ -726,7 +776,7 @@ public class LoginActivity extends Activity {
                         }
                         Utility.alert(LoginActivity.this, message);
                     } else {
-                        Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                        Utility.alert(LoginActivity.this, message);
                         if (response.has(AppConstants.ERROR_CODE)) {
                             String error = response.getString(AppConstants.ERROR_CODE);
                             if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
@@ -759,130 +809,178 @@ public class LoginActivity extends Activity {
         AppController.getInstance().addToRequestQueue(jsonObjReq, "");
     }
 
-    private void LoginWS(FirebaseUser user, String email, int is_from) {
-        String username = "";
-        String email_or_mobile = "";
-        String password = "";
-        JSONObject json = new JSONObject();
-
-        if (is_from == is_from_normal) {
-            email_or_mobile = edt_username.getText().toString().trim();
-            password = edt_pass.getText().toString();
-            if (!email_or_mobile.isEmpty() && !password.isEmpty()) {
-                try {
-                    if (edt_username.getHint().toString().contains("Email")) {
-                        if (!isValidEmail(email_or_mobile)) {
-                            json.put(AppConstants.USERNAME, email_or_mobile);
-                            json.put(AppConstants.PASSWORD, password);
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Invalid Email", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    } else if (edt_username.getHint().toString().contains("Mobile")) {
-                        if (isValidMobile(email_or_mobile)) {
-                            json.put(AppConstants.USERNAME, email_or_mobile);
-                            json.put(AppConstants.PASSWORD, password);
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Invalid Mobile", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                Toast.makeText(LoginActivity.this, getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
-                return;
-            }
-        } else if (is_from == is_from_fb) {
-            if (!email.isEmpty()) {
-                try {
-                    json.put(AppConstants.USERNAME, email);
-                    json.put(AppConstants.IS_SOCIAL, "1");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (is_from == is_from_google) {
-            if (user != null) {
-                Log.e(TAG, " email: " + user.getEmail() + " phone: " + user.getPhoneNumber() + " Id: " + user.getUid() + " Name: " + user.getDisplayName());
-                username = user.getEmail();
-                if (username != null && !username.isEmpty()) {
-                } else {
-                    username = user.getPhoneNumber();
-                    if (username != null && !username.isEmpty()) {
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Not able to get your details from Social account", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-                try {
-                    json.put(AppConstants.USERNAME, username);
-                    json.put(AppConstants.IS_SOCIAL, "1");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+    private void LoginWS(FirebaseUser user, JSONObject data, int is_from) {
 
         if (Utility.isOnline(this)) {
             Utility.showProgressDialog(this);
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.LOGIN_URL, json, new Response.Listener<JSONObject>() {
+            String username = "";
+            String email_or_mobile = "";
+            String password = "";
+            JSONObject json = new JSONObject();
 
-                @Override
-                public void onResponse(@NonNull JSONObject response) {
-                    Log.d(TAG, "LoginWS: " + response.toString());
-
+            if (is_from == is_from_normal) {
+                email_or_mobile = edt_username.getText().toString().trim();
+                password = edt_pass.getText().toString();
+                if (!email_or_mobile.isEmpty() && !password.isEmpty()) {
                     try {
-                        hideProgressDialog();
-                        boolean success = response.getBoolean(AppConstants.SUCCESS);
-                        String message = response.getString(AppConstants.MESSAGE);
-                        if (success) {
-                            AfterValidCheck(response, true);
-                        } else {
-                            Utility.alert(LoginActivity.this, message);
+                        if (edt_username.getHint().toString().contains("Email")) {
+                            if (!isValidEmail(email_or_mobile)) {
+                                json.put(AppConstants.USERNAME, email_or_mobile);
+                                json.put(AppConstants.PASSWORD, password);
+                                fetchLoginData(json);
+                            } else {
+                                Utility.alert(LoginActivity.this, getResources().getString(R.string.invalid_email));
+                                //Toast.makeText(LoginActivity.this, "Invalid Email", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } else if (edt_username.getHint().toString().contains("Mobile")) {
+                            if (isValidMobile(email_or_mobile)) {
+                                json.put(AppConstants.USERNAME, email_or_mobile);
+                                json.put(AppConstants.PASSWORD, password);
+                                fetchLoginData(json);
+                            } else {
+                                Utility.alert(LoginActivity.this, getResources().getString(R.string.err_msg_invalid_mobile));
+                                //Toast.makeText(LoginActivity.this, "Invalid Mobile", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-
+                } else {
+                    Utility.alert(LoginActivity.this, getString(R.string.err_msg_blank));
+                    //Toast.makeText(LoginActivity.this, getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
+                    return;
                 }
-            }, error -> {
-                hideProgressDialog();
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-                String message = null;
-                if (error instanceof NetworkError) {
-                    message = getString(R.string.can_not_connect_to_internet);
-                } else if (error instanceof ServerError) {
-                    message = getString(R.string.server_could_not_found);
-                } else if (error instanceof AuthFailureError) {
-                    message = getString(R.string.can_not_connect_to_internet);
-                } else if (error instanceof ParseError) {
-                    message = getString(R.string.parsing_error);
-                } else if (error instanceof TimeoutError) {
-                    message = getString(R.string.connection_timeout);
+            } else if (is_from == is_from_fb) {
+                String fb_email = "", fb_profile_url = "";
+                try {
+                    fb_email = data.getString("email");
+                    fb_profile_url = data.getString("url");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_LONG).show();
-            }) {
-                @NonNull
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
-                    params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
-                    params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
-                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences != null ? mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, "") : null);
-                    if (mSharedPreferences != null) {
-                        params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
+
+                if (fb_email.isEmpty()) {
+                    return;
+                }
+
+                if (!fb_profile_url.isEmpty()) {
+
+                    try {
+                        json.put(AppConstants.USERNAME, fb_email);
+                        json.put(AppConstants.IS_SOCIAL, "1");
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    return params;
+                    new GetBase64String(json).execute(fb_profile_url);
+
+                } else {
+                    try {
+                        json.put(AppConstants.USERNAME, fb_email);
+                        json.put(AppConstants.IS_SOCIAL, "1");
+                        fetchLoginData(json);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            };
-            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
-            AppController.getInstance().addToRequestQueue(jsonObjReq, "");
+
+            } else if (is_from == is_from_google) {
+
+                if (user != null) {
+                    Log.e(TAG, " email: " + user.getEmail() + " phone: " + user.getPhoneNumber() + " Id: " + user.getUid() + " Name: " + user.getDisplayName());
+                    username = user.getEmail();
+                    if (username != null && !username.isEmpty()) {
+                    } else {
+                        username = user.getPhoneNumber();
+                        if (username != null && !username.isEmpty()) {
+                        } else {
+                            Utility.alert(LoginActivity.this, getResources().getString(R.string.error_msg_get_data_social_site));
+                            //Toast.makeText(LoginActivity.this, R.string.error_msg_get_data_social_site, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+
+                    if (!user.getPhotoUrl().toString().isEmpty()) {
+
+                        try {
+                            json.put(AppConstants.USERNAME, username);
+                            json.put(AppConstants.IS_SOCIAL, "1");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        new GetBase64String(json).execute(user.getPhotoUrl().toString().replace("s96-c", "s240-c"));
+
+                    } else {
+                        try {
+                            json.put(AppConstants.USERNAME, username);
+                            json.put(AppConstants.IS_SOCIAL, "1");
+                            fetchLoginData(json);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            }
+
+
         }
 
+    }
+
+    private void fetchLoginData(JSONObject json) {
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.LOGIN_URL, json, response -> {
+            Log.d(TAG, "LoginWS: " + response.toString());
+
+            try {
+                hideProgressDialog();
+                boolean success = response.getBoolean(AppConstants.SUCCESS);
+                String message = response.getString(AppConstants.MESSAGE);
+                if (success) {
+                    AfterValidCheck(response, true);
+                } else {
+                    Utility.alert(LoginActivity.this, message);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }, error -> {
+            hideProgressDialog();
+            VolleyLog.d(TAG, "Error: " + error.getMessage());
+            String message = null;
+            if (error instanceof NetworkError) {
+                message = getString(R.string.can_not_connect_to_internet);
+            } else if (error instanceof ServerError) {
+                message = getString(R.string.server_could_not_found);
+            } else if (error instanceof AuthFailureError) {
+                message = getString(R.string.can_not_connect_to_internet);
+            } else if (error instanceof ParseError) {
+                message = getString(R.string.parsing_error);
+            } else if (error instanceof TimeoutError) {
+                message = getString(R.string.connection_timeout);
+            }
+            Utility.alert(LoginActivity.this, message);
+            //Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_LONG).show();
+        }) {
+            @NonNull
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
+                params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
+                params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
+                params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences != null ? mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, "") : null);
+                if (mSharedPreferences != null) {
+                    params.put(AppConstants.DEVICE_TOKEN, mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
+                }
+                return params;
+            }
+        };
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(jsonObjReq, "");
     }
 
     private void AfterValidCheck(JSONObject response, boolean isLoginSuccess) throws Exception {
@@ -946,6 +1044,36 @@ public class LoginActivity extends Activity {
             }
         } else {
             Utility.alert(LoginActivity.this, getString(R.string.registraion_request_pending));
+        }
+    }
+
+    class GetBase64String extends AsyncTask<String, Void, String> {
+        JSONObject mJsonObject = null;
+
+        GetBase64String(JSONObject mJsonObject) {
+            this.mJsonObject = mJsonObject;
+        }
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String str = Utility.getByteArrayFromImageURL(strings[0]);
+            return str;
+        }
+
+        @Override
+        protected void onPostExecute(String str) {
+            super.onPostExecute(str);
+
+            if (mJsonObject != null) {
+                try {
+                    mJsonObject.put(AppConstants.PROFILE_PIC, str);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                fetchLoginData(mJsonObject);
+            }
+
         }
     }
 

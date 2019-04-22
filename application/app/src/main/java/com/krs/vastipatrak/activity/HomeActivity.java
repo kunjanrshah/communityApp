@@ -95,9 +95,9 @@ import com.krs.vastipatrak.fragments.SharedUsersFragment;
 import com.krs.vastipatrak.interfaces.IAdminControl;
 import com.krs.vastipatrak.service.MyLocationService;
 import com.krs.vastipatrak.utils.AppConstants;
-import com.krs.vastipatrak.utils.Utility;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.krs.vastipatrak.utils.NotificationUtils;
+import com.krs.vastipatrak.utils.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -176,7 +176,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
 
-        ll_menulist= findViewById(R.id.ll_menulist);
+        ll_menulist = findViewById(R.id.ll_menulist);
         fm_container_body = findViewById(R.id.fm_container_body);
         rvMenuList = findViewById(R.id.rvMenuList);
         mPreferencesWelcome = getSharedPreferences(AppConstants.PREF_WELCOME, MODE_PRIVATE);
@@ -215,7 +215,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             startService(mIntent);
         }
 
-        mEditor.putBoolean(AppConstants.IS_HOME,true);
+        mEditor.putBoolean(AppConstants.IS_HOME, true);
         mEditor.apply();
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
@@ -1479,7 +1479,9 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                             AppController.getInstance().realm.commitTransaction();
 
                             FirebaseAuth.getInstance().signOut();
-                            AppController.getInstance().mGoogleSignInClient.signOut().addOnCompleteListener(HomeActivity.this, task -> Toast.makeText(HomeActivity.this, "Logout", Toast.LENGTH_SHORT).show());
+                            AppController.getInstance().mGoogleSignInClient.signOut().addOnCompleteListener(HomeActivity.this, task -> {
+                                Log.d(TAG, "Logout from GoogleSignInClient");
+                            });
 
                             Intent mIntent = new Intent(HomeActivity.this, MyLocationService.class);
                             stopService(mIntent);
@@ -1519,7 +1521,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
             };
             jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(AppConstants.INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
             // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "");
         }
     }
 

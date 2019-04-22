@@ -15,14 +15,17 @@ import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.QuickContactBadge;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,7 +68,7 @@ public class RegisterActivty extends Activity {
     private static String TAG = RegisterActivty.class.getSimpleName();
     private TextView txt_already, txt_how_register, txtCity;
     private ImageView img_back, img_header_logo, img_profile, img_cancel;
-    private EditText edt_head_name, edt_spouse_name, edt_email_id, edt_mobile, edt_password, edt_cpassword, edt_address, edt_head_surname;
+    private EditText edt_head_name, edt_email_id, edt_mobile, edt_password, edt_cpassword, edt_address, edt_head_surname;
     private Button btn_register;
     private JSONObject json = null;
     private String str_profile_hash = "";
@@ -102,6 +105,13 @@ public class RegisterActivty extends Activity {
         });
 
         btn_register.setOnClickListener(v -> RegistraionWS());
+
+        edt_address.setOnEditorActionListener((v, actionId, event) -> {
+            if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                RegistraionWS();
+            }
+            return false;
+        });
 
         img_profile.setOnClickListener(v -> {
             cropImageActivity();
@@ -243,7 +253,6 @@ public class RegisterActivty extends Activity {
 
         edt_head_name = findViewById(R.id.edt_head_name);
         edt_head_surname = findViewById(R.id.edt_head_surname);
-        edt_spouse_name = findViewById(R.id.edt_spouse_name);
         edt_email_id = findViewById(R.id.edt_email_id);
         edt_mobile = findViewById(R.id.edt_mobile);
         edt_password = findViewById(R.id.edt_password);
@@ -311,7 +320,7 @@ public class RegisterActivty extends Activity {
             String city = txtCity.getText().toString().trim();
 
             if (mobile.length() != 10) {
-                Toast.makeText(RegisterActivty.this, "Mobile number must be 10 digit", Toast.LENGTH_SHORT).show();
+                Utility.alert(RegisterActivty.this,getString(R.string.invalid_mobile_range));
                 return;
             }
             /*String code = CountryData.countryAreaCodes[spinnerCountries.getSelectedItemPosition()];
@@ -319,14 +328,14 @@ public class RegisterActivty extends Activity {
 
             if (!email.isEmpty()) {
                 if (Utility.isValidEmail(email)) {
-                    Toast.makeText(RegisterActivty.this, "Ivalid Email Address!", Toast.LENGTH_SHORT).show();
+                    Utility.alert(RegisterActivty.this,getString(R.string.invalid_email));
                     return;
                 }
             }
 
             if (!password.isEmpty() && !cpassword.isEmpty()) {
                 if (!password.equals(cpassword)) {
-                    Toast.makeText(RegisterActivty.this, "Password mismatch!", Toast.LENGTH_SHORT).show();
+                    Utility.alert(RegisterActivty.this,getString(R.string.err_msg_repeat_password));
                     return;
                 }
             }
@@ -397,8 +406,8 @@ public class RegisterActivty extends Activity {
                             } else if (error instanceof TimeoutError) {
                                 message = getString(R.string.connection_timeout);
                             }
-                            Toast.makeText(RegisterActivty.this, "" + message, Toast.LENGTH_LONG).show();
-
+                            //Toast.makeText(RegisterActivty.this, "" + message, Toast.LENGTH_LONG).show();
+                            Utility.alert(RegisterActivty.this,message);
                         }) {
                             @NonNull
                             @Override
@@ -416,16 +425,20 @@ public class RegisterActivty extends Activity {
                         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
                         AppController.getInstance().addToRequestQueue(jsonObjReq, "");
                     } else {
-                        Toast.makeText(RegisterActivty.this, getString(R.string.err_msg_invalid_mobile), Toast.LENGTH_LONG).show();
+                        Utility.alert(RegisterActivty.this,getString(R.string.invalid_mobile_range));
+                        //Toast.makeText(RegisterActivty.this, getString(R.string.err_msg_invalid_mobile), Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(RegisterActivty.this, getString(R.string.err_msg_repeat_password), Toast.LENGTH_LONG).show();
+                    Utility.alert(RegisterActivty.this,getString(R.string.err_msg_repeat_password));
+                    //Toast.makeText(RegisterActivty.this, getString(R.string.err_msg_repeat_password), Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(RegisterActivty.this, getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
+                Utility.alert(RegisterActivty.this,getString(R.string.err_msg_blank));
+                //Toast.makeText(RegisterActivty.this, getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(RegisterActivty.this, AppConstants.NO_CONNECTION, Toast.LENGTH_LONG).show();
+            Utility.alert(RegisterActivty.this,getString(R.string.can_not_connect_to_internet));
+            //Toast.makeText(RegisterActivty.this, AppConstants.NO_CONNECTION, Toast.LENGTH_LONG).show();
         }
     }
 }

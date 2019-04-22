@@ -12,7 +12,7 @@ public class AppConstants {
     public static final String ADMIN = "ADMIN";
     public static final String USER = "USER";
 
-    public static final int INIT_TIMEOUT = 8000;
+    public static final int INIT_TIMEOUT = 15000;
     public static final int DEFAULT_MAX_RETRIES = 3;
     public static final float DEFAULT_BACKOFF_MULT = 2f;
 

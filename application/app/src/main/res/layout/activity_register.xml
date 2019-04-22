@@ -44,9 +44,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp">
 
-
-
-
         <ImageView
             android:id="@+id/img_profile"
             android:layout_width="80dp"
@@ -68,17 +65,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:text="@string/register_now"
             android:layout_marginRight="30dp"
-            android:textSize="20sp"
             android:gravity="right"
+            android:text="@string/register_now"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
     </FrameLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"  >
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -91,13 +88,13 @@
                 android:id="@+id/edt_head_name"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/border"
                 android:drawableStart="@drawable/man_user"
+                android:drawablePadding="10dp"
                 android:hint="@string/hint_name"
                 android:inputType="textCapSentences"
                 android:paddingLeft="10dp"
-
                 android:singleLine="true" />
 
             <EditText
@@ -107,6 +104,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:drawableStart="@drawable/man_user"
+                android:drawablePadding="10dp"
                 android:hint="@string/hint_surname"
                 android:inputType="textCapSentences"
                 android:paddingLeft="10dp"
@@ -120,6 +118,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:drawableStart="@drawable/close_envelope"
+                android:drawablePadding="10dp"
                 android:hint="@string/hint_email"
                 android:inputType="textCapSentences"
                 android:paddingLeft="10dp"
@@ -131,23 +130,31 @@
                 android:gravity="center"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
-                <Spinner
-                    android:id="@+id/spinnerCountries"
+
+                <RelativeLayout
                     android:layout_width="120dp"
-                    android:layout_height="50dp"
-                    style="@style/spinner_style"
-                      />
+                    android:layout_gravity="center"
+                    android:background="@drawable/border"
+                    android:layout_height="50dp"  >
+
+                    <Spinner
+                        android:id="@+id/spinnerCountries"
+                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                        android:layout_width="120dp"
+                        android:layout_height="50dp" />
+                </RelativeLayout>
 
                 <EditText
                     android:id="@+id/edt_mobile"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginLeft="5dp"
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/icon"
+                    android:drawablePadding="10dp"
                     android:hint="@string/hint_mobile"
                     android:inputType="number"
                     android:maxLength="10"
-                    android:layout_marginLeft="5dp"
                     android:paddingLeft="10dp"
                     android:singleLine="true" />
             </LinearLayout>
@@ -158,8 +165,9 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
-                android:drawableLeft="@drawable/lock"
-                android:drawableStart="@drawable/password_hide"
+                android:drawableStart="@drawable/lock"
+                android:drawableEnd="@drawable/password_hide"
+                android:drawablePadding="10dp"
                 android:hint="@string/hint_password"
                 android:inputType="textPassword"
                 android:paddingLeft="10dp"
@@ -172,8 +180,9 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
-                android:drawableLeft="@drawable/lock"
-                android:drawableStart="@drawable/password_hide"
+                android:drawableStart="@drawable/lock"
+                android:drawableEnd="@drawable/password_hide"
+                android:drawablePadding="10dp"
                 android:hint="@string/hint_conform_password"
                 android:inputType="textPassword"
                 android:paddingLeft="10dp"
@@ -190,22 +199,22 @@
                     android:id="@+id/autoCompleteTextView"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:hint="@string/hint_city"
                     android:layout_alignParentTop="true"
-                    android:padding="10dp"
-                    android:textSize="18sp"
-                    android:singleLine="true"
-                    android:drawableStart="@drawable/home_address"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/border"
                     android:layout_centerHorizontal="true"
+                    android:background="@drawable/border"
+                    android:drawableStart="@drawable/home_address"
+                    android:drawablePadding="10dp"
+                    android:ems="10"
+                    android:gravity="center_vertical"
+                    android:hint="@string/hint_city"
                     android:imeOptions="actionNext"
-                    android:ems="10" />
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textSize="18sp" />
 
 
                 <TextView
                     android:id="@+id/txtCity"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/border"
@@ -215,7 +224,8 @@
                     android:padding="10dp"
                     android:singleLine="true"
                     android:textColor="@android:color/black"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <EditText
@@ -225,10 +235,11 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:drawableStart="@drawable/home_address"
+                android:drawablePadding="10dp"
                 android:hint="@string/hint_address"
+                android:imeOptions="actionDone"
                 android:inputType="textCapSentences"
                 android:paddingLeft="10dp"
-                android:imeOptions="actionDone"
                 android:singleLine="true" />
 
             <TextView

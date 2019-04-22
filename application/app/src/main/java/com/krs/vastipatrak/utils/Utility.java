@@ -35,6 +35,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -60,6 +61,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -72,7 +75,6 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import PiyushBase64.Base64;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -318,7 +320,30 @@ public class Utility {
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, bao);
         byte[] ba = bao.toByteArray();
-        return Base64.encodeBytes(ba);
+        return PiyushBase64.Base64.encodeBytes(ba);
+    }
+
+
+
+
+    public static  String getByteArrayFromImageURL(String url) {
+
+        try {
+            URL imageUrl = new URL(url);
+            URLConnection ucon = imageUrl.openConnection();
+            InputStream is = ucon.getInputStream();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int read = 0;
+            while ((read = is.read(buffer, 0, buffer.length)) != -1) {
+                baos.write(buffer, 0, read);
+            }
+            baos.flush();
+            return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        } catch (Exception e) {
+            Log.d("Error", e.toString());
+        }
+        return null;
     }
 
     public static Bitmap scaleImage(Context context, @NonNull Uri photoUri) throws IOException {
