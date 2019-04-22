@@ -13,7 +13,7 @@
 
         <ImageView
             android:id="@+id/img_back"
-            android:layout_width="30dp"
+            android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginLeft="10dp"
             android:background="@drawable/left_arrow"
@@ -45,182 +45,7 @@
         android:layout_marginTop="20dp">
 
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="15dp"
-                android:orientation="vertical">
-
-
-                <EditText
-                    android:id="@+id/edt_head_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/border"
-                    android:drawableRight="@drawable/man_user"
-                    android:hint="@string/hint_name"
-                    android:inputType="textCapSentences"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:singleLine="true" />
-
-                <EditText
-                    android:id="@+id/edt_head_surname"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/border"
-                    android:drawableRight="@drawable/man_user"
-                    android:hint="@string/hint_surname"
-                    android:inputType="textCapSentences"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:singleLine="true" />
-
-
-                <EditText
-                    android:id="@+id/edt_email_id"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/border"
-                    android:drawableRight="@drawable/close_envelope"
-                    android:hint="@string/hint_email"
-                    android:inputType="textCapSentences"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:singleLine="true" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-                    <Spinner
-                        android:id="@+id/spinnerCountries"
-                        android:layout_width="120dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="-15dp"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:textAlignment="center" />
-
-                    <EditText
-                        android:id="@+id/edt_mobile"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@drawable/border"
-                        android:drawableRight="@drawable/icon"
-                        android:hint="@string/hint_mobile"
-                        android:inputType="number"
-                        android:maxLength="10"
-                        android:layout_marginLeft="-15dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:singleLine="true" />
-                </LinearLayout>
-
-                <EditText
-                    android:id="@+id/edt_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/border"
-                    android:drawableLeft="@drawable/lock"
-                    android:drawableEnd="@drawable/password_hide"
-                    android:hint="@string/hint_password"
-                    android:inputType="textPassword"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:singleLine="true" />
-
-                <EditText
-                    android:id="@+id/edt_cpassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/border"
-                    android:drawableLeft="@drawable/lock"
-                    android:drawableEnd="@drawable/password_hide"
-                    android:hint="@string/hint_conform_password"
-                    android:inputType="textPassword"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:singleLine="true" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/txtCity"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@drawable/border"
-                        android:gravity="center_vertical"
-                        android:hint="@string/hint_city"
-                        android:inputType="textCapSentences"
-                        android:padding="10dp"
-                        android:singleLine="true"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <EditText
-                    android:id="@+id/edt_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/border"
-                    android:drawableRight="@drawable/home_address"
-                    android:hint="@string/hint_address"
-                    android:inputType="textCapSentences"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:singleLine="true" />
-
-                <TextView
-                    android:id="@+id/txt_how_register"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/how_to_register"
-                    android:textSize="16sp" />
-
-                <Button
-                    android:id="@+id/btn_register"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/btn_registration"
-                    android:gravity="center"
-                    android:text="@string/register"
-                    android:textColor="@color/mdtp_white"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/txt_already"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/already_have_a_account_sign_in"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-        </ScrollView>
 
         <ImageView
             android:id="@+id/img_profile"
@@ -240,13 +65,202 @@
 
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:text="@string/register_now"
+            android:layout_marginRight="30dp"
             android:textSize="20sp"
+            android:gravity="right"
             android:textStyle="bold" />
 
     </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"  >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edt_head_name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:drawableStart="@drawable/man_user"
+                android:hint="@string/hint_name"
+                android:inputType="textCapSentences"
+                android:paddingLeft="10dp"
+
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/edt_head_surname"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:drawableStart="@drawable/man_user"
+                android:hint="@string/hint_surname"
+                android:inputType="textCapSentences"
+                android:paddingLeft="10dp"
+                android:singleLine="true" />
+
+
+            <EditText
+                android:id="@+id/edt_email_id"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:drawableStart="@drawable/close_envelope"
+                android:hint="@string/hint_email"
+                android:inputType="textCapSentences"
+                android:paddingLeft="10dp"
+                android:singleLine="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                <Spinner
+                    android:id="@+id/spinnerCountries"
+                    android:layout_width="120dp"
+                    android:layout_height="50dp"
+                    style="@style/spinner_style"
+                      />
+
+                <EditText
+                    android:id="@+id/edt_mobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border"
+                    android:drawableStart="@drawable/icon"
+                    android:hint="@string/hint_mobile"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:layout_marginLeft="5dp"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/edt_password"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:drawableLeft="@drawable/lock"
+                android:drawableStart="@drawable/password_hide"
+                android:hint="@string/hint_password"
+                android:inputType="textPassword"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/edt_cpassword"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:drawableLeft="@drawable/lock"
+                android:drawableStart="@drawable/password_hide"
+                android:hint="@string/hint_conform_password"
+                android:inputType="textPassword"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:singleLine="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <AutoCompleteTextView
+                    android:id="@+id/autoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="@string/hint_city"
+                    android:layout_alignParentTop="true"
+                    android:padding="10dp"
+                    android:textSize="18sp"
+                    android:singleLine="true"
+                    android:drawableStart="@drawable/home_address"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/border"
+                    android:layout_centerHorizontal="true"
+                    android:imeOptions="actionNext"
+                    android:ems="10" />
+
+
+                <TextView
+                    android:id="@+id/txtCity"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border"
+                    android:gravity="center_vertical"
+                    android:hint="@string/hint_city"
+                    android:inputType="textCapSentences"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/edt_address"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:drawableStart="@drawable/home_address"
+                android:hint="@string/hint_address"
+                android:inputType="textCapSentences"
+                android:paddingLeft="10dp"
+                android:imeOptions="actionDone"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/txt_how_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_horizontal"
+                android:text="@string/how_to_register"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btn_register"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/btn_registration"
+                android:gravity="center"
+                android:text="@string/register"
+                android:textColor="@color/mdtp_white"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_already"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_horizontal"
+                android:text="@string/already_have_a_account_sign_in"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

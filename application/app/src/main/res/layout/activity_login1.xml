@@ -80,7 +80,6 @@
         android:gravity="center"
         android:orientation="vertical">
 
-
         <TextView
             android:id="@+id/login_with"
             android:layout_width="match_parent"
@@ -142,30 +141,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="@drawable/border"
-                android:drawableEnd="@drawable/icon"
+                android:drawableStart="@drawable/icon"
                 android:gravity="center"
                 android:inputType="phone|textNoSuggestions"
                 android:hint="@string/enter_mobile_no"
-                android:paddingLeft="5dp"
-                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/edt_pass"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:drawableStart="@drawable/password_hide"
+                android:gravity="center"
+                android:hint="@string/password"
+                android:inputType="textPassword|textNoSuggestions"
+                android:paddingLeft="10dp"
                 android:singleLine="true" />
         </LinearLayout>
-
-        <EditText
-            android:id="@+id/edt_pass"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/border"
-            android:drawableEnd="@drawable/password_hide"
-            android:gravity="center"
-            android:hint="@string/password"
-            android:inputType="textPassword|textNoSuggestions"
-            android:paddingLeft="5dp"
-            android:paddingRight="10dp"
-            android:singleLine="true" />
 
         <LinearLayout
             android:layout_width="match_parent"

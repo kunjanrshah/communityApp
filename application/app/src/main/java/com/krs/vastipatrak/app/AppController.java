@@ -49,6 +49,7 @@ public class AppController extends Application {
     public ArrayList<String> lstGotra;
     public ArrayList<String> lstNative;
     public ArrayList<String> lstEducation;
+
     public SharedPreferences mSharedPreferences;
     public SharedPreferences.Editor mEditor;
     ConnectivityReceiver broadcastRevcevier;
@@ -70,6 +71,7 @@ public class AppController extends Application {
         lstGotra =new ArrayList<>();
         lstNative =new ArrayList<>();
         lstEducation =new ArrayList<>();
+
         mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         initRealm();
@@ -83,7 +85,10 @@ public class AppController extends Application {
         mEditor.putBoolean(getString(R.string.app_create),true);
         mEditor.apply();
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.web_client_id)).requestEmail().build();
+        GoogleSignInOptions gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.web_client_id))
+                .requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
