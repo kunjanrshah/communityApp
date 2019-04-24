@@ -66,7 +66,7 @@ import static com.krs.vastipatrak.utils.Utility.watchYoutubeVideo;
 public class RegisterActivty extends Activity {
 
     private static String TAG = RegisterActivty.class.getSimpleName();
-    private TextView txt_already, txt_how_register, txtCity;
+    private TextView txt_already, txt_how_register;
     private ImageView img_back, img_header_logo, img_profile, img_cancel;
     private EditText edt_head_name, edt_email_id, edt_mobile, edt_password, edt_cpassword, edt_address, edt_head_surname;
     private Button btn_register;
@@ -115,16 +115,6 @@ public class RegisterActivty extends Activity {
 
         img_profile.setOnClickListener(v -> {
             cropImageActivity();
-        });
-
-        txtCity.setOnClickListener(v -> {
-            if (is_first) {
-                is_first = false;
-                Intent mIntent = new Intent(RegisterActivty.this, SelectionlistActivity.class);
-                mIntent.putExtra(getString(R.string.listview), false);
-                mIntent.putExtra(getString(R.string.title), R.string.city);
-                startActivityForResult(mIntent, AppConstants.REQEUST_CODE_CITY);
-            }
         });
 
         img_cancel.setOnClickListener(v -> {
@@ -226,7 +216,6 @@ public class RegisterActivty extends Activity {
             {
                 JSONObject response=new JSONObject(citylist);
                 JSONArray mArray = response.getJSONArray(AppConstants.DATA);
-
                 for (int i = 0; i < mArray.length(); i++) {
                     JSONObject mObject = mArray.getJSONObject(i);
                     lstCities.add(mObject.getString("city_name"));
@@ -259,7 +248,6 @@ public class RegisterActivty extends Activity {
         edt_cpassword = findViewById(R.id.edt_cpassword);
         edt_address = findViewById(R.id.edt_address);
         btn_register = findViewById(R.id.btn_register);
-        txtCity = findViewById(R.id.txtCity);
 
         String str = getResources().getString(R.string.already_have_a_account_sign_in) + "<b>" + " " + getString(R.string.login) + "</b>";
         txt_already.setText(Html.fromHtml(str));
@@ -278,13 +266,6 @@ public class RegisterActivty extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AppConstants.REQEUST_CODE_CITY) {
-            if (data != null) {
-                is_first = true;
-                txtCity.setText(data.getStringExtra(getString(R.string.selection)));
-            }
-        }
-
         Uri imageUri = null;
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             imageUri = CropImage.getPickImageResultUri(RegisterActivty.this, data);
@@ -317,7 +298,7 @@ public class RegisterActivty extends Activity {
             String password = edt_password.getText().toString().trim();
             String cpassword = edt_cpassword.getText().toString().trim();
             String address = edt_address.getText().toString().trim();
-            String city = txtCity.getText().toString().trim();
+            String city = autoCompleteTextView.getText().toString().trim();
 
             if (mobile.length() != 10) {
                 Utility.alert(RegisterActivty.this,getString(R.string.invalid_mobile_range));

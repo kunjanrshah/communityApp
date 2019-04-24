@@ -6,7 +6,7 @@
     <string name="hint_email_mobile">Email or Mobile</string>
     <string name="hint_mobile">Mobile No</string>
     <string name="hint_password">Password</string>
-    <string name="hint_conform_password">Confirm Password</string>
+
     <string name="hint_city">City</string>
     <string name="hint_native">Native Place</string>
     <string name="btn_sign_up">SIGN UP</string>
@@ -29,11 +29,11 @@
     <string name="hint_land_line">Land Line </string>
     <string name="hint_gotra">Gotra </string>
 
-    <string name="err_msg_email">Enter valid email</string>
+
     <string name="err_msg_search">Enter search string</string>
-    <string name="err_msg_invalid_mobile">Invalid Mobile Number</string>
-    <string name="err_msg_blank">Please enter missing details</string>
-    <string name="err_msg_password">Enter the password</string>
+
+
+
     <string name="err_msg_conform_password">wrong password try again</string>
     <string name="forgot_password"><u>Forgot Password</u></string>
     <string name="sync_data"><u>Sync Data</u></string>
@@ -42,7 +42,7 @@
     <string name="err_msg_surname">Enter your surname</string>
     <string name="err_msg_native">Enter your native place</string>
     <string name="err_msg_address">Enter your address </string>
-    <string name="err_msg_repeat_password">Password and Repeat password not match</string>
+
     <string name="go_to_whatsapp">Go to WhatsApp ?</string>
     <string name="action_search">Search</string>
     <string name="action_save">Save</string>
@@ -69,7 +69,7 @@
     <string name="nav_item_my_profile">My Profile</string>
     <string name="nav_item_near_by">Near by</string>
     <string name="nav_item_shared_users">Shared Users</string>
-    <string name="nav_item_change_password">Change Password</string>
+
     <string name="nav_item_help">Help</string>
     <string name="nav_item_2017_matrimony">2017 Matrimony</string>
     <string name="nav_item_matrimony">Matrimony</string>
@@ -374,17 +374,6 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
 ૬ વ્યવસાયનું સરનામું, અને તેની વિગત.
 ૭ તેમજ તેના ફેમિલી મેમ્બર ના બધાજ સભ્યોનું ઉપર લખેલી બધી વિગતો.</string>
 
-    <string name="slide_2_title">Movie Tickets</string>
-    <string name="slide_2_desc">Book movie tickets for your family and friends!</string>
-
-    <string name="slide_3_title">Great Discounts</string>
-    <string name="slide_3_desc">Best discounts on every single service we offer!</string>
-
-    <string name="slide_4_title">World Travel</string>
-    <string name="slide_4_desc">Book tickets of any transportation and travel the world!</string>
-
-    <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
-    <string name="play_again">Play Again</string>
     <string name="is_first_time">IsFirstTimeLaunch</string>
     <string name="understand">ખબર પડી</string>
     <string name="press_for_city">Press for City</string>
@@ -404,12 +393,19 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="facebook_app_id">1749295805152367</string>
     <string name="fb_login_protocol_scheme">fb1749295805152367</string>
     <string name="web_client_id">900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com</string>
-    <string name="hint_address">Address</string>
-    <string name="already_have_a_account_sign_in">Already have a account?</string>
-    <string name="do_you_have_an_account_register_now">Do you have an account?</string>
+
+
+    <!--Splash screen -->
+    <string name="CityList_SP" translatable="false">CityList_SP</string>
+    <string name="allow_get_data_value" translatable="false">1</string>
+    <string name="all_cities_list" translatable="false">all_cities</string>
+
+    <!--Choose Language screen -->
+    <string name="choose_language">Change Language</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
-    <string name="choose_language">Change Language</string>
+
+    <!-- Login Screen -->
     <string name="login_now">Login Now</string>
     <string name="please_login_to_continue_using_our_app">Please login to continue using our app</string>
     <string name="login_with">Login with</string>
@@ -419,11 +415,19 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="password">Password</string>
     <string name="_forgot_password">Forgot Password?</string>
     <string name="or_login_with">Or Login with</string>
+    <string name="err_msg_blank">Please enter missing details</string>
     <string name="register_now">REGISTER NOW</string>
     <string name="enter_email_id">Enter Email ID</string>
     <string name="get_otp">Get OTP</string>
     <string name="send_email">send email</string>
-    <string name="city">City</string>
+    <string name="nav_item_change_password">Change Password</string>
+    <string name="already_have_a_account_sign_in">Already have a account?</string>
+    <string name="do_you_have_an_account_register_now">Do you have an account?</string>
+    <string name="err_msg_invalid_mobile">Invalid Mobile Number</string>
+    <string name="err_msg_email">Enter valid email</string>
+    <string name="err_msg_repeat_password">Password and Repeat password not match</string>
+    <string name="err_msg_password">Enter the password</string>
+    <string name="hint_conform_password">Confirm Password</string>
     <string name="type_otp">Type OTP</string>
     <string name="registraion_request_pending">Registration request is pending. Please contact to Admin !!</string>
     <string name="invalid_username">Invalid username</string>
@@ -431,8 +435,27 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="server_could_not_found">The server could not be found. Please try again after some time!!</string>
     <string name="parsing_error">Parsing error! Please try again after some time!!</string>
     <string name="connection_timeout">Connection TimeOut! Please check your internet connection.</string>
-    <string name="CityList_SP">CityList_SP</string>
-    <string name="invalid_mobile_range">Mobile number must be 10 digit</string>
     <string name="invalid_email">Invalid Email Address!</string>
     <string name="error_msg_get_data_social_site">Not able to get your details from Social account</string>
+
+
+
+
+    <!-- Register Screen -->
+    <string name="hint_address">Address</string>
+
+    <!-- Common Screen -->
+
+
+    <string name="city">City</string>
+
+
+
+
+    <string name="invalid_mobile_range">Mobile number must be 10 digit</string>
+
+
+
+
+
 </resources>

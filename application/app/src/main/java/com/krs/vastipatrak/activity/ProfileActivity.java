@@ -602,23 +602,23 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
         }
 
         if (valid.equalsIgnoreCase("")) {
-            call_profile_ws(mJsonObject, "1");
+            call_profile_ws(mJsonObject);
         } else {
             Toast.makeText(ProfileActivity.this, "" + valid, Toast.LENGTH_SHORT).show();
             valid = "";
         }
     }
 
-    private void call_profile_ws(@Nullable JSONObject mJsonObject, final String is_update) {
+    private void call_profile_ws(@Nullable JSONObject mJsonObject) {
         if (Utility.isOnline(this) && mSharedPreferences != null) {
             try {
                 if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, true)) {
                     mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
-                    mJsonObject.put(AppConstants.IS_UPDATE, is_update);
+
                 } else {
                     mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
                     mJsonObject.put(AppConstants.UPDATE_USER_ID, mSharedPreferences.getString(AppConstants.PROFILE_ID, ""));
-                    mJsonObject.put(AppConstants.IS_UPDATE, is_update);
+
                 }
                 mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
 
@@ -635,65 +635,61 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                 e.printStackTrace();
             }
 
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.PROFILE_URL, mJsonObject, new Response.Listener<JSONObject>() {
-
-                @Override
-                public void onResponse(@NonNull JSONObject response) {
-                    Log.d(TAG,"CallProfileWS: "+ response.toString());
-                    try {
-                        Utility.hideProgressDialog();
-                        String success = response.getString(AppConstants.SUCCESS);
-                        String message = response.getString(AppConstants.MESSAGE);
-                        if (success.equalsIgnoreCase(AppConstants.TRUE)) {
-                            String data = response.getString(AppConstants.DATA);
-                            JSONObject mData = new JSONObject(data);
-                            mListProfileData1 = Utility.SaveProfile(mData);
-                            if (is_update.equalsIgnoreCase("1")) {
-                                if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false)) {
-                                    mEditor.putString(AppConstants.PROFILE_PIC_URL, mData.getString(AppConstants.PROFILE_PIC_URL));
-                                    mEditor.putString(AppConstants.FIRST_NAME, mData.getString(AppConstants.FIRST_NAME));
-                                    mEditor.putString(AppConstants.LAST_NAME, mData.getString(AppConstants.LAST_NAME));
-                                    mEditor.putString(AppConstants.OFFICE_LAT, mData.getString(AppConstants.OFFICE_LAT));
-                                    mEditor.putString(AppConstants.OFFICE_LNG, mData.getString(AppConstants.OFFICE_LNG));
-                                    mEditor.putString(AppConstants.HOME_LAT, mData.getString(AppConstants.HOME_LAT));
-                                    mEditor.putString(AppConstants.HOME_LNG, mData.getString(AppConstants.HOME_LNG));
-                                    mEditor.apply();
-                                    AppController.getInstance().isUpdate = true;
-                                }
-                                //  Toast.makeText(ProfileActivity.this, message, Toast.LENGTH_SHORT).show();
-                                alert(message);
-                            } else {
-                                setupViewPager(viewPager);
-                                tabLayout.setupWithViewPager(viewPager);
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.PROFILE_URL, mJsonObject, response -> {
+                Log.d(TAG,"CallProfileWS: "+ response.toString());
+                try {
+                    Utility.hideProgressDialog();
+                    String success = response.getString(AppConstants.SUCCESS);
+                    String message = response.getString(AppConstants.MESSAGE);
+                    if (success.equalsIgnoreCase(AppConstants.TRUE)) {
+                        String data = response.getString(AppConstants.DATA);
+                        JSONObject mData = new JSONObject(data);
+                        mListProfileData1 = Utility.SaveProfile(mData);
+                        if ("1".equalsIgnoreCase("1")) {
+                            if (mSharedPreferences.getBoolean(AppConstants.MYPROFILE_SP, false)) {
+                                mEditor.putString(AppConstants.PROFILE_PIC_URL, mData.getString(AppConstants.PROFILE_PIC_URL));
+                                mEditor.putString(AppConstants.FIRST_NAME, mData.getString(AppConstants.FIRST_NAME));
+                                mEditor.putString(AppConstants.LAST_NAME, mData.getString(AppConstants.LAST_NAME));
+                                mEditor.putString(AppConstants.OFFICE_LAT, mData.getString(AppConstants.OFFICE_LAT));
+                                mEditor.putString(AppConstants.OFFICE_LNG, mData.getString(AppConstants.OFFICE_LNG));
+                                mEditor.putString(AppConstants.HOME_LAT, mData.getString(AppConstants.HOME_LAT));
+                                mEditor.putString(AppConstants.HOME_LNG, mData.getString(AppConstants.HOME_LNG));
+                                mEditor.apply();
+                                AppController.getInstance().isUpdate = true;
                             }
+                            //  Toast.makeText(ProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+                            alert(message);
                         } else {
-                            try {
-                                JSONObject mData = new JSONObject(message);
-                                if (mData.has(mData.getString(AppConstants.EMAIL_ADDRESS))) {
-                                    message = mData.getString(AppConstants.EMAIL_ADDRESS);
-                                } else if (mData.has(mData.getString(AppConstants.MOBILE))) {
-                                    message = mData.getString(AppConstants.MOBILE);
-                                } else {
+                            setupViewPager(viewPager);
+                            tabLayout.setupWithViewPager(viewPager);
+                        }
+                    } else {
+                        try {
+                            JSONObject mData = new JSONObject(message);
+                            if (mData.has(mData.getString(AppConstants.EMAIL_ADDRESS))) {
+                                message = mData.getString(AppConstants.EMAIL_ADDRESS);
+                            } else if (mData.has(mData.getString(AppConstants.MOBILE))) {
+                                message = mData.getString(AppConstants.MOBILE);
+                            } else {
 
-                                    if (response.has(AppConstants.ERROR_CODE)) {
-                                        String error = response.getString(AppConstants.ERROR_CODE);
-                                        if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
-                                            Intent mIntent = new Intent(ProfileActivity.this, LoginActivity.class);
-                                            mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(mIntent);
-                                            finish();
-                                        }
+                                if (response.has(AppConstants.ERROR_CODE)) {
+                                    String error = response.getString(AppConstants.ERROR_CODE);
+                                    if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
+                                        Intent mIntent = new Intent(ProfileActivity.this, LoginActivity.class);
+                                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(mIntent);
+                                        finish();
                                     }
                                 }
-                                Toast.makeText(ProfileActivity.this, message, Toast.LENGTH_SHORT).show();
-                            } catch (Exception e) {
-                                Toast.makeText(ProfileActivity.this, message, Toast.LENGTH_SHORT).show();
-                                e.printStackTrace();
                             }
+                            Toast.makeText(ProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Toast.makeText(ProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }, new Response.ErrorListener() {
 

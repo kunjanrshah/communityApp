@@ -8,7 +8,7 @@ public class AppConstants {
     public static final String[] CALL_CAMARA = {Manifest.permission.CAMERA};
     public static final int CAMARA_REQUEST = 4;
     public static final int INIT_REQUEST = 1;
-    public static int REQEUST_CODE_CITY=14;
+
     public static final String ADMIN = "ADMIN";
     public static final String USER = "USER";
 
@@ -45,6 +45,7 @@ public class AppConstants {
     public static final String IS_SHARE = "is_share";
     public static final String CAN_SHARE = "can_share";
     public static final String API_KEY = "api_key";
+    public static final String ALLOW_GET_DATA = "allow_get_data";
     public static final String DEVICE_TYPE = "device_type";
     public static final String DEVICE_TOKEN = "device_token";
     public static final String DEVICE_ID = "int_udid";
@@ -248,7 +249,7 @@ public class AppConstants {
     private static final String BASE_URL = "http://www.superbinstruments.com/directory-dev";
     //  private static final String BASE_URL = "http://www.superbinstruments.com/yadav";
     public static final String LOGIN_URL = BASE_URL + "/API/login";
-    public static final String SIGNUP_URL = BASE_URL + "/API/register";
+    public static final String SIGNUP_URL = BASE_URL + "/API/Userreg";
     public static final String FORGOT_PASSWORD_URL = BASE_URL + "/API/forgotPassword";
     public static final String ADVANCE_SEARCH_URL = BASE_URL + "/API/searchUsers";
     public static final String GLOBAL_SEARCH_URL = BASE_URL + "/API/globalSearch";

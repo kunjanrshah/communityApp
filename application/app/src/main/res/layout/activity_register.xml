@@ -30,7 +30,7 @@
                 android:id="@+id/img_header_logo"
                 android:layout_width="250dp"
                 android:layout_height="22dp"
-                android:background="@drawable/group1copy" />
+                android:background="@drawable/app_text_title" />
         </LinearLayout>
 
         <ImageView
@@ -87,7 +87,7 @@
             <EditText
                 android:id="@+id/edt_head_name"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/register_field_height"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/border"
                 android:drawableStart="@drawable/man_user"
@@ -100,7 +100,7 @@
             <EditText
                 android:id="@+id/edt_head_surname"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/register_field_height"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:drawableStart="@drawable/man_user"
@@ -114,7 +114,7 @@
             <EditText
                 android:id="@+id/edt_email_id"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/register_field_height"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:drawableStart="@drawable/close_envelope"
@@ -147,7 +147,7 @@
                 <EditText
                     android:id="@+id/edt_mobile"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/register_field_height"
                     android:layout_marginLeft="5dp"
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/icon"
@@ -162,7 +162,7 @@
             <EditText
                 android:id="@+id/edt_password"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/register_field_height"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:drawableStart="@drawable/lock"
@@ -177,7 +177,7 @@
             <EditText
                 android:id="@+id/edt_cpassword"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/register_field_height"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:drawableStart="@drawable/lock"
@@ -198,7 +198,7 @@
                 <AutoCompleteTextView
                     android:id="@+id/autoCompleteTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/register_field_height"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/border"
@@ -211,21 +211,6 @@
                     android:padding="10dp"
                     android:singleLine="true"
                     android:textSize="18sp" />
-
-
-                <TextView
-                    android:id="@+id/txtCity"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@drawable/border"
-                    android:gravity="center_vertical"
-                    android:hint="@string/hint_city"
-                    android:inputType="textCapSentences"
-                    android:padding="10dp"
-                    android:singleLine="true"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp"
-                    android:visibility="gone" />
             </LinearLayout>
 
             <EditText

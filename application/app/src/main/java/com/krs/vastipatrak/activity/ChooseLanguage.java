@@ -19,9 +19,8 @@ import java.util.Objects;
 
 public class ChooseLanguage extends Activity {
 
-    String[] languages;
     private Button btn_login, btn_register;
-    private Spinner spinner1;
+    private Spinner splanguage;
     private boolean is_login = false;
     private boolean is_register = false;
 
@@ -31,10 +30,10 @@ public class ChooseLanguage extends Activity {
 
         setContentView(R.layout.activity_choose_languages);
         MemoryAllocation();
-        languages = Objects.requireNonNull(this).getResources().getStringArray(R.array.languages);
+        String[] languages = Objects.requireNonNull(this).getResources().getStringArray(R.array.languages);
         ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, languages);
-        spinner1.setAdapter(aa);
-        spinner1.setSelection(1);
+        splanguage.setAdapter(aa);
+        splanguage.setSelection(1);
 
         btn_login.setOnClickListener(v -> {
             if (!is_login) {
@@ -81,14 +80,14 @@ public class ChooseLanguage extends Activity {
 
     private void MemoryAllocation() {
 
-        spinner1 = findViewById(R.id.splanguage);
+        splanguage = findViewById(R.id.splanguage);
         btn_login = findViewById(R.id.btn_login);
         btn_register = findViewById(R.id.btn_register);
 
-        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        splanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Utility.changeLang(ChooseLanguage.this, spinner1.getSelectedItem().toString());
+                Utility.changeLang(ChooseLanguage.this, splanguage.getSelectedItem().toString());
                 btn_login.setText(getResources().getString(R.string.login));
                 btn_register.setText(getResources().getString(R.string.register));
             }
@@ -98,24 +97,5 @@ public class ChooseLanguage extends Activity {
 
             }
         });
-/*
-        spinner1.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                Utility.changeLang(ChooseLanguage.this,spinner1.getText().toString());
-                btn_login.setText(getResources().getString(R.string.login));
-                btn_register.setText(getResources().getString(R.string.register));
-            }
-        });*/
     }
 }

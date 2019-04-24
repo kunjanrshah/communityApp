@@ -87,6 +87,7 @@ import static com.krs.vastipatrak.utils.AppConstants.INIT_TIMEOUT;
 import static com.krs.vastipatrak.utils.Utility.hideProgressDialog;
 import static com.krs.vastipatrak.utils.Utility.isValidEmail;
 import static com.krs.vastipatrak.utils.Utility.isValidMobile;
+import static com.krs.vastipatrak.utils.Utility.showProgressDialog;
 
 
 public class LoginActivity extends Activity {
@@ -133,7 +134,6 @@ public class LoginActivity extends Activity {
         @Override
         public void onVerificationFailed(FirebaseException e) {
             Utility.alert(LoginActivity.this, e.getMessage());
-            //Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     };
 
@@ -142,7 +142,7 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_login1);
+        setContentView(R.layout.activity_login);
 
         MemoryAllocation();
 
@@ -324,7 +324,6 @@ public class LoginActivity extends Activity {
                 if (str.isEmpty() || str.length() < 10 || !isValidMobile(str)) {
                     edt_username.requestFocus();
                     Utility.alert(this, getString(R.string.err_msg_invalid_mobile));
-                    // Toast.makeText(this, getString(R.string.err_msg_invalid_mobile), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 verifyValidUser(str, false);
@@ -332,7 +331,6 @@ public class LoginActivity extends Activity {
                 if (str.isEmpty() || isValidEmail(str)) {
                     edt_username.requestFocus();
                     Utility.alert(this, getString(R.string.err_msg_email));
-                    //Toast.makeText(this, getString(R.string.err_msg_email), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 verifyValidUser(str, true);
@@ -344,11 +342,9 @@ public class LoginActivity extends Activity {
                         call_change_password_ws();
                     } else {
                         Utility.alert(this, getString(R.string.err_msg_repeat_password));
-                        //Toast.makeText(this, getString(R.string.err_msg_repeat_password), Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Utility.alert(this, getString(R.string.err_msg_password));
-                    //Toast.makeText(this, getString(R.string.err_msg_password), Toast.LENGTH_SHORT).show();
                 }
             } else {
                 if (edt_pass.isShown()) {
@@ -624,7 +620,6 @@ public class LoginActivity extends Activity {
                     }
                 } else {
                     Utility.alert(this, getString(R.string.invalid_username));
-                    //Toast.makeText(LoginActivity.this, R.string.invalid_username, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -645,7 +640,6 @@ public class LoginActivity extends Activity {
                 message = getString(R.string.connection_timeout);
             }
             Utility.alert(this, message);
-            //Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_LONG).show();
         }) {
             @NonNull
             @Override
@@ -715,7 +709,6 @@ public class LoginActivity extends Activity {
                             }
                         } else {
                             Utility.alert(LoginActivity.this, message);
-                            //Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                             if (response.has(AppConstants.ERROR_CODE)) {
                                 String error = response.getString(AppConstants.ERROR_CODE);
                                 /*if (error.equalsIgnoreCase(AppConstants.ERROR_13)) {
@@ -812,7 +805,6 @@ public class LoginActivity extends Activity {
     private void LoginWS(FirebaseUser user, JSONObject data, int is_from) {
 
         if (Utility.isOnline(this)) {
-            Utility.showProgressDialog(this);
             String username = "";
             String email_or_mobile = "";
             String password = "";
@@ -830,7 +822,6 @@ public class LoginActivity extends Activity {
                                 fetchLoginData(json);
                             } else {
                                 Utility.alert(LoginActivity.this, getResources().getString(R.string.invalid_email));
-                                //Toast.makeText(LoginActivity.this, "Invalid Email", Toast.LENGTH_SHORT).show();
                                 return;
                             }
                         } else if (edt_username.getHint().toString().contains("Mobile")) {
@@ -840,7 +831,6 @@ public class LoginActivity extends Activity {
                                 fetchLoginData(json);
                             } else {
                                 Utility.alert(LoginActivity.this, getResources().getString(R.string.err_msg_invalid_mobile));
-                                //Toast.makeText(LoginActivity.this, "Invalid Mobile", Toast.LENGTH_SHORT).show();
                                 return;
                             }
                         }
@@ -849,7 +839,6 @@ public class LoginActivity extends Activity {
                     }
                 } else {
                     Utility.alert(LoginActivity.this, getString(R.string.err_msg_blank));
-                    //Toast.makeText(LoginActivity.this, getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
                     return;
                 }
             } else if (is_from == is_from_fb) {
@@ -896,7 +885,6 @@ public class LoginActivity extends Activity {
                         if (username != null && !username.isEmpty()) {
                         } else {
                             Utility.alert(LoginActivity.this, getResources().getString(R.string.error_msg_get_data_social_site));
-                            //Toast.makeText(LoginActivity.this, R.string.error_msg_get_data_social_site, Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
@@ -930,6 +918,7 @@ public class LoginActivity extends Activity {
     }
 
     private void fetchLoginData(JSONObject json) {
+        Utility.showProgressDialog(this);
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.LOGIN_URL, json, response -> {
             Log.d(TAG, "LoginWS: " + response.toString());
 
@@ -963,7 +952,6 @@ public class LoginActivity extends Activity {
                 message = getString(R.string.connection_timeout);
             }
             Utility.alert(LoginActivity.this, message);
-            //Toast.makeText(LoginActivity.this, "" + message, Toast.LENGTH_LONG).show();
         }) {
             @NonNull
             @Override
@@ -1054,17 +1042,21 @@ public class LoginActivity extends Activity {
             this.mJsonObject = mJsonObject;
         }
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog(LoginActivity.this);
+        }
 
         @Override
         protected String doInBackground(String... strings) {
-            String str = Utility.getByteArrayFromImageURL(strings[0]);
-            return str;
+            return Utility.getByteArrayFromImageURL(strings[0]);
         }
 
         @Override
         protected void onPostExecute(String str) {
             super.onPostExecute(str);
-
+                hideProgressDialog();
             if (mJsonObject != null) {
                 try {
                     mJsonObject.put(AppConstants.PROFILE_PIC, str);
