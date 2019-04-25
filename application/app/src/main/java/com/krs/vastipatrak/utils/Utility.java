@@ -339,7 +339,7 @@ public class Utility {
                 baos.write(buffer, 0, read);
             }
             baos.flush();
-            return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+            return PiyushBase64.Base64.encodeBytes(baos.toByteArray(), Base64.DEFAULT);
         } catch (Exception e) {
             Log.d("Error", e.toString());
         }
