@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--Login page-->
+    <!--Splash screen -->
+    <string name="CityList_SP" translatable="false">CityList_SP</string>
+    <string name="allow_get_data_value" translatable="false">1</string>
+    <string name="all_cities_list" translatable="false">all_cities</string>
+
+    <!--Choose Language screen -->
     <string name="login">लॉगइन</string>
     <string name="register">रजिस्टर</string>
     <string name="choose_language">भाषा बदलें</string>
+
+    <!--Login page-->
     <string name="login_now">अब लॉगिन करें</string>
     <string name="please_login_to_continue_using_our_app">कृप्या एप्लिकेशन जारी रखने के लिए लॉगिन करे</string>
     <string name="login_with">के साथ लॉगिन करें</string>
@@ -15,13 +22,29 @@
     <string name="password">पासवर्ड</string>
     <string name="_forgot_password">पासवर्ड भूल गए ?</string>
     <string name="or_login_with">या लॉगिन करें</string>
-    <string name="already_have_a_account_sign_in">क्या आपके पास पहले से एक खाता मौजूद है? </string>
     <string name="do_you_have_an_account_register_now">क्या आपका अकाउंट है??</string>
-    <string name="register_now">रजिस्टर करें</string>
-    <string name="send_otp">OTP भेजें</string>
+    <string name="get_otp">OTP भेजें</string>
     <string name="send_email">ईमेल भेजें</string>
+    <string name="err_msg_blank">कृपया खाली विवरण दर्ज करें</string>
+    <string name="nav_item_change_password">पासवर्ड बदलें</string>
+    <string name="err_msg_invalid_mobile">अमान्य मोबाइल नंबर</string>
+    <string name="err_msg_email">मान्य ईमेल दर्ज करें</string>
+    <string name="err_msg_password">पासवर्ड दर्ज करे</string>
+    <string name="type_otp">ओटीपी टाइप करें</string>
+    <string name="registraion_request_pending">रजिस्ट्रेशन रिक्वेस्ट पेंडिंग हे. कृपया व्यवस्थापक से संपर्क करें।</string>
+    <string name="invalid_username">इनवैलिड यूजर</string>
+    <string name="error_msg_get_data_social_site">सोसिअल अकाउंट से डिटेल्स नहीं ले सकते</string>
+    <string name="update_profile_photo">क्या आप फ़ोटो अपडेट करना चाहते हैं?</string>
+    <string name="yes">यस </string>
+    <string name="no">नहीं</string>
+    <string name="how_to_login">लॉगइन  कैसे करे</string>
+    <string name="invalid_username_password">उपयोगकर्ता नाम या पासवर्ड गलत है</string>
+    <string name="loading">काम चालू है...</string>
+    <string name="user_not_found" >यूजर नॉट फाउंड!</string>
 
     <!--Registraion page-->
+    <string name="register_now">रजिस्टर करें</string>
+    <string name="already_have_a_account_sign_in">क्या आपके पास पहले से एक खाता मौजूद है? </string>
     <string name="hint_name">परिवार के मुखिया का नाम</string>
     <string name="hint_head_surname">परिवार के मुखिया का उपनाम</string>
     <string name="hint_spouse_name">जीवनसाथी का नाम</string>
@@ -31,5 +54,15 @@
     <string name="hint_conform_password">पासवर्ड की पुष्टि कीजिये</string>
     <string name="hint_address">पता</string>
     <string name="how_to_register">कैसे करें रजिस्टर?</string>
+    <string name="hint_surname">लास्ट नाम</string>
+    <string name="hint_city">शहर</string>
+    <string name="invalid_mobile_range">मोबाइल नंबर 10 अंकों का होना चाहिए</string>
+    <string name="invalid_email">अमान्य ईमेल!</string>
+    <string name="err_msg_repeat_password">पासवर्ड और रिपीट पासवर्ड मेल नहीं खाते</string>
 
+    <!-- Common Screen -->
+    <string name="can_not_connect_to_internet">इंटरनेट से कनेक्ट नहीं किया जा सकता ... कृपया अपना कनेक्शन जांचें!</string>
+    <string name="server_could_not_found">सर्वर नहीं मिल सका। कृपया कुछ समय बाद फिर से प्रयास करें !!</string>
+    <string name="parsing_error">पार्सिंग की त्रुटि! कृपया कुछ समय बाद फिर से प्रयास करें !!</string>
+    <string name="connection_timeout">कनेक्शन का समय समाप्त! कृपया अपने इंटरनेट कनेक्शन की जाँच करें।</string>
 </resources>

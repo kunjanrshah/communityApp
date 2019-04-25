@@ -1602,7 +1602,7 @@ public class Utility {
             if (!((Activity) mContext).isFinishing()) {
                 if (pDialog == null) {
                     pDialog = new ProgressDialog(mContext);
-                    pDialog.setMessage(AppConstants.LOADING);
+                    pDialog.setMessage(mContext.getString(R.string.loading));
                     pDialog.setCancelable(false);
                 }
                 if (!pDialog.isShowing()) pDialog.show();

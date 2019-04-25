@@ -1,20 +1,20 @@
 <resources>
     <string name="theme_app_name">વસ્તીપત્રક</string>
     <string name="app_name">વસ્તીપત્રક</string>
-    <string name="hint_email">Email ID</string>
+
     <string name="hint_other">If Other (Please Specify)</string>
     <string name="hint_email_mobile">Email or Mobile</string>
-    <string name="hint_mobile">Mobile No</string>
-    <string name="hint_password">Password</string>
 
-    <string name="hint_city">City</string>
+
+
+
     <string name="hint_native">Native Place</string>
     <string name="btn_sign_up">SIGN UP</string>
     <string name="btn_add_new">ADD NEW</string>
     <string name="btn_sign_in">SIGN IN</string>
-    <string name="hint_name">Family Head First Name</string>
+
     <string name="hint_head_surname">Family Head SurName</string>
-    <string name="hint_surname">Last Name</string>
+
     <string name="hint_father_name">Father Name</string>
     <string name="hint_mother_name">Mother Name</string>
     <string name="hint_birth_date">Birth Date</string>
@@ -324,8 +324,8 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="title_activity_share_event">ShareEventActivity</string>
 
     <string name="tour_video">Tour Video</string>
-    <string name="how_to_login">How to login?</string>
-    <string name="how_to_register">How to Register?</string>
+
+
     <string name="language">Language</string>
     <string name="select_subcast">Select Subcast</string>
     <string name="select_ekdo">Select Ekdo</string>
@@ -415,46 +415,56 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="password">Password</string>
     <string name="_forgot_password">Forgot Password?</string>
     <string name="or_login_with">Or Login with</string>
-    <string name="err_msg_blank">Please enter missing details</string>
-    <string name="register_now">REGISTER NOW</string>
     <string name="enter_email_id">Enter Email ID</string>
     <string name="get_otp">Get OTP</string>
     <string name="send_email">send email</string>
-    <string name="nav_item_change_password">Change Password</string>
-    <string name="already_have_a_account_sign_in">Already have a account?</string>
     <string name="do_you_have_an_account_register_now">Do you have an account?</string>
+    <string name="err_msg_blank">Please enter missing details</string>
+    <string name="nav_item_change_password">Change Password</string>
     <string name="err_msg_invalid_mobile">Invalid Mobile Number</string>
+    <string name="invalid_mobile" translatable="false">Invalid Mobile Number</string>
     <string name="err_msg_email">Enter valid email</string>
-    <string name="err_msg_repeat_password">Password and Repeat password not match</string>
     <string name="err_msg_password">Enter the password</string>
-    <string name="hint_conform_password">Confirm Password</string>
     <string name="type_otp">Type OTP</string>
     <string name="registraion_request_pending">Registration request is pending. Please contact to Admin !!</string>
     <string name="invalid_username">Invalid username</string>
-    <string name="can_not_connect_to_internet">Cannot connect to Internet...Please check your connection!</string>
-    <string name="server_could_not_found">The server could not be found. Please try again after some time!!</string>
-    <string name="parsing_error">Parsing error! Please try again after some time!!</string>
-    <string name="connection_timeout">Connection TimeOut! Please check your internet connection.</string>
-    <string name="invalid_email">Invalid Email Address!</string>
     <string name="error_msg_get_data_social_site">Not able to get your details from Social account</string>
+    <string name="update_profile_photo">Do you want to update Profile Photo?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="how_to_login">How to login?</string>
+    <string name="invalid_username_password">Invalid username or password</string>
+    <string name="loading">Loading...</string>
+    <string name="incorrect" translatable="false">incorrect</string>
+
 
 
 
 
     <!-- Register Screen -->
     <string name="hint_address">Address</string>
+    <string name="register_now">REGISTER NOW</string>
+    <string name="hint_name">Family Head First Name</string>
+    <string name="hint_email">Email ID</string>
+    <string name="hint_mobile">Mobile No</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_conform_password">Confirm Password</string>
+    <string name="how_to_register">How to Register?</string>
+    <string name="already_have_a_account_sign_in">Already have a account?</string>
+    <string name="hint_surname">Last Name</string>
+    <string name="hint_city">City</string>
+    <string name="invalid_mobile_range">Mobile number must be 10 digit</string>
+    <string name="invalid_email">Invalid Email Address!</string>
+    <string name="err_invalid_email" translatable="false">Invalid Email Address!</string>
+    <string name="err_msg_repeat_password" >Password and Repeat password not match</string>
+    <string name="user_not" translatable="false">User not</string>
+    <string name="user_not_found" >User not found!</string>
 
     <!-- Common Screen -->
-
-
-    <string name="city">City</string>
-
-
-
-
-    <string name="invalid_mobile_range">Mobile number must be 10 digit</string>
-
-
+    <string name="can_not_connect_to_internet">Cannot connect to Internet...Please check your connection!</string>
+    <string name="server_could_not_found">The server could not be found. Please try again after some time!!</string>
+    <string name="parsing_error">Parsing error! Please try again after some time!!</string>
+    <string name="connection_timeout">Connection TimeOut! Please check your internet connection.</string>
 
 
 

@@ -25,11 +25,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.QuickContactBadge;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
@@ -53,7 +51,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,12 +64,13 @@ public class RegisterActivty extends Activity {
 
     private static String TAG = RegisterActivty.class.getSimpleName();
     private TextView txt_already, txt_how_register;
-    private ImageView img_back, img_header_logo, img_profile, img_cancel;
+    private ImageView img_back;
+    private ImageView img_profile;
+    private ImageView img_cancel;
     private EditText edt_head_name, edt_email_id, edt_mobile, edt_password, edt_cpassword, edt_address, edt_head_surname;
     private Button btn_register;
     private JSONObject json = null;
     private String str_profile_hash = "";
-    private boolean is_first = true;
     private boolean isShow = true;
     private boolean isShow1 = true;
     private String add_new = "";
@@ -113,9 +111,7 @@ public class RegisterActivty extends Activity {
             return false;
         });
 
-        img_profile.setOnClickListener(v -> {
-            cropImageActivity();
-        });
+        img_profile.setOnClickListener(v -> cropImageActivity());
 
         img_cancel.setOnClickListener(v -> {
             img_profile.setImageResource(R.drawable.man_reg);
@@ -233,7 +229,7 @@ public class RegisterActivty extends Activity {
     private void MemoryAllocation() {
         autoCompleteTextView= findViewById(R.id.autoCompleteTextView);
         img_back = findViewById(R.id.img_back);
-        img_header_logo = findViewById(R.id.img_header_logo);
+        ImageView img_header_logo = findViewById(R.id.img_header_logo);
         img_profile = findViewById(R.id.img_profile);
         img_cancel = findViewById(R.id.img_cancel);
         spinnerCountries = findViewById(R.id.spinnerCountries);

@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--Login page-->
+
+
+    <!--Splash screen -->
+    <string name="CityList_SP" translatable="false">CityList_SP</string>
+    <string name="allow_get_data_value" translatable="false">1</string>
+    <string name="all_cities_list" translatable="false">all_cities</string>
+
+    <!--Choose Language screen -->
     <string name="login">લોગઈન</string>
     <string name="register">રજિસ્ટર</string>
     <string name="choose_language">ભાષા બદલો</string>
+
+    <!--Login page-->
     <string name="login_now">હમણાં જ લોગઇન કરો</string>
     <string name="please_login_to_continue_using_our_app">કૃપા કરીને તમારી એપ્લિકેશન ચાલુ રાખવા માટે લૉગિન કરો</string>
     <string name="login_with">લોગઇન વિથ</string>
@@ -14,13 +23,29 @@
     <string name="password">પાસવર્ડ</string>
     <string name="_forgot_password">પાસવર્ડ ભૂલી ગયા છો?</string>
     <string name="or_login_with">ઓર લોગઇન વિથ</string>
-    <string name="already_have_a_account_sign_in">પહેલેથી જ એકાઉન્ટ છે?</string>
     <string name="do_you_have_an_account_register_now">શું તમારી પાસે એકાઉન્ટ છે?</string>
-    <string name="register_now">હમણાં જ રેજિસ્ટર કરો</string>
-    <string name="send_otp">OTP મોકલો</string>
+    <string name="get_otp">OTP મોકલો</string>
     <string name="send_email">ઈ-મેલ મોકલો</string>
+    <string name="err_msg_blank">કૃપા કરીને ખાલી વિગતો દાખલ કરો</string>
+    <string name="nav_item_change_password">પાસવર્ડ બદલો</string>
+    <string name="err_msg_invalid_mobile">અમાન્ય મોબાઇલ નંબર</string>
+    <string name="err_msg_email">માન્ય ઇમેઇલ દાખલ કરો</string>
+    <string name="err_msg_password">પાસવર્ડ દાખલ કરો</string>
+    <string name="type_otp">ઓટીપી લખો</string>
+    <string name="registraion_request_pending">રેજીસ્ટ્રેશન રિક્વેસ્ટ પેન્ડિંગ છે. પ્લીઝ એડમીન નો સંપર્ક કરો.</string>
+    <string name="invalid_username">ઇનવેલિડ યુઝર</string>
+    <string name="error_msg_get_data_social_site">સોશિયલ એકાઉન્ટથી તમારી વિગતો મેળવી શકતા નથી</string>
+    <string name="update_profile_photo">શું તમે પ્રોફાઇલ ફોટો અપડેટ કરવા માંગો છો?</string>
+    <string name="yes">હા</string>
+    <string name="no">ના</string>
+    <string name="how_to_login">લૉગિન કેવી રીતે કરવું?</string>
+    <string name="invalid_username_password">યુઝરનેમ અથવા પાસવર્ડ ખોટો છે</string>
+    <string name="loading">કાર્ય પ્રગતિમાં છે...</string>
+    <string name="user_not_found" >યુઝર નોટ ફાઉન્ડ!</string>
 
     <!--Registraion page-->
+    <string name="already_have_a_account_sign_in">પહેલેથી જ એકાઉન્ટ છે?</string>
+    <string name="register_now">હમણાં જ રેજિસ્ટર કરો</string>
     <string name="hint_name">ફેમિલી હેડ નું  નામ </string>
     <string name="hint_head_surname">ફેમિલી હેડ અટક</string>
     <string name="hint_spouse_name">જીવનસાથી નું નામ</string>
@@ -30,4 +55,16 @@
     <string name="hint_conform_password">પાસવર્ડની ખાતરી કરો</string>
     <string name="hint_address">સરનામું</string>
     <string name="how_to_register">રજીસ્ટર કેવી રીતે કરવું?</string>
+    <string name="hint_surname">લાસ્ટ નામ</string>
+    <string name="hint_city">શહેર</string>
+    <string name="invalid_mobile_range">મોબાઇલ નંબર 10 અંક હોવો આવશ્યક છે</string>
+    <string name="invalid_email">અમાન્ય ઇમેઇલ!</string>
+    <string name="err_msg_repeat_password">પાસવર્ડ અને પુનરાવર્તન પાસવર્ડ મેળ ખાતા નથી</string>
+
+    <!-- Common Screen -->
+    <string name="can_not_connect_to_internet">ઇન્ટરનેટથી કનેક્ટ કરી શકાતું નથી ... કૃપા કરીને તમારું કનેક્શન તપાસો!</string>
+    <string name="server_could_not_found">સર્વર મળી શક્યું નથી. થોડીવાર પછી ફરી પ્રયત્ન કરો !!</string>
+    <string name="parsing_error">પાર્સિંગની ભૂલ! થોડીવાર પછી ફરી પ્રયત્ન કરો !!</string>
+    <string name="connection_timeout">કનેક્શન સમયસમાપ્તિ! કૃપા કરીને તમારું ઇન્ટરનેટ કનેક્શન તપાસો.</string>
+
 </resources>

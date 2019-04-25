@@ -78,7 +78,6 @@ public class AppConstants {
     public static final String IS_HOME = "is_home";
     public static final String UPDATE_USER_ID = "update_user_id";
     public static final String EVENT_DATE = "event_date";
-    public static final String LOADING = "Loading...";
     public static final String NO_CONNECTION = "No internet connection!";
     public static final String EMAIL = "email";
     public static final String FIRST_NAME = "first_name";

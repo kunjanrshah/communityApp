@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
@@ -677,9 +678,7 @@ public class LoginActivity extends Activity {
                 e.printStackTrace();
             }
 
-
             final String password_url = AppConstants.CHANGE_PASSWORD_URL;
-
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, password_url, mJsonObject, new Response.Listener<JSONObject>() {
 
                 @Override
@@ -815,7 +814,7 @@ public class LoginActivity extends Activity {
                 password = edt_pass.getText().toString();
                 if (!email_or_mobile.isEmpty() && !password.isEmpty()) {
                     try {
-                        if (edt_username.getHint().toString().contains("Email")) {
+                        if (isSelected.equalsIgnoreCase(Email)) {
                             if (!isValidEmail(email_or_mobile)) {
                                 json.put(AppConstants.USERNAME, email_or_mobile);
                                 json.put(AppConstants.PASSWORD, password);
@@ -824,7 +823,7 @@ public class LoginActivity extends Activity {
                                 Utility.alert(LoginActivity.this, getResources().getString(R.string.invalid_email));
                                 return;
                             }
-                        } else if (edt_username.getHint().toString().contains("Mobile")) {
+                        } else {
                             if (isValidMobile(email_or_mobile)) {
                                 json.put(AppConstants.USERNAME, email_or_mobile);
                                 json.put(AppConstants.PASSWORD, password);
@@ -856,14 +855,25 @@ public class LoginActivity extends Activity {
 
                 if (!fb_profile_url.isEmpty()) {
 
-                    try {
-                        json.put(AppConstants.USERNAME, fb_email);
-                        json.put(AppConstants.IS_SOCIAL, "1");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    new GetBase64String(json).execute(fb_profile_url);
-
+                    String finalFb_email = fb_email;
+                    String finalFb_profile_url = fb_profile_url;
+                    new AlertDialog.Builder(this).setTitle(getString(R.string.app_name)).setMessage(getResources().getString(R.string.update_profile_photo)).setIcon(R.drawable.app_icon).setCancelable(false).setPositiveButton(getString(R.string.yes), (dialog, whichButton) -> {
+                        try {
+                            json.put(AppConstants.USERNAME, finalFb_email);
+                            json.put(AppConstants.IS_SOCIAL, "1");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        new GetBase64String(json).execute(finalFb_profile_url);
+                    }).setNegativeButton(getString(R.string.no), (dialog, which) -> {
+                        try {
+                            json.put(AppConstants.USERNAME, finalFb_email);
+                            json.put(AppConstants.IS_SOCIAL, "1");
+                            fetchLoginData(json);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).show();
                 } else {
                     try {
                         json.put(AppConstants.USERNAME, fb_email);
@@ -873,7 +883,6 @@ public class LoginActivity extends Activity {
                         e.printStackTrace();
                     }
                 }
-
             } else if (is_from == is_from_google) {
 
                 if (user != null) {
@@ -891,14 +900,25 @@ public class LoginActivity extends Activity {
 
                     if (!user.getPhotoUrl().toString().isEmpty()) {
 
-                        try {
-                            json.put(AppConstants.USERNAME, username);
-                            json.put(AppConstants.IS_SOCIAL, "1");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        new GetBase64String(json).execute(user.getPhotoUrl().toString().replace("s96-c", "s240-c"));
+                        final String finalUsername = username;
+                        new AlertDialog.Builder(this).setTitle(getString(R.string.app_name)).setMessage(getResources().getString(R.string.update_profile_photo)).setIcon(R.drawable.app_icon).setCancelable(false).setPositiveButton(getString(R.string.yes), (dialog, whichButton) -> {
+                            try {
+                                json.put(AppConstants.USERNAME, finalUsername);
+                                json.put(AppConstants.IS_SOCIAL, "1");
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            new GetBase64String(json).execute(user.getPhotoUrl().toString().replace("s96-c", "s240-c"));
+                        }).setNegativeButton(getString(R.string.no), (dialog, which) -> {
+                            try {
+                                json.put(AppConstants.USERNAME, finalUsername);
+                                json.put(AppConstants.IS_SOCIAL, "1");
+                                fetchLoginData(json);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
+                        }).show();
                     } else {
                         try {
                             json.put(AppConstants.USERNAME, username);
@@ -907,7 +927,6 @@ public class LoginActivity extends Activity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
                     }
                 }
             }
@@ -925,11 +944,25 @@ public class LoginActivity extends Activity {
             try {
                 hideProgressDialog();
                 boolean success = response.getBoolean(AppConstants.SUCCESS);
-                String message = response.getString(AppConstants.MESSAGE);
+                String message = response.getString(AppConstants.MESSAGE).toLowerCase();
                 if (success) {
                     AfterValidCheck(response, true);
                 } else {
-                    Utility.alert(LoginActivity.this, message);
+                    String str = "";
+                    if (message.contains(getString(R.string.incorrect).toLowerCase())) {
+                        str = getResources().getString(R.string.invalid_username_password);
+                    } else if (message.contains(getString(R.string.invalid_mobile).toLowerCase())) {
+                        str = getResources().getString(R.string.err_msg_invalid_mobile);
+                    } else if (message.contains(getString(R.string.err_invalid_email).toLowerCase())) {
+                        str = getResources().getString(R.string.invalid_email);
+                    } else if (message.contains(getString(R.string.err_invalid_email).toLowerCase())) {
+                        str = getResources().getString(R.string.invalid_email);
+                    } else if (message.contains(getString(R.string.user_not).toLowerCase())) {
+                        str = getResources().getString(R.string.user_not_found);
+                    } else {
+                        str = message;
+                    }
+                    Utility.alert(LoginActivity.this, str);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1056,7 +1089,7 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(String str) {
             super.onPostExecute(str);
-                hideProgressDialog();
+            hideProgressDialog();
             if (mJsonObject != null) {
                 try {
                     mJsonObject.put(AppConstants.PROFILE_PIC, str);
