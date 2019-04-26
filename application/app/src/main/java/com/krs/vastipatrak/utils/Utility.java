@@ -1607,7 +1607,7 @@ public class Utility {
                 }
                 if (!pDialog.isShowing()) pDialog.show();
                 ProgressBar progressbar = pDialog.findViewById(android.R.id.progress);
-                progressbar.getIndeterminateDrawable().setColorFilter(mContext.getColor(R.color.colorPrimaryDark), android.graphics.PorterDuff.Mode.SRC_IN);
+                progressbar.getIndeterminateDrawable().setColorFilter(mContext.getResources().getColor(R.color.colorPrimaryDark), android.graphics.PorterDuff.Mode.SRC_IN);
             }
 
 

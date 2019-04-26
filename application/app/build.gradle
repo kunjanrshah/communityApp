@@ -10,9 +10,9 @@ android {
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.krs.vastipatrak"
-        minSdkVersion 23
+        minSdkVersion 21
         versionCode 17
-        versionName "1.17.0"
+        versionName "1.20.0"
         multiDexEnabled true
     }
     buildTypes {

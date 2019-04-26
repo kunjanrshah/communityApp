@@ -166,11 +166,11 @@ public class LoginActivity extends Activity {
             filters[0] = new InputFilter.LengthFilter(10); //Filter to 10 characters
             edt_username.setFilters(filters);
 
-            btn_mobile.setBackgroundColor(getColor(R.color.colorPrimaryDark));
-            btn_mobile.setTextColor(getColor(R.color.mdtp_white));
+            btn_mobile.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            btn_mobile.setTextColor(getResources().getColor(R.color.mdtp_white));
 
             btn_email.setBackground(getDrawable(R.drawable.border));
-            btn_email.setTextColor(getColor(R.color.mdtp_transparent_black));
+            btn_email.setTextColor(getResources().getColor(R.color.mdtp_transparent_black));
 
             edt_pass.setHint(getString(R.string.password));
             edt_pass.setVisibility(View.VISIBLE);
@@ -191,11 +191,11 @@ public class LoginActivity extends Activity {
             edt_username.setHint(R.string.enter_email_id);
             edt_username.setText("");
 
-            btn_email.setBackgroundColor(getColor(R.color.colorPrimaryDark));
-            btn_email.setTextColor(getColor(R.color.mdtp_white));
+            btn_email.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            btn_email.setTextColor(getResources().getColor(R.color.mdtp_white));
 
             btn_mobile.setBackground(getDrawable(R.drawable.border));
-            btn_mobile.setTextColor(getColor(R.color.mdtp_transparent_black));
+            btn_mobile.setTextColor(getResources().getColor(R.color.mdtp_transparent_black));
 
             edt_pass.setHint(getString(R.string.password));
             edt_pass.setVisibility(View.VISIBLE);
@@ -311,12 +311,14 @@ public class LoginActivity extends Activity {
             Intent mIntent = new Intent(LoginActivity.this, RegisterActivty.class);
             startActivity(mIntent);
             finish();
+            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
         });
 
         img_back.setOnClickListener(v -> {
             Intent mIntent = new Intent(LoginActivity.this, ChooseLanguage.class);
             startActivity(mIntent);
             finish();
+            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
         });
 
         btn_login.setOnClickListener(v -> {

@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
@@ -37,8 +38,6 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.AppConstants;
@@ -54,6 +53,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
 import static com.krs.vastipatrak.utils.AppConstants.INIT_TIMEOUT;
@@ -65,7 +66,7 @@ public class RegisterActivty extends Activity {
     private static String TAG = RegisterActivty.class.getSimpleName();
     private TextView txt_already, txt_how_register;
     private ImageView img_back;
-    private ImageView img_profile;
+    private CircleImageView img_profile;
     private ImageView img_cancel;
     private EditText edt_head_name, edt_email_id, edt_mobile, edt_password, edt_cpassword, edt_address, edt_head_surname;
     private Button btn_register;
@@ -89,17 +90,22 @@ public class RegisterActivty extends Activity {
         }
 
         MemoryAllocation();
-        setCityListAdapter();
+        runOnUiThread(() -> setCityListAdapter());
+
         txt_already.setOnClickListener(v -> {
             Intent mIntent = new Intent(RegisterActivty.this, LoginActivity.class);
+            mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(mIntent);
             finish();
+            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
         });
 
         img_back.setOnClickListener(v -> {
             Intent mIntent = new Intent(RegisterActivty.this, ChooseLanguage.class);
+            mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(mIntent);
             finish();
+            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
         });
 
         btn_register.setOnClickListener(v -> RegistraionWS());
@@ -204,22 +210,19 @@ public class RegisterActivty extends Activity {
         });
     }
 
-    private void setCityListAdapter()
-    {
-        String citylist=AppController.getInstance().mSharedPreferences.getString(getString(R.string.CityList_SP),"");
+    private void setCityListAdapter() {
+        String citylist = AppController.getInstance().mSharedPreferences.getString(getString(R.string.CityList_SP), "");
         ArrayList<String> lstCities = new ArrayList<>();
-        try
-            {
-                JSONObject response=new JSONObject(citylist);
-                JSONArray mArray = response.getJSONArray(AppConstants.DATA);
-                for (int i = 0; i < mArray.length(); i++) {
-                    JSONObject mObject = mArray.getJSONObject(i);
-                    lstCities.add(mObject.getString("city_name"));
-                }
-            }catch (Exception e)
-            {
-                e.printStackTrace();
+        try {
+            JSONObject response = new JSONObject(citylist);
+            JSONArray mArray = response.getJSONArray(AppConstants.DATA);
+            for (int i = 0; i < mArray.length(); i++) {
+                JSONObject mObject = mArray.getJSONObject(i);
+                lstCities.add(mObject.getString("city_name"));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, lstCities);
         autoCompleteTextView.setThreshold(2);
@@ -227,7 +230,7 @@ public class RegisterActivty extends Activity {
     }
 
     private void MemoryAllocation() {
-        autoCompleteTextView= findViewById(R.id.autoCompleteTextView);
+        autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
         img_back = findViewById(R.id.img_back);
         ImageView img_header_logo = findViewById(R.id.img_header_logo);
         img_profile = findViewById(R.id.img_profile);
@@ -273,11 +276,12 @@ public class RegisterActivty extends Activity {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                BitmapDrawable drawable = (BitmapDrawable) img_profile.getDrawable();
-                Bitmap bmp = drawable.getBitmap();
-                Glide.with(this).load(result.getUri()).thumbnail(0.5f).apply(RequestOptions.circleCropTransform()).into(img_profile);
-                str_profile_hash = Utility.getBase64(bmp);
-                img_cancel.setVisibility(View.VISIBLE);
+                try {
+                    img_profile.setImageURI(result.getUri());
+                    img_cancel.setVisibility(View.VISIBLE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(RegisterActivty.this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
             }
@@ -297,7 +301,7 @@ public class RegisterActivty extends Activity {
             String city = autoCompleteTextView.getText().toString().trim();
 
             if (mobile.length() != 10) {
-                Utility.alert(RegisterActivty.this,getString(R.string.invalid_mobile_range));
+                Utility.alert(RegisterActivty.this, getString(R.string.invalid_mobile_range));
                 return;
             }
             /*String code = CountryData.countryAreaCodes[spinnerCountries.getSelectedItemPosition()];
@@ -305,14 +309,14 @@ public class RegisterActivty extends Activity {
 
             if (!email.isEmpty()) {
                 if (Utility.isValidEmail(email)) {
-                    Utility.alert(RegisterActivty.this,getString(R.string.invalid_email));
+                    Utility.alert(RegisterActivty.this, getString(R.string.invalid_email));
                     return;
                 }
             }
 
             if (!password.isEmpty() && !cpassword.isEmpty()) {
                 if (!password.equals(cpassword)) {
-                    Utility.alert(RegisterActivty.this,getString(R.string.err_msg_repeat_password));
+                    Utility.alert(RegisterActivty.this, getString(R.string.err_msg_repeat_password));
                     return;
                 }
             }
@@ -321,8 +325,8 @@ public class RegisterActivty extends Activity {
                 if (password.equalsIgnoreCase(cpassword)) {
                     if (mobile.length() == 10) {
                         try {
-                            json = new JSONObject();
                             Utility.showProgressDialog(this);
+                            json = new JSONObject();
                             json.put(AppConstants.FIRST_NAME, name);
                             json.put(AppConstants.LAST_NAME, surname);
                             json.put(AppConstants.EMAIL_ADDRESS, email);
@@ -337,6 +341,9 @@ public class RegisterActivty extends Activity {
                             } else {
                                 json.put(AppConstants.STATUS, "0");
                             }
+                            BitmapDrawable drawable = (BitmapDrawable) img_profile.getDrawable();
+                            runOnUiThread(() -> str_profile_hash = Utility.getBase64(drawable.getBitmap()));
+
                             if (!str_profile_hash.isEmpty()) {
                                 json.put(AppConstants.PROFILE_PIC, str_profile_hash);
                             }
@@ -384,7 +391,7 @@ public class RegisterActivty extends Activity {
                                 message = getString(R.string.connection_timeout);
                             }
                             //Toast.makeText(RegisterActivty.this, "" + message, Toast.LENGTH_LONG).show();
-                            Utility.alert(RegisterActivty.this,message);
+                            Utility.alert(RegisterActivty.this, message);
                         }) {
                             @NonNull
                             @Override
@@ -402,19 +409,19 @@ public class RegisterActivty extends Activity {
                         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
                         AppController.getInstance().addToRequestQueue(jsonObjReq, "");
                     } else {
-                        Utility.alert(RegisterActivty.this,getString(R.string.invalid_mobile_range));
+                        Utility.alert(RegisterActivty.this, getString(R.string.invalid_mobile_range));
                         //Toast.makeText(RegisterActivty.this, getString(R.string.err_msg_invalid_mobile), Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Utility.alert(RegisterActivty.this,getString(R.string.err_msg_repeat_password));
+                    Utility.alert(RegisterActivty.this, getString(R.string.err_msg_repeat_password));
                     //Toast.makeText(RegisterActivty.this, getString(R.string.err_msg_repeat_password), Toast.LENGTH_LONG).show();
                 }
             } else {
-                Utility.alert(RegisterActivty.this,getString(R.string.err_msg_blank));
+                Utility.alert(RegisterActivty.this, getString(R.string.err_msg_blank));
                 //Toast.makeText(RegisterActivty.this, getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
             }
         } else {
-            Utility.alert(RegisterActivty.this,getString(R.string.can_not_connect_to_internet));
+            Utility.alert(RegisterActivty.this, getString(R.string.can_not_connect_to_internet));
             //Toast.makeText(RegisterActivty.this, AppConstants.NO_CONNECTION, Toast.LENGTH_LONG).show();
         }
     }
