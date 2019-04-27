@@ -145,6 +145,7 @@
                     android:id="@+id/edt_username"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
+                    android:paddingRight="10dp"
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/icon"
                     android:inputType="phone|textNoSuggestions"
@@ -163,12 +164,27 @@
                 android:drawablePadding="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
-                android:drawableEnd="@drawable/password_hide"
+                android:drawableEnd="@drawable/pwd_hide"
                 android:drawableStart="@drawable/lock"
                 android:hint="@string/password"
-                android:imeOptions="actionDone"
+                android:inputType="textWebPassword"
                 android:paddingRight="10dp"
-                android:inputType="textPassword|textNoSuggestions"
+                android:paddingLeft="10dp"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/edt_cpass"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:visibility="gone"
+                android:drawablePadding="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:drawableEnd="@drawable/pwd_hide"
+                android:drawableStart="@drawable/lock"
+                android:hint="@string/hint_conform_password"
+                android:inputType="textWebPassword"
+                android:paddingRight="10dp"
                 android:paddingLeft="10dp"
                 android:singleLine="true" />
         </LinearLayout>
@@ -216,7 +232,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:text="@string/do_you_have_an_account_register_now" />
 
     </LinearLayout>
@@ -271,7 +287,6 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@color/mdtp_white"
                 android:src="@drawable/facebook" />
 
             <ImageView

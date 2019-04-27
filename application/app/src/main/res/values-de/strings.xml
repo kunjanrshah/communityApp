@@ -24,7 +24,7 @@
     <string name="_forgot_password">પાસવર્ડ ભૂલી ગયા છો?</string>
     <string name="or_login_with">ઓર લોગઇન વિથ</string>
     <string name="do_you_have_an_account_register_now">શું તમારી પાસે એકાઉન્ટ છે?</string>
-    <string name="get_otp">OTP મોકલો</string>
+    <string name="send_otp">OTP મોકલો</string>
     <string name="send_email">ઈ-મેલ મોકલો</string>
     <string name="err_msg_blank">કૃપા કરીને ખાલી વિગતો દાખલ કરો</string>
     <string name="nav_item_change_password">પાસવર્ડ બદલો</string>

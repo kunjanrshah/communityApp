@@ -104,7 +104,7 @@ public class LoginActivity extends Activity {
     private ImageView img_back, img_login_fb, img_login_google;
     private TextView txt_forgot_pass, txt_do_you_have, txt_cancel;
     private Button btn_mobile, btn_email, btn_login;
-    private EditText edt_username, edt_pass;
+    private EditText edt_username, edt_pass,edt_cpass;
     private boolean isShow = true;
     private SharedPreferences mSharedPreferences = null;
     private SharedPreferences.Editor mEditor = null;
@@ -115,12 +115,14 @@ public class LoginActivity extends Activity {
     private Spinner spinnerCountries;
     private RelativeLayout rl_spinner;
     private String isSelected = Mobile;
+    private String mobile_no = "";
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         @Override
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
             verificationId = s;
+            btn_login.setText(getResources().getString(R.string.verify_otp));
         }
 
         @Override
@@ -206,13 +208,20 @@ public class LoginActivity extends Activity {
 
         });
 
-        edt_pass.setOnEditorActionListener((v, actionId, event) -> {
+        /*edt_pass.setOnEditorActionListener((v, actionId, event) -> {
             if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-
-                btn_login.performClick();
+                if (btn_login.getText().toString().toLowerCase().contains("Change".toLowerCase())) {
+                    if (!edt_username.getText().toString().isEmpty() && !edt_pass.getText().toString().isEmpty()) {
+                        if (edt_username.getText().toString().equals(edt_pass.getText().toString().isEmpty())) {
+                            call_change_password_ws();
+                        }
+                    }
+                } else {
+                    btn_login.performClick();
+                }
             }
             return false;
-        });
+        });*/
 
         edt_username.addTextChangedListener(new TextWatcher() {
             @Override
@@ -244,6 +253,11 @@ public class LoginActivity extends Activity {
             } else {
                 btn_mobile.performClick();
             }
+            edt_username.setText("");
+            edt_pass.setText("");
+            edt_cpass.setText("");
+            edt_username.setVisibility(View.VISIBLE);
+            edt_cpass.setVisibility(View.GONE);
             edt_pass.setHint(getString(R.string.password));
             edt_pass.setVisibility(View.VISIBLE);
             txt_cancel.setVisibility(View.GONE);
@@ -273,6 +287,7 @@ public class LoginActivity extends Activity {
                             mJsonObject.put("url", url);
                             LoginWS(null, mJsonObject, is_from_fb);
                         } catch (JSONException e) {
+                            Toast.makeText(LoginActivity.this, "Error while getting records from Facebook", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     });
@@ -316,14 +331,17 @@ public class LoginActivity extends Activity {
 
         img_back.setOnClickListener(v -> {
             Intent mIntent = new Intent(LoginActivity.this, ChooseLanguage.class);
+            mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(mIntent);
             finish();
             overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
         });
 
+
         btn_login.setOnClickListener(v -> {
             String str = edt_username.getText().toString().trim();
-            if (btn_login.getText().toString().contains(getString(R.string.get_otp))) {
+
+            if (btn_login.getText().toString().contains(getString(R.string.send_otp))) {
                 if (str.isEmpty() || str.length() < 10 || !isValidMobile(str)) {
                     edt_username.requestFocus();
                     Utility.alert(this, getString(R.string.err_msg_invalid_mobile));
@@ -338,17 +356,21 @@ public class LoginActivity extends Activity {
                 }
                 verifyValidUser(str, true);
             } else if (btn_login.getText().toString().contains(getString(R.string.password))) {
-                String str1 = edt_username.getText().toString().trim();
-                String str2 = edt_pass.getText().toString().trim();
+                String str1 = edt_pass.getText().toString().trim();
+                String str2 = edt_cpass.getText().toString().trim();
                 if (!str1.isEmpty() && !str2.isEmpty()) {
                     if (str1.equals(str2)) {
-                        call_change_password_ws();
+                        call_change_password_ws(str1,str2);
                     } else {
                         Utility.alert(this, getString(R.string.err_msg_repeat_password));
                     }
                 } else {
                     Utility.alert(this, getString(R.string.err_msg_password));
                 }
+            } else if (btn_login.getText().toString().contains(getResources().getString(R.string.verify_otp))) {
+                verifyCode(edt_username.getText().toString().trim());
+            } else if (btn_login.getText().toString().contains(getResources().getString(R.string.resend_otp))) {
+                sendVerificationCode(mobile_no);
             } else {
                 if (edt_pass.isShown()) {
                     LoginWS(null, null, is_from_normal);
@@ -358,19 +380,40 @@ public class LoginActivity extends Activity {
             }
         });
 
+        edt_cpass.setOnTouchListener((v, event) -> {
+
+            final int DRAWABLE_RIGHT = 2;
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getRawX() >= (edt_cpass.getRight() - edt_cpass.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if (isShow) {
+                        edt_cpass.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_show, 0);
+                        edt_cpass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        isShow = false;
+                    } else {
+                        edt_cpass.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_hide, 0);
+                        edt_cpass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        isShow = true;
+                    }
+                    edt_cpass.setSelection(edt_cpass.length());
+
+                    return true;
+                }
+            }
+            return false;
+        });
+
         edt_pass.setOnTouchListener((v, event) -> {
 
             final int DRAWABLE_RIGHT = 2;
-
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (event.getRawX() >= (edt_pass.getRight() - edt_pass.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                     if (isShow) {
-                        edt_pass.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.password_show, 0);
-                        edt_pass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+                        edt_pass.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_show, 0);
+                        edt_pass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                         isShow = false;
                     } else {
-                        edt_pass.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.password_hide, 0);
-                        edt_pass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+                        edt_pass.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_hide, 0);
+                        edt_pass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                         isShow = true;
                     }
                     edt_pass.setSelection(edt_pass.length());
@@ -390,7 +433,7 @@ public class LoginActivity extends Activity {
             if (hint.contains(getString(R.string.email))) {
                 btn_login.setText(getString(R.string.send_email));
             } else {
-                btn_login.setText(getString(R.string.get_otp));
+                btn_login.setText(getString(R.string.send_otp));
             }
         });
 
@@ -434,6 +477,7 @@ public class LoginActivity extends Activity {
         img_back = findViewById(R.id.img_back);
         edt_username = findViewById(R.id.edt_username);
         edt_pass = findViewById(R.id.edt_pass);
+        edt_cpass = findViewById(R.id.edt_cpass);
         btn_mobile = findViewById(R.id.btn_mobile);
         btn_email = findViewById(R.id.btn_email);
         btn_login = findViewById(R.id.btn_login);
@@ -564,7 +608,7 @@ public class LoginActivity extends Activity {
 
     private void sendVerificationCode(String number) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(number, 60, TimeUnit.SECONDS, TaskExecutors.MAIN_THREAD, mCallBack);
-
+        Toast.makeText(LoginActivity.this, "OTP Send Please wait for a minute", Toast.LENGTH_LONG).show();
     }
 
     private void verifyCode(String code) {
@@ -578,10 +622,9 @@ public class LoginActivity extends Activity {
                 edt_username.setText("");
                 edt_pass.setText("");
                 edt_pass.setVisibility(View.VISIBLE);
-                edt_username.setHint(getString(R.string.password));
-                edt_pass.setHint(getString(R.string.hint_conform_password));
+                edt_cpass.setVisibility(View.VISIBLE);
+                edt_username.setVisibility(View.GONE);
                 btn_login.setText(getString(R.string.nav_item_change_password));
-                edt_username.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
             } else {
                 Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
             }
@@ -613,9 +656,11 @@ public class LoginActivity extends Activity {
                             AfterValidCheck(response, false);
                             String code = CountryData.countryAreaCodes[spinnerCountries.getSelectedItemPosition()];
                             String number = "+" + code + username;
-                            edt_username.setText("");
                             rl_spinner.setVisibility(View.GONE);
-                            edt_username.setHint(R.string.type_otp);
+                            edt_username.setText("");
+                            btn_login.setText(getString(R.string.resend_otp));
+                            edt_username.setHint(getString(R.string.type_otp));
+                            mobile_no = number;
                             sendVerificationCode(number);
                         } else {
                             Utility.alert(LoginActivity.this, getString(R.string.registraion_request_pending));
@@ -662,7 +707,7 @@ public class LoginActivity extends Activity {
         AppController.getInstance().addToRequestQueue(jsonObjReq, "");
     }
 
-    private void call_change_password_ws() {
+    private void call_change_password_ws(String str1,String str2) {
 
         if (Utility.isOnline(this)) {
 
@@ -673,9 +718,8 @@ public class LoginActivity extends Activity {
                 mJsonObject = new JSONObject();
                 mJsonObject.put(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
                 mJsonObject.put(AppConstants.ACCESS_TOKEN, mSharedPreferences.getString(AppConstants.ACCESS_TOKEN, ""));
-                mJsonObject.put(AppConstants.PASSWORD, edt_username.getText());
-                mJsonObject.put(AppConstants.REPEAT_PASSWORD, edt_pass.getText());
-
+                mJsonObject.put(AppConstants.PASSWORD, str1);
+                mJsonObject.put(AppConstants.REPEAT_PASSWORD, str2);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -694,7 +738,7 @@ public class LoginActivity extends Activity {
                         String success = response.getString(AppConstants.SUCCESS);
                         if (success.equalsIgnoreCase(AppConstants.TRUE)) {
                             Utility.UpdateProfilePassword(edt_pass.getText().toString(), mSharedPreferences.getString(AppConstants.USER_ID, ""));
-                            // Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                             String userid = mSharedPreferences.getString(AppConstants.USER_ID, "");
                             if (userid.isEmpty()) {
                                 return;

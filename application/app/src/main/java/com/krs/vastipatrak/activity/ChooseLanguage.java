@@ -33,7 +33,6 @@ public class ChooseLanguage extends Activity {
         String[] languages = Objects.requireNonNull(this).getResources().getStringArray(R.array.languages);
         ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, languages);
         splanguage.setAdapter(aa);
-        splanguage.setSelection(1);
 
         btn_login.setOnClickListener(v -> {
             if (!is_login) {
@@ -69,6 +68,20 @@ public class ChooseLanguage extends Activity {
         mIntent.putExtra(AppConstants.USER_ID, AppController.getInstance().mSharedPreferences.getString(AppConstants.USER_ID, ""));
         startActivity(mIntent);
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        String locale = AppController.getInstance().mSharedPreferences.getString(getResources().getString(R.string.locale_sp), getResources().getString(R.string._english));
+        if (locale.equalsIgnoreCase(getResources().getString(R.string._gujarati))) {
+            splanguage.setSelection(2);
+        } else if (locale.equalsIgnoreCase(getResources().getString(R.string._hindi))) {
+            splanguage.setSelection(3);
+        } else {
+            splanguage.setSelection(1);
+        }
     }
 
     @Override

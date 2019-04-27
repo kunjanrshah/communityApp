@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,6 +48,8 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,14 +109,14 @@ public class RegisterActivty extends Activity {
             overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
         });
 
-        btn_register.setOnClickListener(v -> RegistraionWS());
+        btn_register.setOnClickListener(v -> RegistrationWS());
 
-        edt_address.setOnEditorActionListener((v, actionId, event) -> {
+       /* edt_address.setOnEditorActionListener((v, actionId, event) -> {
             if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                RegistraionWS();
+                RegistrationWS();
             }
             return false;
-        });
+        });*/
 
         img_profile.setOnClickListener(v -> cropImageActivity());
 
@@ -140,13 +141,13 @@ public class RegisterActivty extends Activity {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (event.getRawX() >= (edt_password.getRight() - edt_password.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                     if (isShow) {
-                        edt_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_show, 0);
+                        edt_password.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_show, 0);
                         edt_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
                         isShow = false;
                     } else {
-                        edt_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
-                        edt_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        edt_password.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_hide, 0);
+                        edt_password.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
                         isShow = true;
                     }
@@ -166,12 +167,12 @@ public class RegisterActivty extends Activity {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (event.getRawX() >= (edt_cpassword.getRight() - edt_cpassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                     if (isShow1) {
-                        edt_cpassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_show, 0);
+                        edt_cpassword.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_show, 0);
                         edt_cpassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                         isShow1 = false;
                     } else {
-                        edt_cpassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
-                        edt_cpassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        edt_cpassword.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_hide, 0);
+                        edt_cpassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                         isShow1 = true;
                     }
                     try {
@@ -277,8 +278,23 @@ public class RegisterActivty extends Activity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 try {
-                    img_profile.setImageURI(result.getUri());
+
+                    File f = new File(String.valueOf(result.getUri().getPath()));
+
+                    runOnUiThread(() -> {
+                        Bitmap bmp1 = null;
+                        try {
+                            bmp1 = Utility.getBitmap(this, f);
+                            str_profile_hash = Utility.getBase64(bmp1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    //Bitmap bmp= decodeFile(f);
+                    //runOnUiThread(() -> str_profile_hash = Utility.getBase64(bmp));
+
                     img_cancel.setVisibility(View.VISIBLE);
+                    img_profile.setImageURI(result.getUri());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -289,7 +305,7 @@ public class RegisterActivty extends Activity {
     }
 
 
-    private void RegistraionWS() {
+    private void RegistrationWS() {
         if (Utility.isOnline(this)) {
             String name = edt_head_name.getText().toString().trim();
             String surname = edt_head_surname.getText().toString().trim();
@@ -299,6 +315,20 @@ public class RegisterActivty extends Activity {
             String cpassword = edt_cpassword.getText().toString().trim();
             String address = edt_address.getText().toString().trim();
             String city = autoCompleteTextView.getText().toString().trim();
+
+            if (!name.isEmpty()
+                    && !surname.isEmpty()
+                    && !email.isEmpty()
+                    && !mobile.isEmpty()
+                    && !password.isEmpty()
+                    && !cpassword.isEmpty()
+                    && !city.isEmpty()
+                    && !address.isEmpty()){
+            }else
+            {
+                Utility.alert(RegisterActivty.this, getString(R.string.err_msg_blank));
+                return;
+            }
 
             if (mobile.length() != 10) {
                 Utility.alert(RegisterActivty.this, getString(R.string.invalid_mobile_range));
@@ -341,8 +371,6 @@ public class RegisterActivty extends Activity {
                             } else {
                                 json.put(AppConstants.STATUS, "0");
                             }
-                            BitmapDrawable drawable = (BitmapDrawable) img_profile.getDrawable();
-                            runOnUiThread(() -> str_profile_hash = Utility.getBase64(drawable.getBitmap()));
 
                             if (!str_profile_hash.isEmpty()) {
                                 json.put(AppConstants.PROFILE_PIC, str_profile_hash);

@@ -57,10 +57,13 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -275,6 +278,80 @@ public class Utility {
 */
 
 
+
+    /*public static class BitmapUtilsTask extends AsyncTask<Object, Void, Bitmap> {
+
+        Context context;
+        File f;
+        public BitmapUtilsTask(Context context,File f) {
+            this.context = context;
+            this.f=f;
+        }
+
+        *//**
+         * Loads a bitmap from the specified url.
+         *
+         * @param url The location of the bitmap asset
+         * @return The bitmap, or null if it could not be loaded
+         * @throws IOException
+         *//*
+        public Bitmap getBitmap() throws IOException {
+
+            // Get the source image's dimensions
+            int desiredWidth = 1000;
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+
+            //BitmapFactory.decodeResource(context.getResources(), R.drawable.green_background , options);
+            BitmapFactory.decodeStream(new FileInputStream(f),null,options);
+            int srcWidth = options.outWidth;
+            int srcHeight = options.outHeight;
+
+            // Only scale if the source is big enough. This code is just trying
+            // to fit a image into a certain width.
+            if (desiredWidth > srcWidth)
+                desiredWidth = srcWidth;
+
+            // Calculate the correct inSampleSize/scale value. This helps reduce
+            // memory use. It should be a power of 2
+            int inSampleSize = 1;
+            while (srcWidth / 2 > desiredWidth) {
+                srcWidth /= 2;
+                srcHeight /= 2;
+                inSampleSize *= 2;
+            }
+            // Decode with inSampleSize
+            options.inJustDecodeBounds = false;
+            options.inDither = false;
+            options.inSampleSize = inSampleSize;
+            options.inScaled = false;
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            options.inPurgeable = true;
+            Bitmap sampledSrcBitmap;
+
+            sampledSrcBitmap =  BitmapFactory.decodeResource(context.getResources(), R.drawable.green_background , options);
+
+            return sampledSrcBitmap;
+        }
+
+        *//**
+         * The system calls this to perform work in a worker thread and delivers
+         * it the parameters given to AsyncTask.execute()
+         *//*
+        @Override
+        protected Bitmap doInBackground(Object... item) {
+            try {
+                return getBitmap();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }*/
+
+
     public static boolean CheckGpsStatus(Context mcontext) {
         LocationManager locationManager;
         boolean GpsStatus;
@@ -295,6 +372,68 @@ public class Utility {
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         mActivity.startActivity(intent);
     }
+
+    public static Bitmap getBitmap(Context context,File f) throws IOException {
+
+        // Get the source image's dimensions
+        int desiredWidth = 200;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+
+        BitmapFactory.decodeStream(new FileInputStream(f),null,options);
+        int srcWidth = options.outWidth;
+        int srcHeight = options.outHeight;
+
+        // Only scale if the source is big enough. This code is just trying
+        // to fit a image into a certain width.
+        if (desiredWidth > srcWidth)
+            desiredWidth = srcWidth;
+
+        // Calculate the correct inSampleSize/scale value. This helps reduce
+        // memory use. It should be a power of 2
+        int inSampleSize = 1;
+        while (srcWidth / 2 > desiredWidth) {
+            srcWidth /= 2;
+            srcHeight /= 2;
+            inSampleSize *= 2;
+        }
+        // Decode with inSampleSize
+        options.inJustDecodeBounds = false;
+        options.inDither = false;
+        options.inSampleSize = inSampleSize;
+        options.inScaled = false;
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        options.inPurgeable = true;
+        Bitmap sampledSrcBitmap;
+        sampledSrcBitmap =BitmapFactory.decodeStream(new FileInputStream(f),null,options);
+        return sampledSrcBitmap;
+    }
+
+    // Decodes image and scales it to reduce memory consumption
+    public static Bitmap decodeFile(File f) {
+        try {
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(new FileInputStream(f), null, o);
+
+            // The new size we want to scale to
+            final int REQUIRED_SIZE=200;
+
+            // Find the correct scale value. It should be the power of 2.
+            int scale = 1;
+            while(o.outWidth / scale / 2 >= REQUIRED_SIZE && o.outHeight / scale / 2 >= REQUIRED_SIZE) {
+                scale *= 2;
+            }
+
+            // Decode with inSampleSize
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
+        } catch (FileNotFoundException e) {}
+        return null;
+    }
+
 
     public static boolean isOnline(Context mContext) {
         try {
@@ -2178,6 +2317,8 @@ public class Utility {
         } else if (lang.equals(context.getResources().getString(R.string._hindi))) {
             loc = "hi";
         }
+        AppController.getInstance().mEditor.putString(context.getResources().getString(R.string.locale_sp),lang);
+        AppController.getInstance().mEditor.apply();
         Locale myLocale = new Locale(loc);
         Locale.setDefault(myLocale);
         android.content.res.Configuration config = new android.content.res.Configuration();

@@ -416,7 +416,8 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="_forgot_password">Forgot Password?</string>
     <string name="or_login_with">Or Login with</string>
     <string name="enter_email_id">Enter Email ID</string>
-    <string name="get_otp">Get OTP</string>
+    <string name="send_otp">Send OTP</string>
+    <string name="resend_otp">Resend OTP</string>
     <string name="send_email">send email</string>
     <string name="do_you_have_an_account_register_now">Do you have an account?</string>
     <string name="err_msg_blank">Please enter missing details</string>
@@ -465,7 +466,8 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="server_could_not_found">The server could not be found. Please try again after some time!!</string>
     <string name="parsing_error">Parsing error! Please try again after some time!!</string>
     <string name="connection_timeout">Connection TimeOut! Please check your internet connection.</string>
-
+    <string name="locale_sp">Locale_sp</string>
+    <string name="verify_otp">Verify OTP</string>
 
 
 </resources>

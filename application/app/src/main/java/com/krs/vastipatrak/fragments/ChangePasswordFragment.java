@@ -89,12 +89,12 @@ public class ChangePasswordFragment extends Fragment {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (input_password.getRight() - input_password.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         if (isShow) {
-                            input_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_show, 0);
+                            input_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.pwd_show, 0);
                             input_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
                             isShow = false;
                         } else {
-                            input_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
+                            input_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.pwd_hide, 0);
                             input_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
                             isShow = true;
@@ -115,12 +115,12 @@ public class ChangePasswordFragment extends Fragment {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (input_repeat.getRight() - input_repeat.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         if (isShow1) {
-                            input_repeat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_show, 0);
+                            input_repeat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.pwd_show, 0);
                             input_repeat.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
                             isShow1 = false;
                         } else {
-                            input_repeat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
+                            input_repeat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.pwd_hide, 0);
                             input_repeat.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
                             isShow1 = true;
@@ -218,8 +218,8 @@ public class ChangePasswordFragment extends Fragment {
         mActivity = getActivity();
         input_password = rootView.findViewById(R.id.input_password);
         input_repeat = rootView.findViewById(R.id.input_repeat);
-        input_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
-        input_repeat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.password_hide, 0);
+        input_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.pwd_hide, 0);
+        input_repeat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.pwd_hide, 0);
 
         fab = rootView.findViewById(R.id.fab);
         mSharedPreferences = mActivity.getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
