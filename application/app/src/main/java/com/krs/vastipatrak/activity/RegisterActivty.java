@@ -111,13 +111,6 @@ public class RegisterActivty extends Activity {
 
         btn_register.setOnClickListener(v -> RegistrationWS());
 
-       /* edt_address.setOnEditorActionListener((v, actionId, event) -> {
-            if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                RegistrationWS();
-            }
-            return false;
-        });*/
-
         img_profile.setOnClickListener(v -> cropImageActivity());
 
         img_cancel.setOnClickListener(v -> {
