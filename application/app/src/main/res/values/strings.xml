@@ -469,5 +469,12 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="locale_sp">Locale_sp</string>
     <string name="verify_otp">Verify OTP</string>
 
+    <!-- Smart Screen -->
+    <string name="main">Main Details</string>
+    <string name="contact">Contanct details</string>
+    <string name="personal">Personal details</string>
+    <string name="professonal">Professional details</string>
+    <string name="_matrimony">Matrimony details</string>
+    <string name="some_more">Some more</string>
 
 </resources>

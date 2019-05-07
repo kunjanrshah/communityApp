@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"    >
+
+    <LinearLayout
+        android:id="@+id/ll_title"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="match_parent"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="10dp"
+        android:text="Welcome to \nSmart Search"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:textSize="15sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="20dp"
+        android:text="You can search here using many filter options(Like Family head,Family members, Mobile No, Email Id etc...)"
+        android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_marginTop="15dp"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:textColor="#843f52"
+        android:text="Main Details"
+        android:paddingRight="15dp"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:background="@drawable/rounded_corder"
+        android:drawablePadding="10dp"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:background="@drawable/border"
+        android:layout_width="150dp"
+        android:text="confirm"
+        android:visibility="gone"
+        android:layout_margin="10dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="40dp" />
+
+</LinearLayout>

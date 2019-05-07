@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/rounded_bottom_corner"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edt_office"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/border"
+                android:hint="Office Address"
+                android:paddingLeft="10dp" />
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/sp_main_cat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Category" />
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/sp_sub_cat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Sub Category" />
+
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/sp_occupation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Occupation" />
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/sp_current_activity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Current Activity" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

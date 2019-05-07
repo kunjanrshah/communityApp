@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/rounded_bottom_corner"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
+
+
+            <EditText
+                android:id="@+id/edt_bdate"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/border"
+                android:hint="Birth Date"
+                android:paddingLeft="10dp" />
+
+            <EditText
+                android:id="@+id/edt_mdate"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/border"
+                android:hint="Marriage Date"
+                android:paddingLeft="10dp" />
+
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/sp_mosad"
+                android:layout_width="match_parent"
+                android:layout_marginTop="15dp"
+                android:layout_height="wrap_content"
+                android:text="Mosaad" />
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/sp_education"
+                android:layout_width="match_parent"
+                android:layout_marginTop="15dp"
+                android:layout_height="wrap_content"
+                android:text="Education" />
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/sp_gotra"
+                android:layout_width="match_parent"
+                android:layout_marginTop="15dp"
+                android:layout_height="wrap_content"
+                android:text="Gotra" />
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/sp_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Blood Group" />
+
+            <CheckBox
+                android:textSize="18sp"
+                android:id="@+id/chk_is_doner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="is Doner?" />
+            <CheckBox
+                android:textSize="18sp"
+                android:id="@+id/chk_is_rented"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="is Rented?" />
+
+            <CheckBox
+                android:textSize="18sp"
+                android:id="@+id/chk_is_expired"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="is Expired?" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
