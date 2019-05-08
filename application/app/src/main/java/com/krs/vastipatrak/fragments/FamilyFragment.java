@@ -1325,7 +1325,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
                         requestPermissions(MainActivity.CALL_CAMARA, MainActivity.CAMARA_REQUEST);
                     }
                 } else if (items[item].equals("Choose from Library")) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.ProfileImages.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
                     startActivityForResult(Intent.createChooser(intent, "Select File"), 1);
                 } else if (items[item].equals("Cancel")) {

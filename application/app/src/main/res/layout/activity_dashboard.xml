@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
+    android:background="@color/mdtp_white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,7 +22,7 @@
                 layout="@layout/toolbar" />
 
             <FrameLayout
-                android:id="@+id/fm_container_body"
+                android:id="@+id/container_body"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"    />

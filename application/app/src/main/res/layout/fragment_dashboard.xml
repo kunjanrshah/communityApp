@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:orientation="vertical">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/home_search_bar_bg"
+        android:drawableStart="@drawable/home_search"
+        android:drawableEnd="@drawable/filter"
+        android:drawablePadding="10dp"
+        android:hint="Search here..."
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="3dp"
+        android:textStyle="bold"
+        android:text="Latest News"
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp" />
+
+    <com.smarteist.autoimageslider.SliderLayout
+        android:id="@+id/imageSlider"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="3dp"
+        android:textStyle="bold"
+        android:text="Recent Activity"
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/lstMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="3dp"
+        android:textStyle="bold"
+        android:text="Favorite Search"
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/lstProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>

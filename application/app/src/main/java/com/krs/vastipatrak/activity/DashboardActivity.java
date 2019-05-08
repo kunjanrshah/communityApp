@@ -3,6 +3,8 @@ package com.krs.vastipatrak.activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,7 +14,10 @@ import android.view.Menu;
 import android.view.View;
 
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.fragments.DashboardFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
+import com.krs.vastipatrak.fragments.SearchFragment;
+import com.krs.vastipatrak.utils.AppConstants;
 
 import java.util.Objects;
 
@@ -54,6 +59,11 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
                 }
             });
         }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        DashboardFragment dashboardFragment = new DashboardFragment();
+        fragmentTransaction.replace(R.id.container_body, dashboardFragment).commit();
     }
 
     @Override
