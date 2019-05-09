@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.fragments.DashboardFragment;

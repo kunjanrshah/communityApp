@@ -24,11 +24,13 @@
                 android:id="@+id/edt_email"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:singleLine="true"
                 android:background="@drawable/border"
                 android:hint="Email Address"
                 android:paddingLeft="10dp" />
 
             <EditText
+                android:singleLine="true"
                 android:id="@+id/edt_mobile"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
@@ -44,6 +46,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/border"
                 android:hint="Local Address"
+                android:singleLine="true"
                 android:paddingLeft="10dp" />
 
 
@@ -51,6 +54,7 @@
                 android:id="@+id/edt_permanent_add"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:singleLine="true"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/border"
                 android:hint="Permanent Address"
@@ -63,6 +67,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/border"
                 android:hint="PinCode"
+                android:singleLine="true"
                 android:paddingLeft="10dp" />
 
 

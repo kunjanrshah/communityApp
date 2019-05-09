@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.SmartSearchAdapter;
+import com.orhanobut.dialogplus.DialogPlus;
 
 public class SmartSearchActivity extends AppCompatActivity {
     private ExpandableListView expandableListView;
@@ -32,9 +33,19 @@ public class SmartSearchActivity extends AppCompatActivity {
         // This listener will show toast on group click
         expandableListView.setOnGroupClickListener((listview, view, group_pos, id) -> {
 
-            if (group_pos == 0 || group_pos == 7) {
+            if (group_pos == 0) {
                 return true;
+            } else if (group_pos == 7) {
+                DialogPlus dialog = DialogPlus.newDialog(this)
+                        // .setAdapter(adapter)
+                        .setOnItemClickListener((dialog1, item, view1, position) -> {
+                        }).setExpanded(true)  // This will enable the expand feature, (similar to android L share dialog)
+                        .create();
+                dialog.show();
+
+                return false;
             } else {
+                adapter.storeFieldsValues();
                 return false;
             }
         });

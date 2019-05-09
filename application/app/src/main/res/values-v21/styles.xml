@@ -6,7 +6,8 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
-
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb_holo</item>
         <item name="android:fastScrollOverlayPosition">atThumb</item>
         <item name="android:fastScrollTextColor">@color/colorPrimary</item>

@@ -9,6 +9,8 @@
         <item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb_holo</item>
         <item name="android:fastScrollOverlayPosition">atThumb</item>
         <item name="android:fastScrollTextColor">@color/colorPrimary</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:fastScrollTrackDrawable">@drawable/fastscroll_thumb_pressed_holo</item>
         <item name="android:fastScrollPreviewBackgroundRight">
             @drawable/bg_default_focused_holo_light
@@ -26,6 +28,8 @@
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/mdtp_white</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 

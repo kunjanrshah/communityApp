@@ -25,11 +25,13 @@
                 android:id="@+id/edt_created"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:singleLine="true"
                 android:background="@drawable/border"
                 android:hint="Profile Created"
                 android:paddingLeft="10dp" />
 
             <EditText
+                android:singleLine="true"
                 android:id="@+id/edt_updated"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
@@ -45,7 +47,7 @@
                 android:text="Profile updatation Percentage"
                 android:layout_height="wrap_content" />
             <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
-                android:id="@+id/rangeSeekbar"
+                android:id="@+id/rangeUpdationBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:corner_radius="10"

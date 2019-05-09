@@ -25,6 +25,7 @@
                 android:id="@+id/edt_head_name"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:singleLine="true"
                 android:background="@drawable/border"
                 android:hint="Family head Name"
                 android:paddingLeft="10dp" />
@@ -33,6 +34,7 @@
                 android:id="@+id/edt_member_name"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:singleLine="true"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/border"
                 android:hint="Family Member Name"
