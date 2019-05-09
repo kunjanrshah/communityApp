@@ -77,6 +77,10 @@
     <string name="nav_item_language">Language</string>
     <string name="nav_item_intro">Tour Video</string>
     <string name="nav_item_logout">Logout</string>
+    <string name="nav_item_statistic">Statistics</string>
+    <string name="nav_item_events">News &amp; Events</string>
+    <string name="nav_item_fa_profie">Favorite Profiles</string>
+    <string name="nav_item_filters">Filters</string>
 
     <string name="event_url">http://www.superbinstruments.com/directory-dev/admin/events</string>
 
@@ -217,7 +221,10 @@
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">
         <item>@string/nav_item_home</item>
-        <item>@string/nav_item_logout</item>
+        <item>@string/nav_item_statistic</item>
+        <item>@string/nav_item_events</item>
+        <item>@string/nav_item_fa_profie</item>
+        <item>@string/nav_item_filters</item>
         <!--<item>@string/nav_item_my_profile</item>
         <item>@string/nav_item_near_by</item>
         <item>@string/nav_item_shared_users</item>

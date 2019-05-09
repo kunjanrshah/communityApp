@@ -22,7 +22,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.AppConstants;
-import com.krs.vastipatrak.utils.Utility;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.krs.vastipatrak.utils.LocaleHelper;
 
@@ -63,6 +62,8 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+
         final Fabric fabric = new Fabric.Builder(this).kits(new Crashlytics()).debuggable(true).build();
         Fabric.with(fabric);
 
@@ -90,6 +91,8 @@ public class AppController extends Application {
                 .requestIdToken(getString(R.string.web_client_id))
                 .requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+
     }
 
     @Override
