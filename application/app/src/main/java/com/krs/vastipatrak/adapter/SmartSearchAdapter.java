@@ -23,11 +23,12 @@ import com.krs.vastipatrak.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 
 public class SmartSearchAdapter extends BaseExpandableListAdapter {
 
-    private HashMap<String, String> mapChildValues;
+    private Hashtable<String, String> mapChildValues;
     private EditText edt_head_name, edt_member_name, edt_email, edt_mobile, edt_local_add, edt_permanent_add, edt_pin_code, edt_bdate, edt_mdate, edt_office, edt_birth_time, edt_height_meter, edt_weight_kg, edt_created, edt_updated;
     private MaterialSpinner sp_surname, sp_samaj, sp_marital, sp_city, sp_gender, sp_native, sp_area, sp_state, sp_mosad, sp_education, sp_gotra, sp_bg, sp_main_cat, sp_sub_cat, sp_occupation, sp_activity, sp_bplace;
     private CrystalRangeSeekbar rangeAgeBar, rangeUpdationBar;
@@ -39,7 +40,7 @@ public class SmartSearchAdapter extends BaseExpandableListAdapter {
 
     public SmartSearchAdapter(Context context) {
         this._context = context;
-        mapChildValues = new HashMap<>();
+        mapChildValues = new Hashtable<>();
         header = new ArrayList<>();
         header.add("");
         header.add(context.getString(R.string.main));
@@ -266,217 +267,223 @@ public class SmartSearchAdapter extends BaseExpandableListAdapter {
     }
 
     public void storeFieldsValues() {
-        if (edt_head_name != null && mapChildValues != null) {
-            mapChildValues.put("head_name", edt_head_name.getText().toString().trim());
-            mapChildValues.put("mem_name", edt_member_name.getText().toString().trim());
-            mapChildValues.put("sp_surname", sp_surname.getText().toString().trim());
-            mapChildValues.put("sp_samaj", sp_samaj.getText().toString().trim());
-            mapChildValues.put("sp_marital", sp_marital.getText().toString().trim());
-            mapChildValues.put("sp_city", sp_city.getText().toString().trim());
-            mapChildValues.put("sp_gender", sp_gender.getText().toString().trim());
-            mapChildValues.put("sp_native", sp_native.getText().toString().trim());
-            mapChildValues.put("minAge", rangeAgeBar.getSelectedMinValue().toString());
-            mapChildValues.put("maxAge", rangeAgeBar.getSelectedMaxValue().toString());
-        }
-        if (edt_email != null && mapChildValues != null) {
-            mapChildValues.put("edt_email", edt_email.getText().toString().trim());
-            mapChildValues.put("edt_mobile", edt_mobile.getText().toString().trim());
-            mapChildValues.put("edt_local_add", edt_local_add.getText().toString().trim());
-            mapChildValues.put("edt_permanent_add", edt_permanent_add.getText().toString().trim());
-            mapChildValues.put("edt_pin_code", edt_pin_code.getText().toString().trim());
-            mapChildValues.put("sp_area", sp_area.getText().toString().trim());
-            mapChildValues.put("sp_state", sp_state.getText().toString().trim());
-        }
-        if (edt_bdate != null && mapChildValues != null) {
-            mapChildValues.put("edt_bdate", edt_bdate.getText().toString().trim());
-            mapChildValues.put("edt_mdate", edt_mdate.getText().toString().trim());
-            mapChildValues.put("sp_mosad", sp_mosad.getText().toString().trim());
-            mapChildValues.put("sp_education", sp_education.getText().toString().trim());
-            mapChildValues.put("sp_gotra", sp_gotra.getText().toString().trim());
-            mapChildValues.put("sp_bg", sp_bg.getText().toString().trim());
-            mapChildValues.put("chk_is_doner", String.valueOf(chk_is_doner.isSelected()));
-            mapChildValues.put("chk_is_rented", String.valueOf(chk_is_rented.isSelected()));
-            mapChildValues.put("chk_is_expired", String.valueOf(chk_is_expired.isSelected()));
-        }
-
-        if (edt_office != null && mapChildValues != null) {
-            mapChildValues.put("edt_office", edt_office.getText().toString().trim());
-            mapChildValues.put("sp_main_cat", sp_main_cat.getText().toString().trim());
-            mapChildValues.put("sp_sub_cat", sp_sub_cat.getText().toString().trim());
-            mapChildValues.put("sp_occupation", sp_occupation.getText().toString().trim());
-            mapChildValues.put("sp_activity", sp_activity.getText().toString().trim());
-        }
-
-        if (edt_birth_time != null && mapChildValues != null) {
-            mapChildValues.put("edt_birth_time", edt_birth_time.getText().toString().trim());
-            mapChildValues.put("edt_height_meter", edt_height_meter.getText().toString().trim());
-            mapChildValues.put("edt_weight_kg", edt_weight_kg.getText().toString().trim());
-            mapChildValues.put("sp_bplace", sp_bplace.getText().toString().trim());
-            mapChildValues.put("chk_is_spect", String.valueOf(chk_is_spect.isSelected()));
-            mapChildValues.put("chk_is_shani", String.valueOf(chk_is_shani.isSelected()));
-            mapChildValues.put("chk_is_mangal", String.valueOf(chk_is_mangal.isSelected()));
-        }
-
-        if (edt_created != null && mapChildValues != null) {
-            mapChildValues.put("edt_created", edt_created.getText().toString().trim());
-            mapChildValues.put("edt_updated", edt_updated.getText().toString().trim());
-            mapChildValues.put("minUpdate", rangeUpdationBar.getSelectedMinValue().toString());
-            mapChildValues.put("maxUpdate", rangeUpdationBar.getSelectedMaxValue().toString());
+        if (mapChildValues != null) {
+            if (edt_head_name != null) {
+                mapChildValues.put("head_name", edt_head_name.getText().toString().trim());
+                mapChildValues.put("mem_name", edt_member_name.getText().toString().trim());
+                mapChildValues.put("sp_surname", sp_surname.getText().toString().trim());
+                mapChildValues.put("sp_samaj", sp_samaj.getText().toString().trim());
+                mapChildValues.put("sp_marital", sp_marital.getText().toString().trim());
+                mapChildValues.put("sp_city", sp_city.getText().toString().trim());
+                mapChildValues.put("sp_gender", sp_gender.getText().toString().trim());
+                mapChildValues.put("sp_native", sp_native.getText().toString().trim());
+                mapChildValues.put("minAge", rangeAgeBar.getSelectedMinValue().toString());
+                mapChildValues.put("maxAge", rangeAgeBar.getSelectedMaxValue().toString());
+            }
+            if (edt_email != null) {
+                mapChildValues.put("edt_email", edt_email.getText().toString().trim());
+                mapChildValues.put("edt_mobile", edt_mobile.getText().toString().trim());
+                mapChildValues.put("edt_local_add", edt_local_add.getText().toString().trim());
+                mapChildValues.put("edt_permanent_add", edt_permanent_add.getText().toString().trim());
+                mapChildValues.put("edt_pin_code", edt_pin_code.getText().toString().trim());
+                mapChildValues.put("sp_area", sp_area.getText().toString().trim());
+                mapChildValues.put("sp_state", sp_state.getText().toString().trim());
+            }
+            if (edt_bdate != null) {
+                mapChildValues.put("edt_bdate", edt_bdate.getText().toString().trim());
+                mapChildValues.put("edt_mdate", edt_mdate.getText().toString().trim());
+                mapChildValues.put("sp_mosad", sp_mosad.getText().toString().trim());
+                mapChildValues.put("sp_education", sp_education.getText().toString().trim());
+                mapChildValues.put("sp_gotra", sp_gotra.getText().toString().trim());
+                mapChildValues.put("sp_bg", sp_bg.getText().toString().trim());
+                mapChildValues.put("chk_is_doner", String.valueOf(chk_is_doner.isSelected()));
+                mapChildValues.put("chk_is_rented", String.valueOf(chk_is_rented.isSelected()));
+                mapChildValues.put("chk_is_expired", String.valueOf(chk_is_expired.isSelected()));
+            }
+            if (edt_office != null) {
+                mapChildValues.put("edt_office", edt_office.getText().toString().trim());
+                mapChildValues.put("sp_main_cat", sp_main_cat.getText().toString().trim());
+                mapChildValues.put("sp_sub_cat", sp_sub_cat.getText().toString().trim());
+                mapChildValues.put("sp_occupation", sp_occupation.getText().toString().trim());
+                mapChildValues.put("sp_activity", sp_activity.getText().toString().trim());
+            }
+            if (edt_birth_time != null) {
+                mapChildValues.put("edt_birth_time", edt_birth_time.getText().toString().trim());
+                mapChildValues.put("edt_height_meter", edt_height_meter.getText().toString().trim());
+                mapChildValues.put("edt_weight_kg", edt_weight_kg.getText().toString().trim());
+                mapChildValues.put("sp_bplace", sp_bplace.getText().toString().trim());
+                mapChildValues.put("chk_is_spect", String.valueOf(chk_is_spect.isSelected()));
+                mapChildValues.put("chk_is_shani", String.valueOf(chk_is_shani.isSelected()));
+                mapChildValues.put("chk_is_mangal", String.valueOf(chk_is_mangal.isSelected()));
+            }
+            if (edt_created != null) {
+                mapChildValues.put("edt_created", edt_created.getText().toString().trim());
+                mapChildValues.put("edt_updated", edt_updated.getText().toString().trim());
+                mapChildValues.put("minUpdate", rangeUpdationBar.getSelectedMinValue().toString());
+                mapChildValues.put("maxUpdate", rangeUpdationBar.getSelectedMaxValue().toString());
+            }
         }
     }
 
     public void retrieveFieldsValues() {
-        if (edt_head_name != null && mapChildValues != null) {
-            edt_head_name.setText(mapChildValues.get("head_name"));
-            edt_member_name.setText(mapChildValues.get("mem_name"));
-            sp_surname.setText(mapChildValues.get("sp_surname"));
-            sp_samaj.setText(mapChildValues.get("sp_samaj"));
-            sp_marital.setText(mapChildValues.get("sp_marital"));
-            sp_city.setText(mapChildValues.get("sp_city"));
-            sp_gender.setText(mapChildValues.get("sp_gender"));
-            sp_native.setText(mapChildValues.get("sp_native"));
+        if (mapChildValues != null && mapChildValues.size() > 0) {
+            if (edt_head_name != null) {
+                String head_name = mapChildValues.get("head_name");
+                if (head_name != null && !head_name.isEmpty()) {
+                    edt_head_name.setText(head_name);
+                }
+                String mem_name = mapChildValues.get("mem_name");
+                if (mem_name != null && !mem_name.isEmpty()) {
+                    edt_member_name.setText(mem_name);
+                }
+                String surname = mapChildValues.get("sp_surname");
+                if (surname != null && !surname.isEmpty()) {
+                    sp_surname.setText(surname);
+                }
+                String samaj = mapChildValues.get("sp_samaj");
+                if (samaj != null && !samaj.isEmpty()) {
+                    sp_samaj.setText(samaj);
+                }
+                String marital = mapChildValues.get("sp_marital");
+                if (marital != null && !marital.isEmpty()) {
+                    sp_marital.setText(marital);
+                }
+                String city = mapChildValues.get("sp_city");
+                if (city != null && !city.isEmpty()) {
+                    sp_city.setText(city);
+                }
+                String gender = mapChildValues.get("sp_gender");
+                if (gender != null && !gender.isEmpty()) {
+                    sp_gender.setText(gender);
+                }
 
-           /* for (int i = 0; i < lst_surname.size(); i++) {
-                if (lst_surname.get(i).equalsIgnoreCase(mapChildValues.get("sp_surname"))) {
-                    sp_surname.setSelectedIndex(i);
-                    break;
+                String native1 = mapChildValues.get("sp_native");
+                if (native1 != null && !native1.isEmpty()) {
+                    sp_native.setText(native1);
+                }
+
+                String maxAge = mapChildValues.get("maxAge");
+                String minAge = mapChildValues.get("minAge");
+                if (maxAge != null && !maxAge.isEmpty()) {
+                    rangeAgeBar.setMaxStartValue(Integer.parseInt(mapChildValues.get("maxAge"))).apply();
+                }
+                if (minAge != null && !minAge.isEmpty()) {
+                    rangeAgeBar.setMinStartValue(Integer.parseInt(mapChildValues.get("minAge"))).apply();
                 }
             }
+            if (edt_email != null) {
+                String email = mapChildValues.get("edt_email");
+                if (email != null && !email.isEmpty()) {
+                    edt_email.setText(email);
+                }
+                String mobile = mapChildValues.get("edt_mobile");
+                if (mobile != null && !mobile.isEmpty()) {
+                    edt_mobile.setText(mobile);
+                }
+                String local_add = mapChildValues.get("edt_local_add");
+                if (local_add != null && !local_add.isEmpty()) {
+                    edt_local_add.setText(local_add);
+                }
+                String permanent_add = mapChildValues.get("edt_permanent_add");
+                if (permanent_add != null && !permanent_add.isEmpty()) {
+                    edt_permanent_add.setText(permanent_add);
+                }
+                String pin_code = mapChildValues.get("edt_pin_code");
+                if (pin_code != null && !pin_code.isEmpty()) {
+                    edt_pin_code.setText(pin_code);
+                }
 
-            for (int i = 0; i < lst_samaj.size(); i++) {
-                if (lst_samaj.get(i).equalsIgnoreCase(mapChildValues.get("sp_samaj"))) {
-                    sp_samaj.setSelectedIndex(i);
-                    break;
+                String area = mapChildValues.get("sp_area");
+                if (area != null && !area.isEmpty()) {
+                    sp_area.setText(area);
+                }
+                String state = mapChildValues.get("sp_state");
+                if (state != null && !state.isEmpty()) {
+                    sp_state.setText(state);
+                }
+
+
+            }
+            if (edt_bdate != null) {
+                edt_bdate.setText(mapChildValues.get("edt_bdate"));
+                edt_mdate.setText(mapChildValues.get("edt_mdate"));
+                sp_mosad.setText(mapChildValues.get("sp_mosad"));
+                sp_education.setText(mapChildValues.get("sp_education"));
+                sp_gotra.setText(mapChildValues.get("sp_gotra"));
+                sp_bg.setText(mapChildValues.get("sp_bg"));
+
+                String is_doner = mapChildValues.get("chk_is_doner");
+                if (is_doner != null && is_doner.equalsIgnoreCase("true")) {
+                    chk_is_doner.setChecked(true);
+                } else {
+                    chk_is_doner.setChecked(false);
+                }
+
+                String is_rented = mapChildValues.get("chk_is_rented");
+                if (is_rented != null && is_rented.equalsIgnoreCase("true")) {
+                    chk_is_rented.setChecked(true);
+                } else {
+                    chk_is_rented.setChecked(false);
+                }
+
+                String is_expired = mapChildValues.get("chk_is_expired");
+                if (is_expired != null && is_expired.equalsIgnoreCase("true")) {
+                    chk_is_expired.setChecked(true);
+                } else {
+                    chk_is_expired.setChecked(false);
+                }
+
+            }
+            if (edt_office != null) {
+                edt_office.setText(mapChildValues.get("edt_office"));
+                sp_main_cat.setText(mapChildValues.get("sp_main_cat"));
+                sp_sub_cat.setText(mapChildValues.get("sp_sub_cat"));
+                sp_occupation.setText(mapChildValues.get("sp_occupation"));
+                sp_activity.setText(mapChildValues.get("sp_activity"));
+            }
+            if (edt_birth_time != null) {
+                edt_birth_time.setText(mapChildValues.get("edt_birth_time"));
+                edt_height_meter.setText(mapChildValues.get("edt_height_meter"));
+                edt_weight_kg.setText(mapChildValues.get("edt_weight_kg"));
+                sp_bplace.setText(mapChildValues.get("sp_bplace"));
+
+                String is_spect = mapChildValues.get("chk_is_spect");
+                if (is_spect != null && is_spect.equalsIgnoreCase("true")) {
+                    chk_is_spect.setChecked(true);
+                } else {
+                    chk_is_spect.setChecked(false);
+                }
+
+                String is_shani = mapChildValues.get("chk_is_shani");
+                if (is_shani != null && is_shani.equalsIgnoreCase("true")) {
+                    chk_is_shani.setChecked(true);
+                } else {
+                    chk_is_shani.setChecked(false);
+                }
+
+                String is_mangal = mapChildValues.get("chk_is_mangal");
+                if (is_mangal != null && is_mangal.equalsIgnoreCase("true")) {
+                    chk_is_mangal.setChecked(true);
+                } else {
+                    chk_is_mangal.setChecked(false);
                 }
             }
+            if (edt_created != null) {
+                edt_created.setText(mapChildValues.get("edt_created"));
+                edt_updated.setText(mapChildValues.get("edt_updated"));
 
-            for (int i = 0; i < lst_marital.size(); i++) {
-                if (lst_marital.get(i).equalsIgnoreCase(mapChildValues.get("sp_marital"))) {
-                    sp_marital.setSelectedIndex(i);
-                    break;
+                String maxUpdate = mapChildValues.get("maxUpdate");
+                String minUpdate = mapChildValues.get("minUpdate");
+                if (maxUpdate != null && !maxUpdate.isEmpty()) {
+                    rangeUpdationBar.setMaxStartValue(Integer.parseInt(maxUpdate)).apply();
                 }
-            }
-
-            for (int i = 0; i < lst_city.size(); i++) {
-                if (lst_city.get(i).equalsIgnoreCase(mapChildValues.get("sp_city"))) {
-                    sp_city.setSelectedIndex(i);
-                    break;
+                if (minUpdate != null && !minUpdate.isEmpty()) {
+                    rangeUpdationBar.setMinStartValue(Integer.parseInt(minUpdate)).apply();
                 }
-            }
 
-            for (int i = 0; i < lst_gender.size(); i++) {
-                if (lst_gender.get(i).equalsIgnoreCase(mapChildValues.get("sp_gender"))) {
-                    sp_gender.setSelectedIndex(i);
-                    break;
-                }
-            }
-
-            for (int i = 0; i < lst_native.size(); i++) {
-                if (lst_native.get(i).equalsIgnoreCase(mapChildValues.get("sp_native"))) {
-                    sp_native.setSelectedIndex(i);
-                    break;
-                }
-            }*/
-
-            String maxAge = mapChildValues.get("maxAge");
-            String minAge = mapChildValues.get("minAge");
-            if (maxAge != null && !maxAge.isEmpty()) {
-                rangeAgeBar.setMaxStartValue(Integer.parseInt(mapChildValues.get("maxAge"))).apply();
-            }
-            if (minAge != null && !minAge.isEmpty()) {
-                rangeAgeBar.setMinStartValue(Integer.parseInt(mapChildValues.get("minAge"))).apply();
             }
         }
 
-        if (edt_email != null && mapChildValues != null) {
-            edt_email.setText(mapChildValues.get("edt_email"));
-            edt_mobile.setText(mapChildValues.get("edt_mobile"));
-            edt_local_add.setText(mapChildValues.get("edt_local_add"));
-            edt_permanent_add.setText(mapChildValues.get("edt_permanent_add"));
-            edt_pin_code.setText(mapChildValues.get("edt_pin_code"));
-            sp_area.setText(mapChildValues.get("sp_area"));
-            sp_state.setText(mapChildValues.get("sp_state"));
-        }
-
-        if (edt_bdate != null && mapChildValues != null) {
-            edt_bdate.setText(mapChildValues.get("edt_bdate"));
-            edt_mdate.setText(mapChildValues.get("edt_mdate"));
-            sp_mosad.setText(mapChildValues.get("sp_mosad"));
-            sp_education.setText(mapChildValues.get("sp_education"));
-            sp_gotra.setText(mapChildValues.get("sp_gotra"));
-            sp_bg.setText(mapChildValues.get("sp_bg"));
-
-            String is_doner = mapChildValues.get("chk_is_doner");
-            if (is_doner.equalsIgnoreCase("true")) {
-                chk_is_doner.setChecked(true);
-            } else {
-                chk_is_doner.setChecked(false);
-            }
-
-            String is_rented = mapChildValues.get("chk_is_rented");
-            if (is_rented.equalsIgnoreCase("true")) {
-                chk_is_rented.setChecked(true);
-            } else {
-                chk_is_rented.setChecked(false);
-            }
-
-            String is_expired = mapChildValues.get("chk_is_expired");
-            if (is_expired.equalsIgnoreCase("true")) {
-                chk_is_expired.setChecked(true);
-            } else {
-                chk_is_expired.setChecked(false);
-            }
-
-        }
-        if (edt_office != null && mapChildValues != null) {
-            edt_office.setText(mapChildValues.get("edt_office"));
-            sp_main_cat.setText(mapChildValues.get("sp_main_cat"));
-            sp_sub_cat.setText(mapChildValues.get("sp_sub_cat"));
-            sp_occupation.setText(mapChildValues.get("sp_occupation"));
-            sp_activity.setText(mapChildValues.get("sp_activity"));
-        }
-
-        if (edt_birth_time != null && mapChildValues != null) {
-            edt_birth_time.setText(mapChildValues.get("edt_birth_time"));
-            edt_height_meter.setText(mapChildValues.get("edt_height_meter"));
-            edt_weight_kg.setText(mapChildValues.get("edt_weight_kg"));
-            sp_bplace.setText(mapChildValues.get("sp_bplace"));
-
-            String is_spect = mapChildValues.get("chk_is_spect");
-            if (is_spect.equalsIgnoreCase("true")) {
-                chk_is_spect.setChecked(true);
-            } else {
-                chk_is_spect.setChecked(false);
-            }
-
-            String is_shani = mapChildValues.get("chk_is_shani");
-            if (is_shani.equalsIgnoreCase("true")) {
-                chk_is_shani.setChecked(true);
-            } else {
-                chk_is_shani.setChecked(false);
-            }
-
-            String is_mangal = mapChildValues.get("chk_is_mangal");
-            if (is_mangal.equalsIgnoreCase("true")) {
-                chk_is_mangal.setChecked(true);
-            } else {
-                chk_is_mangal.setChecked(false);
-            }
-        }
-        if (edt_created != null && mapChildValues != null) {
-            edt_created.setText(mapChildValues.get("edt_created"));
-            edt_updated.setText(mapChildValues.get("edt_updated"));
-
-            String maxUpdate = mapChildValues.get("maxUpdate");
-            String minUpdate = mapChildValues.get("minUpdate");
-            if (maxUpdate != null && !maxUpdate.isEmpty()) {
-                rangeUpdationBar.setMaxStartValue(Integer.parseInt(maxUpdate)).apply();
-            }
-            if (minUpdate != null && !minUpdate.isEmpty()) {
-                rangeUpdationBar.setMinStartValue(Integer.parseInt(minUpdate)).apply();
-            }
-
-        }
 
     }
 
@@ -487,7 +494,9 @@ public class SmartSearchAdapter extends BaseExpandableListAdapter {
 
         switch (groupPosition) {
             case 1:
-                convertView = inflater.inflate(R.layout.main_details, null);
+                if (inflater != null) {
+                    convertView = inflater.inflate(R.layout.main_details, null);
+                }
                 edt_head_name = convertView.findViewById(R.id.edt_head_name);
                 edt_member_name = convertView.findViewById(R.id.edt_member_name);
                 sp_surname = convertView.findViewById(R.id.sp_surname);
