@@ -7,21 +7,22 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.adapter.SmartPopUpAdapter;
 import com.krs.vastipatrak.adapter.SmartSearchAdapter;
 import com.orhanobut.dialogplus.DialogPlus;
 
 public class SmartSearchActivity extends AppCompatActivity {
     private ExpandableListView expandableListView;
+    int previousGroup = -1;
     private SmartSearchAdapter adapter;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_smart_search);
-        expandableListView = (ExpandableListView) findViewById(R.id.lst_expandable);
+        expandableListView = findViewById(R.id.lst_expandable);
         expandableListView.setGroupIndicator(null);
-        adapter = new SmartSearchAdapter(SmartSearchActivity.this);
+        adapter = new SmartSearchAdapter(SmartSearchActivity.this,expandableListView);
         expandableListView.setAdapter(adapter);
         setListener();
 
@@ -35,16 +36,7 @@ public class SmartSearchActivity extends AppCompatActivity {
 
             if (group_pos == 0) {
                 return true;
-            } else if (group_pos == 7) {
-                DialogPlus dialog = DialogPlus.newDialog(this)
-                        // .setAdapter(adapter)
-                        .setOnItemClickListener((dialog1, item, view1, position) -> {
-                        }).setExpanded(true)  // This will enable the expand feature, (similar to android L share dialog)
-                        .create();
-                dialog.show();
-
-                return false;
-            } else {
+            }  else {
                 adapter.storeFieldsValues();
                 return false;
             }
@@ -55,14 +47,14 @@ public class SmartSearchActivity extends AppCompatActivity {
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
             // Default position
-            int previousGroup = -1;
 
             @Override
             public void onGroupExpand(int groupPosition) {
+                adapter.previousGroup=groupPosition;
                 if (groupPosition != previousGroup)
 
-                    // Collapse the expanded group
-                    expandableListView.collapseGroup(previousGroup);
+                // Collapse the expanded group
+                expandableListView.collapseGroup(previousGroup);
                 previousGroup = groupPosition;
             }
 

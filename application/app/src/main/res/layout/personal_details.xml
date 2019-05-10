@@ -71,7 +71,7 @@
 
             <CheckBox
                 android:textSize="18sp"
-                android:id="@+id/chk_is_doner"
+                android:id="@+id/chk_is_donor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"

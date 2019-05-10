@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_mid_light_gray"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edt_head_name"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:visibility="gone"
+            android:background="@drawable/border"
+            android:hint="Family head Name"
+            android:paddingLeft="10dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/edt_member_name"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="15dp"
+            android:visibility="gone"
+            android:background="@drawable/border"
+            android:hint="Family Member Name"
+            android:paddingLeft="10dp"
+            android:singleLine="true" />
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/sp_surname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:visibility="gone"
+            android:background="@drawable/rounded_top_corner"
+            android:text="Surname" />
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/sp_samaj"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rounded_top_corner"
+            android:text="Regin/Samaj" />
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/sp_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="15dp"
+            android:text="Gender" />
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/sp_marital"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Marital Status" />
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/sp_native"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Native" />
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/sp_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="15dp"
+            android:text="City" />
+
+        <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+            android:id="@+id/rangeSeekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            app:bar_color="#C0C0C0"
+            app:bar_highlight_color="#A9A9A9"
+            app:corner_radius="10"
+            app:data_type="_integer"
+            app:gap="10"
+            android:visibility="gone"
+            app:left_thumb_color="#808080"
+            app:left_thumb_color_pressed="#696969"
+            app:max_value="100"
+            app:min_value="0"
+            app:right_thumb_color="#808080"
+            app:right_thumb_color_pressed="#696969" />
+
+        <LinearLayout
+            android:id="@+id/ll_range"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textMin1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Age 0" />
+
+            <TextView
+                android:id="@+id/textMax1"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="Age 100" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
