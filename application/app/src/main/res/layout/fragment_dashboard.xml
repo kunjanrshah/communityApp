@@ -1,68 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:orientation="vertical">
-
-    <EditText
+    android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/home_search_bar_bg"
-        android:drawableStart="@drawable/home_search"
-        android:drawableEnd="@drawable/filter"
-        android:drawablePadding="10dp"
-        android:hint="Search here..."
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp" />
+        android:layout_height="match_parent"
 
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/home_search_bar_bg"
+            android:drawableStart="@drawable/home_search"
+            android:drawableEnd="@drawable/filter"
+            android:drawablePadding="10dp"
+            android:hint="Search Here..."
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textStyle="bold"
+
+            android:text="Latest News"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp" />
+
+        <com.smarteist.autoimageslider.SliderLayout
+            android:id="@+id/imageSlider"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentTop="true" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_0_corder"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:elevation="3dp"
+            >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="Recent Activity"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/lstMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:text="Favorite Search"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/lstProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="3dp"
-        android:textStyle="bold"
-        android:text="Latest News"
-        android:textColor="@color/colorPrimary"
-        android:textSize="16sp" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_edit_white_24dp"
+        app:borderWidth="0dp"
+        app:fabSize="normal"
+        app:rippleColor="@color/mdtp_white"/>
 
-    <com.smarteist.autoimageslider.SliderLayout
-        android:id="@+id/imageSlider"
+    <com.github.fabtransitionactivity.SheetLayout
+        android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_alignParentTop="true" />
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        app:ft_container_gravity="center"
+        app:ft_color="@color/mdtp_white"
+        android:elevation="2dp"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="3dp"
-        android:textStyle="bold"
-        android:text="Recent Activity"
-        android:textColor="@color/colorPrimary"
-        android:textSize="16sp" />
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/lstMenu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+</RelativeLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="3dp"
-        android:textStyle="bold"
-        android:text="Favorite Search"
-        android:textColor="@color/colorPrimary"
-        android:textSize="16sp" />
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/lstProfile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-
-</LinearLayout>

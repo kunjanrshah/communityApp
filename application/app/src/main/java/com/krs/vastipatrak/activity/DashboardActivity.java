@@ -12,16 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.fragments.DashboardFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
-import com.krs.vastipatrak.fragments.SearchFragment;
-import com.krs.vastipatrak.utils.AppConstants;
-
-import java.util.Objects;
 
 public class DashboardActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener{
 
@@ -79,4 +73,6 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         getMenuInflater().inflate(R.menu.menu_dashboard, menu);
         return true;
     }
+
+
 }

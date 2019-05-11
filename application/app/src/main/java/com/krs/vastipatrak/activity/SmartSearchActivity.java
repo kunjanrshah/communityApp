@@ -3,6 +3,8 @@ package com.krs.vastipatrak.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -17,15 +19,52 @@ public class SmartSearchActivity extends AppCompatActivity {
     private SmartSearchAdapter adapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        enterFromBottomAnimation();
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_smart_search);
+
+        Toolbar mToolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(mToolbar);
+        mToolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
+        getSupportActionBar().setTitle("Smart Search");
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_left_arrow);
+
         expandableListView = findViewById(R.id.lst_expandable);
         expandableListView.setGroupIndicator(null);
         adapter = new SmartSearchAdapter(SmartSearchActivity.this,expandableListView);
         expandableListView.setAdapter(adapter);
         setListener();
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        exitToBottomAnimation();
+    }
+
+    protected void enterFromBottomAnimation(){
+        overridePendingTransition(R.anim.activity_open_translate_from_bottom, R.anim.activity_no_animation);
+    }
+
+    protected void exitToBottomAnimation(){
+        overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_close_translate_to_bottom);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     // Setting different listeners to expandablelistview
