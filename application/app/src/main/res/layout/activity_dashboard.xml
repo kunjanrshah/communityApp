@@ -2,30 +2,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
-    android:fitsSystemWindows="true"
-    android:background="@color/mdtp_white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/mdtp_white"
+    android:fitsSystemWindows="true">
 
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/container_toolbar"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/myAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:elevation="3dp">
             <include
                 android:id="@+id/toolbar"
                 layout="@layout/toolbar" />
+        </android.support.design.widget.AppBarLayout>
 
-            <FrameLayout
-                android:id="@+id/container_body"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"    />
+        <FrameLayout
+            android:id="@+id/container_body"
+            app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"  />
 
+<!--        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigation"
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="?android:attr/windowBackground"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:menu="@menu/bottom_navigation" />-->
 
-    </LinearLayout>
+        <com.luseen.spacenavigation.SpaceNavigationView
+            android:id="@+id/space"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:centre_button_color="@color/colorPrimary"
+            app:inactive_item_color="@android:color/black"
+            app:active_item_color="@color/colorPrimary"
+            app:space_background_color="@color/color_light_gray"
+            app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior" />
+
+    </android.support.design.widget.CoordinatorLayout>
 
     <fragment
         android:id="@+id/fragment_navigation_drawer"
@@ -33,6 +58,7 @@
         android:layout_width="@dimen/nav_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout="@layout/fragment_navigation_drawer"
         tools:layout="@layout/fragment_navigation_drawer" />
 

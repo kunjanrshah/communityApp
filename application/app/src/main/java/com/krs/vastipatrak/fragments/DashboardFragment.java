@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,13 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.fabtransitionactivity.SheetLayout;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.activity.SmartSearchActivity;
 import com.krs.vastipatrak.model.FavProfiles;
 import com.krs.vastipatrak.model.RecentMenu;
 import com.smarteist.autoimageslider.DefaultSliderView;
@@ -30,7 +26,7 @@ import com.smarteist.autoimageslider.SliderLayout;
 
 import java.util.ArrayList;
 
-public class DashboardFragment extends Fragment implements SheetLayout.OnFabAnimationEndListener{
+public class DashboardFragment extends Fragment {
 
     SliderLayout sliderLayout;
     RecyclerView lstProfile;
@@ -41,10 +37,6 @@ public class DashboardFragment extends Fragment implements SheetLayout.OnFabAnim
     int ProfileImages[] = {R.drawable.man_reg,R.drawable.man_reg,R.drawable.man_reg,R.drawable.man_reg,R.drawable.man_reg};
     String MenuNames[] = {"My Profile","Donation","Matrimony","QR Code","Search"};
     int MenuImages[] = {R.drawable.dark_icon,R.drawable.dark_icon,R.drawable.dark_icon,R.drawable.dark_icon,R.drawable.dark_icon};
-    FloatingActionButton mFab;
-    SheetLayout mSheetLayout;
-    private static final int REQUEST_CODE = 1;
-
 
     @Nullable
     @Override
@@ -55,20 +47,13 @@ public class DashboardFragment extends Fragment implements SheetLayout.OnFabAnim
         lstMenu =  rootView.findViewById(R.id.lstMenu);
         lstProfile =  rootView.findViewById(R.id.lstProfile);
         sliderLayout = rootView.findViewById(R.id.imageSlider);
-        mSheetLayout = rootView.findViewById(R.id.bottom_sheet);
-        mFab         = rootView.findViewById(R.id.fab);
         sliderLayout.setIndicatorAnimation(IndicatorAnimations.SWAP); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
         sliderLayout.setSliderTransformAnimation(SliderAnimations.FADETRANSFORMATION);
         sliderLayout.setScrollTimeInSec(3); //set scroll delay in seconds :
 
-        mSheetLayout.setFab(mFab);
-        mSheetLayout.setFabAnimationEndListener(this);
-
         setSliderViews();
         setRecentActivity();
         setFavoriteList();
-
-        mFab.setOnClickListener(v -> mSheetLayout.expandFab());
 
         return rootView;
     }
@@ -145,19 +130,6 @@ public class DashboardFragment extends Fragment implements SheetLayout.OnFabAnim
         }
     }
 
-    @Override
-    public void onFabAnimationEnd() {
-        Intent intent = new Intent(getActivity(), SmartSearchActivity.class);
-        startActivityForResult(intent, REQUEST_CODE);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE){
-            mSheetLayout.contractFab();
-        }
-    }
 
     public class RecentMenuAdapter extends RecyclerView.Adapter<RecentActivityViewHolder> {
         private ArrayList<RecentMenu> list;
