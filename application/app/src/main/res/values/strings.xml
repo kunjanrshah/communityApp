@@ -492,6 +492,7 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="_matrimony">Matrimony details</string>
     <string name="some_more">Some more</string>
     <string name="ss_head_name">head_name</string>
+    <string name="ss_family_code">family_code</string>
     <string name="ss_mem_name">mem_name</string>
     <string name="ss_sp_surname">sp_surname</string>
     <string name="ss_sp_samaj">sp_samaj</string>

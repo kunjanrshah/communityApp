@@ -22,10 +22,20 @@
             android:orientation="vertical">
 
             <EditText
+                android:id="@+id/edt_family_code"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:singleLine="true"
+                android:background="@drawable/border"
+                android:hint="Family Code"
+                android:paddingLeft="10dp" />
+
+            <EditText
                 android:id="@+id/edt_head_name"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:singleLine="true"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:hint="Family head Name"
                 android:paddingLeft="10dp" />
@@ -35,14 +45,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:singleLine="true"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:hint="Family Member Name"
                 android:paddingLeft="10dp" />
 
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/sp_surname"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_top_corner"
@@ -50,7 +60,7 @@
 
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/sp_samaj"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_top_corner"
@@ -60,33 +70,33 @@
                 android:id="@+id/sp_gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="Gender" />
 
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/sp_marital"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="Marital Status" />
 
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/sp_native"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="Native" />
 
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/sp_city"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="City" />
 
             <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
                 android:id="@+id/rangeSeekbar"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:corner_radius="10"

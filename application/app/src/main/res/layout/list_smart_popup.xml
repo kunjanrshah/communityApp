@@ -3,100 +3,233 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_mid_light_gray"
     android:orientation="vertical">
 
-    <LinearLayout
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="right"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/img_cancel_bg_primary"
+        android:padding="10dp" />
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/flexbox_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="10dp"
-        android:orientation="vertical">
+        app:alignItems="stretch"
+        app:alignContent="space_around"
+        app:justifyContent="space_around"
+        app:flexWrap="wrap">
 
-        <EditText
-            android:id="@+id/edt_head_name"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/ll_family_code"
+            android:layout_width="wrap_content"
             android:layout_height="45dp"
-            android:visibility="gone"
+            android:layout_margin="3dp"
             android:background="@drawable/border"
-            android:hint="Family head Name"
-            android:paddingLeft="10dp"
-            android:singleLine="true" />
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/edt_member_name"
-            android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:text="Code: "
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_family_code"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:singleLine="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="right|center_vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/img_cancel"
+                    android:padding="10dp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_head"
+            android:layout_width="wrap_content"
             android:layout_height="45dp"
-            android:layout_marginTop="15dp"
-            android:visibility="gone"
+            android:layout_margin="3dp"
             android:background="@drawable/border"
-            android:hint="Family Member Name"
-            android:paddingLeft="10dp"
-            android:singleLine="true" />
+            android:orientation="horizontal">
 
-        <com.jaredrummler.materialspinner.MaterialSpinner
-            android:id="@+id/sp_surname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:visibility="gone"
-            android:background="@drawable/rounded_top_corner"
-            android:text="Surname" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:text="Head: "
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_head_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:singleLine="true" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/img_cancel"
+                android:padding="10dp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_member_name"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="3dp"
+            android:background="@drawable/border"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:text="Member: "
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_member_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:singleLine="true" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/img_cancel"
+                android:padding="10dp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_surname"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/border"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginRight="-30dp"
+                android:text="Surname: "
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/sp_surname"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:background="@drawable/border"
+                android:text="Surname" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/img_cancel"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
 
         <com.jaredrummler.materialspinner.MaterialSpinner
             android:id="@+id/sp_samaj"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/rounded_top_corner"
-            android:text="Regin/Samaj" />
+            android:text="Regin/Samaj"
+            android:visibility="gone" />
 
         <com.jaredrummler.materialspinner.MaterialSpinner
             android:id="@+id/sp_gender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginTop="15dp"
-            android:text="Gender" />
+            android:layout_marginTop="10dp"
+            android:text="Gender"
+            android:visibility="gone" />
 
         <com.jaredrummler.materialspinner.MaterialSpinner
             android:id="@+id/sp_marital"
             android:layout_width="match_parent"
-            android:visibility="gone"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Marital Status" />
+            android:layout_marginTop="10dp"
+            android:text="Marital Status"
+            android:visibility="gone" />
 
         <com.jaredrummler.materialspinner.MaterialSpinner
             android:id="@+id/sp_native"
             android:layout_width="match_parent"
-            android:visibility="gone"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Native" />
+            android:layout_marginTop="10dp"
+            android:text="Native"
+            android:visibility="gone" />
 
         <com.jaredrummler.materialspinner.MaterialSpinner
             android:id="@+id/sp_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginTop="15dp"
-            android:text="City" />
+            android:layout_marginTop="10dp"
+            android:text="City"
+            android:visibility="gone" />
 
         <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
             android:id="@+id/rangeSeekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
             app:bar_color="#C0C0C0"
             app:bar_highlight_color="#A9A9A9"
             app:corner_radius="10"
             app:data_type="_integer"
             app:gap="10"
-            android:visibility="gone"
             app:left_thumb_color="#808080"
             app:left_thumb_color_pressed="#696969"
             app:max_value="100"
@@ -107,9 +240,9 @@
         <LinearLayout
             android:id="@+id/ll_range"
             android:layout_width="match_parent"
-            android:visibility="gone"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/textMin1"
@@ -126,6 +259,7 @@
                 android:text="Age 100" />
 
         </LinearLayout>
-    </LinearLayout>
+    </com.google.android.flexbox.FlexboxLayout>
+
 
 </LinearLayout>

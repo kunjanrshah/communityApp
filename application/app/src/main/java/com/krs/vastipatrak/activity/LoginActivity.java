@@ -505,7 +505,7 @@ public class LoginActivity extends Activity {
         if (!is_home) {
             return;
         }
-        Intent mIntent = new Intent(LoginActivity.this, HomeActivity.class);
+        Intent mIntent = new Intent(LoginActivity.this, DashboardActivity.class);
         if (mSharedPreferences != null) {
             mIntent.putExtra(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
         }
@@ -743,7 +743,7 @@ public class LoginActivity extends Activity {
                             if (userid.isEmpty()) {
                                 return;
                             }
-                            Intent mIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                            Intent mIntent = new Intent(LoginActivity.this, DashboardActivity.class);
                             if (mSharedPreferences != null) {
                                 mIntent.putExtra(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
                             }
@@ -1099,7 +1099,7 @@ public class LoginActivity extends Activity {
                 AppController.isAdmin = true;
               }*/
             if (isLoginSuccess) {
-                Intent mIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                Intent mIntent = new Intent(LoginActivity.this, DashboardActivity.class);
                 if (mSharedPreferences != null) {
                     mIntent.putExtra(AppConstants.USER_ID, mSharedPreferences.getString(AppConstants.USER_ID, ""));
                 }

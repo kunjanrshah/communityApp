@@ -33,14 +33,14 @@
                 android:id="@+id/sp_main_cat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="Category" />
 
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/sp_sub_cat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="Sub Category" />
 
 
@@ -48,14 +48,14 @@
                 android:id="@+id/sp_occupation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="Occupation" />
 
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/sp_current_activity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="Current Activity" />
 
 

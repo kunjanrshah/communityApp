@@ -2,9 +2,8 @@ package com.krs.vastipatrak.activity;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.res.ResourcesCompat;
@@ -14,22 +13,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.fragments.DashboardFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
+import com.krs.vastipatrak.fragments.SmartSearchFragment;
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.luseen.spacenavigation.SpaceOnLongClickListener;
 
-public class DashboardActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener{
+public class DashboardActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
 
     FragmentDrawer drawerFragment;
     DrawerLayout mDrawerLayout;
+    DashboardFragment dashboardFragment;
+    SmartSearchFragment ssfragment;
     private SpaceNavigationView spaceNavigationView;
 
     @Override
@@ -45,8 +46,8 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         getSupportActionBar().setTitle("HOME");
 
         drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-        mDrawerLayout= findViewById(R.id.drawer_layout);
-        drawerFragment.setUp(R.id.fragment_navigation_drawer,mDrawerLayout , mToolbar);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, mDrawerLayout, mToolbar);
 
         drawerFragment.mDrawerToggle.setDrawerIndicatorEnabled(false);
 
@@ -63,17 +64,16 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
                 }
             });
         }
-        spaceNavigationView = (SpaceNavigationView) findViewById(R.id.space);
+        spaceNavigationView = findViewById(R.id.space);
         spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
         spaceNavigationView.addSpaceItem(new SpaceItem("Home", R.drawable.home));
         spaceNavigationView.addSpaceItem(new SpaceItem("Filter", R.drawable.filter));
         spaceNavigationView.shouldShowFullBadgeText(false);
         spaceNavigationView.setCentreButtonIconColorFilterEnabled(false);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        DashboardFragment dashboardFragment = new DashboardFragment();
-        fragmentTransaction.replace(R.id.container_body, dashboardFragment).commit();
+        dashboardFragment = new DashboardFragment();
+        ssfragment = new SmartSearchFragment();
+        movetoFragment(dashboardFragment);
 
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
@@ -84,15 +84,21 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
             @Override
             public void onItemClick(int itemIndex, String itemName) {
                 Log.d("onItemClick ", "" + itemIndex + " " + itemName);
+                if (itemIndex == 1) {
+                    movetoFragment(ssfragment);
+                } else if (itemIndex == 0) {
+                    movetoFragment(dashboardFragment);
+                }
             }
 
             @Override
             public void onItemReselected(int itemIndex, String itemName) {
-                if(itemIndex==1)
-                {
-
-                }
                 Log.d("onItemReselected ", "" + itemIndex + " " + itemName);
+                if (itemIndex == 1) {
+                    movetoFragment(ssfragment);
+                } else if (itemIndex == 0) {
+                    movetoFragment(dashboardFragment);
+                }
             }
         });
 
@@ -108,6 +114,12 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
             }
         });
         //spaceNavigationView.showIconOnly();
+    }
+
+    private void movetoFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container_body, fragment).commit();
     }
 
     @Override

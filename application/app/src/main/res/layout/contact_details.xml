@@ -34,7 +34,7 @@
                 android:id="@+id/edt_mobile"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:hint="Mobile Number"
                 android:paddingLeft="10dp" />
@@ -43,7 +43,7 @@
                 android:id="@+id/edt_local_add"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:hint="Local Address"
                 android:singleLine="true"
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:singleLine="true"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:hint="Permanent Address"
                 android:paddingLeft="10dp" />
@@ -64,7 +64,7 @@
                 android:id="@+id/edt_pin_code"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:hint="PinCode"
                 android:singleLine="true"
@@ -75,14 +75,14 @@
                 android:id="@+id/sp_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="Area" />
 
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/sp_state"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="State" />
 
 

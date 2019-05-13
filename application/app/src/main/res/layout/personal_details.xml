@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:singleLine="true"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:hint="Marriage Date"
                 android:paddingLeft="10dp" />
@@ -44,21 +44,21 @@
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/sp_mosad"
                 android:layout_width="match_parent"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
                 android:text="Mosaad" />
 
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/sp_education"
                 android:layout_width="match_parent"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
                 android:text="Education" />
 
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/sp_gotra"
                 android:layout_width="match_parent"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
                 android:text="Gotra" />
 
@@ -66,7 +66,7 @@
                 android:id="@+id/sp_bg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="Blood Group" />
 
             <CheckBox
@@ -74,14 +74,14 @@
                 android:id="@+id/chk_is_donor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="is Doner?" />
             <CheckBox
                 android:textSize="18sp"
                 android:id="@+id/chk_is_rented"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="is Rented?" />
 
             <CheckBox
@@ -89,7 +89,7 @@
                 android:id="@+id/chk_is_expired"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="is Expired?" />
 
 

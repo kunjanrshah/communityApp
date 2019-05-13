@@ -64,7 +64,7 @@ public class ChooseLanguage extends Activity {
         if (!is_home) {
             return;
         }
-        Intent mIntent = new Intent(ChooseLanguage.this, HomeActivity.class);
+        Intent mIntent = new Intent(ChooseLanguage.this, DashboardActivity.class);
         mIntent.putExtra(AppConstants.USER_ID, AppController.getInstance().mSharedPreferences.getString(AppConstants.USER_ID, ""));
         startActivity(mIntent);
         finish();

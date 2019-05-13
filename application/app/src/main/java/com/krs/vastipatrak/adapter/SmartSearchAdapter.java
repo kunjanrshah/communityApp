@@ -19,6 +19,7 @@ import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListen
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.utils.Utility;
 import com.orhanobut.dialogplus.DialogPlus;
 
 import java.util.ArrayList;
@@ -31,16 +32,14 @@ public class SmartSearchAdapter extends BaseExpandableListAdapter {
     private Context _context;
     private List<String> header;
     private HashMap<String, String> mapChildValues;
-    private EditText edt_head_name, edt_member_name, edt_email, edt_mobile, edt_local_add, edt_permanent_add, edt_pin_code, edt_bdate, edt_mdate, edt_office, edt_birth_time, edt_height_meter, edt_weight_kg, edt_created, edt_updated;
+    private EditText edt_head_name, edt_family_code, edt_member_name, edt_email, edt_mobile, edt_local_add, edt_permanent_add, edt_pin_code, edt_bdate, edt_mdate, edt_office, edt_birth_time, edt_height_meter, edt_weight_kg, edt_created, edt_updated;
     private MaterialSpinner sp_surname, sp_samaj, sp_marital, sp_city, sp_gender, sp_native, sp_area, sp_state, sp_mosad, sp_education, sp_gotra, sp_bg, sp_main_cat, sp_sub_cat, sp_occupation, sp_activity, sp_bplace;
     private CrystalRangeSeekbar rangeAgeBar, rangeUpdationBar;
     private CheckBox chk_is_donor, chk_is_rented, chk_is_expired, chk_is_spect, chk_is_shani, chk_is_mangal;
     private ArrayAdapter<String> surnameAdapter, samajAdapter, maritalAdapter, cityAdapter, genderAdapter, nativeAdapter, mosadAdapter, educationAdapter, gotraAdapter, bgAdapter, areaAdapter, stateAdapter, categoryAdapter, subcatAdapter, occupationAdapter, curActivityAdapter, birthPlaceAdapter;
-    private ExpandableListView expandableListView;
 
-    public SmartSearchAdapter(Context context, ExpandableListView expandableListView) {
+    public SmartSearchAdapter(Context context) {
         this._context = context;
-        this.expandableListView = expandableListView;
 
         mapChildValues = new HashMap<>();
         header = new ArrayList<>();
@@ -242,10 +241,15 @@ public class SmartSearchAdapter extends BaseExpandableListAdapter {
         }
         btn_confirm.setOnClickListener(v -> {
             storeFieldsValues();
-            SmartPopUpAdapter popUpAdapter = new SmartPopUpAdapter(_context, mapChildValues);
-            DialogPlus dialog = DialogPlus.newDialog(_context).setAdapter(popUpAdapter).setOnItemClickListener((dialog1, item, view1, position) -> {
-            }).setExpanded(true).setFooter(R.layout.popup_footer).setHeader(R.layout.popup_header).create();
-            dialog.show();
+            if (mapChildValues.size() > 0) {
+                SmartPopUpAdapter popUpAdapter = new SmartPopUpAdapter(_context, mapChildValues);
+                DialogPlus dialog = DialogPlus.newDialog(_context).setAdapter(popUpAdapter).setOnItemClickListener((dialog1, item, view1, position) -> {
+                }).setExpanded(true).setContentBackgroundResource(R.drawable.popup_top_corner).create();
+                dialog.show();
+            } else {
+                Utility.alert(_context, "Please enter filter value");
+            }
+
         });
 
         header_text.setText(headerTitle);
@@ -269,6 +273,7 @@ public class SmartSearchAdapter extends BaseExpandableListAdapter {
     public void storeFieldsValues() {
         if (mapChildValues != null) {
             if (edt_head_name != null) {
+                mapChildValues.put(_context.getResources().getString(R.string.ss_family_code), edt_family_code.getText().toString().trim());
                 mapChildValues.put(_context.getResources().getString(R.string.ss_head_name), edt_head_name.getText().toString().trim());
                 mapChildValues.put(_context.getString(R.string.ss_mem_name), edt_member_name.getText().toString().trim());
                 mapChildValues.put(_context.getString(R.string.ss_sp_surname), sp_surname.getText().toString().trim());
@@ -328,6 +333,10 @@ public class SmartSearchAdapter extends BaseExpandableListAdapter {
     private void retrieveFieldsValues() {
         if (mapChildValues != null && mapChildValues.size() > 0) {
             if (edt_head_name != null) {
+                String family_code = mapChildValues.get(_context.getResources().getString(R.string.ss_family_code));
+                if (family_code != null && !family_code.isEmpty()) {
+                    edt_family_code.setText(family_code);
+                }
                 String head_name = mapChildValues.get(_context.getResources().getString(R.string.ss_head_name));
                 if (head_name != null && !head_name.isEmpty()) {
                     edt_head_name.setText(head_name);
@@ -480,8 +489,6 @@ public class SmartSearchAdapter extends BaseExpandableListAdapter {
                 if (activity != null && !activity.isEmpty()) {
                     sp_activity.setText(activity);
                 }
-
-
             }
             if (edt_birth_time != null) {
                 String birth_time = mapChildValues.get(_context.getString(R.string.ss_edt_birth_time));
@@ -558,6 +565,7 @@ public class SmartSearchAdapter extends BaseExpandableListAdapter {
                 if (inflater != null) {
                     convertView = inflater.inflate(R.layout.main_details, null);
                 }
+                edt_family_code = convertView.findViewById(R.id.edt_family_code);
                 edt_head_name = convertView.findViewById(R.id.edt_head_name);
                 edt_member_name = convertView.findViewById(R.id.edt_member_name);
                 sp_surname = convertView.findViewById(R.id.sp_surname);

@@ -29,16 +29,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"  />
 
-<!--        <android.support.design.widget.BottomNavigationView
-            android:id="@+id/navigation"
-            android:layout_gravity="bottom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="?android:attr/windowBackground"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:menu="@menu/bottom_navigation" />-->
-
         <com.luseen.spacenavigation.SpaceNavigationView
             android:id="@+id/space"
             android:layout_width="match_parent"

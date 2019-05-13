@@ -35,7 +35,7 @@
                 android:id="@+id/edt_updated"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:hint="Profile Udpated"
                 android:paddingLeft="10dp" />
@@ -43,7 +43,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="Profile updatation Percentage"
                 android:layout_height="wrap_content" />
             <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar

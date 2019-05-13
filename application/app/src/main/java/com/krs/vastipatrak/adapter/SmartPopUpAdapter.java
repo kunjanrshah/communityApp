@@ -14,6 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
+import com.google.android.flexbox.AlignItems;
+import com.google.android.flexbox.AlignSelf;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayout;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.krs.vastipatrak.R;
 
@@ -125,7 +129,16 @@ public class SmartPopUpAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_smart_popup, null);
         }
+        FlexboxLayout flexboxLayout = convertView.findViewById(R.id.flexbox_layout);
+        flexboxLayout.setFlexDirection(FlexDirection.ROW);
 
+        View view = flexboxLayout.getChildAt(0);
+        FlexboxLayout.LayoutParams lp = (FlexboxLayout.LayoutParams) view.getLayoutParams();
+        lp.setFlexGrow(1.0f);
+        lp.setAlignSelf(AlignItems.FLEX_START);
+        view.setLayoutParams(lp);
+
+        EditText edt_family_code = convertView.findViewById(R.id.edt_family_code);
         EditText edt_head_name = convertView.findViewById(R.id.edt_head_name);
         EditText edt_member_name = convertView.findViewById(R.id.edt_member_name);
         MaterialSpinner sp_surname = convertView.findViewById(R.id.sp_surname);
@@ -156,7 +169,13 @@ public class SmartPopUpAdapter extends BaseAdapter {
             String value = entry.getValue().trim();
             System.out.println(entry.getKey() + " = " + entry.getValue());
 
-            if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_head_name))) {
+            if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_family_code))) {
+                if (!value.isEmpty()) {
+                    edt_family_code.setVisibility(View.VISIBLE);
+                    edt_family_code.setText(entry.getValue());
+                }
+            }
+            else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_head_name))) {
                 if (!value.isEmpty()) {
                     edt_head_name.setVisibility(View.VISIBLE);
                     edt_head_name.setText(entry.getValue());
