@@ -11,9 +11,9 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SmartSearchAdapter extends BaseExpandableListAdapter {
+public class SmartSearchAdapter extends BaseExpandableListAdapter implements SmartPopUpAdapter.ICloseDialog {
 
     public int previousGroup = -1;
     private Context _context;
@@ -37,6 +37,7 @@ public class SmartSearchAdapter extends BaseExpandableListAdapter {
     private CrystalRangeSeekbar rangeAgeBar, rangeUpdationBar;
     private CheckBox chk_is_donor, chk_is_rented, chk_is_expired, chk_is_spect, chk_is_shani, chk_is_mangal;
     private ArrayAdapter<String> surnameAdapter, samajAdapter, maritalAdapter, cityAdapter, genderAdapter, nativeAdapter, mosadAdapter, educationAdapter, gotraAdapter, bgAdapter, areaAdapter, stateAdapter, categoryAdapter, subcatAdapter, occupationAdapter, curActivityAdapter, birthPlaceAdapter;
+    private DialogPlus dialog;
 
     public SmartSearchAdapter(Context context) {
         this._context = context;
@@ -242,14 +243,15 @@ public class SmartSearchAdapter extends BaseExpandableListAdapter {
         btn_confirm.setOnClickListener(v -> {
             storeFieldsValues();
             if (mapChildValues.size() > 0) {
-                SmartPopUpAdapter popUpAdapter = new SmartPopUpAdapter(_context, mapChildValues);
-                DialogPlus dialog = DialogPlus.newDialog(_context).setAdapter(popUpAdapter).setOnItemClickListener((dialog1, item, view1, position) -> {
-                }).setExpanded(true).setContentBackgroundResource(R.drawable.popup_top_corner).create();
+                SmartPopUpAdapter popUpAdapter = new SmartPopUpAdapter(_context,this, mapChildValues);
+                dialog = DialogPlus.newDialog(_context).setAdapter(popUpAdapter).setOnItemClickListener((dialog1, item, view1, position) -> {
+                }).setExpanded(true).setContentBackgroundResource(R.drawable.popup_top_corner).setOnItemClickListener((dialog12, item, view, position) -> {
+                    Toast.makeText(_context, "Clicked " + position, Toast.LENGTH_SHORT).show();
+                }).create();
                 dialog.show();
             } else {
                 Utility.alert(_context, "Please enter filter value");
             }
-
         });
 
         header_text.setText(headerTitle);
@@ -702,5 +704,12 @@ public class SmartSearchAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return false;
+    }
+
+    @Override
+    public void PopupClose() {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
     }
 }

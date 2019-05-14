@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -35,11 +36,12 @@ public class SmartPopUpAdapter extends BaseAdapter {
     private CrystalRangeSeekbar rangeUpdationBar;
     private CheckBox chk_is_donor, chk_is_rented, chk_is_expired, chk_is_spect, chk_is_shani, chk_is_mangal;
     private ArrayAdapter<String> mosadAdapter, educationAdapter, gotraAdapter, bgAdapter, areaAdapter, stateAdapter, categoryAdapter, subcatAdapter, occupationAdapter, curActivityAdapter, birthPlaceAdapter;
+    ICloseDialog mICloseDialog;
 
-    public SmartPopUpAdapter(Context _context, HashMap<String, String> stringHashMap) {
+    public SmartPopUpAdapter(Context _context,SmartSearchAdapter adapter, HashMap<String, String> stringHashMap) {
         this._context = _context;
         this.mapChildValues = stringHashMap;
-
+        mICloseDialog=(ICloseDialog)adapter;
         /*List<String> lst_area = new ArrayList<>();
         lst_area.add("area");
         lst_area.add("area1");
@@ -138,9 +140,14 @@ public class SmartPopUpAdapter extends BaseAdapter {
         lp.setAlignSelf(AlignItems.FLEX_START);
         view.setLayoutParams(lp);
 
+        ImageView img_popup_close=convertView.findViewById(R.id.img_popup_close);
+        img_popup_close.setOnClickListener(v -> {
+            mICloseDialog.PopupClose();
+        });
+
         EditText edt_family_code = convertView.findViewById(R.id.edt_family_code);
         EditText edt_head_name = convertView.findViewById(R.id.edt_head_name);
-        EditText edt_member_name = convertView.findViewById(R.id.edt_member_name);
+        EditText edt_member = convertView.findViewById(R.id.edt_member);
         MaterialSpinner sp_surname = convertView.findViewById(R.id.sp_surname);
         MaterialSpinner sp_samaj = convertView.findViewById(R.id.sp_samaj);
         MaterialSpinner sp_marital = convertView.findViewById(R.id.sp_marital);
@@ -150,11 +157,11 @@ public class SmartPopUpAdapter extends BaseAdapter {
         CrystalRangeSeekbar rangeAgeBar = convertView.findViewById(R.id.rangeSeekbar);
         final TextView tvMin = convertView.findViewById(R.id.textMin1);
         final TextView tvMax = convertView.findViewById(R.id.textMax1);
-        LinearLayout ll_range = convertView.findViewById(R.id.ll_range);
+        LinearLayout ll_age = convertView.findViewById(R.id.ll_age);
         // set listener
         rangeAgeBar.setOnRangeSeekbarChangeListener((minValue, maxValue) -> {
             if (minValue.intValue() > 0 || maxValue.intValue() < 100) {
-                ll_range.setVisibility(View.VISIBLE);
+                ll_age.setVisibility(View.VISIBLE);
                 rangeAgeBar.setVisibility(View.VISIBLE);
                 tvMin.setText("Age " + minValue);
                 tvMax.setText("Age " + maxValue);
@@ -182,8 +189,8 @@ public class SmartPopUpAdapter extends BaseAdapter {
                 }
             } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_mem_name))) {
                 if (!value.isEmpty()) {
-                    edt_member_name.setVisibility(View.VISIBLE);
-                    edt_member_name.setText(entry.getValue());
+                    edt_member.setVisibility(View.VISIBLE);
+                    edt_member.setText(entry.getValue());
                 }
             } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_surname))) {
                 if (!value.isEmpty() && !value.equalsIgnoreCase(_context.getString(R.string.ss_surname))) {
@@ -272,7 +279,14 @@ public class SmartPopUpAdapter extends BaseAdapter {
                 }
             }
         }
+
+
         return convertView;
+    }
+
+    interface ICloseDialog
+    {
+        void PopupClose();
     }
 
     @Override
