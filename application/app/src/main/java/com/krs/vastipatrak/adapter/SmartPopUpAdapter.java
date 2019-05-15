@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
 import com.google.android.flexbox.AlignItems;
-import com.google.android.flexbox.AlignSelf;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayout;
 import com.jaredrummler.materialspinner.MaterialSpinner;
@@ -124,17 +123,30 @@ public class SmartPopUpAdapter extends BaseAdapter {
         stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);*/
     }
 
+    private class PopUpViewHolder
+    {
+        FlexboxLayout flexboxLayout;
+        public PopUpViewHolder(View view)
+        {
+            flexboxLayout = view.findViewById(R.id.flexbox_layout);
+        }
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        PopUpViewHolder viewHolder;
 
         LayoutInflater mInflater = (LayoutInflater) _context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_smart_popup, null);
+            viewHolder = new PopUpViewHolder(convertView);
+            convertView.setTag(viewHolder);
+        }else {
+            viewHolder = (PopUpViewHolder) convertView.getTag();
         }
-        FlexboxLayout flexboxLayout = convertView.findViewById(R.id.flexbox_layout);
-        flexboxLayout.setFlexDirection(FlexDirection.ROW);
 
-        View view = flexboxLayout.getChildAt(0);
+        viewHolder.flexboxLayout.setFlexDirection(FlexDirection.ROW);
+        View view = viewHolder.flexboxLayout.getChildAt(0);
         FlexboxLayout.LayoutParams lp = (FlexboxLayout.LayoutParams) view.getLayoutParams();
         lp.setFlexGrow(1.0f);
         lp.setAlignSelf(AlignItems.FLEX_START);
@@ -143,6 +155,67 @@ public class SmartPopUpAdapter extends BaseAdapter {
         ImageView img_popup_close=convertView.findViewById(R.id.img_popup_close);
         img_popup_close.setOnClickListener(v -> {
             mICloseDialog.PopupClose();
+        });
+
+        LinearLayout ll_family_code= convertView.findViewById(R.id.ll_family_code);
+        LinearLayout ll_head= convertView.findViewById(R.id.ll_head);
+        LinearLayout ll_member= convertView.findViewById(R.id.ll_member);
+        LinearLayout ll_surname= convertView.findViewById(R.id.ll_surname);
+        LinearLayout ll_samaj= convertView.findViewById(R.id.ll_samaj);
+        LinearLayout ll_gender= convertView.findViewById(R.id.ll_gender);
+        LinearLayout ll_marital= convertView.findViewById(R.id.ll_marital);
+        LinearLayout ll_native= convertView.findViewById(R.id.ll_native);
+        LinearLayout ll_city= convertView.findViewById(R.id.ll_city);
+        LinearLayout ll_age= convertView.findViewById(R.id.ll_age);
+
+        ImageView img_code_close= convertView.findViewById(R.id.img_code_close);
+        img_code_close.setOnClickListener(v -> {
+            ll_family_code.setVisibility(View.GONE);
+        });
+
+        ImageView img_age_close= convertView.findViewById(R.id.img_age_close);
+        img_age_close.setOnClickListener(v -> {
+            ll_age.setVisibility(View.GONE);
+        });
+
+        ImageView img_head_close= convertView.findViewById(R.id.img_head_close);
+        img_head_close.setOnClickListener(v -> {
+            ll_head.setVisibility(View.GONE);
+        });
+
+        ImageView img_member_close= convertView.findViewById(R.id.img_member_close);
+        img_member_close.setOnClickListener(v -> {
+            ll_member.setVisibility(View.GONE);
+        });
+
+        ImageView img_surname_close= convertView.findViewById(R.id.img_surname_close);
+        img_surname_close.setOnClickListener(v -> {
+            ll_surname.setVisibility(View.GONE);
+        });
+
+        ImageView img_samaj_close= convertView.findViewById(R.id.img_samaj_close);
+        img_samaj_close.setOnClickListener(v -> {
+            ll_samaj.setVisibility(View.GONE);
+        });
+
+        ImageView img_gender_close= convertView.findViewById(R.id.img_gender_close);
+        img_gender_close.setOnClickListener(v -> {
+            ll_gender.setVisibility(View.GONE);
+        });
+
+        ImageView img_marital_close= convertView.findViewById(R.id.img_marital_close);
+        img_marital_close.setOnClickListener(v -> {
+            ll_marital.setVisibility(View.GONE);
+        });
+
+        ImageView img_native_close= convertView.findViewById(R.id.img_native_close);
+        img_native_close.setOnClickListener(v -> {
+            ll_native.setVisibility(View.GONE);
+        });
+
+        ImageView img_city_close= convertView.findViewById(R.id.img_city_close);
+        img_city_close.setOnClickListener(v -> {
+            ll_city.setVisibility(View.GONE);
         });
 
         EditText edt_family_code = convertView.findViewById(R.id.edt_family_code);
@@ -157,12 +230,11 @@ public class SmartPopUpAdapter extends BaseAdapter {
         CrystalRangeSeekbar rangeAgeBar = convertView.findViewById(R.id.rangeSeekbar);
         final TextView tvMin = convertView.findViewById(R.id.textMin1);
         final TextView tvMax = convertView.findViewById(R.id.textMax1);
-        LinearLayout ll_age = convertView.findViewById(R.id.ll_age);
+
         // set listener
         rangeAgeBar.setOnRangeSeekbarChangeListener((minValue, maxValue) -> {
             if (minValue.intValue() > 0 || maxValue.intValue() < 100) {
                 ll_age.setVisibility(View.VISIBLE);
-                rangeAgeBar.setVisibility(View.VISIBLE);
                 tvMin.setText("Age " + minValue);
                 tvMax.setText("Age " + maxValue);
             }
@@ -178,18 +250,18 @@ public class SmartPopUpAdapter extends BaseAdapter {
 
             if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_family_code))) {
                 if (!value.isEmpty()) {
-                    edt_family_code.setVisibility(View.VISIBLE);
+                    ll_family_code.setVisibility(View.VISIBLE);
                     edt_family_code.setText(entry.getValue());
                 }
             }
             else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_head_name))) {
                 if (!value.isEmpty()) {
-                    edt_head_name.setVisibility(View.VISIBLE);
+                    ll_head.setVisibility(View.VISIBLE);
                     edt_head_name.setText(entry.getValue());
                 }
             } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_mem_name))) {
                 if (!value.isEmpty()) {
-                    edt_member.setVisibility(View.VISIBLE);
+                    ll_member.setVisibility(View.VISIBLE);
                     edt_member.setText(entry.getValue());
                 }
             } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_surname))) {
@@ -201,7 +273,7 @@ public class SmartPopUpAdapter extends BaseAdapter {
                     ArrayAdapter<String> surnameAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_surname);
                     surnameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sp_surname.setAdapter(surnameAdapter);
-                    sp_surname.setVisibility(View.VISIBLE);
+                    ll_surname.setVisibility(View.VISIBLE);
                     sp_surname.setText(entry.getValue());
                 }
             } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_samaj))) {
@@ -213,7 +285,7 @@ public class SmartPopUpAdapter extends BaseAdapter {
                     ArrayAdapter<String> samajAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_samaj);
                     samajAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sp_samaj.setAdapter(samajAdapter);
-                    sp_samaj.setVisibility(View.VISIBLE);
+                    ll_samaj.setVisibility(View.VISIBLE);
                     sp_samaj.setText(entry.getValue());
                 }
             } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_marital))) {
@@ -226,7 +298,7 @@ public class SmartPopUpAdapter extends BaseAdapter {
                     ArrayAdapter<String> maritalAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_marital);
                     maritalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sp_marital.setAdapter(maritalAdapter);
-                    sp_marital.setVisibility(View.VISIBLE);
+                    ll_marital.setVisibility(View.VISIBLE);
                     sp_marital.setText(entry.getValue());
                 }
             } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_city))) {
@@ -238,7 +310,7 @@ public class SmartPopUpAdapter extends BaseAdapter {
                     ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_city);
                     cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sp_city.setAdapter(cityAdapter);
-                    sp_city.setVisibility(View.VISIBLE);
+                    ll_city.setVisibility(View.VISIBLE);
                     sp_city.setText(entry.getValue());
                 }
             } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_gender))) {
@@ -252,7 +324,7 @@ public class SmartPopUpAdapter extends BaseAdapter {
                     ArrayAdapter<String> genderAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_gender);
                     genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sp_gender.setAdapter(genderAdapter);
-                    sp_gender.setVisibility(View.VISIBLE);
+                    ll_gender.setVisibility(View.VISIBLE);
                     sp_gender.setText(entry.getValue());
                 }
             } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_native))) {
@@ -266,7 +338,7 @@ public class SmartPopUpAdapter extends BaseAdapter {
                     ArrayAdapter<String> nativeAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_native);
                     nativeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sp_native.setAdapter(nativeAdapter);
-                    sp_native.setVisibility(View.VISIBLE);
+                    ll_native.setVisibility(View.VISIBLE);
                     sp_native.setText(entry.getValue());
                 }
             } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_minage))) {
