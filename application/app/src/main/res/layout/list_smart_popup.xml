@@ -12,26 +12,30 @@
         android:layout_gravity="right"
         android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
-        android:visibility="gone"
         android:background="@drawable/ic_cancel_popup"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:visibility="gone" />
 
     <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/flexbox_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
         app:alignContent="stretch"
         app:alignItems="stretch"
-        android:layout_marginTop="20dp"
         app:flexWrap="wrap">
 
         <LinearLayout
             android:id="@+id/ll_family_code"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:background="@drawable/border"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -57,10 +61,10 @@
 
                 <ImageView
                     android:id="@+id/img_code_close"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="5dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="10dp"
                     android:background="@drawable/ic_cancel_pop_item"
                     android:padding="10dp" />
             </LinearLayout>
@@ -72,9 +76,10 @@
             android:id="@+id/ll_head"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:background="@drawable/border"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -95,11 +100,11 @@
 
             <ImageView
                 android:id="@+id/img_head_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="10dp" />
 
@@ -109,9 +114,10 @@
             android:id="@+id/ll_member"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:background="@drawable/border"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -132,11 +138,11 @@
 
             <ImageView
                 android:id="@+id/img_member_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="10dp" />
 
@@ -146,14 +152,16 @@
             android:id="@+id/ll_surname"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:background="@drawable/border"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical">
+
                 <com.jaredrummler.materialspinner.MaterialSpinner
                     android:id="@+id/sp_surname"
                     android:layout_width="wrap_content"
@@ -162,16 +170,16 @@
                     android:layout_marginLeft="55dp"
                     android:layout_marginRight="-15dp"
                     android:background="@drawable/border"
-                    android:textSize="16sp"
                     android:text="Surname"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Surname: "
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
+                    android:text="Surname: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -179,10 +187,11 @@
 
             <ImageView
                 android:id="@+id/img_surname_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -191,14 +200,16 @@
             android:id="@+id/ll_samaj"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
             android:background="@drawable/border"
-            android:orientation="horizontal">
+            android:layout_margin="5dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical">
+
                 <com.jaredrummler.materialspinner.MaterialSpinner
                     android:id="@+id/sp_samaj"
                     android:layout_width="wrap_content"
@@ -207,16 +218,16 @@
                     android:layout_marginLeft="35dp"
                     android:layout_marginRight="-15dp"
                     android:background="@drawable/border"
-                    android:textSize="16sp"
                     android:text="Regin/Samaj"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Samaj: "
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
+                    android:text="Samaj: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -224,10 +235,11 @@
 
             <ImageView
                 android:id="@+id/img_samaj_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -236,14 +248,16 @@
             android:id="@+id/ll_gender"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:background="@drawable/border"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical">
+
                 <com.jaredrummler.materialspinner.MaterialSpinner
                     android:id="@+id/sp_gender"
                     android:layout_width="wrap_content"
@@ -252,16 +266,16 @@
                     android:layout_marginLeft="45dp"
                     android:layout_marginRight="-15dp"
                     android:background="@drawable/border"
-                    android:textSize="16sp"
                     android:text="Gender"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Gender: "
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
+                    android:text="Gender: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -269,10 +283,11 @@
 
             <ImageView
                 android:id="@+id/img_gender_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -281,14 +296,16 @@
             android:id="@+id/ll_marital"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:background="@drawable/border"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical">
+
                 <com.jaredrummler.materialspinner.MaterialSpinner
                     android:id="@+id/sp_marital"
                     android:layout_width="wrap_content"
@@ -297,27 +314,28 @@
                     android:layout_marginLeft="45dp"
                     android:layout_marginRight="-15dp"
                     android:background="@drawable/border"
-                    android:textSize="16sp"
                     android:text="Marital"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Marital: "
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Marital: "
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_marital_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -326,7 +344,8 @@
             android:id="@+id/ll_native"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
+            android:visibility="gone"
+            android:layout_margin="5dp"
             android:background="@drawable/border"
             android:orientation="horizontal">
 
@@ -334,6 +353,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical">
+
                 <com.jaredrummler.materialspinner.MaterialSpinner
                     android:id="@+id/sp_native"
                     android:layout_width="wrap_content"
@@ -342,16 +362,17 @@
                     android:layout_marginLeft="35dp"
                     android:layout_marginRight="-15dp"
                     android:background="@drawable/border"
-                    android:textSize="16sp"
                     android:text="Native"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Native: "
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="Native: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -359,10 +380,11 @@
 
             <ImageView
                 android:id="@+id/img_native_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -371,14 +393,16 @@
             android:id="@+id/ll_city"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:background="@drawable/border"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical">
+
                 <com.jaredrummler.materialspinner.MaterialSpinner
                     android:id="@+id/sp_city"
                     android:layout_width="wrap_content"
@@ -387,16 +411,16 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="-15dp"
                     android:background="@drawable/border"
-                    android:textSize="16sp"
                     android:text="City"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="City: "
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
+                    android:text="City: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -404,21 +428,23 @@
 
             <ImageView
                 android:id="@+id/img_city_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_age"
+            android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
             android:background="@drawable/border"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -481,14 +507,43 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_margin="5dp"
-                android:background="@drawable/ic_cancel_pop_item"
-                android:padding="5dp" />
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_cancel_pop_item" />
 
         </LinearLayout>
 
 
     </com.google.android.flexbox.FlexboxLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+        <EditText
+            android:gravity="center_horizontal"
+            android:layout_width="200dp"
+            android:layout_gravity="center_horizontal"
+            android:textSize="18sp"
+            android:text="Filter 1"
+            android:hint="Filter Name"
+            android:layout_height="wrap_content" />
+    <CheckBox
+        android:id="@+id/chk_save"
+        android:layout_width="wrap_content"
+        android:text="Save Filter"
+        android:textSize="18sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:text="Apply"
+        android:textSize="18sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/dark_border"
+        android:layout_height="wrap_content" />
+    </LinearLayout>
 </LinearLayout>

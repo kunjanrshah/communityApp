@@ -126,9 +126,49 @@ public class SmartPopUpAdapter extends BaseAdapter {
     private class PopUpViewHolder
     {
         FlexboxLayout flexboxLayout;
-        public PopUpViewHolder(View view)
+        ImageView img_popup_close,img_code_close,img_age_close,img_head_close,img_member_close,img_surname_close,
+        img_samaj_close,img_gender_close,img_marital_close,img_native_close,img_city_close;
+        LinearLayout ll_family_code,ll_head,ll_member,ll_surname,ll_samaj,ll_gender,ll_marital,ll_native,ll_city,ll_age;
+        EditText edt_family_code,edt_head_name,edt_member;
+        MaterialSpinner sp_surname,sp_samaj,sp_marital,sp_city,sp_gender,sp_native;
+        CrystalRangeSeekbar rangeAgeBar;
+        TextView tvMin,tvMax;
+        PopUpViewHolder(View view)
         {
             flexboxLayout = view.findViewById(R.id.flexbox_layout);
+            img_popup_close=view.findViewById(R.id.img_popup_close);
+            ll_family_code= view.findViewById(R.id.ll_family_code);
+            ll_head= view.findViewById(R.id.ll_head);
+            ll_member= view.findViewById(R.id.ll_member);
+            ll_surname= view.findViewById(R.id.ll_surname);
+            ll_samaj= view.findViewById(R.id.ll_samaj);
+            ll_gender= view.findViewById(R.id.ll_gender);
+            ll_marital= view.findViewById(R.id.ll_marital);
+            ll_native= view.findViewById(R.id.ll_native);
+            ll_city= view.findViewById(R.id.ll_city);
+            ll_age= view.findViewById(R.id.ll_age);
+            img_code_close= view.findViewById(R.id.img_code_close);
+            img_age_close= view.findViewById(R.id.img_age_close);
+            img_head_close= view.findViewById(R.id.img_head_close);
+            img_member_close= view.findViewById(R.id.img_member_close);
+            img_surname_close= view.findViewById(R.id.img_surname_close);
+            img_samaj_close= view.findViewById(R.id.img_samaj_close);
+            img_gender_close= view.findViewById(R.id.img_gender_close);
+            img_marital_close= view.findViewById(R.id.img_marital_close);
+            img_native_close= view.findViewById(R.id.img_native_close);
+            img_city_close= view.findViewById(R.id.img_city_close);
+            edt_family_code = view.findViewById(R.id.edt_family_code);
+            edt_head_name = view.findViewById(R.id.edt_head_name);
+            edt_member = view.findViewById(R.id.edt_member);
+            sp_surname = view.findViewById(R.id.sp_surname);
+            sp_samaj = view.findViewById(R.id.sp_samaj);
+            sp_marital = view.findViewById(R.id.sp_marital);
+            sp_city = view.findViewById(R.id.sp_city);
+            sp_gender = view.findViewById(R.id.sp_gender);
+            sp_native = view.findViewById(R.id.sp_native);
+            rangeAgeBar = view.findViewById(R.id.rangeSeekbar);
+            tvMin = view.findViewById(R.id.textMin1);
+            tvMax = view.findViewById(R.id.textMax1);
         }
     }
 
@@ -141,218 +181,168 @@ public class SmartPopUpAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.list_smart_popup, null);
             viewHolder = new PopUpViewHolder(convertView);
             convertView.setTag(viewHolder);
+            for (Map.Entry<String, String> entry : mapChildValues.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue().trim();
+                System.out.println(entry.getKey() + " = " + entry.getValue());
+
+                if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_family_code))) {
+                    if (!value.isEmpty()) {
+                        viewHolder.ll_family_code.setVisibility(View.VISIBLE);
+                        viewHolder.edt_family_code.setText(entry.getValue());
+                    }
+                }
+                else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_head_name))) {
+                    if (!value.isEmpty()) {
+                        viewHolder.ll_head.setVisibility(View.VISIBLE);
+                        viewHolder.edt_head_name.setText(entry.getValue());
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_mem_name))) {
+                    if (!value.isEmpty()) {
+                        viewHolder.ll_member.setVisibility(View.VISIBLE);
+                        viewHolder.edt_member.setText(entry.getValue());
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_surname))) {
+                    if (!value.isEmpty() && !value.equalsIgnoreCase(_context.getString(R.string.ss_surname))) {
+                        List<String> lst_surname = new ArrayList<>();
+                        lst_surname.add(_context.getString(R.string.ss_surname));
+                        lst_surname.add("surname1");
+                        lst_surname.add("surname2");
+                        ArrayAdapter<String> surnameAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_surname);
+                        surnameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        viewHolder.sp_surname.setAdapter(surnameAdapter);
+                        viewHolder.ll_surname.setVisibility(View.VISIBLE);
+                        viewHolder.sp_surname.setText(entry.getValue());
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_samaj))) {
+                    if (!value.isEmpty() && !value.equalsIgnoreCase(_context.getString(R.string.ss_samaj))) {
+                        List<String> lst_samaj = new ArrayList<>();
+                        lst_samaj.add(_context.getString(R.string.ss_samaj));
+                        lst_samaj.add("samaj1");
+                        lst_samaj.add("samaj2");
+                        ArrayAdapter<String> samajAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_samaj);
+                        samajAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        viewHolder.sp_samaj.setAdapter(samajAdapter);
+                        viewHolder.ll_samaj.setVisibility(View.VISIBLE);
+                        viewHolder.sp_samaj.setText(entry.getValue());
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_marital))) {
+                    if (!value.isEmpty() && !value.equalsIgnoreCase(_context.getString(R.string.ss_marital))) {
+                        List<String> lst_marital = new ArrayList<>();
+                        lst_marital.add(_context.getString(R.string.ss_marital));
+                        lst_marital.add("marital1");
+                        lst_marital.add("marital2");
+
+                        ArrayAdapter<String> maritalAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_marital);
+                        maritalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        viewHolder.sp_marital.setAdapter(maritalAdapter);
+                        viewHolder.ll_marital.setVisibility(View.VISIBLE);
+                        viewHolder.sp_marital.setText(entry.getValue());
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_city))) {
+                    if (!value.isEmpty() && !value.equalsIgnoreCase(_context.getString(R.string.ss_city))) {
+                        List<String> lst_city = new ArrayList<>();
+                        lst_city.add(_context.getString(R.string.ss_city));
+                        lst_city.add("city1");
+                        lst_city.add("city2");
+                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_city);
+                        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        viewHolder.sp_city.setAdapter(cityAdapter);
+                        viewHolder.ll_city.setVisibility(View.VISIBLE);
+                        viewHolder.sp_city.setText(entry.getValue());
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_gender))) {
+
+                    if (!value.isEmpty() && !value.equalsIgnoreCase(_context.getString(R.string.ss_gender))) {
+                        List<String> lst_gender = new ArrayList<>();
+                        lst_gender.add(_context.getString(R.string.ss_gender));
+                        lst_gender.add("Male");
+                        lst_gender.add("Female");
+
+                        ArrayAdapter<String> genderAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_gender);
+                        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        viewHolder.sp_gender.setAdapter(genderAdapter);
+                        viewHolder.ll_gender.setVisibility(View.VISIBLE);
+                        viewHolder.sp_gender.setText(entry.getValue());
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_native))) {
+
+                    if (!value.isEmpty() && !value.equalsIgnoreCase(_context.getString(R.string.ss_native))) {
+                        List<String> lst_native = new ArrayList<>();
+                        lst_native.add(_context.getString(R.string.ss_native));
+                        lst_native.add("Native1");
+                        lst_native.add("Native2");
+
+                        ArrayAdapter<String> nativeAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_native);
+                        nativeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        viewHolder.sp_native.setAdapter(nativeAdapter);
+                        viewHolder.ll_native.setVisibility(View.VISIBLE);
+                        viewHolder.sp_native.setText(entry.getValue());
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_minage))) {
+                    if (!value.isEmpty()) {
+                        viewHolder.rangeAgeBar.setMinStartValue(Integer.parseInt(value)).apply();
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_maxage))) {
+                    if (!value.isEmpty()) {
+                        viewHolder.rangeAgeBar.setMaxStartValue(Integer.parseInt(value)).apply();
+                    }
+                }
+            }
+            viewHolder.flexboxLayout.setFlexDirection(FlexDirection.ROW);
+            View view = viewHolder.flexboxLayout.getChildAt(0);
+            FlexboxLayout.LayoutParams lp = (FlexboxLayout.LayoutParams) view.getLayoutParams();
+            lp.setFlexGrow(1.0f);
+            lp.setAlignSelf(AlignItems.FLEX_START);
+            view.setLayoutParams(lp);
+
+            // set listener
+            viewHolder.rangeAgeBar.setOnRangeSeekbarChangeListener((minValue, maxValue) -> {
+                if (minValue.intValue() > 0 || maxValue.intValue() < 100) {
+                    viewHolder.ll_age.setVisibility(View.VISIBLE);
+                    viewHolder.tvMin.setText("Age " + minValue);
+                    viewHolder.tvMax.setText("Age " + maxValue);
+                }
+            });
+            // set final value listener
+            viewHolder.rangeAgeBar.setOnRangeSeekbarFinalValueListener((minValue, maxValue) -> Log.d("CRS=>", String.valueOf(minValue) + " : " + String.valueOf(maxValue)));
         }else {
             viewHolder = (PopUpViewHolder) convertView.getTag();
         }
 
-        viewHolder.flexboxLayout.setFlexDirection(FlexDirection.ROW);
-        View view = viewHolder.flexboxLayout.getChildAt(0);
-        FlexboxLayout.LayoutParams lp = (FlexboxLayout.LayoutParams) view.getLayoutParams();
-        lp.setFlexGrow(1.0f);
-        lp.setAlignSelf(AlignItems.FLEX_START);
-        view.setLayoutParams(lp);
-
-        ImageView img_popup_close=convertView.findViewById(R.id.img_popup_close);
-        img_popup_close.setOnClickListener(v -> {
+        viewHolder.img_popup_close.setOnClickListener(v -> {
             mICloseDialog.PopupClose();
         });
-
-        LinearLayout ll_family_code= convertView.findViewById(R.id.ll_family_code);
-        LinearLayout ll_head= convertView.findViewById(R.id.ll_head);
-        LinearLayout ll_member= convertView.findViewById(R.id.ll_member);
-        LinearLayout ll_surname= convertView.findViewById(R.id.ll_surname);
-        LinearLayout ll_samaj= convertView.findViewById(R.id.ll_samaj);
-        LinearLayout ll_gender= convertView.findViewById(R.id.ll_gender);
-        LinearLayout ll_marital= convertView.findViewById(R.id.ll_marital);
-        LinearLayout ll_native= convertView.findViewById(R.id.ll_native);
-        LinearLayout ll_city= convertView.findViewById(R.id.ll_city);
-        LinearLayout ll_age= convertView.findViewById(R.id.ll_age);
-
-        ImageView img_code_close= convertView.findViewById(R.id.img_code_close);
-        img_code_close.setOnClickListener(v -> {
-            ll_family_code.setVisibility(View.GONE);
+        viewHolder.img_code_close.setOnClickListener(v -> {
+            viewHolder.ll_family_code.setVisibility(View.GONE);
         });
-
-        ImageView img_age_close= convertView.findViewById(R.id.img_age_close);
-        img_age_close.setOnClickListener(v -> {
-            ll_age.setVisibility(View.GONE);
+        viewHolder.img_age_close.setOnClickListener(v -> {
+            viewHolder.ll_age.setVisibility(View.GONE);
         });
-
-        ImageView img_head_close= convertView.findViewById(R.id.img_head_close);
-        img_head_close.setOnClickListener(v -> {
-            ll_head.setVisibility(View.GONE);
+        viewHolder.img_head_close.setOnClickListener(v -> {
+            viewHolder.ll_head.setVisibility(View.GONE);
         });
-
-        ImageView img_member_close= convertView.findViewById(R.id.img_member_close);
-        img_member_close.setOnClickListener(v -> {
-            ll_member.setVisibility(View.GONE);
+        viewHolder.img_member_close.setOnClickListener(v -> {
+            viewHolder.ll_member.setVisibility(View.GONE);
         });
-
-        ImageView img_surname_close= convertView.findViewById(R.id.img_surname_close);
-        img_surname_close.setOnClickListener(v -> {
-            ll_surname.setVisibility(View.GONE);
+        viewHolder.img_surname_close.setOnClickListener(v -> {
+            viewHolder.ll_surname.setVisibility(View.GONE);
         });
-
-        ImageView img_samaj_close= convertView.findViewById(R.id.img_samaj_close);
-        img_samaj_close.setOnClickListener(v -> {
-            ll_samaj.setVisibility(View.GONE);
+        viewHolder.img_samaj_close.setOnClickListener(v -> {
+            viewHolder.ll_samaj.setVisibility(View.GONE);
         });
-
-        ImageView img_gender_close= convertView.findViewById(R.id.img_gender_close);
-        img_gender_close.setOnClickListener(v -> {
-            ll_gender.setVisibility(View.GONE);
+        viewHolder.img_gender_close.setOnClickListener(v -> {
+            viewHolder.ll_gender.setVisibility(View.GONE);
         });
-
-        ImageView img_marital_close= convertView.findViewById(R.id.img_marital_close);
-        img_marital_close.setOnClickListener(v -> {
-            ll_marital.setVisibility(View.GONE);
+        viewHolder.img_marital_close.setOnClickListener(v -> {
+            viewHolder.ll_marital.setVisibility(View.GONE);
         });
-
-        ImageView img_native_close= convertView.findViewById(R.id.img_native_close);
-        img_native_close.setOnClickListener(v -> {
-            ll_native.setVisibility(View.GONE);
+        viewHolder.img_native_close.setOnClickListener(v -> {
+            viewHolder.ll_native.setVisibility(View.GONE);
         });
-
-        ImageView img_city_close= convertView.findViewById(R.id.img_city_close);
-        img_city_close.setOnClickListener(v -> {
-            ll_city.setVisibility(View.GONE);
+        viewHolder.img_city_close.setOnClickListener(v -> {
+            viewHolder.ll_city.setVisibility(View.GONE);
         });
-
-        EditText edt_family_code = convertView.findViewById(R.id.edt_family_code);
-        EditText edt_head_name = convertView.findViewById(R.id.edt_head_name);
-        EditText edt_member = convertView.findViewById(R.id.edt_member);
-        MaterialSpinner sp_surname = convertView.findViewById(R.id.sp_surname);
-        MaterialSpinner sp_samaj = convertView.findViewById(R.id.sp_samaj);
-        MaterialSpinner sp_marital = convertView.findViewById(R.id.sp_marital);
-        MaterialSpinner sp_city = convertView.findViewById(R.id.sp_city);
-        MaterialSpinner sp_gender = convertView.findViewById(R.id.sp_gender);
-        MaterialSpinner sp_native = convertView.findViewById(R.id.sp_native);
-        CrystalRangeSeekbar rangeAgeBar = convertView.findViewById(R.id.rangeSeekbar);
-        final TextView tvMin = convertView.findViewById(R.id.textMin1);
-        final TextView tvMax = convertView.findViewById(R.id.textMax1);
-
-        // set listener
-        rangeAgeBar.setOnRangeSeekbarChangeListener((minValue, maxValue) -> {
-            if (minValue.intValue() > 0 || maxValue.intValue() < 100) {
-                ll_age.setVisibility(View.VISIBLE);
-                tvMin.setText("Age " + minValue);
-                tvMax.setText("Age " + maxValue);
-            }
-        });
-
-        // set final value listener
-        rangeAgeBar.setOnRangeSeekbarFinalValueListener((minValue, maxValue) -> Log.d("CRS=>", String.valueOf(minValue) + " : " + String.valueOf(maxValue)));
-
-        for (Map.Entry<String, String> entry : mapChildValues.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue().trim();
-            System.out.println(entry.getKey() + " = " + entry.getValue());
-
-            if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_family_code))) {
-                if (!value.isEmpty()) {
-                    ll_family_code.setVisibility(View.VISIBLE);
-                    edt_family_code.setText(entry.getValue());
-                }
-            }
-            else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_head_name))) {
-                if (!value.isEmpty()) {
-                    ll_head.setVisibility(View.VISIBLE);
-                    edt_head_name.setText(entry.getValue());
-                }
-            } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_mem_name))) {
-                if (!value.isEmpty()) {
-                    ll_member.setVisibility(View.VISIBLE);
-                    edt_member.setText(entry.getValue());
-                }
-            } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_surname))) {
-                if (!value.isEmpty() && !value.equalsIgnoreCase(_context.getString(R.string.ss_surname))) {
-                    List<String> lst_surname = new ArrayList<>();
-                    lst_surname.add(_context.getString(R.string.ss_surname));
-                    lst_surname.add("surname1");
-                    lst_surname.add("surname2");
-                    ArrayAdapter<String> surnameAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_surname);
-                    surnameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    sp_surname.setAdapter(surnameAdapter);
-                    ll_surname.setVisibility(View.VISIBLE);
-                    sp_surname.setText(entry.getValue());
-                }
-            } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_samaj))) {
-                if (!value.isEmpty() && !value.equalsIgnoreCase(_context.getString(R.string.ss_samaj))) {
-                    List<String> lst_samaj = new ArrayList<>();
-                    lst_samaj.add(_context.getString(R.string.ss_samaj));
-                    lst_samaj.add("samaj1");
-                    lst_samaj.add("samaj2");
-                    ArrayAdapter<String> samajAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_samaj);
-                    samajAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    sp_samaj.setAdapter(samajAdapter);
-                    ll_samaj.setVisibility(View.VISIBLE);
-                    sp_samaj.setText(entry.getValue());
-                }
-            } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_marital))) {
-                if (!value.isEmpty() && !value.equalsIgnoreCase(_context.getString(R.string.ss_marital))) {
-                    List<String> lst_marital = new ArrayList<>();
-                    lst_marital.add(_context.getString(R.string.ss_marital));
-                    lst_marital.add("marital1");
-                    lst_marital.add("marital2");
-
-                    ArrayAdapter<String> maritalAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_marital);
-                    maritalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    sp_marital.setAdapter(maritalAdapter);
-                    ll_marital.setVisibility(View.VISIBLE);
-                    sp_marital.setText(entry.getValue());
-                }
-            } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_city))) {
-                if (!value.isEmpty() && !value.equalsIgnoreCase(_context.getString(R.string.ss_city))) {
-                    List<String> lst_city = new ArrayList<>();
-                    lst_city.add(_context.getString(R.string.ss_city));
-                    lst_city.add("city1");
-                    lst_city.add("city2");
-                    ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_city);
-                    cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    sp_city.setAdapter(cityAdapter);
-                    ll_city.setVisibility(View.VISIBLE);
-                    sp_city.setText(entry.getValue());
-                }
-            } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_gender))) {
-
-                if (!value.isEmpty() && !value.equalsIgnoreCase(_context.getString(R.string.ss_gender))) {
-                    List<String> lst_gender = new ArrayList<>();
-                    lst_gender.add(_context.getString(R.string.ss_gender));
-                    lst_gender.add("Male");
-                    lst_gender.add("Female");
-
-                    ArrayAdapter<String> genderAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_gender);
-                    genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    sp_gender.setAdapter(genderAdapter);
-                    ll_gender.setVisibility(View.VISIBLE);
-                    sp_gender.setText(entry.getValue());
-                }
-            } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_native))) {
-
-                if (!value.isEmpty() && !value.equalsIgnoreCase(_context.getString(R.string.ss_native))) {
-                    List<String> lst_native = new ArrayList<>();
-                    lst_native.add(_context.getString(R.string.ss_native));
-                    lst_native.add("Native1");
-                    lst_native.add("Native2");
-
-                    ArrayAdapter<String> nativeAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_native);
-                    nativeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    sp_native.setAdapter(nativeAdapter);
-                    ll_native.setVisibility(View.VISIBLE);
-                    sp_native.setText(entry.getValue());
-                }
-            } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_minage))) {
-                if (!value.isEmpty()) {
-                    rangeAgeBar.setMinStartValue(Integer.parseInt(value)).apply();
-                }
-            } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_maxage))) {
-                if (!value.isEmpty()) {
-                    rangeAgeBar.setMaxStartValue(Integer.parseInt(value)).apply();
-                }
-            }
-        }
-
-
         return convertView;
     }
 
