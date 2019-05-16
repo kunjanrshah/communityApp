@@ -513,6 +513,289 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/ll_email"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:text="Email: "
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_email"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:singleLine="true" />
+
+            <ImageView
+                android:id="@+id/img_email_close"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_cancel_pop_item"
+                android:padding="10dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:text="Mobile: "
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_mobile"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:singleLine="true" />
+
+            <ImageView
+                android:id="@+id/img_mobile_close"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_cancel_pop_item"
+                android:padding="10dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_local_add"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:text="Local Add: "
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_local_add"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:singleLine="true" />
+
+            <ImageView
+                android:id="@+id/img_local_add_close"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_cancel_pop_item"
+                android:padding="10dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_permanent_add"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:text="Permanent Add: "
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_permanent_add"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:singleLine="true" />
+
+            <ImageView
+                android:id="@+id/img_permanent_add_close"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_cancel_pop_item"
+                android:padding="10dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_pincode"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:text="Permanent Add: "
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_pincode"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:singleLine="true" />
+
+            <ImageView
+                android:id="@+id/img_pincode_close"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_cancel_pop_item"
+                android:padding="10dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_area"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/sp_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="-15dp"
+                    android:background="@drawable/border"
+                    android:text="Area"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:text="Area: "
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/img_area_close"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_cancel_pop_item"
+                android:padding="5dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_state"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/sp_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="-15dp"
+                    android:background="@drawable/border"
+                    android:text="State"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:text="State: "
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/img_state_close"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_cancel_pop_item"
+                android:padding="5dp" />
+        </LinearLayout>
+
 
     </com.google.android.flexbox.FlexboxLayout>
 
