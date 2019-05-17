@@ -28,6 +28,7 @@ import java.util.Map;
 
 public class SmartPopUpAdapter extends BaseAdapter {
 
+    ICloseDialog mICloseDialog;
     private Context _context;
     private HashMap<String, String> mapChildValues;
     private EditText edt_email, edt_mobile, edt_local_add, edt_permanent_add, edt_pin_code, edt_bdate, edt_mdate, edt_office, edt_birth_time, edt_height_meter, edt_weight_kg, edt_created, edt_updated;
@@ -35,12 +36,11 @@ public class SmartPopUpAdapter extends BaseAdapter {
     private CrystalRangeSeekbar rangeUpdationBar;
     private CheckBox chk_is_donor, chk_is_rented, chk_is_expired, chk_is_spect, chk_is_shani, chk_is_mangal;
     private ArrayAdapter<String> mosadAdapter, educationAdapter, gotraAdapter, bgAdapter, areaAdapter, stateAdapter, categoryAdapter, subcatAdapter, occupationAdapter, curActivityAdapter, birthPlaceAdapter;
-    ICloseDialog mICloseDialog;
 
-    public SmartPopUpAdapter(Context _context,SmartSearchAdapter adapter, HashMap<String, String> stringHashMap) {
+    public SmartPopUpAdapter(Context _context, SmartSearchAdapter adapter, HashMap<String, String> stringHashMap) {
         this._context = _context;
         this.mapChildValues = stringHashMap;
-        mICloseDialog=(ICloseDialog)adapter;
+        mICloseDialog = (ICloseDialog) adapter;
         /*List<String> lst_area = new ArrayList<>();
         lst_area.add("area");
         lst_area.add("area1");
@@ -123,55 +123,6 @@ public class SmartPopUpAdapter extends BaseAdapter {
         stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);*/
     }
 
-    private class PopUpViewHolder
-    {
-        FlexboxLayout flexboxLayout;
-        ImageView img_popup_close,img_code_close,img_age_close,img_head_close,img_member_close,img_surname_close,
-        img_samaj_close,img_gender_close,img_marital_close,img_native_close,img_city_close;
-        LinearLayout ll_family_code,ll_head,ll_member,ll_surname,ll_samaj,ll_gender,ll_marital,ll_native,ll_city,ll_age;
-        EditText edt_family_code,edt_head_name,edt_member;
-        MaterialSpinner sp_surname,sp_samaj,sp_marital,sp_city,sp_gender,sp_native;
-        CrystalRangeSeekbar rangeAgeBar;
-        TextView tvMin,tvMax;
-        PopUpViewHolder(View view)
-        {
-            flexboxLayout = view.findViewById(R.id.flexbox_layout);
-            img_popup_close=view.findViewById(R.id.img_popup_close);
-            ll_family_code= view.findViewById(R.id.ll_family_code);
-            ll_head= view.findViewById(R.id.ll_head);
-            ll_member= view.findViewById(R.id.ll_member);
-            ll_surname= view.findViewById(R.id.ll_surname);
-            ll_samaj= view.findViewById(R.id.ll_samaj);
-            ll_gender= view.findViewById(R.id.ll_gender);
-            ll_marital= view.findViewById(R.id.ll_marital);
-            ll_native= view.findViewById(R.id.ll_native);
-            ll_city= view.findViewById(R.id.ll_city);
-            ll_age= view.findViewById(R.id.ll_age);
-            img_code_close= view.findViewById(R.id.img_code_close);
-            img_age_close= view.findViewById(R.id.img_age_close);
-            img_head_close= view.findViewById(R.id.img_head_close);
-            img_member_close= view.findViewById(R.id.img_member_close);
-            img_surname_close= view.findViewById(R.id.img_surname_close);
-            img_samaj_close= view.findViewById(R.id.img_samaj_close);
-            img_gender_close= view.findViewById(R.id.img_gender_close);
-            img_marital_close= view.findViewById(R.id.img_marital_close);
-            img_native_close= view.findViewById(R.id.img_native_close);
-            img_city_close= view.findViewById(R.id.img_city_close);
-            edt_family_code = view.findViewById(R.id.edt_family_code);
-            edt_head_name = view.findViewById(R.id.edt_head_name);
-            edt_member = view.findViewById(R.id.edt_member);
-            sp_surname = view.findViewById(R.id.sp_surname);
-            sp_samaj = view.findViewById(R.id.sp_samaj);
-            sp_marital = view.findViewById(R.id.sp_marital);
-            sp_city = view.findViewById(R.id.sp_city);
-            sp_gender = view.findViewById(R.id.sp_gender);
-            sp_native = view.findViewById(R.id.sp_native);
-            rangeAgeBar = view.findViewById(R.id.rangeSeekbar);
-            tvMin = view.findViewById(R.id.textMin1);
-            tvMax = view.findViewById(R.id.textMax1);
-        }
-    }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         PopUpViewHolder viewHolder;
@@ -191,8 +142,7 @@ public class SmartPopUpAdapter extends BaseAdapter {
                         viewHolder.ll_family_code.setVisibility(View.VISIBLE);
                         viewHolder.edt_family_code.setText(entry.getValue());
                     }
-                }
-                else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_head_name))) {
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_head_name))) {
                     if (!value.isEmpty()) {
                         viewHolder.ll_head.setVisibility(View.VISIBLE);
                         viewHolder.edt_head_name.setText(entry.getValue());
@@ -306,7 +256,7 @@ public class SmartPopUpAdapter extends BaseAdapter {
             });
             // set final value listener
             viewHolder.rangeAgeBar.setOnRangeSeekbarFinalValueListener((minValue, maxValue) -> Log.d("CRS=>", String.valueOf(minValue) + " : " + String.valueOf(maxValue)));
-        }else {
+        } else {
             viewHolder = (PopUpViewHolder) convertView.getTag();
         }
 
@@ -346,11 +296,6 @@ public class SmartPopUpAdapter extends BaseAdapter {
         return convertView;
     }
 
-    interface ICloseDialog
-    {
-        void PopupClose();
-    }
-
     @Override
     public int getCount() {
         return 1;
@@ -364,6 +309,81 @@ public class SmartPopUpAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return 0;
+    }
+
+    interface ICloseDialog {
+        void PopupClose();
+    }
+
+    private class PopUpViewHolder {
+        FlexboxLayout flexboxLayout;
+        ImageView img_popup_close, img_code_close, img_age_close, img_head_close, img_member_close, img_surname_close,
+                img_samaj_close, img_gender_close, img_marital_close, img_native_close, img_city_close,
+                img_email_close, img_mobile_close, img_local_add_close, img_permanent_add_close, img_pincode_close, img_area_close, img_state_close;
+        LinearLayout ll_family_code, ll_head, ll_member, ll_surname, ll_samaj, ll_gender, ll_marital, ll_native, ll_city, ll_age,
+                ll_email, ll_mobile, ll_local_add, ll_permanent_add, ll_pincode, ll_area, ll_state;
+        EditText edt_family_code, edt_head_name, edt_member, edt_email, edt_mobile, edt_local_add, edt_permanent_add, edt_pincode;
+        MaterialSpinner sp_surname, sp_samaj, sp_marital, sp_city, sp_gender, sp_native, sp_area, sp_state;
+        CrystalRangeSeekbar rangeAgeBar;
+        TextView tvMin, tvMax;
+
+        PopUpViewHolder(View view) {
+            flexboxLayout = view.findViewById(R.id.flexbox_layout);
+            img_popup_close = view.findViewById(R.id.img_popup_close);
+            ll_family_code = view.findViewById(R.id.ll_family_code);
+            ll_head = view.findViewById(R.id.ll_head);
+            ll_member = view.findViewById(R.id.ll_member);
+            ll_surname = view.findViewById(R.id.ll_surname);
+            ll_samaj = view.findViewById(R.id.ll_samaj);
+            ll_gender = view.findViewById(R.id.ll_gender);
+            ll_marital = view.findViewById(R.id.ll_marital);
+            ll_native = view.findViewById(R.id.ll_native);
+            ll_city = view.findViewById(R.id.ll_city);
+            ll_age = view.findViewById(R.id.ll_age);
+            ll_email = view.findViewById(R.id.ll_email);
+            ll_mobile = view.findViewById(R.id.ll_mobile);
+            ll_local_add = view.findViewById(R.id.ll_local_add);
+            ll_permanent_add = view.findViewById(R.id.ll_permanent_add);
+            ll_pincode = view.findViewById(R.id.ll_pincode);
+            ll_area = view.findViewById(R.id.ll_area);
+            ll_state = view.findViewById(R.id.ll_state);
+            img_code_close = view.findViewById(R.id.img_code_close);
+            img_age_close = view.findViewById(R.id.img_age_close);
+            img_head_close = view.findViewById(R.id.img_head_close);
+            img_member_close = view.findViewById(R.id.img_member_close);
+            img_surname_close = view.findViewById(R.id.img_surname_close);
+            img_samaj_close = view.findViewById(R.id.img_samaj_close);
+            img_gender_close = view.findViewById(R.id.img_gender_close);
+            img_marital_close = view.findViewById(R.id.img_marital_close);
+            img_native_close = view.findViewById(R.id.img_native_close);
+            img_city_close = view.findViewById(R.id.img_city_close);
+            img_email_close = view.findViewById(R.id.img_email_close);
+            img_mobile_close = view.findViewById(R.id.img_mobile_close);
+            img_local_add_close = view.findViewById(R.id.img_local_add_close);
+            img_permanent_add_close = view.findViewById(R.id.img_permanent_add_close);
+            img_pincode_close = view.findViewById(R.id.img_pincode_close);
+            img_area_close = view.findViewById(R.id.img_area_close);
+            img_state_close = view.findViewById(R.id.img_state_close);
+            edt_email= view.findViewById(R.id.edt_email);
+            edt_mobile= view.findViewById(R.id.edt_mobile);
+            edt_local_add= view.findViewById(R.id.edt_local_add);
+            edt_permanent_add= view.findViewById(R.id.edt_permanent_add);
+            edt_pincode= view.findViewById(R.id.edt_pincode);
+            edt_family_code = view.findViewById(R.id.edt_family_code);
+            edt_head_name = view.findViewById(R.id.edt_head_name);
+            edt_member = view.findViewById(R.id.edt_member);
+            sp_surname = view.findViewById(R.id.sp_surname);
+            sp_samaj = view.findViewById(R.id.sp_samaj);
+            sp_marital = view.findViewById(R.id.sp_marital);
+            sp_city = view.findViewById(R.id.sp_city);
+            sp_gender = view.findViewById(R.id.sp_gender);
+            sp_native = view.findViewById(R.id.sp_native);
+            sp_area= view.findViewById(R.id.sp_area);
+            sp_state= view.findViewById(R.id.sp_state);
+            rangeAgeBar = view.findViewById(R.id.rangeSeekbar);
+            tvMin = view.findViewById(R.id.textMin1);
+            tvMax = view.findViewById(R.id.textMax1);
+        }
     }
 
 
