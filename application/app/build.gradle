@@ -6,7 +6,7 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.krs.vastipatrak"
@@ -53,11 +53,7 @@ dependencies {
     implementation files('libs/OvteBase64.jar')
     implementation 'com.github.recruit-lifestyle:WaveSwipeRefreshLayout:1.6'
 
-    implementation "com.android.support:design:27.1.1"
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
     //noinspection GradleCompatible
-    implementation 'com.android.support:multidex:1.0.3'
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }
@@ -86,12 +82,9 @@ dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
         transitive = true
     }
-    configurations.all {
-        exclude group: 'com.android.support', module: 'support-v13'
-    }
+
     implementation 'com.github.delight-im:Android-AdvancedWebView:v3.0.0'
     implementation 'com.github.orangegangsters:swipy:1.2.3@aar'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'de.blox:graphview:0.4.2'
     implementation project(':library')
     implementation project(':draggabletreeview')
@@ -104,6 +97,7 @@ dependencies {
     implementation 'com.orhanobut:dialogplus:1.11@aar'
     implementation 'com.github.armcha:SpaceNavigationView:1.6.0'
     implementation 'com.google.android:flexbox:1.0.0'
+    implementation 'com.github.iammert:MultiSearchView:0.1'
 
 }
 apply plugin: 'com.google.gms.google-services'

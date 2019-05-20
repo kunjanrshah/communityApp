@@ -22,8 +22,7 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/MyMaterialTheme"
-        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
-        tools:replace="label">
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning" >
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="cd2b567af7b407b2736293035d07a280439e584e" />

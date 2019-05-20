@@ -1,10 +1,7 @@
 
 package com.krs.vastipatrak.model;
 
-import android.support.annotation.Nullable;
-
-import java.util.Date;
-
+import androidx.annotation.Nullable;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

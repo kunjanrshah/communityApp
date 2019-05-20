@@ -5,11 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +15,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+
 import com.allyants.draggabletreeview.DraggableTreeView;
 import com.allyants.draggabletreeview.SimpleTreeViewAdapter;
 import com.allyants.draggabletreeview.TreeNode;
@@ -28,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.material.snackbar.Snackbar;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.FtSpinnerAdapter;
 import com.krs.vastipatrak.app.AppController;
@@ -637,7 +638,7 @@ public class FamilyTreeActivity extends AppCompatActivity implements AdapterView
         if (!isConnected) {
             if (snackbar != null) {
                 View sbView = snackbar.getView();
-                TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
+                TextView textView = sbView.findViewById(R.id.snackbar_text);
                 textView.setTextColor(Color.WHITE);
                 snackbar.show();
             }

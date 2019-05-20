@@ -18,9 +18,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,6 +42,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -363,7 +364,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             public void onClick(View v) {
                 String mdate = edt_mdate.getText().toString().trim();
                 String msg = "";
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
                 builder.setTitle(mActivity.getString(R.string.app_name));
 
                 if (!mdate.isEmpty()) {
@@ -420,7 +421,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             public void onClick(View v) {
                 String sbdate = edtsponse_bdate.getText().toString().trim();
                 String msg = "";
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
                 builder.setTitle(mActivity.getString(R.string.app_name));
                 if (!sbdate.isEmpty()) {
                     final String date = Utility.parseDateToddMMyyyy(sbdate, ddMMMyyyy, yyyy_MM_dd);
@@ -951,7 +952,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             public void onClick(View v) {
                 String bdate = mViewholder.edtchild_bdate.getText().toString().trim();
                 String msg = "";
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
                 builder.setTitle(mActivity.getString(R.string.app_name));
                 if (!bdate.isEmpty()) {
                     final String date = Utility.parseDateToddMMyyyy(bdate, ddMMMyyyy, yyyy_MM_dd);
@@ -1011,7 +1012,7 @@ public class FamilyFragment extends Fragment implements Serializable, AdapterVie
             @Override
             public void onClick(View v) {
                 String msg = "";
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
                 builder.setTitle(mActivity.getString(R.string.app_name));
                 if (mViewholder.tbtn_interest.isChecked()) {
                     msg = "Interested for Matrimony ?";

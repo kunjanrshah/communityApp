@@ -19,10 +19,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,6 +39,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -459,7 +460,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
         tbtn_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
                 builder.setTitle(mActivity.getString(R.string.app_name));
                 if (tbtn_share.isChecked()) {
                     String message = "Do you want to Share your Location ?";
@@ -513,7 +514,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
                 String bdate = edtbdate.getText().toString().trim();
                 if (!bdate.isEmpty()) {
                     final String date = Utility.parseDateToddMMyyyy(bdate, ddMMMyyyy, yyyy_MM_dd);
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
                     builder.setTitle(mActivity.getString(R.string.app_name));
                     builder.setCancelable(false);
                     if (chk_profile_bdate_rem.isChecked()) {
@@ -1254,7 +1255,7 @@ public class PersonalFragment extends Fragment implements AdapterView.OnItemSele
 
 
     private void alert(String message) {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getString(R.string.app_name));
         builder.setMessage(message);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
