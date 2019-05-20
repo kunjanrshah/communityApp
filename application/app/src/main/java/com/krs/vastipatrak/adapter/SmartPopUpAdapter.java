@@ -411,9 +411,67 @@ public class SmartPopUpAdapter extends BaseAdapter {
                         viewHolder.ll_activity.setVisibility(View.VISIBLE);
                         viewHolder.sp_activity.setText(entry.getValue());
                     }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_edt_birth_time))) {
+                    if (!value.isEmpty()) {
+                        viewHolder.ll_btime.setVisibility(View.VISIBLE);
+                        viewHolder.edt_btime.setText(entry.getValue());
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_sp_bplace))) {
+                    if (!value.isEmpty() && !value.equalsIgnoreCase(_context.getString(R.string.ss_bplace))) {
+                        List<String> lst_bplace = new ArrayList<>();
+                        lst_bplace.add(_context.getString(R.string.ss_bplace));
+                        lst_bplace.add("BPlace1");
+                        lst_bplace.add("BPlace2");
+                        ArrayAdapter<String> activityAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, lst_bplace);
+                        activityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        viewHolder.sp_bplace.setAdapter(activityAdapter);
+                        viewHolder.ll_bplace.setVisibility(View.VISIBLE);
+                        viewHolder.sp_bplace.setText(entry.getValue());
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_edt_height_meter))) {
+                    if (!value.isEmpty()) {
+                        viewHolder.ll_height.setVisibility(View.VISIBLE);
+                        viewHolder.edt_height_meter.setText(entry.getValue());
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_edt_weight_kg))) {
+                    if (!value.isEmpty()) {
+                        viewHolder.ll_weight.setVisibility(View.VISIBLE);
+                        viewHolder.edt_weight_kg.setText(entry.getValue());
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_chk_is_shani))) {
+                    if (value.equalsIgnoreCase("true")) {
+                        viewHolder.ll_isShani.setVisibility(View.VISIBLE);
+                        viewHolder.chk_is_shani.setChecked(true);
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_chk_is_mangal))) {
+                    if (value.equalsIgnoreCase("true")) {
+                        viewHolder.ll_isMangal.setVisibility(View.VISIBLE);
+                        viewHolder.chk_is_mangal.setChecked(true);
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_chk_is_spect))) {
+                    if (value.equalsIgnoreCase("true")) {
+                        viewHolder.ll_isSpect.setVisibility(View.VISIBLE);
+                        viewHolder.chk_is_spect.setChecked(true);
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_edt_created))) {
+                    if (!value.isEmpty()) {
+                        viewHolder.ll_created.setVisibility(View.VISIBLE);
+                        viewHolder.edt_created.setText(entry.getValue());
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_edt_updated))) {
+                    if (!value.isEmpty()) {
+                        viewHolder.ll_updated.setVisibility(View.VISIBLE);
+                        viewHolder.edt_updated.setText(entry.getValue());
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_minUpdate))) {
+                    if (!value.isEmpty()) {
+                        viewHolder.rangeUpdationBar.setMinStartValue(Integer.parseInt(value)).apply();
+                    }
+                } else if (key.equalsIgnoreCase(_context.getResources().getString(R.string.ss_maxUpdate))) {
+                    if (!value.isEmpty()) {
+                        viewHolder.rangeUpdationBar.setMaxStartValue(Integer.parseInt(value)).apply();
+                    }
                 }
-
-
             }
 
             viewHolder.flexboxLayout.setFlexDirection(FlexDirection.ROW);
@@ -433,6 +491,19 @@ public class SmartPopUpAdapter extends BaseAdapter {
             });
             // set final value listener
             viewHolder.rangeAgeBar.setOnRangeSeekbarFinalValueListener((minValue, maxValue) -> Log.d("CRS=>", String.valueOf(minValue) + " : " + String.valueOf(maxValue)));
+
+            // set listener
+            viewHolder.rangeUpdationBar.setOnRangeSeekbarChangeListener((minValue, maxValue) -> {
+                if (minValue.intValue() > 0 || maxValue.intValue() < 100) {
+                    viewHolder.ll_percentage.setVisibility(View.VISIBLE);
+                    viewHolder.txt_min_per.setText(minValue+"%");
+                    viewHolder.txt_max_per.setText(maxValue+"%");
+                }
+            });
+            // set final value listener
+            viewHolder.rangeAgeBar.setOnRangeSeekbarFinalValueListener((minValue, maxValue) -> Log.d("CRS=>", String.valueOf(minValue) + " : " + String.valueOf(maxValue)));
+
+
         } else {
             viewHolder = (PopUpViewHolder) convertView.getTag();
         }
@@ -549,13 +620,21 @@ public class SmartPopUpAdapter extends BaseAdapter {
         viewHolder.img_mangal_close.setOnClickListener(v -> {
             viewHolder.ll_isMangal.setVisibility(View.GONE);
         });
-        viewHolder. img_height_close.setOnClickListener(v -> {
+        viewHolder.img_height_close.setOnClickListener(v -> {
             viewHolder.ll_height.setVisibility(View.GONE);
         });
         viewHolder.img_weight_close.setOnClickListener(v -> {
             viewHolder.ll_weight.setVisibility(View.GONE);
         });
-
+        viewHolder.img_per_close.setOnClickListener(v -> {
+            viewHolder.ll_percentage.setVisibility(View.GONE);
+        });
+        viewHolder.img_updated_close.setOnClickListener(v -> {
+            viewHolder.ll_updated.setVisibility(View.GONE);
+        });
+        viewHolder.img_created_close.setOnClickListener(v -> {
+            viewHolder.ll_created.setVisibility(View.GONE);
+        });
 
         viewHolder.chk_save.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -593,15 +672,16 @@ public class SmartPopUpAdapter extends BaseAdapter {
 
     private class PopUpViewHolder {
         FlexboxLayout flexboxLayout;
-        ImageView img_popup_close, img_code_close, img_age_close, img_head_close, img_member_close, img_surname_close, img_samaj_close, img_gender_close, img_marital_close, img_native_close, img_city_close, img_email_close, img_mobile_close, img_local_add_close, img_permanent_add_close, img_pincode_close, img_area_close, img_state_close, img_bdate_close, img_mdate_close, img_mosad_close, img_education_close, img_gotra_close, img_bg_close, img_expired_close, img_rented_close, img_donor_close, img_oaddress_close, img_sub_cat_close, img_cat_close, img_occu_close, img_activity_close, img_btime_close, img_bplace_close, img_spect_close, img_shani_close, img_mangal_close, img_height_close, img_weight_close;
-        LinearLayout ll_family_code, ll_head, ll_member, ll_surname, ll_samaj, ll_gender, ll_marital, ll_native, ll_city, ll_age, ll_email, ll_mobile, ll_local_add, ll_permanent_add, ll_pincode, ll_area, ll_state, ll_birth_date, ll_mdate, ll_mosad, ll_education, ll_gotra, ll_bg, ll_isExpired, ll_isRented, ll_isDonor, ll_office_add, ll_cat, ll_sub_cat, ll_occupation, ll_activity, ll_btime, ll_bplace, ll_isSpect, ll_isShani, ll_isMangal, ll_height, ll_weight;
-        EditText edt_family_code, edt_head_name, edt_member, edt_email, edt_mobile, edt_local_add, edt_permanent_add, edt_pincode, edt_birth_date, edt_mdate, edt_office, edt_btime, edt_height_meter, edt_weight_kg;
+        ImageView img_popup_close, img_code_close, img_age_close, img_head_close, img_member_close, img_surname_close, img_samaj_close, img_gender_close, img_marital_close, img_native_close, img_city_close, img_email_close, img_mobile_close, img_local_add_close, img_permanent_add_close, img_pincode_close, img_area_close, img_state_close, img_bdate_close, img_mdate_close, img_mosad_close, img_education_close, img_gotra_close, img_bg_close, img_expired_close, img_rented_close, img_donor_close, img_oaddress_close, img_sub_cat_close, img_cat_close, img_occu_close, img_activity_close, img_btime_close, img_bplace_close, img_spect_close, img_shani_close, img_mangal_close, img_height_close, img_weight_close, img_per_close, img_updated_close, img_created_close;
+        LinearLayout ll_family_code, ll_head, ll_member, ll_surname, ll_samaj, ll_gender, ll_marital, ll_native, ll_city, ll_age, ll_email, ll_mobile, ll_local_add, ll_permanent_add, ll_pincode, ll_area, ll_state, ll_birth_date, ll_mdate, ll_mosad, ll_education, ll_gotra, ll_bg, ll_isExpired, ll_isRented, ll_isDonor, ll_office_add, ll_cat, ll_sub_cat, ll_occupation, ll_activity, ll_btime, ll_bplace, ll_isSpect, ll_isShani, ll_isMangal, ll_height, ll_weight, ll_created, ll_updated, ll_percentage;
+        EditText edt_family_code, edt_head_name, edt_member, edt_email, edt_mobile, edt_local_add, edt_permanent_add, edt_pincode, edt_birth_date, edt_mdate, edt_office, edt_btime, edt_height_meter, edt_weight_kg, edt_updated, edt_created;
         MaterialSpinner sp_surname, sp_samaj, sp_marital, sp_city, sp_gender, sp_native, sp_area, sp_state, sp_mosad, sp_education, sp_gotra, sp_bg, sp_main_cat, sp_sub_cat, sp_occupation, sp_activity, sp_bplace;
-        CrystalRangeSeekbar rangeAgeBar;
-        TextView tvMin, tvMax;
+        CrystalRangeSeekbar rangeAgeBar, rangeUpdationBar;
+        TextView tvMin, tvMax, txt_min_per, txt_max_per;
         EditText edt_filter_name;
         CheckBox chk_save, chk_is_expired, chk_is_rented, chk_is_donor, chk_is_spect, chk_is_shani, chk_is_mangal;
         Button btnApply;
+
 
         PopUpViewHolder(View view) {
             flexboxLayout = view.findViewById(R.id.flexbox_layout);
@@ -644,7 +724,9 @@ public class SmartPopUpAdapter extends BaseAdapter {
             ll_isMangal = view.findViewById(R.id.ll_isMangal);
             ll_height = view.findViewById(R.id.ll_height);
             ll_weight = view.findViewById(R.id.ll_weight);
-
+            ll_created = view.findViewById(R.id.ll_created);
+            ll_updated = view.findViewById(R.id.ll_updated);
+            ll_percentage = view.findViewById(R.id.ll_percentage);
             img_code_close = view.findViewById(R.id.img_code_close);
             img_age_close = view.findViewById(R.id.img_age_close);
             img_head_close = view.findViewById(R.id.img_head_close);
@@ -683,6 +765,9 @@ public class SmartPopUpAdapter extends BaseAdapter {
             img_mangal_close = view.findViewById(R.id.img_mangal_close);
             img_height_close = view.findViewById(R.id.img_height_close);
             img_weight_close = view.findViewById(R.id.img_weight_close);
+            img_per_close = view.findViewById(R.id.img_per_close);
+            img_updated_close = view.findViewById(R.id.img_updated_close);
+            img_created_close = view.findViewById(R.id.img_created_close);
 
             edt_email = view.findViewById(R.id.edt_email);
             edt_mobile = view.findViewById(R.id.edt_mobile);
@@ -699,6 +784,9 @@ public class SmartPopUpAdapter extends BaseAdapter {
             edt_btime = view.findViewById(R.id.edt_btime);
             edt_height_meter = view.findViewById(R.id.edt_height_meter);
             edt_weight_kg = view.findViewById(R.id.edt_weight_kg);
+
+            edt_updated = view.findViewById(R.id.edt_updated);
+            edt_created = view.findViewById(R.id.edt_created);
 
             sp_surname = view.findViewById(R.id.sp_surname);
             sp_samaj = view.findViewById(R.id.sp_samaj);
@@ -721,6 +809,11 @@ public class SmartPopUpAdapter extends BaseAdapter {
             rangeAgeBar = view.findViewById(R.id.rangeSeekbar);
             tvMin = view.findViewById(R.id.textMin1);
             tvMax = view.findViewById(R.id.textMax1);
+
+            rangeUpdationBar = view.findViewById(R.id.rangeUpdationBar);
+            txt_min_per = view.findViewById(R.id.txt_min_per);
+            txt_max_per = view.findViewById(R.id.txt_max_per);
+
             btnApply = view.findViewById(R.id.btnApply);
             chk_is_expired = view.findViewById(R.id.chk_is_expired);
             chk_is_rented = view.findViewById(R.id.chk_is_rented);

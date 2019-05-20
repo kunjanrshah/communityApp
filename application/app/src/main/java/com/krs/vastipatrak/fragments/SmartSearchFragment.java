@@ -1,13 +1,19 @@
 package com.krs.vastipatrak.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -19,14 +25,17 @@ public class SmartSearchFragment extends Fragment {
     int previousGroup = -1;
     private SmartSearchAdapter adapter;
 
-    @Nullable
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_smart_search, container, false);
         expandableListView = rootView.findViewById(R.id.lst_expandable);
+
         expandableListView.setGroupIndicator(null);
         adapter = new SmartSearchAdapter(getActivity());
         expandableListView.setAdapter(adapter);
+
+
         setListener();
 
         return rootView;

@@ -1078,8 +1078,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:text="is Donor?"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/img_donor_close"
@@ -1108,8 +1107,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:text="is Rented?"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/img_rented_close"
@@ -1138,8 +1136,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:text="is Expired?"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="16sp"      />
 
             <ImageView
                 android:id="@+id/img_expired_close"
@@ -1436,7 +1433,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="45dp"
+                    android:layout_marginStart="70dp"
                     android:layout_marginEnd="-10dp"
                     android:background="@drawable/border"
                     android:text="Birth Place"
@@ -1466,6 +1463,7 @@
 
         <LinearLayout
             android:id="@+id/ll_isSpect"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -1494,6 +1492,7 @@
 
         <LinearLayout
             android:id="@+id/ll_isShani"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -1523,6 +1522,7 @@
 
         <LinearLayout
             android:id="@+id/ll_isMangal"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -1553,6 +1553,7 @@
 
         <LinearLayout
             android:id="@+id/ll_height"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -1573,6 +1574,8 @@
             <EditText
                 android:id="@+id/edt_height_meter"
                 android:layout_width="70dp"
+                android:gravity="center"
+                android:background="@null"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textSize="16sp" />
@@ -1601,6 +1604,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:visibility="gone"
             android:layout_marginStart="5dp"
             android:background="@drawable/border"
             android:orientation="horizontal">
@@ -1618,6 +1622,8 @@
             <EditText
                 android:id="@+id/edt_weight_kg"
                 android:layout_width="70dp"
+                android:gravity="center"
+                android:background="@null"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textSize="16sp" />
@@ -1628,7 +1634,7 @@
                 android:layout_gravity="center_vertical"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:text="Meter" />
+                android:text="Kg" />
 
             <ImageView
                 android:id="@+id/img_weight_close"
@@ -1642,12 +1648,165 @@
         </LinearLayout>
 
 
+        <LinearLayout
+            android:id="@+id/ll_created"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:text="Created Date: "
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_created"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:singleLine="true" />
+
+            <ImageView
+                android:id="@+id/img_created_close"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_cancel_pop_item"
+                android:padding="10dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_updated"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:text="Updated Date: "
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_updated"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:singleLine="true" />
+
+            <ImageView
+                android:id="@+id/img_updated_close"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_cancel_pop_item"
+                android:padding="10dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_percentage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:text="Percentage: "
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+                    android:id="@+id/rangeUpdationBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bar_color="#C0C0C0"
+                    app:bar_highlight_color="#A9A9A9"
+                    app:corner_radius="10"
+                    app:data_type="_integer"
+                    app:gap="10"
+                    app:left_thumb_color="#808080"
+                    app:left_thumb_color_pressed="#696969"
+                    app:max_value="100"
+                    app:min_value="0"
+                    app:right_thumb_color="#808080"
+                    app:right_thumb_color_pressed="#696969" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txt_min_per"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="0%" />
+
+                    <TextView
+                        android:id="@+id/txt_max_per"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="100%" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/img_per_close"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_cancel_pop_item" />
+
+        </LinearLayout>
+
+
     </com.google.android.flexbox.FlexboxLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
 
         <EditText
@@ -1658,7 +1817,7 @@
             android:gravity="center_horizontal"
             android:hint="Filter Name"
             android:text="Filter 1"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:visibility="gone" />
 
         <LinearLayout
@@ -1673,7 +1832,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Save Filter"
-                android:textSize="12sp" />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btnApply"
@@ -1683,7 +1842,7 @@
                 android:layout_marginStart="10dp"
                 android:background="@drawable/dark_border"
                 android:text="Apply"
-                android:textSize="12sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 

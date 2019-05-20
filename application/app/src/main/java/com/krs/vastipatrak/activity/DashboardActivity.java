@@ -119,6 +119,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
     private void movetoFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left);
         fragmentTransaction.replace(R.id.container_body, fragment).commit();
     }
 

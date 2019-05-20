@@ -1,17 +1,21 @@
 package com.krs.vastipatrak.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,25 +35,47 @@ public class DashboardFragment extends Fragment {
     SliderLayout sliderLayout;
     RecyclerView lstProfile;
     RecyclerView lstMenu;
+    EditText edt_search;
     ArrayList<FavProfiles> listProfiles = new ArrayList<>();
     ArrayList<RecentMenu> listMenus = new ArrayList<>();
-    String ProfileNames[] = {"Rajendra","Tejas","Kunjan","Mukund","Kushal"};
-    int ProfileImages[] = {R.drawable.man_reg,R.drawable.man_reg,R.drawable.man_reg,R.drawable.man_reg,R.drawable.man_reg};
-    String MenuNames[] = {"My Profile","Donation","Matrimony","QR Code","Search"};
-    int MenuImages[] = {R.drawable.dark_icon,R.drawable.dark_icon,R.drawable.dark_icon,R.drawable.dark_icon,R.drawable.dark_icon};
+    String[] ProfileNames = {"Rajendra", "Tejas", "Kunjan", "Mukund", "Kushal"};
+    int[] ProfileImages = {R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg};
+    String[] MenuNames = {"My Profile", "Donation", "Matrimony", "QR Code", "Search"};
+    int[] MenuImages = {R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon};
+    private boolean isTouch = false;
 
-    @Nullable
+    @SuppressLint("ClickableViewAccessibility")
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        lstMenu =  rootView.findViewById(R.id.lstMenu);
-        lstProfile =  rootView.findViewById(R.id.lstProfile);
+        lstMenu = rootView.findViewById(R.id.lstMenu);
+        lstProfile = rootView.findViewById(R.id.lstProfile);
+        edt_search = rootView.findViewById(R.id.edt_search);
         sliderLayout = rootView.findViewById(R.id.imageSlider);
         sliderLayout.setIndicatorAnimation(IndicatorAnimations.SWAP); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
         sliderLayout.setSliderTransformAnimation(SliderAnimations.FADETRANSFORMATION);
         sliderLayout.setScrollTimeInSec(3); //set scroll delay in seconds :
+
+        edt_search.setInputType(InputType.TYPE_NULL);
+        edt_search.setKeyListener(null);
+        edt_search.setOnTouchListener((v, event) -> {
+
+       //     if (!isTouch) {
+                isTouch = true;
+                Fragment fragment = new SearchResultFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right);
+                fragmentTransaction.replace(R.id.container_body, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+           // }
+
+            return false;
+        });
+
 
         setSliderViews();
         setRecentActivity();
@@ -60,7 +86,7 @@ public class DashboardFragment extends Fragment {
 
     private void setRecentActivity() {
         listMenus.clear();
-        for(int i = 0; i< MenuNames.length; i++){
+        for (int i = 0; i < MenuNames.length; i++) {
             RecentMenu item = new RecentMenu();
             item.setCardName(MenuNames[i]);
             item.setImageResourceId(MenuImages[i]);
@@ -78,7 +104,7 @@ public class DashboardFragment extends Fragment {
 
     private void setFavoriteList() {
         listProfiles.clear();
-        for(int i = 0; i< ProfileNames.length; i++){
+        for (int i = 0; i < ProfileNames.length; i++) {
             FavProfiles item = new FavProfiles();
             item.setCardName(ProfileNames[i]);
             item.setImageResourceId(ProfileImages[i]);
@@ -119,8 +145,7 @@ public class DashboardFragment extends Fragment {
             }
 
             sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
-            sliderView.setDescription("The quick brown fox jumps over the lazy dog.\n" +
-                    "Jackdaws love my big sphinx of quartz. " + (i + 1));
+            sliderView.setDescription("The quick brown fox jumps over the lazy dog.\n" + "Jackdaws love my big sphinx of quartz. " + (i + 1));
             final int finalI = i;
 
             sliderView.setOnSliderClickListener(sliderView1 -> Toast.makeText(getActivity(), "This is slider " + (finalI + 1), Toast.LENGTH_SHORT).show());
@@ -164,7 +189,7 @@ public class DashboardFragment extends Fragment {
     public class FavProfileAdapter extends RecyclerView.Adapter<FavProfileViewHolder> {
         private ArrayList<FavProfiles> list;
 
-        public FavProfileAdapter(ArrayList<FavProfiles> Data) {
+        FavProfileAdapter(ArrayList<FavProfiles> Data) {
             list = Data;
         }
 
@@ -172,8 +197,7 @@ public class DashboardFragment extends Fragment {
         public FavProfileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             // create a new view
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fav_profle, parent, false);
-            FavProfileViewHolder holder = new FavProfileViewHolder(view);
-            return holder;
+            return new FavProfileViewHolder(view);
         }
 
         @Override
@@ -190,60 +214,58 @@ public class DashboardFragment extends Fragment {
         }
     }
 
-    public class RecentActivityViewHolder extends RecyclerView.ViewHolder {
+    class RecentActivityViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView titleTextView;
-        public ImageView coverImageView;
+        TextView titleTextView;
+        ImageView coverImageView;
 
-        public RecentActivityViewHolder(View v) {
+        RecentActivityViewHolder(View v) {
             super(v);
-            titleTextView = (TextView) v.findViewById(R.id.titleTextView);
-            coverImageView = (ImageView) v.findViewById(R.id.coverImageView);
+            titleTextView = v.findViewById(R.id.titleTextView);
+            coverImageView = v.findViewById(R.id.coverImageView);
         }
     }
 
-    public class FavProfileViewHolder extends RecyclerView.ViewHolder {
+    class FavProfileViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView titleTextView;
-        public ImageView coverImageView;
-        public ImageView likeImageView;
-        public ImageView shareImageView;
+        TextView titleTextView;
+        ImageView coverImageView;
+        ImageView likeImageView;
+        ImageView shareImageView;
 
-        public FavProfileViewHolder(View v) {
+        FavProfileViewHolder(View v) {
             super(v);
-            titleTextView = (TextView) v.findViewById(R.id.titleTextView);
-            coverImageView = (ImageView) v.findViewById(R.id.coverImageView);
-            likeImageView = (ImageView) v.findViewById(R.id.likeImageView);
-            shareImageView = (ImageView) v.findViewById(R.id.shareImageView);
+            titleTextView = v.findViewById(R.id.titleTextView);
+            coverImageView = v.findViewById(R.id.coverImageView);
+            likeImageView = v.findViewById(R.id.likeImageView);
+            shareImageView = v.findViewById(R.id.shareImageView);
             likeImageView.setOnClickListener(v12 -> {
 
-                int id = (int)likeImageView.getTag();
-                if( id == R.drawable.ic_like){
+                int id = (int) likeImageView.getTag();
+                if (id == R.drawable.ic_like) {
 
                     likeImageView.setTag(R.drawable.ic_liked);
                     likeImageView.setImageResource(R.drawable.ic_liked);
 
-                   Toast.makeText(getActivity(),titleTextView.getText()+" added to favourites",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), titleTextView.getText() + " added to favourites", Toast.LENGTH_SHORT).show();
 
-                }else{
+                } else {
                     likeImageView.setTag(R.drawable.ic_like);
                     likeImageView.setImageResource(R.drawable.ic_like);
-                    Toast.makeText(getActivity(),titleTextView.getText()+" removed from favourites",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), titleTextView.getText() + " removed from favourites", Toast.LENGTH_SHORT).show();
                 }
 
             });
 
             shareImageView.setOnClickListener(v1 -> {
 
-                Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
-                        "://" + getResources().getResourcePackageName(coverImageView.getId())
-                        + '/' + "drawable" + '/' + getResources().getResourceEntryName((int)coverImageView.getTag()));
+                Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getResources().getResourcePackageName(coverImageView.getId()) + '/' + "drawable" + '/' + getResources().getResourceEntryName((int) coverImageView.getTag()));
 
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM,imageUri);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
                 shareIntent.setType("image/jpeg");
-                startActivity(Intent.createChooser(shareIntent,"Send"));
+                startActivity(Intent.createChooser(shareIntent, "Send"));
             });
         }
     }
