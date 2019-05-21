@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:paddingRight="16dp">
+
+        <com.iammert.library.ui.multisearchviewlib.MultiSearchContainerView
+                android:id="@+id/searchViewContainer"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/imageViewSearch"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageViewSearch"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:clickable="true"
+                app:srcCompat="@drawable/home_search"
+                android:padding="5dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+</layout>

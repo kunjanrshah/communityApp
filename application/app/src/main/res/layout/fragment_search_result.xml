@@ -13,21 +13,14 @@
         android:textSize="22sp"
         android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/edt_search"
+    <com.iammert.library.ui.multisearchviewlib.MultiSearchView
+        android:id="@+id/multiSearchView"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_margin="5dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/home_search_bar_bg"
-        android:drawableStart="@drawable/home_search"
-        android:drawableEnd="@drawable/voice"
-        android:drawablePadding="10dp"
-        android:hint="Search Here..."
-        android:inputType="text"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:singleLine="true" />
+        android:layout_height="wrap_content"
+        style="@style/SearchTextStyle"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"        />
 
     <TextView
         android:layout_width="match_parent"
@@ -39,6 +32,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lstRecentSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/lstProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

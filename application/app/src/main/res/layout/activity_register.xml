@@ -196,13 +196,13 @@
                 android:orientation="vertical">
 
                 <AutoCompleteTextView
-                    android:id="@+id/autoCompleteTextView"
+                    android:id="@+id/txtCity"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/register_field_height"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/border"
-                    android:drawableStart="@drawable/home_address"
+                    android:drawableStart="@drawable/_city"
                     android:drawablePadding="10dp"
                     android:ems="10"
                     android:gravity="center_vertical"
@@ -226,6 +226,34 @@
                 android:inputType="textCapSentences"
                 android:paddingLeft="10dp"
                 android:singleLine="true" />
+
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/sp_community"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/register_field_height"
+                android:drawableStart="@drawable/_community"
+                android:background="@drawable/border"
+                android:textSize="18sp"
+                android:ems="10"
+                style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                android:imeOptions="actionNext"
+                android:text="Community" />
+
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/sp_region"
+                android:layout_marginTop="10dp"
+                android:textSize="18sp"
+                android:ems="10"
+                style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                android:imeOptions="actionNext"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/register_field_height"
+                android:drawableStart="@drawable/_region"
+                android:background="@drawable/border"
+                android:text="Regin/Samaj" />
 
             <TextView
                 android:id="@+id/txt_how_register"

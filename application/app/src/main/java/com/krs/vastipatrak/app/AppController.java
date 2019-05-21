@@ -11,6 +11,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.multidex.MultiDex;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -67,7 +68,7 @@ public class AppController extends Application {
         final Fabric fabric = new Fabric.Builder(this).kits(new Crashlytics()).debuggable(true).build();
         Fabric.with(fabric);
 
-        //MultiDex.install(this);
+        MultiDex.install(this);
         mInstance = this;
         lstGotra =new ArrayList<>();
         lstNative =new ArrayList<>();

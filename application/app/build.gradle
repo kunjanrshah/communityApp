@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -34,6 +36,9 @@ android {
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
+    }
+    dataBinding{
+        enabled = true
     }
 }
 
@@ -88,6 +93,7 @@ dependencies {
     implementation 'de.blox:graphview:0.4.2'
     implementation project(':library')
     implementation project(':draggabletreeview')
+    implementation project(':multisearchviewlib')
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.wdullaer:materialdatetimepicker:3.5.1'
@@ -97,7 +103,9 @@ dependencies {
     implementation 'com.orhanobut:dialogplus:1.11@aar'
     implementation 'com.github.armcha:SpaceNavigationView:1.6.0'
     implementation 'com.google.android:flexbox:1.1.0'
-    implementation 'com.github.iammert:MultiSearchView:0.1'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
+
 
 }
 apply plugin: 'com.google.gms.google-services'

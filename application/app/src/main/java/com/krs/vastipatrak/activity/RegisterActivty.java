@@ -37,6 +37,7 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.utils.AppConstants;
@@ -44,6 +45,7 @@ import com.krs.vastipatrak.utils.CountryData;
 import com.krs.vastipatrak.utils.Utility;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -77,10 +79,9 @@ public class RegisterActivty extends Activity {
     private boolean isShow1 = true;
     private String add_new = "";
     private Spinner spinnerCountries;
-    private AutoCompleteTextView autoCompleteTextView;
+    private MaterialSpinner sp_community,sp_region;
+    private AutoCompleteTextView txtCity;
 
-
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -202,6 +203,25 @@ public class RegisterActivty extends Activity {
                 return v;
             }
         });
+
+
+        sp_community.setAdapter(new ArrayAdapter<String>(RegisterActivty.this, R.layout.my_spinner_style, CountryData.communityNames) {
+
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                ((TextView) v).setTextSize(18);
+                ((TextView) v).setGravity(Gravity.LEFT);
+                ((TextView) v).setTextColor(getResources().getColor(R.color.colorHint));
+                return v;
+            }
+
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView, parent);
+                ((TextView) v).setTextSize(20);
+                return v;
+            }
+        });
+
     }
 
     private void setCityListAdapter() {
@@ -219,12 +239,15 @@ public class RegisterActivty extends Activity {
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, lstCities);
-        autoCompleteTextView.setThreshold(2);
-        autoCompleteTextView.setAdapter(adapter);
+        txtCity.setThreshold(2);
+        txtCity.setAdapter(adapter);
     }
 
     private void MemoryAllocation() {
-        autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
+        sp_community = findViewById(R.id.sp_community);
+        sp_region = findViewById(R.id.sp_region);
+        txtCity = findViewById(R.id.txtCity);
+
         img_back = findViewById(R.id.img_back);
         ImageView img_header_logo = findViewById(R.id.img_header_logo);
         img_profile = findViewById(R.id.img_profile);
@@ -307,7 +330,7 @@ public class RegisterActivty extends Activity {
             String password = edt_password.getText().toString().trim();
             String cpassword = edt_cpassword.getText().toString().trim();
             String address = edt_address.getText().toString().trim();
-            String city = autoCompleteTextView.getText().toString().trim();
+            String city = txtCity.getText().toString().trim();
 
             if (!name.isEmpty()
                     && !surname.isEmpty()

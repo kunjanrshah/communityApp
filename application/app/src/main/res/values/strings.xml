@@ -412,6 +412,8 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
 
     <!--Splash screen -->
     <string name="CityList_SP" translatable="false">CityList_SP</string>
+
+
     <string name="allow_get_data_value" translatable="false">1</string>
     <string name="all_cities_list" translatable="false">all_cities</string>
 
@@ -469,6 +471,8 @@ https://play.google.com/store/apps/details?id=com.krs.vastipatrak
     <string name="already_have_a_account_sign_in">Already have a account?</string>
     <string name="hint_surname">Last Name</string>
     <string name="hint_city">City</string>
+    <string name="hint_community">Community</string>
+    <string name="hint_region">Region</string>
     <string name="invalid_mobile_range">Mobile number must be 10 digit</string>
     <string name="invalid_email">Invalid Email Address!</string>
     <string name="err_invalid_email" translatable="false">Invalid Email Address!</string>
