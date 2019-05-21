@@ -67,7 +67,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
@@ -562,7 +561,7 @@ public class LoginActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "Firebase Facebook login failed", Toast.LENGTH_SHORT).show();
 
                     if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                        FirebaseAuthUserCollisionException exception = (FirebaseAuthUserCollisionException) task.getException();
+                        /*FirebaseAuthUserCollisionException exception = (FirebaseAuthUserCollisionException) task.getException();
                         //exception.getErrorCode()
                         mAuth.fetchProvidersForEmail("kunjanrshah@gmail.com").addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
                             @Override
@@ -575,7 +574,7 @@ public class LoginActivity extends Activity {
                                     }
                                 }
                             }
-                        });
+                        });*/
                         Toast.makeText(getApplicationContext(), "User with Email id already exists", Toast.LENGTH_SHORT).show();
                     }
                     LoginManager.getInstance().logOut();

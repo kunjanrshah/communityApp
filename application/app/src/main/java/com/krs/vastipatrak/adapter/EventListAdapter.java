@@ -25,7 +25,6 @@ import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.model.ListEventData;
 import com.krs.vastipatrak.utils.AppConstants;
-import com.krs.vastipatrak.utils.Utility;
 
 import java.util.ArrayList;
 
@@ -38,8 +37,12 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     public EventListAdapter(Context context, ListEventData data) {
         this.context = context;
         listUrls = new ArrayList<>();
-        listUrls.addAll(data.getImages());
-        listUrls.addAll(data.getYoutubeUrl());
+        if (data.getImages() != null) {
+            listUrls.addAll(data.getImages());
+        }
+        if (data.getYoutubeUrl() != null) {
+            listUrls.addAll(data.getYoutubeUrl());
+        }
     }
 
 

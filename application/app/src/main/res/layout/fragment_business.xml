@@ -10,7 +10,7 @@
         android:layout_margin="10dp"
         android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_occupation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -23,9 +23,9 @@
                 android:hint="Occupation"
                 android:inputType="textCapSentences"
                 android:singleLine="true" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_work"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -38,9 +38,9 @@
                 android:hint="Work Details"
                 android:inputType="textCapSentences"
                 android:singleLine="true" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_omobile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -54,9 +54,9 @@
                 android:drawableEnd="@drawable/icon_contacts"
                 android:phoneNumber="true"
                 android:singleLine="true" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_oaddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -71,7 +71,7 @@
                 android:inputType="textCapSentences"
                 android:lines="2"
                 android:singleLine="true" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/txt_office"

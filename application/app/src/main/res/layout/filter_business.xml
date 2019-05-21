@@ -1,4 +1,4 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
@@ -20,7 +20,7 @@
             android:layout_margin="10dp"
             android:orientation="vertical">
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_layout_occupation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -33,9 +33,9 @@
                     android:hint="Occupation"
                     android:inputType="textCapSentences"
                     android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_layout_work"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -48,9 +48,9 @@
                     android:hint="Work Details"
                     android:inputType="textCapSentences"
                     android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_layout_omobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -64,9 +64,9 @@
                     android:drawableEnd="@drawable/icon_contacts"
                     android:phoneNumber="true"
                     android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_layout_oaddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -80,7 +80,7 @@
                     android:inputType="textCapSentences"
                     android:lines="2"
                     android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
     </com.melnykov.fab.ObservableScrollView>
@@ -96,4 +96,4 @@
         app:fab_colorPressed="@color/accent_pressed"
         app:fab_colorRipple="@color/ripple" />
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
