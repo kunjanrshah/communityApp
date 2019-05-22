@@ -59,7 +59,7 @@ public class ProfileAdapter  extends RecyclerView.Adapter{
                 }
             });
 
-            textView.setText(data);
+           // textView.setText(data);
 
             frontLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -81,7 +81,7 @@ public class ProfileAdapter  extends RecyclerView.Adapter{
 
     /**
      * Only if you need to restore open/close state when the orientation is changed.
-     * Call this method in {@link android.app.Activity#onSaveInstanceState(Bundle)}
+     * Call this method in {@link //android.app.Activity#onSaveInstanceState(Bundle)}
      */
     public void saveStates(Bundle outState) {
         binderHelper.saveStates(outState);
@@ -89,7 +89,7 @@ public class ProfileAdapter  extends RecyclerView.Adapter{
 
     /**
      * Only if you need to restore open/close state when the orientation is changed.
-     * Call this method in {@link android.app.Activity#onRestoreInstanceState(Bundle)}
+     * Call this method in {@link //android.app.Activity#onRestoreInstanceState(Bundle)}
      */
     public void restoreStates(Bundle inState) {
         binderHelper.restoreStates(inState);

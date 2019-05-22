@@ -25,7 +25,7 @@
                 android:imeOptions="actionSearch"
                 android:theme="@style/EditTextStyle"
                 android:maxLength="15"
-                android:textSize="22sp"
+                android:textSize="18sp"
                 android:inputType="textCapSentences"
                 android:textColorHint="#80999999"/>
 

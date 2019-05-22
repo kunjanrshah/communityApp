@@ -8,9 +8,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:text="Search Here..."
-        android:textSize="22sp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="Click on search icon..."
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <com.iammert.library.ui.multisearchviewlib.MultiSearchView
@@ -18,9 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/SearchTextStyle"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="10dp"        />
+        android:layout_margin="5dp"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -39,7 +38,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lstProfile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>

@@ -44,7 +44,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         setSupportActionBar(mToolbar);
         mToolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("HOME");
+        getSupportActionBar().setTitle("Home");
 
         drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         mDrawerLayout = findViewById(R.id.drawer_layout);

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,7 +40,7 @@ public class SearchResultFragment extends Fragment {
         lstRecentSearch =  rootView.findViewById(R.id.lstRecentSearch);
         multiSearchView =  rootView.findViewById(R.id.multiSearchView);
         lstProfile = rootView.findViewById(R.id.lstProfile);
-
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Smart Search");
         multiSearchView.setSearchViewListener(new MultiSearchView.MultiSearchViewListener() {
             @Override
             public void onTextChanged(int i, CharSequence charSequence) {
@@ -64,13 +65,13 @@ public class SearchResultFragment extends Fragment {
 
         setRecentSearch();
         setupList();
+
         return rootView;
     }
 
     private void setupList() {
 
         lstProfile.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         profileAdapter = new ProfileAdapter(getActivity(), createList(20));
         lstProfile.setAdapter(profileAdapter);
     }
