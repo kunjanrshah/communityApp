@@ -15,6 +15,7 @@ import androidx.multidex.MultiDex;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -25,6 +26,7 @@ import com.krs.vastipatrak.model.ListProfileData;
 import com.krs.vastipatrak.utils.AppConstants;
 import com.krs.vastipatrak.utils.ConnectivityReceiver;
 import com.krs.vastipatrak.utils.LocaleHelper;
+import com.krs.vastipatrak.volley.LruBitmapCache;
 
 import java.util.ArrayList;
 
@@ -55,6 +57,8 @@ public class AppController extends Application {
     ConnectivityReceiver broadcastRevcevier;
     private RequestQueue mRequestQueue;
     public GoogleSignInClient mGoogleSignInClient;
+    private ImageLoader mImageLoader;
+    LruBitmapCache mLruBitmapCache;
 
     public static synchronized AppController getInstance() {
         return mInstance;
@@ -96,6 +100,24 @@ public class AppController extends Application {
 
     }
 
+    public ImageLoader getImageLoader() {
+        getRequestQueue();
+        if (mImageLoader == null) {
+            getLruBitmapCache();
+            mImageLoader = new ImageLoader(this.mRequestQueue, mLruBitmapCache);
+        }
+
+        return this.mImageLoader;
+    }
+
+    public LruBitmapCache getLruBitmapCache() {
+        if (mLruBitmapCache == null)
+            mLruBitmapCache = new LruBitmapCache();
+        return this.mLruBitmapCache;
+    }
+
+
+
     @Override
     public void onTerminate() {
         super.onTerminate();
@@ -134,7 +156,7 @@ public class AppController extends Application {
         realm = Realm.getInstance(config);
     }
 
-    private RequestQueue getRequestQueue() {
+    public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(getApplicationContext());
         }

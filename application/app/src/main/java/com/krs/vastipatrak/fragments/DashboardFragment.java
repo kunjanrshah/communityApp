@@ -149,7 +149,17 @@ public class DashboardFragment extends Fragment {
             sliderView.setDescription("The quick brown fox jumps over the lazy dog.\n" + "Jackdaws love my big sphinx of quartz. " + (i + 1));
             final int finalI = i;
 
-            sliderView.setOnSliderClickListener(sliderView1 -> Toast.makeText(getActivity(), "This is slider " + (finalI + 1), Toast.LENGTH_SHORT).show());
+            sliderView.setOnSliderClickListener(sliderView1 ->
+            {
+                Fragment fragment = new NewsFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container_body, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                Toast.makeText(getActivity(), "This is slider " + (finalI + 1), Toast.LENGTH_SHORT).show();
+
+            });
 
             //at last add this view in your layout :
             sliderLayout.addSliderView(sliderView);
