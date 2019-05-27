@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -58,7 +59,7 @@ public class DashboardFragment extends Fragment {
         sliderLayout.setIndicatorAnimation(IndicatorAnimations.SWAP); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
         sliderLayout.setSliderTransformAnimation(SliderAnimations.FADETRANSFORMATION);
         sliderLayout.setScrollTimeInSec(3); //set scroll delay in seconds :
-
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Home");
         edt_search.setInputType(InputType.TYPE_NULL);
         edt_search.setKeyListener(null);
         edt_search.setOnTouchListener((v, event) -> {
@@ -197,6 +198,18 @@ public class DashboardFragment extends Fragment {
         }
     }
 
+    class RecentActivityViewHolder extends RecyclerView.ViewHolder {
+
+        TextView titleTextView;
+        ImageView coverImageView;
+
+        RecentActivityViewHolder(View v) {
+            super(v);
+            titleTextView = v.findViewById(R.id.titleTextView);
+            coverImageView = v.findViewById(R.id.coverImageView);
+        }
+    }
+
     public class FavProfileAdapter extends RecyclerView.Adapter<FavProfileViewHolder> {
         private ArrayList<FavProfiles> list;
 
@@ -225,17 +238,7 @@ public class DashboardFragment extends Fragment {
         }
     }
 
-    class RecentActivityViewHolder extends RecyclerView.ViewHolder {
 
-        TextView titleTextView;
-        ImageView coverImageView;
-
-        RecentActivityViewHolder(View v) {
-            super(v);
-            titleTextView = v.findViewById(R.id.titleTextView);
-            coverImageView = v.findViewById(R.id.coverImageView);
-        }
-    }
 
     class FavProfileViewHolder extends RecyclerView.ViewHolder {
 

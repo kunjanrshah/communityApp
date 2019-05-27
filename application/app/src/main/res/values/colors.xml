@@ -14,6 +14,8 @@
 
     <color name="colorHint">#9e9e9e</color>
 
+    <color name="placeholder_bg">#dddddd</color>
+
     <!--<color name="colorPrimary">#3b5998</color>
     <color name="colorPrimaryDark">#8b9dc3</color>-->
 

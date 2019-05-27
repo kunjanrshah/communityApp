@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:shimmer="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="5dp"
@@ -16,10 +17,10 @@
 
     <com.iammert.library.ui.multisearchviewlib.MultiSearchView
         android:id="@+id/multiSearchView"
+        style="@style/SearchTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/SearchTextStyle"
-        android:layout_margin="5dp"/>
+        android:layout_margin="5dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -34,6 +35,70 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        shimmer:duration="800">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!-- <TextView
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_margin="5dp"
+                 android:text="Recent Search"
+                 android:textSize="16sp"
+                 android:textStyle="bold" />
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal">
+             <include layout="@layout/recent_menu_shimmer" />
+             <include layout="@layout/recent_menu_shimmer" />
+             <include layout="@layout/recent_menu_shimmer" />
+             <include layout="@layout/recent_menu_shimmer" />
+             <include layout="@layout/recent_menu_shimmer" />
+         </LinearLayout>-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Search Result"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <include layout="@layout/row_list_shimmer" />
+
+            <include layout="@layout/row_list_shimmer" />
+
+            <include layout="@layout/row_list_shimmer" />
+
+            <include layout="@layout/row_list_shimmer" />
+
+            <include layout="@layout/row_list_shimmer" />
+
+            <include layout="@layout/row_list_shimmer" />
+
+            <include layout="@layout/row_list_shimmer" />
+
+
+        </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="Recent Search"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lstProfile"

@@ -1817,13 +1817,13 @@
             android:gravity="center_horizontal"
             android:hint="Filter Name"
             android:text="Filter 1"
-            android:textSize="14sp"
-            android:visibility="gone" />
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
             android:orientation="horizontal">
 
             <CheckBox

@@ -10,16 +10,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.adapter.SmartSearchAdapter;
+import com.krs.vastipatrak.adapter.SmartFilterAdapter;
 
-public class SmartSearchFragment extends Fragment {
+public class SmartFilterFragment extends Fragment {
     private ExpandableListView expandableListView;
-    int previousGroup = -1;
-    private SmartSearchAdapter adapter;
-
+    private int previousGroup = -1;
+    private SmartFilterAdapter adapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -27,9 +27,9 @@ public class SmartSearchFragment extends Fragment {
         expandableListView = rootView.findViewById(R.id.lst_expandable);
 
         expandableListView.setGroupIndicator(null);
-        adapter = new SmartSearchAdapter(getActivity());
+        adapter = new SmartFilterAdapter(getActivity());
         expandableListView.setAdapter(adapter);
-
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Smart Filter");
 
         setListener();
 

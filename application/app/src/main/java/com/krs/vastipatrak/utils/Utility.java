@@ -17,7 +17,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
@@ -602,7 +605,7 @@ public class Utility {
         }
     }
 
-  /*  public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
@@ -620,7 +623,7 @@ public class Utility {
         canvas.drawBitmap(bitmap, rect, rect, paint);
 
         return output;
-    }*/
+    }
 
     /*public static byte[] getBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

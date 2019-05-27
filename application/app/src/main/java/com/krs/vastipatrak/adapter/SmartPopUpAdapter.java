@@ -16,12 +16,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayout;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.fragments.SearchResultFragment;
+import com.krs.vastipatrak.fragments.SmartFilterFragment;
+import com.krs.vastipatrak.fragments.SmartFilterResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +47,7 @@ public class SmartPopUpAdapter extends BaseAdapter {
     private CheckBox chk_is_donor, chk_is_rented, chk_is_expired, chk_is_spect, chk_is_shani, chk_is_mangal;*/
     //private ArrayAdapter<String> mosadAdapter, educationAdapter, gotraAdapter, bgAdapter, areaAdapter, stateAdapter, categoryAdapter, subcatAdapter, occupationAdapter, curActivityAdapter, birthPlaceAdapter;
 
-    public SmartPopUpAdapter(Context _context, SmartSearchAdapter adapter, HashMap<String, String> stringHashMap) {
+    public SmartPopUpAdapter(Context _context, SmartFilterAdapter adapter, HashMap<String, String> stringHashMap) {
         this._context = _context;
         this.mapChildValues = stringHashMap;
         mICloseDialog = (ICloseDialog) adapter;
@@ -636,18 +644,24 @@ public class SmartPopUpAdapter extends BaseAdapter {
             viewHolder.ll_created.setVisibility(View.GONE);
         });
 
-        viewHolder.chk_save.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        /*viewHolder.chk_save.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 viewHolder.edt_filter_name.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.edt_filter_name.setVisibility(View.GONE);
             }
-        });
+        });*/
 
         viewHolder.btnApply.setOnClickListener(v -> {
-            Toast.makeText(_context, "Apply", Toast.LENGTH_SHORT).show();
+            mICloseDialog.PopupClose();
+            Fragment fragment = new SmartFilterResult();
+            FragmentManager fragmentManager = ((AppCompatActivity)_context).getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right);
+            fragmentTransaction.replace(R.id.container_body, fragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         });
-
         return convertView;
     }
 

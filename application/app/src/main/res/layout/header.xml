@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="Welcome to \nSmart Search"
+            android:text="Welcome to \nSmart Filter"
             android:textSize="30sp"
             android:textStyle="bold" />
 

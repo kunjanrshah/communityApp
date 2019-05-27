@@ -25,6 +25,7 @@
 
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/profilePic"
+                android:background="@color/placeholder_bg"
                 android:layout_width="@dimen/feed_item_profile_pic"
                 android:layout_height="@dimen/feed_item_profile_pic"
                 android:scaleType="fitCenter" >
@@ -38,6 +39,7 @@
 
                 <TextView
                     android:id="@+id/name"
+                    android:background="@color/placeholder_bg"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/feed_item_profile_name"
@@ -45,6 +47,7 @@
 
                 <TextView
                     android:id="@+id/timestamp"
+                    android:background="@color/placeholder_bg"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/timestamp"
@@ -54,9 +57,10 @@
 
         <TextView
             android:id="@+id/txtStatusMsg"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/placeholder_bg"
             android:paddingLeft="@dimen/feed_item_status_pad_left_right"
             android:paddingRight="@dimen/feed_item_status_pad_left_right"
             android:paddingTop="@dimen/feed_item_status_pad_top" />
@@ -67,6 +71,8 @@
             android:layout_height="wrap_content"
             android:linksClickable="true"
             android:paddingBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/placeholder_bg"
             android:paddingLeft="@dimen/feed_item_status_pad_left_right"
             android:paddingRight="@dimen/feed_item_status_pad_left_right"
             android:textColorLink="@color/link" />

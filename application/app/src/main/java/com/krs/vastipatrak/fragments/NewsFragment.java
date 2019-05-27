@@ -9,6 +9,8 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Cache;
@@ -17,10 +19,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.FeedListAdapter;
 import com.krs.vastipatrak.app.AppController;
 import com.krs.vastipatrak.model.FeedItem;
+import com.krs.vastipatrak.utils.MyDividerItemDecoration;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +34,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 public class NewsFragment extends Fragment {
 
 
@@ -38,6 +44,7 @@ public class NewsFragment extends Fragment {
     private FeedListAdapter listAdapter;
     private List<FeedItem> feedItems;
     private String URL_FEED = "https://api.androidhive.info/feed/feed.json";
+    private ShimmerFrameLayout mShimmerViewContainer;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,16 +52,26 @@ public class NewsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_news, container, false);
 
         listView = (RecyclerView) rootView.findViewById(R.id.list);
-
+        mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container);
         feedItems = new ArrayList<FeedItem>();
 
         listAdapter = new FeedListAdapter(getActivity(), feedItems);
-        listView.setAdapter(listAdapter);
 
+        listView.setHasFixedSize(true);
+        LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
+        MyLayoutManager.setOrientation(RecyclerView.VERTICAL);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        listView.setLayoutManager(mLayoutManager);
+        listView.setItemAnimator(new DefaultItemAnimator());
+        listView.addItemDecoration(new MyDividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 16));
+        listView.setLayoutManager(MyLayoutManager);
+        listView.setAdapter(listAdapter);
 
         // We first check for cached request
         Cache cache = AppController.getInstance().getRequestQueue().getCache();
-        Cache.Entry entry = cache.get(URL_FEED);
+        //Cache.Entry entry = cache.get(URL_FEED);
+        Cache.Entry entry = null;
         if (entry != null) {
             // fetch the data from cache
             try {
@@ -95,6 +112,17 @@ public class NewsFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mShimmerViewContainer.startShimmerAnimation();
+    }
+
+    @Override
+    public void onPause() {
+        mShimmerViewContainer.stopShimmerAnimation();
+        super.onPause();
+    }
 
     /**
      * Parsing json reponse and passing the data to feed view list adapter
@@ -125,7 +153,9 @@ public class NewsFragment extends Fragment {
 
                 feedItems.add(item);
             }
-
+            // stop animating Shimmer and hide the layout
+            mShimmerViewContainer.stopShimmerAnimation();
+            mShimmerViewContainer.setVisibility(View.GONE);
             // notify data changes to list adapater
             listAdapter.notifyDataSetChanged();
         } catch (JSONException e) {

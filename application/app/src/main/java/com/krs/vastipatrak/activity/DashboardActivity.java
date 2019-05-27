@@ -20,7 +20,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.fragments.DashboardFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
-import com.krs.vastipatrak.fragments.SmartSearchFragment;
+import com.krs.vastipatrak.fragments.SmartFilterFragment;
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
@@ -31,7 +31,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
     FragmentDrawer drawerFragment;
     DrawerLayout mDrawerLayout;
     DashboardFragment dashboardFragment;
-    SmartSearchFragment ssfragment;
+    SmartFilterFragment ssfragment;
     private SpaceNavigationView spaceNavigationView;
 
     @Override
@@ -73,7 +73,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         spaceNavigationView.setCentreButtonIconColorFilterEnabled(false);
 
         dashboardFragment = new DashboardFragment();
-        ssfragment = new SmartSearchFragment();
+        ssfragment = new SmartFilterFragment();
         movetoFragment(dashboardFragment);
 
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {

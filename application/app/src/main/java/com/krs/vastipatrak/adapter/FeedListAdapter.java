@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.krs.vastipatrak.R;
@@ -22,7 +25,7 @@ import com.krs.vastipatrak.utils.FeedImageView;
 import java.util.List;
 
 
-public class FeedListAdapter extends BaseAdapter {
+public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.FeedListViewHolder> {
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
     private Activity activity;
     private LayoutInflater inflater;
@@ -33,7 +36,7 @@ public class FeedListAdapter extends BaseAdapter {
         this.feedItems = feedItems;
     }
 
-    @Override
+    /*@Override
     public int getCount() {
         return feedItems.size();
     }
@@ -41,6 +44,66 @@ public class FeedListAdapter extends BaseAdapter {
     @Override
     public Object getItem(int location) {
         return feedItems.get(location);
+    }*/
+
+    @Override
+    public FeedListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.feed_item, parent, false);
+        return new FeedListViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull FeedListViewHolder holder, int position) {
+        if (imageLoader == null) imageLoader = AppController.getInstance().getImageLoader();
+
+        FeedItem item = feedItems.get(position);
+
+        holder.name.setText(item.getName());
+
+        // Converting timestamp into x ago format
+        CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(Long.parseLong(item.getTimeStamp()), System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
+        holder.timestamp.setText(timeAgo);
+
+        // Chcek for empty status message
+        if (!TextUtils.isEmpty(item.getStatus())) {
+            holder.statusMsg.setText(item.getStatus());
+            holder.statusMsg.setVisibility(View.VISIBLE);
+        } else {
+            // status is empty, remove from view
+            holder.statusMsg.setVisibility(View.GONE);
+        }
+
+        // Checking for null feed url
+        if (item.getUrl() != null) {
+            holder.url.setText(Html.fromHtml("<a href=\"" + item.getUrl() + "\">" + item.getUrl() + "</a> "));
+
+            // Making url clickable
+            holder.url.setMovementMethod(LinkMovementMethod.getInstance());
+            holder.url.setVisibility(View.VISIBLE);
+        } else {
+            // url is null, remove from the view
+            holder.url.setVisibility(View.GONE);
+        }
+
+        // user profile pic
+        holder.profilePic.setImageUrl(item.getProfilePic(), imageLoader);
+
+        // Feed image
+        if (item.getImge() != null) {
+            holder.feedImageView.setImageUrl(item.getImge(), imageLoader);
+            holder.feedImageView.setVisibility(View.VISIBLE);
+            holder.feedImageView.setResponseObserver(new FeedImageView.ResponseObserver() {
+                @Override
+                public void onError() {
+                }
+
+                @Override
+                public void onSuccess() {
+                }
+            });
+        } else {
+            holder.feedImageView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -49,6 +112,29 @@ public class FeedListAdapter extends BaseAdapter {
     }
 
     @Override
+    public int getItemCount() {
+        return feedItems.size();
+    }
+
+
+    class FeedListViewHolder extends RecyclerView.ViewHolder
+    {
+        TextView name,timestamp,statusMsg,url;
+        NetworkImageView profilePic;
+        FeedImageView feedImageView;
+
+        FeedListViewHolder(View itemView) {
+            super(itemView);
+            name = (TextView) itemView.findViewById(R.id.name);
+            timestamp = (TextView) itemView.findViewById(R.id.timestamp);
+            statusMsg = (TextView) itemView.findViewById(R.id.txtStatusMsg);
+            url = (TextView) itemView.findViewById(R.id.txtUrl);
+            profilePic = (NetworkImageView) itemView.findViewById(R.id.profilePic);
+            feedImageView = (FeedImageView) itemView.findViewById(R.id.feedImage1);
+        }
+    }
+
+   /* @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (inflater == null)
@@ -57,12 +143,7 @@ public class FeedListAdapter extends BaseAdapter {
 
         if (imageLoader == null) imageLoader = AppController.getInstance().getImageLoader();
 
-        TextView name = (TextView) convertView.findViewById(R.id.name);
-        TextView timestamp = (TextView) convertView.findViewById(R.id.timestamp);
-        TextView statusMsg = (TextView) convertView.findViewById(R.id.txtStatusMsg);
-        TextView url = (TextView) convertView.findViewById(R.id.txtUrl);
-        NetworkImageView profilePic = (NetworkImageView) convertView.findViewById(R.id.profilePic);
-        FeedImageView feedImageView = (FeedImageView) convertView.findViewById(R.id.feedImage1);
+
 
         FeedItem item = feedItems.get(position);
 
@@ -114,6 +195,6 @@ public class FeedListAdapter extends BaseAdapter {
         }
 
         return convertView;
-    }
+    }*/
 
 }

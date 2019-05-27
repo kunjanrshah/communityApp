@@ -1,6 +1,7 @@
 package com.krs.vastipatrak.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.iammert.library.ui.multisearchviewlib.MultiSearchView;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.adapter.ProfileAdapter;
@@ -26,6 +28,7 @@ public class SearchResultFragment extends Fragment {
     private RecyclerView lstRecentSearch;
     private RecyclerView lstProfile;
     private ProfileAdapter profileAdapter;
+    private ShimmerFrameLayout mShimmerViewContainer;
 
     private ArrayList<RecentProfiles> listRecentProfiles = new ArrayList<>();
     private String[] RecentProfileNames = {"Rajendra", "Tejas", "Kunjan", "Mukund", "Kushal"};
@@ -40,6 +43,7 @@ public class SearchResultFragment extends Fragment {
         lstRecentSearch =  rootView.findViewById(R.id.lstRecentSearch);
         multiSearchView =  rootView.findViewById(R.id.multiSearchView);
         lstProfile = rootView.findViewById(R.id.lstProfile);
+        mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Smart Search");
         multiSearchView.setSearchViewListener(new MultiSearchView.MultiSearchViewListener() {
             @Override
@@ -69,11 +73,31 @@ public class SearchResultFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mShimmerViewContainer.startShimmerAnimation();
+    }
+
+    @Override
+    public void onPause() {
+        mShimmerViewContainer.stopShimmerAnimation();
+        super.onPause();
+    }
+
     private void setupList() {
 
         lstProfile.setLayoutManager(new LinearLayoutManager(getActivity()));
         profileAdapter = new ProfileAdapter(getActivity(), createList(20));
         lstProfile.setAdapter(profileAdapter);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // stop animating Shimmer and hide the layout
+                mShimmerViewContainer.stopShimmerAnimation();
+                mShimmerViewContainer.setVisibility(View.GONE);
+            }
+        },3000);
     }
 
     private List<String> createList(int n) {

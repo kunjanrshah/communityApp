@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SmartSearchAdapter extends BaseExpandableListAdapter implements SmartPopUpAdapter.ICloseDialog {
+public class SmartFilterAdapter extends BaseExpandableListAdapter implements SmartPopUpAdapter.ICloseDialog {
 
     public int previousGroup = -1;
     private Context _context;
@@ -39,7 +39,7 @@ public class SmartSearchAdapter extends BaseExpandableListAdapter implements Sma
     private ArrayAdapter<String> surnameAdapter, samajAdapter, maritalAdapter, cityAdapter, genderAdapter, nativeAdapter, mosadAdapter, educationAdapter, gotraAdapter, bgAdapter, areaAdapter, stateAdapter, categoryAdapter, subcatAdapter, occupationAdapter, curActivityAdapter, birthPlaceAdapter;
     private DialogPlus dialog;
 
-    public SmartSearchAdapter(Context context) {
+    public SmartFilterAdapter(Context context) {
         this._context = context;
 
         mapChildValues = new HashMap<>();
