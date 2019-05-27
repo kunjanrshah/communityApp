@@ -40,15 +40,15 @@ public class SearchResultFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_search_result, container, false);
 
-        lstRecentSearch =  rootView.findViewById(R.id.lstRecentSearch);
-        multiSearchView =  rootView.findViewById(R.id.multiSearchView);
+        lstRecentSearch = rootView.findViewById(R.id.lstRecentSearch);
+        multiSearchView = rootView.findViewById(R.id.multiSearchView);
         lstProfile = rootView.findViewById(R.id.lstProfile);
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Smart Search");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Smart Search");
         multiSearchView.setSearchViewListener(new MultiSearchView.MultiSearchViewListener() {
             @Override
             public void onTextChanged(int i, CharSequence charSequence) {
-               // Toast.makeText(getActivity(), "onTextChanged", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getActivity(), "onTextChanged", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -77,6 +77,7 @@ public class SearchResultFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mShimmerViewContainer.startShimmerAnimation();
+        new Handler().postDelayed(() -> multiSearchView.getBinding().imageViewSearch.performClick(), 500);
     }
 
     @Override
@@ -97,7 +98,7 @@ public class SearchResultFragment extends Fragment {
                 mShimmerViewContainer.stopShimmerAnimation();
                 mShimmerViewContainer.setVisibility(View.GONE);
             }
-        },3000);
+        }, 3000);
     }
 
     private List<String> createList(int n) {
@@ -113,7 +114,7 @@ public class SearchResultFragment extends Fragment {
 
     private void setRecentSearch() {
         listRecentProfiles.clear();
-        for(int i = 0; i< RecentProfileNames.length; i++){
+        for (int i = 0; i < RecentProfileNames.length; i++) {
             RecentProfiles item = new RecentProfiles();
             item.setCardName(RecentProfileNames[i]);
             item.setImageResourceId(RecentProfileImages[i]);
