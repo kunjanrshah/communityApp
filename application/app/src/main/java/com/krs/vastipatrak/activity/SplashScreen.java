@@ -43,7 +43,7 @@ public class SplashScreen extends Activity {
         // Splash screen timer
         int SPLASH_TIME_OUT = 3000;
         new Handler().postDelayed(() -> {
-            Intent i = new Intent(SplashScreen.this, ChooseLanguage.class);
+            Intent i = new Intent(SplashScreen.this, ChooseLan.class);
             startActivity(i);
             finish();
         }, SPLASH_TIME_OUT);

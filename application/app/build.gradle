@@ -107,5 +107,10 @@ dependencies {
     implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
 
+    implementation 'com.flaviofaria:kenburnsview:1.0.7'
+    implementation 'androidx.percentlayout:percentlayout:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+
+
 }
 apply plugin: 'com.google.gms.google-services'
