@@ -32,7 +32,7 @@
 
 
     <LinearLayout
-        android:id="@+id/form_login"
+        android:id="@+id/ll_spinner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -59,7 +59,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/button_login"
+        android:id="@+id/ll_login"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="20dp"

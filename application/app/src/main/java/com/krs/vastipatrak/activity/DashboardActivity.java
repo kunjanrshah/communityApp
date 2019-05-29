@@ -3,6 +3,7 @@ package com.krs.vastipatrak.activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.fragments.DashboardFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
@@ -40,11 +42,17 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
 
         setContentView(R.layout.activity_dashboard);
         Toolbar mToolbar = findViewById(R.id.toolbar);
-
         setSupportActionBar(mToolbar);
         mToolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Home");
+
+       // View details_toolbar_transition_helper = findViewById(R.id.details_toolbar_transition_helper);
+       // details_toolbar_transition_helper.setTranslationY(-156);
+        AppBarLayout myAppBar = findViewById(R.id.myAppBar);
+
+        myAppBar.setTranslationY(-getToolbarHeight());
+        myAppBar.animate().translationY(0f).alpha(1f).setDuration(2000).start();
 
         drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         mDrawerLayout = findViewById(R.id.drawer_layout);
@@ -116,6 +124,16 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         });
         //spaceNavigationView.showIconOnly();
     }
+
+    private int getToolbarHeight() {
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            return TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        } else {
+            return 0;
+        }
+    }
+
 
     private void movetoFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();

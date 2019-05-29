@@ -15,30 +15,37 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/myAppBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:layout_height="?attr/actionBarSize"
+            android:alpha="0"
+            tools:alpha="1"
+            tools:layout_marginTop="24dp"
             app:elevation="3dp">
+
             <include
                 android:id="@+id/toolbar"
                 layout="@layout/toolbar" />
+
         </com.google.android.material.appbar.AppBarLayout>
+
+
 
         <FrameLayout
             android:id="@+id/container_body"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"  />
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
         <com.luseen.spacenavigation.SpaceNavigationView
             android:id="@+id/space"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            app:active_item_color="@color/colorPrimary"
             app:centre_button_color="@color/colorPrimary"
             app:inactive_item_color="@android:color/black"
-            app:active_item_color="@color/colorPrimary"
-            app:space_background_color="@color/color_light_gray"
-            app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior" />
+            app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior"
+            app:space_background_color="@color/color_light_gray" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
@@ -48,8 +55,8 @@
         android:layout_width="@dimen/nav_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout="@layout/fragment_navigation_drawer"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:layout="@layout/fragment_navigation_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

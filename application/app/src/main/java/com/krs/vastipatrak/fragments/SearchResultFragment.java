@@ -40,6 +40,7 @@ public class SearchResultFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_search_result, container, false);
 
+
         lstRecentSearch = rootView.findViewById(R.id.lstRecentSearch);
         multiSearchView = rootView.findViewById(R.id.multiSearchView);
         lstProfile = rootView.findViewById(R.id.lstProfile);
@@ -76,13 +77,13 @@ public class SearchResultFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mShimmerViewContainer.startShimmerAnimation();
+        //mShimmerViewContainer.startShimmerAnimation();
         new Handler().postDelayed(() -> multiSearchView.getBinding().imageViewSearch.performClick(), 500);
     }
 
     @Override
     public void onPause() {
-        mShimmerViewContainer.stopShimmerAnimation();
+        //mShimmerViewContainer.stopShimmerAnimation();
         super.onPause();
     }
 
@@ -91,14 +92,14 @@ public class SearchResultFragment extends Fragment {
         lstProfile.setLayoutManager(new LinearLayoutManager(getActivity()));
         profileAdapter = new ProfileAdapter(getActivity(), createList(20));
         lstProfile.setAdapter(profileAdapter);
-        new Handler().postDelayed(new Runnable() {
+       /* new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 // stop animating Shimmer and hide the layout
                 mShimmerViewContainer.stopShimmerAnimation();
                 mShimmerViewContainer.setVisibility(View.GONE);
             }
-        }, 3000);
+        }, 3000);*/
     }
 
     private List<String> createList(int n) {
