@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -27,8 +26,6 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayout;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.fragments.SearchResultFragment;
-import com.krs.vastipatrak.fragments.SmartFilterFragment;
 import com.krs.vastipatrak.fragments.SmartFilterResult;
 
 import java.util.ArrayList;

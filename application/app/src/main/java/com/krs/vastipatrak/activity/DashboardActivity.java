@@ -79,6 +79,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         spaceNavigationView.addSpaceItem(new SpaceItem("Filter", R.drawable.filter));
         spaceNavigationView.shouldShowFullBadgeText(false);
         spaceNavigationView.setCentreButtonIconColorFilterEnabled(false);
+        spaceNavigationView.animate().translationY(0f).alpha(1f).setDuration(2000).start();
 
         dashboardFragment = new DashboardFragment();
         ssfragment = new SmartFilterFragment();

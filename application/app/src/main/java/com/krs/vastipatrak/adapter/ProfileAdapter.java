@@ -10,11 +10,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.utils.Utility;
 
 import java.util.List;
 
@@ -24,13 +26,13 @@ public class ProfileAdapter extends RecyclerView.Adapter{
     private LayoutInflater mInflater;
     private Context mContext;
     private final ViewBinderHelper binderHelper = new ViewBinderHelper();
+    RecyclerView lstProfile;
 
-
-    public ProfileAdapter(Context context, List<String> dataSet) {
+    public ProfileAdapter(Context context,RecyclerView lstProfile, List<String> dataSet) {
         mContext = context;
         mDataSet = dataSet;
         mInflater = LayoutInflater.from(context);
-
+        this.lstProfile=lstProfile;
         // uncomment if you want to open only one row at a time
         // binderHelper.setOpenOnlyOne(true);
     }
@@ -60,15 +62,27 @@ public class ProfileAdapter extends RecyclerView.Adapter{
 
            // textView.setText(data);
 
-            frontLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String displayText = "" + data + " clicked";
-                    Toast.makeText(mContext, displayText, Toast.LENGTH_SHORT).show();
-                    Log.d("RecyclerAdapter", displayText);
-                }
+            frontLayout.setOnClickListener(view -> {
+
+                FragmentTransaction fragmentTransaction=initFragmentTransaction(view);
+                String displayText = "" + data + " clicked";
+                Toast.makeText(mContext, displayText, Toast.LENGTH_SHORT).show();
+                Log.d("RecyclerAdapter", displayText);
             });
         }
+    }
+
+
+
+    private FragmentTransaction initFragmentTransaction(View view)
+    {
+        float toY = view.getResources().getDimensionPixelOffset(R.dimen.details_toolbar_container_height) - view.getHeight() / 2f;
+        float positions[] = new float[3];
+        positions[0] = view.getX();
+        positions[1] = view.getY() + Utility.getToolbarHeight(mContext);
+        positions[2] = toY;
+        int adapterPosition = lstProfile.getChildAdapterPosition(view);
+
     }
 
     @NonNull

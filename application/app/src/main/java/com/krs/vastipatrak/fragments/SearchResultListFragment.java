@@ -23,7 +23,7 @@ import com.krs.vastipatrak.model.RecentProfiles;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchResultFragment extends Fragment {
+public class SearchResultListFragment extends Fragment {
 
     private RecyclerView lstRecentSearch;
     private RecyclerView lstProfile;
@@ -39,7 +39,6 @@ public class SearchResultFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_search_result, container, false);
-
 
         lstRecentSearch = rootView.findViewById(R.id.lstRecentSearch);
         multiSearchView = rootView.findViewById(R.id.multiSearchView);
@@ -90,7 +89,7 @@ public class SearchResultFragment extends Fragment {
     private void setupList() {
 
         lstProfile.setLayoutManager(new LinearLayoutManager(getActivity()));
-        profileAdapter = new ProfileAdapter(getActivity(), createList(20));
+        profileAdapter = new ProfileAdapter(getActivity(),lstProfile, createList(20));
         lstProfile.setAdapter(profileAdapter);
        /* new Handler().postDelayed(new Runnable() {
             @Override
