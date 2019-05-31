@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.iammert.library.ui.multisearchviewlib.MultiSearchView;
 import com.krs.vastipatrak.R;
+import com.krs.vastipatrak.activity.DashboardActivity;
 import com.krs.vastipatrak.adapter.ProfileAdapter;
 import com.krs.vastipatrak.model.RecentProfiles;
 
@@ -39,7 +40,6 @@ public class SearchResultListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_search_result, container, false);
-
         lstRecentSearch = rootView.findViewById(R.id.lstRecentSearch);
         multiSearchView = rootView.findViewById(R.id.multiSearchView);
         lstProfile = rootView.findViewById(R.id.lstProfile);
@@ -89,7 +89,7 @@ public class SearchResultListFragment extends Fragment {
     private void setupList() {
 
         lstProfile.setLayoutManager(new LinearLayoutManager(getActivity()));
-        profileAdapter = new ProfileAdapter(getActivity(),lstProfile, createList(20));
+        profileAdapter = new ProfileAdapter((DashboardActivity)getActivity(),lstProfile, createList(20));
         lstProfile.setAdapter(profileAdapter);
        /* new Handler().postDelayed(new Runnable() {
             @Override

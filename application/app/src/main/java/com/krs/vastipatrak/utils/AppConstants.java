@@ -9,6 +9,9 @@ public class AppConstants {
     public static final int CAMARA_REQUEST = 4;
     public static final int INIT_REQUEST = 1;
 
+    public static final String EXTRA_COORDINATES = "coordinates";
+    public static final String  EXTRA_POSITION = "position";
+
     public static final String ADMIN = "ADMIN";
     public static final String USER = "USER";
 

@@ -6,6 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    mavenCentral()
 }
 android {
     compileSdkVersion 28
@@ -110,6 +111,9 @@ dependencies {
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
 
 }

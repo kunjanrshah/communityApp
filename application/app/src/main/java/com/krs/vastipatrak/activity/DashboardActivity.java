@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -49,10 +50,10 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
 
        // View details_toolbar_transition_helper = findViewById(R.id.details_toolbar_transition_helper);
        // details_toolbar_transition_helper.setTranslationY(-156);
-        AppBarLayout myAppBar = findViewById(R.id.myAppBar);
+        CardView cardView = findViewById(R.id.card_view);
 
-        myAppBar.setTranslationY(-getToolbarHeight());
-        myAppBar.animate().translationY(0f).alpha(1f).setDuration(2000).start();
+        cardView.setTranslationY(-getToolbarHeight());
+        cardView.animate().translationY(0f).alpha(1f).setDuration(2000).start();
 
         drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         mDrawerLayout = findViewById(R.id.drawer_layout);
