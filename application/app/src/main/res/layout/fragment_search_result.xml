@@ -54,31 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <!-- <TextView
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_margin="5dp"
-                 android:text="Recent Search"
-                 android:textSize="16sp"
-                 android:textStyle="bold" />
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:orientation="horizontal">
-             <include layout="@layout/recent_menu_shimmer" />
-             <include layout="@layout/recent_menu_shimmer" />
-             <include layout="@layout/recent_menu_shimmer" />
-             <include layout="@layout/recent_menu_shimmer" />
-             <include layout="@layout/recent_menu_shimmer" />
-         </LinearLayout>-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Recent Search"
-                android:textSize="16sp"
-                android:textStyle="bold" />
 
             <include layout="@layout/row_list_shimmer" />
 
@@ -103,13 +79,6 @@
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:text="Recent Search"
-        android:textSize="16sp"
-        android:textStyle="bold" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lstProfile"
         android:layout_width="match_parent"

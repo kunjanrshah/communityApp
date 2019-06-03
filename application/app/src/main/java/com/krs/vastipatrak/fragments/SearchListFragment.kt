@@ -1,11 +1,9 @@
 package com.krs.vastipatrak.fragments
 
 import android.animation.AnimatorInflater
-import android.animation.ValueAnimator
 import android.os.Bundle
 import android.os.Handler
 import android.transition.TransitionInflater
-import android.util.Half.toFloat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +11,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,18 +19,16 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.iammert.library.ui.multisearchviewlib.MultiSearchView
 import com.krs.vastipatrak.R
 import com.krs.vastipatrak.adapter.RecyclerAdapter
-import com.krs.vastipatrak.interfaces.BottomNavigationViewListener
 import com.krs.vastipatrak.model.DataProvider
 import com.krs.vastipatrak.model.RecentProfiles
 import com.krs.vastipatrak.utils.*
 import kotlinx.android.synthetic.main.activity_dashboard.*
-import kotlinx.android.synthetic.main.fragment_search_list_detail.*
-import kotlinx.android.synthetic.main.fragment_search_list_detail.toolbar
 import kotlinx.android.synthetic.main.fragment_search_result.*
+import spencerstudios.com.bungeelib.Bungee
 
 import java.util.ArrayList
 
-class SearchResultListFragment : BaseFragment(), View.OnClickListener {
+class SearchListFragment : BaseFragment(), View.OnClickListener {
 
     private var lstRecentSearch: RecyclerView? = null
     private var lstProfile: RecyclerView? = null
@@ -44,8 +39,6 @@ class SearchResultListFragment : BaseFragment(), View.OnClickListener {
     private val RecentProfileNames = arrayOf("Rajendra", "Tejas", "Kunjan", "Mukund", "Kushal")
     private val RecentProfileImages = intArrayOf(R.drawable.user_profile, R.drawable.user_profile, R.drawable.user_profile, R.drawable.user_profile, R.drawable.user_profile)
     private var multiSearchView: MultiSearchView? = null
-
-    var bottomNavListener: BottomNavigationViewListener? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -144,10 +137,10 @@ class SearchResultListFragment : BaseFragment(), View.OnClickListener {
         positions[2] = toY
 
         val adapterPosition = lstProfile!!.getChildAdapterPosition(view)
-        val detailsFragment = SearchResultDetailFragment.newInstance(positions, adapterPosition)
+        val detailsFragment = SearchDetailFragment.newInstance(positions, adapterPosition)
 
         val transaction = fragmentManager?.beginTransaction()
-                ?.replace(R.id.container_body, detailsFragment, SearchResultDetailFragment.TAG)
+                ?.replace(R.id.container_body, detailsFragment, SearchDetailFragment.TAG)
                 ?.addToBackStack(null)
 
         supportsLollipop {
@@ -164,7 +157,13 @@ class SearchResultListFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun startAnimation(view: View, fragmentTransaction: FragmentTransaction?) {
-        AnimatorInflater.loadAnimator(activity, R.animator.main_list_animator).apply {
+
+     //   fragmentTransaction!!.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right)
+        fragmentTransaction?.commitAllowingStateLoss()
+      //  Bungee.fade(context);
+
+
+       /* AnimatorInflater.loadAnimator(activity, R.animator.main_list_animator).apply {
             setTarget(lstProfile)
             //withStartAction { animateToolbarElevation(true) }
             withEndAction {
@@ -173,10 +172,10 @@ class SearchResultListFragment : BaseFragment(), View.OnClickListener {
                 val toY = view.resources.getDimensionPixelOffset(R.dimen.details_toolbar_container_height) - view.height / 2f
 
                 view.animate().y(229f).start()
-                fragmentTransaction!!.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right)
+               // fragmentTransaction!!.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right)
                 fragmentTransaction?.commitAllowingStateLoss()
-
-                /*activity?.myAppBar!!.animate()
+                Bungee.fade(context);
+                *//*activity?.myAppBar!!.animate()
                         .translationY(-activity!!.myAppBar.height.toFloat())
                         .alpha(0f)
                         .setDuration(1000)
@@ -188,10 +187,10 @@ class SearchResultListFragment : BaseFragment(), View.OnClickListener {
                             fragmentTransaction!!.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                             fragmentTransaction?.commitAllowingStateLoss()
                         }
-                        .start()*/
+                        .start()*//*
             }
             start()
-        }
+        }*/
     }
 
   /*  private fun animateToolbarElevation(animateOut: Boolean) {

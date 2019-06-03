@@ -28,6 +28,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -35,10 +36,13 @@ import android.speech.RecognizerIntent;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.transition.Slide;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -48,6 +52,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+
 
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.app.AppController;
@@ -115,6 +120,8 @@ public class Utility {
         return !matcher.matches();
 
     }
+
+
 
     public static boolean isValidMobile(String phone) {
         return android.util.Patterns.PHONE.matcher(phone).matches();

@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -23,11 +23,14 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.fragments.DashboardFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
+import com.krs.vastipatrak.fragments.HeaderDetailFragment;
 import com.krs.vastipatrak.fragments.SmartFilterFragment;
+import com.krs.vastipatrak.utils.Utility;
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.luseen.spacenavigation.SpaceOnLongClickListener;
+
 
 public class DashboardActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
 
@@ -35,12 +38,13 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
     DrawerLayout mDrawerLayout;
     DashboardFragment dashboardFragment;
     SmartFilterFragment ssfragment;
+    HeaderDetailFragment headerDetailFragment;
+
     private SpaceNavigationView spaceNavigationView;
     public static AppBarLayout myAppBar;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_dashboard);
         Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -83,6 +87,8 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
 
         dashboardFragment = new DashboardFragment();
         ssfragment = new SmartFilterFragment();
+        headerDetailFragment =new HeaderDetailFragment();
+
         movetoFragment(dashboardFragment);
 
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
@@ -159,6 +165,32 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_dashboard, menu);
+
         return true;
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_profile:
+
+                movetoFragment(headerDetailFragment);
+
+                return true;
+            case R.id.action_notification:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+
+
+
+
+
+
 }

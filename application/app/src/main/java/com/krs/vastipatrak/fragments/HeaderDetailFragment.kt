@@ -1,6 +1,7 @@
 package com.krs.vastipatrak.fragments
 
 import android.animation.AnimatorInflater
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,31 +12,34 @@ import androidx.core.view.doOnLayout
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.krs.vastipatrak.R
+import com.krs.vastipatrak.activity.DashboardActivity
 import com.krs.vastipatrak.adapter.RecyclerAdapter
 import com.krs.vastipatrak.interfaces.OnBackPressedListener
 import com.krs.vastipatrak.model.DataProvider
 import com.krs.vastipatrak.utils.AppConstants.*
-import com.krs.vastipatrak.utils.Utility.getToolbarHeight
+import com.krs.vastipatrak.utils.Utility.hideKeyboard
 import com.krs.vastipatrak.utils.supportsLollipop
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_search_list_detail.*
 import kotlinx.android.synthetic.main.row_list.*
+import spencerstudios.com.bungeelib.Bungee
 
-class SearchResultDetailFragment : Fragment(), OnBackPressedListener {
+
+class HeaderDetailFragment : Fragment(), OnBackPressedListener {
 
     private lateinit var coordinates: FloatArray
 
     companion object {
 
-        const val TAG = "SearchResultDetailFragment"
-        fun newInstance(coordinates: FloatArray, adapterPosition: Int): SearchResultDetailFragment {
+        const val TAG = "SearchDetailFragment"
+        fun newInstance(coordinates: FloatArray, adapterPosition: Int): HeaderDetailFragment {
             val bundle = Bundle().apply {
 
                 putFloatArray(EXTRA_COORDINATES, coordinates)
                 putInt(EXTRA_POSITION, adapterPosition)
             }
 
-            return SearchResultDetailFragment().apply { arguments = bundle }
+            return HeaderDetailFragment().apply { arguments = bundle }
         }
     }
 
@@ -76,6 +80,7 @@ class SearchResultDetailFragment : Fragment(), OnBackPressedListener {
         } else {
             activity!!.myAppBar.alpha = 1f
         }
+        hideKeyboard(activity)
     }
 
     private fun setupViews(position: Int) {
@@ -84,7 +89,7 @@ class SearchResultDetailFragment : Fragment(), OnBackPressedListener {
             toolbar_container.transitionName = TRANSITION_TOOLBAR
         }
 
-        (details_card.layoutParams as ViewGroup.MarginLayoutParams).topMargin = coordinates[2].toInt()
+        (details_card.layoutParams as ViewGroup.MarginLayoutParams).topMargin = 229// coordinates[2].toInt()
 
         val data = DataProvider.getCardData()[position]
         tv_title.text = data.name
@@ -129,19 +134,30 @@ class SearchResultDetailFragment : Fragment(), OnBackPressedListener {
                 .setStartDelay(50)
                 .setDuration(1000)
                 .withEndAction {
-                    activity?.supportFragmentManager?.popBackStack()
+                    //activity?.supportFragmentManager?.popBackStack()
+                    val intent = Intent(getActivity(), DashboardActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    getActivity()?.finish()
+                    Bungee.fade(context);
                 }
                 .setInterpolator(AnticipateInterpolator(2f))
                 .start()
 
-       // animateToolbar(0f, 350)
-      //  activity!!.myAppBar.translationY = -getToolbarHeight(context).toFloat()
-       // activity!!.myAppBar.animate().translationY(0f).alpha(1f).setDuration(1000).start()
+
+
+        //getActivity()?.overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left)
+
+
+        // animateToolbar(0f, 350)
+        //  activity!!.myAppBar.translationY = -getToolbarHeight(context).toFloat()
+        // activity!!.myAppBar.animate().translationY(0f).alpha(1f).setDuration(1000).start()
     }
 
+
     private fun animateToolbar(alphaTo: Float = 1f, duration: Long = 1000) {
-    //    activity!!.myAppBar.animate().alpha(alphaTo).setDuration(duration).start()
-       // activity!!.myAppBar.translationY = -getToolbarHeight(context).toFloat()
-       // activity!!.myAppBar.animate().translationY(0f).alpha(1f).setDuration(1000).start()
+        //    activity!!.myAppBar.animate().alpha(alphaTo).setDuration(duration).start()
+        // activity!!.myAppBar.translationY = -getToolbarHeight(context).toFloat()
+        // activity!!.myAppBar.animate().translationY(0f).alpha(1f).setDuration(1000).start()
     }
 }
