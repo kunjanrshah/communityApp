@@ -12,19 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_view"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:alpha="0"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:alpha="1"
-            tools:layout_marginTop="24dp">
-
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/myAppBar"
                 android:layout_width="match_parent"
@@ -39,17 +26,6 @@
                     layout="@layout/toolbar" />
 
             </com.google.android.material.appbar.AppBarLayout>
-        </androidx.cardview.widget.CardView>
-
-        <View
-            android:id="@+id/details_toolbar_transition_helper"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/details_toolbar_container_height"
-            android:background="@color/centre_button_color"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:translationY="-200dp" />
 
         <FrameLayout
             android:id="@+id/container_body"

@@ -35,7 +35,7 @@ import java.util.ArrayList;
 public class DashboardFragment extends Fragment {
 
     SliderLayout sliderLayout;
-    RecyclerView lstProfile;
+    RecyclerView lstFavProfile;
     RecyclerView lstMenu;
     EditText edt_search;
     ArrayList<FavProfiles> listProfiles = new ArrayList<>();
@@ -53,7 +53,7 @@ public class DashboardFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         lstMenu = rootView.findViewById(R.id.lstMenu);
-        lstProfile = rootView.findViewById(R.id.lstProfile);
+        lstFavProfile = rootView.findViewById(R.id.lstFavProfile);
         edt_search = rootView.findViewById(R.id.edt_search);
         sliderLayout = rootView.findViewById(R.id.imageSlider);
         sliderLayout.setIndicatorAnimation(IndicatorAnimations.SWAP); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
@@ -115,13 +115,13 @@ public class DashboardFragment extends Fragment {
             listProfiles.add(item);
         }
 
-        lstProfile.setHasFixedSize(true);
+        lstFavProfile.setHasFixedSize(true);
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
         MyLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        if (listProfiles.size() > 0 & lstProfile != null) {
-            lstProfile.setAdapter(new FavProfileAdapter(listProfiles));
+        if (listProfiles.size() > 0 & lstFavProfile != null) {
+            lstFavProfile.setAdapter(new FavProfileAdapter(listProfiles));
         }
-        lstProfile.setLayoutManager(MyLayoutManager);
+        lstFavProfile.setLayoutManager(MyLayoutManager);
     }
 
     private void setSliderViews() {

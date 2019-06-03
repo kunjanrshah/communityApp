@@ -41,7 +41,13 @@ android {
     dataBinding{
         enabled = true
     }
+    androidExtensions {
+        experimental = true
+    }
+
 }
+
+
 
 repositories {
     repositories {

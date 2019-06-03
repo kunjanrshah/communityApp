@@ -36,7 +36,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
     DashboardFragment dashboardFragment;
     SmartFilterFragment ssfragment;
     private SpaceNavigationView spaceNavigationView;
-
+    public static AppBarLayout myAppBar;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,10 +50,9 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
 
        // View details_toolbar_transition_helper = findViewById(R.id.details_toolbar_transition_helper);
        // details_toolbar_transition_helper.setTranslationY(-156);
-        CardView cardView = findViewById(R.id.card_view);
-
-        cardView.setTranslationY(-getToolbarHeight());
-        cardView.animate().translationY(0f).alpha(1f).setDuration(2000).start();
+        myAppBar= findViewById(R.id.myAppBar);
+        myAppBar.setTranslationY(-getToolbarHeight());
+        myAppBar.animate().translationY(0f).alpha(1f).setDuration(2000).start();
 
         drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         mDrawerLayout = findViewById(R.id.drawer_layout);

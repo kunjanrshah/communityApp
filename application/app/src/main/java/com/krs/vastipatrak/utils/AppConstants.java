@@ -12,6 +12,11 @@ public class AppConstants {
     public static final String EXTRA_COORDINATES = "coordinates";
     public static final String  EXTRA_POSITION = "position";
 
+    public static final String TRANSITION_CARD = "card_transition_";
+    public static final String  TRANSITION_TOOLBAR = "toolbar_transition";
+
+
+
     public static final String ADMIN = "ADMIN";
     public static final String USER = "USER";
 

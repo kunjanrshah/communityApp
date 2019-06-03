@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:shimmer="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/ll_root"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="5dp"
     android:orientation="vertical">
@@ -111,13 +113,13 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lstProfile"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:layoutAnimation="@anim/layout_animation_fall_down"
         android:overScrollMode="never"
         android:padding="8dp"
         tools:itemCount="4"
-        tools:listitem="@layout/row_list"        />
-
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/row_list"/>
 
 </LinearLayout>

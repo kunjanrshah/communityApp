@@ -24,28 +24,28 @@
             android:layout_gravity="top"
             android:alpha="0"
             tools:alpha="1"
-            tools:layout_marginTop="@dimen/margin_normal">
+            tools:layout_marginTop="16dp">
 
             <ImageView
                 android:id="@+id/img_back"
-                android:layout_width="@dimen/toolbar_icon_size"
-                android:layout_height="@dimen/toolbar_icon_size"
-                android:layout_marginStart="@dimen/margin_small"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
                 android:clickable="true"
                 android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_left" />
+                app:srcCompat="@drawable/ic_like" />
 
             <TextView
                 android:id="@+id/tv_action_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginStart="8dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:text="@string/action_back"
+                android:text="Back"
                 android:textAppearance="@style/ToolbarAction"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/img_back"
@@ -53,16 +53,16 @@
 
             <ImageView
                 android:id="@+id/img_export"
-                android:layout_width="@dimen/toolbar_icon_size"
-                android:layout_height="@dimen/toolbar_icon_size"
-                android:layout_marginEnd="@dimen/margin_normal"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="16dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_export" />
+                app:srcCompat="@drawable/export" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -70,7 +70,7 @@
 
     <include
         android:id="@+id/details_card"
-        layout="@layout/item_card"
+        layout="@layout/row_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -103,7 +103,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="48dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="70dp"
         android:clickable="true"
         android:focusable="true"
         android:translationY="100dp"
@@ -119,7 +119,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="70dp"
         android:clickable="true"
         android:focusable="true"
         android:translationY="100dp"

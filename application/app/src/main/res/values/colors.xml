@@ -71,5 +71,6 @@
     <color name="link">#0a80d1</color>
     <color name="timestamp">#a0a3a7</color>
     <color name="white">#ffffff</color>
+    <color name="gray">#f1f5f7</color>
 
 </resources>
