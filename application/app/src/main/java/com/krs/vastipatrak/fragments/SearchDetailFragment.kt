@@ -98,7 +98,7 @@ class SearchDetailFragment : Fragment(), OnBackPressedListener {
         fab_negative.setOnClickListener { onBackPressed() }
 
         with(recycler_view) {
-            adapter = RecyclerAdapter(DataProvider.getDetailsData())
+            adapter = RecyclerAdapter(DataProvider.getDetailsData(),null)
 
             setHasFixedSize(true)
             fab_negative.doOnLayout {

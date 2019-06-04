@@ -160,7 +160,6 @@
 
         </activity>
 
-
         <service android:name=".service.MyLocationService" />
         <service android:name=".service.LocationAlertService" />
 

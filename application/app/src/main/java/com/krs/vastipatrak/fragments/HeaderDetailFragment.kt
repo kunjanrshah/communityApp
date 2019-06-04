@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import com.krs.vastipatrak.R
 import com.krs.vastipatrak.activity.DashboardActivity
 import com.krs.vastipatrak.adapter.RecyclerAdapter
+import com.krs.vastipatrak.adapter.RecyclerAdapter.ItemClickListener
 import com.krs.vastipatrak.interfaces.OnBackPressedListener
 import com.krs.vastipatrak.model.DataProvider
 import com.krs.vastipatrak.utils.AppConstants.*
@@ -25,7 +26,10 @@ import kotlinx.android.synthetic.main.row_list.*
 import spencerstudios.com.bungeelib.Bungee
 
 
-class HeaderDetailFragment : Fragment(), OnBackPressedListener {
+class HeaderDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListener{
+    override fun itemClick(id: Int) {
+        fragmentManager?.beginTransaction()?.replace(R.id.container, ProfileDetailFragment(), tag)?.addToBackStack(null)?.commit()
+    }
 
     private lateinit var coordinates: FloatArray
 
@@ -99,10 +103,14 @@ class HeaderDetailFragment : Fragment(), OnBackPressedListener {
         img_status.setImageResource(data.status.iconId)
         img_card.setImageResource(data.imageId)
 
+        details_card.setOnClickListener {
+            fragmentManager?.beginTransaction()?.replace(R.id.container, ProfileDetailFragment(), tag)?.addToBackStack(null)?.commit()
+        }
+
         fab_negative.setOnClickListener { onBackPressed() }
 
         with(recycler_view) {
-            adapter = RecyclerAdapter(DataProvider.getDetailsData())
+            adapter = RecyclerAdapter(DataProvider.getDetailsData(),this@HeaderDetailFragment)
 
             setHasFixedSize(true)
             fab_negative.doOnLayout {

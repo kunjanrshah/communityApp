@@ -1,6 +1,5 @@
 package com.krs.vastipatrak.fragments
 
-import android.animation.AnimatorInflater
 import android.os.Bundle
 import android.os.Handler
 import android.transition.TransitionInflater
@@ -24,7 +23,6 @@ import com.krs.vastipatrak.model.RecentProfiles
 import com.krs.vastipatrak.utils.*
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_search_result.*
-import spencerstudios.com.bungeelib.Bungee
 
 import java.util.ArrayList
 
@@ -87,7 +85,7 @@ class SearchListFragment : BaseFragment(), View.OnClickListener {
     private fun setupList() {
 
         lstProfile!!.layoutManager = LinearLayoutManager(activity)
-        recyclerAdapter = RecyclerAdapter<DataProvider.DataProvider1.Card>(DataProvider.getCardData(), this)
+        recyclerAdapter = RecyclerAdapter<DataProvider.DataProvider1.Card>(DataProvider.getCardData(),null)
         lstProfile!!.adapter = recyclerAdapter
         lstProfile!!.setHasFixedSize(true)
         Handler().postDelayed({

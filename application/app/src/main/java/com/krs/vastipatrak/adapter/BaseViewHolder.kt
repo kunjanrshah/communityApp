@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
 import com.krs.vastipatrak.R
 import com.krs.vastipatrak.model.DataProvider
 import com.krs.vastipatrak.utils.AppConstants.TRANSITION_CARD
@@ -20,13 +21,15 @@ abstract class  BaseViewHolder<T : DataProvider.DataProvider1.BaseData>(view: Vi
     override val containerView: View?
         get() = itemView
 
-    abstract fun bind(data: T, listener: View.OnClickListener? = null)
+    abstract fun bind(data: T, listener: RecyclerAdapter.ItemClickListener?)
 
 
     class CardViewHolder(parent: ViewGroup) : BaseViewHolder<DataProvider.DataProvider1.Card>(parent.inflate(R.layout.row_list)) {
 
-        override fun bind(data: DataProvider.DataProvider1.Card, listener: View.OnClickListener?) {
-            containerView?.setOnClickListener(listener)
+        override fun bind(data: DataProvider.DataProvider1.Card, listener: RecyclerAdapter.ItemClickListener?) {
+            containerView?.setOnClickListener {
+                listener!!.itemClick(data.id)
+            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 containerView?.transitionName = TRANSITION_CARD + adapterPosition
@@ -43,7 +46,12 @@ abstract class  BaseViewHolder<T : DataProvider.DataProvider1.BaseData>(view: Vi
 
     class DetailsViewHolder(parent: ViewGroup) : BaseViewHolder<DataProvider.DataProvider1.Details>(parent.inflate(R.layout.item_details)) {
 
-        override fun bind(data: DataProvider.DataProvider1.Details, listener: View.OnClickListener?) {
+        override fun bind(data: DataProvider.DataProvider1.Details, listener: RecyclerAdapter.ItemClickListener?) {
+
+            itemView.setOnClickListener({
+                listener!!.itemClick(0)
+            })
+
             tv_details_title.text = data.title
             tv_details_subtitle.text = data.subtitle
             tv_details_amount.text = data.amount
