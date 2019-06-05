@@ -28,7 +28,7 @@ import spencerstudios.com.bungeelib.Bungee
 
 class HeaderDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListener{
     override fun itemClick(id: Int) {
-        fragmentManager?.beginTransaction()?.replace(R.id.container, ProfileDetailFragment(), tag)?.addToBackStack(null)?.commit()
+        fragmentManager?.beginTransaction()?.replace(R.id.container_body, ProfileDetailFragment(), tag)?.addToBackStack(null)?.commit()
     }
 
     private lateinit var coordinates: FloatArray
@@ -104,7 +104,7 @@ class HeaderDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
         img_card.setImageResource(data.imageId)
 
         details_card.setOnClickListener {
-            fragmentManager?.beginTransaction()?.replace(R.id.container, ProfileDetailFragment(), tag)?.addToBackStack(null)?.commit()
+            fragmentManager?.beginTransaction()?.replace(R.id.container_body, ProfileDetailFragment(), tag)?.addToBackStack(null)?.commit()
         }
 
         fab_negative.setOnClickListener { onBackPressed() }
