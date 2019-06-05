@@ -21,15 +21,13 @@ abstract class  BaseViewHolder<T : DataProvider.DataProvider1.BaseData>(view: Vi
     override val containerView: View?
         get() = itemView
 
-    abstract fun bind(data: T, listener: RecyclerAdapter.ItemClickListener?)
+    abstract fun bind(data: T, listener: RecyclerAdapter.ItemClickListener?, listener1: View.OnClickListener? = null)
 
 
     class CardViewHolder(parent: ViewGroup) : BaseViewHolder<DataProvider.DataProvider1.Card>(parent.inflate(R.layout.row_list)) {
 
-        override fun bind(data: DataProvider.DataProvider1.Card, listener: RecyclerAdapter.ItemClickListener?) {
-            containerView?.setOnClickListener {
-                listener!!.itemClick(data.id)
-            }
+        override fun bind(data: DataProvider.DataProvider1.Card, listener: RecyclerAdapter.ItemClickListener?,listener1: View.OnClickListener?) {
+            containerView?.setOnClickListener(listener1)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 containerView?.transitionName = TRANSITION_CARD + adapterPosition
@@ -46,10 +44,10 @@ abstract class  BaseViewHolder<T : DataProvider.DataProvider1.BaseData>(view: Vi
 
     class DetailsViewHolder(parent: ViewGroup) : BaseViewHolder<DataProvider.DataProvider1.Details>(parent.inflate(R.layout.item_details)) {
 
-        override fun bind(data: DataProvider.DataProvider1.Details, listener: RecyclerAdapter.ItemClickListener?) {
+        override fun bind(data: DataProvider.DataProvider1.Details, listener: RecyclerAdapter.ItemClickListener?,listener1: View.OnClickListener?) {
 
             itemView.setOnClickListener({
-                listener!!.itemClick(0)
+                listener!!.itemClick(data.id)
             })
 
             tv_details_title.text = data.title

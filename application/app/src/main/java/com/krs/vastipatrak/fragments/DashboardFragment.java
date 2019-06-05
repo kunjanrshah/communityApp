@@ -64,7 +64,7 @@ public class DashboardFragment extends Fragment {
         edt_search.setKeyListener(null);
         edt_search.setOnTouchListener((v, event) -> {
 
-       //     if (!isTouch) {
+            if (!isTouch) {
                 isTouch = true;
                 Fragment fragment = new SearchListFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -73,7 +73,7 @@ public class DashboardFragment extends Fragment {
                 fragmentTransaction.replace(R.id.container_body, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-           // }
+            }
 
             return false;
         });
@@ -84,6 +84,13 @@ public class DashboardFragment extends Fragment {
         setFavoriteList();
 
         return rootView;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isTouch=false;
     }
 
     private void setRecentActivity() {

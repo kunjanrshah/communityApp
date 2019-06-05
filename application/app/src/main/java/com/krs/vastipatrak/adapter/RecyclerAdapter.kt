@@ -1,7 +1,9 @@
 package com.krs.vastipatrak.adapter
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
 import com.krs.vastipatrak.fragments.HeaderDetailFragment
 import com.krs.vastipatrak.model.DataProvider
 
@@ -9,10 +11,8 @@ import com.krs.vastipatrak.model.DataProvider
 /**
  * Created by Alexander Kolpakov on 17.07.2018
  */
-class RecyclerAdapter<T : DataProvider.DataProvider1.BaseData>(private var dataSet: List<T>, val itemClickListener: ItemClickListener?)
+class RecyclerAdapter<T : DataProvider.DataProvider1.BaseData>(private var dataSet: List<T>, val itemClickListener: ItemClickListener?,private var listener1: View.OnClickListener? = null)
     : RecyclerView.Adapter<BaseViewHolder<T>>() {
-
-    //val itemClickListener: ItemClickListener? = headerdetail
 
     @Suppress("UNCHECKED_CAST")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<T> {
@@ -37,5 +37,5 @@ class RecyclerAdapter<T : DataProvider.DataProvider1.BaseData>(private var dataS
         fun itemClick(id : Int)
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<T>, position: Int) = holder.bind(dataSet[position], itemClickListener)
+    override fun onBindViewHolder(holder: BaseViewHolder<T>, position: Int) = holder.bind(dataSet[position], itemClickListener,listener1)
 }

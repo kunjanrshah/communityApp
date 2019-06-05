@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.krs.vastipatrak.R;
 
-public class MemberProfileFragment extends Fragment {
+public class MatrimonyDetailsFragment extends Fragment {
 
     private int bgRes;
     private ImageView imageView;
@@ -19,20 +19,22 @@ public class MemberProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bgRes = getArguments().getInt("data");
+      //  bgRes = getArguments().getInt("data");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_member_profile, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_matrimony_details, container, false);
+
+        return rootView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        imageView = (ImageView) getView().findViewById(R.id.image);
-        imageView.setBackgroundResource(bgRes);
+        //imageView = (ImageView) getView().findViewById(R.id.image);
+        //imageView.setBackgroundResource(bgRes);
     }
 
 }

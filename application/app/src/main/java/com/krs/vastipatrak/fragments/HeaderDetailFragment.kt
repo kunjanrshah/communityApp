@@ -8,11 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnticipateInterpolator
 import android.view.animation.OvershootInterpolator
+import androidx.cardview.widget.CardView
 import androidx.core.view.doOnLayout
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.krs.vastipatrak.R
 import com.krs.vastipatrak.activity.DashboardActivity
+import com.krs.vastipatrak.activity.ProfileDetailActivity
 import com.krs.vastipatrak.adapter.RecyclerAdapter
 import com.krs.vastipatrak.adapter.RecyclerAdapter.ItemClickListener
 import com.krs.vastipatrak.interfaces.OnBackPressedListener
@@ -27,8 +29,11 @@ import spencerstudios.com.bungeelib.Bungee
 
 
 class HeaderDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListener{
+
     override fun itemClick(id: Int) {
-        fragmentManager?.beginTransaction()?.replace(R.id.container_body, ProfileDetailFragment(), tag)?.addToBackStack(null)?.commit()
+        val intent = Intent(getActivity(), ProfileDetailActivity::class.java)
+        startActivity(intent)
+        Bungee.fade(context);
     }
 
     private lateinit var coordinates: FloatArray
@@ -104,7 +109,9 @@ class HeaderDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
         img_card.setImageResource(data.imageId)
 
         details_card.setOnClickListener {
-            fragmentManager?.beginTransaction()?.replace(R.id.container_body, ProfileDetailFragment(), tag)?.addToBackStack(null)?.commit()
+            val intent = Intent(getActivity(), ProfileDetailActivity::class.java)
+            startActivity(intent)
+            Bungee.fade(context);
         }
 
         fab_negative.setOnClickListener { onBackPressed() }
