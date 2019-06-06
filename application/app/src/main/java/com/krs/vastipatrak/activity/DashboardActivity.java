@@ -1,5 +1,6 @@
 package com.krs.vastipatrak.activity;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +26,6 @@ import com.krs.vastipatrak.fragments.DashboardFragment;
 import com.krs.vastipatrak.fragments.FragmentDrawer;
 import com.krs.vastipatrak.fragments.HeaderDetailFragment;
 import com.krs.vastipatrak.fragments.SmartFilterFragment;
-import com.krs.vastipatrak.utils.Utility;
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
@@ -34,14 +34,14 @@ import com.luseen.spacenavigation.SpaceOnLongClickListener;
 
 public class DashboardActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
 
+    public static AppBarLayout myAppBar;
     FragmentDrawer drawerFragment;
     DrawerLayout mDrawerLayout;
     DashboardFragment dashboardFragment;
     SmartFilterFragment ssfragment;
     HeaderDetailFragment headerDetailFragment;
-
     private SpaceNavigationView spaceNavigationView;
-    public static AppBarLayout myAppBar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,9 +52,9 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Home");
 
-       // View details_toolbar_transition_helper = findViewById(R.id.details_toolbar_transition_helper);
-       // details_toolbar_transition_helper.setTranslationY(-156);
-        myAppBar= findViewById(R.id.myAppBar);
+        // View details_toolbar_transition_helper = findViewById(R.id.details_toolbar_transition_helper);
+        // details_toolbar_transition_helper.setTranslationY(-156);
+        myAppBar = findViewById(R.id.myAppBar);
         myAppBar.setTranslationY(-getToolbarHeight());
         myAppBar.animate().translationY(0f).alpha(1f).setDuration(2000).start();
 
@@ -87,7 +87,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
 
         dashboardFragment = new DashboardFragment();
         ssfragment = new SmartFilterFragment();
-        headerDetailFragment =new HeaderDetailFragment();
+        headerDetailFragment = new HeaderDetailFragment();
 
         movetoFragment(dashboardFragment);
 
@@ -158,7 +158,11 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
 
     @Override
     public void onDrawerItemSelected(View view, int position) {
-
+        Toast.makeText(this, "" + position, Toast.LENGTH_SHORT).show();
+        if (position == 3) {
+            Intent mIntent = new Intent(this, NearByLocationActivity.class);
+            startActivity(mIntent);
+        }
     }
 
     @Override
@@ -185,12 +189,6 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
-
-
-
-
 
 
 }
