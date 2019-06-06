@@ -2,14 +2,18 @@ package com.krs.vastipatrak.fragments;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.krs.vastipatrak.R;
 import com.krs.vastipatrak.model.FavProfiles;
 import com.krs.vastipatrak.model.RecentMenu;
+import com.krs.vastipatrak.utils.ExpandableHeightGridView;
 import com.smarteist.autoimageslider.DefaultSliderView;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -35,15 +40,16 @@ import java.util.ArrayList;
 public class DashboardFragment extends Fragment {
 
     SliderLayout sliderLayout;
-    RecyclerView lstFavProfile;
-    RecyclerView lstMenu;
+    RecyclerView lstFavProfile, lstRecentMenu;
+    ExpandableHeightGridView gridMenu;
     EditText edt_search;
     ArrayList<FavProfiles> listProfiles = new ArrayList<>();
-    ArrayList<RecentMenu> listMenus = new ArrayList<>();
+    ArrayList<RecentMenu> recentMenus = new ArrayList<>();
     String[] ProfileNames = {"Rajendra", "Tejas", "Kunjan", "Mukund", "Kushal"};
     int[] ProfileImages = {R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg};
-    String[] MenuNames = {"My Profile", "Donation", "Matrimony", "QR Code", "Search"};
-    int[] MenuImages = {R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon};
+
+    String[] MenuNames = {"My Profile", "Donation", "Matrimony", "QR Code", "Search","My Profile", "Donation", "Matrimony", "QR Code", "Search","My Profile", "Donation", "Matrimony", "QR Code", "Search"};
+    int[] MenuImages = {R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon,R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon,R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon};
     private boolean isTouch = false;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -52,14 +58,16 @@ public class DashboardFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        lstMenu = rootView.findViewById(R.id.lstMenu);
+        lstRecentMenu = rootView.findViewById(R.id.lstRecentMenu);
         lstFavProfile = rootView.findViewById(R.id.lstFavProfile);
+        gridMenu = rootView.findViewById(R.id.grid_view);
+        gridMenu.setExpanded(true);
         edt_search = rootView.findViewById(R.id.edt_search);
         sliderLayout = rootView.findViewById(R.id.imageSlider);
         sliderLayout.setIndicatorAnimation(IndicatorAnimations.SWAP); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
         sliderLayout.setSliderTransformAnimation(SliderAnimations.FADETRANSFORMATION);
         sliderLayout.setScrollTimeInSec(3); //set scroll delay in seconds :
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Home");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Home");
         edt_search.setInputType(InputType.TYPE_NULL);
         edt_search.setKeyListener(null);
         edt_search.setOnTouchListener((v, event) -> {
@@ -78,10 +86,9 @@ public class DashboardFragment extends Fragment {
             return false;
         });
 
-
         setSliderViews();
-        setRecentActivity();
         setFavoriteList();
+        gridMenu.setAdapter(new ImageAdapter(getActivity()));
 
         return rootView;
     }
@@ -90,25 +97,65 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        isTouch=false;
+        isTouch = false;
     }
 
-    private void setRecentActivity() {
-        listMenus.clear();
+
+    private void setSliderViews() {
+
+        for (int i = 0; i <= 3; i++) {
+            DefaultSliderView sliderView = new DefaultSliderView(getActivity());
+            switch (i) {
+                case 0:
+                    sliderView.setImageDrawable(R.drawable.ic_launcher_background);
+                    break;
+                case 1:
+                    sliderView.setImageUrl("https://images.pexels.com/photos/218983/pexels-photo-218983.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
+                    break;
+                case 2:
+                    sliderView.setImageUrl("https://images.pexels.com/photos/747964/pexels-photo-747964.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260");
+                    break;
+                case 3:
+                    sliderView.setImageUrl("https://images.pexels.com/photos/929778/pexels-photo-929778.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
+                    break;
+            }
+
+            sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
+            sliderView.setDescription("The quick brown fox jumps over the lazy dog.\n" + "Jackdaws love my big sphinx of quartz. " + (i + 1));
+            final int finalI = i;
+
+            sliderView.setOnSliderClickListener(sliderView1 -> {
+                Fragment fragment = new NewsFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container_body, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                Toast.makeText(getActivity(), "This is slider " + (finalI + 1), Toast.LENGTH_SHORT).show();
+
+            });
+
+            //at last add this view in your layout :
+            sliderLayout.addSliderView(sliderView);
+        }
+    }
+
+    private void setLstRecentMenu() {
+        recentMenus.clear();
         for (int i = 0; i < MenuNames.length; i++) {
             RecentMenu item = new RecentMenu();
             item.setCardName(MenuNames[i]);
             item.setImageResourceId(MenuImages[i]);
-            listMenus.add(item);
+            recentMenus.add(item);
         }
 
-        lstMenu.setHasFixedSize(true);
+        lstRecentMenu.setHasFixedSize(true);
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
         MyLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        if (listMenus.size() > 0 & lstMenu != null) {
-            lstMenu.setAdapter(new RecentMenuAdapter(listMenus));
+        if (recentMenus.size() > 0 & lstRecentMenu != null) {
+            lstRecentMenu.setAdapter(new RecentMenuAdapter(recentMenus));
         }
-        lstMenu.setLayoutManager(MyLayoutManager);
+        lstRecentMenu.setLayoutManager(MyLayoutManager);
     }
 
     private void setFavoriteList() {
@@ -131,60 +178,66 @@ public class DashboardFragment extends Fragment {
         lstFavProfile.setLayoutManager(MyLayoutManager);
     }
 
-    private void setSliderViews() {
 
-        for (int i = 0; i <= 3; i++) {
+    class ImageAdapter extends BaseAdapter {
+        private Context mContext;
 
-            DefaultSliderView sliderView = new DefaultSliderView(getActivity());
+        ImageAdapter(Context c) {
+            mContext = c;
+        }
 
+        @Override
+        public int getCount() {
+            Log.d(DashboardFragment.class.getSimpleName(),"len: "+MenuImages.length);
+            return MenuImages.length;
+        }
 
-            switch (i) {
-                case 0:
-                    sliderView.setImageDrawable(R.drawable.ic_launcher_background);
-                    break;
-                case 1:
-                    sliderView.setImageUrl("https://images.pexels.com/photos/218983/pexels-photo-218983.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
-                    break;
-                case 2:
-                    sliderView.setImageUrl("https://images.pexels.com/photos/747964/pexels-photo-747964.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260");
-                    break;
-                case 3:
-                    sliderView.setImageUrl("https://images.pexels.com/photos/929778/pexels-photo-929778.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
-                    break;
+        @Override
+        public Object getItem(int position) {
+            return MenuImages[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolderItem viewHolder;
+
+            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.dashboard_menu, parent, false);
+                viewHolder = new ViewHolderItem();
+                viewHolder.image = convertView.findViewById(R.id.image);
+                viewHolder.textView = convertView.findViewById(R.id.name);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolderItem) convertView.getTag();
             }
 
-            sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
-            sliderView.setDescription("The quick brown fox jumps over the lazy dog.\n" + "Jackdaws love my big sphinx of quartz. " + (i + 1));
-            final int finalI = i;
-
-            sliderView.setOnSliderClickListener(sliderView1 ->
-            {
-                Fragment fragment = new NewsFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container_body, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                Toast.makeText(getActivity(), "This is slider " + (finalI + 1), Toast.LENGTH_SHORT).show();
-
-            });
-
-            //at last add this view in your layout :
-            sliderLayout.addSliderView(sliderView);
+            viewHolder.image.setImageResource(MenuImages[position]);
+            viewHolder.textView.setText(MenuNames[position]);
+            Log.d(DashboardFragment.class.getSimpleName(),"position: "+position);
+            return convertView;
         }
     }
 
+    class ViewHolderItem {
+        ImageView image;
+        TextView textView;
+    }
 
-    public class RecentMenuAdapter extends RecyclerView.Adapter<RecentActivityViewHolder> {
+    class RecentMenuAdapter extends RecyclerView.Adapter<RecentActivityViewHolder> {
         private ArrayList<RecentMenu> list;
 
-        public RecentMenuAdapter(ArrayList<RecentMenu> Data) {
+        RecentMenuAdapter(ArrayList<RecentMenu> Data) {
             list = Data;
         }
 
         @Override
         public RecentActivityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            // create a new view
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recent_menu, parent, false);
             RecentActivityViewHolder holder = new RecentActivityViewHolder(view);
             return holder;
@@ -192,11 +245,9 @@ public class DashboardFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final RecentActivityViewHolder holder, int position) {
-
             holder.titleTextView.setText(list.get(position).getCardName());
             holder.coverImageView.setImageResource(list.get(position).getImageResourceId());
             holder.coverImageView.setTag(list.get(position).getImageResourceId());
-
         }
 
         @Override
@@ -244,8 +295,6 @@ public class DashboardFragment extends Fragment {
             return list.size();
         }
     }
-
-
 
     class FavProfileViewHolder extends RecyclerView.ViewHolder {
 
