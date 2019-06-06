@@ -3,6 +3,7 @@ package com.krs.vastipatrak.activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import github.chenupt.springindicator.viewpager.ScrollerViewPager;
 public class ProfileDetailActivity extends AppCompatActivity {
 
     ImageView img_close;
+    int id=0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +34,15 @@ public class ProfileDetailActivity extends AppCompatActivity {
 
         setContentView(R.layout.fragment_profile_detail);
 
+        Bundle mbundle=getIntent().getExtras();
+        if(mbundle!=null)
+        {
+           id= mbundle.getInt("id");
+        }
+        Toast.makeText(this, ""+id, Toast.LENGTH_SHORT).show();
         img_close=findViewById(R.id.img_close);
+
+
 
         img_close.setOnClickListener(v -> {
             finish();

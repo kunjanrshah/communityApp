@@ -21,7 +21,7 @@ abstract class  BaseViewHolder<T : DataProvider.DataProvider1.BaseData>(view: Vi
     override val containerView: View?
         get() = itemView
 
-    abstract fun bind(data: T, listener: RecyclerAdapter.ItemClickListener?, listener1: View.OnClickListener? = null)
+    abstract fun bind(data: T, listener: RecyclerAdapter.ItemClickListener?, listener1: View.OnClickListener?)
 
 
     class CardViewHolder(parent: ViewGroup) : BaseViewHolder<DataProvider.DataProvider1.Card>(parent.inflate(R.layout.row_list)) {

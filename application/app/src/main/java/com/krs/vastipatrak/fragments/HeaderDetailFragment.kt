@@ -32,6 +32,7 @@ class HeaderDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
 
     override fun itemClick(id: Int) {
         val intent = Intent(getActivity(), ProfileDetailActivity::class.java)
+        intent.putExtra("id",id);
         startActivity(intent)
         Bungee.fade(context);
     }

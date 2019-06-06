@@ -27,7 +27,7 @@
             android:layout_marginLeft="18dp"
             android:layout_weight="1"
             android:text="My Profile"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -38,8 +38,8 @@
         android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:background="@color/color_light_gray"
-        android:layout_height="60dp">
+        android:background="@color/color_mid_light_gray"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:layout_width="50dp"
@@ -52,7 +52,7 @@
             android:text="Pratik Soni"
             android:layout_weight="1"
             android:textStyle="bold"
-            android:textSize="22sp"
+            android:textSize="18sp"
             android:layout_marginLeft="20dp"
             android:layout_height="wrap_content" />
 
@@ -69,8 +69,6 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         app:siIndicatorColor="@color/colorPrimary"
         app:siIndicatorColors="@array/indicator_colors"
         app:siSelectedTextColor="@android:color/white"
@@ -87,7 +85,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:background="@color/color_light_gray"
+        android:background="@color/color_mid_light_gray"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:layout_marginBottom="5dp"

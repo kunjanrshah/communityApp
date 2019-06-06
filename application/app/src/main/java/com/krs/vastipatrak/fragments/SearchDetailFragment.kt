@@ -1,6 +1,7 @@
 package com.krs.vastipatrak.fragments
 
 import android.animation.AnimatorInflater
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.core.view.doOnLayout
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.krs.vastipatrak.R
+import com.krs.vastipatrak.activity.ProfileDetailActivity
 import com.krs.vastipatrak.adapter.RecyclerAdapter
 import com.krs.vastipatrak.interfaces.OnBackPressedListener
 import com.krs.vastipatrak.model.DataProvider
@@ -20,8 +22,15 @@ import com.krs.vastipatrak.utils.supportsLollipop
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_search_list_detail.*
 import kotlinx.android.synthetic.main.row_list.*
+import spencerstudios.com.bungeelib.Bungee
 
-class SearchDetailFragment : Fragment(), OnBackPressedListener {
+class SearchDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter.ItemClickListener {
+    override fun itemClick(id: Int) {
+        val intent = Intent(getActivity(), ProfileDetailActivity::class.java)
+        intent.putExtra("id",id);
+        startActivity(intent)
+        Bungee.fade(context);
+    }
 
     private lateinit var coordinates: FloatArray
 
@@ -29,8 +38,8 @@ class SearchDetailFragment : Fragment(), OnBackPressedListener {
 
         const val TAG = "SearchDetailFragment"
         fun newInstance(coordinates: FloatArray, adapterPosition: Int): SearchDetailFragment {
-            val bundle = Bundle().apply {
 
+            val bundle = Bundle().apply {
                 putFloatArray(EXTRA_COORDINATES, coordinates)
                 putInt(EXTRA_POSITION, adapterPosition)
             }
@@ -98,7 +107,7 @@ class SearchDetailFragment : Fragment(), OnBackPressedListener {
         fab_negative.setOnClickListener { onBackPressed() }
 
         with(recycler_view) {
-            adapter = RecyclerAdapter(DataProvider.getDetailsData(),null)
+            adapter = RecyclerAdapter(DataProvider.getDetailsData(),this@SearchDetailFragment)
 
             setHasFixedSize(true)
             fab_negative.doOnLayout {

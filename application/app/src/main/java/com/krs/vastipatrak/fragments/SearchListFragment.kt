@@ -1,7 +1,6 @@
 package com.krs.vastipatrak.fragments
 
-import android.app.Activity
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.transition.TransitionInflater
@@ -27,19 +26,12 @@ import com.krs.vastipatrak.utils.supportsLollipop
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_search_result.*
 import java.util.*
-import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
-import android.content.Context.INPUT_METHOD_SERVICE
-import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import com.krs.vastipatrak.activity.ProfileDetailActivity
+import spencerstudios.com.bungeelib.Bungee
 
 
-class SearchListFragment : Fragment(), RecyclerAdapter.ItemClickListener, View.OnClickListener {
-
-    override fun itemClick(id: Int) {
-    }
+class SearchListFragment : Fragment(), View.OnClickListener {
 
     private var lstRecentSearch: RecyclerView? = null
     private var lstProfile: RecyclerView? = null
@@ -110,7 +102,7 @@ class SearchListFragment : Fragment(), RecyclerAdapter.ItemClickListener, View.O
     private fun setupList() {
 
         lstProfile!!.layoutManager = LinearLayoutManager(activity) as RecyclerView.LayoutManager?
-        recyclerAdapter = RecyclerAdapter<DataProvider.DataProvider1.Card>(DataProvider.getCardData(), this@SearchListFragment, this)
+        recyclerAdapter = RecyclerAdapter<DataProvider.DataProvider1.Card>(DataProvider.getCardData(),null, this@SearchListFragment)
         lstProfile!!.adapter = recyclerAdapter
         lstProfile!!.setHasFixedSize(true)
         Handler().postDelayed({
@@ -161,7 +153,6 @@ class SearchListFragment : Fragment(), RecyclerAdapter.ItemClickListener, View.O
 
         val adapterPosition = lstProfile!!.getChildAdapterPosition(view)
         val detailsFragment = SearchDetailFragment.newInstance(positions, adapterPosition)
-
         val transaction = fragmentManager?.beginTransaction()
                 ?.replace(R.id.container_body, detailsFragment, SearchDetailFragment.TAG)
                 ?.addToBackStack(null)
