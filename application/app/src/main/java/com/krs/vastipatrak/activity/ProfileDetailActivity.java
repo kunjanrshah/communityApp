@@ -1,67 +1,133 @@
 package com.krs.vastipatrak.activity;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.krs.vastipatrak.R;
-import com.krs.vastipatrak.fragments.HeaderDetailFragment;
 import com.krs.vastipatrak.fragments.MainDetailsFragment;
 import com.krs.vastipatrak.fragments.MatrimonyDetailsFragment;
 import com.krs.vastipatrak.fragments.PersonalDetailsFragment;
 import com.krs.vastipatrak.fragments.ProfessionalDetailsFragment;
 import com.krs.vastipatrak.utils.Utility;
 
-import github.chenupt.multiplemodel.viewpager.ModelPagerAdapter;
-import github.chenupt.multiplemodel.viewpager.PagerModelManager;
-import github.chenupt.springindicator.SpringIndicator;
-import github.chenupt.springindicator.viewpager.ScrollerViewPager;
-
 public class ProfileDetailActivity extends AppCompatActivity {
 
-    ImageView img_close;
-    int id=0;
+    ImageView img_close, img_one, img_two, img_three, img_four;
+    int id = 0;
+    ViewPager viewpager;
+    MainDetailsFragment mainDetailsFragment;
+    PersonalDetailsFragment personalDetailsFragment;
+    ProfessionalDetailsFragment professionalDetailsFragment;
+    MatrimonyDetailsFragment matrimonyDetailsFragment;
+    MyPagerAdapter adapterViewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.fragment_profile_detail);
+        setContentView(R.layout.activity_profile_detail);
 
-        Bundle mbundle=getIntent().getExtras();
-        if(mbundle!=null)
-        {
-           id= mbundle.getInt("id");
+        Bundle mbundle = getIntent().getExtras();
+        if (mbundle != null) {
+            id = mbundle.getInt("id");
         }
-        Toast.makeText(this, ""+id, Toast.LENGTH_SHORT).show();
-        img_close=findViewById(R.id.img_close);
 
-
-
+        img_one = findViewById(R.id.img_one);
+        img_two = findViewById(R.id.img_two);
+        img_three = findViewById(R.id.img_three);
+        img_four = findViewById(R.id.img_four);
+        img_close = findViewById(R.id.img_close);
         img_close.setOnClickListener(v -> {
             finish();
         });
 
-        ScrollerViewPager viewPager =  findViewById(R.id.view_pager);
-        SpringIndicator springIndicator = findViewById(R.id.indicator);
+        viewpager = findViewById(R.id.viewpager);
+        mainDetailsFragment = new MainDetailsFragment();
+        personalDetailsFragment = new PersonalDetailsFragment();
+        professionalDetailsFragment = new ProfessionalDetailsFragment();
+        matrimonyDetailsFragment = new MatrimonyDetailsFragment();
 
-        PagerModelManager manager = new PagerModelManager();
-        manager.addFragment(new MainDetailsFragment(),"1");
-        manager.addFragment(new PersonalDetailsFragment(),"2");
-        manager.addFragment(new ProfessionalDetailsFragment(),"3");
-        manager.addFragment(new MatrimonyDetailsFragment(),"4");
-        ModelPagerAdapter adapter = new ModelPagerAdapter(getSupportFragmentManager(), manager);
-        viewPager.setAdapter(adapter);
-        viewPager.fixScrollSpeed();
+        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+        viewpager.setAdapter(adapterViewPager);
 
-        // just set viewPager
-        springIndicator.setViewPager(viewPager);
+
+        viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                if (position == 0) {
+                    img_one.setImageResource(R.drawable.one_step);
+                    img_two.setImageResource(R.drawable.two_step_gray);
+                    img_three.setImageResource(R.drawable.three_step_gray);
+                    img_four.setImageResource(R.drawable.four_step_gray);
+                } else if (position == 1) {
+                    img_one.setImageResource(R.drawable.one_step_gray);
+                    img_two.setImageResource(R.drawable.two_step);
+                    img_three.setImageResource(R.drawable.three_step_gray);
+                    img_four.setImageResource(R.drawable.four_step_gray);
+                } else if (position == 2) {
+                    img_one.setImageResource(R.drawable.one_step_gray);
+                    img_two.setImageResource(R.drawable.two_step_gray);
+                    img_three.setImageResource(R.drawable.three_step);
+                    img_four.setImageResource(R.drawable.four_step_gray);
+                } else if (position == 3) {
+                    img_one.setImageResource(R.drawable.one_step_gray);
+                    img_two.setImageResource(R.drawable.two_step_gray);
+                    img_three.setImageResource(R.drawable.three_step_gray);
+                    img_four.setImageResource(R.drawable.four_step);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         Utility.hideKeyboard(this);
     }
+
+
+    class MyPagerAdapter extends FragmentPagerAdapter {
+        private int NUM_ITEMS = 4;
+
+        public MyPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return mainDetailsFragment;
+                case 1:
+                    return personalDetailsFragment;
+                case 2:
+                    return professionalDetailsFragment;
+                case 3:
+                    return matrimonyDetailsFragment;
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_ITEMS;
+        }
+    }
+
+
 }

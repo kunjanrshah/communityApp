@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp"
+        android:background="@drawable/border"
+        android:orientation="vertical"
+        android:padding="5dp">
+
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Professional"
         android:padding="10dp"
+        android:textColor="@color/colorPrimary"
         android:layout_marginTop="3dp"
-        android:background="@color/color_mid_light_gray"
         android:textSize="18sp" />
 
     <ScrollView
@@ -29,7 +38,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
@@ -47,7 +56,7 @@
             <RelativeLayout
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
@@ -65,7 +74,7 @@
             <RelativeLayout
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
@@ -80,64 +89,81 @@
                     android:text="Occupation" />
             </RelativeLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_layout_name"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"       >
-
-                <EditText
-                    android:id="@+id/edtMemCode"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:hint="Company/Shop name"
-                    android:inputType="textCapSentences"
-                    android:singleLine="true"    />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_layout_website"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"       >
-
-                <EditText
-                    android:id="@+id/edtWebsite"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:hint="Website URL"
-                    android:inputType="textCapSentences"
-                    android:singleLine="true"    />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_layout_address"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"   >
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Company/Shop Name"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/border_color_gray"
+                    android:singleLine="true" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Website URL"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/border_color_gray"
+                    android:singleLine="true" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Address"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/edtAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableEnd="@drawable/house"
-                    android:gravity="top|left"
-                    android:hint="Address"
+                    android:background="@drawable/border_color_gray"
+                    android:drawablePadding="10dp"
                     android:inputType="textMultiLine"
                     android:lines="3"
                     android:maxLines="3"
                     android:minLines="3"
-                    android:nextFocusForward="@id/txt_home"
-                    android:scrollbars="vertical" />
+                    android:scrollbars="vertical"
+                    android:singleLine="true" />
 
-
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
 
         </LinearLayout>
 
     </ScrollView>
 
+</LinearLayout>
 </LinearLayout>

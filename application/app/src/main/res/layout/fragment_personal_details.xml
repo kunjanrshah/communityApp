@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp"
+        android:background="@drawable/border"
+        android:orientation="vertical"
+        android:padding="5dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -10,7 +19,7 @@
         android:text="Personal"
         android:padding="10dp"
         android:layout_marginTop="3dp"
-        android:background="@color/color_mid_light_gray"
+        android:textColor="@color/colorPrimary"
         android:textSize="18sp"
          />
 
@@ -40,30 +49,32 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/input_layout_occupation"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
-
-                        <EditText
-                            android:id="@+id/edtMemCode"
-                            android:layout_width="150dp"
-                            android:layout_height="wrap_content"
-                            android:hint="Role"
-                            android:inputType="textCapSentences"
-                            android:singleLine="true"
-                            android:text="Admin" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_gravity="center"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center|bottom"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
                         android:background="@drawable/border"
-                        android:gravity="center"
+                        android:gravity="center|bottom"
+                        android:textAlignment="center">
+
+                        <Spinner
+                            style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Role" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center|bottom"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/border"
+                        android:gravity="center|bottom"
+
                         android:textAlignment="center">
 
                         <Spinner
@@ -86,7 +97,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
@@ -103,7 +114,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
@@ -128,7 +139,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
@@ -145,7 +156,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
@@ -170,7 +181,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/border"
@@ -215,11 +226,12 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/border"
-                    android:gravity="center"
+                    android:gravity="center|bottom"
                     android:textAlignment="center">
 
                     <Spinner
@@ -234,25 +246,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
                     android:orientation="vertical">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/input_layout_mdate"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Marriage Date"
+                            android:textStyle="bold" />
 
                         <EditText
-                            android:id="@+id/edtmdate"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:drawableEnd="@drawable/calendar"
-                            android:hint="Marriage Date"
-                            android:inputType="date"
-                            android:nextFocusDown="@id/edtbTime"
+                            android:layout_height="40dp"
+                            android:background="@drawable/border_color_gray"
                             android:singleLine="true" />
-                    </com.google.android.material.textfield.TextInputLayout>
 
+                    </LinearLayout>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -265,4 +280,5 @@
         </LinearLayout>
     </ScrollView>
 
+</LinearLayout>
 </LinearLayout>
