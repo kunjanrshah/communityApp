@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.krs.vastipatrak">
+    package="com.krs.community">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -17,7 +17,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
     <application
-        android:name=".app.AppController"
+        android:name="com.krs.community.app.AppController"
         android:icon="@drawable/ic_app"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -60,93 +60,31 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
 
-        <activity
-            android:name=".activity.WelcomeActivity"
-            android:label="@string/theme_app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
 
         <activity
-            android:name=".activity.MainActivity"
-            android:label="@string/theme_app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".activity.EventlistActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/theme_app_name" />
-        <activity
-            android:name=".activity.ProfileActivity"
-            android:label="@string/theme_app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-        <activity
-            android:name=".activity.AdvanceSearchActivity"
-            android:label="@string/theme_app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-
-        <activity
-            android:name=".activity.ShareEventActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/title_activity_share_event"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyMaterialTheme" />
-        <activity
-            android:name=".activity.FamilyTreeActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.SelectionlistActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".activity.PDFActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.HomeActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".activity.SplashScreen"
+            android:name="com.krs.community.activity.SplashScreen"
             android:screenOrientation="portrait">
 
 
         </activity>
         <activity
-            android:name=".activity.ChooseLanguage"
+            android:name="com.krs.community.activity.ChooseLanguage"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".activity.RegisterActivty"
+            android:name="com.krs.community.activity.RegisterActivty"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".activity.LoginActivity"
+            android:name="com.krs.community.activity.LoginActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".activity.DashboardActivity"
+            android:name="com.krs.community.activity.DashboardActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden">
@@ -157,24 +95,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ChooseLan"
+            android:name="com.krs.community.activity.ChooseLan"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" >
 
         </activity>
         <activity
-            android:name=".activity.ProfileDetailActivity"
+            android:name="com.krs.community.activity.ProfileDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
-        <service android:name=".service.MyLocationService" />
-        <service android:name=".service.LocationAlertService" />
+        <service android:name="com.krs.community.service.MyLocationService" />
+        <service android:name="com.krs.community.service.LocationAlertService" />
 
         <!-- Firebase Notifications -->
         <service
-            android:name=".service.MyFirebaseMessagingService"
+            android:name="com.krs.community.service.MyFirebaseMessagingService"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

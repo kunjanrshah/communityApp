@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-apply plugin: 'realm-android'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
@@ -12,7 +11,7 @@ android {
     compileSdkVersion 28
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
-        applicationId "com.krs.vastipatrak"
+        applicationId "com.krs.community"
         minSdkVersion 21
         versionCode 19
         versionName "1.19.0"
@@ -95,8 +94,6 @@ dependencies {
     implementation 'com.github.delight-im:Android-AdvancedWebView:v3.0.0'
     implementation 'com.github.orangegangsters:swipy:1.2.3@aar'
     implementation 'de.blox:graphview:0.4.2'
-    implementation project(':library')
-    implementation project(':draggabletreeview')
     implementation project(':multisearchviewlib')
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'

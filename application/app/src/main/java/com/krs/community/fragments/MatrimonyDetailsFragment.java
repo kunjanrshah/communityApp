@@ -1,0 +1,40 @@
+package com.krs.community.fragments;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.krs.community.R;
+
+public class MatrimonyDetailsFragment extends Fragment {
+
+    private int bgRes;
+    private ImageView imageView;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+      //  bgRes = getArguments().getInt("data");
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_matrimony_details, container, false);
+
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //imageView = (ImageView) getView().findViewById(R.id.image);
+        //imageView.setBackgroundResource(bgRes);
+    }
+
+}

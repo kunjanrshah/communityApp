@@ -1,1 +1,1 @@
-include ':app',':library', ':draggabletreeview', ':multisearchviewlib'
+include ':app',':multisearchviewlib'
