@@ -13,6 +13,9 @@
         <item name="android:fastScrollTextColor">@color/colorPrimary</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="android:fastScrollTrackDrawable">@drawable/fastscroll_thumb_pressed_holo</item>
         <item name="android:fastScrollPreviewBackgroundRight">
             @drawable/bg_default_focused_holo_light

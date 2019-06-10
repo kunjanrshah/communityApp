@@ -51,10 +51,9 @@
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="80dp"
-        android:background="@drawable/border_color_primary"
-        android:text="confirm"
-        android:textColor="@color/mdtp_white"
-        android:textStyle="bold"
-        android:visibility="gone" />
+        android:background="@drawable/dark_border"
+        android:text="Verify"
+        android:textColor="@color/colorPrimary"
+         />
 
 </LinearLayout>

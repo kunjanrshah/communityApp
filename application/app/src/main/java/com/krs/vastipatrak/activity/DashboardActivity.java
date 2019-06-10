@@ -1,6 +1,5 @@
 package com.krs.vastipatrak.activity;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,19 +29,19 @@ import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.luseen.spacenavigation.SpaceOnLongClickListener;
-
 import spencerstudios.com.bungeelib.Bungee;
 
 
 public class DashboardActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
 
     public static AppBarLayout myAppBar;
-    FragmentDrawer drawerFragment;
-    DrawerLayout mDrawerLayout;
-    DashboardFragment dashboardFragment;
-    SmartFilterFragment ssfragment;
-    HeaderDetailFragment headerDetailFragment;
+    private DrawerLayout mDrawerLayout;
+    private DashboardFragment dashboardFragment;
+    private SmartFilterFragment ssfragment;
+    private HeaderDetailFragment headerDetailFragment;
+    private SearchByDistanceFragment distanceFragment;
     private SpaceNavigationView spaceNavigationView;
+    private String TAG=DashboardActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,7 +59,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         myAppBar.setTranslationY(-getToolbarHeight());
         myAppBar.animate().translationY(0f).alpha(1f).setDuration(2000).start();
 
-        drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        FragmentDrawer drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         mDrawerLayout = findViewById(R.id.drawer_layout);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, mDrawerLayout, mToolbar);
 
@@ -82,20 +81,23 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         spaceNavigationView = findViewById(R.id.space);
         spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
         spaceNavigationView.addSpaceItem(new SpaceItem("Home", R.drawable.home));
-        spaceNavigationView.addSpaceItem(new SpaceItem("Filter", R.drawable.filter));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Calendar", R.drawable.calendar));
         spaceNavigationView.shouldShowFullBadgeText(false);
         spaceNavigationView.setCentreButtonIconColorFilterEnabled(false);
+        spaceNavigationView.setCentreButtonIcon(R.drawable.filter_icon);
         spaceNavigationView.animate().translationY(0f).alpha(1f).setDuration(2000).start();
 
         dashboardFragment = new DashboardFragment();
         ssfragment = new SmartFilterFragment();
         headerDetailFragment = new HeaderDetailFragment();
+        distanceFragment=new SearchByDistanceFragment();
 
         movetoFragment(dashboardFragment);
 
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
             public void onCentreButtonClick() {
+                movetoFragment(ssfragment);
                 Log.d("onCentreButtonClick ", "onCentreButtonClick");
             }
 
@@ -113,7 +115,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
             public void onItemReselected(int itemIndex, String itemName) {
                 Log.d("onItemReselected ", "" + itemIndex + " " + itemName);
                 if (itemIndex == 1) {
-                    movetoFragment(ssfragment);
+
                 } else if (itemIndex == 0) {
                     movetoFragment(dashboardFragment);
                 }
@@ -160,10 +162,9 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
 
     @Override
     public void onDrawerItemSelected(View view, int position) {
-        Toast.makeText(this, "" + position, Toast.LENGTH_SHORT).show();
+        Log.d(TAG,"position: "+position);
         if (position == 3) {
-            Intent mIntent = new Intent(this, NearByLocationActivity.class);
-            startActivity(mIntent);
+            movetoFragment(distanceFragment);
             Bungee.fade(this);
         }
     }

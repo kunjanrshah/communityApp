@@ -2,7 +2,7 @@
 <!--  res/drawable/rounded_corderml -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle" android:padding="5dp">
-    <solid android:color="@color/color_light_gray"/>
+    <solid android:color="@color/color_mid_light_gray"/>
     <corners
         android:topLeftRadius="15dp"
         android:topRightRadius="15dp"/>

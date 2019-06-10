@@ -87,7 +87,8 @@ public class DashboardFragment extends Fragment {
         });
 
         setSliderViews();
-        setFavoriteList();
+        setLstRecentMenu();
+       // setFavoriteList();
         gridMenu.setAdapter(new ImageAdapter(getActivity()));
 
         return rootView;
@@ -142,10 +143,10 @@ public class DashboardFragment extends Fragment {
 
     private void setLstRecentMenu() {
         recentMenus.clear();
-        for (int i = 0; i < MenuNames.length; i++) {
+        for (int i = 0; i < ProfileNames.length; i++) {
             RecentMenu item = new RecentMenu();
-            item.setCardName(MenuNames[i]);
-            item.setImageResourceId(MenuImages[i]);
+            item.setCardName(ProfileNames[i]);
+            item.setImageResourceId(ProfileImages[i]);
             recentMenus.add(item);
         }
 

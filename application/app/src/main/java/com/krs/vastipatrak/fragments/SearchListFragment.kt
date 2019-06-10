@@ -140,7 +140,6 @@ class SearchListFragment : Fragment(), View.OnClickListener {
         ll_root.addView(copy)
         view!!.visibility = View.INVISIBLE
         startAnimation(copy, fragmentTransaction)
-
     }
 
     private fun initFragmentTransaction(view: View): FragmentTransaction? {

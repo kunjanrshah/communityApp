@@ -11,7 +11,7 @@ import com.krs.vastipatrak.model.DataProvider
 /**
  * Created by Alexander Kolpakov on 17.07.2018
  */
-class RecyclerAdapter<T : DataProvider.DataProvider1.BaseData>(private var dataSet: List<T>, val itemClickListener: ItemClickListener? = null,private var listener1: View.OnClickListener? = null)
+class RecyclerAdapter<T : DataProvider.DataProvider1.BaseData>(private var dataSet: List<T>, val itemClickListener: ItemClickListener? = null,private var onClickListener: View.OnClickListener? = null)
     : RecyclerView.Adapter<BaseViewHolder<T>>() {
 
     @Suppress("UNCHECKED_CAST")
@@ -37,5 +37,5 @@ class RecyclerAdapter<T : DataProvider.DataProvider1.BaseData>(private var dataS
         fun itemClick(id : Int)
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<T>, position: Int) = holder.bind(dataSet[position], itemClickListener,listener1)
+    override fun onBindViewHolder(holder: BaseViewHolder<T>, position: Int) = holder.bind(dataSet[position], itemClickListener,onClickListener)
 }

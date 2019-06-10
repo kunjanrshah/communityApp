@@ -13,21 +13,18 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_details.*
 import kotlinx.android.synthetic.main.row_list.*
 
-/**
- * Created by Alexander Kolpakov on 29.07.2018
- */
 abstract class  BaseViewHolder<T : DataProvider.DataProvider1.BaseData>(view: View) : RecyclerView.ViewHolder(view), LayoutContainer {
 
     override val containerView: View?
         get() = itemView
 
-    abstract fun bind(data: T, listener: RecyclerAdapter.ItemClickListener?, listener1: View.OnClickListener?)
+    abstract fun bind(data: T, itemClickListener: RecyclerAdapter.ItemClickListener?, onClickListener: View.OnClickListener?)
 
 
     class CardViewHolder(parent: ViewGroup) : BaseViewHolder<DataProvider.DataProvider1.Card>(parent.inflate(R.layout.row_list)) {
 
-        override fun bind(data: DataProvider.DataProvider1.Card, listener: RecyclerAdapter.ItemClickListener?,listener1: View.OnClickListener?) {
-            containerView?.setOnClickListener(listener1)
+        override fun bind(data: DataProvider.DataProvider1.Card, itemClickListener: RecyclerAdapter.ItemClickListener?,onClickListener: View.OnClickListener?) {
+            containerView?.setOnClickListener(onClickListener)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 containerView?.transitionName = TRANSITION_CARD + adapterPosition
@@ -44,10 +41,10 @@ abstract class  BaseViewHolder<T : DataProvider.DataProvider1.BaseData>(view: Vi
 
     class DetailsViewHolder(parent: ViewGroup) : BaseViewHolder<DataProvider.DataProvider1.Details>(parent.inflate(R.layout.item_details)) {
 
-        override fun bind(data: DataProvider.DataProvider1.Details, listener: RecyclerAdapter.ItemClickListener?,listener1: View.OnClickListener?) {
+        override fun bind(data: DataProvider.DataProvider1.Details, itemClickListener: RecyclerAdapter.ItemClickListener?,onClickListener: View.OnClickListener?) {
 
             itemView.setOnClickListener({
-                listener!!.itemClick(data.id)
+                itemClickListener!!.itemClick(data.id)
             })
 
             tv_details_title.text = data.title

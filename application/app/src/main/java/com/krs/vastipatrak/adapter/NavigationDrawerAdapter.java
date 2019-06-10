@@ -46,7 +46,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
                 //holder.imgDrawer.setBackgroundResource(R.drawable.user);
                 break;
             case 2:
-                holder.imgDrawer.setBackgroundResource(R.drawable.calendar_white);
+                holder.imgDrawer.setBackgroundResource(R.drawable.analytics);
                 break;
             case 3:
                 holder.imgDrawer.setBackgroundResource(R.drawable.vector_drawable_fav_user);
@@ -58,7 +58,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
                 holder.imgDrawer.setBackgroundResource(R.drawable.matrimony);
                 break;
             case 6:
-                holder.imgDrawer.setBackgroundResource(R.drawable.ic_calendar);
+                holder.imgDrawer.setBackgroundResource(R.drawable.calendar);
                 break;
             case 7:
                 holder.imgDrawer.setBackgroundResource(R.drawable.translate);
