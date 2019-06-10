@@ -31,6 +31,8 @@ import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.luseen.spacenavigation.SpaceOnLongClickListener;
 
+import spencerstudios.com.bungeelib.Bungee;
+
 
 public class DashboardActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
 
@@ -162,6 +164,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         if (position == 3) {
             Intent mIntent = new Intent(this, NearByLocationActivity.class);
             startActivity(mIntent);
+            Bungee.fade(this);
         }
     }
 
