@@ -62,13 +62,13 @@
 
 
         <activity
-            android:name="com.krs.community.activity.SplashScreen"
+            android:name="com.krs.community.activity.SplashScreenActivity"
             android:screenOrientation="portrait">
 
 
         </activity>
         <activity
-            android:name="com.krs.community.activity.ChooseLanguage"
+            android:name="com.krs.community.activity.ChooseLanguageActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -95,7 +95,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.krs.community.activity.ChooseLan"
+            android:name="com.krs.community.activity.ChooseLanActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" >

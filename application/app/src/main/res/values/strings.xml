@@ -1,6 +1,6 @@
 <resources>
-    <string name="theme_app_name">વસ્તીપત્રક</string>
-    <string name="app_name">વસ્તીપત્રક</string>
+    <string name="theme_app_name">Community</string>
+    <string name="app_name">Community</string>
 
     <string name="hint_other">If Other (Please Specify)</string>
     <string name="hint_email_mobile">Email or Mobile</string>
@@ -558,5 +558,9 @@ https://play.google.com/store/apps/details?id=com.krs.community
     <string name="ss_Occupation">Occupation</string>
     <string name="ss_activity">Activity</string>
     <string name="ss_bplace">BPlace</string>
+
+    <string name="dateFormat" translatable="false">EE, dd MMM</string>
+    <string name="timeFormat" translatable="false">EE, dd MMM HH:mm</string>
+    <string name="period" translatable="false">%1$s – %2$s</string>
 
 </resources>

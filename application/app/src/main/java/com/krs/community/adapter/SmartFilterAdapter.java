@@ -265,7 +265,7 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
         } else {
             // If group is not expanded then change the text back into normal
             // and change the icon
-            header_text.setBackground(_context.getResources().getDrawable(R.drawable.rounded_corder));
+            header_text.setBackground(_context.getResources().getDrawable(R.drawable.rounded_corder_gray));
             header_text.setTypeface(null, Typeface.NORMAL);
             header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.sort_down, 0);
         }

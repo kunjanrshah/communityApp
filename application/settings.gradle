@@ -1,1 +1,1 @@
-include ':app',':multisearchviewlib'
+include ':app',':multisearchviewlib',':slycalendarview'

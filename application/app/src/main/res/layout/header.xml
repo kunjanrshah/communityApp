@@ -34,7 +34,7 @@
         android:layout_height="50dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/rounded_corder"
+        android:background="@drawable/rounded_corder_gray"
         android:drawablePadding="10dp"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
