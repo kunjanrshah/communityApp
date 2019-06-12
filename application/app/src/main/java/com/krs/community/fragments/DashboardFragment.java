@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -30,6 +31,8 @@ import com.smarteist.autoimageslider.DefaultSliderView;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderLayout;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -206,8 +209,6 @@ public class DashboardFragment extends Fragment {
         TextView textView;
     }
 
-
-
     public class FavProfileAdapter extends RecyclerView.Adapter<FavProfileViewHolder> {
         private ArrayList<FavProfiles> list;
 
@@ -217,7 +218,6 @@ public class DashboardFragment extends Fragment {
 
         @Override
         public FavProfileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            // create a new view
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fav_profle, parent, false);
             return new FavProfileViewHolder(view);
         }
@@ -235,6 +235,41 @@ public class DashboardFragment extends Fragment {
             return list.size();
         }
     }
+
+    class FilterViewHolder extends RecyclerView.ViewHolder
+    {
+        TextView text;
+        FilterViewHolder(View v) {
+            super(v);
+            text = v.findViewById(R.id.text);
+        }
+    }
+
+    class FilterAdapter extends RecyclerView.Adapter<FilterViewHolder>
+    {
+        private ArrayList<String> list=null;
+
+        FilterAdapter(ArrayList<String> arrayList) {
+            list = arrayList;
+        }
+
+        @Override
+        public FilterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.filter_calendar, parent, false);
+            return new FilterViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull FilterViewHolder holder, int position) {
+            holder.text.setText(list.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+    }
+
 
     class FavProfileViewHolder extends RecyclerView.ViewHolder {
 

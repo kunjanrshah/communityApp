@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:background="@drawable/rounded_bottom_corner"
+        android:background="@drawable/round_bottom_corner"
         android:orientation="vertical">
 
         <LinearLayout
@@ -55,7 +55,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rounded_top_corner"
+                android:background="@drawable/round_top_corner"
                 android:text="Surname" />
 
             <com.jaredrummler.materialspinner.MaterialSpinner
@@ -63,7 +63,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rounded_top_corner"
+                android:background="@drawable/round_top_corner"
                 android:text="Regin/Samaj" />
 
             <com.jaredrummler.materialspinner.MaterialSpinner

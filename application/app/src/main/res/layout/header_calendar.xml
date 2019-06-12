@@ -14,7 +14,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/rounded_bottom_corner_colorprimary" />
+            android:background="@drawable/round_bottom_corner_colorprimary" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,7 +25,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:background="@drawable/rounded_corder_white"
+                android:background="@drawable/round_corner_white"
                 android:elevation="6dp"
                 android:gravity="center"
                 android:paddingLeft="20dp"
@@ -51,8 +51,8 @@
                 android:id="@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_marginLeft="15dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="25dp"
                 android:backgroundTint="@color/white"
                 android:elevation="6dp"
                 android:src="@drawable/search_profile"
@@ -60,4 +60,12 @@
 
         </LinearLayout>
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/lstCalFliter"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
 </LinearLayout>

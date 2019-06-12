@@ -900,48 +900,6 @@ public class Utility {
         return sb.toString();
     }
 
-    public static void getRandomColor(@NonNull Context context, int position, LinearLayout ll_event) {
-        int i = position % 10;
-        Log.v("color number:", "" + i);
-        ll_event.setAlpha((float) 0.9);
-        switch (i) {
-            case 0:
-                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape5));
-                break;
-            case 1:
-                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape1));
-                break;
-            case 2:
-                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape2));
-                break;
-            case 3:
-                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape3));
-                break;
-            case 4:
-                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape4));
-                break;
-            case 5:
-                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape5));
-                break;
-            case 6:
-                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape6));
-                break;
-            case 7:
-                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape7));
-                break;
-            case 8:
-                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape8));
-                break;
-            case 9:
-                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape9));
-                break;
-            case 10:
-                ll_event.setBackground(context.getResources().getDrawable(R.drawable.shape10));
-                break;
-        }
-
-    }
-
     @Nullable
     public static String parseDateToddMMyyyy(String mydate, String inputPattern, String outputPattern) {
 

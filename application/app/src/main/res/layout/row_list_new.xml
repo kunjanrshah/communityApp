@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_list"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="@drawable/border"
+    android:orientation="vertical"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/card_elevation"
+    app:contentPadding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/border"
+                android:src="@drawable/user_profile2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Kunjan Shah"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Maninagar, Ahmedabad"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:background="@drawable/round_corner_blue"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Family Head"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorGray"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="2dp" />
+
+        <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="10dp"
+            android:gravity="center"
+             android:orientation="horizontal">
+
+             <TextView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:text="Share With"
+                 android:textSize="12sp" />
+
+             <ImageView
+                 android:layout_width="20dp"
+                 android:layout_height="20dp"
+                 android:layout_marginLeft="25dp"
+                 android:background="@drawable/whatsapp" />
+
+             <ImageView
+                 android:layout_width="20dp"
+                 android:layout_height="20dp"
+                 android:layout_marginLeft="15dp"
+                 android:background="@drawable/qr_code" />
+
+             <LinearLayout
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="1" />
+
+
+             <LinearLayout
+                 android:layout_width="150dp"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="right"
+                 android:background="@drawable/round_corner_gray"
+                 android:orientation="horizontal"
+                 android:padding="5dp">
+
+                 <ImageView
+                     android:layout_width="20dp"
+                     android:layout_height="20dp"
+                     android:background="@drawable/check_location" />
+
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_marginLeft="5dp"
+                     android:text="Check Location" />
+
+             </LinearLayout>
+
+         </LinearLayout>
+
+
+            <View
+               android:layout_width="match_parent"
+               android:layout_height="1dp"
+                android:background="@color/colorGray"
+               android:layout_marginLeft="50dp"
+               android:layout_marginTop="5dp" />
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="25dp"
+               android:gravity="center"
+               android:layout_marginTop="7dp"
+               android:orientation="horizontal">
+
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:text="Contact"
+                   android:textSize="12sp" />
+
+               <LinearLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="10dp"
+                   android:orientation="horizontal">
+
+                   <ImageView
+                       android:layout_width="20dp"
+                       android:layout_height="20dp"
+                       android:background="@drawable/phone" />
+
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center_vertical"
+                       android:layout_marginLeft="5dp"
+                       android:text="9427051418"
+                       android:textColor="@color/com_facebook_blue"
+                       android:textSize="12sp" />
+
+               </LinearLayout>
+
+               <LinearLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="10dp"
+                   android:orientation="horizontal">
+
+                   <ImageView
+                       android:layout_width="20dp"
+                       android:layout_height="20dp"
+                       android:background="@drawable/email" />
+
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center_vertical"
+                       android:layout_marginLeft="5dp"
+                       android:text="kunjanrshah@gmail.com"
+                       android:textSize="12sp" />
+
+               </LinearLayout>
+
+
+           </LinearLayout>
+
+           <View
+               android:layout_width="match_parent"
+               android:layout_height="2dp"
+               android:background="@color/colorGray"
+               android:layout_marginLeft="50dp"
+               android:layout_marginTop="5dp" />
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="25dp"
+               android:gravity="center"
+               android:layout_marginLeft="50dp"
+               android:layout_marginTop="5dp"
+               android:orientation="horizontal">
+
+               <LinearLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:orientation="horizontal">
+
+                   <ImageView
+                       android:layout_width="20dp"
+                       android:layout_height="20dp"
+                       android:background="@drawable/ic_share" />
+
+                   <TextView
+                       android:layout_marginLeft="5dp"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="Share Profile" />
+               </LinearLayout>
+
+               <LinearLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="5dp"
+                   android:layout_weight="1"
+                   android:gravity="center_vertical"
+                   android:orientation="horizontal">
+
+                   <ImageView
+                       android:layout_width="15dp"
+                       android:layout_height="15dp"
+                       android:background="@drawable/export_pdf" />
+
+                   <TextView
+                       android:layout_marginLeft="5dp"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="Export PDF" />
+               </LinearLayout>
+
+
+               <LinearLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="5dp"
+                   android:layout_weight="1"
+                   android:orientation="horizontal">
+
+                   <ImageView
+                       android:layout_width="20dp"
+                       android:layout_height="20dp"
+                       android:background="@drawable/family_tree" />
+
+                   <TextView
+                       android:layout_marginLeft="5dp"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="Family Tree" />
+               </LinearLayout>
+
+
+           </LinearLayout>
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
