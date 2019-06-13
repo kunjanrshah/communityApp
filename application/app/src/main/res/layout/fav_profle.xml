@@ -4,12 +4,8 @@
     android:layout_width="80dp"
     android:layout_height="80dp"
     android:padding="5dp"
-    card_view:cardCornerRadius="0dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    android:layout_margin="5dp"
+    card_view:cardCornerRadius="6dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,5 +32,5 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+
 </androidx.cardview.widget.CardView>

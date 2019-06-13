@@ -5,11 +5,13 @@ import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.multidex.MultiDex;
 
 import com.android.volley.Request;
@@ -50,6 +52,7 @@ public class AppController extends Application {
     public GoogleSignInClient mGoogleSignInClient;
     private ImageLoader mImageLoader;
     LruBitmapCache mLruBitmapCache;
+    public Typeface typeface,typeface_bold;
 
     public static synchronized AppController getInstance() {
         return mInstance;
@@ -59,6 +62,8 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
 
+        typeface = ResourcesCompat.getFont(getApplicationContext(),R.font.montserrat_regular);
+        typeface_bold = ResourcesCompat.getFont(getApplicationContext(),R.font.montserrat_semibold);
 
         final Fabric fabric = new Fabric.Builder(this).kits(new Crashlytics()).debuggable(true).build();
         Fabric.with(fabric);

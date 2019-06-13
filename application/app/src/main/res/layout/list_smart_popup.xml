@@ -16,13 +16,62 @@
         android:padding="10dp"
         android:visibility="gone" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edt_filter_name"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:hint="Filter Name"
+            android:text="Filter 1"
+            android:visibility="gone"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/chk_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Save"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnApply"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/dark_border"
+                android:text="Apply"
+                android:textSize="14sp" />
+
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
     <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/flexbox_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
         android:layout_weight="1"
         app:alignContent="stretch"
         app:alignItems="stretch"
@@ -33,41 +82,39 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="15dp"
                 android:text="Code: "
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="14sp"
+                android:textStyle="bold"
+                 />
 
             <EditText
                 android:id="@+id/edt_family_code"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:background="@null"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textSize="14sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="right|center_vertical">
-
-                <ImageView
-                    android:id="@+id/img_code_close"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/ic_cancel_pop_item"
-                    android:padding="10dp" />
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/img_code_close"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_cancel_pop_item"
+                android:padding="5dp" />
 
 
         </LinearLayout>
@@ -77,36 +124,39 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:visibility="gone"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
-            android:visibility="gone">
+            >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="15dp"
                 android:text="Head: "
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edt_head_name"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="14sp"
                 android:background="@null"
                 android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/img_head_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
-                android:padding="10dp" />
+                android:padding="5dp" />
 
         </LinearLayout>
 
@@ -115,21 +165,22 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal"    >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="15dp"
                 android:text="Member: "
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
+                android:textSize="14sp"
                 android:id="@+id/edt_member"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -138,13 +189,13 @@
 
             <ImageView
                 android:id="@+id/img_member_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
-                android:padding="10dp" />
+                android:padding="5dp" />
 
         </LinearLayout>
 
@@ -153,9 +204,9 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal"     >
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -169,31 +220,33 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="55dp"
                     android:layout_marginRight="-15dp"
-                    android:background="@drawable/border"
+                    android:background="@drawable/round_corner_white"
                     android:text="Surname"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="Surname: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_surname_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
-                android:padding="5dp" />
+                android:padding="5dp"
+
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -201,9 +254,9 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -215,33 +268,38 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="35dp"
+                    android:layout_marginLeft="45dp"
                     android:layout_marginRight="-15dp"
                     android:background="@drawable/border"
                     android:text="Regin/Samaj"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="Samaj: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_samaj_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
-                android:padding="5dp" />
+                android:padding="5dp"
+
+
+
+
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -249,9 +307,10 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:visibility="gone"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
-            android:visibility="gone">
+            >
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -263,33 +322,38 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="45dp"
+                    android:layout_marginLeft="55dp"
                     android:layout_marginRight="-15dp"
                     android:background="@drawable/border"
                     android:text="Gender"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="Gender: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_gender_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
-                android:padding="5dp" />
+                android:padding="5dp"
+
+
+
+
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -297,7 +361,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -311,33 +375,38 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="45dp"
+                    android:layout_marginLeft="55dp"
                     android:layout_marginRight="-15dp"
                     android:background="@drawable/border"
                     android:text="Marital"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="Marital: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_marital_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
-                android:padding="5dp" />
+                android:padding="5dp"
+
+
+
+
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -345,7 +414,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -359,34 +428,38 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="35dp"
+                    android:layout_marginLeft="45dp"
                     android:layout_marginRight="-15dp"
                     android:background="@drawable/border"
                     android:text="Native"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="15dp"
                     android:layout_marginEnd="10dp"
                     android:text="Native: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_native_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
-                android:padding="5dp" />
+                android:padding="5dp"
+
+
+
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -394,7 +467,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -408,30 +481,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="30dp"
                     android:layout_marginRight="-15dp"
                     android:background="@drawable/border"
                     android:text="City"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="City: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_city_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
@@ -442,24 +515,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:visibility="gone"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
-            android:visibility="gone">
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="25dp"
                     android:text="Age: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
@@ -489,12 +564,14 @@
                         android:id="@+id/textMin1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                       android:layout_weight="1"
+                        android:layout_marginLeft="15dp"
                         android:text="Age 0" />
 
                     <TextView
                         android:id="@+id/textMax1"
                         android:layout_width="100dp"
+                        android:layout_marginRight="15dp"
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="Age 100" />
@@ -504,10 +581,10 @@
 
             <ImageView
                 android:id="@+id/img_age_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item" />
 
@@ -518,7 +595,7 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -526,10 +603,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="15dp"
                 android:text="Email: "
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -537,17 +614,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:textSize="14sp"
                 android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/img_email_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
-                android:padding="10dp" />
+                android:padding="5dp" />
 
         </LinearLayout>
 
@@ -556,7 +634,7 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -564,10 +642,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="15dp"
                 android:text="Mobile: "
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -575,17 +653,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:textSize="14sp"
                 android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/img_mobile_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
-                android:padding="10dp" />
+                android:padding="5dp" />
 
         </LinearLayout>
 
@@ -594,7 +673,7 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -602,10 +681,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="15dp"
                 android:text="Local Add: "
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -613,17 +692,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:textSize="14sp"
                 android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/img_local_add_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
-                android:padding="10dp" />
+                android:padding="5dp" />
 
         </LinearLayout>
 
@@ -632,7 +712,7 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -640,10 +720,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="15dp"
                 android:text="Permanent Add: "
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -651,14 +731,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:textSize="14sp"
                 android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/img_permanent_add_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="10dp" />
@@ -670,7 +751,7 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -678,10 +759,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="15dp"
                 android:text="Permanent Add: "
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -689,14 +770,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:textSize="14sp"
                 android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/img_pincode_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="10dp" />
@@ -708,7 +790,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -722,30 +804,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginLeft="35dp"
                     android:layout_marginRight="-10dp"
                     android:background="@drawable/border"
                     android:text="Area"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="Area: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_area_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -755,7 +837,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -769,30 +851,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginLeft="35dp"
                     android:layout_marginRight="-10dp"
                     android:background="@drawable/border"
                     android:text="State"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="State: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_state_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -802,7 +884,7 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -810,10 +892,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="15dp"
                 android:text="Birth Date: "
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -821,17 +903,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:textSize="14sp"
                 android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/img_bdate_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
-                android:padding="10dp" />
+                android:padding="5dp" />
 
         </LinearLayout>
 
@@ -840,7 +923,7 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -848,10 +931,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="15dp"
                 android:text="Marriage Date: "
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -859,17 +942,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:textSize="14sp"
                 android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/img_mdate_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
-                android:padding="10dp" />
+                android:padding="5dp" />
 
         </LinearLayout>
 
@@ -879,7 +963,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -893,30 +977,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="50dp"
                     android:layout_marginRight="-10dp"
                     android:background="@drawable/border"
                     android:text="Mosad"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="Mosad: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_mosad_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -926,7 +1011,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -940,30 +1025,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="60dp"
+                    android:layout_marginLeft="70dp"
                     android:layout_marginRight="-10dp"
                     android:background="@drawable/border"
                     android:text="Education"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="Education: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_education_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -973,7 +1059,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -987,30 +1073,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="40dp"
                     android:layout_marginRight="-10dp"
                     android:background="@drawable/border"
                     android:text="Gotra"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="Gotra: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_gotra_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1020,7 +1107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1034,30 +1121,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="25dp"
                     android:layout_marginRight="-10dp"
                     android:background="@drawable/border"
                     android:text="BloodGroup"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="BG: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_bg_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1065,9 +1153,9 @@
         <LinearLayout
             android:id="@+id/ll_isDonor"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1078,15 +1166,15 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:text="is Donor?"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/img_donor_close"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1094,9 +1182,9 @@
         <LinearLayout
             android:id="@+id/ll_isRented"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1107,15 +1195,15 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:text="is Rented?"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/img_rented_close"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1123,9 +1211,9 @@
         <LinearLayout
             android:id="@+id/ll_isExpired"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1136,15 +1224,15 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:text="is Expired?"
-                android:textSize="16sp"      />
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/img_expired_close"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1154,7 +1242,7 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1162,10 +1250,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="15dp"
                 android:text="Office Add: "
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -1173,14 +1261,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:textSize="14sp"
                 android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/img_oaddress_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="10dp" />
@@ -1192,7 +1281,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1206,30 +1295,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="55dp"
+                    android:layout_marginStart="65dp"
                     android:layout_marginEnd="-10dp"
                     android:background="@drawable/border"
                     android:text="Category"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="Category: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_cat_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1239,7 +1329,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1253,30 +1343,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="85dp"
+                    android:layout_marginStart="95dp"
                     android:layout_marginEnd="-10dp"
                     android:background="@drawable/border"
                     android:text="Sub Category"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="Sub Category:"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_sub_cat_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1286,7 +1377,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1300,30 +1391,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="75dp"
+                    android:layout_marginStart="85dp"
                     android:layout_marginEnd="-10dp"
                     android:background="@drawable/border"
                     android:text="Occupation"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="Occupation: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_occu_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1333,7 +1425,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1347,30 +1439,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="45dp"
+                    android:layout_marginStart="55dp"
                     android:layout_marginEnd="-10dp"
                     android:background="@drawable/border"
                     android:text="Activity"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="Activity: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_activity_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1381,7 +1474,7 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1389,10 +1482,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="15dp"
                 android:text="Birth Time: "
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -1400,14 +1493,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:textSize="14sp"
                 android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/img_btime_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="10dp" />
@@ -1419,7 +1513,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1433,42 +1527,43 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="70dp"
+                    android:layout_marginStart="80dp"
                     android:layout_marginEnd="-10dp"
                     android:background="@drawable/border"
                     android:text="Birth Place"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="15dp"
                     android:text="Birth Place:"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
             <ImageView
                 android:id="@+id/img_bplace_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_isSpect"
-            android:visibility="gone"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
-            android:orientation="horizontal">
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <CheckBox
                 android:id="@+id/chk_is_spect"
@@ -1477,27 +1572,27 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:text="is Spect?"
-                android:textSize="16sp"    />
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/img_spect_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_isShani"
-            android:visibility="gone"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
-            android:orientation="horizontal">
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <CheckBox
                 android:id="@+id/chk_is_shani"
@@ -1506,28 +1601,27 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:text="is Shani?"
-                android:textSize="16sp"
-                />
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/img_shani_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_isMangal"
-            android:visibility="gone"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
-            android:orientation="horizontal">
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <CheckBox
                 android:id="@+id/chk_is_mangal"
@@ -1536,16 +1630,15 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:text="is Mangal?"
-                android:textSize="16sp"
-                 />
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/img_mangal_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1553,48 +1646,48 @@
 
         <LinearLayout
             android:id="@+id/ll_height"
-            android:visibility="gone"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_margin="5dp"
             android:layout_marginStart="5dp"
-            android:background="@drawable/border"
-            android:orientation="horizontal">
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textStyle="bold"
-                android:textSize="16sp"
+                android:layout_marginStart="15dp"
+                android:text="Height:"
                 android:textColor="@color/colorPrimary"
-                android:layout_marginStart="5dp"
-                android:text="Height:" />
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edt_height_meter"
-                android:layout_width="70dp"
-                android:gravity="center"
-                android:background="@null"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textSize="16sp" />
+                android:background="@null"
+                android:gravity="center"
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:text="Meter" />
+                android:text="Meter"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/img_height_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1602,47 +1695,48 @@
         <LinearLayout
             android:id="@+id/ll_weight"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_margin="5dp"
             android:visibility="gone"
-            android:layout_marginStart="5dp"
-            android:background="@drawable/border"
-            android:orientation="horizontal">
+            android:layout_marginStart="10dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal"
+            >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textStyle="bold"
-                android:textSize="16sp"
+                android:text="Weight"
+                android:layout_marginLeft="15dp"
                 android:textColor="@color/colorPrimary"
-                android:layout_marginStart="5dp"
-                android:text="Weight:" />
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edt_weight_kg"
-                android:layout_width="70dp"
-                android:gravity="center"
-                android:background="@null"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textSize="16sp" />
+                android:background="@null"
+                android:gravity="center"
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:text="Kg" />
+                android:text="Kg"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/img_weight_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1653,7 +1747,7 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1661,10 +1755,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="15dp"
                 android:text="Created Date: "
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -1672,17 +1766,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:textSize="14sp"
                 android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/img_created_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
-                android:padding="10dp" />
+                android:padding="5dp" />
 
         </LinearLayout>
 
@@ -1691,7 +1786,7 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1699,10 +1794,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="15dp"
                 android:text="Updated Date: "
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -1710,17 +1805,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:textSize="14sp"
                 android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/img_updated_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
-                android:padding="10dp" />
+                android:padding="5dp" />
 
         </LinearLayout>
 
@@ -1729,7 +1825,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@drawable/border"
+            android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1743,10 +1839,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="25dp"
                     android:text="Percentage: "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
@@ -1777,6 +1873,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:layout_marginStart="15dp"
                         android:text="0%" />
 
                     <TextView
@@ -1791,11 +1888,12 @@
 
             <ImageView
                 android:id="@+id/img_per_close"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="25dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="15dp"
                 android:layout_marginEnd="10dp"
+                android:padding="5dp"
                 android:background="@drawable/ic_cancel_pop_item" />
 
         </LinearLayout>
@@ -1803,48 +1901,5 @@
 
     </com.google.android.flexbox.FlexboxLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edt_filter_name"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:hint="Filter Name"
-            android:text="Filter 1"
-            android:textSize="16sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
-
-            <CheckBox
-                android:id="@+id/chk_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Save Filter"
-                android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/btnApply"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/dark_border"
-                android:text="Apply"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-    </LinearLayout>
 </LinearLayout>

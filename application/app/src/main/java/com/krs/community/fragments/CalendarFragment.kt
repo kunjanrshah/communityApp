@@ -1,6 +1,7 @@
 package com.krs.community.fragments
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.FacebookSdk
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.krs.community.R
+import com.krs.community.app.AppController
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.utils.copyViewImage
@@ -47,7 +49,6 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
                         SimpleDateFormat(getString(R.string.dateFormat)).format(secondDate.getTime())
                 )
                 Log.d(TAG, str)
-                //Toast.makeText(activity,"" + str,Toast.LENGTH_LONG).show();
             }
             txtdate.setText(str)
         }
@@ -58,6 +59,16 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity).supportActionBar!!.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity).supportActionBar!!.show()
+    }
+
     lateinit var recyclerView: RecyclerView
     lateinit var ll_root: LinearLayout
     var tithi: Boolean = true
@@ -65,6 +76,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
     var anniversay: Boolean = true
     var birthday: Boolean = true
     var reminder: Boolean = true
+    var typeface: Typeface = AppController.getInstance().typeface
+    var typeface_bold: Typeface = AppController.getInstance().typeface_bold
 
     var TAG: String = "CalendarFragment"
 
@@ -98,69 +111,12 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
                 ?.replace(com.krs.community.R.id.container_body, detailsFragment, SearchDetailFragment.TAG)
                 ?.addToBackStack(null)
 
-        /* supportsLollipop {
-             val transition = TransitionInflater.from(context)
-                     .inflateTransition(R.transition.shared_element_transition)
-             detailsFragment.sharedElementEnterTransition = transition
-
-             transaction
-                     ?.addSharedElement(view, view.transitionName)
-             //  ?.addSharedElement(details_toolbar_transition_helper, details_toolbar_transition_helper.transitionName)
-         }*/
-
-        return transaction
+         return transaction
     }
 
     private fun startAnimation(view: View, fragmentTransaction: FragmentTransaction?) {
-
-        //   fragmentTransaction!!.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right)
         fragmentTransaction?.commitAllowingStateLoss()
-        //  Bungee.fade(context);
-
-
-        /* AnimatorInflater.loadAnimator(activity, R.animator.main_list_animator).apply {
-             setTarget(lstProfile)
-             //withStartAction { animateToolbarElevation(true) }
-             withEndAction {
-                 lstProfile!!.visibility = View.INVISIBLE
-
-                 val toY = view.resources.getDimensionPixelOffset(R.dimen.details_toolbar_container_height) - view.height / 2f
-
-                 view.animate().y(229f).start()
-                // fragmentTransaction!!.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right)
-                 fragmentTransaction?.commitAllowingStateLoss()
-                 Bungee.fade(context);
-                 *//*activity?.myAppBar!!.animate()
-                        .translationY(-activity!!.myAppBar.height.toFloat())
-                        .alpha(0f)
-                        .setDuration(1000)
-                        .withStartAction {
-                            bottomNavListener?.hideBottomNavigationView()
-                            //details_toolbar_transition_helper.animate().translationY(0f).setDuration(500).start()
-                        }
-                        .withEndAction {
-                            fragmentTransaction!!.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                            fragmentTransaction?.commitAllowingStateLoss()
-                        }
-                        .start()*//*
-            }
-            start()
-        }*/
     }
-
-    /*  private fun animateToolbarElevation(animateOut: Boolean) {
-          var valueFrom = resources.getDimension(R.dimen.toolbar_elevation)
-          var valueTo = 0f
-          if (!animateOut) {
-              valueTo = valueFrom
-              valueFrom = 0f
-          }
-          ValueAnimator.ofFloat(valueFrom, valueTo).setDuration(1000).apply {
-              startDelay = 0
-              addUpdateListener { activity?.card_toolbar!!.cardElevation = it.animatedValue as Float }
-              start()
-          }
-      }*/
 
     private fun createCardAdapter(recyclerView: RecyclerView) {
         val content = ArrayList<String>()
@@ -170,7 +126,11 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
 
         val adapter = object : ParallaxRecyclerAdapter<String>(content) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<String>, i: Int) {
-               // (viewHolder as CalendarViewHolder).tv_title.text = adapter.data[i]
+                (viewHolder as CalendarViewHolder).tv_name.setText("Kunjan Shah")
+                (viewHolder as CalendarViewHolder).txt_area.setText("Maninagar, Ahmedabad")
+                (viewHolder as CalendarViewHolder).txt_email.setText("kunjanrshah@gmail.com")
+                (viewHolder as CalendarViewHolder).txt_mobile.setText("9427051418")
+                (viewHolder as CalendarViewHolder).family_role.setText("Family Head")
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<String>, i: Int): RecyclerView.ViewHolder {
@@ -244,11 +204,30 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         recyclerView.adapter = adapter
     }
 
-    internal class CalendarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-       // var tv_title: TextView
 
+    internal class CalendarViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+        var tv_name: TextView
+        var txt_area: TextView
+        var txt_event: TextView
+        var txt_email: TextView
+        var txt_mobile: TextView
+        var family_role: TextView
         init {
-            //tv_title = itemView.findViewById<View>(com.krs.community.R.id.tv_title) as TextView
+            var typeface: Typeface = AppController.getInstance().typeface
+            var typeface_bold: Typeface = AppController.getInstance().typeface_bold
+            tv_name = v.findViewById<View>(com.krs.community.R.id.tv_name) as TextView
+            tv_name.setTypeface(typeface_bold)
+
+            txt_area = v.findViewById(R.id.txt_area)
+            txt_area.setTypeface(typeface)
+            txt_event = v.findViewById(R.id.txt_event)
+            txt_event.setTypeface(typeface)
+            txt_email = v.findViewById(R.id.txt_email)
+            txt_email.setTypeface(typeface)
+            txt_mobile = v.findViewById(R.id.txt_mobile)
+            txt_mobile.setTypeface(typeface)
+            family_role = v.findViewById(R.id.family_role)
+            family_role.setTypeface(typeface_bold)
         }
     }
 
@@ -257,6 +236,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
 
         init {
             txt_name = v.findViewById(R.id.txt_name)
+            txt_name.setTypeface(typeface_bold)
+
         }
     }
 

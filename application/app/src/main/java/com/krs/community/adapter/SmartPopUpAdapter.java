@@ -556,13 +556,13 @@ public class SmartPopUpAdapter extends BaseAdapter {
             viewHolder.ll_created.setVisibility(View.GONE);
         });
 
-        /*viewHolder.chk_save.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        viewHolder.chk_save.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 viewHolder.edt_filter_name.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.edt_filter_name.setVisibility(View.GONE);
             }
-        });*/
+        });
 
         viewHolder.btnApply.setOnClickListener(v -> {
             mICloseDialog.PopupClose();

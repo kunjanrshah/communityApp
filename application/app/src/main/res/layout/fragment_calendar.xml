@@ -10,7 +10,10 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:visibility="gone"
         android:background="@color/color_mid_light_gray" />
+
+
 
     <FrameLayout
         android:layout_width="match_parent"
