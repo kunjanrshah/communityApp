@@ -43,28 +43,13 @@
                     app:bmb_buttonPlaceEnum="buttonPlace_sc_6_1"
                     app:bmb_inList="true"         />
 
-
-                <TextView
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:gravity="center"
-                    android:text="Birthday"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="12sp" />
-
-
-                <TextView
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:gravity="center"
-                    android:text="Events"
-                    android:textColor="@color/material_blue_500"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="Home"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginTop="-7dp"
+                        android:layout_height="wrap_content" />
 
 
             </LinearLayout>
@@ -123,6 +108,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="5dp"
+                    android:alpha="1"
                     android:layout_marginTop="10dp"
                     android:background="@color/colorGray" />
 
@@ -182,32 +168,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="5dp"
+                    android:alpha="1"
                     android:background="@color/colorGray" />
 
-                <TextView
-                    android:id="@+id/txt_bday"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:text="13-06-1991"
-                    android:textSize="12sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/colorGray" />
-
-                <TextView
-                    android:id="@+id/tv_event"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:orientation="horizontal"
                     android:layout_marginTop="5dp"
-                    android:text="Ahmedabad, in western India, is the largest city in the state of Gujarat. The Sabarmati River runs through its center."
-                    android:textSize="12sp" />
+                    android:layout_marginLeft="5dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/location"
+                        android:layout_height="15dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="12.3KM"
+                        android:layout_marginLeft="3dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
 
 
             </LinearLayout>

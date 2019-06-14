@@ -53,6 +53,8 @@ import androidx.core.content.ContextCompat;
 
 import com.krs.community.R;
 import com.krs.community.app.AppController;
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
+import com.nightonke.boommenu.Util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -100,6 +102,53 @@ public class Utility {
     }
 
 
+    public static TextInsideCircleButton.Builder getTextInsideCircleButtonBuilder() {
+        return new TextInsideCircleButton.Builder()
+                .normalImageRes(getImageResource())
+                .normalTextRes(R.string.text_inside_circle_button_text_normal);
+    }
+
+    public static TextInsideCircleButton.Builder getSquareTextInsideCircleButtonBuilder() {
+        return new TextInsideCircleButton.Builder()
+                .isRound(false)
+                .shadowCornerRadius(Util.dp2px(10))
+                .buttonCornerRadius(Util.dp2px(10))
+                .normalImageRes(getImageResource())
+                .normalTextRes(R.string.text_inside_circle_button_text_normal);
+    }
+
+    public static TextInsideCircleButton.Builder getTextInsideCircleButtonBuilderWithDifferentPieceColor() {
+        return new TextInsideCircleButton.Builder()
+                .normalImageRes(getImageResource())
+                .normalTextRes(R.string.text_inside_circle_button_text_normal)
+                .pieceColor(Color.WHITE);
+    }
+
+    private static int[] imageResources = new int[]{
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher
+    };
+
+    private static int imageResourceIndex = 0;
+
+    static int getImageResource() {
+        if (imageResourceIndex >= imageResources.length) imageResourceIndex = 0;
+        return imageResources[imageResourceIndex++];
+    }
 
     public static boolean isValidMobile(String phone) {
         return android.util.Patterns.PHONE.matcher(phone).matches();

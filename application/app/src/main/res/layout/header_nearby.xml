@@ -7,11 +7,37 @@
     android:orientation="vertical"
     android:paddingBottom="25dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/left_arrow_white"
+            android:layout_height="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:text="Search by Distance"
+            android:textColor="@color/white"
+            android:fontFamily="@font/montserrat_semibold"
+            android:textSize="16sp"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:paddingTop="10dp"
+        android:fontFamily="@font/montserrat_semibold"
         android:text="Enter Distance(Km)"
         android:textColor="@color/white"
         android:textSize="18sp" />
@@ -33,8 +59,9 @@
             android:buttonTint="@color/white"
             android:checked="true"
             android:text="Home"
+            android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+             />
 
         <RadioButton
             android:id="@+id/rbtnOffice"
@@ -43,8 +70,9 @@
             android:layout_weight="1"
             android:buttonTint="@color/white"
             android:text="Office"
+            android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+             />
 
         <RadioButton
             android:id="@+id/rbtnUser"
@@ -53,8 +81,9 @@
             android:layout_weight="1"
             android:buttonTint="@color/white"
             android:text="User"
+            android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+             />
 
         <RadioButton
             android:id="@+id/rbtnAll"
@@ -63,8 +92,9 @@
             android:layout_weight="1"
             android:buttonTint="@color/white"
             android:text="All"
+            android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+             />
 
     </LinearLayout>
 
@@ -82,10 +112,14 @@
             android:background="@drawable/border_dark_primary"
             android:hint="Enter Km"
             android:paddingLeft="10dp"
+            android:text="15 KM"
+            android:fontFamily="@font/montserrat_semibold"
             android:textColor="@color/white"
+            android:gravity="center"
             android:textColorHint="@color/colorPrimary" />
 
         <Button
+            android:fontFamily="@font/montserrat_semibold"
             android:id="@+id/btnSearch"
             android:layout_width="150dp"
             android:layout_height="45dp"

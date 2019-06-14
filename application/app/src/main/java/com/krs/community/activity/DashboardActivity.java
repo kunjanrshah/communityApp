@@ -44,7 +44,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
     private HeaderDetailFragment headerDetailFragment;
     private SearchByDistanceFragment distanceFragment;
     private CalendarFragment calendarFragment;
-    private SpaceNavigationView spaceNavigationView;
+    public static SpaceNavigationView spaceNavigationView;
     private String TAG = DashboardActivity.class.getSimpleName();
 
     @Override
@@ -104,9 +104,9 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
             public void onCentreButtonClick() {
                 Log.d("onCentreButtonClick ", "onCentreButtonClick");
                 Fragment fragment = getSupportFragmentManager().findFragmentByTag(CalendarFragment.class.getSimpleName());
-                if (fragment == null || !fragment.isVisible()) {
+                //if (fragment == null || !fragment.isVisible()) {
                     movetoFragment(ssfragment);
-                }
+                //}
             }
 
             @Override
@@ -168,9 +168,14 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
 
     private void movetoFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
+      /*  int count = fragmentManager.getBackStackEntryCount();
+        for(int i = 0; i < count; ++i) {
+            fragmentManager.popBackStack();
+        }*/
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left);
         fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getSimpleName()).commit();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.krs.community.fragments
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +20,10 @@ import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import java.util.ArrayList
 
 import com.facebook.FacebookSdk.getApplicationContext
+import com.krs.community.app.AppController
+import com.krs.community.utils.Utility
 import com.krs.community.utils.copyViewImage
+import com.nightonke.boommenu.BoomMenuButton
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class SearchByDistanceFragment : Fragment() {
@@ -35,7 +39,7 @@ class SearchByDistanceFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         val mLayoutManager = LinearLayoutManager(getApplicationContext())
         recyclerView.layoutManager = mLayoutManager
-        recyclerView.itemAnimator = DefaultItemAnimator()
+        recyclerView.itemAnimator = DefaultItemAnimator() as RecyclerView.ItemAnimator?
         createCardAdapter(recyclerView)
 
         (activity as AppCompatActivity).supportActionBar!!.title = "Search by Distance"
@@ -43,33 +47,21 @@ class SearchByDistanceFragment : Fragment() {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity).supportActionBar!!.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity).supportActionBar!!.show()
+    }
+
     private fun createCardAdapter(recyclerView: RecyclerView) {
+
         val content = ArrayList<String>()
         for (i in 0..49) {
             content.add("item $i")
-        }
-
-        val adapter = object : ParallaxRecyclerAdapter<String>(content) {
-            override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<String>, i: Int) {
-                (viewHolder as ViewHolder1).tv_title.text = adapter.data[i]
-            }
-
-            override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<String>, i: Int): RecyclerView.ViewHolder {
-                return ViewHolder1(layoutInflater.inflate(R.layout.row_list, viewGroup, false))
-            }
-
-            override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<String>): Int {
-                return content.size
-            }
-        }
-
-        adapter.setOnClickEvent { v, position ->
-            val fragmentTransaction = initFragmentTransaction(v)
-            val copy = view!!.copyViewImage()
-            copy.y += activity!!.myAppBar.height
-            ll_root.addView(copy)
-            view!!.visibility = View.INVISIBLE
-            startAnimation(copy, fragmentTransaction)
         }
 
         val layoutManagerFixed = HeaderLayoutManagerFixed(activity)
@@ -119,6 +111,42 @@ class SearchByDistanceFragment : Fragment() {
 
         }
 
+        val adapter = object : ParallaxRecyclerAdapter<String>(content) {
+            override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<String>, i: Int) {
+                (viewHolder as DistanceViewHolder).tv_name.setText("Kunjan Shah")
+                (viewHolder as DistanceViewHolder).tv_area.setText("Maninagar, Ahmedabad")
+                (viewHolder as DistanceViewHolder).tv_email.setText("kunjanrshah@gmail.com")
+                (viewHolder as DistanceViewHolder).tv_mobile.setText("9427051418")
+                (viewHolder as DistanceViewHolder).tv_role.setText("Family Head")
+
+                (viewHolder as DistanceViewHolder).bmb1.clearBuilders()
+                for (i in 0 until (viewHolder as DistanceViewHolder).bmb1.piecePlaceEnum.pieceNumber()) {
+                    (viewHolder as DistanceViewHolder).bmb1.addBuilder(Utility.getTextInsideCircleButtonBuilder())
+                }
+
+                (viewHolder as DistanceViewHolder).bmb1.setOnClickListener {
+                    (viewHolder as DistanceViewHolder).bmb1.boom()
+                }
+            }
+
+            override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<String>, i: Int): RecyclerView.ViewHolder {
+                return DistanceViewHolder(layoutInflater.inflate(R.layout.list_distance, viewGroup, false))
+            }
+
+            override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<String>): Int {
+                return content.size
+            }
+        }
+
+        adapter.setOnClickEvent { v, position ->
+            val fragmentTransaction = initFragmentTransaction(v)
+            val copy = view!!.copyViewImage()
+            copy.y += activity!!.myAppBar.height
+            ll_root.addView(copy)
+            view!!.visibility = View.INVISIBLE
+            startAnimation(copy, fragmentTransaction)
+        }
+
         layoutManagerFixed.setHeaderIncrementFixer(header)
         adapter.isShouldClipView = false
         adapter.setParallaxHeader(header, recyclerView)
@@ -126,11 +154,30 @@ class SearchByDistanceFragment : Fragment() {
         recyclerView.adapter = adapter
     }
 
-    internal class ViewHolder1(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tv_title: TextView
+    internal class DistanceViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+        var tv_name: TextView
+        var tv_area: TextView
+        var tv_email: TextView
+        var tv_mobile: TextView
+        var tv_role: TextView
+        var bmb1: BoomMenuButton
 
         init {
-            tv_title = itemView.findViewById<View>(R.id.tv_title) as TextView
+            val typeface: Typeface = AppController.getInstance().typeface
+            val typeface_bold: Typeface = AppController.getInstance().typeface_bold
+            tv_name = v.findViewById<View>(com.krs.community.R.id.tv_name) as TextView
+            tv_name.setTypeface(typeface_bold)
+
+            tv_area = v.findViewById(R.id.tv_area)
+            tv_area.setTypeface(typeface)
+            tv_email = v.findViewById(R.id.tv_email)
+            tv_email.setTypeface(typeface)
+            tv_mobile = v.findViewById(R.id.tv_mobile)
+            tv_mobile.setTypeface(typeface)
+            tv_role = v.findViewById(R.id.tv_role)
+            tv_role.setTypeface(typeface_bold)
+
+            bmb1=v.findViewById(R.id.bmb1)
         }
     }
 

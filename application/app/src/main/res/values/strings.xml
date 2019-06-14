@@ -562,5 +562,6 @@ https://play.google.com/store/apps/details?id=com.krs.community
     <string name="dateFormat" translatable="false">EE, dd MMM</string>
     <string name="timeFormat" translatable="false">EE, dd MMM HH:mm</string>
     <string name="period" translatable="false">%1$s – %2$s</string>
+    <string name="text_inside_circle_button_text_normal">Text Inside Circle Button(Normal)</string>
 
 </resources>

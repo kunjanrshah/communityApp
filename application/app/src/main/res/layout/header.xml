@@ -42,15 +42,16 @@
         android:text="Main Details"
         android:textColor="#843f52"
         android:textSize="18sp"
+
         android:textStyle="bold" />
 
     <Button
         android:id="@+id/btn_confirm"
         android:layout_width="150dp"
+        android:layout_marginBottom="80dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="80dp"
         android:background="@drawable/dark_border"
         android:text="Verify"
         android:textColor="@color/colorPrimary"

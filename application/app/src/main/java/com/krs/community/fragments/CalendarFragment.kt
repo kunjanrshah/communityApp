@@ -23,7 +23,9 @@ import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
+import com.krs.community.utils.Utility
 import com.krs.community.utils.copyViewImage
+import com.nightonke.boommenu.BoomMenuButton
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.header_calendar.*
 import ru.slybeaver.slycalendarview.SlyCalendarDialog
@@ -76,8 +78,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
     var anniversay: Boolean = true
     var birthday: Boolean = true
     var reminder: Boolean = true
-    var typeface: Typeface = AppController.getInstance().typeface
-    var typeface_bold: Typeface = AppController.getInstance().typeface_bold
+    var typeface: Typeface? = null
+    var typeface_bold: Typeface? = null
 
     var TAG: String = "CalendarFragment"
 
@@ -86,6 +88,9 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         val root = inflater.inflate(com.krs.community.R.layout.fragment_calendar, container, false)
 
         (activity as AppCompatActivity).supportActionBar!!.title = "Search by Calendar"
+
+        typeface= AppController.getInstance().typeface
+        typeface_bold= AppController.getInstance().typeface_bold
 
         ll_root = root.findViewById<LinearLayout>(com.krs.community.R.id.ll_root)
         recyclerView = root.findViewById<RecyclerView>(com.krs.community.R.id.recycler_view)
@@ -127,10 +132,19 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         val adapter = object : ParallaxRecyclerAdapter<String>(content) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<String>, i: Int) {
                 (viewHolder as CalendarViewHolder).tv_name.setText("Kunjan Shah")
-                (viewHolder as CalendarViewHolder).txt_area.setText("Maninagar, Ahmedabad")
-                (viewHolder as CalendarViewHolder).txt_email.setText("kunjanrshah@gmail.com")
-                (viewHolder as CalendarViewHolder).txt_mobile.setText("9427051418")
-                (viewHolder as CalendarViewHolder).family_role.setText("Family Head")
+                (viewHolder as CalendarViewHolder).tv_area.setText("Maninagar, Ahmedabad")
+                (viewHolder as CalendarViewHolder).tv_email.setText("kunjanrshah@gmail.com")
+                (viewHolder as CalendarViewHolder).tv_mobile.setText("9427051418")
+                (viewHolder as CalendarViewHolder).tv_role.setText("Family Head")
+
+                (viewHolder as CalendarViewHolder).bmb1.clearBuilders()
+                for (i in 0 until (viewHolder as CalendarViewHolder).bmb1.piecePlaceEnum.pieceNumber()) {
+                    (viewHolder as CalendarViewHolder).bmb1.addBuilder(Utility.getTextInsideCircleButtonBuilder())
+                }
+
+                (viewHolder as CalendarViewHolder).bmb1.setOnClickListener {
+                    (viewHolder as CalendarViewHolder).bmb1.boom()
+                }
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<String>, i: Int): RecyclerView.ViewHolder {
@@ -207,27 +221,32 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
 
     internal class CalendarViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var tv_name: TextView
-        var txt_area: TextView
-        var txt_event: TextView
-        var txt_email: TextView
-        var txt_mobile: TextView
-        var family_role: TextView
+        var tv_area: TextView
+        var tv_event: TextView
+        var tv_email: TextView
+        var tv_mobile: TextView
+        var tv_role: TextView
+        var bmb1: BoomMenuButton
+
         init {
-            var typeface: Typeface = AppController.getInstance().typeface
-            var typeface_bold: Typeface = AppController.getInstance().typeface_bold
+            val typeface: Typeface = AppController.getInstance().typeface
+            val typeface_bold: Typeface = AppController.getInstance().typeface_bold
             tv_name = v.findViewById<View>(com.krs.community.R.id.tv_name) as TextView
             tv_name.setTypeface(typeface_bold)
 
-            txt_area = v.findViewById(R.id.txt_area)
-            txt_area.setTypeface(typeface)
-            txt_event = v.findViewById(R.id.txt_event)
-            txt_event.setTypeface(typeface)
-            txt_email = v.findViewById(R.id.txt_email)
-            txt_email.setTypeface(typeface)
-            txt_mobile = v.findViewById(R.id.txt_mobile)
-            txt_mobile.setTypeface(typeface)
-            family_role = v.findViewById(R.id.family_role)
-            family_role.setTypeface(typeface_bold)
+            tv_area = v.findViewById(R.id.tv_area)
+            tv_area.setTypeface(typeface)
+            tv_event = v.findViewById(R.id.tv_event)
+            tv_event.setTypeface(typeface)
+            tv_email = v.findViewById(R.id.tv_email)
+            tv_email.setTypeface(typeface)
+            tv_mobile = v.findViewById(R.id.tv_mobile)
+            tv_mobile.setTypeface(typeface)
+            tv_role = v.findViewById(R.id.tv_role)
+            tv_role.setTypeface(typeface_bold)
+
+            bmb1=v.findViewById(R.id.bmb1)
+
         }
     }
 
