@@ -44,8 +44,8 @@ public class FragmentDrawer extends Fragment {
     public ActionBarDrawerToggle mDrawerToggle;
     public DrawerLayout mDrawerLayout;
     public View containerView;
-    private ImageView img_profile;
-    private TextView txt_name;
+    //private ImageView img_profile;
+   // private TextView txt_name;
     private SharedPreferences mSharedPreferences;
     private FragmentDrawerListener drawerListener;
 
@@ -89,16 +89,17 @@ public class FragmentDrawer extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         RecyclerView recyclerView = layout.findViewById(R.id.drawerList);
 
-        img_profile = layout.findViewById(R.id.img_profile);
-        txt_name = layout.findViewById(R.id.txt_name);
-        try {
+       // img_profile = layout.findViewById(R.id.img_profile);
+       // txt_name = layout.findViewById(R.id.txt_name);
+
+       /* try {
             Glide.with(getActivity()).load(mSharedPreferences.getString(AppConstants.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
         } catch (Exception e) {
             e.getMessage();
-        }
+        }*/
 
         String name = mSharedPreferences.getString(AppConstants.FIRST_NAME, "") + " " + mSharedPreferences.getString(AppConstants.LAST_NAME, "");
-        txt_name.setText(name);
+        //txt_name.setText(name);
         NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(getActivity(), getData());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -126,13 +127,13 @@ public class FragmentDrawer extends Fragment {
 
                 if (AppController.getInstance().isUpdate) {
                     AppController.getInstance().isUpdate = false;
-                    try {
+                   /* try {
                         Glide.with(getActivity()).load(mSharedPreferences.getString(AppConstants.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
                     } catch (Exception e) {
                         e.getMessage();
-                    }
+                    }*/
                     String name = mSharedPreferences.getString(AppConstants.FIRST_NAME, "") + " " + mSharedPreferences.getString(AppConstants.LAST_NAME, "");
-                    txt_name.setText(name);
+                  //  txt_name.setText(name);
                 }
                 //  getActivity().invalidateOptionsMenu();
                 Utility.hideKeyboard(getActivity());

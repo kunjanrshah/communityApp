@@ -49,10 +49,10 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
                 holder.imgDrawer.setBackgroundResource(R.drawable.analytics);
                 break;
             case 3:
-                holder.imgDrawer.setBackgroundResource(R.drawable.vector_drawable_fav_user);
+                holder.imgDrawer.setBackgroundResource(R.drawable.location_white);
                 break;
             case 4:
-                holder.imgDrawer.setBackgroundResource(R.drawable.filter_icon);
+                holder.imgDrawer.setBackgroundResource(R.drawable.settings);
                 break;
             /*case 5:
                 holder.imgDrawer.setBackgroundResource(R.drawable.matrimony);

@@ -105,6 +105,17 @@ class SearchByDistanceFragment : Fragment() {
             rbtnAll.isChecked = true
         }
 
+        val img_cancel = header.findViewById<ImageView>(R.id.img_cancel)
+        img_cancel.setOnClickListener {
+
+            val fragmentManager = activity!!.supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right)
+            fragmentTransaction.replace(R.id.container_body, DashboardFragment())
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
+
         val edtKm = header.findViewById<EditText>(R.id.edtKm)
         val btnSearch = header.findViewById<Button>(R.id.btnSearch)
         btnSearch.setOnClickListener { v ->

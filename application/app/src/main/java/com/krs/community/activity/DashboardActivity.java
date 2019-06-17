@@ -1,12 +1,16 @@
 package com.krs.community.activity;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -26,6 +30,7 @@ import com.krs.community.fragments.DashboardFragment;
 import com.krs.community.fragments.FragmentDrawer;
 import com.krs.community.fragments.HeaderDetailFragment;
 import com.krs.community.fragments.SearchByDistanceFragment;
+import com.krs.community.fragments.SettingFragment;
 import com.krs.community.fragments.SmartFilterFragment;
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
@@ -34,17 +39,14 @@ import com.luseen.spacenavigation.SpaceOnLongClickListener;
 
 import spencerstudios.com.bungeelib.Bungee;
 
+import static android.view.WindowManager.*;
+
 
 public class DashboardActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
 
     public static AppBarLayout myAppBar;
-    private DrawerLayout mDrawerLayout;
-    private DashboardFragment dashboardFragment;
-    private SmartFilterFragment ssfragment;
-    private HeaderDetailFragment headerDetailFragment;
-    private SearchByDistanceFragment distanceFragment;
-    private CalendarFragment calendarFragment;
     public static SpaceNavigationView spaceNavigationView;
+    private DrawerLayout mDrawerLayout;
     private String TAG = DashboardActivity.class.getSimpleName();
 
     @Override
@@ -91,13 +93,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         spaceNavigationView.setCentreButtonIcon(R.drawable.filter_icon);
         spaceNavigationView.animate().translationY(0f).alpha(1f).setDuration(2000).start();
 
-        dashboardFragment = new DashboardFragment();
-        ssfragment = new SmartFilterFragment();
-        headerDetailFragment = new HeaderDetailFragment();
-        distanceFragment = new SearchByDistanceFragment();
-        calendarFragment = new CalendarFragment();
-
-        movetoFragment(dashboardFragment);
+        movetoFragment(new DashboardFragment());
 
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
@@ -105,7 +101,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
                 Log.d("onCentreButtonClick ", "onCentreButtonClick");
                 Fragment fragment = getSupportFragmentManager().findFragmentByTag(CalendarFragment.class.getSimpleName());
                 //if (fragment == null || !fragment.isVisible()) {
-                    movetoFragment(ssfragment);
+                movetoFragment(new SmartFilterFragment());
                 //}
             }
 
@@ -115,12 +111,12 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
                 if (itemIndex == 1) {
                     Fragment fragment = getSupportFragmentManager().findFragmentByTag(CalendarFragment.class.getSimpleName());
                     if (fragment == null || !fragment.isVisible()) {
-                        movetoFragment(calendarFragment);
+                        movetoFragment(new CalendarFragment());
                     }
                 } else if (itemIndex == 0) {
                     Fragment fragment = getSupportFragmentManager().findFragmentByTag(DashboardFragment.class.getSimpleName());
                     if (fragment == null || !fragment.isVisible()) {
-                        movetoFragment(dashboardFragment);
+                        movetoFragment(new DashboardFragment());
                     }
                 }
             }
@@ -131,12 +127,12 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
                 if (itemIndex == 1) {
                     Fragment fragment = getSupportFragmentManager().findFragmentByTag(CalendarFragment.class.getSimpleName());
                     if (fragment == null || !fragment.isVisible()) {
-                        movetoFragment(calendarFragment);
+                        movetoFragment(new CalendarFragment());
                     }
                 } else if (itemIndex == 0) {
                     Fragment fragment = getSupportFragmentManager().findFragmentByTag(DashboardFragment.class.getSimpleName());
                     if (fragment == null || !fragment.isVisible()) {
-                        movetoFragment(dashboardFragment);
+                        movetoFragment(new DashboardFragment());
                     }
                 }
             }
@@ -166,16 +162,22 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
     }
 
 
+    public void HideStatusBar() {
+        this.getWindow().clearFlags(LayoutParams.FLAG_FULLSCREEN);
+    }
+    public void ShowStatusBar() {
+        this.getWindow().clearFlags(LayoutParams.FLAG_FULLSCREEN);
+    }
+
     private void movetoFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-      /*  int count = fragmentManager.getBackStackEntryCount();
-        for(int i = 0; i < count; ++i) {
-            fragmentManager.popBackStack();
-        }*/
+        Fragment oldFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
+        if (oldFragment != null) {
+            fragmentManager.beginTransaction().remove(oldFragment).commit();
+        }
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left);
         fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getSimpleName()).commit();
-        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override
@@ -189,7 +191,11 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
     public void onDrawerItemSelected(View view, int position) {
         Log.d(TAG, "position: " + position);
         if (position == 3) {
-            movetoFragment(distanceFragment);
+            movetoFragment(new SearchByDistanceFragment());
+            Bungee.fade(this);
+        }else if(position == 4)
+        {
+            movetoFragment(new SettingFragment());
             Bungee.fade(this);
         }
     }
@@ -209,7 +215,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         switch (item.getItemId()) {
             case R.id.action_profile:
 
-                movetoFragment(headerDetailFragment);
+                movetoFragment(new HeaderDetailFragment());
 
                 return true;
             case R.id.action_notification:

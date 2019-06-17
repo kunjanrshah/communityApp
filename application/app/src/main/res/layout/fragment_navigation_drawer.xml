@@ -16,6 +16,7 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="0.3"
             android:text="Vastipatrak"
+            android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/mdtp_white"
             android:textSize="18sp" />
 
@@ -51,6 +52,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_weight="0.3"
+            android:fontFamily="@font/montserrat_regular"
             android:text="Choose Language"
             android:textColor="@color/mdtp_white"
             android:textSize="18sp" />
@@ -65,7 +67,6 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-
                 android:layout_gravity="center"
                 android:background="@drawable/choose_lang" />
         </LinearLayout>
@@ -73,11 +74,12 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/bottom_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorGray" />
 
-    <FrameLayout
+   <!-- <FrameLayout
         android:id="@+id/nav_header_container"
         android:layout_width="match_parent"
         android:layout_height="160dp"
@@ -104,10 +106,10 @@
             android:layout_marginBottom="10dp"
             android:gravity="bottom"
             android:text="My Name"
+            android:fontFamily="@font/montserrat_semibold"
             android:textColor="@color/mdtp_white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-    </FrameLayout>
+            android:textSize="20sp"     />
+    </FrameLayout>-->
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -115,7 +117,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_below="@id/nav_header_container"
+        android:layout_below="@id/bottom_line"
         android:layout_marginTop="15dp" />
 
     <View

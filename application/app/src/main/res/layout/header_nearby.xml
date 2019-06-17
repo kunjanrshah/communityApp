@@ -14,12 +14,14 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/img_cancel"
             android:layout_width="20dp"
             android:layout_marginLeft="10dp"
             android:background="@drawable/left_arrow_white"
             android:layout_height="20dp" />
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:text="Search by Distance"
             android:textColor="@color/white"

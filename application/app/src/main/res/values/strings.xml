@@ -88,7 +88,7 @@ Along the top of the screen is a status bar, showing information about the devic
     <string name="nav_item_statistic">Statistics</string>
     <string name="nav_item_events">News &amp; Events</string>
     <string name="nav_item_fa_profie">Search by Distance</string>
-    <string name="nav_item_filters">Filters</string>
+    <string name="nav_item_filters">Settings</string>
 
     <string name="event_url">http://www.superbinstruments.com/directory-dev/admin/events</string>
 
