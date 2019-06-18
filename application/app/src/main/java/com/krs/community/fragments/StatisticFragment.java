@@ -9,15 +9,12 @@ import androidx.fragment.app.Fragment;
 
 import com.krs.community.R;
 
-public class SettingFragment extends Fragment {
+public class StatisticFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
-        View root = inflater.inflate(R.layout.fragmnet_settings, container, false);
+        View root=inflater.inflate(R.layout.fragment_statistics,container,false);
 
         return root;
     }
-
 }

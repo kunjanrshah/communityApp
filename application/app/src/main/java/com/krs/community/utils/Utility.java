@@ -49,7 +49,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.krs.community.R;
 import com.krs.community.app.AppController;
@@ -219,6 +224,34 @@ public class Utility {
     public static boolean hasPermission(@NonNull Context mContext, @NonNull String perm) {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
     }
+
+    public static void movetoFragment(Activity activity,Fragment fragment) {
+        FragmentManager fragmentManager = ((AppCompatActivity)activity).getSupportFragmentManager();
+        Fragment oldFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
+        if (oldFragment != null) {
+            fragmentManager.beginTransaction().remove(oldFragment).commit();
+        }
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left);
+        fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getSimpleName()).commit();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public static void changeStatusbarColor(Activity activity, int color,boolean pIsDark)
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            Window window = ((AppCompatActivity)activity).getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+            window.setStatusBarColor(activity.getResources().getColor(color));
+            int lFlags = activity.getWindow().getDecorView().getSystemUiVisibility();
+            activity.getWindow().getDecorView().setSystemUiVisibility(pIsDark ? (lFlags & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) : (lFlags | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR));
+        }
+    }
+
+
 
 /*
     private static String getDistanceOnRoad(double latitude, double longitude, double prelatitute, double prelongitude) {
@@ -627,14 +660,7 @@ public class Utility {
         return cursor.getInt(0);
     }
 
-    public static void changeStatusBarColor(Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = activity.getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            //window.setStatusBarColor(Color.TRANSPARENT);
-            window.setStatusBarColor(activity.getResources().getColor(R.color.colorPrimary));
-        }
-    }
+
 
     public static void promptSpeechInput(Activity mActivity) {
 

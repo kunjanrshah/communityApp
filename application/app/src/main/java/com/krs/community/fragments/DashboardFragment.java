@@ -4,6 +4,7 @@ package com.krs.community.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -27,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.krs.community.R;
 import com.krs.community.model.FavProfiles;
 import com.krs.community.utils.ExpandableHeightGridView;
+import com.krs.community.utils.Utility;
 import com.smarteist.autoimageslider.DefaultSliderView;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -52,12 +55,13 @@ public class DashboardFragment extends Fragment {
 
     public static final String TAG=DashboardFragment.class.getSimpleName();
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
-
+        Utility.changeStatusbarColor(getActivity(),R.color.colorPrimary,true);
         lstFavProfile = rootView.findViewById(R.id.lstFavProfile);
         gridMenu = rootView.findViewById(R.id.grid_view);
         gridMenu.setExpanded(true);

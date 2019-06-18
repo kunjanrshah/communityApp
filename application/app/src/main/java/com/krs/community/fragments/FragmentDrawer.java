@@ -2,8 +2,10 @@ package com.krs.community.fragments;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -11,14 +13,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,8 +50,6 @@ public class FragmentDrawer extends Fragment {
     public ActionBarDrawerToggle mDrawerToggle;
     public DrawerLayout mDrawerLayout;
     public View containerView;
-    //private ImageView img_profile;
-   // private TextView txt_name;
     private SharedPreferences mSharedPreferences;
     private FragmentDrawerListener drawerListener;
 
@@ -76,7 +80,6 @@ public class FragmentDrawer extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // drawer labels
         titles = Objects.requireNonNull(getActivity()).getResources().getStringArray(R.array.nav_drawer_labels);
     }
 
@@ -88,33 +91,59 @@ public class FragmentDrawer extends Fragment {
         // Inflating view layout
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         RecyclerView recyclerView = layout.findViewById(R.id.drawerList);
+        TextView tv_settings= layout.findViewById(R.id.tv_settings);
+        TextView  tv_help_feedback= layout.findViewById(R.id.tv_help_feedback);
+        TextView tv_contact_us= layout.findViewById(R.id.tv_contact_us);
+        ImageView iv_logout= layout.findViewById(R.id.iv_logout);
+        LinearLayout ll_change_lan= layout.findViewById(R.id.ll_change_lan);
 
-       // img_profile = layout.findViewById(R.id.img_profile);
-       // txt_name = layout.findViewById(R.id.txt_name);
+        iv_logout.setOnClickListener(v -> {
+           getActivity().finish();
+        });
 
-       /* try {
-            Glide.with(getActivity()).load(mSharedPreferences.getString(AppConstants.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
-        } catch (Exception e) {
-            e.getMessage();
-        }*/
+        ll_change_lan.setOnClickListener(v -> {
+            mDrawerLayout.closeDrawers();
+            Utility.movetoFragment(getActivity(),new ChangeLanguageFragment());
+        });
 
-        String name = mSharedPreferences.getString(AppConstants.FIRST_NAME, "") + " " + mSharedPreferences.getString(AppConstants.LAST_NAME, "");
-        //txt_name.setText(name);
+        tv_settings.setOnClickListener(v -> {
+            mDrawerLayout.closeDrawers();
+            Utility.movetoFragment(getActivity(),new SettingFragment());
+        });
+
+        tv_help_feedback.setOnClickListener(v -> {
+            mDrawerLayout.closeDrawers();
+            Utility.movetoFragment(getActivity(),new HelpFragment());
+        });
+
+        tv_contact_us.setOnClickListener(v -> {
+            mDrawerLayout.closeDrawers();
+            Utility.movetoFragment(getActivity(),new ContactUsFragment());
+        });
+
         NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(getActivity(), getData());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         //  recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                drawerListener.onDrawerItemSelected(view, position);
-                mDrawerLayout.closeDrawer(containerView);
-            }
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, (view, position) -> {
+            drawerListener.onDrawerItemSelected(view, position);
+            mDrawerLayout.closeDrawers();
+            //mDrawerLayout.closeDrawer(containerView);
         }));
 
         return layout;
     }
 
+    private void movetoFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        Fragment oldFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
+        if (oldFragment != null) {
+            fragmentManager.beginTransaction().remove(oldFragment).commit();
+        }
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left);
+        fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getSimpleName()).commit();
+    }
 
     public void setUp(int fragmentId, DrawerLayout drawerLayout, @NonNull final Toolbar toolbar) {
         containerView = Objects.requireNonNull(getActivity()).findViewById(fragmentId);

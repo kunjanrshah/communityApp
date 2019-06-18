@@ -86,6 +86,7 @@ Along the top of the screen is a status bar, showing information about the devic
     <string name="nav_item_intro">Tour Video</string>
     <string name="nav_item_logout">Logout</string>
     <string name="nav_item_statistic">Statistics</string>
+    <string name="nav_item_committee" translatable="false">Committee</string>
     <string name="nav_item_events">News &amp; Events</string>
     <string name="nav_item_fa_profie">Search by Distance</string>
     <string name="nav_item_filters">Settings</string>
@@ -230,9 +231,9 @@ Along the top of the screen is a status bar, showing information about the devic
     <string-array name="nav_drawer_labels">
         <item>@string/nav_item_home</item>
         <item>@string/nav_item_statistic</item>
-        <item>@string/nav_item_events</item>
-        <item>@string/nav_item_fa_profie</item>
-        <item>@string/nav_item_filters</item>
+        <item>@string/nav_item_committee</item>
+        <!--<item>@string/nav_item_fa_profie</item>
+        <item>@string/nav_item_filters</item>-->
         <!--<item>@string/nav_item_my_profile</item>
         <item>@string/nav_item_near_by</item>
         <item>@string/nav_item_shared_users</item>
@@ -363,7 +364,7 @@ https://play.google.com/store/apps/details?id=com.krs.community
     <string name="near_by_office">Office</string>
     <string name="near_by_users">User</string>
     <string name="isEnable">isEnable</string>
-    <string name="ver">Ver. 1.15</string>
+    <string name="ver">Ver. 1.15 </string>
     <string name="AGE">AGE</string>
     <string name="search_date_info">search_date_info</string>
     <string name="type">type</string>

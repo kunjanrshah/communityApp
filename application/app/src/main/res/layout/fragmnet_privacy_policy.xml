@@ -39,7 +39,7 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/montserrat_semibold"
                 android:text="Photo"
-                android:textColor="#A8A8A8"
+                android:textColor="@color/light_gray"
                 android:textStyle="bold"
                 android:textSize="16sp" />
 
