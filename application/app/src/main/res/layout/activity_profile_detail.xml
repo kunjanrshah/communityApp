@@ -27,52 +27,117 @@
             android:layout_marginLeft="18dp"
             android:layout_weight="1"
             android:text="My Profile"
+            android:fontFamily="@font/montserrat_semibold"
+            android:textSize="18sp"     />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/user_profile" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="Pratik Soni"
+            android:textColor="@color/colorPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="New Naroda, Ahmedabad"
+            android:textColor="@color/mdtp_transparent_black"
+            android:textSize="18sp"
+             />
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/color_mid_light_gray"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:gravity="center"
         android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/user_profile" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="1"
-            android:text="Pratik Soni"
-            android:textSize="18sp"
-            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:background="@drawable/pencil_edit_button" />
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/view_family" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginRight="20dp"
-                android:text="Edit" />
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="View Family" />
+        </LinearLayout>
 
+        <View
+            android:layout_width="1dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/mdtp_transparent_black" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/user_edit" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="Edit Profile" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/mdtp_transparent_black" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="30dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="Share Location" />
         </LinearLayout>
 
     </LinearLayout>
@@ -82,7 +147,6 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:gravity="center_vertical">
 
@@ -176,22 +240,24 @@
         android:paddingBottom="5dp">
 
         <Button
-            android:layout_width="100dp"
-            android:layout_height="45dp"
-            android:background="@drawable/dark_border"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/border_color_primary"
             android:text="Save"
+            android:fontFamily="@font/montserrat_semibold"
             android:textColor="@color/browser_actions_title_color"
             android:textStyle="bold" />
 
         <Button
-            android:layout_width="120dp"
-            android:layout_height="45dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/border_color_primary"
+            android:background="@drawable/border_bg_color_primary"
             android:padding="10dp"
+            android:fontFamily="@font/montserrat_semibold"
             android:text="Save &amp; Next"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+             />
 
     </LinearLayout>
 

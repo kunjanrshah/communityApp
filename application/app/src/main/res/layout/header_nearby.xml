@@ -126,7 +126,7 @@
             android:layout_width="150dp"
             android:layout_height="45dp"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/border_color_primary"
+            android:background="@drawable/border_bg_color_primary"
             android:text="Search Now"
             android:textColor="@color/white" />
 

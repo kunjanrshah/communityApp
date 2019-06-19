@@ -54,7 +54,7 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="20dp"
-                android:background="@drawable/dark_border"
+                android:background="@drawable/border_color_primary"
                 android:text="Apply"
                 android:textSize="14sp" />
 

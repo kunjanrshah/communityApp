@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="15dp"
+        android:layout_margin="5dp"
         android:background="@drawable/border"
         android:orientation="vertical"
         android:padding="5dp">
@@ -17,23 +17,22 @@
             android:layout_height="wrap_content"
             android:text="Essential"
             android:padding="10dp"
+            android:fontFamily="@font/montserrat_semibold"
             android:textColor="@color/colorPrimary"
-            android:layout_marginTop="3dp"
             android:textSize="18sp"     />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
             android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:orientation="vertical"
-                android:paddingBottom="30dp">
+                android:paddingBottom="15dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -50,11 +49,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Member Code"
-                            android:textStyle="bold" />
+                            android:fontFamily="@font/montserrat_semibold"     />
 
                         <EditText
                             android:layout_width="150dp"
                             android:layout_height="40dp"
+                            android:fontFamily="@font/montserrat_regular"
                             android:background="@drawable/border_color_gray"
                             android:singleLine="true" />
 
@@ -74,6 +74,7 @@
                             style="@style/Widget.AppCompat.DropDownItem.Spinner"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_regular"
                             android:text="Relation" />
                     </RelativeLayout>
 
@@ -83,7 +84,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -96,11 +97,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="First Name"
-                            android:textStyle="bold" />
+                            android:fontFamily="@font/montserrat_semibold" />
 
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
+                            android:fontFamily="@font/montserrat_regular"
                             android:background="@drawable/border_color_gray"
                             android:singleLine="true" />
 
@@ -117,11 +119,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Last Name"
-                            android:textStyle="bold" />
+                            android:fontFamily="@font/montserrat_semibold" />
 
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
+                            android:fontFamily="@font/montserrat_regular"
                             android:background="@drawable/border_color_gray"
                             android:singleLine="true" />
 
@@ -133,7 +136,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -146,11 +149,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Mobile"
-                            android:textStyle="bold" />
+                            android:fontFamily="@font/montserrat_semibold" />
 
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
+                            android:fontFamily="@font/montserrat_regular"
                             android:background="@drawable/border_color_gray"
                             android:singleLine="true" />
 
@@ -159,7 +163,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="5dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -167,11 +171,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Email"
-                            android:textStyle="bold" />
+                            android:fontFamily="@font/montserrat_semibold" />
 
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
+                            android:fontFamily="@font/montserrat_regular"
                             android:background="@drawable/border_color_gray"
                             android:singleLine="true" />
 
@@ -190,7 +195,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="5dp"
                         android:layout_weight="1"
                         android:background="@drawable/border"
                         android:gravity="center"
@@ -200,6 +204,7 @@
                             style="@style/Widget.AppCompat.DropDownItem.Spinner"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_regular"
                             android:text="Gender" />
                     </RelativeLayout>
 
@@ -218,6 +223,7 @@
                             style="@style/Widget.AppCompat.DropDownItem.Spinner"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_regular"
                             android:text="City" />
                     </RelativeLayout>
 
@@ -226,7 +232,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -238,7 +244,6 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
@@ -246,11 +251,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Birth Date"
-                                android:textStyle="bold" />
+                                android:fontFamily="@font/montserrat_semibold" />
 
                             <EditText
                                 android:layout_width="match_parent"
                                 android:layout_height="40dp"
+                                android:fontFamily="@font/montserrat_regular"
                                 android:background="@drawable/border_color_gray"
                                 android:singleLine="true" />
 
@@ -261,6 +267,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:text="DD/MM/YYYY"
+                            android:fontFamily="@font/montserrat_regular"
                             android:textSize="10sp" />
 
                     </LinearLayout>
@@ -270,12 +277,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:layout_marginLeft="5dp"
                         android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
@@ -283,11 +290,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Expire Date"
-                                android:textStyle="bold" />
+                                android:fontFamily="@font/montserrat_semibold" />
 
                             <EditText
                                 android:layout_width="match_parent"
                                 android:layout_height="40dp"
+                                android:fontFamily="@font/montserrat_regular"
                                 android:background="@drawable/border_color_gray"
                                 android:singleLine="true" />
 
@@ -298,6 +306,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:text="DD/MM/YYYY"
+                            android:fontFamily="@font/montserrat_regular"
                             android:textSize="10sp" />
 
                     </LinearLayout>
@@ -306,6 +315,7 @@
                         android:id="@+id/chkExpired"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_regular"
                         android:layout_gravity="center_vertical"
                         android:checked="true" />
 
@@ -314,14 +324,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -329,7 +339,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Local Address"
-                            android:textStyle="bold" />
+                            android:fontFamily="@font/montserrat_semibold" />
 
                         <EditText
                             android:id="@+id/edtAddress"
@@ -340,6 +350,7 @@
                             android:inputType="textMultiLine"
                             android:lines="3"
                             android:maxLines="3"
+                            android:fontFamily="@font/montserrat_regular"
                             android:minLines="3"
                             android:scrollbars="vertical"
                             android:singleLine="true" />
@@ -352,6 +363,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/montserrat_regular"
                         android:text="Rented" />
 
                 </LinearLayout>

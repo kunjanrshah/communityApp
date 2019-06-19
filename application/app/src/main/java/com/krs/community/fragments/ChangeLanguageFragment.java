@@ -25,7 +25,7 @@ public class ChangeLanguageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root=inflater.inflate(R.layout.fragment_change_pass,container,false);
+        View root=inflater.inflate(R.layout.fragment_change_lan,container,false);
 
         ImageView iv_lan_cancel=root.findViewById(R.id.iv_lan_cancel);
         iv_lan_cancel.setOnClickListener(v -> {

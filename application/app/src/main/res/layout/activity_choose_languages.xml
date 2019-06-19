@@ -59,7 +59,7 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/dark_border"
+            android:background="@drawable/border_color_primary"
             android:text="@string/register"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="20sp" />

@@ -27,6 +27,7 @@ import com.krs.community.utils.Utility
 import com.krs.community.utils.copyViewImage
 import com.nightonke.boommenu.BoomMenuButton
 import kotlinx.android.synthetic.main.activity_dashboard.*
+import kotlinx.android.synthetic.main.fragment_search_list_detail.*
 import kotlinx.android.synthetic.main.header_calendar.*
 import ru.slybeaver.slycalendarview.SlyCalendarDialog
 import java.text.SimpleDateFormat
@@ -91,6 +92,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
 
         typeface= AppController.getInstance().typeface
         typeface_bold= AppController.getInstance().typeface_bold
+
 
         ll_root = root.findViewById<LinearLayout>(com.krs.community.R.id.ll_root)
         recyclerView = root.findViewById<RecyclerView>(com.krs.community.R.id.recycler_view)
@@ -173,7 +175,12 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         val txtdate: TextView
         val imgCalendar: ImageView
         val lstCalFliter: RecyclerView
+        var iv_cancel:ImageView
 
+        iv_cancel=header.findViewById(R.id.iv_cancel)
+        iv_cancel.setOnClickListener {
+            Utility.movetoFragment(activity,DashboardFragment())
+        }
         fab = header.run { findViewById(com.krs.community.R.id.fab) }
         txtdate = header.findViewById(com.krs.community.R.id.txtdate)
         imgCalendar = header.findViewById(com.krs.community.R.id.imgCalendar)

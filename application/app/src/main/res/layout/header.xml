@@ -52,7 +52,7 @@
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:background="@drawable/dark_border"
+        android:background="@drawable/border_color_primary"
         android:text="Verify"
         android:textColor="@color/colorPrimary"
          />

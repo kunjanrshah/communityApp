@@ -5,40 +5,42 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.krs.community.R;
 import com.krs.community.utils.Utility;
 
-public class PrivacyPolicyFragment extends Fragment {
+import static com.krs.community.utils.Utility.changeStatusbarColor;
 
+public class ChangePasswordFragment extends Fragment {
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root=inflater.inflate(R.layout.fragment_change_pass,container,false);
 
-
-        View root = inflater.inflate(R.layout.fragmnet_privacy_policy, container, false);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(getActivity(),R.color.colorPrivacyPolictyBG,false);
-        }
-
-        ImageView iv_cancel=root.findViewById(R.id.iv_cancel);
-        iv_cancel.setOnClickListener(v -> {
+        ImageView iv_lan_cancel=root.findViewById(R.id.iv_lan_cancel);
+        iv_lan_cancel.setOnClickListener(v -> {
             Utility.movetoFragment(getActivity(),new SettingFragment());
         });
 
-        return root;
+        changeStatusbarColor(getActivity(),R.color.colorPrivacyPolictyBG,false);
+        return  root;
     }
 
     @Override
     public void onResume() {
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+
     }
 
     @Override
@@ -46,4 +48,5 @@ public class PrivacyPolicyFragment extends Fragment {
         super.onStop();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
+
 }

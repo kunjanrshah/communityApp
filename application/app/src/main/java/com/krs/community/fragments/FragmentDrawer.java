@@ -2,10 +2,9 @@ package com.krs.community.fragments;
 
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -28,9 +26,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.krs.community.R;
+import com.krs.community.activity.LoginActivity;
 import com.krs.community.adapter.NavigationDrawerAdapter;
 import com.krs.community.app.AppController;
 import com.krs.community.model.NavDrawerItem;
@@ -91,34 +88,36 @@ public class FragmentDrawer extends Fragment {
         // Inflating view layout
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         RecyclerView recyclerView = layout.findViewById(R.id.drawerList);
-        TextView tv_settings= layout.findViewById(R.id.tv_settings);
-        TextView  tv_help_feedback= layout.findViewById(R.id.tv_help_feedback);
-        TextView tv_contact_us= layout.findViewById(R.id.tv_contact_us);
-        ImageView iv_logout= layout.findViewById(R.id.iv_logout);
-        LinearLayout ll_change_lan= layout.findViewById(R.id.ll_change_lan);
+        TextView tv_settings = layout.findViewById(R.id.tv_settings);
+        TextView tv_help_feedback = layout.findViewById(R.id.tv_help_feedback);
+        TextView tv_contact_us = layout.findViewById(R.id.tv_contact_us);
+        ImageView iv_logout = layout.findViewById(R.id.iv_logout);
+        LinearLayout ll_change_lan = layout.findViewById(R.id.ll_change_lan);
 
         iv_logout.setOnClickListener(v -> {
-           getActivity().finish();
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().finish();
         });
 
         ll_change_lan.setOnClickListener(v -> {
             mDrawerLayout.closeDrawers();
-            Utility.movetoFragment(getActivity(),new ChangeLanguageFragment());
+            Utility.movetoFragment(getActivity(), new ChangeLanguageFragment());
         });
 
         tv_settings.setOnClickListener(v -> {
             mDrawerLayout.closeDrawers();
-            Utility.movetoFragment(getActivity(),new SettingFragment());
+            Utility.movetoFragment(getActivity(), new SettingFragment());
         });
 
         tv_help_feedback.setOnClickListener(v -> {
             mDrawerLayout.closeDrawers();
-            Utility.movetoFragment(getActivity(),new HelpFragment());
+            Utility.movetoFragment(getActivity(), new HelpFragment());
         });
 
         tv_contact_us.setOnClickListener(v -> {
             mDrawerLayout.closeDrawers();
-            Utility.movetoFragment(getActivity(),new ContactUsFragment());
+            Utility.movetoFragment(getActivity(), new ContactUsFragment());
         });
 
         NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(getActivity(), getData());
@@ -132,17 +131,6 @@ public class FragmentDrawer extends Fragment {
         }));
 
         return layout;
-    }
-
-    private void movetoFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        Fragment oldFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
-        if (oldFragment != null) {
-            fragmentManager.beginTransaction().remove(oldFragment).commit();
-        }
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left);
-        fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getSimpleName()).commit();
     }
 
     public void setUp(int fragmentId, DrawerLayout drawerLayout, @NonNull final Toolbar toolbar) {
@@ -162,7 +150,7 @@ public class FragmentDrawer extends Fragment {
                         e.getMessage();
                     }*/
                     String name = mSharedPreferences.getString(AppConstants.FIRST_NAME, "") + " " + mSharedPreferences.getString(AppConstants.LAST_NAME, "");
-                  //  txt_name.setText(name);
+                    //  txt_name.setText(name);
                 }
                 //  getActivity().invalidateOptionsMenu();
                 Utility.hideKeyboard(getActivity());

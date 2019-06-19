@@ -35,7 +35,7 @@ import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderLayout;
 
-import org.w3c.dom.Text;
+import org.w3c.dom.DocumentFragment;
 
 import java.util.ArrayList;
 
@@ -49,8 +49,8 @@ public class DashboardFragment extends Fragment {
     String[] ProfileNames = {"Rajendra", "Tejas", "Kunjan", "Mukund", "Kushal"};
     int[] ProfileImages = {R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg};
 
-    String[] MenuNames = {"My Profile", "Donation", "Matrimony", "QR Code", "Search","My Profile", "Donation", "Matrimony", "QR Code", "Search","My Profile", "Donation", "Matrimony", "QR Code", "Search"};
-    int[] MenuImages = {R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon,R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon,R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon};
+    String[] MenuNames = {"By QRCode", "By Distance", "Matrimony", "Documents", "Paytm","App Tour", "Admins", "Non Actives", "Add New", "Share Event"};
+    int[] MenuImages = {R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon,R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon};
     private boolean isTouch = false;
 
     public static final String TAG=DashboardFragment.class.getSimpleName();
@@ -91,7 +91,7 @@ public class DashboardFragment extends Fragment {
 
         setSliderViews();
         setFavoriteList();
-        gridMenu.setAdapter(new ImageAdapter(getActivity()));
+        gridMenu.setAdapter(new MenuAdapter(getActivity()));
 
         return rootView;
     }
@@ -165,10 +165,10 @@ public class DashboardFragment extends Fragment {
     }
 
 
-    class ImageAdapter extends BaseAdapter {
+    class MenuAdapter extends BaseAdapter {
         private Context mContext;
 
-        ImageAdapter(Context c) {
+        MenuAdapter(Context c) {
             mContext = c;
         }
 
@@ -205,7 +205,44 @@ public class DashboardFragment extends Fragment {
 
             viewHolder.image.setImageResource(MenuImages[position]);
             viewHolder.textView.setText(MenuNames[position]);
-            Log.d(DashboardFragment.class.getSimpleName(),"position: "+position);
+
+            convertView.setOnClickListener(v -> {
+                switch (position)
+                {
+                   case 0:
+                        Utility.movetoFragment(getActivity(),new ByQRCodeFragment());
+                       break;
+                    case 1:
+                        Utility.movetoFragment(getActivity(),new SearchByDistanceFragment());
+                        break;
+                    case 2:
+                        Utility.movetoFragment(getActivity(),new MatrimonyFragment());
+                        break;
+                    case 3:
+                        Utility.movetoFragment(getActivity(),new DocumentsFragment());
+                        break;
+                    case 4:
+                        Utility.movetoFragment(getActivity(),new PaytmFragment());
+                        break;
+                    case 5:
+                        Utility.movetoFragment(getActivity(),new TourVideoFragment());
+                        break;
+                    case 6:
+                        Utility.movetoFragment(getActivity(),new AdminsFragment());
+                        break;
+                    case 7:
+                        Utility.movetoFragment(getActivity(),new NonActivesFragment());
+                        break;
+                    case 8:
+                        Utility.movetoFragment(getActivity(),new AddNewFragment());
+                        break;
+                    case 9:
+                        Utility.movetoFragment(getActivity(),new ShareEventFragment());
+                        break;
+                }
+
+            });
+
             return convertView;
         }
     }
@@ -233,7 +270,6 @@ public class DashboardFragment extends Fragment {
             holder.titleTextView.setText(list.get(position).getCardName());
             holder.coverImageView.setImageResource(list.get(position).getImageResourceId());
             holder.coverImageView.setTag(list.get(position).getImageResourceId());
-           // holder.likeImageView.setTag(R.drawable.ic_like);
         }
 
         @Override
