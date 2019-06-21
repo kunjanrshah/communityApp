@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.krs.community.R;
+import com.krs.community.activity.DashboardActivity;
 import com.krs.community.utils.Utility;
 
 import static com.krs.community.utils.Utility.changeStatusbarColor;
@@ -40,7 +41,6 @@ public class ChangeLanguageFragment extends Fragment {
     public void onResume() {
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-
     }
 
     @Override

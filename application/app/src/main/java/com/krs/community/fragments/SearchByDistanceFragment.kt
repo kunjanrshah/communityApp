@@ -1,6 +1,7 @@
 package com.krs.community.fragments
 
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -43,7 +44,9 @@ class SearchByDistanceFragment : Fragment() {
         createCardAdapter(recyclerView)
 
         (activity as AppCompatActivity).supportActionBar!!.title = "Search by Distance"
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Utility.changeStatusbarColor(activity, R.color.colorPrimary, true)
+        }
         return root
     }
 
@@ -107,13 +110,7 @@ class SearchByDistanceFragment : Fragment() {
 
         val img_cancel = header.findViewById<ImageView>(R.id.img_cancel)
         img_cancel.setOnClickListener {
-
-            val fragmentManager = activity!!.supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right)
-            fragmentTransaction.replace(R.id.container_body, DashboardFragment())
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commit()
+            Utility.movetoFragment(activity,DashboardFragment())
         }
 
         val edtKm = header.findViewById<EditText>(R.id.edtKm)

@@ -20,6 +20,8 @@ import com.krs.community.fragments.PersonalDetailsFragment;
 import com.krs.community.fragments.ProfessionalDetailsFragment;
 import com.krs.community.utils.Utility;
 
+import spencerstudios.com.bungeelib.Bungee;
+
 public class ProfileDetailActivity extends AppCompatActivity {
 
     ImageView img_close, img_one, img_two, img_three, img_four;
@@ -55,6 +57,7 @@ public class ProfileDetailActivity extends AppCompatActivity {
         img_close = findViewById(R.id.img_close);
         img_close.setOnClickListener(v -> {
             finish();
+            Bungee.fade(this);
         });
 
         viewpager = findViewById(R.id.viewpager);

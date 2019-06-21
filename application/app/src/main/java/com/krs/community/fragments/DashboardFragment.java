@@ -93,6 +93,7 @@ public class DashboardFragment extends Fragment {
         setFavoriteList();
         gridMenu.setAdapter(new MenuAdapter(getActivity()));
 
+        Utility.changeStatusbarColor(getActivity(),R.color.white,false);
         return rootView;
     }
 
@@ -317,44 +318,11 @@ public class DashboardFragment extends Fragment {
 
         TextView titleTextView;
         ImageView coverImageView;
-       /* ImageView likeImageView;
-        ImageView shareImageView;*/
 
         FavProfileViewHolder(View v) {
             super(v);
             titleTextView = v.findViewById(R.id.titleTextView);
             coverImageView = v.findViewById(R.id.coverImageView);
-            /*likeImageView = v.findViewById(R.id.likeImageView);
-            shareImageView = v.findViewById(R.id.shareImageView);
-            likeImageView.setOnClickListener(v12 -> {
-
-                int id = (int) likeImageView.getTag();
-                if (id == R.drawable.ic_like) {
-
-                    likeImageView.setTag(R.drawable.ic_liked);
-                    likeImageView.setImageResource(R.drawable.ic_liked);
-
-                    Toast.makeText(getActivity(), titleTextView.getText() + " added to favourites", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    likeImageView.setTag(R.drawable.ic_like);
-                    likeImageView.setImageResource(R.drawable.ic_like);
-                    Toast.makeText(getActivity(), titleTextView.getText() + " removed from favourites", Toast.LENGTH_SHORT).show();
-                }
-
-            });
-
-            shareImageView.setOnClickListener(v1 -> {
-
-                Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getResources().getResourcePackageName(coverImageView.getId()) + '/' + "drawable" + '/' + getResources().getResourceEntryName((int) coverImageView.getTag()));
-
-                Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
-                shareIntent.setType("image/jpeg");
-                startActivity(Intent.createChooser(shareIntent, "Send"));
-            });*/
         }
     }
-
 }

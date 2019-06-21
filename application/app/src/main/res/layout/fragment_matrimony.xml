@@ -52,6 +52,7 @@
         android:paddingRight="10dp" />
 
     <Button
+        android:id="@+id/btnSearch"
         android:layout_width="250dp"
         android:layout_height="45dp"
         android:layout_gravity="center"
@@ -78,7 +79,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/button_addc"
+                android:id="@+id/btn_skip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/right_arrow"

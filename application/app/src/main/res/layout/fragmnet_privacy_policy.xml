@@ -24,8 +24,9 @@
         android:textSize="30sp" />
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:scrollbars="none">
 
         <LinearLayout
@@ -41,14 +42,14 @@
                 android:fontFamily="@font/montserrat_semibold"
                 android:text="Photo"
                 android:textColor="@color/light_gray"
-                android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/round_corner_white"
                 android:orientation="vertical"
@@ -66,9 +67,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="All Community"
+                        android:textColor="#272727"
                         android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
@@ -99,11 +100,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
-                        android:textSize="18sp"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="My Community"
-                         />
+                        android:textColor="#272727"
+                        android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
 
@@ -134,9 +134,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="Hide"
+                        android:textColor="#272727"
                         android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
@@ -157,14 +157,14 @@
                 android:fontFamily="@font/montserrat_semibold"
                 android:text="Mobile"
                 android:textColor="#A8A8A8"
-                android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/round_corner_white"
                 android:orientation="vertical"
@@ -182,9 +182,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="All Community"
+                        android:textColor="#272727"
                         android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
@@ -215,11 +215,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
-                        android:textSize="18sp"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="My Community"
-                        />
+                        android:textColor="#272727"
+                        android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
 
@@ -250,9 +249,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="Hide"
+                        android:textColor="#272727"
                         android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
@@ -273,14 +272,14 @@
                 android:fontFamily="@font/montserrat_semibold"
                 android:text="Location"
                 android:textColor="#A8A8A8"
-                android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/round_corner_white"
                 android:orientation="vertical"
@@ -298,9 +297,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="All Community"
+                        android:textColor="#272727"
                         android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
@@ -331,11 +330,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
-                        android:textSize="18sp"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="My Community"
-                        />
+                        android:textColor="#272727"
+                        android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
 
@@ -366,9 +364,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="Hide"
+                        android:textColor="#272727"
                         android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
@@ -389,14 +387,14 @@
                 android:fontFamily="@font/montserrat_semibold"
                 android:text="Notification"
                 android:textColor="#A8A8A8"
-                android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/round_corner_white"
                 android:orientation="vertical"
@@ -414,9 +412,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="All Community"
+                        android:textColor="#272727"
                         android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
@@ -447,11 +445,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
-                        android:textSize="18sp"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="My Community"
-                        />
+                        android:textColor="#272727"
+                        android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
 
@@ -482,9 +479,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="Hide"
+                        android:textColor="#272727"
                         android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
@@ -505,14 +502,15 @@
                 android:fontFamily="@font/montserrat_semibold"
                 android:text="Address"
                 android:textColor="#A8A8A8"
-                android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="20dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/round_corner_white"
                 android:orientation="vertical"
@@ -530,9 +528,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="All Community"
+                        android:textColor="#272727"
                         android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
@@ -563,11 +561,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
-                        android:textSize="18sp"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="My Community"
-                        />
+                        android:textColor="#272727"
+                        android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
 
@@ -598,9 +595,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#272727"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="Hide"
+                        android:textColor="#272727"
                         android:textSize="18sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
@@ -615,5 +612,4 @@
 
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

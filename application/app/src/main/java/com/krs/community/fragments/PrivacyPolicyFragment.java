@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.krs.community.R;
+import com.krs.community.activity.DashboardActivity;
 import com.krs.community.utils.Utility;
 
 public class PrivacyPolicyFragment extends Fragment {
@@ -32,6 +31,7 @@ public class PrivacyPolicyFragment extends Fragment {
             Utility.movetoFragment(getActivity(),new SettingFragment());
         });
 
+
         return root;
     }
 
@@ -39,11 +39,13 @@ public class PrivacyPolicyFragment extends Fragment {
     public void onResume() {
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        DashboardActivity.spaceNavigationView.setVisibility(View.GONE);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        DashboardActivity.spaceNavigationView.setVisibility(View.VISIBLE);
     }
 }

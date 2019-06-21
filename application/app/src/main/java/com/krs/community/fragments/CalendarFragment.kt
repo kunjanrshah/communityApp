@@ -2,6 +2,7 @@ package com.krs.community.fragments
 
 import android.graphics.Color
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -98,9 +99,12 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         recyclerView = root.findViewById<RecyclerView>(com.krs.community.R.id.recycler_view)
         recyclerView.setHasFixedSize(true)
         val mLayoutManager = LinearLayoutManager(FacebookSdk.getApplicationContext())
-        recyclerView.layoutManager = mLayoutManager
+        recyclerView.layoutManager = mLayoutManager as RecyclerView.LayoutManager?
         recyclerView.itemAnimator = DefaultItemAnimator()
         createCardAdapter(recyclerView)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Utility.changeStatusbarColor(activity,R.color.colorPrimary,true)
+        }
         return root
     }
 

@@ -82,6 +82,8 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import spencerstudios.com.bungeelib.Bungee;
+
 
 public class Utility {
 
@@ -232,7 +234,7 @@ public class Utility {
             fragmentManager.beginTransaction().remove(oldFragment).commit();
         }
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left);
+        fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getSimpleName()).commit();
     }
 

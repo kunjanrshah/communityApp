@@ -149,7 +149,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:background="@drawable/border_bg_color_primary"
+            android:background="@drawable/round_corner_primary"
             android:text="Update Password"
             android:fontFamily="@font/montserrat_semibold"
             android:textColor="@color/white" />

@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,13 +22,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
 import com.krs.community.utils.Utility;
 
 public class MatrimonyFragment extends Fragment {
-
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -58,6 +58,18 @@ public class MatrimonyFragment extends Fragment {
             return false;
         });
 
+        FloatingActionButton  btn_skip=root.findViewById(R.id.btn_skip);
+
+        btn_skip.setOnClickListener(v -> {
+            Utility.movetoFragment(getActivity(),new MatrimonyListFragment());
+        });
+
+        Button btn_search=root.findViewById(R.id.btnSearch);
+        btn_search.setOnClickListener(v -> {
+            Utility.movetoFragment(getActivity(),new MatrimonyListFragment());
+        });
+
+
         return root;
     }
 
@@ -70,8 +82,32 @@ public class MatrimonyFragment extends Fragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.filter_matrimony);
+        Button btnmale=dialog.findViewById(R.id.btnmale);
+        Button btnfemale=dialog.findViewById(R.id.btnfemale);
 
+        btnmale.setOnClickListener(v -> {
+            btnmale.setBackground(getResources().getDrawable(R.drawable.round_corner_primary));
+            btnmale.setTextColor(getResources().getColor(R.color.white));
+            btnfemale.setBackground(getResources().getDrawable(R.drawable.round_corner_white));
+            btnfemale.setTextColor(getResources().getColor(R.color.black));
+        });
 
+        btnfemale.setOnClickListener(v -> {
+            btnmale.setBackground(getResources().getDrawable(R.drawable.round_corner_white));
+            btnmale.setTextColor(getResources().getColor(R.color.black));
+            btnfemale.setBackground(getResources().getDrawable(R.drawable.round_corner_primary));
+            btnfemale.setTextColor(getResources().getColor(R.color.white));
+        });
+
+        ImageView iv_cancel=dialog.findViewById(R.id.iv_cancel);
+        iv_cancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        Button btn_search=dialog.findViewById(R.id.btn_search);
+        btn_search.setOnClickListener(v -> {
+            Utility.movetoFragment(getActivity(),new MatrimonyListFragment());
+        });
 
         dialog.show();
 

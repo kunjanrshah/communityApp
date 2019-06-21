@@ -8,6 +8,7 @@
     android:padding="15dp">
 
     <ImageView
+        android:id="@+id/iv_cancel"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_gravity="right"
@@ -17,16 +18,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
         android:fontFamily="@font/montserrat_semibold"
         android:text="Name"
         android:textColor="@color/black"
         android:textSize="16sp" />
 
     <EditText
+        android:id="@+id/edt_name"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
+        android:paddingLeft="10dp"
+        android:gravity="center_vertical"
+        android:text="Kunjan"
+        android:singleLine="true"
+        android:nextFocusDown="@id/edt_head_name"
+        android:fontFamily="@font/montserrat_regular"
         android:background="@drawable/round_corner_mid_gray" />
 
     <TextView
@@ -40,9 +47,16 @@
         android:textSize="16sp" />
 
     <EditText
+        android:id="@+id/edt_head_name"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
+        android:paddingLeft="10dp"
+        android:gravity="center_vertical"
+        android:text="Rajendra"
+        android:singleLine="true"
+        android:nextFocusDown="@id/edt_mobile"
+        android:fontFamily="@font/montserrat_regular"
         android:background="@drawable/round_corner_mid_gray" />
 
 
@@ -54,8 +68,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
+            android:layout_weight="0.6"
             android:orientation="vertical">
 
             <TextView
@@ -69,9 +82,17 @@
                 android:textSize="16sp" />
 
             <EditText
+                android:id="@+id/edt_mobile"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
+                android:paddingLeft="5dp"
+                android:gravity="center_vertical"
+                android:text="9427051418"
+                android:singleLine="true"
+                android:inputType="number"
+                android:nextFocusDown="@id/edt_mail"
+                android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/round_corner_mid_gray" />
 
         </LinearLayout>
@@ -80,8 +101,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
+            android:layout_weight="0.4"
+            android:layout_marginLeft="5dp"
             android:orientation="vertical">
 
             <TextView
@@ -95,9 +116,17 @@
                 android:textSize="16sp" />
 
             <EditText
+                android:id="@+id/edt_mail"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
+                android:paddingLeft="5dp"
+                android:gravity="center_vertical"
+                android:text="kunjanrshah@gmail.com"
+                android:singleLine="true"
+                android:inputType="textEmailAddress"
+                android:nextFocusDown="@id/sp_city"
+                android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/round_corner_mid_gray" />
 
         </LinearLayout>
@@ -109,20 +138,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:fontFamily="@font/montserrat_semibold"
             android:text="Gender:"
             android:textSize="18sp" />
 
         <Button
+            android:id="@+id/btnmale"
             android:layout_width="80dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
@@ -133,6 +163,7 @@
             android:text="Male" />
 
         <Button
+            android:id="@+id/btnfemale"
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
@@ -148,10 +179,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal">
 
-        <LinearLayout
+        <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
@@ -169,14 +200,59 @@
                 android:textSize="16sp" />
 
             <EditText
+                android:id="@+id/edt_city"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
+                android:paddingLeft="5dp"
+                android:gravity="center_vertical"
+                android:text="Ahmedabad"
+                android:singleLine="true"
+                android:nextFocusDown="@id/edt_marital"
+                android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/round_corner_mid_gray" />
 
-        </LinearLayout>
+        </LinearLayout>-->
 
-        <LinearLayout
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/border"
+            android:gravity="center"
+            android:layout_marginRight="5dp"
+            android:textAlignment="center">
+
+            <Spinner
+                android:id="@+id/sp_city"
+                style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:nextFocusDown="@id/sp_marital"
+                android:text="City" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/border"
+            android:gravity="center"
+            android:textAlignment="center">
+
+            <Spinner
+                android:id="@+id/sp_marital"
+                style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Marital" />
+        </RelativeLayout>
+
+        <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -194,12 +270,19 @@
                 android:textSize="16sp" />
 
             <EditText
+                android:id="@+id/edt_marital"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
+                android:paddingLeft="5dp"
+                android:gravity="center_vertical"
+                android:text="Married"
+                android:singleLine="true"
+                android:nextFocusDown="@id/btn_search"
+                android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/round_corner_mid_gray" />
 
-        </LinearLayout>
+        </LinearLayout>-->
 
 
     </LinearLayout>
@@ -213,20 +296,56 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="20dp"
         android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_semibold"
-            android:text="Age:"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="Age:"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="0"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="Age:"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="100"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
+
 
         <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
             android:id="@+id/rangeSeekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:bar_color="#C0C0C0"
+            app:bar_color="@color/dark_color_primary"
             app:bar_highlight_color="@color/colorPrimary"
             app:corner_radius="10"
             android:layout_marginTop="5dp"
@@ -240,17 +359,21 @@
             app:right_thumb_color_pressed="@color/colorPrimary" />
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:gravity="center"
+        android:layout_height="match_parent">
     <Button
+        android:id="@+id/btn_search"
         android:layout_width="150dp"
-        android:layout_height="35dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/round_corner_primary"
         android:fontFamily="@font/montserrat_semibold"
-        android:gravity="center"
         android:text="Search"
         android:textColor="@color/white"
         android:textSize="14sp" />
-
+    </RelativeLayout>
 
 </LinearLayout>
