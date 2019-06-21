@@ -77,13 +77,7 @@ public class DashboardFragment extends Fragment {
 
             if (!isTouch) {
                 isTouch = true;
-                Fragment fragment = new SearchListFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right);
-                fragmentTransaction.replace(R.id.container_body, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                Utility.movetoFragment(getActivity(),new SearchListFragment());
             }
 
             return false;

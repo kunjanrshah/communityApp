@@ -89,7 +89,9 @@ public class FragmentDrawer extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         RecyclerView recyclerView = layout.findViewById(R.id.drawerList);
         TextView tv_settings = layout.findViewById(R.id.tv_settings);
-        TextView tv_help_feedback = layout.findViewById(R.id.tv_help_feedback);
+
+
+
         TextView tv_contact_us = layout.findViewById(R.id.tv_contact_us);
         ImageView iv_logout = layout.findViewById(R.id.iv_logout);
         LinearLayout ll_change_lan = layout.findViewById(R.id.ll_change_lan);
@@ -108,11 +110,6 @@ public class FragmentDrawer extends Fragment {
         tv_settings.setOnClickListener(v -> {
             mDrawerLayout.closeDrawers();
             Utility.movetoFragment(getActivity(), new SettingFragment());
-        });
-
-        tv_help_feedback.setOnClickListener(v -> {
-            mDrawerLayout.closeDrawers();
-            Utility.movetoFragment(getActivity(), new HelpFragment());
         });
 
         tv_contact_us.setOnClickListener(v -> {
