@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorPrivacyPolictyBG"
     android:orientation="vertical">
 
     <ImageView
@@ -27,21 +28,22 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="10dp"
-        android:text="You can contact us on various platform and also send your feedback with us" />
+        android:text="You can contact us on various platform and also send your feedback with us"
+        android:textColor="@android:color/darker_gray" />
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1">
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="40dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/shadow_white_round_border"
-            android:elevation="6dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -52,6 +54,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -62,6 +65,7 @@
                     android:textSize="18sp" />
 
                 <TextView
+                    android:id="@+id/tv_link"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -79,90 +83,142 @@
                 android:gravity="bottom|center"
                 android:orientation="horizontal">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:background="@drawable/user_profile" />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:background="@drawable/user_profile" />
+                    android:layout_weight="1">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/user_profile" />
+                    <ImageView
+                        android:id="@+id/img_call"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/phone_call" />
+                </LinearLayout>
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/user_profile" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/user_profile" />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_fb"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/ic_fb" />
+                </LinearLayout>
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/user_profile" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/user_profile" />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_twitter"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/twitter" />
+                </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_whatsapp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/whatsapp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_skype"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/skype" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_linkedin"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/linkedin" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_gmail"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/gmail" />
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_profile"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/user_profile"
-            android:elevation="6dp" />
+            android:elevation="12dp" />
 
     </FrameLayout>
 
-    <EditText
-        android:id="@+id/edt_message"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/border_color_gray2"
-        android:elevation="6dp"
-        android:gravity="top|left"
-        android:paddingTop="10dp"
-        android:hint="Type Your Message..."
-        android:inputType="textMultiLine"
-        android:lines="8"
-        android:maxLines="10"
-        android:minLines="6"
-        android:fontFamily="@font/montserrat_regular"
-        android:paddingLeft="10dp"
-        android:scrollbars="vertical"   />
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
+        <EditText
+            android:id="@+id/edt_message"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/border_color_gray2"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="top|left"
+            android:hint="Type Your Message..."
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:maxLines="10"
+            android:minLines="6"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:scrollbars="vertical"
+            android:textColorHint="@android:color/darker_gray" />
+    </LinearLayout>
 
     <Button
+        android:id="@+id/btn_send"
         android:layout_width="250dp"
-        android:text="Send Now"
+        android:layout_height="45dp"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:fontFamily="@font/montserrat_semibold"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/round_corner_primary"
-        android:layout_height="50dp" />
-
+        android:fontFamily="@font/montserrat_semibold"
+        android:gravity="center"
+        android:text="Send Now"
+        android:textColor="@color/white" />
 
 
 </LinearLayout>
