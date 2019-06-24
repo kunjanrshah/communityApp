@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrivacyPolictyBG"
+    android:background="@color/colorBG"
     android:orientation="vertical">
 
     <ImageView
@@ -20,8 +20,8 @@
         android:layout_marginTop="10dp"
         android:fontFamily="@font/montserrat_semibold"
         android:text="Contact Us"
-        android:textColor="@color/black"
-        android:textSize="30sp" />
+        android:textColor="@color/black1"
+        android:textSize="28sp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -40,9 +40,9 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/card"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="180dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="45dp"
             android:layout_marginRight="10dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
@@ -61,8 +61,8 @@
                     android:layout_marginTop="40dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="Pratik Soni"
-                    android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textColor="@color/black2"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tv_link"
@@ -79,7 +79,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="15dp"
                 android:gravity="bottom|center"
                 android:orientation="horizontal">
 
@@ -91,8 +91,8 @@
 
                     <ImageView
                         android:id="@+id/img_call"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:background="@drawable/phone_call" />
                 </LinearLayout>
 
@@ -103,8 +103,8 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/img_fb"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:background="@drawable/ic_fb" />
                 </LinearLayout>
 
@@ -115,8 +115,8 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/img_twitter"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:background="@drawable/twitter" />
                 </LinearLayout>
 
@@ -127,8 +127,8 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/img_whatsapp"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:background="@drawable/whatsapp" />
                 </LinearLayout>
 
@@ -139,8 +139,8 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/img_skype"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:background="@drawable/skype" />
                 </LinearLayout>
 
@@ -151,8 +151,8 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/img_linkedin"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:background="@drawable/linkedin" />
                 </LinearLayout>
 
@@ -164,8 +164,8 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/img_gmail"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:background="@drawable/gmail" />
                 </LinearLayout>
 
@@ -175,8 +175,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_profile"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/user_profile"
             android:elevation="12dp" />

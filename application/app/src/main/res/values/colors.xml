@@ -17,7 +17,7 @@
     <color name="colorHint">#9e9e9e</color>
 
     <color name="placeholder_bg">#dddddd</color>
-
+    <color name="colorBG">#fcfcfc</color>
     <!--<color name="colorPrimary">#3b5998</color>
     <color name="colorPrimaryDark">#8b9dc3</color>-->
 
@@ -83,6 +83,8 @@
     <color name="bg_gray">#f2f2f2</color>
     <color name="light_gray">#A8A8A8</color>
     <color name="black">#272727</color>
+    <color name="black2">#656565</color>
+    <color name="black1">#555252</color>
     <color name="dark_color_primary">#5e2d3a</color>
 
 </resources>

@@ -104,6 +104,7 @@ public class MatrimonyFragment extends Fragment {
 
         Button btn_search=dialog.findViewById(R.id.btn_search);
         btn_search.setOnClickListener(v -> {
+            dialog.dismiss();
             Utility.movetoFragment(getActivity(),new MatrimonyListFragment());
         });
 

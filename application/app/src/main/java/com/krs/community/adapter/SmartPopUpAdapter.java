@@ -27,6 +27,7 @@ import com.google.android.flexbox.FlexboxLayout;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.krs.community.R;
 import com.krs.community.fragments.SmartFilterResult;
+import com.krs.community.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -566,13 +567,7 @@ public class SmartPopUpAdapter extends BaseAdapter {
 
         viewHolder.btnApply.setOnClickListener(v -> {
             mICloseDialog.PopupClose();
-            Fragment fragment = new SmartFilterResult();
-            FragmentManager fragmentManager = ((AppCompatActivity)_context).getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right);
-            fragmentTransaction.replace(R.id.container_body, fragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+            Utility.movetoFragment((Activity) _context,new SmartFilterResult());
         });
         return convertView;
     }

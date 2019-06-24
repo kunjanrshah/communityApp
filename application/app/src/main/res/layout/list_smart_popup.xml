@@ -82,7 +82,6 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:visibility="gone"
             android:background="@drawable/round_corner_white"
             android:orientation="horizontal">
 
@@ -108,11 +107,11 @@
 
             <ImageView
                 android:id="@+id/img_code_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
 
@@ -150,11 +149,11 @@
 
             <ImageView
                 android:id="@+id/img_head_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
 
@@ -189,11 +188,11 @@
 
             <ImageView
                 android:id="@+id/img_member_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
 
@@ -238,11 +237,11 @@
 
             <ImageView
                 android:id="@+id/img_surname_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp"
 
@@ -288,11 +287,11 @@
 
             <ImageView
                 android:id="@+id/img_samaj_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp"
 
@@ -342,11 +341,11 @@
 
             <ImageView
                 android:id="@+id/img_gender_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp"
 
@@ -395,11 +394,11 @@
 
             <ImageView
                 android:id="@+id/img_marital_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp"
 
@@ -449,11 +448,11 @@
 
             <ImageView
                 android:id="@+id/img_native_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp"
 
@@ -501,11 +500,11 @@
 
             <ImageView
                 android:id="@+id/img_city_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -581,11 +580,11 @@
 
             <ImageView
                 android:id="@+id/img_age_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item" />
 
         </LinearLayout>
@@ -619,11 +618,11 @@
 
             <ImageView
                 android:id="@+id/img_email_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
 
@@ -658,11 +657,11 @@
 
             <ImageView
                 android:id="@+id/img_mobile_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
 
@@ -697,11 +696,11 @@
 
             <ImageView
                 android:id="@+id/img_local_add_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
 
@@ -736,11 +735,11 @@
 
             <ImageView
                 android:id="@+id/img_permanent_add_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="10dp" />
 
@@ -775,11 +774,11 @@
 
             <ImageView
                 android:id="@+id/img_pincode_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="10dp" />
 
@@ -824,10 +823,11 @@
 
             <ImageView
                 android:id="@+id/img_area_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -871,10 +871,11 @@
 
             <ImageView
                 android:id="@+id/img_state_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -908,11 +909,11 @@
 
             <ImageView
                 android:id="@+id/img_bdate_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
 
@@ -947,11 +948,11 @@
 
             <ImageView
                 android:id="@+id/img_mdate_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
 
@@ -997,11 +998,11 @@
 
             <ImageView
                 android:id="@+id/img_mosad_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1045,11 +1046,11 @@
 
             <ImageView
                 android:id="@+id/img_education_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1093,11 +1094,11 @@
 
             <ImageView
                 android:id="@+id/img_gotra_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1141,11 +1142,11 @@
 
             <ImageView
                 android:id="@+id/img_bg_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1170,11 +1171,11 @@
 
             <ImageView
                 android:id="@+id/img_donor_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1199,11 +1200,11 @@
 
             <ImageView
                 android:id="@+id/img_rented_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1228,11 +1229,11 @@
 
             <ImageView
                 android:id="@+id/img_expired_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1266,11 +1267,11 @@
 
             <ImageView
                 android:id="@+id/img_oaddress_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginStart="25dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="10dp" />
 
@@ -1315,11 +1316,11 @@
 
             <ImageView
                 android:id="@+id/img_cat_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1363,11 +1364,11 @@
 
             <ImageView
                 android:id="@+id/img_sub_cat_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1411,11 +1412,11 @@
 
             <ImageView
                 android:id="@+id/img_occu_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1459,11 +1460,11 @@
 
             <ImageView
                 android:id="@+id/img_activity_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1498,11 +1499,11 @@
 
             <ImageView
                 android:id="@+id/img_btime_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="right|center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="10dp" />
 
@@ -1547,11 +1548,11 @@
 
             <ImageView
                 android:id="@+id/img_bplace_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1576,11 +1577,11 @@
 
             <ImageView
                 android:id="@+id/img_spect_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1605,11 +1606,11 @@
 
             <ImageView
                 android:id="@+id/img_shani_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1634,11 +1635,11 @@
 
             <ImageView
                 android:id="@+id/img_mangal_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1683,11 +1684,11 @@
 
             <ImageView
                 android:id="@+id/img_height_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1732,11 +1733,11 @@
 
             <ImageView
                 android:id="@+id/img_weight_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
         </LinearLayout>
@@ -1771,11 +1772,11 @@
 
             <ImageView
                 android:id="@+id/img_created_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="right|center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
 
@@ -1810,11 +1811,11 @@
 
             <ImageView
                 android:id="@+id/img_updated_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="right|center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
 
@@ -1888,11 +1889,11 @@
 
             <ImageView
                 android:id="@+id/img_per_close"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="right|center_vertical"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_gravity="right|center_vertical"
                 android:padding="5dp"
                 android:background="@drawable/ic_cancel_pop_item" />
 
