@@ -151,7 +151,9 @@ public class LoginActivity extends Activity {
             mEditor.putString(AppConstants.DEVICE_TOKEN, newToken);
             mEditor.apply();
         });
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Utility.changeStatusbarColor(this,R.color.colorBG,false);
+        }
         btn_mobile.setOnClickListener(v -> {
             isSelected = Mobile;
             rl_spinner.setVisibility(View.VISIBLE);

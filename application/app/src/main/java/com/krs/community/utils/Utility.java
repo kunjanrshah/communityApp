@@ -242,8 +242,7 @@ public class Utility {
     public static void changeStatusbarColor(Activity activity, int color,boolean pIsDark)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            Window window = ((AppCompatActivity)activity).getWindow();
+            Window window = activity.getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
@@ -252,7 +251,6 @@ public class Utility {
             activity.getWindow().getDecorView().setSystemUiVisibility(pIsDark ? (lFlags & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) : (lFlags | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR));
         }
     }
-
 
 
 /*

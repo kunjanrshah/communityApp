@@ -33,7 +33,9 @@ public class ChooseLanguageActivity extends Activity {
         String[] languages = Objects.requireNonNull(this).getResources().getStringArray(R.array.languages);
         ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, languages);
         splanguage.setAdapter(aa);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Utility.changeStatusbarColor(this,R.color.white,false);
+        }
         btn_login.setOnClickListener(v -> {
             if (!is_login) {
                 is_login = true;

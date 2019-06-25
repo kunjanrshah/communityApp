@@ -87,7 +87,9 @@ public class RegisterActivty extends Activity {
         if (mBundle != null) {
             add_new = mBundle.getString(AppConstants.SCREEN);
         }
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Utility.changeStatusbarColor(this,R.color.white,false);
+        }
         MemoryAllocation();
         runOnUiThread(() -> setCityListAdapter());
 
@@ -218,6 +220,10 @@ public class RegisterActivty extends Activity {
                 return v;
             }
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Utility.changeStatusbarColor(this,R.color.colorBG,false);
+        }
 
     }
 
