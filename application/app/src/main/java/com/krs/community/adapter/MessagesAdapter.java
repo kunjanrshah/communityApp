@@ -1,7 +1,6 @@
 package com.krs.community.adapter;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.HapticFeedbackConstants;
@@ -14,14 +13,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.krs.community.R;
-import com.krs.community.fragments.NonActivesFragment;
 import com.krs.community.model.Message;
 import com.krs.community.utils.FlipAnimator;
 import com.krs.community.utils.Utility;
@@ -102,6 +99,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
 
         String name="Kunjan Shah";
         holder.tv_name.setText(name);
+        holder.boomMenuButton.setVisibility(View.INVISIBLE);
         holder.boomMenuButton.clearBuilders();
 
         for(int i=0; i<holder.boomMenuButton.getPiecePlaceEnum().pieceNumber(); i++)

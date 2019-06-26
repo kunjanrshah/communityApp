@@ -23,7 +23,7 @@ public class PrivacyPolicyFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragmnet_privacy_policy, container, false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(getActivity(),R.color.colorPrivacyPolictyBG,false);
+            Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
         }
 
         ImageView iv_cancel=root.findViewById(R.id.iv_cancel);

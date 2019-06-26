@@ -58,6 +58,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         setContentView(R.layout.activity_dashboard);
         Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
         mToolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Home");

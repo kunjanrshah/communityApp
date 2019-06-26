@@ -2,6 +2,7 @@ package com.krs.community.fragments;
 
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -9,12 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -24,6 +25,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.krs.community.R;
 import com.krs.community.adapter.MessagesAdapter;
 import com.krs.community.model.Message;
+import com.krs.community.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,7 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -46,7 +49,6 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
         FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.fab);
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show());
 
-
         recyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -55,7 +57,6 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(mAdapter);
 
         actionModeCallback = new ActionModeCallback();
@@ -191,6 +192,13 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            ViewGroup   decorView = (ViewGroup) getActivity().getWindow().getDecorView().findViewById(R.id.action_mode_bar);
+            decorView.setBackgroundColor(getResources().getColor(R.color.mdtp_date_picker_month_day));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Utility.changeStatusbarColor(getActivity(),R.color.mdtp_date_picker_month_day,true);
+            }
+
             return false;
         }
 
@@ -214,6 +222,9 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
             swipeRefreshLayout.setEnabled(true);
             actionMode = null;
             ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
+            }
             recyclerView.post(new Runnable() {
                 @Override
                 public void run() {
