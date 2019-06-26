@@ -78,6 +78,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import spencerstudios.com.bungeelib.Bungee;
+
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
 import static com.krs.community.utils.AppConstants.INIT_TIMEOUT;
@@ -324,7 +326,7 @@ public class LoginActivity extends Activity {
             Intent mIntent = new Intent(LoginActivity.this, RegisterActivty.class);
             startActivity(mIntent);
             finish();
-            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+            Bungee.fade(this);
         });
 
         img_back.setOnClickListener(v -> {
@@ -332,7 +334,7 @@ public class LoginActivity extends Activity {
             mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(mIntent);
             finish();
-            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+            Bungee.fade(this);
         });
 
 

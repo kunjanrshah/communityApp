@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -130,7 +131,9 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
 
         if (count == 0) {
             actionMode.finish();
+            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         } else {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
             actionMode.setTitle(String.valueOf(count));
             actionMode.invalidate();
         }
@@ -210,6 +213,7 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
             mAdapter.clearSelections();
             swipeRefreshLayout.setEnabled(true);
             actionMode = null;
+            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
             recyclerView.post(new Runnable() {
                 @Override
                 public void run() {

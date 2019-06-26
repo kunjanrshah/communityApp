@@ -236,6 +236,7 @@ public class Utility {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getSimpleName()).commit();
+        Bungee.fade(activity);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

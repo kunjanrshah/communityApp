@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import spencerstudios.com.bungeelib.Bungee;
+
 
 public class FragmentDrawer extends Fragment {
 
@@ -100,6 +102,7 @@ public class FragmentDrawer extends Fragment {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
             getActivity().finish();
+            Bungee.fade(getActivity());
         });
 
         ll_change_lan.setOnClickListener(v -> {

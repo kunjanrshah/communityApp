@@ -54,6 +54,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import spencerstudios.com.bungeelib.Bungee;
 
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
@@ -98,7 +99,7 @@ public class RegisterActivty extends Activity {
             mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(mIntent);
             finish();
-            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+            Bungee.fade(this);
         });
 
         img_back.setOnClickListener(v -> {
@@ -106,7 +107,7 @@ public class RegisterActivty extends Activity {
             mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(mIntent);
             finish();
-            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+            Bungee.fade(this);
         });
 
         btn_register.setOnClickListener(v -> RegistrationWS());

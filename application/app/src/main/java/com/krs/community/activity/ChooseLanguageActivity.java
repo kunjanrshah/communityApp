@@ -17,6 +17,8 @@ import com.krs.community.utils.Utility;
 
 import java.util.Objects;
 
+import spencerstudios.com.bungeelib.Bungee;
+
 public class ChooseLanguageActivity extends Activity {
 
     private Button btn_login, btn_register;
@@ -41,6 +43,7 @@ public class ChooseLanguageActivity extends Activity {
                 is_login = true;
                 Intent mIntent = new Intent(ChooseLanguageActivity.this, LoginActivity.class);
                 startActivity(mIntent);
+                Bungee.fade(this);
             }
         });
 
@@ -49,6 +52,7 @@ public class ChooseLanguageActivity extends Activity {
                 is_register = true;
                 Intent mIntent = new Intent(ChooseLanguageActivity.this, RegisterActivty.class);
                 startActivity(mIntent);
+                Bungee.fade(this);
             }
         });
 
