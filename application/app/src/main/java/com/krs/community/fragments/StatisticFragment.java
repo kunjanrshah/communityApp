@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
 import com.krs.community.utils.Utility;
+import com.nightonke.boommenu.Util;
+import com.wdullaer.materialdatetimepicker.Utils;
 
 public class StatisticFragment extends Fragment {
 
@@ -22,6 +25,9 @@ public class StatisticFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(),R.color.bg_gray,false);
         }
+
+        ImageView iv_cancel=root.findViewById(R.id.iv_cancel);
+        iv_cancel.setOnClickListener(v -> Utility.movetoFragment(getActivity(),new DashboardFragment()));
 
         return root;
     }
