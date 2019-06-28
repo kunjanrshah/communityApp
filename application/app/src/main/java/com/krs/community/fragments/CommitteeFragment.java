@@ -5,12 +5,10 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,22 +31,14 @@ public class CommitteeFragment extends Fragment {
         View root=inflater.inflate(R.layout.fragment_committee,container,false);
 
         RecyclerView listCommittee=root.findViewById(R.id.listCommittee);
+        ImageView filter=root.findViewById(R.id.filter);
+        filter.setOnClickListener(v -> {
+            openFilter();
+        });
 
-        EditText edtSearch=root.findViewById(R.id.edtSearch);
         ImageView iv_cancel=root.findViewById(R.id.iv_cancel);
         iv_cancel.setOnClickListener(v -> {
             Utility.movetoFragment(getActivity(),new DashboardFragment());
-        });
-
-        edtSearch.setOnTouchListener((v, event) -> {
-            final int DRAWABLE_RIGHT = 2;
-            if(event.getAction() == MotionEvent.ACTION_UP) {
-                if(event.getRawX() >= (edtSearch.getRight() - edtSearch.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                    openFilter();
-                    return true;
-                }
-            }
-            return false;
         });
 
         ListCommitteeAdapter mAdapter=new ListCommitteeAdapter();
@@ -69,8 +59,6 @@ public class CommitteeFragment extends Fragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.filter_committee);
-
-
 
         ImageView iv_cancel=dialog.findViewById(R.id.iv_cancel);
         iv_cancel.setOnClickListener(v -> {

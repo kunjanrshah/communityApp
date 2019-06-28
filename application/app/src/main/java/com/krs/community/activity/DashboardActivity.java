@@ -1,16 +1,12 @@
 package com.krs.community.activity;
 
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -20,8 +16,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.krs.community.R;
@@ -30,8 +24,6 @@ import com.krs.community.fragments.CommitteeFragment;
 import com.krs.community.fragments.DashboardFragment;
 import com.krs.community.fragments.FragmentDrawer;
 import com.krs.community.fragments.HeaderDetailFragment;
-import com.krs.community.fragments.SearchByDistanceFragment;
-import com.krs.community.fragments.SettingFragment;
 import com.krs.community.fragments.SmartFilterFragment;
 import com.krs.community.fragments.StatisticFragment;
 import com.luseen.spacenavigation.SpaceItem;
@@ -39,9 +31,6 @@ import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.luseen.spacenavigation.SpaceOnLongClickListener;
 
-import spencerstudios.com.bungeelib.Bungee;
-
-import static android.view.WindowManager.*;
 import static com.krs.community.utils.Utility.movetoFragment;
 
 

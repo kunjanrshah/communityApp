@@ -192,12 +192,12 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            ViewGroup   decorView = (ViewGroup) getActivity().getWindow().getDecorView().findViewById(R.id.action_mode_bar);
-            decorView.setBackgroundColor(getResources().getColor(R.color.mdtp_date_picker_month_day));
+           /* ViewGroup   decorView = (ViewGroup) getActivity().getWindow().getDecorView().findViewById(R.id.action_mode_bar);
+            decorView.setBackgroundColor(getResources().getColor(R.color.colorBG));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Utility.changeStatusbarColor(getActivity(),R.color.mdtp_date_picker_month_day,true);
-            }
+                Utility.changeStatusbarColor(getActivity(),R.color.colorBG,true);
+            }*/
 
             return false;
         }

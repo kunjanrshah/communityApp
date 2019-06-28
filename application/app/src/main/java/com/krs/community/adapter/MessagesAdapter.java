@@ -99,7 +99,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
 
         String name="Kunjan Shah";
         holder.tv_name.setText(name);
-        holder.boomMenuButton.setVisibility(View.INVISIBLE);
         holder.boomMenuButton.clearBuilders();
 
         for(int i=0; i<holder.boomMenuButton.getPiecePlaceEnum().pieceNumber(); i++)
