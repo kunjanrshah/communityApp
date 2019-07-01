@@ -118,9 +118,9 @@ class SearchListFragment : Fragment(), View.OnClickListener {
         positions[2] = toY
 
         val adapterPosition = lstProfile!!.getChildAdapterPosition(view)
-        val detailsFragment = SearchDetailFragment.newInstance(positions, adapterPosition)
+        val detailsFragment = HeaderDetailFragment.newInstance(positions, adapterPosition)
         val transaction = fragmentManager?.beginTransaction()
-                ?.replace(R.id.container_body, detailsFragment, SearchDetailFragment.TAG)
+                ?.replace(R.id.container_body, detailsFragment, HeaderDetailFragment.TAG)
                 ?.addToBackStack(null)
 
         supportsLollipop {

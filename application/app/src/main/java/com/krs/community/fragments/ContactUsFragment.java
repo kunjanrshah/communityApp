@@ -40,7 +40,7 @@ public class ContactUsFragment extends Fragment {
         card.setBackgroundResource(R.drawable.shadow_white_round_border);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(getActivity(),R.color.gray,false);
+            Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
         }
 
         ImageView iv_profile=layout.findViewById(R.id.iv_profile);

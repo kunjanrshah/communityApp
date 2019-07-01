@@ -28,7 +28,6 @@ import com.krs.community.utils.Utility
 import com.krs.community.utils.copyViewImage
 import com.nightonke.boommenu.BoomMenuButton
 import kotlinx.android.synthetic.main.activity_dashboard.*
-import kotlinx.android.synthetic.main.fragment_search_list_detail.*
 import kotlinx.android.synthetic.main.header_calendar.*
 import ru.slybeaver.slycalendarview.SlyCalendarDialog
 import java.text.SimpleDateFormat
@@ -80,8 +79,6 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
     var anniversay: Boolean = true
     var birthday: Boolean = true
     var reminder: Boolean = true
-    var typeface: Typeface? = null
-    var typeface_bold: Typeface? = null
 
     var TAG: String = "CalendarFragment"
 
@@ -90,10 +87,6 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         val root = inflater.inflate(com.krs.community.R.layout.fragment_calendar, container, false)
 
         (activity as AppCompatActivity).supportActionBar!!.title = "Search by Calendar"
-
-        typeface= AppController.getInstance().typeface
-        typeface_bold= AppController.getInstance().typeface_bold
-
 
         ll_root = root.findViewById<LinearLayout>(com.krs.community.R.id.ll_root)
         recyclerView = root.findViewById<RecyclerView>(com.krs.community.R.id.recycler_view)
@@ -117,9 +110,12 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         positions[2] = toY
 
         val adapterPosition = recyclerView.getChildAdapterPosition(view)
-        val detailsFragment = SearchbyDetailFragment.newInstance(positions, adapterPosition)
+        val detailsFragment = HeaderDetailFragment.newInstance(positions, adapterPosition)
+
+        //Utility.movetoFragment(activity,HeaderDetailFragment())
+
         val transaction = fragmentManager?.beginTransaction()
-                ?.replace(com.krs.community.R.id.container_body, detailsFragment, SearchDetailFragment.TAG)
+                ?.replace(com.krs.community.R.id.container_body, detailsFragment, HeaderDetailFragment.TAG)
                 ?.addToBackStack(null)
 
          return transaction
@@ -138,23 +134,23 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         val adapter = object : ParallaxRecyclerAdapter<String>(content) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<String>, i: Int) {
                 (viewHolder as CalendarViewHolder).tv_name.setText("Kunjan Shah")
-                (viewHolder as CalendarViewHolder).tv_area.setText("Maninagar, Ahmedabad")
-                (viewHolder as CalendarViewHolder).tv_email.setText("kunjanrshah@gmail.com")
-                (viewHolder as CalendarViewHolder).tv_mobile.setText("9427051418")
-                (viewHolder as CalendarViewHolder).tv_role.setText("Family Head")
+                viewHolder.tv_area.setText("Maninagar, Ahmedabad")
+                viewHolder.tv_email.setText("kunjanrshah@gmail.com")
+                viewHolder.tv_mobile.setText("9427051418")
+                viewHolder.tv_role.setText("Family Head")
 
-                (viewHolder as CalendarViewHolder).bmb1.clearBuilders()
-                for (i in 0 until (viewHolder as CalendarViewHolder).bmb1.piecePlaceEnum.pieceNumber()) {
-                    (viewHolder as CalendarViewHolder).bmb1.addBuilder(Utility.getTextInsideCircleButtonBuilder())
+                viewHolder.bmb1.clearBuilders()
+                for (i in 0 until viewHolder.bmb1.piecePlaceEnum.pieceNumber()) {
+                    viewHolder.bmb1.addBuilder(Utility.getTextInsideCircleButtonBuilder())
                 }
 
-                (viewHolder as CalendarViewHolder).bmb1.setOnClickListener {
-                    (viewHolder as CalendarViewHolder).bmb1.boom()
+                viewHolder.bmb1.setOnClickListener {
+                    viewHolder.bmb1.boom()
                 }
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<String>, i: Int): RecyclerView.ViewHolder {
-                return CalendarViewHolder(layoutInflater.inflate(com.krs.community.R.layout.row_list_new, viewGroup, false))
+                return CalendarViewHolder(layoutInflater.inflate(com.krs.community.R.layout.row_list_calendar, viewGroup, false))
             }
 
             override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<String>): Int {
@@ -266,8 +262,6 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
 
         init {
             txt_name = v.findViewById(R.id.txt_name)
-            txt_name.setTypeface(typeface_bold)
-
         }
     }
 

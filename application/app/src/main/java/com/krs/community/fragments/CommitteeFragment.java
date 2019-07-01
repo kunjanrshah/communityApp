@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,7 +31,38 @@ public class CommitteeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root=inflater.inflate(R.layout.fragment_committee,container,false);
 
-        RecyclerView listCommittee=root.findViewById(R.id.listCommittee);
+        TextView txt_region=root.findViewById(R.id.txt_region);
+        TextView txt_duration=root.findViewById(R.id.txt_duration);
+        TextView txt_committee=root.findViewById(R.id.txt_committee);
+        TextView txt_designation=root.findViewById(R.id.txt_designation);
+
+        LinearLayout ll_region=root.findViewById(R.id.ll_region);
+        LinearLayout ll_duration=root.findViewById(R.id.ll_duration);
+        LinearLayout ll_committee=root.findViewById(R.id.ll_committee);
+        LinearLayout ll_designation=root.findViewById(R.id.ll_designation);
+
+        ImageView img_region_close=root.findViewById(R.id.img_region_close);
+        img_region_close.setOnClickListener(v -> {
+            ll_region.setVisibility(View.GONE);
+        });
+
+        ImageView img_duration_close=root.findViewById(R.id.img_duration_close);
+        img_duration_close.setOnClickListener(v -> {
+            ll_duration.setVisibility(View.GONE);
+        });
+
+        ImageView img_committee_close=root.findViewById(R.id.img_committee_close);
+        img_committee_close.setOnClickListener(v -> {
+            ll_committee.setVisibility(View.GONE);
+        });
+
+        ImageView img_designation_close=root.findViewById(R.id.img_designation_close);
+        img_designation_close.setOnClickListener(v -> {
+            ll_designation.setVisibility(View.GONE);
+        });
+
+
+
         ImageView filter=root.findViewById(R.id.filter);
         filter.setOnClickListener(v -> {
             openFilter();
@@ -43,6 +75,7 @@ public class CommitteeFragment extends Fragment {
 
         ListCommitteeAdapter mAdapter=new ListCommitteeAdapter();
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView listCommittee=root.findViewById(R.id.listCommittee);
         listCommittee.setLayoutManager(MyLayoutManager);
         listCommittee.setItemAnimator(new DefaultItemAnimator());
         listCommittee.setAdapter(mAdapter);

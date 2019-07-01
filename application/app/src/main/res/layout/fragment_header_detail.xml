@@ -13,13 +13,13 @@
         tools:ignore="UselessParent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+            android:id="@+id/rv_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/row_list_calendar" />
+            tools:listitem="@layout/row_list_header" />
 
     </FrameLayout>
 </LinearLayout>

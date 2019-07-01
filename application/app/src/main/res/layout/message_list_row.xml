@@ -98,24 +98,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:gravity="center"
-                    android:text="City"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="12sp" />
-
-
-                <TextView
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="5dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:gravity="center"
                     android:text="Address"
                     android:textColor="@color/material_blue_500"
                     android:textSize="12sp" />
-
 
             </LinearLayout>
 
@@ -231,20 +219,6 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="5dp"
-                    android:background="@color/colorGray" />
-
-                <TextView
-                    android:id="@+id/txt_bday"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Ahmedabad"
-                    android:textSize="12sp" />
 
                 <View
                     android:layout_width="match_parent"
