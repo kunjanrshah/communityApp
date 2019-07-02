@@ -4,6 +4,7 @@ package com.krs.community.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.krs.community.R;
+import com.krs.community.activity.RegisterActivty;
 import com.krs.community.model.FavProfiles;
 import com.krs.community.utils.ExpandableHeightGridView;
 import com.krs.community.utils.Utility;
@@ -74,7 +76,6 @@ public class DashboardFragment extends Fragment {
         edt_search.setInputType(InputType.TYPE_NULL);
         edt_search.setKeyListener(null);
         edt_search.setOnTouchListener((v, event) -> {
-
             if (!isTouch) {
                 isTouch = true;
                 Utility.movetoFragment(getActivity(),new SearchListFragment());
@@ -229,7 +230,8 @@ public class DashboardFragment extends Fragment {
                         Utility.movetoFragment(getActivity(),new NonActivesFragment());
                         break;
                     case 8:
-                        Utility.movetoFragment(getActivity(),new AddNewFragment());
+                        Intent intent=new Intent(getActivity(),RegisterActivty.class);
+                        startActivity(intent);
                         break;
                     case 9:
                         Utility.movetoFragment(getActivity(),new ShareEventFragment());

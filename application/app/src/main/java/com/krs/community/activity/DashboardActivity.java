@@ -23,7 +23,8 @@ import com.krs.community.fragments.CalendarFragment;
 import com.krs.community.fragments.CommitteeFragment;
 import com.krs.community.fragments.DashboardFragment;
 import com.krs.community.fragments.FragmentDrawer;
-import com.krs.community.fragments.HeaderDetailFragment;
+import com.krs.community.fragments.FamilyDetailFragment;
+import com.krs.community.fragments.NotificationListFragment;
 import com.krs.community.fragments.SmartFilterFragment;
 import com.krs.community.fragments.StatisticFragment;
 import com.luseen.spacenavigation.SpaceItem;
@@ -192,10 +193,13 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         switch (item.getItemId()) {
             case R.id.action_profile:
 
-                movetoFragment(this,new HeaderDetailFragment());
+                movetoFragment(this,new FamilyDetailFragment());
 
                 return true;
-            case R.id.action_notification:
+            case R.id.action_notify:
+
+                movetoFragment(this,new NotificationListFragment());
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

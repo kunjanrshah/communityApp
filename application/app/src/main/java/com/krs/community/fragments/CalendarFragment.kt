@@ -110,12 +110,12 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         positions[2] = toY
 
         val adapterPosition = recyclerView.getChildAdapterPosition(view)
-        val detailsFragment = HeaderDetailFragment.newInstance(positions, adapterPosition)
+        val detailsFragment = FamilyDetailFragment.newInstance(positions, adapterPosition)
 
-        //Utility.movetoFragment(activity,HeaderDetailFragment())
+        //Utility.movetoFragment(activity,FamilyDetailFragment())
 
         val transaction = fragmentManager?.beginTransaction()
-                ?.replace(com.krs.community.R.id.container_body, detailsFragment, HeaderDetailFragment.TAG)
+                ?.replace(com.krs.community.R.id.container_body, detailsFragment, FamilyDetailFragment.TAG)
                 ?.addToBackStack(null)
 
          return transaction

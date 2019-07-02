@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
+
     <application
         android:name="com.krs.community.app.AppController"
         android:icon="@drawable/ic_app"
@@ -23,6 +24,8 @@
         android:largeHeap="true"
         android:theme="@style/MyMaterialTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="cd2b567af7b407b2736293035d07a280439e584e" />

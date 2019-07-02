@@ -1,7 +1,6 @@
 package com.krs.community.fragments
 
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +10,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,18 +26,14 @@ import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.utils.AppConstants.*
 import com.krs.community.utils.Utility
 import com.krs.community.utils.Utility.hideKeyboard
-import com.krs.community.utils.copyViewImage
 import com.nightonke.boommenu.BoomMenuButton
-import kotlinx.android.synthetic.main.activity_dashboard.*
-import kotlinx.android.synthetic.main.fragment_header_detail.*
-import kotlinx.android.synthetic.main.header_header_detail.*
-import kotlinx.android.synthetic.main.header_header_detail.view.*
+import kotlinx.android.synthetic.main.family_header_detail.view.*
 
 
 import spencerstudios.com.bungeelib.Bungee
 
 
-class HeaderDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListener{
+class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListener{
 
     override fun itemClick(id: Int) {
         val intent = Intent(activity, ProfileDetailActivity::class.java)
@@ -54,15 +48,15 @@ class HeaderDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
 
     companion object {
 
-        const val TAG = "HeaderDetailFragment"
-        fun newInstance(coordinates: FloatArray, adapterPosition: Int): HeaderDetailFragment {
+        const val TAG = "FamilyDetailFragment"
+        fun newInstance(coordinates: FloatArray, adapterPosition: Int): FamilyDetailFragment {
             val bundle = Bundle().apply {
 
                 putFloatArray(EXTRA_COORDINATES, coordinates)
                 putInt(EXTRA_POSITION, adapterPosition)
             }
 
-            return HeaderDetailFragment().apply { arguments = bundle }
+            return FamilyDetailFragment().apply { arguments = bundle }
         }
     }
 
@@ -106,40 +100,40 @@ class HeaderDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
         hideKeyboard(activity)
     }
 
-    private fun setupViews(position: Int) {
-        /* supportsLollipop {
+    /*private fun setupViews(position: Int) {
+        *//* supportsLollipop {
              details_card.transitionName = TRANSITION_CARD + position
              toolbar_container.transitionName = TRANSITION_TOOLBAR
          }
 
          (details_card.layoutParams as ViewGroup.MarginLayoutParams).topMargin = 229// coordinates[2].toInt()
- */
+ *//*
         val data = DataProvider.getCardData()[position]
-        /* tv_title.text = data.name
+        *//* tv_title.text = data.name
          tv_amount.text = data.amount
          tv_date.text = data.date
          tv_status.text = data.status.code
          img_status.setImageResource(data.status.iconId)
-         img_card.setImageResource(data.imageId)*/
+         img_card.setImageResource(data.imageId)*//*
 
-        /*   details_card.setOnClickListener {
+        *//*   details_card.setOnClickListener {
                val intent = Intent(activity, ProfileDetailActivity::class.java)
                startActivity(intent)
                Bungee.fade(context)
-           }*/
+           }*//*
 
         // fab_negative.setOnClickListener { onBackPressed() }
 
         with(rv_detail) {
-            adapter = RecyclerAdapter(DataProvider.getDetailsData(),this@HeaderDetailFragment)
+            adapter = RecyclerAdapter(DataProvider.getDetailsData(),this@FamilyDetailFragment)
 
             setHasFixedSize(true)
-            /*fab_negative.doOnLayout {
+            *//*fab_negative.doOnLayout {
                 val paddingBottom = (paddingBottom + fab_negative.height * 1.5).toInt()
                 updatePadding(bottom = paddingBottom)
-            }*/
+            }*//*
         }
-    }
+    }*/
 
 
     override fun onResume() {
@@ -161,10 +155,9 @@ class HeaderDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
         val adapter = object : ParallaxRecyclerAdapter<String>(content) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<String>, i: Int) {
                  (viewHolder as HeaderViewHolder).tv_name.setText("Kunjan Shah")
-                /* viewHolder.tv_area.setText("Maninagar, Ahmedabad")
-                 viewHolder.tv_email.setText("kunjanrshah@gmail.com")
-                 viewHolder.tv_mobile.setText("9427051418")
-                 viewHolder.tv_role.setText("Family Head")*/
+                viewHolder.tv_subtext.setText("Son")
+                viewHolder.tv_email.setText("kunjanrshah@gmail.com")
+                viewHolder.tv_mobile.setText("9427051418")
 
                 viewHolder.bmb1.clearBuilders()
                 for (i in 0 until viewHolder.bmb1.piecePlaceEnum.pieceNumber()) {
@@ -186,17 +179,37 @@ class HeaderDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
         }
 
         adapter.setOnClickEvent { v, position ->
-            val fragmentTransaction = initFragmentTransaction(v)
+
+            val intent = Intent(activity, ProfileDetailActivity::class.java)
+            intent.putExtra("id",id)
+            startActivity(intent)
+            Bungee.fade(context)
+
+            /*val fragmentTransaction = initFragmentTransaction(v)
             val copy = view!!.copyViewImage()
             copy.y += activity!!.myAppBar.height
             ll_root.addView(copy)
             view!!.visibility = View.INVISIBLE
-            startAnimation(copy, fragmentTransaction)
+            startAnimation(copy, fragmentTransaction)*/
         }
 
         val layoutManagerFixed = HeaderLayoutManagerFixed(activity)
         recyclerView.layoutManager = layoutManagerFixed
-        val header = layoutInflater.inflate(com.krs.community.R.layout.header_header_detail, recyclerView, false)
+        val header = layoutInflater.inflate(com.krs.community.R.layout.family_header_detail, recyclerView, false)
+        val ll_family_head:LinearLayout
+        ll_family_head=header.findViewById(R.id.ll_family_head)
+        ll_family_head.setOnClickListener {
+            val intent = Intent(activity, ProfileDetailActivity::class.java)
+            intent.putExtra("id",id)
+            startActivity(intent)
+            Bungee.fade(context)
+        }
+
+        header.img_cancel.setOnClickListener {
+            Utility.movetoFragment(activity,SearchListFragment())
+        }
+
+
 
         header.bmb.clearBuilders()
         for (i in 0 until header.bmb.piecePlaceEnum.pieceNumber()) {
@@ -215,7 +228,7 @@ class HeaderDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
 
     }
 
-    private fun startAnimation(view: View, fragmentTransaction: FragmentTransaction?) {
+  /*  private fun startAnimation(view: View, fragmentTransaction: FragmentTransaction?) {
         fragmentTransaction?.commitAllowingStateLoss()
     }
 
@@ -228,28 +241,27 @@ class HeaderDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
         positions[2] = toY
 
         val adapterPosition = rv_detail.getChildAdapterPosition(view)
-        val detailsFragment = SearchbyDetailFragment.newInstance(positions, adapterPosition)
+        val detailsFragment = FamilyDetailFragment.newInstance(positions, adapterPosition)
         val transaction = fragmentManager?.beginTransaction()
                 ?.replace(com.krs.community.R.id.container_body, detailsFragment, SearchDetailFragment.TAG)
                 ?.addToBackStack(null)
 
         return transaction
-    }
+    }*/
 
     internal class HeaderViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var tv_name: TextView
-        /* var tv_subtext: TextView
-         var tv_email: TextView
-         var tv_mobile: TextView
-         var tv_role: TextView*/
+        var tv_subtext: TextView
+        var tv_email: TextView
+        var tv_mobile: TextView
         var bmb1: BoomMenuButton
 
         init {
             tv_name = v.findViewById<View>(com.krs.community.R.id.tv_name) as TextView
-            /*tv_subtext = v.findViewById(R.id.tv_subtext)
+            tv_subtext = v.findViewById(R.id.tv_subtext)
+            tv_subtext.setTypeface(AppController.getInstance().typeface_bold)
             tv_email = v.findViewById(R.id.tv_email)
             tv_mobile = v.findViewById(R.id.tv_mobile)
-            tv_role = v.findViewById(R.id.tv_role)*/
             bmb1=v.findViewById(R.id.bmb1)
         }
     }

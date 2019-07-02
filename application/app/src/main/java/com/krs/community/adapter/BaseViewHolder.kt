@@ -21,7 +21,7 @@ abstract class  BaseViewHolder<T : DataProvider.DataProvider1.BaseData>(view: Vi
     abstract fun bind(data: T, itemClickListener: RecyclerAdapter.ItemClickListener?, onClickListener: View.OnClickListener?)
 
 
-    class CardViewHolder(parent: ViewGroup) : BaseViewHolder<DataProvider.DataProvider1.Card>(parent.inflate(R.layout.row_list_header)) {
+    class CardViewHolder(parent: ViewGroup) : BaseViewHolder<DataProvider.DataProvider1.Card>(parent.inflate(R.layout.row_list_search)) {
 
 
         override fun bind(data: DataProvider.DataProvider1.Card, itemClickListener: RecyclerAdapter.ItemClickListener?,onClickListener: View.OnClickListener?) {

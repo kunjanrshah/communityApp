@@ -6,6 +6,7 @@ import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -30,6 +31,7 @@ class SearchListFragment : Fragment(), View.OnClickListener {
     private var recyclerAdapter: RecyclerAdapter<DataProvider.DataProvider1.Card>? = null
     private var mShimmerViewContainer: ShimmerFrameLayout? = null
     private var multiSearchView: MultiSearchView? = null
+    private var iv_cancel: ImageView? = null
     lateinit var view1:View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -39,6 +41,7 @@ class SearchListFragment : Fragment(), View.OnClickListener {
         multiSearchView = rootView.findViewById(R.id.multiSearchView)
         lstProfile = rootView.findViewById(R.id.lstProfile)
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
+        iv_cancel = rootView.findViewById(R.id.iv_cancel)
         (activity as AppCompatActivity).supportActionBar!!.title = "Smart Search"
         multiSearchView!!.setSearchViewListener(object : MultiSearchView.MultiSearchViewListener {
             override fun onTextChanged(i: Int, charSequence: CharSequence) {
@@ -58,6 +61,10 @@ class SearchListFragment : Fragment(), View.OnClickListener {
             }
         })
 
+        iv_cancel?.setOnClickListener {
+            Utility.movetoFragment(activity,DashboardFragment())
+        }
+
         setupList()
 
         return rootView
@@ -73,14 +80,16 @@ class SearchListFragment : Fragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
+        (activity as AppCompatActivity).supportActionBar!!.hide()
         Handler().postDelayed({
             Utility.hideKeyboard(activity)
-        }, 1000)
+        }, 1500)
     }
 
 
 
     override fun onPause() {
+        (activity as AppCompatActivity).supportActionBar!!.show()
         mShimmerViewContainer!!.stopShimmerAnimation()
         super.onPause()
     }
@@ -118,9 +127,9 @@ class SearchListFragment : Fragment(), View.OnClickListener {
         positions[2] = toY
 
         val adapterPosition = lstProfile!!.getChildAdapterPosition(view)
-        val detailsFragment = HeaderDetailFragment.newInstance(positions, adapterPosition)
+        val detailsFragment = FamilyDetailFragment.newInstance(positions, adapterPosition)
         val transaction = fragmentManager?.beginTransaction()
-                ?.replace(R.id.container_body, detailsFragment, HeaderDetailFragment.TAG)
+                ?.replace(R.id.container_body, detailsFragment, FamilyDetailFragment.TAG)
                 ?.addToBackStack(null)
 
         supportsLollipop {
