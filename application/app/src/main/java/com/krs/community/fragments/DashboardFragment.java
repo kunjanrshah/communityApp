@@ -32,6 +32,7 @@ import com.krs.community.activity.RegisterActivty;
 import com.krs.community.model.FavProfiles;
 import com.krs.community.utils.ExpandableHeightGridView;
 import com.krs.community.utils.Utility;
+import com.nightonke.boommenu.Util;
 import com.smarteist.autoimageslider.DefaultSliderView;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -51,7 +52,7 @@ public class DashboardFragment extends Fragment {
     String[] ProfileNames = {"Rajendra", "Tejas", "Kunjan", "Mukund", "Kushal"};
     int[] ProfileImages = {R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg};
 
-    String[] MenuNames = {"By QRCode", "By Distance", "Matrimony", "Documents", "Paytm","App Tour", "Admins", "Non Actives", "Add New", "Share Event"};
+    String[] MenuNames = {"By QRCode", "By Distance", "Matrimony", "Documents", "Paytm","App Tour", "Admins", "Registered", "Add New", "Share Event"};
     int[] MenuImages = {R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon,R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon};
     private boolean isTouch = false;
 
@@ -87,6 +88,18 @@ public class DashboardFragment extends Fragment {
         setSliderViews();
         setFavoriteList();
         gridMenu.setAdapter(new MenuAdapter(getActivity()));
+
+        ImageView iv_all_favorites=rootView.findViewById(R.id.iv_all_favorites);
+        iv_all_favorites.setOnClickListener(v -> {
+            Utility.movetoFragment(getActivity(),new FavoriteFragment());
+        });
+
+        ImageView iv_all_news=rootView.findViewById(R.id.iv_all_news);
+        iv_all_news.setOnClickListener(v -> {
+            Utility.movetoFragment(getActivity(),new NewsFragment());
+        });
+
+
 
         Utility.changeStatusbarColor(getActivity(),R.color.white,false);
         return rootView;
@@ -274,41 +287,6 @@ public class DashboardFragment extends Fragment {
             return list.size();
         }
     }
-
-    class FilterViewHolder extends RecyclerView.ViewHolder
-    {
-        TextView text;
-        FilterViewHolder(View v) {
-            super(v);
-            text = v.findViewById(R.id.text);
-        }
-    }
-
-    class FilterAdapter extends RecyclerView.Adapter<FilterViewHolder>
-    {
-        private ArrayList<String> list=null;
-
-        FilterAdapter(ArrayList<String> arrayList) {
-            list = arrayList;
-        }
-
-        @Override
-        public FilterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.filter_calendar, parent, false);
-            return new FilterViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull FilterViewHolder holder, int position) {
-            holder.text.setText(list.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return list.size();
-        }
-    }
-
 
     class FavProfileViewHolder extends RecyclerView.ViewHolder {
 

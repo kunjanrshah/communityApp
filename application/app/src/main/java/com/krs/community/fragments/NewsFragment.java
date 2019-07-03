@@ -1,12 +1,15 @@
 package com.krs.community.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +27,7 @@ import com.krs.community.adapter.FeedListAdapter;
 import com.krs.community.app.AppController;
 import com.krs.community.model.FeedItem;
 import com.krs.community.utils.MyDividerItemDecoration;
+import com.krs.community.utils.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,10 +54,18 @@ public class NewsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_news, container, false);
 
+        ImageView iv_cancel=rootView.findViewById(R.id.iv_cancel);
+        iv_cancel.setOnClickListener(v -> {
+            Utility.movetoFragment(getActivity(),new DashboardFragment());
+        });
+
         listView = rootView.findViewById(R.id.list);
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container);
         feedItems = new ArrayList<FeedItem>();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Utility.changeStatusbarColor(getActivity(),R.color.bg_gray,false);
+        }
         listAdapter = new FeedListAdapter(getActivity(), feedItems);
 
         listView.setHasFixedSize(true);
@@ -63,7 +75,6 @@ public class NewsFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         listView.setLayoutManager(mLayoutManager);
         listView.setItemAnimator(new DefaultItemAnimator());
-        listView.addItemDecoration(new MyDividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 16));
         listView.setLayoutManager(MyLayoutManager);
         listView.setAdapter(listAdapter);
 
@@ -110,11 +121,13 @@ public class NewsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         mShimmerViewContainer.startShimmerAnimation();
     }
 
     @Override
     public void onPause() {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         mShimmerViewContainer.stopShimmerAnimation();
         super.onPause();
     }

@@ -1,6 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_cancel"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/left_arrow" />
 
     <ExpandableListView
         android:id="@+id/lst_expandable"
@@ -12,4 +20,4 @@
         android:dividerHeight="0dp"
         android:scrollbars="none" />
 
-</RelativeLayout>
+</LinearLayout>

@@ -1,89 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:background="@drawable/round_bottom_corner_colorprimary"
-        android:orientation="horizontal"
-        android:padding="5dp">
-
-        <ImageView
-            android:id="@+id/img_cancel"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/left_arrow_white" />
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="15dp"
-            android:fontFamily="@font/montserrat_semibold"
-            android:text="Family Detail"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-
-    </LinearLayout>
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="4dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/round_corner_itemlist"
+    android:orientation="vertical"
+    android:padding="16dp"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/card_elevation"
+    app:contentPadding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+
         <LinearLayout
-            android:id="@+id/ll_family_head"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/round_corner_itemlist"
-            android:elevation="8dp"
-            android:orientation="horizontal"
-            android:padding="16dp">
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ImageView
+                <RelativeLayout
+                    android:id="@+id/icon_container"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@drawable/round_corner_profile"
-                    android:src="@drawable/user" />
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/icon_back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fillAfter="false"
+                        android:fillEnabled="false">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/bg_circle" />
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_done_white_24dp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/icon_front"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fillAfter="false"
+                        android:fillEnabled="false">
+
+                        <ImageView
+                            android:id="@+id/icon_profile"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp" />
+
+                        <TextView
+                            android:id="@+id/icon_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textColor="@android:color/white"
+                            android:textSize="22sp" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
 
                 <com.nightonke.boommenu.BoomMenuButton
-                    android:id="@+id/bmb"
+                    android:id="@+id/boomMenuButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_marginLeft="-8dp"
+                    android:layout_marginTop="-5dp"
                     app:bmb_buttonEnum="textInsideCircle"
                     app:bmb_buttonPlaceEnum="buttonPlace_sc_6_1"
                     app:bmb_inList="true"
                     app:bmb_piecePlaceEnum="piecePlace_dot_6_1" />
 
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:gravity="center"
-                    android:text="Address"
-                    android:textColor="@color/material_blue_500"
-                    android:textSize="12sp" />
-
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/message_container"
+                android:clickable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -104,25 +115,33 @@
                             android:id="@+id/tv_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_semibold"
                             android:text="Kunjan Patel"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:textSize="16sp" />
 
                         <TextView
-                            android:id="@+id/tv_area"
+                            android:id="@+id/tv_subtext"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_regular"
                             android:text="Maninagar, Ahmedabad"
                             android:textSize="12sp" />
 
                     </LinearLayout>
 
-                    <ImageView
+                    <TextView
                         android:id="@+id/tv_role"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_marginTop="10dp"
                         android:background="@drawable/round_corner_blue"
-                        android:gravity="center" />
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="center"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="Member"
+                        android:textColor="@color/white"
+                        android:textSize="11sp" />
 
                 </LinearLayout>
 
@@ -135,15 +154,20 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="25dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
                         android:orientation="horizontal">
+
 
                         <ImageView
                             android:layout_width="15dp"
@@ -156,6 +180,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
+                            android:fontFamily="@font/montserrat_regular"
                             android:text="9825450261"
                             android:textColor="@color/com_facebook_blue"
                             android:textSize="12sp" />
@@ -165,7 +190,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="10dp"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -179,42 +204,13 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
+                            android:fontFamily="@font/montserrat_regular"
                             android:text="kunjanshah@gmail.com"
                             android:textSize="12sp" />
 
                     </LinearLayout>
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/colorGray" />
-
-                <TextView
-                    android:id="@+id/tv_event"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:text="8/B Jay Garvi Gujarat Soc., Gor no Kuwa, Jashoda cross road. Maninagar(E)"
-                    android:textSize="12sp" />
-
-
             </LinearLayout>
         </LinearLayout>
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:text="Family Member List"
-            android:textSize="16sp"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="20dp"
-            android:fontFamily="@font/montserrat_semibold"
-            android:layout_height="wrap_content" />
-
     </LinearLayout>
-
-</FrameLayout>
+</LinearLayout>

@@ -29,12 +29,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!--<ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/round_corner_profile"
-                    android:src="@drawable/user" />-->
-
                 <RelativeLayout
                     android:id="@+id/icon_container"
                     android:layout_width="40dp"

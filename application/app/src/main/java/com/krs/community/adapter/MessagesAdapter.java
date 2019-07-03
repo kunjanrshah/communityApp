@@ -144,7 +144,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
         holder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                ((AppCompatActivity) mContext).getSupportActionBar().hide();
+
                 listener.onRowLongClicked(position);
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 return true;

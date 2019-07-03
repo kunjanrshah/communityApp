@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,23 +16,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
 import com.krs.community.adapter.SmartFilterAdapter;
+import com.krs.community.utils.Utility;
 
-public class SmartFilterFragment extends Fragment {
+public class FilterListFragment extends Fragment {
     private ExpandableListView expandableListView;
-   // private FloatingActionButton floating_action_button;
     private int previousGroup = -1;
     private SmartFilterAdapter adapter;
-    private String TAG = SmartFilterFragment.class.getSimpleName();
+    private String TAG = FilterListFragment.class.getSimpleName();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_smart_search, container, false);
         expandableListView = rootView.findViewById(R.id.lst_expandable);
-       // floating_action_button= rootView.findViewById(R.id.floating_action_button);
         expandableListView.setGroupIndicator(null);
         adapter = new SmartFilterAdapter(getActivity());
         expandableListView.setAdapter(adapter);
@@ -39,6 +38,10 @@ public class SmartFilterFragment extends Fragment {
 
         setListener();
 
+        ImageView iv_cancel=rootView.findViewById(R.id.iv_cancel);
+        iv_cancel.setOnClickListener(v -> {
+            Utility.movetoFragment(getActivity(),new DashboardFragment());
+        });
 
 
         expandableListView.setOnScrollListener(new OnScrollObserver() {
@@ -60,6 +63,18 @@ public class SmartFilterFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+    }
+
     // Setting different listeners to expandablelistview
     void setListener() {
 
@@ -74,9 +89,6 @@ public class SmartFilterFragment extends Fragment {
             }
         });
 
-        // This listener will expand one group at one time
-        // You can remove this listener for expanding all groups
-        // Default position
         expandableListView.setOnGroupExpandListener(groupPosition -> {
             adapter.previousGroup = groupPosition;
             if (groupPosition != previousGroup)
@@ -92,7 +104,6 @@ public class SmartFilterFragment extends Fragment {
             return false;
         });
     }
-
 
     public abstract class OnScrollObserver implements AbsListView.OnScrollListener {
 

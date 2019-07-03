@@ -5,23 +5,28 @@
     xmlns:shimmer="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/ll_title"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
     <ImageView
         android:id="@+id/iv_cancel"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_margin="10dp"
         android:background="@drawable/left_arrow" />
-
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
         android:fontFamily="@font/montserrat_semibold"
         android:text="Smart Filter"
         android:textColor="@color/black"
-        android:textSize="30sp" />
+        android:textSize="25sp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

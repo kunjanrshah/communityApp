@@ -25,7 +25,7 @@ import com.krs.community.fragments.DashboardFragment;
 import com.krs.community.fragments.FragmentDrawer;
 import com.krs.community.fragments.FamilyDetailFragment;
 import com.krs.community.fragments.NotificationListFragment;
-import com.krs.community.fragments.SmartFilterFragment;
+import com.krs.community.fragments.FilterListFragment;
 import com.krs.community.fragments.StatisticFragment;
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
@@ -95,7 +95,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
                 Log.d("onCentreButtonClick ", "onCentreButtonClick");
                 Fragment fragment = getSupportFragmentManager().findFragmentByTag(CalendarFragment.class.getSimpleName());
                 //if (fragment == null || !fragment.isVisible()) {
-                movetoFragment(DashboardActivity.this,new SmartFilterFragment());
+                movetoFragment(DashboardActivity.this,new FilterListFragment());
                 //}
             }
 

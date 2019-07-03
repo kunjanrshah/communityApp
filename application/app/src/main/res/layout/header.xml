@@ -17,13 +17,14 @@
             android:layout_marginLeft="10dp"
             android:text="Welcome to \nSmart Filter"
             android:textSize="30sp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/montserrat_semibold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:layout_marginBottom="10dp"
             android:text="You can search here using many filter options(Like Family head,Family members, Mobile No, Email Id etc...)"
             android:textSize="15sp" />
     </LinearLayout>
@@ -40,10 +41,9 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:text="Main Details"
-        android:textColor="#843f52"
+        android:textColor="@color/colorPrimary"
         android:textSize="18sp"
-
-        android:textStyle="bold" />
+        android:fontFamily="@font/montserrat_semibold" />
 
     <Button
         android:id="@+id/btn_confirm"
@@ -52,9 +52,9 @@
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
+        android:fontFamily="@font/montserrat_semibold"
         android:background="@drawable/border_color_primary"
         android:text="Verify"
-        android:textColor="@color/colorPrimary"
-         />
+        android:textColor="@color/colorPrimary"   />
 
 </LinearLayout>

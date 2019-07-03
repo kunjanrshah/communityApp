@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -237,6 +238,20 @@ public class Utility {
         fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getSimpleName()).commit();
         Bungee.fade(activity);
+    }
+
+
+    public static int getRandomMaterialColor(Context context,String typeColor) {
+        int returnColor = Color.GRAY;
+        int arrayId = context.getResources().getIdentifier("mdcolor_" + typeColor, "array", context.getPackageName());
+
+        if (arrayId != 0) {
+            TypedArray colors = context.getResources().obtainTypedArray(arrayId);
+            int index = (int) (Math.random() * colors.length());
+            returnColor = colors.getColor(index, Color.GRAY);
+            colors.recycle();
+        }
+        return returnColor;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

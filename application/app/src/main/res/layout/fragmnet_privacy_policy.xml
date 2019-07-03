@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/iv_cancel"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_margin="10dp"
         android:background="@drawable/left_arrow" />
 
@@ -16,12 +16,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
         android:fontFamily="@font/montserrat_semibold"
         android:text="Privacy Policy"
         android:textColor="@color/black"
-        android:textSize="30sp" />
+        android:textSize="25sp" />
 
     <ScrollView
         android:id="@+id/scrollView"

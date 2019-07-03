@@ -1,5 +1,6 @@
 package com.krs.community.fragments
 
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.transition.TransitionInflater
@@ -23,6 +24,7 @@ import com.krs.community.utils.copyViewImage
 import com.krs.community.utils.supportsLollipop
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_search_result.*
+import kotlinx.android.synthetic.main.header_calendar.*
 
 
 class SearchListFragment : Fragment(), View.OnClickListener {
@@ -42,6 +44,11 @@ class SearchListFragment : Fragment(), View.OnClickListener {
         lstProfile = rootView.findViewById(R.id.lstProfile)
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
         iv_cancel = rootView.findViewById(R.id.iv_cancel)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Utility.changeStatusbarColor(activity,R.color.white,false)
+        }
+
         (activity as AppCompatActivity).supportActionBar!!.title = "Smart Search"
         multiSearchView!!.setSearchViewListener(object : MultiSearchView.MultiSearchViewListener {
             override fun onTextChanged(i: Int, charSequence: CharSequence) {
@@ -115,7 +122,8 @@ class SearchListFragment : Fragment(), View.OnClickListener {
         copy.y += activity!!.myAppBar.height
         ll_root.addView(copy)
         view!!.visibility = View.INVISIBLE
-        startAnimation(copy, fragmentTransaction)
+        fragmentTransaction?.commitAllowingStateLoss()
+       // startAnimation(copy, fragmentTransaction)
     }
 
     private fun initFragmentTransaction(view: View): FragmentTransaction? {
@@ -144,59 +152,4 @@ class SearchListFragment : Fragment(), View.OnClickListener {
 
         return transaction
     }
-
-    private fun startAnimation(view: View, fragmentTransaction: FragmentTransaction?) {
-
-        //   fragmentTransaction!!.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right)
-        fragmentTransaction?.commitAllowingStateLoss()
-        //  Bungee.fade(context);
-
-
-        /* AnimatorInflater.loadAnimator(activity, R.animator.main_list_animator).apply {
-             setTarget(lstProfile)
-             //withStartAction { animateToolbarElevation(true) }
-             withEndAction {
-                 lstProfile!!.visibility = View.INVISIBLE
-
-                 val toY = view.resources.getDimensionPixelOffset(R.dimen.details_toolbar_container_height) - view.height / 2f
-
-                 view.animate().y(229f).start()
-                // fragmentTransaction!!.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right)
-                 fragmentTransaction?.commitAllowingStateLoss()
-                 Bungee.fade(context);
-                 *//*activity?.myAppBar!!.animate()
-                        .translationY(-activity!!.myAppBar.height.toFloat())
-                        .alpha(0f)
-                        .setDuration(1000)
-                        .withStartAction {
-                            bottomNavListener?.hideBottomNavigationView()
-                            //details_toolbar_transition_helper.animate().translationY(0f).setDuration(500).start()
-                        }
-                        .withEndAction {
-                            fragmentTransaction!!.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                            fragmentTransaction?.commitAllowingStateLoss()
-                        }
-                        .start()*//*
-            }
-            start()
-        }*/
-    }
-
-    /*  private fun animateToolbarElevation(animateOut: Boolean) {
-          var valueFrom = resources.getDimension(R.dimen.toolbar_elevation)
-          var valueTo = 0f
-          if (!animateOut) {
-              valueTo = valueFrom
-              valueFrom = 0f
-          }
-          ValueAnimator.ofFloat(valueFrom, valueTo).setDuration(1000).apply {
-              startDelay = 0
-              addUpdateListener { activity?.card_toolbar!!.cardElevation = it.animatedValue as Float }
-              start()
-          }
-      }*/
-
-
-
-
 }

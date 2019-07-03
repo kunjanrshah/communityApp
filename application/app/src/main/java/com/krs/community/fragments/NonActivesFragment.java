@@ -10,9 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -38,17 +41,19 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
     private List<Message> messages = new ArrayList<>();
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
-
+    private LinearLayout ll_title;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_nonactives, container, false);
 
-        FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.fab);
-        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show());
+        ImageView iv_cancel=root.findViewById(R.id.iv_cancel);
+        iv_cancel.setOnClickListener(v -> {
+            Utility.movetoFragment(getActivity(),new DashboardFragment());
+        });
 
+        ll_title=root.findViewById(R.id.ll_title);
         recyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -60,8 +65,20 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
         recyclerView.setAdapter(mAdapter);
 
         actionModeCallback = new ActionModeCallback();
-
+        getInbox();
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 
     // deleting the messages from recycler view
@@ -94,7 +111,7 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
             message.setTimestamp("10:30 AM");
             message.setFrom("Google Alerts");
             message.setSubject("Google Alert - android");
-            message.setColor(getRandomMaterialColor("400"));
+            message.setColor(Utility.getRandomMaterialColor(getActivity(),"400"));
             messages.add(message);
         }
 
@@ -102,21 +119,6 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    /**
-     * chooses a random color from array.xml
-     */
-    private int getRandomMaterialColor(String typeColor) {
-        int returnColor = Color.GRAY;
-        int arrayId = getResources().getIdentifier("mdcolor_" + typeColor, "array", getActivity().getPackageName());
-
-        if (arrayId != 0) {
-            TypedArray colors = getResources().obtainTypedArray(arrayId);
-            int index = (int) (Math.random() * colors.length());
-            returnColor = colors.getColor(index, Color.GRAY);
-            colors.recycle();
-        }
-        return returnColor;
-    }
 
     @Override
     public void onIconClicked(int position) {
@@ -132,9 +134,9 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
 
         if (count == 0) {
             actionMode.finish();
-            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+            ll_title.setVisibility(View.VISIBLE);
         } else {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+            ll_title.setVisibility(View.GONE);
             actionMode.setTitle(String.valueOf(count));
             actionMode.invalidate();
         }
@@ -170,6 +172,7 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
     @Override
     public void onRowLongClicked(int position) {
         // long press is performed, enable action mode
+        ll_title.setVisibility(View.GONE);
         enableActionMode(position);
     }
 
@@ -221,7 +224,7 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
             mAdapter.clearSelections();
             swipeRefreshLayout.setEnabled(true);
             actionMode = null;
-            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+            ll_title.setVisibility(View.VISIBLE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
             }
