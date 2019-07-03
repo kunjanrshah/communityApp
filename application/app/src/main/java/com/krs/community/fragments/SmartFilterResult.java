@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -36,7 +37,7 @@ import com.krs.community.utils.Utility;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SmartFilterResult extends Fragment implements FilterResultAdapter.FilterResultAdapterListener{
+public class SmartFilterResult extends Fragment implements FilterResultAdapter.FilterResultAdapterListener,SwipeRefreshLayout.OnRefreshListener{
 
 
     private RecyclerView rv_filters;
@@ -46,6 +47,7 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
     private List<Message> messages = new ArrayList<>();
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
@@ -58,10 +60,19 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         });
 
         rv_filters =rootView.findViewById(R.id.lstFilter);
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container);
         ll_title=rootView.findViewById(R.id.ll_title);
         actionModeCallback = new ActionModeCallback();
+
+        ImageView img_edit=rootView.findViewById(R.id.img_edit);
+        img_edit.setOnClickListener(v -> {
+
+        });
+
         setupList();
+        getInbox();
         return rootView;
     }
 
@@ -91,6 +102,27 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         },2000);
     }
 
+    private void getInbox() {
+        swipeRefreshLayout.setRefreshing(true);
+        messages.clear();
+
+        for (int i = 0; i < 20; i++) {
+            Message message = new Message();
+            message.setId(1);
+            message.setImportant(false);
+            message.setMessage("Now android supports multiple voice recogonization");
+            message.setPicture("https://api.androidhive.info/json/google.png");
+            message.setRead(false);
+            message.setTimestamp("10:30 AM");
+            message.setFrom("Google Alerts");
+            message.setSubject("Google Alert - android");
+            message.setColor(Utility.getRandomMaterialColor(getActivity(),"400"));
+            messages.add(message);
+        }
+
+        mAdapter.notifyDataSetChanged();
+        swipeRefreshLayout.setRefreshing(false);
+    }
     private List<String> createList(int n) {
         List<String> list = new ArrayList<>();
 
@@ -110,13 +142,18 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onRefresh() {
+        getInbox();
+    }
+
     private class ActionModeCallback implements ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.menu_action_mode, menu);
 
             // disable swipe refresh if action mode is enabled
-           // swipeRefreshLayout.setEnabled(false);
+            swipeRefreshLayout.setEnabled(false);
             return true;
         }
 
@@ -149,7 +186,7 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             mAdapter.clearSelections();
-          //  swipeRefreshLayout.setEnabled(true);
+            swipeRefreshLayout.setEnabled(true);
             actionMode = null;
             ll_title.setVisibility(View.VISIBLE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
