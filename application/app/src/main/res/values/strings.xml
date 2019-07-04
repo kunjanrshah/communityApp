@@ -85,7 +85,8 @@ Along the top of the screen is a status bar, showing information about the devic
     <string name="nav_item_language">Language</string>
     <string name="nav_item_intro">Tour Video</string>
     <string name="nav_item_logout">Logout</string>
-    <string name="nav_item_statistic">Statistics</string>
+    <string name="nav_item_filter">Filters</string>
+    <string name="nav_item_statistic" translatable="false">Statistics</string>
     <string name="nav_item_committee" translatable="false">Committee</string>
     <string name="nav_item_events">News &amp; Events</string>
     <string name="nav_item_fa_profie">Search by Distance</string>
@@ -230,6 +231,7 @@ Along the top of the screen is a status bar, showing information about the devic
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">
         <item>@string/nav_item_home</item>
+        <item>@string/nav_item_filter</item>
         <item>@string/nav_item_statistic</item>
         <item>@string/nav_item_committee</item>
         <!--<item>@string/nav_item_fa_profie</item>

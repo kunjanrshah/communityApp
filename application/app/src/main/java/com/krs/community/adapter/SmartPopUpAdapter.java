@@ -424,14 +424,10 @@ public class SmartPopUpAdapter extends BaseAdapter {
             // set final value listener
             viewHolder.rangeAgeBar.setOnRangeSeekbarFinalValueListener((minValue, maxValue) -> Log.d("CRS=>", minValue + " : " + maxValue));
 
-
         } else {
             viewHolder = (PopUpViewHolder) convertView.getTag();
         }
 
-        viewHolder.img_popup_close.setOnClickListener(v -> {
-            mICloseDialog.PopupClose();
-        });
         viewHolder.img_code_close.setOnClickListener(v -> {
             viewHolder.ll_family_code.setVisibility(View.GONE);
         });
@@ -561,12 +557,13 @@ public class SmartPopUpAdapter extends BaseAdapter {
             if (isChecked) {
                 viewHolder.edt_filter_name.setVisibility(View.VISIBLE);
             } else {
-                viewHolder.edt_filter_name.setVisibility(View.GONE);
+                viewHolder.edt_filter_name.setVisibility(View.INVISIBLE);
             }
         });
 
         viewHolder.btnApply.setOnClickListener(v -> {
             mICloseDialog.PopupClose();
+
             Utility.movetoFragment((Activity) _context,new SmartFilterResult());
         });
         return convertView;
@@ -593,7 +590,7 @@ public class SmartPopUpAdapter extends BaseAdapter {
 
     private class PopUpViewHolder {
         FlexboxLayout flexboxLayout;
-        ImageView img_popup_close, img_code_close, img_age_close, img_head_close, img_member_close, img_surname_close, img_samaj_close, img_gender_close, img_marital_close, img_native_close, img_city_close, img_email_close, img_mobile_close, img_local_add_close, img_permanent_add_close, img_pincode_close, img_area_close, img_state_close, img_bdate_close, img_mdate_close, img_mosad_close, img_education_close, img_gotra_close, img_bg_close, img_expired_close, img_rented_close, img_donor_close, img_oaddress_close, img_sub_cat_close, img_cat_close, img_occu_close, img_activity_close, img_btime_close, img_bplace_close, img_spect_close, img_shani_close, img_mangal_close, img_height_close, img_weight_close, img_per_close, img_updated_close, img_created_close;
+        ImageView img_code_close, img_age_close, img_head_close, img_member_close, img_surname_close, img_samaj_close, img_gender_close, img_marital_close, img_native_close, img_city_close, img_email_close, img_mobile_close, img_local_add_close, img_permanent_add_close, img_pincode_close, img_area_close, img_state_close, img_bdate_close, img_mdate_close, img_mosad_close, img_education_close, img_gotra_close, img_bg_close, img_expired_close, img_rented_close, img_donor_close, img_oaddress_close, img_sub_cat_close, img_cat_close, img_occu_close, img_activity_close, img_btime_close, img_bplace_close, img_spect_close, img_shani_close, img_mangal_close, img_height_close, img_weight_close, img_per_close, img_updated_close, img_created_close;
         LinearLayout ll_family_code, ll_head, ll_member, ll_surname, ll_samaj, ll_gender, ll_marital, ll_native, ll_city, ll_age, ll_email, ll_mobile, ll_local_add, ll_permanent_add, ll_pincode, ll_area, ll_state, ll_birth_date, ll_mdate, ll_mosad, ll_education, ll_gotra, ll_bg, ll_isExpired, ll_isRented, ll_isDonor, ll_office_add, ll_cat, ll_sub_cat, ll_occupation, ll_activity, ll_btime, ll_bplace, ll_isSpect, ll_isShani, ll_isMangal, ll_height, ll_weight, ll_created, ll_updated, ll_percentage;
         EditText edt_family_code, edt_head_name, edt_member, edt_email, edt_mobile, edt_local_add, edt_permanent_add, edt_pincode, edt_birth_date, edt_mdate, edt_office, edt_btime, edt_height_meter, edt_weight_kg, edt_updated, edt_created;
         MaterialSpinner sp_surname, sp_samaj, sp_marital, sp_city, sp_gender, sp_native, sp_area, sp_state, sp_mosad, sp_education, sp_gotra, sp_bg, sp_main_cat, sp_sub_cat, sp_occupation, sp_activity, sp_bplace;
@@ -606,7 +603,6 @@ public class SmartPopUpAdapter extends BaseAdapter {
 
         PopUpViewHolder(View view) {
             flexboxLayout = view.findViewById(R.id.flexbox_layout);
-            img_popup_close = view.findViewById(R.id.img_popup_close);
             ll_family_code = view.findViewById(R.id.ll_family_code);
             ll_head = view.findViewById(R.id.ll_head);
             ll_member = view.findViewById(R.id.ll_member);

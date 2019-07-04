@@ -5,63 +5,53 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/img_popup_close"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_gravity="right"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/ic_cancel_popup"
-        android:padding="10dp"
-        android:visibility="gone" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginStart="15dp"
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/edt_filter_name"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
+            android:layout_width="150dp"
+            android:layout_weight="1"
+            android:layout_height="35dp"
+            android:textAlignment="center"
+            android:background="@drawable/round_corner_mid_gray"
             android:hint="Filter Name"
             android:text="Filter 1"
-            android:visibility="gone"
+            android:paddingStart="10dp"
+            android:singleLine="true"
+            android:paddingRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:visibility="invisible"
             android:textSize="14sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+
+        <CheckBox
+            android:id="@+id/chk_save"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <CheckBox
-                android:id="@+id/chk_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Save"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/btnApply"
-                android:layout_width="60dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="20dp"
-                android:background="@drawable/border_color_primary"
-                android:text="Apply"
-                android:textSize="14sp" />
+            android:layout_gravity="center"
+            android:text="Save"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="16sp" />
 
 
-
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/btnApply"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:fontFamily="@font/montserrat_semibold"
+            android:background="@drawable/round_corner_white"
+            android:text="Apply"
+            android:layout_marginLeft="10dp"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
@@ -71,7 +61,7 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_weight="1"
         app:alignContent="stretch"
         app:alignItems="stretch"
@@ -82,6 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
+            android:visibility="gone"
             android:background="@drawable/round_corner_white"
             android:orientation="horizontal">
 
@@ -1901,6 +1892,10 @@
 
 
     </com.google.android.flexbox.FlexboxLayout>
+
+
+
+
 
 
 </LinearLayout>

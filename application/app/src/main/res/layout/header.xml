@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="false"
+    android:enabled="false"
+    android:filterTouchesWhenObscured="false"
+    android:focusableInTouchMode="false"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/ll_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="false"
+        android:enabled="false"
+        android:filterTouchesWhenObscured="false"
+        android:focusableInTouchMode="false"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -15,46 +23,41 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:fontFamily="@font/montserrat_semibold"
             android:text="Welcome to \nSmart Filter"
-            android:textSize="30sp"
-            android:fontFamily="@font/montserrat_semibold" />
+            android:textSize="30sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:fontFamily="@font/montserrat_regular"
             android:layout_marginBottom="10dp"
+            android:fontFamily="@font/montserrat_regular"
             android:text="You can search here using many filter options(Like Family head,Family members, Mobile No, Email Id etc...)"
             android:textSize="15sp" />
     </LinearLayout>
 
     <TextView
-        android:id="@+id/header"
+        android:id="@+id/tv_header"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/round_corner_gray"
         android:drawablePadding="10dp"
+        android:fontFamily="@font/montserrat_semibold"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:text="Main Details"
         android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        android:fontFamily="@font/montserrat_semibold" />
+        android:textSize="18sp" />
 
-    <Button
-        android:id="@+id/btn_confirm"
-        android:layout_width="150dp"
+    <TextView
+        android:id="@+id/tv_bottom"
+        android:layout_width="match_parent"
         android:layout_marginBottom="80dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/montserrat_semibold"
-        android:background="@drawable/border_color_primary"
-        android:text="Verify"
-        android:textColor="@color/colorPrimary"   />
+        android:layout_height="0dp" />
+
 
 </LinearLayout>

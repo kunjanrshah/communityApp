@@ -3,10 +3,7 @@ package com.krs.community.fragments;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
-import android.util.SparseBooleanArray;
 import android.view.ActionMode;
-import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,16 +19,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
 import com.krs.community.adapter.FilterResultAdapter;
-import com.krs.community.adapter.MessagesAdapter;
 import com.krs.community.model.Message;
-import com.krs.community.utils.FlipAnimator;
 import com.krs.community.utils.Utility;
 
 import java.util.ArrayList;
@@ -56,7 +48,7 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
 
         ImageView iv_cancel=rootView.findViewById(R.id.iv_cancel);
         iv_cancel.setOnClickListener(v -> {
-            Utility.movetoFragment(getActivity(),new FilterListFragment());
+            Utility.movetoFragment(getActivity(),new ExpandableFilterListFragment());
         });
 
         rv_filters =rootView.findViewById(R.id.lstFilter);
@@ -66,10 +58,6 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         ll_title=rootView.findViewById(R.id.ll_title);
         actionModeCallback = new ActionModeCallback();
 
-        ImageView img_edit=rootView.findViewById(R.id.img_edit);
-        img_edit.setOnClickListener(v -> {
-
-        });
 
         setupList();
         getInbox();
@@ -81,7 +69,7 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         super.onResume();
         mShimmerViewContainer.startShimmerAnimation();
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-        DashboardActivity.spaceNavigationView.setVisibility(View.GONE);
+        DashboardActivity.spaceNavigationView.setVisibility(View.VISIBLE);
     }
 
     @Override

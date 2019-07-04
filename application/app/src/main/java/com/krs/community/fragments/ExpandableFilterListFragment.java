@@ -1,7 +1,10 @@
 package com.krs.community.fragments;
 
 
+import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,17 +24,23 @@ import com.krs.community.activity.DashboardActivity;
 import com.krs.community.adapter.SmartFilterAdapter;
 import com.krs.community.utils.Utility;
 
-public class FilterListFragment extends Fragment {
+
+public class ExpandableFilterListFragment extends Fragment {
     private ExpandableListView expandableListView;
     private int previousGroup = -1;
     private SmartFilterAdapter adapter;
-    private String TAG = FilterListFragment.class.getSimpleName();
+    private String TAG = ExpandableFilterListFragment.class.getSimpleName();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_smart_search, container, false);
         expandableListView = rootView.findViewById(R.id.lst_expandable);
         expandableListView.setGroupIndicator(null);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Utility.changeStatusbarColor(getActivity(),R.color.white,false);
+        }
+
         adapter = new SmartFilterAdapter(getActivity());
         expandableListView.setAdapter(adapter);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Smart Filter");
@@ -43,6 +52,17 @@ public class FilterListFragment extends Fragment {
             Utility.movetoFragment(getActivity(),new DashboardFragment());
         });
 
+        ImageView iv_filter=rootView.findViewById(R.id.iv_filter);
+        iv_filter.setOnClickListener(v -> {
+            Utility.movetoFragment(getActivity(),new FiltersFragment());
+        });
+
+        ImageView iv_verify=rootView.findViewById(R.id.iv_verify);
+        iv_verify.setOnClickListener(v -> {
+            Utility.hideKeyboard(getActivity());
+
+            new Handler().postDelayed(() -> adapter.openBottomSheetDailog(),500);
+        });
 
         expandableListView.setOnScrollListener(new OnScrollObserver() {
             @Override
@@ -66,6 +86,7 @@ public class FilterListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Utility.hideKeyboard(getActivity());
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
     }
 
@@ -81,7 +102,7 @@ public class FilterListFragment extends Fragment {
         // This listener will show toast on group click
         expandableListView.setOnGroupClickListener((listview, view, group_pos, id) -> {
 
-            if (group_pos == 0) {
+            if (group_pos == 0 || group_pos==7) {
                 return true;
             } else {
                 adapter.storeFieldsValues();
@@ -131,5 +152,6 @@ public class FilterListFragment extends Fragment {
             last = current;
         }
     }
+
 
 }

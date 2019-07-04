@@ -3,12 +3,12 @@ package com.krs.community.adapter;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -41,7 +41,6 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
 
     public SmartFilterAdapter(Context context) {
         this._context = context;
-
         mapChildValues = new HashMap<>();
         header = new ArrayList<>();
         header.add("");
@@ -218,97 +217,198 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
 
         // Inflating header layout and setting text
         if (convertView == null) {
-            LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater infalInflater = LayoutInflater.from(_context);
             if (infalInflater != null) {
                 convertView = infalInflater.inflate(R.layout.header, parent, false);
             }
         }
         LinearLayout ll_title = convertView.findViewById(R.id.ll_title);
-        TextView header_text = convertView.findViewById(R.id.header);
-        Button btn_confirm = convertView.findViewById(R.id.btn_confirm);
-
+        TextView tv_header = convertView.findViewById(R.id.tv_header);
+        TextView tv_bottom = convertView.findViewById(R.id.tv_bottom);
         if (groupPosition == 0) {
             ll_title.setVisibility(View.VISIBLE);
-            header_text.setVisibility(View.GONE);
-            btn_confirm.setVisibility(View.GONE);
+            tv_header.setVisibility(View.GONE);
+            tv_bottom.setVisibility(View.GONE);
         } else if (groupPosition == 7) {
             ll_title.setVisibility(View.GONE);
-            header_text.setVisibility(View.GONE);
-            btn_confirm.setVisibility(View.VISIBLE);
-        } else {
-            ll_title.setVisibility(View.GONE);
-            btn_confirm.setVisibility(View.GONE);
-            header_text.setVisibility(View.VISIBLE);
-        }
-        btn_confirm.setOnClickListener(v -> {
-            storeFieldsValues();
-            if (mapChildValues.size() > 0) {
-                SmartPopUpAdapter popUpAdapter = new SmartPopUpAdapter(_context,this, mapChildValues);
-                dialog = DialogPlus.newDialog(_context).setAdapter(popUpAdapter).setOnItemClickListener((dialog1, item, view1, position) -> {
-                }).setExpanded(true).setContentBackgroundResource(R.drawable.popup_top_corner).setOnItemClickListener((dialog12, item, view, position) -> {
-                    Toast.makeText(_context, "Clicked " + position, Toast.LENGTH_SHORT).show();
-                }).create();
-                dialog.show();
-            } else {
-                Utility.alert(_context, "Please enter filter value");
-            }
-        });
+            tv_header.setVisibility(View.GONE);
+            tv_bottom.setVisibility(View.INVISIBLE);
 
-        header_text.setText(headerTitle);
+        } else {
+            tv_bottom.setVisibility(View.GONE);
+            ll_title.setVisibility(View.GONE);
+            tv_header.setVisibility(View.VISIBLE);
+        }
+
+
+        tv_header.setText(headerTitle);
 
         // If group is expanded then change the text into bold and change the
         // icon
         if (isExpanded) {
-            header_text.setBackground(_context.getResources().getDrawable(R.drawable.round_top_corner));
-            header_text.setTypeface(null, Typeface.BOLD);
-            header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.sort_up, 0);
+            tv_header.setBackground(_context.getResources().getDrawable(R.drawable.round_top_corner));
+            tv_header.setTypeface(null, Typeface.BOLD);
+            tv_header.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.sort_up, 0);
         } else {
             // If group is not expanded then change the text back into normal
             // and change the icon
-            header_text.setBackground(_context.getResources().getDrawable(R.drawable.round_corner_gray));
-            header_text.setTypeface(null, Typeface.NORMAL);
-            header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.sort_down, 0);
+            tv_header.setBackground(_context.getResources().getDrawable(R.drawable.round_corner_gray));
+            tv_header.setTypeface(null, Typeface.NORMAL);
+            tv_header.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.sort_down, 0);
         }
+
+
         return convertView;
     }
 
     public void storeFieldsValues() {
         if (mapChildValues != null) {
             if (edt_head_name != null) {
-                mapChildValues.put(_context.getResources().getString(R.string.ss_family_code), edt_family_code.getText().toString().trim());
-                mapChildValues.put(_context.getResources().getString(R.string.ss_head_name), edt_head_name.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_mem_name), edt_member_name.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_surname), sp_surname.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_samaj), sp_samaj.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_marital), sp_marital.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_city), sp_city.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_gender), sp_gender.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_native), sp_native.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_minage), rangeAgeBar.getSelectedMinValue().toString());
-                mapChildValues.put(_context.getString(R.string.ss_maxage), rangeAgeBar.getSelectedMaxValue().toString());
+                String family_code = edt_family_code.getText().toString().trim();
+                if (!family_code.isEmpty()) {
+                    mapChildValues.put(_context.getResources().getString(R.string.ss_family_code), family_code);
+                }
+                String head_name = edt_head_name.getText().toString().trim();
+                if (!head_name.isEmpty()) {
+                    mapChildValues.put(_context.getResources().getString(R.string.ss_head_name), head_name);
+                }
+
+                String mem_name = edt_member_name.getText().toString().trim();
+                if (!mem_name.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_mem_name), mem_name);
+                }
+                String surname = sp_surname.getText().toString().trim();
+                if (!surname.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_surname), surname);
+                }
+
+                String samaj = sp_samaj.getText().toString().trim();
+                if (!samaj.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_samaj), samaj);
+                }
+
+                String marital = sp_marital.getText().toString().trim();
+                if (!marital.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_marital), marital);
+                }
+
+                String city = sp_city.getText().toString().trim();
+                if (!city.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_city), city);
+                }
+
+                String gender = sp_gender.getText().toString().trim();
+                if (!gender.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_gender), gender);
+                }
+
+                String _native = sp_native.getText().toString().trim();
+                if (!_native.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_native), _native);
+                }
+
+                String min = rangeAgeBar.getSelectedMinValue().toString();
+                String max = rangeAgeBar.getSelectedMaxValue().toString();
+
+                if (!min.isEmpty() && !max.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_minage), min);
+                    mapChildValues.put(_context.getString(R.string.ss_maxage), max);
+                }
+
             }
             if (edt_email != null) {
-                mapChildValues.put(_context.getString(R.string.ss_edt_email), edt_email.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_edt_mobile), edt_mobile.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_edt_local_add), edt_local_add.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_edt_permanent_add), edt_permanent_add.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_edt_pin_code), edt_pin_code.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_area), sp_area.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_state), sp_state.getText().toString().trim());
+                String email = edt_email.getText().toString().trim();
+                if (!email.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_edt_email), email);
+                }
+
+                String mobile = edt_mobile.getText().toString().trim();
+                if (!mobile.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_edt_mobile), mobile);
+                }
+
+                String local_add = edt_local_add.getText().toString().trim();
+                if (!local_add.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_edt_local_add), local_add);
+                }
+
+                String permanent = edt_permanent_add.getText().toString().trim();
+                if (!permanent.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_edt_permanent_add), permanent);
+                }
+
+                String pincode = edt_pin_code.getText().toString().trim();
+                if (!pincode.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_edt_pin_code), pincode);
+                }
+
+                String area = sp_area.getText().toString().trim();
+                if (!area.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_area), area);
+                }
+
+                String state = sp_state.getText().toString().trim();
+                if (!state.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_state), state);
+                }
+
+
             }
             if (edt_bdate != null) {
-                mapChildValues.put(_context.getString(R.string.ss_edt_bdate), edt_bdate.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_edt_mdate), edt_mdate.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_mosad), sp_mosad.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_education), sp_education.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_gotra), sp_gotra.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_bg), sp_bg.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_chk_is_donor), String.valueOf(chk_is_donor.isChecked()));
-                mapChildValues.put(_context.getString(R.string.ss_chk_is_rented), String.valueOf(chk_is_rented.isChecked()));
-                mapChildValues.put(_context.getString(R.string.ss_chk_is_expired), String.valueOf(chk_is_expired.isChecked()));
+                String bdate = edt_bdate.getText().toString().trim();
+                if (!bdate.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_edt_bdate), bdate);
+                }
+
+                String mdate = edt_mdate.getText().toString().trim();
+                if (!mdate.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_edt_mdate), mdate);
+                }
+
+                String mosad = sp_mosad.getText().toString().trim();
+                if (!mosad.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_mosad), mosad);
+                }
+
+                String educaiton = sp_education.getText().toString().trim();
+                if (!educaiton.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_education), educaiton);
+                }
+
+                String gotra = sp_gotra.getText().toString().trim();
+                if (!gotra.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_gotra), gotra);
+                }
+
+                String bg = sp_bg.getText().toString().trim();
+                if (!bg.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_bg), bg);
+                }
+
+                String donor = String.valueOf(chk_is_donor.isChecked());
+                if (!donor.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_chk_is_donor), donor);
+                }
+
+                String is_rented = String.valueOf(chk_is_rented.isChecked());
+                if (!is_rented.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_chk_is_rented), is_rented);
+                }
+
+                String expired = String.valueOf(chk_is_expired.isChecked());
+                if (!expired.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_chk_is_expired), expired);
+                }
+
+
             }
             if (edt_office != null) {
-                mapChildValues.put(_context.getString(R.string.ss_edt_office), edt_office.getText().toString().trim());
+
+                String office = edt_office.getText().toString().trim();
+                if (!office.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_edt_office), office);
+                }
+
                 mapChildValues.put(_context.getString(R.string.ss_sp_main_cat), sp_main_cat.getText().toString().trim());
                 mapChildValues.put(_context.getString(R.string.ss_sp_sub_cat), sp_sub_cat.getText().toString().trim());
                 mapChildValues.put(_context.getString(R.string.ss_sp_occupation), sp_occupation.getText().toString().trim());
@@ -561,7 +661,7 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+        Log.d("SmartFilterAdapter", "groupPosition: " + groupPosition);
         switch (groupPosition) {
             case 1:
                 if (inflater != null) {
@@ -695,6 +795,8 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
                 retrieveFieldsValues();
 
                 break;
+            default:
+                break;
         }
 
         return convertView;
@@ -710,6 +812,21 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
     public void PopupClose() {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
+        }
+    }
+
+    public void openBottomSheetDailog() {
+        storeFieldsValues();
+        if (mapChildValues.size() > 0) {
+            SmartPopUpAdapter popUpAdapter = new SmartPopUpAdapter(_context, this, mapChildValues);
+            dialog = DialogPlus.newDialog(_context).setAdapter(popUpAdapter).setOnItemClickListener((dialog1, item, view1, position) -> {
+            }).setExpanded(true).setContentBackgroundResource(R.drawable.popup_top_corner).setOnItemClickListener((dialog12, item, view, position) -> {
+                Toast.makeText(_context, "Clicked " + position, Toast.LENGTH_SHORT).show();
+            }).setCancelable(true).setGravity(Gravity.BOTTOM).setExpanded(true).create();
+
+            dialog.show();
+        } else {
+            Utility.alert(_context, "Please enter filter value");
         }
     }
 }
