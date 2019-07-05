@@ -123,8 +123,16 @@ public class FragmentDrawer extends Fragment {
         NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(getActivity(), getData());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        //  recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, (view, position) -> {
+
+            LinearLayout ll_item=view.findViewById(R.id.ll_item);
+            ImageView imgDrawer = view.findViewById(R.id.imgDrawer);
+            TextView title = view.findViewById(R.id.title);
+
+            ll_item.setBackground(getResources().getDrawable(R.drawable.right_round_corner));
+            title.setTextColor(getResources().getColor(R.color.colorPrimary));
+            imgDrawer.setBackgroundResource(R.drawable.home_primary);
+
             drawerListener.onDrawerItemSelected(view, position);
             mDrawerLayout.closeDrawers();
             //mDrawerLayout.closeDrawer(containerView);

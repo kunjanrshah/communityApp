@@ -278,43 +278,44 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
                     mapChildValues.put(_context.getString(R.string.ss_mem_name), mem_name);
                 }
                 String surname = sp_surname.getText().toString().trim();
-                if (!surname.isEmpty()) {
+                if (!surname.isEmpty() && !surname.equalsIgnoreCase("Surname")) {
                     mapChildValues.put(_context.getString(R.string.ss_sp_surname), surname);
                 }
 
                 String samaj = sp_samaj.getText().toString().trim();
-                if (!samaj.isEmpty()) {
+                if (!samaj.isEmpty() && !samaj.equalsIgnoreCase("samaj")) {
                     mapChildValues.put(_context.getString(R.string.ss_sp_samaj), samaj);
                 }
 
                 String marital = sp_marital.getText().toString().trim();
-                if (!marital.isEmpty()) {
+                if (!marital.isEmpty() && !marital.equalsIgnoreCase("Marital")) {
                     mapChildValues.put(_context.getString(R.string.ss_sp_marital), marital);
                 }
 
                 String city = sp_city.getText().toString().trim();
-                if (!city.isEmpty()) {
+                if (!city.isEmpty() && !city.equalsIgnoreCase("City") ) {
                     mapChildValues.put(_context.getString(R.string.ss_sp_city), city);
                 }
 
                 String gender = sp_gender.getText().toString().trim();
-                if (!gender.isEmpty()) {
+                if (!gender.isEmpty() && !gender.equalsIgnoreCase("gender")) {
                     mapChildValues.put(_context.getString(R.string.ss_sp_gender), gender);
                 }
 
                 String _native = sp_native.getText().toString().trim();
-                if (!_native.isEmpty()) {
+                if (!_native.isEmpty() && !_native.equalsIgnoreCase("Native")) {
                     mapChildValues.put(_context.getString(R.string.ss_sp_native), _native);
                 }
 
                 String min = rangeAgeBar.getSelectedMinValue().toString();
                 String max = rangeAgeBar.getSelectedMaxValue().toString();
 
-                if (!min.isEmpty() && !max.isEmpty()) {
+                if (!min.isEmpty() && !min.equalsIgnoreCase("0")) {
                     mapChildValues.put(_context.getString(R.string.ss_minage), min);
+                }
+                if (!max.isEmpty() && !max.equalsIgnoreCase("100")) {
                     mapChildValues.put(_context.getString(R.string.ss_maxage), max);
                 }
-
             }
             if (edt_email != null) {
                 String email = edt_email.getText().toString().trim();
@@ -343,16 +344,14 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
                 }
 
                 String area = sp_area.getText().toString().trim();
-                if (!area.isEmpty()) {
+                if (!area.isEmpty() && !area.equalsIgnoreCase("area")) {
                     mapChildValues.put(_context.getString(R.string.ss_sp_area), area);
                 }
 
                 String state = sp_state.getText().toString().trim();
-                if (!state.isEmpty()) {
+                if (!state.isEmpty() && !state.equalsIgnoreCase("State")) {
                     mapChildValues.put(_context.getString(R.string.ss_sp_state), state);
                 }
-
-
             }
             if (edt_bdate != null) {
                 String bdate = edt_bdate.getText().toString().trim();
@@ -366,41 +365,39 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
                 }
 
                 String mosad = sp_mosad.getText().toString().trim();
-                if (!mosad.isEmpty()) {
+                if (!mosad.isEmpty() && !mosad.equalsIgnoreCase("Mosad")) {
                     mapChildValues.put(_context.getString(R.string.ss_sp_mosad), mosad);
                 }
 
                 String educaiton = sp_education.getText().toString().trim();
-                if (!educaiton.isEmpty()) {
+                if (!educaiton.isEmpty() && !educaiton.equalsIgnoreCase("Education")) {
                     mapChildValues.put(_context.getString(R.string.ss_sp_education), educaiton);
                 }
 
                 String gotra = sp_gotra.getText().toString().trim();
-                if (!gotra.isEmpty()) {
+                if (!gotra.isEmpty() && !gotra.equalsIgnoreCase("Gotra")) {
                     mapChildValues.put(_context.getString(R.string.ss_sp_gotra), gotra);
                 }
 
                 String bg = sp_bg.getText().toString().trim();
-                if (!bg.isEmpty()) {
+                if (!bg.isEmpty() && !bg.equalsIgnoreCase("BG")) {
                     mapChildValues.put(_context.getString(R.string.ss_sp_bg), bg);
                 }
 
                 String donor = String.valueOf(chk_is_donor.isChecked());
-                if (!donor.isEmpty()) {
+                if (!donor.isEmpty() && !donor.equalsIgnoreCase("false")) {
                     mapChildValues.put(_context.getString(R.string.ss_chk_is_donor), donor);
                 }
 
                 String is_rented = String.valueOf(chk_is_rented.isChecked());
-                if (!is_rented.isEmpty()) {
+                if (!is_rented.isEmpty() && !is_rented.equalsIgnoreCase("false")) {
                     mapChildValues.put(_context.getString(R.string.ss_chk_is_rented), is_rented);
                 }
 
                 String expired = String.valueOf(chk_is_expired.isChecked());
-                if (!expired.isEmpty()) {
+                if (!expired.isEmpty() && !expired.equalsIgnoreCase("false")) {
                     mapChildValues.put(_context.getString(R.string.ss_chk_is_expired), expired);
                 }
-
-
             }
             if (edt_office != null) {
 
@@ -409,25 +406,81 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
                     mapChildValues.put(_context.getString(R.string.ss_edt_office), office);
                 }
 
-                mapChildValues.put(_context.getString(R.string.ss_sp_main_cat), sp_main_cat.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_sub_cat), sp_sub_cat.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_occupation), sp_occupation.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_activity), sp_activity.getText().toString().trim());
+                String main_cat = sp_main_cat.getText().toString().trim();
+                if (!main_cat.isEmpty() && !main_cat.equalsIgnoreCase("Category")) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_main_cat), main_cat);
+                }
+
+                String sub_cat = sp_sub_cat.getText().toString().trim();
+                if (!sub_cat.isEmpty() && !sub_cat.equalsIgnoreCase("Sub_Cat")) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_sub_cat), sub_cat);
+                }
+
+                String occupatation = sp_occupation.getText().toString().trim();
+                if (!occupatation.isEmpty() && !occupatation.equalsIgnoreCase("Occupation")) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_occupation), occupatation);
+                }
+
+                String activity = sp_activity.getText().toString().trim();
+                if (!activity.isEmpty() && !activity.equalsIgnoreCase("Activity")) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_activity), activity);
+                }
             }
             if (edt_birth_time != null) {
-                mapChildValues.put(_context.getString(R.string.ss_edt_birth_time), edt_birth_time.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_edt_height_meter), edt_height_meter.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_edt_weight_kg), edt_weight_kg.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_sp_bplace), sp_bplace.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_chk_is_spect), String.valueOf(chk_is_spect.isChecked()));
-                mapChildValues.put(_context.getString(R.string.ss_chk_is_shani), String.valueOf(chk_is_shani.isChecked()));
-                mapChildValues.put(_context.getString(R.string.ss_chk_is_mangal), String.valueOf(chk_is_mangal.isChecked()));
+                String btime = edt_birth_time.getText().toString().trim();
+                if (!btime.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_edt_birth_time), btime);
+                }
+
+                String meter = edt_height_meter.getText().toString().trim();
+                if (!meter.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_edt_height_meter), meter);
+                }
+
+                String weight = edt_weight_kg.getText().toString().trim();
+                if (!weight.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_edt_weight_kg), weight);
+                }
+
+                String bplace = sp_bplace.getText().toString().trim();
+                if (!bplace.isEmpty() && !bplace.equalsIgnoreCase("bplace")) {
+                    mapChildValues.put(_context.getString(R.string.ss_sp_bplace), bplace);
+                }
+
+                String is_spect = String.valueOf(chk_is_spect.isChecked());
+                if (!is_spect.isEmpty() && !is_spect.equalsIgnoreCase("false")) {
+                    mapChildValues.put(_context.getString(R.string.ss_chk_is_spect), is_spect);
+                }
+
+                String is_shani = String.valueOf(chk_is_shani.isChecked());
+                if (!is_shani.isEmpty() && !is_shani.equalsIgnoreCase("false")) {
+                    mapChildValues.put(_context.getString(R.string.ss_chk_is_shani), is_shani);
+                }
+
+                String is_mangal = String.valueOf(chk_is_mangal.isChecked());
+                if (!is_mangal.isEmpty() && !is_mangal.equalsIgnoreCase("false")) {
+                    mapChildValues.put(_context.getString(R.string.ss_chk_is_mangal), is_mangal);
+                }
+
             }
             if (edt_created != null) {
-                mapChildValues.put(_context.getString(R.string.ss_edt_created), edt_created.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_edt_updated), edt_updated.getText().toString().trim());
-                mapChildValues.put(_context.getString(R.string.ss_minUpdate), rangeUpdationBar.getSelectedMinValue().toString());
-                mapChildValues.put(_context.getResources().getString(R.string.ss_maxUpdate), rangeUpdationBar.getSelectedMaxValue().toString());
+                String created = edt_created.getText().toString().trim();
+                if (!created.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_edt_created), created);
+                }
+
+
+                String updated = edt_updated.getText().toString().trim();
+                if (!updated.isEmpty()) {
+                    mapChildValues.put(_context.getString(R.string.ss_edt_updated), updated);
+                }
+
+                String min = rangeUpdationBar.getSelectedMinValue().toString();
+                String max = rangeUpdationBar.getSelectedMaxValue().toString();
+                if (!min.isEmpty() && !max.isEmpty() && !max.equalsIgnoreCase("100") && !min.equalsIgnoreCase("0")) {
+                    mapChildValues.put(_context.getString(R.string.ss_minUpdate), min);
+                    mapChildValues.put(_context.getResources().getString(R.string.ss_maxUpdate), max);
+                }
             }
         }
     }
@@ -448,7 +501,7 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
                     edt_member_name.setText(mem_name);
                 }
                 String surname = mapChildValues.get(_context.getResources().getString(R.string.ss_sp_surname));
-                if (surname != null && !surname.isEmpty()) {
+                if (surname != null && !surname.isEmpty() && !surname.equalsIgnoreCase("Surname")) {
                     sp_surname.setText(surname);
                 }
                 String samaj = mapChildValues.get(_context.getResources().getString(R.string.ss_sp_samaj));
@@ -456,7 +509,7 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
                     sp_samaj.setText(samaj);
                 }
                 String marital = mapChildValues.get(_context.getResources().getString(R.string.ss_sp_marital));
-                if (marital != null && !marital.isEmpty()) {
+                if (marital != null && !marital.isEmpty() && !marital.equalsIgnoreCase("Marital")) {
                     sp_marital.setText(marital);
                 }
                 String city = mapChildValues.get(_context.getResources().getString(R.string.ss_sp_city));
@@ -464,7 +517,7 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
                     sp_city.setText(city);
                 }
                 String gender = mapChildValues.get(_context.getResources().getString(R.string.ss_sp_gender));
-                if (gender != null && !gender.isEmpty()) {
+                if (gender != null && !gender.isEmpty() && !gender.equalsIgnoreCase("gender")) {
                     sp_gender.setText(gender);
                 }
 
@@ -475,10 +528,10 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
 
                 String maxAge = mapChildValues.get(_context.getString(R.string.ss_maxAge));
                 String minAge = mapChildValues.get(_context.getString(R.string.ss_minAge));
-                if (maxAge != null && !maxAge.isEmpty()) {
+                if (maxAge != null && !maxAge.isEmpty() && !maxAge.equalsIgnoreCase("100")) {
                     rangeAgeBar.setMaxStartValue(Integer.parseInt(mapChildValues.get(_context.getString(R.string.ss_maxAge)))).apply();
                 }
-                if (minAge != null && !minAge.isEmpty()) {
+                if (minAge != null && !minAge.isEmpty() && !minAge.equalsIgnoreCase("0")) {
                     rangeAgeBar.setMinStartValue(Integer.parseInt(mapChildValues.get(_context.getString(R.string.ss_minAge)))).apply();
                 }
             }

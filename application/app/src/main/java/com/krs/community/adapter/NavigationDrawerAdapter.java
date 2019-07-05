@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,13 +43,13 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
                 holder.imgDrawer.setBackgroundResource(R.drawable.home);
                 break;
             case 1:
-                holder.imgDrawer.setBackgroundResource(R.drawable.filter_icon);
+                holder.imgDrawer.setBackgroundResource(R.drawable.filter_outline);
                 break;
             case 2:
                 holder.imgDrawer.setBackgroundResource(R.drawable.analytics);
                 break;
             case 3:
-                holder.imgDrawer.setBackgroundResource(R.drawable.committee);
+                holder.imgDrawer.setBackgroundResource(R.drawable.committee1);
                 break;
         }
     }
@@ -61,9 +62,10 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     class MyViewHolder extends RecyclerView.ViewHolder {
         final TextView title;
         final ImageView imgDrawer;
-
+        LinearLayout ll_item;
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
+            ll_item = itemView.findViewById(R.id.ll_item);
             title = itemView.findViewById(R.id.title);
             imgDrawer = itemView.findViewById(R.id.imgDrawer);
         }

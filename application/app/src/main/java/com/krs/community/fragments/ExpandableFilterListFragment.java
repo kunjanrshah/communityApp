@@ -61,21 +61,19 @@ public class ExpandableFilterListFragment extends Fragment {
         iv_verify.setOnClickListener(v -> {
             Utility.hideKeyboard(getActivity());
 
-            new Handler().postDelayed(() -> adapter.openBottomSheetDailog(),500);
+            new Handler().postDelayed(() -> adapter.openBottomSheetDailog(),250);
         });
 
         expandableListView.setOnScrollListener(new OnScrollObserver() {
             @Override
             public void onScrollUp() {
                 Log.d(TAG, "onScrollUp");
-
                 DashboardActivity.spaceNavigationView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onScrollDown() {
                 Log.d(TAG, "onScrollDown");
-
                 DashboardActivity.spaceNavigationView.setVisibility(View.GONE);
             }
         });

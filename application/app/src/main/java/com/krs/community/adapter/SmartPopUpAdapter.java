@@ -2,6 +2,7 @@ package com.krs.community.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import android.widget.Toast;
 
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
 import com.google.android.flexbox.AlignItems;
@@ -28,6 +25,8 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.krs.community.R;
 import com.krs.community.fragments.SmartFilterResult;
 import com.krs.community.utils.Utility;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -417,8 +416,8 @@ public class SmartPopUpAdapter extends BaseAdapter {
             viewHolder.rangeUpdationBar.setOnRangeSeekbarChangeListener((minValue, maxValue) -> {
                 if (minValue.intValue() > 0 || maxValue.intValue() < 100) {
                     viewHolder.ll_percentage.setVisibility(View.VISIBLE);
-                    viewHolder.txt_min_per.setText(minValue+"%");
-                    viewHolder.txt_max_per.setText(maxValue+"%");
+                    viewHolder.txt_min_per.setText(minValue + "%");
+                    viewHolder.txt_max_per.setText(maxValue + "%");
                 }
             });
             // set final value listener
@@ -562,12 +561,194 @@ public class SmartPopUpAdapter extends BaseAdapter {
         });
 
         viewHolder.btnApply.setOnClickListener(v -> {
-            mICloseDialog.PopupClose();
 
-            Utility.movetoFragment((Activity) _context,new SmartFilterResult());
+            if (getValues(viewHolder).length() > 0) {
+                mICloseDialog.PopupClose();
+                SmartFilterResult filterResult = new SmartFilterResult();
+                Bundle mBundle = new Bundle();
+                mBundle.putString("filter_values", getValues(viewHolder).toString());
+                filterResult.setArguments(mBundle);
+                Utility.movetoFragment((Activity) _context, filterResult);
+            } else {
+                Toast.makeText(_context, "No Filter found!", Toast.LENGTH_SHORT).show();
+            }
         });
         return convertView;
     }
+
+    private JSONObject getValues(PopUpViewHolder viewHolder) {
+        JSONObject lstValues = new JSONObject();
+        try {
+            if (viewHolder.ll_family_code.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_family_code), viewHolder.edt_family_code.getText().toString().trim());
+            }
+            if (viewHolder.ll_head.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_head_name), viewHolder.edt_head_name.getText().toString().trim());
+            }
+            if (viewHolder.ll_member.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_mem_name), viewHolder.edt_member.getText().toString().trim());
+            }
+            if (viewHolder.ll_surname.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_surname), viewHolder.sp_surname.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_samaj.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_samaj), viewHolder.sp_samaj.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_gender.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_gender), viewHolder.sp_gender.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_marital.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_marital), viewHolder.sp_marital.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_native.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_native), viewHolder.sp_native.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_city.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_city), viewHolder.sp_city.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_age.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_minAge), viewHolder.rangeAgeBar.getSelectedMinValue().toString().trim());
+                lstValues.put(_context.getResources().getString(R.string.ss_maxAge), viewHolder.rangeAgeBar.getSelectedMaxValue().toString().trim());
+            }
+
+            if (viewHolder.ll_email.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_edt_email), viewHolder.edt_email.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_mobile.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_edt_mobile), viewHolder.edt_mobile.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_local_add.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_edt_local_add), viewHolder.edt_local_add.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_permanent_add.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_edt_permanent_add), viewHolder.edt_permanent_add.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_pincode.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_edt_pin_code), viewHolder.edt_pincode.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_area.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_area), viewHolder.sp_area.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_state.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_state), viewHolder.sp_state.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_birth_date.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_edt_bdate), viewHolder.edt_birth_date.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_mdate.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_edt_mdate), viewHolder.edt_mdate.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_mosad.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_mosad), viewHolder.sp_mosad.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_education.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_education), viewHolder.sp_education.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_gotra.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_gotra), viewHolder.sp_gotra.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_bg.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_bg), viewHolder.sp_bg.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_isDonor.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_chk_is_donor), viewHolder.chk_is_donor.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_isRented.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_chk_is_rented), viewHolder.chk_is_rented.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_isExpired.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_chk_is_expired), viewHolder.chk_is_expired.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_office_add.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_edt_office), viewHolder.edt_office.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_cat.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_main_cat), viewHolder.sp_main_cat.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_sub_cat.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_sub_cat), viewHolder.sp_sub_cat.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_occupation.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_occupation), viewHolder.sp_occupation.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_activity.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_activity), viewHolder.sp_activity.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_btime.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_edt_birth_time), viewHolder.edt_btime.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_bplace.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_sp_bplace), viewHolder.sp_bplace.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_isSpect.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_chk_is_spect), viewHolder.chk_is_spect.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_isShani.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_chk_is_shani), viewHolder.chk_is_shani.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_isMangal.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_chk_is_mangal), viewHolder.chk_is_mangal.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_height.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_edt_height_meter), viewHolder.edt_height_meter.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_weight.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_edt_weight_kg), viewHolder.edt_weight_kg.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_created.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_edt_created), viewHolder.edt_created.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_updated.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_edt_updated), viewHolder.edt_updated.getText().toString().trim());
+            }
+
+            if (viewHolder.ll_percentage.isShown()) {
+                lstValues.put(_context.getResources().getString(R.string.ss_maxUpdate), viewHolder.rangeUpdationBar.getSelectedMaxValue().toString().trim());
+                lstValues.put(_context.getResources().getString(R.string.ss_minUpdate), viewHolder.rangeUpdationBar.getSelectedMinValue().toString().trim());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return lstValues;
+    }
+
 
     @Override
     public int getCount() {

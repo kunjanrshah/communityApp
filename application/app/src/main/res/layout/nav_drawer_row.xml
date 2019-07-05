@@ -2,13 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="10dp"
+    android:id="@+id/ll_item"
     android:clickable="true"
+    android:layout_marginRight="10dp"
     android:gravity="center_vertical"
     android:focusable="true"
     android:orientation="horizontal">
 
+
     <ImageView
+        android:layout_marginStart="20dp"
         android:id="@+id/imgDrawer"
         android:layout_width="20dp"
         android:layout_height="20dp"
@@ -21,9 +24,9 @@
         android:gravity="center_vertical"
         android:paddingStart="20dp"
         android:text="Home"
-        android:fontFamily="@font/montserrat_regular"
+        android:fontFamily="@font/montserrat_medium"
         android:layout_gravity="center"
-        android:textColor="@color/mdtp_white"
+        android:textColor="@color/black"
         android:textSize="16sp"
          />
 

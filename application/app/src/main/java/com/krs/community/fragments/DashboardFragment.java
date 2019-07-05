@@ -89,13 +89,13 @@ public class DashboardFragment extends Fragment {
         setFavoriteList();
         gridMenu.setAdapter(new MenuAdapter(getActivity()));
 
-        ImageView iv_all_favorites=rootView.findViewById(R.id.iv_all_favorites);
-        iv_all_favorites.setOnClickListener(v -> {
+        TextView tv_all_favorites=rootView.findViewById(R.id.tv_all_favorites);
+        tv_all_favorites.setOnClickListener(v -> {
             Utility.movetoFragment(getActivity(),new FavoriteFragment());
         });
 
-        ImageView iv_all_news=rootView.findViewById(R.id.iv_all_news);
-        iv_all_news.setOnClickListener(v -> {
+        TextView tv_all_news=rootView.findViewById(R.id.tv_all_news);
+        tv_all_news.setOnClickListener(v -> {
             Utility.movetoFragment(getActivity(),new NewsFragment());
         });
 
