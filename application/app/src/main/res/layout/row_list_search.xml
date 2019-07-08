@@ -31,11 +31,53 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ImageView
+                <RelativeLayout
+                    android:id="@+id/icon_container"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@drawable/round_corner_profile"
-                    android:src="@drawable/user" />
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/icon_back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fillAfter="false"
+                        android:fillEnabled="false">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/bg_circle" />
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_done_white_24dp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/icon_front"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fillAfter="false"
+                        android:fillEnabled="false">
+
+                        <ImageView
+                            android:id="@+id/icon_profile"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp" />
+
+                        <TextView
+                            android:id="@+id/icon_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textColor="@android:color/white"
+                            android:textSize="22sp" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
 
                 <com.nightonke.boommenu.BoomMenuButton
                     android:id="@+id/bmb1"
@@ -51,6 +93,8 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/message_container"
+                android:clickable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">

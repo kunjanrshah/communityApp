@@ -1,5 +1,6 @@
 package com.krs.community.fragments
 
+
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -16,20 +17,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.FacebookSdk
 import com.krs.community.R
 import com.krs.community.activity.ProfileDetailActivity
-import com.krs.community.adapter.RecyclerAdapter
 import com.krs.community.adapter.RecyclerAdapter.ItemClickListener
 import com.krs.community.app.AppController
 import com.krs.community.interfaces.OnBackPressedListener
-import com.krs.community.model.DataProvider
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
-import com.krs.community.utils.AppConstants.*
+import com.krs.community.utils.AppConstants.EXTRA_COORDINATES
+import com.krs.community.utils.AppConstants.EXTRA_POSITION
 import com.krs.community.utils.Utility
 import com.krs.community.utils.Utility.hideKeyboard
 import com.nightonke.boommenu.BoomMenuButton
 import kotlinx.android.synthetic.main.family_header_detail.view.*
-
-
 import spencerstudios.com.bungeelib.Bungee
 
 

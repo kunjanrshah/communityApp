@@ -4,46 +4,59 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.transition.TransitionInflater
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.iammert.library.ui.multisearchviewlib.MultiSearchView
 import com.krs.community.R
 import com.krs.community.adapter.RecyclerAdapter
 import com.krs.community.model.DataProvider
+import com.krs.community.model.Message
 import com.krs.community.utils.Utility
 import com.krs.community.utils.copyViewImage
 import com.krs.community.utils.supportsLollipop
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_search_result.*
-import kotlinx.android.synthetic.main.header_calendar.*
+import java.util.ArrayList
 
 
-class SearchListFragment : Fragment(), View.OnClickListener {
+class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.OnRefreshListener {
+    override fun onRefresh() {
+        getInbox()
+    }
 
-    private var lstProfile: RecyclerView? = null
+    private var rv_search: RecyclerView? = null
     private var recyclerAdapter: RecyclerAdapter<DataProvider.DataProvider1.Card>? = null
     private var mShimmerViewContainer: ShimmerFrameLayout? = null
     private var multiSearchView: MultiSearchView? = null
     private var iv_cancel: ImageView? = null
     lateinit var view1:View
+    private var actionModeCallback: ActionModeCallback? = null
+    private var actionMode: ActionMode? = null
+    private var swipeRefreshLayout: SwipeRefreshLayout? = null
+    private var ll_title: LinearLayout? = null
+    private val messages = ArrayList<Message>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_search_result, container, false)
         view1=rootView
         multiSearchView = rootView.findViewById(R.id.multiSearchView)
-        lstProfile = rootView.findViewById(R.id.lstProfile)
+        rv_search = rootView.findViewById(R.id.rv_search)
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
         iv_cancel = rootView.findViewById(R.id.iv_cancel)
+        swipeRefreshLayout = rootView.findViewById<View>(R.id.swipe_refresh_layout) as SwipeRefreshLayout
+        swipeRefreshLayout!!.setOnRefreshListener(this)
+        ll_title = rootView.findViewById(R.id.ll_title)
+        actionModeCallback = ActionModeCallback()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity,R.color.white,false)
@@ -72,6 +85,7 @@ class SearchListFragment : Fragment(), View.OnClickListener {
             Utility.movetoFragment(activity,DashboardFragment())
         }
 
+        getInbox()
         setupList()
 
         return rootView
@@ -93,7 +107,27 @@ class SearchListFragment : Fragment(), View.OnClickListener {
         }, 1500)
     }
 
+    private fun getInbox() {
+        swipeRefreshLayout!!.setRefreshing(true)
+        messages.clear()
 
+        for (i in 0..19) {
+            val message = Message()
+            message.id = 1
+            message.isImportant = false
+            message.message = "Now android supports multiple voice recogonization"
+            message.picture = "https://api.androidhive.info/json/google.png"
+            message.isRead = false
+            message.timestamp = "10:30 AM"
+            message.from = "Google Alerts"
+            message.subject = "Google Alert - android"
+            message.color = Utility.getRandomMaterialColor(activity!!, "400")
+            messages.add(message)
+        }
+
+        recyclerAdapter?.notifyDataSetChanged()
+        swipeRefreshLayout?.setRefreshing(false)
+    }
 
     override fun onPause() {
         (activity as AppCompatActivity).supportActionBar!!.show()
@@ -103,10 +137,10 @@ class SearchListFragment : Fragment(), View.OnClickListener {
 
     private fun setupList() {
 
-        lstProfile!!.layoutManager = LinearLayoutManager(activity)
+        rv_search!!.layoutManager = LinearLayoutManager(activity)
         recyclerAdapter = RecyclerAdapter<DataProvider.DataProvider1.Card>(DataProvider.getCardData(),null, this@SearchListFragment)
-        lstProfile!!.adapter = recyclerAdapter
-        lstProfile!!.setHasFixedSize(true)
+        rv_search!!.adapter = recyclerAdapter
+        rv_search!!.setHasFixedSize(true)
         Handler().postDelayed({
             // stop animating Shimmer and hide the layout
             mShimmerViewContainer!!.stopShimmerAnimation()
@@ -134,7 +168,7 @@ class SearchListFragment : Fragment(), View.OnClickListener {
         positions[1] = view.y + activity!!.myAppBar.height
         positions[2] = toY
 
-        val adapterPosition = lstProfile!!.getChildAdapterPosition(view)
+        val adapterPosition = rv_search!!.getChildAdapterPosition(view)
         val detailsFragment = FamilyDetailFragment.newInstance(positions, adapterPosition)
         val transaction = fragmentManager?.beginTransaction()
                 ?.replace(R.id.container_body, detailsFragment, FamilyDetailFragment.TAG)
@@ -149,7 +183,64 @@ class SearchListFragment : Fragment(), View.OnClickListener {
                     ?.addSharedElement(view, view.transitionName)
             //  ?.addSharedElement(details_toolbar_transition_helper, details_toolbar_transition_helper.transitionName)
         }
-
         return transaction
+    }
+
+
+    private inner class ActionModeCallback : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+            mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
+
+            // disable swipe refresh if action mode is enabled
+            swipeRefreshLayout!!.setEnabled(false)
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+            /* ViewGroup   decorView = (ViewGroup) getActivity().getWindow().getDecorView().findViewById(R.id.action_mode_bar);
+            decorView.setBackgroundColor(getResources().getColor(R.color.colorBG));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Utility.changeStatusbarColor(getActivity(),R.color.colorBG,true);
+            }*/
+
+            return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+            when (item.itemId) {
+                R.id.action_delete -> {
+                    // delete all the selected messages
+                    deleteMessages()
+                    mode.finish()
+                    return true
+                }
+
+                else -> return false
+            }
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode) {
+            recyclerAdapter?.clearSelections()
+            swipeRefreshLayout!!.setEnabled(true)
+            actionMode = null
+            ll_title!!.setVisibility(View.VISIBLE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Utility.changeStatusbarColor(activity, R.color.colorBG, false)
+            }
+            rv_search?.post(Runnable {
+                recyclerAdapter!!.resetAnimationIndex()
+                // mAdapter.notifyDataSetChanged();
+            })
+        }
+    }
+
+    private fun deleteMessages() {
+        recyclerAdapter!!.resetAnimationIndex()
+        val selectedItemPositions = recyclerAdapter!!.getSelectedItems()
+        for (i in selectedItemPositions.indices.reversed()) {
+            recyclerAdapter!!.removeData(selectedItemPositions.get(i))
+        }
+        recyclerAdapter?.notifyDataSetChanged()
     }
 }

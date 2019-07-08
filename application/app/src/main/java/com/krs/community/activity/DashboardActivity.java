@@ -82,7 +82,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentDraw
         spaceNavigationView = findViewById(R.id.space);
         spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
         spaceNavigationView.addSpaceItem(new SpaceItem("Home", R.drawable.home));
-        spaceNavigationView.addSpaceItem(new SpaceItem("Calendar", R.drawable.calendar));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Calendar", R.drawable.calendar4));
         spaceNavigationView.shouldShowFullBadgeText(false);
         spaceNavigationView.setCentreButtonIconColorFilterEnabled(false);
         spaceNavigationView.setCentreButtonIcon(R.drawable.filter_icon);

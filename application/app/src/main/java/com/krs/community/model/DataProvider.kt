@@ -43,11 +43,11 @@ class DataProvider
 
         enum class Status(val code: String, @DrawableRes val iconId: Int) {
             CORRECT("Correct", R.drawable.ic_action_search),
-            INCORRECT("Incorrect", R.drawable.calendar),
-            COMPLAINT("Complaint", R.drawable.calendar),
-            ERROR("Error", R.drawable.calendar),
-            RECEIVED("Received", R.drawable.calendar),
-            NOT_RECEIVED("Not received", R.drawable.calendar)
+            INCORRECT("Incorrect", R.drawable.calendar4),
+            COMPLAINT("Complaint", R.drawable.calendar4),
+            ERROR("Error", R.drawable.calendar4),
+            RECEIVED("Received", R.drawable.calendar4),
+            NOT_RECEIVED("Not received", R.drawable.calendar4)
         }
     }
 }

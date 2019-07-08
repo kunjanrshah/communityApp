@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/action_activate"
-        android:icon="@drawable/remove_fav"
+        android:icon="@drawable/del_fav"
         android:orderInCategory="100"
         android:title="UnFavorite"
         app:showAsAction="always" />

@@ -115,7 +115,6 @@ public class FilterResultAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder h, int position) {
         final ViewHolder holder = (ViewHolder) h;
 
-
         if (messages != null && 0 <= position && position < messages.size()) {
             Message message = messages.get(position);
             String name="Kunjan Shah";

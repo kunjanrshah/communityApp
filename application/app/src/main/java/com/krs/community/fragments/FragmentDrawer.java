@@ -21,8 +21,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,6 +49,7 @@ public class FragmentDrawer extends Fragment {
     public View containerView;
     private SharedPreferences mSharedPreferences;
     private FragmentDrawerListener drawerListener;
+    private View view1;
 
     public FragmentDrawer() {
 
@@ -93,7 +92,6 @@ public class FragmentDrawer extends Fragment {
         TextView tv_settings = layout.findViewById(R.id.tv_settings);
 
 
-
         TextView tv_contact_us = layout.findViewById(R.id.tv_contact_us);
         ImageView iv_logout = layout.findViewById(R.id.iv_logout);
         LinearLayout ll_change_lan = layout.findViewById(R.id.ll_change_lan);
@@ -125,13 +123,50 @@ public class FragmentDrawer extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, (view, position) -> {
 
-            LinearLayout ll_item=view.findViewById(R.id.ll_item);
+            if (view1 != null) {
+                LinearLayout ll_item = view1.findViewById(R.id.ll_item);
+                ImageView imgDrawer = view1.findViewById(R.id.imgDrawer);
+                TextView title = view1.findViewById(R.id.title);
+
+                ll_item.setBackground(null);
+                title.setTextColor(getResources().getColor(R.color.black2));
+                if (view1.getTag().toString().equals("0")) {
+                    imgDrawer.setBackgroundResource(R.drawable.home);
+                }else if(view1.getTag().toString().equals("1"))
+                {
+                    imgDrawer.setBackgroundResource(R.drawable.filter_outline);
+                }else if(view1.getTag().toString().equals("2"))
+                {
+                    imgDrawer.setBackgroundResource(R.drawable.analytics);
+                }
+                else if(view1.getTag().toString().equals("3"))
+                {
+                    imgDrawer.setBackgroundResource(R.drawable.committee1);
+                }
+            }
+            view.setTag(position);
+            view1 = view;
+            LinearLayout ll_item = view.findViewById(R.id.ll_item);
             ImageView imgDrawer = view.findViewById(R.id.imgDrawer);
             TextView title = view.findViewById(R.id.title);
 
             ll_item.setBackground(getResources().getDrawable(R.drawable.right_round_corner));
             title.setTextColor(getResources().getColor(R.color.colorPrimary));
-            imgDrawer.setBackgroundResource(R.drawable.home_primary);
+            if(position==0)
+            {
+                imgDrawer.setBackgroundResource(R.drawable.home_primary);
+            }else if(position==1)
+            {
+                imgDrawer.setBackgroundResource(R.drawable.filter_outline_color_primary);
+            }else if(position==2)
+            {
+                imgDrawer.setBackgroundResource(R.drawable.analytics_color_primary);
+            }
+            else if(position==3)
+            {
+                imgDrawer.setBackgroundResource(R.drawable.committee1_color_primary);
+            }
+
 
             drawerListener.onDrawerItemSelected(view, position);
             mDrawerLayout.closeDrawers();

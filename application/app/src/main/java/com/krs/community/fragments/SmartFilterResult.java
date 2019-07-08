@@ -31,7 +31,6 @@ import java.util.List;
 
 public class SmartFilterResult extends Fragment implements FilterResultAdapter.FilterResultAdapterListener,SwipeRefreshLayout.OnRefreshListener{
 
-
     private RecyclerView rv_filters;
     private ShimmerFrameLayout mShimmerViewContainer;
     private LinearLayout ll_title;
@@ -51,13 +50,12 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
             Utility.movetoFragment(getActivity(),new ExpandableFilterListFragment());
         });
 
+        mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container);
         rv_filters =rootView.findViewById(R.id.lstFilter);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
-        mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container);
         ll_title=rootView.findViewById(R.id.ll_title);
         actionModeCallback = new ActionModeCallback();
-
 
         setupList();
         getInbox();
@@ -111,6 +109,7 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         mAdapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
     }
+
     private List<String> createList(int n) {
         List<String> list = new ArrayList<>();
 
