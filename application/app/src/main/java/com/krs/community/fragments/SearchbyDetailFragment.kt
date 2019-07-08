@@ -16,6 +16,7 @@ import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.adapter.RecyclerAdapter
 import com.krs.community.interfaces.OnBackPressedListener
 import com.krs.community.model.DataProvider
+import com.krs.community.model.Message
 import com.krs.community.utils.AppConstants.*
 import com.krs.community.utils.Utility
 import com.krs.community.utils.supportsLollipop
@@ -23,6 +24,7 @@ import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_search_list_detail.*
 import kotlinx.android.synthetic.main.row_list.*
 import spencerstudios.com.bungeelib.Bungee
+import java.util.ArrayList
 
 class SearchbyDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter.ItemClickListener {
     override fun itemClick(id: Int) {
@@ -33,6 +35,7 @@ class SearchbyDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter
     }
 
     private lateinit var coordinates: FloatArray
+    var messages = ArrayList<Message>()
 
     companion object {
 
@@ -86,6 +89,7 @@ class SearchbyDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter
             activity!!.myAppBar.alpha = 1f
         }
         Utility.hideKeyboard(activity)
+        getInbox()
     }
 
     private fun setupViews(position: Int) {
@@ -107,7 +111,7 @@ class SearchbyDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter
         fab_negative.setOnClickListener { onBackPressed() }
 
         with(recycler_view) {
-            adapter = RecyclerAdapter(DataProvider.getDetailsData(),this@SearchbyDetailFragment)
+           var adapter1 = RecyclerAdapter<MutableList<Message>>(activity,messages,this@SearchbyDetailFragment)
 
             setHasFixedSize(true)
             fab_negative.doOnLayout {
@@ -117,6 +121,24 @@ class SearchbyDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter
         }
     }
 
+    private fun getInbox() {
+
+        messages.clear()
+
+        for (i in 0..19) {
+            val message = Message()
+            message.id = 1
+            message.isImportant = false
+            message.message = "Now android supports multiple voice recogonization"
+            message.picture = "https://api.androidhive.info/json/google.png"
+            message.isRead = false
+            message.timestamp = "10:30 AM"
+            message.from = "Google Alerts"
+            message.subject = "Google Alert - android"
+            message.color = Utility.getRandomMaterialColor(activity!!, "400")
+            messages.add(message)
+        }
+    }
 
     override fun onBackPressed() {
         animateViewsOut()

@@ -32,13 +32,13 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:id="@+id/icon_container"
+                    android:id="@+id/icon_container1"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:orientation="vertical">
 
                     <RelativeLayout
-                        android:id="@+id/icon_back"
+                        android:id="@+id/icon_back1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fillAfter="false"
@@ -57,19 +57,19 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:id="@+id/icon_front"
+                        android:id="@+id/icon_front1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fillAfter="false"
                         android:fillEnabled="false">
 
                         <ImageView
-                            android:id="@+id/icon_profile"
+                            android:id="@+id/icon_profile1"
                             android:layout_width="40dp"
                             android:layout_height="40dp" />
 
                         <TextView
-                            android:id="@+id/icon_text"
+                            android:id="@+id/icon_text1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
@@ -80,7 +80,7 @@
                 </RelativeLayout>
 
                 <com.nightonke.boommenu.BoomMenuButton
-                    android:id="@+id/bmb1"
+                    android:id="@+id/boomMenuButton1"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginLeft="-8dp"
@@ -93,7 +93,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/message_container"
+                android:id="@+id/message_container1"
                 android:clickable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -112,7 +112,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/tv_name"
+                            android:id="@+id/tv_name1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semibold"

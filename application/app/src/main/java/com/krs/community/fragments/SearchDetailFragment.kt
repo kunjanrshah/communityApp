@@ -11,18 +11,20 @@ import android.view.animation.OvershootInterpolator
 import androidx.core.view.doOnLayout
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.krs.community.R
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.adapter.RecyclerAdapter
 import com.krs.community.interfaces.OnBackPressedListener
 import com.krs.community.model.DataProvider
+import com.krs.community.model.Message
 import com.krs.community.utils.AppConstants.*
 import com.krs.community.utils.Utility
 import com.krs.community.utils.supportsLollipop
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_search_list_detail.*
-import kotlinx.android.synthetic.main.row_list.*
 import spencerstudios.com.bungeelib.Bungee
+import java.util.ArrayList
 
 class SearchDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter.ItemClickListener {
     override fun itemClick(id: Int) {
@@ -33,6 +35,8 @@ class SearchDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter.I
     }
 
     private lateinit var coordinates: FloatArray
+    var messages = ArrayList<Message>()
+    lateinit var recycle_view:RecyclerView
 
     companion object {
 
@@ -59,7 +63,15 @@ class SearchDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter.I
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_search_list_detail, container, false)
+    ): View?
+    {
+        val root:View = inflater.inflate (R.layout.fragment_search_list_detail, container, false)
+
+        recycle_view = root.findViewById(R.id.recycler_view)
+
+        return   root;
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -86,7 +98,28 @@ class SearchDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter.I
             activity!!.myAppBar.alpha = 1f
         }
         Utility.hideKeyboard(activity)
+        getInbox()
     }
+
+    private fun getInbox() {
+
+        messages.clear()
+
+        for (i in 0..19) {
+            val message = Message()
+            message.id = 1
+            message.isImportant = false
+            message.message = "Now android supports multiple voice recogonization"
+            message.picture = "https://api.androidhive.info/json/google.png"
+            message.isRead = false
+            message.timestamp = "10:30 AM"
+            message.from = "Google Alerts"
+            message.subject = "Google Alert - android"
+            message.color = Utility.getRandomMaterialColor(activity!!, "400")
+            messages.add(message)
+        }
+    }
+
 
     private fun setupViews(position: Int) {
         supportsLollipop {
@@ -96,20 +129,21 @@ class SearchDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter.I
 
         (details_card.layoutParams as ViewGroup.MarginLayoutParams).topMargin = 229// coordinates[2].toInt()
 
-        val data = DataProvider.getCardData()[position]
-        tv_title.text = data.name
+       // val data = DataProvider.getCardData()[position]
+      /*  tv_title.text = data.name
         tv_amount.text = data.amount
         tv_date.text = data.date
         tv_status.text = data.status.code
         img_status.setImageResource(data.status.iconId)
-        img_card.setImageResource(data.imageId)
+        img_card.setImageResource(data.imageId)*/
 
         fab_negative.setOnClickListener { onBackPressed() }
 
-        with(recycler_view) {
-            adapter = RecyclerAdapter(DataProvider.getDetailsData(),this@SearchDetailFragment)
+        var adapter1 = RecyclerAdapter<MutableList<Message>>(activity,messages,this@SearchDetailFragment)
+        recycle_view.adapter=adapter1
+        recycle_view.setHasFixedSize(true)
 
-            setHasFixedSize(true)
+        with(recycler_view) {
             fab_negative.doOnLayout {
                 val paddingBottom = (paddingBottom + fab_negative.height * 1.5).toInt()
                 updatePadding(bottom = paddingBottom)

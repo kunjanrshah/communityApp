@@ -28,13 +28,72 @@ import kotlinx.android.synthetic.main.fragment_search_result.*
 import java.util.ArrayList
 
 
-class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.OnRefreshListener {
+class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.OnRefreshListener,RecyclerAdapter.RecyclerAdapterListener {
+    override fun onIconClicked(position: Int) {
+        if (actionMode == null) {
+            actionMode = activity!!.startActionMode(actionModeCallback)
+        }
+        toggleSelection(position)
+    }
+
+    override fun onIconImportantClicked(position: Int) {
+        // Star icon is clicked,
+        // mark the message as important
+        val message = messages[position]
+        message.isImportant = !message.isImportant
+        messages[position] = message
+        recyclerAdapter!!.notifyDataSetChanged()
+    }
+
+    override fun onMessageRowClicked(position: Int) {
+        // verify whether action mode is enabled or not
+        // if enabled, change the row state to activated
+        if (recyclerAdapter!!.getSelectedItemCount() > 0) {
+            enableActionMode(position)
+        } else {
+            // read the message which removes bold from the row
+            val message = messages[position]
+            message.isRead = true
+            messages[position] = message
+            recyclerAdapter!!.notifyDataSetChanged()
+
+            Toast.makeText(activity, "Read: " + message.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onRowLongClicked(position: Int) {
+        // long press is performed, enable action mode
+        ll_title!!.setVisibility(View.GONE)
+        enableActionMode(position)
+    }
+
     override fun onRefresh() {
         getInbox()
     }
 
+    private fun enableActionMode(position: Int) {
+        if (actionMode == null) {
+            actionMode = activity!!.startActionMode(actionModeCallback)
+        }
+        toggleSelection(position)
+    }
+
+    private fun toggleSelection(position: Int) {
+        recyclerAdapter!!.toggleSelection(position)
+        val count = recyclerAdapter!!.getSelectedItemCount()
+
+        if (count == 0) {
+            actionMode!!.finish()
+            ll_title!!.setVisibility(View.VISIBLE)
+        } else {
+            ll_title!!.setVisibility(View.GONE)
+            actionMode!!.setTitle(count.toString())
+            actionMode!!.invalidate()
+        }
+    }
+
     private var rv_search: RecyclerView? = null
-    private var recyclerAdapter: RecyclerAdapter<DataProvider.DataProvider1.Card>? = null
+    private var recyclerAdapter: RecyclerAdapter<MutableList<Message>>? = null
     private var mShimmerViewContainer: ShimmerFrameLayout? = null
     private var multiSearchView: MultiSearchView? = null
     private var iv_cancel: ImageView? = null
@@ -64,19 +123,19 @@ class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.O
 
         (activity as AppCompatActivity).supportActionBar!!.title = "Smart Search"
         multiSearchView!!.setSearchViewListener(object : MultiSearchView.MultiSearchViewListener {
-            override fun onTextChanged(i: Int, charSequence: CharSequence) {
+            override fun onTextChanged(index: Int, s: CharSequence) {
                 // Toast.makeText(getActivity(), "onTextChanged", Toast.LENGTH_SHORT).show();
             }
 
-            override fun onSearchComplete(i: Int, charSequence: CharSequence) {
+            override fun onSearchComplete(index: Int, s: CharSequence) {
                 Toast.makeText(activity, "onSearchComplete", Toast.LENGTH_SHORT).show()
             }
 
-            override fun onSearchItemRemoved(i: Int) {
+            override fun onSearchItemRemoved(index: Int) {
                 Toast.makeText(activity, "onSearchItemRemoved", Toast.LENGTH_SHORT).show()
             }
 
-            override fun onItemSelected(i: Int, charSequence: CharSequence) {
+            override fun onItemSelected(index: Int, s: CharSequence) {
                 Toast.makeText(activity, "onItemSelected", Toast.LENGTH_SHORT).show()
             }
         })
@@ -104,7 +163,7 @@ class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.O
         (activity as AppCompatActivity).supportActionBar!!.hide()
         Handler().postDelayed({
             Utility.hideKeyboard(activity)
-        }, 1500)
+        }, 2000)
     }
 
     private fun getInbox() {
@@ -138,7 +197,7 @@ class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.O
     private fun setupList() {
 
         rv_search!!.layoutManager = LinearLayoutManager(activity)
-        recyclerAdapter = RecyclerAdapter<DataProvider.DataProvider1.Card>(DataProvider.getCardData(),null, this@SearchListFragment)
+        recyclerAdapter = RecyclerAdapter(activity,messages,null, this@SearchListFragment)
         rv_search!!.adapter = recyclerAdapter
         rv_search!!.setHasFixedSize(true)
         Handler().postDelayed({
@@ -228,7 +287,7 @@ class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.O
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(activity, R.color.colorBG, false)
             }
-            rv_search?.post(Runnable {
+            rv_search?.post({
                 recyclerAdapter!!.resetAnimationIndex()
                 // mAdapter.notifyDataSetChanged();
             })
