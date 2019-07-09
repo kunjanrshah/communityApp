@@ -567,4 +567,12 @@ https://play.google.com/store/apps/details?id=com.krs.community
     <string name="period" translatable="false">%1$s – %2$s</string>
     <string name="text_inside_circle_button_text_normal">Text Inside Circle Button(Normal)</string>
 
+    <string name="_export">Export</string>
+    <string name="_qrcode">QR Code</string>
+    <string name="_share">Share</string>
+    <string name="_location">Location</string>
+    <string name="_whatsapp">WhatsApp</string>
+    <string name="_family_tree">Family Tree</string>
+
+
 </resources>

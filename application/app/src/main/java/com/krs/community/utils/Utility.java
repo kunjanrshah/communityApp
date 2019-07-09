@@ -85,7 +85,6 @@ import java.util.regex.Pattern;
 
 import spencerstudios.com.bungeelib.Bungee;
 
-
 public class Utility {
 
     public static final int REQ_CODE_SPEECH_INPUT = 100;
@@ -112,8 +111,10 @@ public class Utility {
 
     public static TextInsideCircleButton.Builder getTextInsideCircleButtonBuilder() {
         return new TextInsideCircleButton.Builder()
+                .normalColor(Color.WHITE)
+                .pieceColor(Color.GRAY)
                 .normalImageRes(getImageResource())
-                .normalTextRes(R.string.text_inside_circle_button_text_normal);
+                .normalTextRes(getTextResource());
     }
 
     public static TextInsideCircleButton.Builder getSquareTextInsideCircleButtonBuilder() {
@@ -133,22 +134,21 @@ public class Utility {
     }
 
     private static int[] imageResources = new int[]{
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher
+            R.drawable.export1,
+            R.drawable.family_tree_,
+            R.drawable.whatsapp_,
+            R.drawable.qr_code,
+            R.drawable.share_icon,
+            R.drawable.location
+    };
+
+    private static int[] textResources = new int[]{
+            R.string._export,
+            R.string._qrcode,
+            R.string._share,
+            R.string._location,
+            R.string._whatsapp,
+            R.string._family_tree
     };
 
     private static int imageResourceIndex = 0;
@@ -156,6 +156,12 @@ public class Utility {
     static int getImageResource() {
         if (imageResourceIndex >= imageResources.length) imageResourceIndex = 0;
         return imageResources[imageResourceIndex++];
+    }
+
+    private static int textResourceIndex = 0;
+    static int getTextResource() {
+        if (textResourceIndex >= textResources.length) textResourceIndex = 0;
+        return textResources[textResourceIndex++];
     }
 
     public static boolean isValidMobile(String phone) {

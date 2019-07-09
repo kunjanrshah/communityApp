@@ -1,7 +1,6 @@
 package com.krs.community.fragments;
 
 
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -150,6 +149,4 @@ public class ExpandableFilterListFragment extends Fragment {
             last = current;
         }
     }
-
-
 }

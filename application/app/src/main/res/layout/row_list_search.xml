@@ -94,9 +94,10 @@
 
             <LinearLayout
                 android:id="@+id/message_container1"
-                android:clickable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -107,7 +108,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -144,14 +145,12 @@
                         android:textSize="11sp" />
 
                 </LinearLayout>
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="10dp"
                     android:background="@color/colorGray" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
@@ -210,6 +209,7 @@
 
                     </LinearLayout>
                 </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

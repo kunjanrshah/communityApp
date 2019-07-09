@@ -17,18 +17,23 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.iammert.library.ui.multisearchviewlib.MultiSearchView
 import com.krs.community.R
+import com.krs.community.adapter.AtoZBottomAdapter
 import com.krs.community.adapter.RecyclerAdapter
-import com.krs.community.model.DataProvider
 import com.krs.community.model.Message
 import com.krs.community.utils.Utility
 import com.krs.community.utils.copyViewImage
 import com.krs.community.utils.supportsLollipop
+import com.orhanobut.dialogplus.DialogPlus
+import com.orhanobut.dialogplus.GridHolder
+import com.orhanobut.dialogplus.OnItemClickListener
+import com.orhanobut.dialogplus.ViewHolder
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_search_result.*
-import java.util.ArrayList
+import java.util.*
+import kotlin.collections.ArrayList
 
 
-class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.OnRefreshListener,RecyclerAdapter.RecyclerAdapterListener {
+class SearchListFragment : Fragment(), View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, RecyclerAdapter.RecyclerAdapterListener {
     override fun onIconClicked(position: Int) {
         if (actionMode == null) {
             actionMode = activity!!.startActionMode(actionModeCallback)
@@ -45,9 +50,26 @@ class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.O
         recyclerAdapter!!.notifyDataSetChanged()
     }
 
-    override fun onMessageRowClicked(position: Int) {
-        // verify whether action mode is enabled or not
-        // if enabled, change the row state to activated
+    override fun onMessageRowClicked(position: Int, v: View) {
+
+        if (recyclerAdapter!!.getSelectedItemCount() > 0) {
+            enableActionMode(position)
+        } else {
+
+            val fragmentTransaction = initFragmentTransaction(v)
+            val copy = view!!.copyViewImage()
+            copy.y += activity!!.myAppBar.height
+            ll_root.addView(copy)
+            view!!.visibility = View.INVISIBLE
+            fragmentTransaction?.commitAllowingStateLoss()
+            // startAnimation(copy, fragmentTransaction)
+
+        }
+    }
+
+    override fun onClick(v: View) {
+        val position = rv_search!!.getChildAdapterPosition(v)
+
         if (recyclerAdapter!!.getSelectedItemCount() > 0) {
             enableActionMode(position)
         } else {
@@ -57,7 +79,13 @@ class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.O
             messages[position] = message
             recyclerAdapter!!.notifyDataSetChanged()
 
-            Toast.makeText(activity, "Read: " + message.message, Toast.LENGTH_SHORT).show()
+            val fragmentTransaction = initFragmentTransaction(v)
+            val copy = view!!.copyViewImage()
+            copy.y += activity!!.myAppBar.height
+            ll_root.addView(copy)
+            view!!.visibility = View.INVISIBLE
+            fragmentTransaction?.commitAllowingStateLoss()
+            // startAnimation(copy, fragmentTransaction)
         }
     }
 
@@ -97,17 +125,18 @@ class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.O
     private var mShimmerViewContainer: ShimmerFrameLayout? = null
     private var multiSearchView: MultiSearchView? = null
     private var iv_cancel: ImageView? = null
-    lateinit var view1:View
+    lateinit var view1: View
     private var actionModeCallback: ActionModeCallback? = null
     private var actionMode: ActionMode? = null
     private var swipeRefreshLayout: SwipeRefreshLayout? = null
     private var ll_title: LinearLayout? = null
     private val messages = ArrayList<Message>()
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_search_result, container, false)
-        view1=rootView
+        view1 = rootView
         multiSearchView = rootView.findViewById(R.id.multiSearchView)
         rv_search = rootView.findViewById(R.id.rv_search)
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
@@ -117,8 +146,37 @@ class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.O
         ll_title = rootView.findViewById(R.id.ll_title)
         actionModeCallback = ActionModeCallback()
 
+        val iv_atoz = rootView.findViewById(R.id.iv_atoz) as ImageView
+        iv_atoz.setOnClickListener {
+            val listContent: ArrayList<String> = ArrayList<String>();
+            listContent.add("A")
+            listContent.add("B")
+            listContent.add("C")
+            listContent.add("D")
+            listContent.add("E")
+            listContent.add("F")
+            listContent.add("I")
+            listContent.add("J")
+            val adapter: AtoZBottomAdapter=AtoZBottomAdapter(listContent,activity);
+
+            val dialog = DialogPlus.newDialog(activity)
+                    //.setAdapter(adapter)
+                    .setGravity(Gravity.BOTTOM)
+                    .setContentHolder(ViewHolder(R.layout.bottom_sheet_atoz_dialog))
+                    .setCancelable(true)
+                    .setContentBackgroundResource(R.drawable.popup_top_corner)
+                    .setOnItemClickListener(object : OnItemClickListener {
+                        override fun onItemClick(dialog: DialogPlus, item: Any, view: View, position: Int) {
+                            Toast.makeText(activity, "position: " + position, Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                    .setExpanded(true)  // This will enable the expand feature, (similar to android L share dialog)
+                    .create()
+            dialog.show()
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(activity,R.color.white,false)
+            Utility.changeStatusbarColor(activity, R.color.white, false)
         }
 
         (activity as AppCompatActivity).supportActionBar!!.title = "Smart Search"
@@ -141,7 +199,7 @@ class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.O
         })
 
         iv_cancel?.setOnClickListener {
-            Utility.movetoFragment(activity,DashboardFragment())
+            Utility.movetoFragment(activity, DashboardFragment())
         }
 
         getInbox()
@@ -197,7 +255,7 @@ class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.O
     private fun setupList() {
 
         rv_search!!.layoutManager = LinearLayoutManager(activity)
-        recyclerAdapter = RecyclerAdapter(activity,messages,null, this@SearchListFragment)
+        recyclerAdapter = RecyclerAdapter(activity, messages, null, this@SearchListFragment, this)
         rv_search!!.adapter = recyclerAdapter
         rv_search!!.setHasFixedSize(true)
         Handler().postDelayed({
@@ -205,18 +263,6 @@ class SearchListFragment : Fragment(), View.OnClickListener,SwipeRefreshLayout.O
             mShimmerViewContainer!!.stopShimmerAnimation()
             mShimmerViewContainer!!.visibility = View.GONE
         }, 3000)
-    }
-
-
-
-    override fun onClick(v: View) {
-        val fragmentTransaction = initFragmentTransaction(v)
-        val copy = view!!.copyViewImage()
-        copy.y += activity!!.myAppBar.height
-        ll_root.addView(copy)
-        view!!.visibility = View.INVISIBLE
-        fragmentTransaction?.commitAllowingStateLoss()
-       // startAnimation(copy, fragmentTransaction)
     }
 
     private fun initFragmentTransaction(view: View): FragmentTransaction? {
