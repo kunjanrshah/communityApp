@@ -19,6 +19,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -64,6 +65,8 @@ public class AppController extends Application {
 
         typeface = ResourcesCompat.getFont(getApplicationContext(),R.font.montserrat_regular);
         typeface_bold = ResourcesCompat.getFont(getApplicationContext(),R.font.montserrat_semibold);
+
+        Fresco.initialize(getApplicationContext());
 
         final Fabric fabric = new Fabric.Builder(this).kits(new Crashlytics()).debuggable(true).build();
         Fabric.with(fabric);

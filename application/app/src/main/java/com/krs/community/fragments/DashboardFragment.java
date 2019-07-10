@@ -52,8 +52,8 @@ public class DashboardFragment extends Fragment {
     String[] ProfileNames = {"Rajendra", "Tejas", "Kunjan", "Mukund", "Kushal"};
     int[] ProfileImages = {R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg};
 
-    String[] MenuNames = {"By QRCode", "By Distance", "Matrimony", "Documents", "Paytm","App Tour", "Admins", "Registered", "Add New", "Share Event"};
-    int[] MenuImages = {R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon,R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon};
+    String[] MenuNames = {"My QRCode","My Family", "By Distance", "Matrimony", "Documents", "Paytm","App Tour", "Admins", "Registered", "Add New", "Share Event"};
+    int[] MenuImages = {R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon,R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon};
     private boolean isTouch = false;
 
     public static final String TAG=DashboardFragment.class.getSimpleName();
@@ -98,8 +98,6 @@ public class DashboardFragment extends Fragment {
         tv_all_news.setOnClickListener(v -> {
             Utility.movetoFragment(getActivity(),new NewsFragment());
         });
-
-
 
         Utility.changeStatusbarColor(getActivity(),R.color.white,false);
         return rootView;
@@ -159,8 +157,6 @@ public class DashboardFragment extends Fragment {
             FavProfiles item = new FavProfiles();
             item.setCardName(ProfileNames[i]);
             item.setImageResourceId(ProfileImages[i]);
-            item.setIsfav(0);
-            item.setIsturned(0);
             listProfiles.add(item);
         }
 
@@ -222,31 +218,34 @@ public class DashboardFragment extends Fragment {
                         Utility.movetoFragment(getActivity(),new ByQRCodeFragment());
                        break;
                     case 1:
-                        Utility.movetoFragment(getActivity(),new SearchByDistanceFragment());
+
                         break;
                     case 2:
-                        Utility.movetoFragment(getActivity(),new MatrimonyFragment());
+                        Utility.movetoFragment(getActivity(),new SearchByDistanceFragment());
                         break;
                     case 3:
-                        Utility.movetoFragment(getActivity(),new DocumentsFragment());
+                        Utility.movetoFragment(getActivity(),new MatrimonyFragment());
                         break;
                     case 4:
-                        Utility.movetoFragment(getActivity(),new PaytmFragment());
+                        Utility.movetoFragment(getActivity(),new DocumentsFragment());
                         break;
                     case 5:
-                        Utility.movetoFragment(getActivity(),new TourVideoFragment());
+                        Utility.movetoFragment(getActivity(),new PaytmFragment());
                         break;
                     case 6:
-                        Utility.movetoFragment(getActivity(),new AdminsFragment());
+                        Utility.movetoFragment(getActivity(),new TourVideoFragment());
                         break;
                     case 7:
-                        Utility.movetoFragment(getActivity(),new NonActivesFragment());
+                        Utility.movetoFragment(getActivity(),new AdminsFragment());
                         break;
                     case 8:
+                        Utility.movetoFragment(getActivity(),new NonActivesFragment());
+                        break;
+                    case 9:
                         Intent intent=new Intent(getActivity(),RegisterActivty.class);
                         startActivity(intent);
                         break;
-                    case 9:
+                    case 10:
                         Utility.movetoFragment(getActivity(),new ShareEventFragment());
                         break;
                 }

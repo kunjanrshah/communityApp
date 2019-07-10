@@ -70,7 +70,7 @@ dependencies {
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
 
-
+    implementation 'com.zfdang.multiple-images-selector:multiple-images-selector:1.1.5'
     implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation 'com.google.firebase:firebase-messaging:18.0.0'
     implementation 'com.google.firebase:firebase-auth:17.0.0'

@@ -872,10 +872,18 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
         storeFieldsValues();
         if (mapChildValues.size() > 0) {
             SmartPopUpAdapter popUpAdapter = new SmartPopUpAdapter(_context, this, mapChildValues);
-            dialog = DialogPlus.newDialog(_context).setAdapter(popUpAdapter).setOnItemClickListener((dialog1, item, view1, position) -> {
-            }).setExpanded(true).setContentBackgroundResource(R.drawable.popup_top_corner).setOnItemClickListener((dialog12, item, view, position) -> {
+            dialog = DialogPlus
+                    .newDialog(_context)
+                    .setAdapter(popUpAdapter)
+                    .setExpanded(true)
+                    .setContentBackgroundResource(R.drawable.popup_top_corner)
+                    .setOnItemClickListener((dialog12, item, view, position) -> {
                 Toast.makeText(_context, "Clicked " + position, Toast.LENGTH_SHORT).show();
-            }).setCancelable(true).setGravity(Gravity.BOTTOM).setExpanded(true).create();
+                                                })
+                    .setCancelable(true)
+                    .setGravity(Gravity.BOTTOM)
+                    .setExpanded(true)
+                    .create();
 
             dialog.show();
         } else {

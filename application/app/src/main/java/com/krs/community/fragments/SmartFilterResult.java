@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.ActionMode;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,9 +23,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
+import com.krs.community.adapter.AtoZBottomAdapter;
 import com.krs.community.adapter.FilterResultAdapter;
 import com.krs.community.model.Message;
 import com.krs.community.utils.Utility;
+import com.orhanobut.dialogplus.DialogPlus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +59,19 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         swipeRefreshLayout.setOnRefreshListener(this);
         ll_title=rootView.findViewById(R.id.ll_title);
         actionModeCallback = new ActionModeCallback();
+        ImageView iv_export=rootView.findViewById(R.id.iv_export);
+        ImageView iv_atoz=rootView.findViewById(R.id.iv_atoz);
+        iv_atoz.setOnClickListener(v -> {
+            AtoZBottomAdapter adapter=new AtoZBottomAdapter(getContext());
+            DialogPlus dialog = DialogPlus.newDialog(getContext())
+                    .setAdapter(adapter)
+                    .setGravity(Gravity.BOTTOM)
+                    .setCancelable(true)
+                    .setExpanded(true)
+                    .setContentBackgroundResource(R.drawable.popup_top_corner)
+                    .create();
+            dialog.show();
+        });
 
         setupList();
         getInbox();
@@ -110,15 +126,6 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    private List<String> createList(int n) {
-        List<String> list = new ArrayList<>();
-
-        for (int i = 0; i < n; i++) {
-            list.add("View " + i);
-        }
-
-        return list;
-    }
 
     private void deleteMessages() {
         mAdapter.resetAnimationIndex();
@@ -146,12 +153,6 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-           /* ViewGroup   decorView = (ViewGroup) getActivity().getWindow().getDecorView().findViewById(R.id.action_mode_bar);
-            decorView.setBackgroundColor(getResources().getColor(R.color.colorBG));
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Utility.changeStatusbarColor(getActivity(),R.color.colorBG,true);
-            }*/
 
             return false;
         }

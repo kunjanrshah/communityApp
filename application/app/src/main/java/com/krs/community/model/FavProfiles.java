@@ -8,24 +8,6 @@ public class FavProfiles {
 
     String cardName;
     int imageResourceId;
-    int isfav;
-    int isturned;
-
-    public int getIsturned() {
-        return isturned;
-    }
-
-    public void setIsturned(int isturned) {
-        this.isturned = isturned;
-    }
-
-    public int getIsfav() {
-        return isfav;
-    }
-
-    public void setIsfav(int isfav) {
-        this.isfav = isfav;
-    }
 
     public String getCardName() {
         return cardName;

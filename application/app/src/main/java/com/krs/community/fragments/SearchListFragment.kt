@@ -24,13 +24,10 @@ import com.krs.community.utils.Utility
 import com.krs.community.utils.copyViewImage
 import com.krs.community.utils.supportsLollipop
 import com.orhanobut.dialogplus.DialogPlus
-import com.orhanobut.dialogplus.GridHolder
 import com.orhanobut.dialogplus.OnItemClickListener
 import com.orhanobut.dialogplus.ViewHolder
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_search_result.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class SearchListFragment : Fragment(), View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, RecyclerAdapter.RecyclerAdapterListener {
@@ -148,29 +145,14 @@ class SearchListFragment : Fragment(), View.OnClickListener, SwipeRefreshLayout.
 
         val iv_atoz = rootView.findViewById(R.id.iv_atoz) as ImageView
         iv_atoz.setOnClickListener {
-            val listContent: ArrayList<String> = ArrayList<String>();
-            listContent.add("A")
-            listContent.add("B")
-            listContent.add("C")
-            listContent.add("D")
-            listContent.add("E")
-            listContent.add("F")
-            listContent.add("I")
-            listContent.add("J")
-            val adapter: AtoZBottomAdapter=AtoZBottomAdapter(listContent,activity);
 
-            val dialog = DialogPlus.newDialog(activity)
-                    //.setAdapter(adapter)
+            val adapter: AtoZBottomAdapter =AtoZBottomAdapter(context);
+            val dialog = DialogPlus.newDialog(context)
+                    .setAdapter(adapter)
                     .setGravity(Gravity.BOTTOM)
-                    .setContentHolder(ViewHolder(R.layout.bottom_sheet_atoz_dialog))
                     .setCancelable(true)
+                    .setExpanded(true)
                     .setContentBackgroundResource(R.drawable.popup_top_corner)
-                    .setOnItemClickListener(object : OnItemClickListener {
-                        override fun onItemClick(dialog: DialogPlus, item: Any, view: View, position: Int) {
-                            Toast.makeText(activity, "position: " + position, Toast.LENGTH_SHORT).show()
-                        }
-                    })
-                    .setExpanded(true)  // This will enable the expand feature, (similar to android L share dialog)
                     .create()
             dialog.show()
         }

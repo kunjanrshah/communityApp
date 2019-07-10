@@ -14,17 +14,15 @@ import java.util.ArrayList;
 
 public class AtoZBottomAdapter extends BaseAdapter {
 
-    private ArrayList<String> lstContent=null;
     private Context _context;
-    public AtoZBottomAdapter(ArrayList<String> lstContent,Context _context)
+    public AtoZBottomAdapter(Context _context)
     {
-        this.lstContent= lstContent;
         this._context=_context;
     }
 
     @Override
     public int getCount() {
-        return lstContent.size();
+        return 1;
     }
 
     @Override
@@ -51,7 +49,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
         {
             viewHolder = (AtoZViewHolder) convertView.getTag();
         }
-        viewHolder.textView.setText(lstContent.get(position));
+
 
         return convertView;
     }

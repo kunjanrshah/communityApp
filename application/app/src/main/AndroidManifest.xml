@@ -16,7 +16,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
-
     <application
         android:name="com.krs.community.app.AppController"
         android:icon="@drawable/ic_app"
@@ -58,6 +57,9 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.zfdang.multiple_images_selector.ImagesSelectorActivity"
+            android:configChanges="orientation|screenSize"/>
 
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
