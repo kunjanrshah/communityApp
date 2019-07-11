@@ -1,13 +1,20 @@
 package com.krs.community.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,9 +30,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
 import com.krs.community.utils.Utility;
+import com.orhanobut.dialogplus.DialogPlus;
 import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
 import com.zfdang.multiple_images_selector.SelectorSettings;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
@@ -34,10 +44,7 @@ public class ShareEventFragment extends Fragment {
 
     // class variables
     private static final int REQUEST_CODE = 123;
-    //ArrayList<Integer> listImages = new ArrayList<Integer>();
-    //int[] Images = {R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background};
     ImagesAdapter adapter;
-    private TextView tvResults;
     private ArrayList<String> mResults = new ArrayList<>();
 
     @Nullable
@@ -52,10 +59,8 @@ public class ShareEventFragment extends Fragment {
 
         ImageView iv_cancel = root.findViewById(R.id.iv_cancel);
         iv_cancel.setOnClickListener(v -> {
-            Utility.movetoFragment(getActivity(), new SettingFragment());
+            Utility.movetoFragment(getActivity(), new DashboardFragment());
         });
-
-        tvResults = root.findViewById(R.id.tvResults);
 
         RecyclerView rv_images = root.findViewById(R.id.rv_images);
         rv_images.setHasFixedSize(true);
@@ -64,6 +69,40 @@ public class ShareEventFragment extends Fragment {
         adapter = new ImagesAdapter();
         rv_images.setAdapter(adapter);
         rv_images.setLayoutManager(MyLayoutManager);
+
+        LinearLayout ll_parent = root.findViewById(R.id.ll_parent);
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        View view = null;
+        for (int i = 0; i < 3; i++) {
+            view = layoutInflater.inflate(R.layout.layout_youtube_url, container, false);
+            ll_parent.addView(view);
+        }
+
+        ImageView iv_upload = root.findViewById(R.id.iv_upload);
+        iv_upload.setOnClickListener(v -> {
+
+            Intent intent = new Intent(getActivity(), ImagesSelectorActivity.class);
+            intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 15);
+            intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 100000);
+            intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
+            intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, mResults);
+            startActivityForResult(intent, REQUEST_CODE);
+
+        });
+
+        Button btnShare, btnCreate;
+        btnShare = root.findViewById(R.id.btnShare);
+        btnCreate = root.findViewById(R.id.btnCreate);
+
+        btnCreate.setOnClickListener(v -> {
+
+        });
+
+        btnShare.setOnClickListener(v -> {
+            ShareEventAdapter adapter = new ShareEventAdapter();
+            DialogPlus dialog = DialogPlus.newDialog(getContext()).setAdapter(adapter).setGravity(Gravity.BOTTOM).setCancelable(true).setExpanded(true).setContentBackgroundResource(R.drawable.popup_top_corner).create();
+            dialog.show();
+        });
 
         return root;
     }
@@ -96,11 +135,52 @@ public class ShareEventFragment extends Fragment {
                 for (String result : mResults) {
                     sb.append(result).append("\n");
                 }
-                tvResults.setText(sb.toString());
+                //   tvResults.setText(sb.toString());
                 adapter.notifyDataSetChanged();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private class ShareEventAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return 1;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ShareEventHolder viewHolder;
+
+            LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.bottom_sheet_share_event, null);
+                viewHolder = new ShareEventHolder(convertView);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ShareEventHolder) convertView.getTag();
+            }
+            return convertView;
+        }
+    }
+
+    private class ShareEventHolder {
+        TextView textView;
+
+        ShareEventHolder(View view) {
+            textView = view.findViewById(R.id.tv_d);
+        }
     }
 
     private class ImagesAdapter extends RecyclerView.Adapter<ImageViewHolder> {
@@ -115,46 +195,43 @@ public class ShareEventFragment extends Fragment {
         @Override
         public void onBindViewHolder(ImageViewHolder holder, int position) {
 
-            if (position == 0) {
-                Glide.with(getContext()).load(R.drawable.photo).thumbnail(0.5f).transition(withCrossFade()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.iv_event);
-            } else {
-                //Utility.getRoundedCornerBitmap()
-                Log.d("ShareEvent", "size: " + mResults.size() + " position:" + position);
-                if (mResults.size() > 0 && mResults.size() > (position - 1)) {
-                    Glide.with(getContext()).load(mResults.get(position - 1)).thumbnail(0.5f).transition(withCrossFade()).apply(RequestOptions.centerInsideTransform()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.iv_event);
+            String filepath = mResults.get(position);
+            Uri uri = Uri.fromFile(new File(filepath));
+            Bitmap bitmap = null;
+            try {
+                bitmap = (Bitmap) MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                if (bitmap != null) {
+                    Bitmap bmp = Utility.getRoundedCornerBitmap(bitmap, 100);
+                    Glide.with(getContext()).load(bmp).thumbnail(0.5f).transition(withCrossFade()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.iv_event);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-            holder.iv_event.setOnClickListener(v -> {
-                if (position == 0) {
-                    Intent intent = new Intent(getActivity(), ImagesSelectorActivity.class);
-                    intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 15);
-                    intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 100000);
-                    intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
-                    intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, mResults);
-                    startActivityForResult(intent, REQUEST_CODE);
-                }
+            holder.iv_cancel.setOnClickListener(v -> {
+                mResults.remove(position);
+                notifyDataSetChanged();
             });
+
         }
 
         @Override
         public int getItemCount() {
-
-            if (mResults.size() > 0) {
-                return (mResults.size() + 1);
-            } else {
-                return 1;
-            }
+            return mResults.size();
         }
     }
 
     class ImageViewHolder extends RecyclerView.ViewHolder {
 
         ImageView iv_event;
+        ImageView iv_cancel;
 
         ImageViewHolder(View v) {
             super(v);
             iv_event = v.findViewById(R.id.iv_event);
+            iv_cancel = v.findViewById(R.id.iv_cancel);
         }
     }
+
+
 }

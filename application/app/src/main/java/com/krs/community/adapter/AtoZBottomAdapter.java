@@ -62,7 +62,6 @@ public class AtoZBottomAdapter extends BaseAdapter {
         {
             textView=view.findViewById(R.id.tv_d);
         }
-
     }
 
 }
