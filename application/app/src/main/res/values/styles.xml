@@ -10,13 +10,23 @@
         <item name="android:tint">@color/colorPrimary</item> <!-- whatever color -->
     </style>
 
+    <style name="myoverflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
+        <item name="android:tint">@color/colorPrimary</item> <!-- whatever color -->
+    </style>
+
     <style name="ActionModeTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
         <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="MyTheme.OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@drawable/share_icon</item>
     </style>
 
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionModeStyle">@style/ActionModeStyle</item>
+        <item name="android:actionOverflowButtonStyle">@style/myoverflow</item>
+
         <item name="actionModeCloseButtonStyle">@style/myclosebutton</item>
         <item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb_holo</item>
         <item name="android:fastScrollOverlayPosition">atThumb</item>

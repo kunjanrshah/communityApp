@@ -24,8 +24,6 @@ import com.krs.community.utils.Utility
 import com.krs.community.utils.copyViewImage
 import com.krs.community.utils.supportsLollipop
 import com.orhanobut.dialogplus.DialogPlus
-import com.orhanobut.dialogplus.OnItemClickListener
-import com.orhanobut.dialogplus.ViewHolder
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_search_result.*
 
@@ -200,10 +198,11 @@ class SearchListFragment : Fragment(), View.OnClickListener, SwipeRefreshLayout.
 
     override fun onResume() {
         super.onResume()
+
         (activity as AppCompatActivity).supportActionBar!!.hide()
         Handler().postDelayed({
             Utility.hideKeyboard(activity)
-        }, 2000)
+        }, 1000)
     }
 
     private fun getInbox() {
@@ -229,10 +228,15 @@ class SearchListFragment : Fragment(), View.OnClickListener, SwipeRefreshLayout.
     }
 
     override fun onPause() {
+        super.onPause()
         (activity as AppCompatActivity).supportActionBar!!.show()
         mShimmerViewContainer!!.stopShimmerAnimation()
-        super.onPause()
+        super.onStop()
+        Handler().postDelayed({
+            Utility.hideKeyboard(activity)
+        }, 500)
     }
+
 
     private fun setupList() {
 

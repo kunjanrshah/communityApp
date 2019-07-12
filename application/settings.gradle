@@ -1,1 +1,1 @@
-include ':app',':multisearchviewlib',':slycalendarview'
+include ':app',':multisearchviewlib',':slycalendarview', ':multiple-images-selector'

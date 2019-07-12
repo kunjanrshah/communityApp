@@ -43,7 +43,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -99,8 +98,10 @@ public class Utility {
         int height = Math.round(ratio * realImage.getHeight());
         return Bitmap.createScaledBitmap(realImage, width, height, filter);
     }*/
-
-
+    private static int[] imageResources = new int[]{R.drawable.export1, R.drawable.family_tree_, R.drawable.whatsapp_, R.drawable.qr_code, R.drawable.share_icon, R.drawable.location};
+    private static int[] textResources = new int[]{R.string._export, R.string._qrcode, R.string._share, R.string._location, R.string._whatsapp, R.string._family_tree};
+    private static int imageResourceIndex = 0;
+    private static int textResourceIndex = 0;
 
     public static boolean IsValidate(@NonNull final String time) {
         String TIME24HOURS_PATTERN = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
@@ -110,57 +111,23 @@ public class Utility {
 
     }
 
-
     public static TextInsideCircleButton.Builder getTextInsideCircleButtonBuilder() {
-        return new TextInsideCircleButton.Builder()
-                .normalColor(Color.WHITE)
-                .pieceColor(Color.GRAY)
-                .normalImageRes(getImageResource())
-                .normalTextRes(getTextResource());
+        return new TextInsideCircleButton.Builder().normalColor(Color.WHITE).pieceColor(Color.GRAY).normalImageRes(getImageResource()).normalTextRes(getTextResource());
     }
 
     public static TextInsideCircleButton.Builder getSquareTextInsideCircleButtonBuilder() {
-        return new TextInsideCircleButton.Builder()
-                .isRound(false)
-                .shadowCornerRadius(Util.dp2px(10))
-                .buttonCornerRadius(Util.dp2px(10))
-                .normalImageRes(getImageResource())
-                .normalTextRes(R.string.text_inside_circle_button_text_normal);
+        return new TextInsideCircleButton.Builder().isRound(false).shadowCornerRadius(Util.dp2px(10)).buttonCornerRadius(Util.dp2px(10)).normalImageRes(getImageResource()).normalTextRes(R.string.text_inside_circle_button_text_normal);
     }
 
     public static TextInsideCircleButton.Builder getTextInsideCircleButtonBuilderWithDifferentPieceColor() {
-        return new TextInsideCircleButton.Builder()
-                .normalImageRes(getImageResource())
-                .normalTextRes(R.string.text_inside_circle_button_text_normal)
-                .pieceColor(Color.WHITE);
+        return new TextInsideCircleButton.Builder().normalImageRes(getImageResource()).normalTextRes(R.string.text_inside_circle_button_text_normal).pieceColor(Color.WHITE);
     }
-
-    private static int[] imageResources = new int[]{
-            R.drawable.export1,
-            R.drawable.family_tree_,
-            R.drawable.whatsapp_,
-            R.drawable.qr_code,
-            R.drawable.share_icon,
-            R.drawable.location
-    };
-
-    private static int[] textResources = new int[]{
-            R.string._export,
-            R.string._qrcode,
-            R.string._share,
-            R.string._location,
-            R.string._whatsapp,
-            R.string._family_tree
-    };
-
-    private static int imageResourceIndex = 0;
 
     static int getImageResource() {
         if (imageResourceIndex >= imageResources.length) imageResourceIndex = 0;
         return imageResources[imageResourceIndex++];
     }
 
-    private static int textResourceIndex = 0;
     static int getTextResource() {
         if (textResourceIndex >= textResources.length) textResourceIndex = 0;
         return textResources[textResourceIndex++];
@@ -236,8 +203,8 @@ public class Utility {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
     }
 
-    public static void movetoFragment(Activity activity,Fragment fragment) {
-        FragmentManager fragmentManager = ((AppCompatActivity)activity).getSupportFragmentManager();
+    public static void movetoFragment(Activity activity, Fragment fragment) {
+        FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
         Fragment oldFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
         if (oldFragment != null) {
             fragmentManager.beginTransaction().remove(oldFragment).commit();
@@ -249,7 +216,7 @@ public class Utility {
     }
 
 
-    public static int getRandomMaterialColor(Context context,String typeColor) {
+    public static int getRandomMaterialColor(Context context, String typeColor) {
         int returnColor = Color.GRAY;
         int arrayId = context.getResources().getIdentifier("mdcolor_" + typeColor, "array", context.getPackageName());
 
@@ -263,8 +230,7 @@ public class Utility {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public static void changeStatusbarColor(Activity activity, int color,boolean pIsDark)
-    {
+    public static void changeStatusbarColor(Activity activity, int color, boolean pIsDark) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = activity.getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -384,12 +350,12 @@ public class Utility {
         }
 
         *//**
-         * Loads a bitmap from the specified url.
-         *
-         * @param url The location of the bitmap asset
-         * @return The bitmap, or null if it could not be loaded
-         * @throws IOException
-         *//*
+     * Loads a bitmap from the specified url.
+     *
+     * @param url The location of the bitmap asset
+     * @return The bitmap, or null if it could not be loaded
+     * @throws IOException
+     *//*
         public Bitmap getBitmap() throws IOException {
 
             // Get the source image's dimensions
@@ -429,10 +395,12 @@ public class Utility {
             return sampledSrcBitmap;
         }
 
-        *//**
-         * The system calls this to perform work in a worker thread and delivers
-         * it the parameters given to AsyncTask.execute()
-         *//*
+        */
+
+    /**
+     * The system calls this to perform work in a worker thread and delivers
+     * it the parameters given to AsyncTask.execute()
+     *//*
         @Override
         protected Bitmap doInBackground(Object... item) {
             try {
@@ -445,8 +413,6 @@ public class Utility {
             return null;
         }
     }*/
-
-
     public static boolean CheckGpsStatus(Context mcontext) {
         LocationManager locationManager;
         boolean GpsStatus;
@@ -468,21 +434,20 @@ public class Utility {
         mActivity.startActivity(intent);
     }
 
-    public static Bitmap getBitmap(Context context,File f) throws IOException {
+    public static Bitmap getBitmap(Context context, File f) throws IOException {
 
         // Get the source image's dimensions
         int desiredWidth = 200;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
 
-        BitmapFactory.decodeStream(new FileInputStream(f),null,options);
+        BitmapFactory.decodeStream(new FileInputStream(f), null, options);
         int srcWidth = options.outWidth;
         int srcHeight = options.outHeight;
 
         // Only scale if the source is big enough. This code is just trying
         // to fit a image into a certain width.
-        if (desiredWidth > srcWidth)
-            desiredWidth = srcWidth;
+        if (desiredWidth > srcWidth) desiredWidth = srcWidth;
 
         // Calculate the correct inSampleSize/scale value. This helps reduce
         // memory use. It should be a power of 2
@@ -500,7 +465,7 @@ public class Utility {
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         options.inPurgeable = true;
         Bitmap sampledSrcBitmap;
-        sampledSrcBitmap =BitmapFactory.decodeStream(new FileInputStream(f),null,options);
+        sampledSrcBitmap = BitmapFactory.decodeStream(new FileInputStream(f), null, options);
         return sampledSrcBitmap;
     }
 
@@ -513,11 +478,11 @@ public class Utility {
             BitmapFactory.decodeStream(new FileInputStream(f), null, o);
 
             // The new size we want to scale to
-            final int REQUIRED_SIZE=200;
+            final int REQUIRED_SIZE = 200;
 
             // Find the correct scale value. It should be the power of 2.
             int scale = 1;
-            while(o.outWidth / scale / 2 >= REQUIRED_SIZE && o.outHeight / scale / 2 >= REQUIRED_SIZE) {
+            while (o.outWidth / scale / 2 >= REQUIRED_SIZE && o.outHeight / scale / 2 >= REQUIRED_SIZE) {
                 scale *= 2;
             }
 
@@ -525,7 +490,8 @@ public class Utility {
             BitmapFactory.Options o2 = new BitmapFactory.Options();
             o2.inSampleSize = scale;
             return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
-        } catch (FileNotFoundException e) {}
+        } catch (FileNotFoundException e) {
+        }
         return null;
     }
 
@@ -558,9 +524,7 @@ public class Utility {
     }
 
 
-
-
-    public static  String getByteArrayFromImageURL(String url) {
+    public static String getByteArrayFromImageURL(String url) {
 
         try {
             URL imageUrl = new URL(url);
@@ -685,7 +649,6 @@ public class Utility {
     }
 
 
-
     public static void promptSpeechInput(Activity mActivity) {
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -763,7 +726,6 @@ public class Utility {
             }
         }).show();
     }*/
-
 
 
     public static String DatetoString(Date date) {
@@ -854,14 +816,18 @@ public class Utility {
     }
 
     public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
-        View view = activity.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(activity);
+        try {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            //Find the currently focused view, so we can grab the correct window token from it.
+            View view = activity.getCurrentFocus();
+            //If no view currently has focus, create a new one, just so we can grab a window token from it
+            if (view == null) {
+                view = new View(activity);
+            }
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 
@@ -1152,7 +1118,7 @@ public class Utility {
         } else if (lang.equals(context.getResources().getString(R.string._hindi))) {
             loc = "hi";
         }
-        AppController.getInstance().mEditor.putString(context.getResources().getString(R.string.locale_sp),lang);
+        AppController.getInstance().mEditor.putString(context.getResources().getString(R.string.locale_sp), lang);
         AppController.getInstance().mEditor.apply();
         Locale myLocale = new Locale(loc);
         Locale.setDefault(myLocale);

@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -43,6 +44,7 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
     private ActionMode actionMode;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
 
@@ -52,7 +54,6 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         iv_cancel.setOnClickListener(v -> {
             Utility.movetoFragment(getActivity(),new ExpandableFilterListFragment());
         });
-
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container);
         rv_filters =rootView.findViewById(R.id.lstFilter);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
@@ -77,6 +78,7 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         getInbox();
         return rootView;
     }
+
 
     @Override
     public void onResume() {
@@ -154,7 +156,8 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
 
-            return false;
+
+            return true;
         }
 
         @Override

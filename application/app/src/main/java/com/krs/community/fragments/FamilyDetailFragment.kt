@@ -1,12 +1,15 @@
 package com.krs.community.fragments
 
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -95,7 +98,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
 
         //setupViews(position)
 
-        hideKeyboard(activity)
+
     }
 
     /*private fun setupViews(position: Int) {
@@ -137,6 +140,10 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar!!.hide()
+        Handler().postDelayed({
+            val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view!!.windowToken, 0)
+        }, 1000)
     }
 
     override fun onStop() {

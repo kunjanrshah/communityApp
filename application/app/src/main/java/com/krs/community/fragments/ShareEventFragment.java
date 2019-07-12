@@ -1,5 +1,6 @@
 package com.krs.community.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,12 +8,17 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -46,6 +52,7 @@ public class ShareEventFragment extends Fragment {
     private static final int REQUEST_CODE = 123;
     ImagesAdapter adapter;
     private ArrayList<String> mResults = new ArrayList<>();
+    ArrayList<String> yURLs = new ArrayList<>();
 
     @Nullable
     @Override
@@ -65,18 +72,27 @@ public class ShareEventFragment extends Fragment {
         RecyclerView rv_images = root.findViewById(R.id.rv_images);
         rv_images.setHasFixedSize(true);
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
-        MyLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        MyLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
         adapter = new ImagesAdapter();
         rv_images.setAdapter(adapter);
         rv_images.setLayoutManager(MyLayoutManager);
 
-        LinearLayout ll_parent = root.findViewById(R.id.ll_parent);
-        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View view = null;
-        for (int i = 0; i < 3; i++) {
-            view = layoutInflater.inflate(R.layout.layout_youtube_url, container, false);
-            ll_parent.addView(view);
-        }
+        RecyclerView rv_parent = root.findViewById(R.id.rv_parent);
+        rv_parent.setHasFixedSize(true);
+        LinearLayoutManager MyLayoutManager1 = new LinearLayoutManager(getActivity());
+        MyLayoutManager1.setOrientation(RecyclerView.VERTICAL);
+
+        yURLs.add("1");
+        yURLs.add("2");
+        yURLs.add("3");
+        URLAdapter adapter1 = new URLAdapter();
+        rv_parent.setAdapter(adapter1);
+        rv_parent.setLayoutManager(MyLayoutManager1);
+
+        ImageView iv_add_url= root.findViewById(R.id.iv_add_url);
+        iv_add_url.setOnClickListener(v -> {
+            adapter1.notifyDataSetChanged();
+        });
 
         ImageView iv_upload = root.findViewById(R.id.iv_upload);
         iv_upload.setOnClickListener(v -> {
@@ -106,6 +122,7 @@ public class ShareEventFragment extends Fragment {
 
         return root;
     }
+
 
     @Override
     public void onResume() {
@@ -140,6 +157,61 @@ public class ShareEventFragment extends Fragment {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    class URLAdapter extends RecyclerView.Adapter<URLViewHolder>
+    {
+
+        @NonNull
+        @Override
+        public URLViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_youtube_url, parent, false);
+            return new URLViewHolder(view);
+        }
+
+        @SuppressLint("ClickableViewAccessibility")
+        @Override
+        public void onBindViewHolder(@NonNull URLViewHolder holder, int position) {
+
+            holder.edt_yurl.setText(yURLs.get(position));
+
+            holder.edt_yurl.setOnTouchListener((v, event) -> {
+                final int DRAWABLE_RIGHT = 2;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (holder.edt_yurl.getRight() - holder.edt_yurl.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        Log.d("YoutubeURL","position: "+position);
+                        yURLs.remove(position);
+                        notifyDataSetChanged();
+
+                        return true;
+                    }
+                }
+                return false;
+            });
+
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public int getItemCount() {
+            return yURLs.size();
+        }
+
+    }
+
+    private class URLViewHolder extends RecyclerView.ViewHolder
+    {
+        EditText edt_yurl;
+        URLViewHolder(View view)
+        {
+            super(view);
+            edt_yurl=view.findViewById(R.id.edt_yurl);
+        }
     }
 
     private class ShareEventAdapter extends BaseAdapter {
@@ -195,29 +267,41 @@ public class ShareEventFragment extends Fragment {
         @Override
         public void onBindViewHolder(ImageViewHolder holder, int position) {
 
-            String filepath = mResults.get(position);
-            Uri uri = Uri.fromFile(new File(filepath));
-            Bitmap bitmap = null;
+            String filepath = "";
             try {
-                bitmap = (Bitmap) MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                if (bitmap != null) {
-                    Bitmap bmp = Utility.getRoundedCornerBitmap(bitmap, 100);
-                    Glide.with(getContext()).load(bmp).thumbnail(0.5f).transition(withCrossFade()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.iv_event);
+                filepath = mResults.get(position);
+                Uri uri = Uri.fromFile(new File(filepath));
+                Bitmap bitmap = null;
+                try {
+                    bitmap = (Bitmap) MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                    if (bitmap != null) {
+                        Bitmap bmp = Utility.getRoundedCornerBitmap(bitmap, 100);
+                        Glide.with(getContext()).load(bmp).thumbnail(0.5f).transition(withCrossFade()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.iv_event);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
+                holder.iv_cancel.setVisibility(View.VISIBLE);
+            } catch (Exception e) {
+                holder.iv_cancel.setVisibility(View.GONE);
+                Glide.with(getContext()).load(R.drawable.photo).thumbnail(0.5f).transition(withCrossFade()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.iv_event);
                 e.printStackTrace();
             }
+
 
             holder.iv_cancel.setOnClickListener(v -> {
                 mResults.remove(position);
                 notifyDataSetChanged();
             });
-
         }
 
         @Override
         public int getItemCount() {
-            return mResults.size();
+            if (mResults.size() < 3) {
+                return 3;
+            } else {
+                return mResults.size();
+            }
         }
     }
 
@@ -232,6 +316,4 @@ public class ShareEventFragment extends Fragment {
             iv_cancel = v.findViewById(R.id.iv_cancel);
         }
     }
-
-
 }
