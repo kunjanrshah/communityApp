@@ -73,7 +73,7 @@ public class NearByFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_near_by, container, false);
-        type=getString(R.string.near_by_home);
+        type = getString(R.string.near_by_home);
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setSubtitle(R.string.title_near_by_users);
         MemoryAllocation(rootView);
         callNearby();
@@ -99,7 +99,11 @@ public class NearByFragment extends Fragment {
 
     private void callNearby() {
         if (!edt_distance.getText().toString().isEmpty()) {
+            if (!mSharedPreferences.getString(Common.Constant_Class.CURR_LAT, "").isEmpty()) {
                 NearByUsers();
+            } else {
+                Toast.makeText(getActivity(), "Couldn't find your location. Please enable your GPS!", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(getActivity(), "Enter distance", Toast.LENGTH_SHORT).show();
         }
