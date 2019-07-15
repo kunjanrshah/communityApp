@@ -146,6 +146,7 @@ public class RelativeFragment extends Fragment {
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(getClass().getSimpleName(), "Error: " + error.getMessage());
+                    hideProgressDialog();
                 }
             }) {
                 @NonNull

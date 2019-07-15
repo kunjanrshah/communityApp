@@ -710,13 +710,12 @@ public class LoginActivity extends Activity implements ConnectivityReceiver.Conn
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
-
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(@NonNull VolleyError error) {
+                        hideProgressDialog();
                         VolleyLog.d(TAG, "Error: " + error.getMessage());
                         String message = null;
                         if (error instanceof NetworkError) {

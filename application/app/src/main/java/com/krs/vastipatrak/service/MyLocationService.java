@@ -27,6 +27,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
+
 
 public class MyLocationService extends Service {
 
@@ -181,6 +183,7 @@ public class MyLocationService extends Service {
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d("TimeService", "Error: " + error.getMessage());
+                    hideProgressDialog();
                 }
             }) {
                 @NonNull

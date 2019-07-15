@@ -75,6 +75,7 @@ import static com.krs.vastipatrak.utils.Common.Constant_Class.MARRIAGE_DATE;
 import static com.krs.vastipatrak.utils.Common.dd_MMM_yyyy;
 import static com.krs.vastipatrak.utils.Common.getChildRandomColor;
 import static com.krs.vastipatrak.utils.Common.getParentRandomColor;
+import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 import static com.krs.vastipatrak.utils.Common.yyyy_MM_dd;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -1131,6 +1132,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    hideProgressDialog();
                 }
             }) {
                 @NonNull
@@ -1190,6 +1192,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    hideProgressDialog();
                 }
             }) {
                 @NonNull

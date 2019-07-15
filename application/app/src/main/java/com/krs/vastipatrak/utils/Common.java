@@ -2255,10 +2255,10 @@ public class Common {
         public static final String SHARE_USER_IDS = "share_user_ids";
         public static final String IS_SHARE = "is_share";
         public static final String CAN_SHARE = "can_share";
-        public static final String API_KEY = "api_key";
-        public static final String DEVICE_TYPE = "device_type";
-        public static final String DEVICE_TOKEN = "device_token";
-        public static final String DEVICE_ID = "int_udid";
+        public static final String API_KEY = "apiKey"; //api_key
+        public static final String DEVICE_TYPE = "deviceType";//device_type
+        public static final String DEVICE_TOKEN = "deviceToken";//device_token
+        public static final String DEVICE_ID = "intUdid"; //int_udid
         public static final String ACCESS_TOKEN = "access_token";
         public static final String RESPONSE_DATA = "response_data";
         public static final String NEAR_BY = "nearBy";

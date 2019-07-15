@@ -62,6 +62,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.krs.vastipatrak.utils.Common.Constant_Class.TITLE_SPOUSE_BLOOD_GROUP;
+import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 
 public class ProfileActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, ConnectivityReceiver.ConnectivityReceiverListener {
     public static boolean isEnable = false;
@@ -685,6 +686,7 @@ public class ProfileActivity extends AppCompatActivity implements TimePickerDial
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    hideProgressDialog();
                 }
             }) {
                 @NonNull

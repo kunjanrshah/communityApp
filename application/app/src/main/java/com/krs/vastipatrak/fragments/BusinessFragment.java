@@ -42,6 +42,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
+
 public class BusinessFragment extends Fragment implements Serializable {
 
 
@@ -223,6 +225,7 @@ public class BusinessFragment extends Fragment implements Serializable {
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    hideProgressDialog();
                 }
             }
 

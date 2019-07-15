@@ -262,6 +262,7 @@ public class SyncFragment extends Fragment {
             public void onErrorResponse(@NonNull VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 String message = null;
+                hideProgressDialog();
                 if (error instanceof NetworkError) {
                     message = "Cannot connect to Internet...Please check your connection!";
                 } else if (error instanceof ServerError) {

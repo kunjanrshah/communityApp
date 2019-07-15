@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.krs.vastipatrak.fragments.SyncFragment.mHandler;
+import static com.krs.vastipatrak.utils.Common.hideProgressDialog;
 
 /**
  * Created by kunjan on 28/2/18.
@@ -150,6 +151,7 @@ public class SyncService extends Service {
                 @Override
                 public void onErrorResponse(@NonNull VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    hideProgressDialog();
                 }
             }) {
                 @NonNull
