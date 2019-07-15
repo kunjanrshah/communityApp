@@ -24,6 +24,7 @@
             android:text="Filter 1"
             android:paddingStart="10dp"
             android:singleLine="true"
+            android:fontFamily="@font/montserrat_regular"
             android:paddingRight="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
@@ -84,7 +85,7 @@
                 android:text="Code: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold"
+                android:fontFamily="@font/montserrat_semibold"
                  />
 
             <EditText
@@ -92,6 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:fontFamily="@font/montserrat_regular"
                 android:background="@null"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -127,13 +129,14 @@
                 android:text="Head: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:id="@+id/edt_head_name"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:background="@null"
                 android:singleLine="true" />
@@ -167,13 +170,14 @@
                 android:text="Member: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:textSize="14sp"
                 android:id="@+id/edt_member"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:fontFamily="@font/montserrat_regular"
                 android:background="@null"
                 android:singleLine="true" />
 
@@ -223,7 +227,7 @@
                     android:text="Surname: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -273,7 +277,7 @@
                     android:text="Samaj: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -327,7 +331,7 @@
                     android:text="Gender: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -380,7 +384,7 @@
                     android:text="Marital: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -434,7 +438,7 @@
                     android:text="Native: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -486,7 +490,7 @@
                     android:text="City: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -525,7 +529,7 @@
                     android:text="Age: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
 
                 <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
                     android:id="@+id/rangeSeekbar"
@@ -597,7 +601,7 @@
                 android:text="Email: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:id="@+id/edt_email"
@@ -605,6 +609,7 @@
                 android:layout_height="match_parent"
                 android:background="@null"
                 android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true" />
 
             <ImageView
@@ -636,13 +641,14 @@
                 android:text="Mobile: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:id="@+id/edt_mobile"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:singleLine="true" />
 
@@ -675,13 +681,14 @@
                 android:text="Local Add: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:id="@+id/edt_local_add"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:singleLine="true" />
 
@@ -714,13 +721,14 @@
                 android:text="Permanent Add: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:id="@+id/edt_permanent_add"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:singleLine="true" />
 
@@ -753,13 +761,14 @@
                 android:text="Permanent Add: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:id="@+id/edt_pincode"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:singleLine="true" />
 
@@ -809,7 +818,7 @@
                     android:text="Area: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -857,7 +866,7 @@
                     android:text="State: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -888,13 +897,14 @@
                 android:text="Birth Date: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:id="@+id/edt_birth_date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:singleLine="true" />
 
@@ -927,13 +937,14 @@
                 android:text="Marriage Date: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:id="@+id/edt_mdate"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:singleLine="true" />
 
@@ -984,7 +995,7 @@
                     android:text="Mosad: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -1032,7 +1043,7 @@
                     android:text="Education: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -1080,7 +1091,7 @@
                     android:text="Gotra: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -1128,7 +1139,7 @@
                     android:text="BG: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -1246,13 +1257,14 @@
                 android:text="Office Add: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:id="@+id/edt_office"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:singleLine="true" />
 
@@ -1302,7 +1314,7 @@
                     android:text="Category: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -1350,7 +1362,7 @@
                     android:text="Sub Category:"
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -1398,7 +1410,7 @@
                     android:text="Occupation: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -1446,7 +1458,7 @@
                     android:text="Activity: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -1478,13 +1490,14 @@
                 android:text="Birth Time: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:id="@+id/edt_btime"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:singleLine="true" />
 
@@ -1534,7 +1547,7 @@
                     android:text="Birth Place:"
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
             </FrameLayout>
 
             <ImageView
@@ -1654,7 +1667,7 @@
                 android:text="Height:"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:id="@+id/edt_height_meter"
@@ -1662,6 +1675,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:background="@null"
+                android:fontFamily="@font/montserrat_regular"
                 android:gravity="center"
                 android:textSize="14sp" />
 
@@ -1671,7 +1685,7 @@
                 android:layout_gravity="center_vertical"
                 android:text="Meter"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <ImageView
                 android:id="@+id/img_height_close"
@@ -1703,7 +1717,7 @@
                 android:layout_marginLeft="15dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:id="@+id/edt_weight_kg"
@@ -1711,6 +1725,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:background="@null"
+                android:fontFamily="@font/montserrat_regular"
                 android:gravity="center"
                 android:textSize="14sp" />
 
@@ -1720,7 +1735,7 @@
                 android:layout_gravity="center_vertical"
                 android:text="Kg"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <ImageView
                 android:id="@+id/img_weight_close"
@@ -1751,13 +1766,14 @@
                 android:text="Created Date: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:id="@+id/edt_created"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:singleLine="true" />
 
@@ -1790,13 +1806,14 @@
                 android:text="Updated Date: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/montserrat_semibold" />
 
             <EditText
                 android:id="@+id/edt_updated"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:singleLine="true" />
 
@@ -1835,7 +1852,7 @@
                     android:text="Percentage: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/montserrat_semibold" />
 
                 <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
                     android:id="@+id/rangeUpdationBar"
