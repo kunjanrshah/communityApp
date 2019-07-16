@@ -117,14 +117,15 @@ public class ChooseLanActivity extends Activity {
     {
         RandomTransitionGenerator generator = new RandomTransitionGenerator(20000, new AccelerateDecelerateInterpolator());
         kbv.setTransitionGenerator(generator);
-        imglogo.animate().setStartDelay(5000).setDuration(2000).alpha(1).start();
+        imglogo.animate().setStartDelay(4000).setDuration(2000).alpha(1).start();
 
-        darkoverlay.animate().setStartDelay(5000).setDuration(2000).alpha(0.6f).start();
+        darkoverlay.animate().setStartDelay(4000).setDuration(3000).alpha(0.6f).start();
+
         ll_spinner.animate().translationY(dm.heightPixels).setStartDelay(0).setDuration(0).start();
-        ll_spinner.animate().translationY(0).setDuration(1500).alpha(1).setStartDelay(6000).start();
+        ll_spinner.animate().translationY(0).setDuration(2000).alpha(1).setStartDelay(6000).start();
 
         ll_login.animate().translationX(dm.widthPixels+ ll_login.getMeasuredWidth()).setDuration(0).setStartDelay(0).start();
-        ll_login.animate().translationX(0).setStartDelay(6500).setDuration(1500).setInterpolator(new OvershootInterpolator()).start();
+        ll_login.animate().translationX(0).setStartDelay(6500).setDuration(2000).setInterpolator(new OvershootInterpolator()).start();
     }
 
     private void MemoryAllocation()

@@ -103,7 +103,7 @@ public class RegisterActivty extends Activity {
         });
 
         img_back.setOnClickListener(v -> {
-            Intent mIntent = new Intent(RegisterActivty.this, ChooseLanguageActivity.class);
+            Intent mIntent = new Intent(RegisterActivty.this, ChooseLanActivity.class);
             mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(mIntent);
             finish();
