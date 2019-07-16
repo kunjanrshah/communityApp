@@ -10,7 +10,7 @@
         android:id="@+id/fragmentloginKenBurnsView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/image_3" />
+        android:src="@drawable/image_2" />
 
     <View
         android:id="@+id/fragmentloginView1"
@@ -71,6 +71,8 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/montserrat_semibold"
             android:background="@color/colorPrimaryDark"
             android:text="@string/login"
             android:textSize="20sp" />
@@ -80,6 +82,7 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:fontFamily="@font/montserrat_semibold"
             android:background="@drawable/border_color_primary"
             android:text="@string/register"
             android:textColor="@color/colorPrimaryDark"

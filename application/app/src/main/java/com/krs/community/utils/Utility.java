@@ -98,7 +98,7 @@ public class Utility {
         int height = Math.round(ratio * realImage.getHeight());
         return Bitmap.createScaledBitmap(realImage, width, height, filter);
     }*/
-    private static int[] imageResources = new int[]{R.drawable.export1, R.drawable.family_tree_, R.drawable.whatsapp_, R.drawable.qr_code, R.drawable.share_icon, R.drawable.location};
+    private static int[] imageResources = new int[]{R.drawable.export_dot, R.drawable.family_tree_dot, R.drawable.whatsapp_dot, R.drawable.qr_code_dot, R.drawable.share_dot, R.drawable.location_dot};
     private static int[] textResources = new int[]{R.string._export, R.string._qrcode, R.string._share, R.string._location, R.string._whatsapp, R.string._family_tree};
     private static int imageResourceIndex = 0;
     private static int textResourceIndex = 0;
