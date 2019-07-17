@@ -202,8 +202,18 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
         recyclerView.layoutManager = layoutManagerFixed
         val header = layoutInflater.inflate(com.krs.community.R.layout.family_header_detail, recyclerView, false)
         val ll_family_head:LinearLayout
+
         ll_family_head=header.findViewById(R.id.ll_family_head)
         ll_family_head.setOnClickListener {
+            val intent = Intent(activity, ProfileDetailActivity::class.java)
+            intent.putExtra("id",id)
+            startActivity(intent)
+            Bungee.fade(context)
+        }
+
+        val tv_add:TextView
+        tv_add=header.findViewById(R.id.tv_add)
+        tv_add.setOnClickListener {
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra("id",id)
             startActivity(intent)
