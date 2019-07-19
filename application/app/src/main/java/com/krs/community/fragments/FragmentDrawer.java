@@ -59,7 +59,6 @@ public class FragmentDrawer extends Fragment {
     private static List<NavDrawerItem> getData() {
         List<NavDrawerItem> data = new ArrayList<>();
 
-
         // preparing navigation drawer items
         assert titles != null;
         for (String title : titles) {
@@ -91,21 +90,19 @@ public class FragmentDrawer extends Fragment {
         RecyclerView recyclerView = layout.findViewById(R.id.drawerList);
         TextView tv_settings = layout.findViewById(R.id.tv_settings);
 
-
         TextView tv_contact_us = layout.findViewById(R.id.tv_contact_us);
-        ImageView iv_logout = layout.findViewById(R.id.iv_logout);
         LinearLayout ll_change_lan = layout.findViewById(R.id.ll_change_lan);
+        ll_change_lan.setOnClickListener(v -> {
+            mDrawerLayout.closeDrawers();
+            Utility.movetoFragment(getActivity(), new ChangeLanguageFragment());
+        });
 
-        iv_logout.setOnClickListener(v -> {
+        LinearLayout ll_logout=layout.findViewById(R.id.ll_logout);
+        ll_logout.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
             getActivity().finish();
             Bungee.fade(getActivity());
-        });
-
-        ll_change_lan.setOnClickListener(v -> {
-            mDrawerLayout.closeDrawers();
-            Utility.movetoFragment(getActivity(), new ChangeLanguageFragment());
         });
 
         tv_settings.setOnClickListener(v -> {
