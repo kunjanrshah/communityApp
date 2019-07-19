@@ -110,7 +110,13 @@ public class RegisterActivty extends Activity {
             Bungee.fade(this);
         });
 
-        btn_register.setOnClickListener(v -> RegistrationWS());
+        btn_register.setOnClickListener(v -> {
+
+            Intent mIntent = new Intent(RegisterActivty.this, DashboardActivity.class);
+            startActivity(mIntent);
+            finish();
+            //RegistrationWS();
+        });
 
         img_profile.setOnClickListener(v -> cropImageActivity());
 

@@ -339,6 +339,11 @@ public class LoginActivity extends Activity {
 
 
         btn_login.setOnClickListener(v -> {
+
+            Intent mIntent = new Intent(LoginActivity.this, DashboardActivity.class);
+            startActivity(mIntent);
+            finish();
+            /*
             String str = edt_username.getText().toString().trim();
 
             if (btn_login.getText().toString().contains(getString(R.string.send_otp))) {
@@ -377,7 +382,7 @@ public class LoginActivity extends Activity {
                 } else {
                     txt_cancel.performClick();
                 }
-            }
+            }*/
         });
 
         edt_cpass.setOnTouchListener((v, event) -> {
