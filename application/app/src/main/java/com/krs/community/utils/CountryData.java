@@ -70,4 +70,6 @@ public class CountryData {
             "39", "58", "84", "681", "967", "260", "263"};
 
     public static final String[] communityNames = {"Community1","Community2"};
+    public static final String[] regionNames = {"Region1","Region2"};
+
 }

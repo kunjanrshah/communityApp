@@ -35,7 +35,6 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.krs.community.R;
 import com.krs.community.app.AppController;
 import com.krs.community.utils.AppConstants;
@@ -77,7 +76,7 @@ public class RegisterActivty extends Activity {
     private boolean isShow1 = true;
     private String add_new = "";
     private Spinner spinnerCountries;
-    private MaterialSpinner sp_community,sp_region;
+    private Spinner sp_community, sp_region;
     private AutoCompleteTextView txtCity;
 
     @Override
@@ -89,9 +88,9 @@ public class RegisterActivty extends Activity {
             add_new = mBundle.getString(AppConstants.SCREEN);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(this,R.color.white,false);
+            Utility.changeStatusbarColor(this, R.color.colorBG, false);
         }
-        MemoryAllocation();
+        Memory_Allocation();
         runOnUiThread(() -> setCityListAdapter());
 
         txt_already.setOnClickListener(v -> {
@@ -198,7 +197,7 @@ public class RegisterActivty extends Activity {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
                 ((TextView) v).setTextSize(18);
-                ((TextView) v).setGravity(Gravity.LEFT);
+                ((TextView) v).setGravity(Gravity.LEFT| Gravity.CENTER_VERTICAL);
                 ((TextView) v).setTextColor(getResources().getColor(R.color.colorHint));
                 return v;
             }
@@ -216,7 +215,25 @@ public class RegisterActivty extends Activity {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
                 ((TextView) v).setTextSize(18);
-                ((TextView) v).setGravity(Gravity.LEFT);
+                ((TextView) v).setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+                ((TextView) v).setTextColor(getResources().getColor(R.color.colorHint));
+                return v;
+            }
+
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView, parent);
+                ((TextView) v).setTextSize(20);
+                return v;
+            }
+        });
+
+
+        sp_region.setAdapter(new ArrayAdapter<String>(RegisterActivty.this, R.layout.my_spinner_style, CountryData.regionNames) {
+
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                ((TextView) v).setTextSize(18);
+                ((TextView) v).setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
                 ((TextView) v).setTextColor(getResources().getColor(R.color.colorHint));
                 return v;
             }
@@ -229,7 +246,7 @@ public class RegisterActivty extends Activity {
         });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(this,R.color.colorBG,false);
+            Utility.changeStatusbarColor(this, R.color.colorBG, false);
         }
 
     }
@@ -253,7 +270,7 @@ public class RegisterActivty extends Activity {
         txtCity.setAdapter(adapter);
     }
 
-    private void MemoryAllocation() {
+    private void Memory_Allocation() {
         sp_community = findViewById(R.id.sp_community);
         sp_region = findViewById(R.id.sp_region);
         txtCity = findViewById(R.id.txtCity);
@@ -349,9 +366,8 @@ public class RegisterActivty extends Activity {
                     && !password.isEmpty()
                     && !cpassword.isEmpty()
                     && !city.isEmpty()
-                    && !address.isEmpty()){
-            }else
-            {
+                    && !address.isEmpty()) {
+            } else {
                 Utility.alert(RegisterActivty.this, getString(R.string.err_msg_blank));
                 return;
             }

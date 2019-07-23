@@ -448,7 +448,7 @@ public class LoginActivity extends Activity {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
                 ((TextView) v).setTextSize(14);
-                ((TextView) v).setGravity(Gravity.LEFT);
+                ((TextView) v).setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
                 return v;
             }
 

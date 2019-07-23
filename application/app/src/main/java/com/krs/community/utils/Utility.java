@@ -156,7 +156,6 @@ public class Utility {
     }
 
     public static boolean isThisDateValid(@Nullable String dateToValidate, @NonNull String dateFromat) {
-
         if (dateToValidate == null) {
             return true;
         }
@@ -165,17 +164,13 @@ public class Utility {
         sdf.setLenient(false);
 
         try {
-
             //if not valid, it will throw ParseException
             Date date = sdf.parse(dateToValidate);
             System.out.println(date);
-
         } catch (ParseException e) {
-
             e.printStackTrace();
             return false;
         }
-
         return true;
     }
 
@@ -192,12 +187,10 @@ public class Utility {
     }
 
     public static boolean canSMS(@NonNull Context mContext) {
-        return (hasPermission(mContext, Manifest.permission.SEND_SMS));
-    }
+        return (hasPermission(mContext, Manifest.permission.SEND_SMS)); }
 
     public static boolean canReadContacts(@NonNull Context mContext) {
-        return (Utility.hasPermission(mContext, Manifest.permission.READ_CONTACTS));
-    }
+        return (Utility.hasPermission(mContext, Manifest.permission.READ_CONTACTS)); }
 
     public static boolean hasPermission(@NonNull Context mContext, @NonNull String perm) {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));

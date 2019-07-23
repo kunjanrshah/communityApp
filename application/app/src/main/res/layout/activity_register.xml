@@ -5,55 +5,58 @@
     android:background="@color/colorBG"
     android:orientation="vertical">
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/img_back"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/left_arrow"
-            android:padding="5dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal">
-
-            <ImageView
-                android:id="@+id/img_header_logo"
-                android:layout_width="250dp"
-                android:layout_height="23dp"
-                android:background="@drawable/app_text_title" />
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+         <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_back"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/left_arrow"
+                    android:padding="5dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:id="@+id/img_header_logo"
+                        android:layout_width="250dp"
+                        android:layout_height="23dp"
+                        android:background="@drawable/app_text_title" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:orientation="vertical">
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-               >
+                android:layout_height="wrap_content">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/img_profile"
@@ -77,10 +80,10 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_marginRight="30dp"
-                    android:gravity="right"
                     android:fontFamily="@font/montserrat_semibold"
+                    android:gravity="right"
                     android:text="@string/register_now"
-                    android:textSize="20sp"        />
+                    android:textSize="20sp" />
 
             </FrameLayout>
 
@@ -107,8 +110,8 @@
                 android:background="@drawable/border"
                 android:drawableStart="@drawable/man_user"
                 android:drawablePadding="10dp"
-                android:hint="@string/hint_surname"
                 android:fontFamily="@font/montserrat_regular"
+                android:hint="@string/hint_surname"
                 android:inputType="textCapSentences"
                 android:paddingLeft="10dp"
                 android:singleLine="true" />
@@ -122,8 +125,8 @@
                 android:background="@drawable/border"
                 android:drawableStart="@drawable/close_envelope"
                 android:drawablePadding="10dp"
-                android:hint="@string/hint_email"
                 android:fontFamily="@font/montserrat_regular"
+                android:hint="@string/hint_email"
                 android:inputType="textCapSentences"
                 android:paddingLeft="10dp"
                 android:singleLine="true" />
@@ -156,8 +159,8 @@
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/icon"
                     android:drawablePadding="10dp"
-                    android:hint="@string/hint_mobile"
                     android:fontFamily="@font/montserrat_regular"
+                    android:hint="@string/hint_mobile"
                     android:inputType="number"
                     android:maxLength="10"
                     android:paddingLeft="10dp"
@@ -173,8 +176,8 @@
                 android:drawableStart="@drawable/lock"
                 android:drawableEnd="@drawable/pwd_hide"
                 android:drawablePadding="10dp"
-                android:hint="@string/hint_password"
                 android:fontFamily="@font/montserrat_regular"
+                android:hint="@string/hint_password"
                 android:inputType="textPassword"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -212,9 +215,9 @@
                     android:drawableStart="@drawable/_city"
                     android:drawablePadding="10dp"
                     android:ems="10"
+                    android:fontFamily="@font/montserrat_regular"
                     android:gravity="center_vertical"
                     android:hint="@string/hint_city"
-                    android:fontFamily="@font/montserrat_regular"
                     android:imeOptions="actionNext"
                     android:padding="10dp"
                     android:singleLine="true"
@@ -229,40 +232,43 @@
                 android:background="@drawable/border"
                 android:drawableStart="@drawable/home_address"
                 android:drawablePadding="10dp"
-                android:hint="@string/hint_address"
                 android:fontFamily="@font/montserrat_regular"
+                android:hint="@string/hint_address"
                 android:imeOptions="actionDone"
                 android:inputType="textCapSentences"
                 android:paddingLeft="10dp"
                 android:singleLine="true" />
 
-
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_community"
-                android:layout_marginTop="10dp"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/register_field_height"
-                android:drawableStart="@drawable/_community"
-                android:background="@drawable/border"
-                android:textSize="18sp"
-                android:ems="10"
-                style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                android:imeOptions="actionNext"
-                android:text="Community" />
-
-
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_region"
+                android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:textSize="18sp"
-                android:ems="10"
-                style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                android:imeOptions="actionNext"
+                android:background="@drawable/border">
+
+                <Spinner
+                    android:id="@+id/sp_community"
+                    style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/register_field_height"
+                    android:text="Community"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/register_field_height"
-                android:drawableStart="@drawable/_region"
-                android:background="@drawable/border"
-                android:text="Regin/Samaj" />
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border">
+
+                <Spinner
+                    android:id="@+id/sp_region"
+                    style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/register_field_height"
+                    android:textSize="18sp" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/txt_how_register"
@@ -277,23 +283,25 @@
                 android:id="@+id/btn_register"
                 android:layout_width="200dp"
                 android:layout_height="45dp"
-                android:layout_margin="5dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
                 android:background="@drawable/btn_registration"
+                android:fontFamily="@font/montserrat_semibold"
                 android:gravity="center"
                 android:text="@string/register"
-                android:fontFamily="@font/montserrat_semibold"
-                android:textColor="@color/mdtp_white"    />
+                android:textColor="@color/mdtp_white" />
 
             <TextView
                 android:id="@+id/txt_already"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:gravity="center_horizontal"
                 android:fontFamily="@font/montserrat_regular"
+                android:gravity="center_horizontal"
                 android:text="@string/already_have_a_account_sign_in"
                 android:textSize="16sp" />
+
+        </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
