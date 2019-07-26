@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorBG"
     android:orientation="vertical">
 
@@ -21,7 +20,7 @@
         android:fontFamily="@font/montserrat_semibold"
         android:text="Contact Us"
         android:textColor="@color/black1"
-        android:textSize="28sp" />
+        android:textSize="26sp" />
 
     <TextView
         android:layout_width="match_parent"

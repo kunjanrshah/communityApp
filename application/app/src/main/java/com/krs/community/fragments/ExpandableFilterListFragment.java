@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -56,8 +57,8 @@ public class ExpandableFilterListFragment extends Fragment {
             Utility.movetoFragment(getActivity(),new FiltersFragment());
         });
 
-        ImageView iv_verify=rootView.findViewById(R.id.iv_verify);
-        iv_verify.setOnClickListener(v -> {
+        TextView tv_apply=rootView.findViewById(R.id.tv_apply);
+        tv_apply.setOnClickListener(v -> {
             Utility.hideKeyboard(getActivity());
 
             new Handler().postDelayed(() -> adapter.openBottomSheetDailog(),250);

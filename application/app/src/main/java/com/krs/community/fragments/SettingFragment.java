@@ -23,7 +23,7 @@ public class SettingFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragmnet_settings, container, false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(getActivity(),R.color.colorPrivacyPolictyBG,false);
+            Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
         }
 
         ImageView img_cancel=root.findViewById(R.id.img_cancel);

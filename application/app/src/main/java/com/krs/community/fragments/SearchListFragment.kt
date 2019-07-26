@@ -86,7 +86,7 @@ class SearchListFragment : Fragment(), View.OnClickListener, SwipeRefreshLayout.
 
     override fun onRowLongClicked(position: Int) {
         // long press is performed, enable action mode
-        ll_title!!.setVisibility(View.GONE)
+      //  ll_title!!.setVisibility(View.GONE)
         enableActionMode(position)
     }
 
@@ -95,6 +95,7 @@ class SearchListFragment : Fragment(), View.OnClickListener, SwipeRefreshLayout.
     }
 
     private fun enableActionMode(position: Int) {
+
         if (actionMode == null) {
             actionMode = activity!!.startActionMode(actionModeCallback)
         }
@@ -107,9 +108,8 @@ class SearchListFragment : Fragment(), View.OnClickListener, SwipeRefreshLayout.
 
         if (count == 0) {
             actionMode!!.finish()
-            ll_title!!.setVisibility(View.VISIBLE)
+
         } else {
-            ll_title!!.setVisibility(View.GONE)
             actionMode!!.setTitle(count.toString())
             actionMode!!.invalidate()
         }
@@ -312,10 +312,10 @@ class SearchListFragment : Fragment(), View.OnClickListener, SwipeRefreshLayout.
         }
 
         override fun onDestroyActionMode(mode: ActionMode) {
+           // ll_title?.setVisibility(View.VISIBLE)
             recyclerAdapter?.clearSelections()
             swipeRefreshLayout!!.setEnabled(true)
             actionMode = null
-            ll_title!!.setVisibility(View.VISIBLE)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(activity, R.color.colorBG, false)
             }

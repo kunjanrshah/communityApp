@@ -37,7 +37,6 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
 
     private RecyclerView rv_filters;
     private ShimmerFrameLayout mShimmerViewContainer;
-    private LinearLayout ll_title;
     private FilterResultAdapter mAdapter;
     private List<Message> messages = new ArrayList<>();
     private ActionModeCallback actionModeCallback;
@@ -58,7 +57,6 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         rv_filters =rootView.findViewById(R.id.lstFilter);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
-        ll_title=rootView.findViewById(R.id.ll_title);
         actionModeCallback = new ActionModeCallback();
         ImageView iv_export=rootView.findViewById(R.id.iv_export);
         ImageView iv_atoz=rootView.findViewById(R.id.iv_atoz);
@@ -179,7 +177,7 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
             mAdapter.clearSelections();
             swipeRefreshLayout.setEnabled(true);
             actionMode = null;
-            ll_title.setVisibility(View.VISIBLE);
+          //  ll_title.setVisibility(View.VISIBLE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
             }
@@ -199,9 +197,9 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
 
         if (count == 0) {
             actionMode.finish();
-            ll_title.setVisibility(View.VISIBLE);
+           // ll_title.setVisibility(View.VISIBLE);
         } else {
-            ll_title.setVisibility(View.GONE);
+          //  ll_title.setVisibility(View.GONE);
             actionMode.setTitle(String.valueOf(count));
             actionMode.invalidate();
         }
@@ -252,7 +250,7 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
     @Override
     public void onRowLongClicked(int position) {
         // long press is performed, enable action mode
-        ll_title.setVisibility(View.GONE);
+    //    ll_title.setVisibility(View.GONE);
         enableActionMode(position);
     }
 }

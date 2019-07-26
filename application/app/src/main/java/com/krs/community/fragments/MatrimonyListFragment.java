@@ -25,11 +25,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
+import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter;
 import com.krs.community.utils.Utility;
 import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.Util;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 public class MatrimonyListFragment extends Fragment {
+
+
+    ArrayList<JSONObject> lstMatrimony;
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -38,14 +46,48 @@ public class MatrimonyListFragment extends Fragment {
 
         View root=inflater.inflate(R.layout.fragment_matrimonylist,container,false);
 
-        RecyclerView listMatrimony=root.findViewById(R.id.listMatrimony);
 
-        EditText edtSearch=root.findViewById(R.id.edtSearch);
-        ImageView iv_cancel=root.findViewById(R.id.iv_cancel);
+
+
+        ParallaxRecyclerAdapter<JSONObject> adapter = new ParallaxRecyclerAdapter<JSONObject>(lstMatrimony) {
+            @Override
+            public void onBindViewHolderImpl(RecyclerView.ViewHolder viewHolder, ParallaxRecyclerAdapter<JSONObject> adapter, int position) {
+                ListViewHolder holder= (ListViewHolder) viewHolder;
+                holder.tv_name.setText("Kunjan Shah");
+                holder.boomMenuButton.clearBuilders();
+
+                for(int i=0; i<holder.boomMenuButton.getPiecePlaceEnum().pieceNumber(); i++)
+                {
+                    holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder());
+                }
+                holder.boomMenuButton.setOnClickListener(v -> {
+                    holder.boomMenuButton.boom();
+                });
+            }
+
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolderImpl(ViewGroup viewGroup, ParallaxRecyclerAdapter<JSONObject> adapter, int i) {
+                return new ListViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.matrimony_profile, viewGroup, false));
+            }
+
+            @Override
+            public int getItemCountImpl(ParallaxRecyclerAdapter<JSONObject> adapter) {
+                return 10;
+            }
+        };
+
+        RecyclerView listMatrimony=root.findViewById(R.id.listMatrimony);
+        LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
+        listMatrimony.setLayoutManager(MyLayoutManager);
+        listMatrimony.setItemAnimator(new DefaultItemAnimator());
+        listMatrimony.setHasFixedSize(true);
+        View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_matrimony, container, false);
+        ImageView iv_cancel = header.findViewById(R.id.iv_cancel);
         iv_cancel.setOnClickListener(v -> {
-            Utility.movetoFragment(getActivity(),new MatrimonyFragment());
+            Utility.movetoFragment(getActivity(), new DashboardFragment());
         });
 
+        EditText edtSearch=header.findViewById(R.id.edtSearch);
         edtSearch.setOnTouchListener((v, event) -> {
             final int DRAWABLE_RIGHT = 2;
             if(event.getAction() == MotionEvent.ACTION_UP) {
@@ -56,14 +98,8 @@ public class MatrimonyListFragment extends Fragment {
             }
             return false;
         });
-
-
-        ListMatrimonyAdapter mAdapter=new ListMatrimonyAdapter();
-        LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
-        listMatrimony.setLayoutManager(MyLayoutManager);
-        listMatrimony.setItemAnimator(new DefaultItemAnimator());
-        listMatrimony.setAdapter(mAdapter);
-        listMatrimony.setHasFixedSize(true);
+        adapter.setParallaxHeader(header, listMatrimony);
+        listMatrimony.setAdapter(adapter);
 
         return root;
     }
@@ -122,7 +158,7 @@ public class MatrimonyListFragment extends Fragment {
     }
 
 
-    public class ListMatrimonyAdapter extends RecyclerView.Adapter<ListViewHolder>
+    /*public class ListMatrimonyAdapter extends RecyclerView.Adapter<ListViewHolder>
     {
         @NonNull
         @Override
@@ -149,7 +185,7 @@ public class MatrimonyListFragment extends Fragment {
         public int getItemCount() {
             return 10;
         }
-    }
+    }*/
 
 
     class ListViewHolder extends RecyclerView.ViewHolder {

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_gray"
+    android:background="@color/colorBG"
     android:orientation="vertical">
 
     <ImageView
@@ -12,17 +12,14 @@
         android:layout_margin="10dp"
         android:background="@drawable/left_arrow" />
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
         android:fontFamily="@font/montserrat_semibold"
         android:text="Settings"
-        android:textColor="#272727"
-        android:textSize="32sp" />
-
+        android:textColor="@color/black1"
+        android:textSize="26sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -96,9 +93,5 @@
                 android:background="@drawable/forward_arrow" />
 
         </LinearLayout>
-
-
     </LinearLayout>
-
-
 </LinearLayout>

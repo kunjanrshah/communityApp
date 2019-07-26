@@ -30,6 +30,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.krs.community.R;
 import com.krs.community.model.Message;
+import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter;
 import com.krs.community.utils.FlipAnimator;
 import com.krs.community.utils.Utility;
 import com.nightonke.boommenu.BoomMenuButton;
@@ -43,42 +44,75 @@ public class FavoriteFragment extends Fragment {
 
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
-    private FavoriteListAdapter mAdapter;
     private SparseBooleanArray selectedItems;
     private SparseBooleanArray animationItemsIndex;
     private boolean reverseAllAnimations = false;
-    private LinearLayout ll_title;
     private static int currentSelectedIndex = -1;
     private RecyclerView rv_favorite;
     private List<Message> messages = new ArrayList<>();
+    ParallaxRecyclerAdapter<Message> adapter = null;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
+            Utility.changeStatusbarColor(getActivity(), R.color.colorBG, false);
         }
 
-        View root=inflater.inflate(R.layout.fragmnet_favorite,container,false);
+        View root = inflater.inflate(R.layout.fragmnet_favorite, container, false);
 
-        ll_title=root.findViewById(R.id.ll_title);
         selectedItems = new SparseBooleanArray();
         animationItemsIndex = new SparseBooleanArray();
         actionModeCallback = new ActionModeCallback();
-        mAdapter = new FavoriteListAdapter();
+        adapter = new ParallaxRecyclerAdapter<Message>(messages) {
+            @Override
+            public void onBindViewHolderImpl(RecyclerView.ViewHolder viewHolder, ParallaxRecyclerAdapter<Message> adapter, int position) {
+                Message message = messages.get(position);
+                String name = "Kunjan Shah";
+                ListViewHolder holder = (ListViewHolder) viewHolder;
+                holder.tv_name.setText(name);
+                holder.boomMenuButton.clearBuilders();
 
-        ImageView iv_cancel=root.findViewById(R.id.iv_cancel);
-        iv_cancel.setOnClickListener(v -> {
-            Utility.movetoFragment(getActivity(),new DashboardFragment());
-        });
+                for (int i = 0; i < holder.boomMenuButton.getPiecePlaceEnum().pieceNumber(); i++) {
+                    holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder());
+                }
+                holder.boomMenuButton.setOnClickListener(v -> {
+                    holder.boomMenuButton.boom();
+                });
+
+                holder.iconText.setText(name.substring(0, 1));
+                holder.itemView.setActivated(selectedItems.get(position, false));
+
+                applyIconAnimation(holder, position);
+                applyProfilePicture(holder, message);
+                applyClickEvents(holder, position);
+            }
+
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolderImpl(ViewGroup viewGroup, ParallaxRecyclerAdapter<Message> adapter, int i) {
+                return new ListViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.favorite_list_item, viewGroup, false));
+            }
+
+            @Override
+            public int getItemCountImpl(ParallaxRecyclerAdapter<Message> adapter) {
+                return messages.size();
+            }
+        };
 
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
         rv_favorite = root.findViewById(R.id.rv_favorite);
         rv_favorite.setLayoutManager(MyLayoutManager);
         rv_favorite.setItemAnimator(new DefaultItemAnimator());
-        rv_favorite.setAdapter(mAdapter);
         rv_favorite.setHasFixedSize(true);
+        View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_favorite, container, false);
+        ImageView iv_cancel = header.findViewById(R.id.iv_cancel);
+        iv_cancel.setOnClickListener(v -> {
+            Utility.movetoFragment(getActivity(), new DashboardFragment());
+        });
+
+        adapter.setParallaxHeader(header, rv_favorite);
+        rv_favorite.setAdapter(adapter);
 
         getInbox();
         return root;
@@ -109,82 +143,44 @@ public class FavoriteFragment extends Fragment {
             message.setTimestamp("10:30 AM");
             message.setFrom("Google Alerts");
             message.setSubject("Google Alert - android");
-            message.setColor(Utility.getRandomMaterialColor(getActivity(),"400"));
+            message.setColor(Utility.getRandomMaterialColor(getActivity(), "400"));
             messages.add(message);
         }
-
-        mAdapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
-    public class FavoriteListAdapter extends RecyclerView.Adapter<ListViewHolder> {
-
-        @NonNull
-        @Override
-        public ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.favorite_list_item, parent, false);
-            return new ListViewHolder(view);
+    private void toggleSelected(int pos) {
+        currentSelectedIndex = pos;
+        if (selectedItems.get(pos, false)) {
+            selectedItems.delete(pos);
+            animationItemsIndex.delete(pos);
+        } else {
+            selectedItems.put(pos, true);
+            animationItemsIndex.put(pos, true);
         }
-
-        @Override
-        public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
-            Message message = messages.get(position);
-            String name="Kunjan Shah";
-            holder.tv_name.setText(name);
-            holder.boomMenuButton.clearBuilders();
-
-            for(int i=0; i<holder.boomMenuButton.getPiecePlaceEnum().pieceNumber(); i++)
-            {
-                holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder());
-            }
-            holder.boomMenuButton.setOnClickListener(v -> {
-                holder.boomMenuButton.boom();
-            });
-
-            holder.iconText.setText(name.substring(0, 1));
-            holder.itemView.setActivated(selectedItems.get(position, false));
-
-            applyIconAnimation(holder, position);
-            applyProfilePicture(holder, message);
-            applyClickEvents(holder, position);
-        }
-
-        void toggleSelection(int pos) {
-            currentSelectedIndex = pos;
-            if (selectedItems.get(pos, false)) {
-                selectedItems.delete(pos);
-                animationItemsIndex.delete(pos);
-            } else {
-                selectedItems.put(pos, true);
-                animationItemsIndex.put(pos, true);
-            }
-            notifyItemChanged(pos);
-        }
-
-
-        @Override
-        public int getItemCount() {
-            return messages.size();
-        }
+        adapter.notifyItemChanged(pos);
     }
 
     private class ListViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
         BoomMenuButton boomMenuButton;
         RelativeLayout iconContainer, iconBack, iconFront;
-        TextView iconText,tv_name;
+        TextView iconText, tv_name;
         ImageView imgProfile;
         LinearLayout messageContainer;
 
         ListViewHolder(View v) {
             super(v);
             tv_name = v.findViewById(R.id.tv_name);
-            boomMenuButton= v.findViewById(R.id.boomMenuButton);
-            iconText =  v.findViewById(R.id.icon_text);
-            iconBack =  v.findViewById(R.id.icon_back);
-            iconFront =  v.findViewById(R.id.icon_front);
-            imgProfile =  v.findViewById(R.id.icon_profile);
-            messageContainer =  v.findViewById(R.id.message_container);
-            iconContainer =  v.findViewById(R.id.icon_container);
+            boomMenuButton = v.findViewById(R.id.boomMenuButton);
+            iconText = v.findViewById(R.id.icon_text);
+            iconBack = v.findViewById(R.id.icon_back);
+            iconFront = v.findViewById(R.id.icon_front);
+            imgProfile = v.findViewById(R.id.icon_profile);
+            messageContainer = v.findViewById(R.id.message_container);
+            iconContainer = v.findViewById(R.id.icon_container);
             v.setOnLongClickListener(this);
         }
 
@@ -229,13 +225,12 @@ public class FavoriteFragment extends Fragment {
             clearSelections();
 
             actionMode = null;
-            ll_title.setVisibility(View.VISIBLE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
+                Utility.changeStatusbarColor(getActivity(), R.color.colorBG, false);
             }
             rv_favorite.post((Runnable) () -> {
                 resetAnimationIndex();
-                // mAdapter.notifyDataSetChanged();
+                 adapter.notifyDataSetChanged();
             });
         }
     }
@@ -264,7 +259,7 @@ public class FavoriteFragment extends Fragment {
                     Message message = messages.get(position);
                     message.setRead(true);
                     messages.set(position, message);
-                    mAdapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
 
                     Toast.makeText(getActivity(), "Read: " + message.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -274,7 +269,6 @@ public class FavoriteFragment extends Fragment {
         holder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                ll_title.setVisibility(View.GONE);
                 enableActionMode(position);
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 return true;
@@ -344,14 +338,12 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void toggleSelection(int position) {
-        mAdapter.toggleSelection(position);
+        toggleSelected(position);
         int count = getSelectedItemCount();
 
         if (count == 0) {
             actionMode.finish();
-            ll_title.setVisibility(View.VISIBLE);
         } else {
-            ll_title.setVisibility(View.GONE);
             actionMode.setTitle(String.valueOf(count));
             actionMode.invalidate();
         }
@@ -360,7 +352,7 @@ public class FavoriteFragment extends Fragment {
     private void clearSelections() {
         reverseAllAnimations = true;
         selectedItems.clear();
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
     private void removeData(int position) {
@@ -374,7 +366,7 @@ public class FavoriteFragment extends Fragment {
         for (int i = selectedItemPositions.size() - 1; i >= 0; i--) {
             removeData(selectedItemPositions.get(i));
         }
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
     private List<Integer> getSelectedItems() {
