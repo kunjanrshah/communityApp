@@ -46,9 +46,6 @@ public class MatrimonyListFragment extends Fragment {
 
         View root=inflater.inflate(R.layout.fragment_matrimonylist,container,false);
 
-
-
-
         ParallaxRecyclerAdapter<JSONObject> adapter = new ParallaxRecyclerAdapter<JSONObject>(lstMatrimony) {
             @Override
             public void onBindViewHolderImpl(RecyclerView.ViewHolder viewHolder, ParallaxRecyclerAdapter<JSONObject> adapter, int position) {

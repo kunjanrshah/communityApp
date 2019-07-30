@@ -16,60 +16,65 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
+import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter;
 import com.krs.community.utils.Utility;
 import com.nightonke.boommenu.BoomMenuButton;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 public class AdminsFragment extends Fragment {
 
+    ArrayList<JSONObject> lstAdmins;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
 
         View root=inflater.inflate(R.layout.fragment_admins,container,false);
 
-        ImageView iv_cancel=root.findViewById(R.id.iv_cancel);
+        ParallaxRecyclerAdapter<JSONObject> adapter = new ParallaxRecyclerAdapter<JSONObject>(lstAdmins) {
+            @Override
+            public void onBindViewHolderImpl(RecyclerView.ViewHolder viewHolder, ParallaxRecyclerAdapter<JSONObject> adapter, int position) {
+                ListViewHolder holder= (ListViewHolder) viewHolder;
+                holder.tv_name.setText("Kunjan Shah");
+                holder.boomMenuButton.clearBuilders();
+
+                for(int i=0; i<holder.boomMenuButton.getPiecePlaceEnum().pieceNumber(); i++)
+                {
+                    holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder());
+                }
+                holder.boomMenuButton.setOnClickListener(v -> {
+                    holder.boomMenuButton.boom();
+                });
+            }
+
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolderImpl(ViewGroup viewGroup, ParallaxRecyclerAdapter<JSONObject> adapter, int i) {
+                return new ListViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.admin_list_item, viewGroup, false));
+            }
+
+            @Override
+            public int getItemCountImpl(ParallaxRecyclerAdapter<JSONObject> adapter) {
+                return 10;
+            }
+        };
+
+        View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_admins, container, false);
+        ImageView iv_cancel = header.findViewById(R.id.iv_cancel);
         iv_cancel.setOnClickListener(v -> {
-            Utility.movetoFragment(getActivity(),new DashboardFragment());
+            Utility.movetoFragment(getActivity(), new DashboardFragment());
         });
 
-        ListAdminAdapter mAdapter=new ListAdminAdapter();
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
-        RecyclerView listAdmin=root.findViewById(R.id.listAdmin);
-        listAdmin.setLayoutManager(MyLayoutManager);
-        listAdmin.setItemAnimator(new DefaultItemAnimator());
-        listAdmin.setAdapter(mAdapter);
-        listAdmin.setHasFixedSize(true);
+        RecyclerView rv_admins=root.findViewById(R.id.rv_Admins);
+        rv_admins.setLayoutManager(MyLayoutManager);
+        rv_admins.setItemAnimator(new DefaultItemAnimator());
+        adapter.setParallaxHeader(header, rv_admins);
+        rv_admins.setAdapter(adapter);
+        rv_admins.setHasFixedSize(true);
 
         return root;
-    }
-
-    public class ListAdminAdapter extends RecyclerView.Adapter<ListViewHolder>
-    {
-        @NonNull
-        @Override
-        public ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.admin_list_item, parent, false);
-            return new ListViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
-            holder.tv_name.setText("Kunjan Shah");
-            holder.boomMenuButton.clearBuilders();
-
-            for(int i=0; i<holder.boomMenuButton.getPiecePlaceEnum().pieceNumber(); i++)
-            {
-                holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder());
-            }
-            holder.boomMenuButton.setOnClickListener(v -> {
-                holder.boomMenuButton.boom();
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return 10;
-        }
     }
 
     class ListViewHolder extends RecyclerView.ViewHolder {

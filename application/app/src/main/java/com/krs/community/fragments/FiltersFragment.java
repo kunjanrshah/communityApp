@@ -35,6 +35,7 @@ public class FiltersFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
         }
+        lstFilters=new ArrayList<JSONObject>();
 
         ParallaxRecyclerAdapter<JSONObject> adapter = new ParallaxRecyclerAdapter<JSONObject>(lstFilters) {
             @Override
@@ -54,7 +55,7 @@ public class FiltersFragment extends Fragment {
             }
         };
 
-        lstFilters=new ArrayList<JSONObject>();
+
         RecyclerView rv_filters=root.findViewById(R.id.rv_filters);
         View header=LayoutInflater.from(getActivity()).inflate(R.layout.header_filters, container, false);
         ImageView iv_cancel= header.findViewById(R.id.iv_cancel);

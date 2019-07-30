@@ -13,7 +13,7 @@
             android:id="@+id/iv_cancel"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:background="@drawable/left_arrow" />
 
         <TextView
@@ -21,7 +21,6 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_semibold"
             android:text="All Filters"
-            android:layout_marginTop="5dp"
             android:layout_marginLeft="15dp"
             android:textColor="@color/black1"
             android:textSize="26sp" />
@@ -29,10 +28,11 @@
         <TextView
             android:layout_marginLeft="15dp"
             android:layout_width="match_parent"
+            android:layout_marginBottom="5dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_regular"
             android:text="You can see list of offline filters and edit, delete or apply it."
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 

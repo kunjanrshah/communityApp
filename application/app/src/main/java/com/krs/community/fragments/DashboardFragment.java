@@ -52,7 +52,7 @@ public class DashboardFragment extends Fragment {
     String[] ProfileNames = {"Rajendra", "Tejas", "Kunjan", "Mukund", "Kushal"};
     int[] ProfileImages = {R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg};
 
-    String[] MenuNames = {"My QRCode","My Family", "By Distance", "Matrimony", "Documents", "Paytm","App Tour", "Admins", "Registered", "Add New", "Share Event"};
+    String[] MenuNames = {"My QRCode","My Family", "By Distance", "Matrimony", "Documents", "Paytm","App Tour", "Admins", "NonActives", "Add New", "Share Event"};
     int[] MenuImages = {R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon,R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon};
     private boolean isTouch = false;
 
