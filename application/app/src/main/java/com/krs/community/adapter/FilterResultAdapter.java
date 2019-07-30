@@ -1,3 +1,4 @@
+/*
 package com.krs.community.adapter;
 
 import android.content.Context;
@@ -39,15 +40,11 @@ public class FilterResultAdapter extends RecyclerView.Adapter {
 
     private List<Message> messages;
     private FilterResultAdapterListener listener;
-    private SparseBooleanArray selectedItems;
 
-    // array used to perform multiple animation at once
+    private SparseBooleanArray selectedItems;
     private SparseBooleanArray animationItemsIndex;
     private boolean reverseAllAnimations = false;
-
-    // index is used to animate only the selected row
-    // dirty fix, find a better solution
-    private static int currentSelectedIndex = -1;
+    private int currentSelectedIndex = -1;
 
     public FilterResultAdapter(Context context,List<Message> messages, FilterResultAdapterListener listener) {
         mContext = context;
@@ -147,6 +144,14 @@ public class FilterResultAdapter extends RecyclerView.Adapter {
         }
     }
 
+
+    @Override
+    public int getItemCount() {
+        if (messages == null)
+            return 0;
+        return messages.size();
+    }
+
     private void applyClickEvents(ViewHolder holder, final int position) {
         holder.iconContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,29 +218,18 @@ public class FilterResultAdapter extends RecyclerView.Adapter {
         }
     }
 
-
-    // As the views will be reused, sometimes the icon appears as
-    // flipped because older view is reused. Reset the Y-axis to 0
     private void resetIconYAxis(View view) {
         if (view.getRotationY() != 0) {
             view.setRotationY(0);
         }
     }
 
-    public void resetAnimationIndex() {
+    private void resetAnimationIndex() {
         reverseAllAnimations = false;
         animationItemsIndex.clear();
     }
 
-
-    @Override
-    public int getItemCount() {
-        if (messages == null)
-            return 0;
-        return messages.size();
-    }
-
-    public void toggleSelection(int pos) {
+    private void toggleSelected(int pos) {
         currentSelectedIndex = pos;
         if (selectedItems.get(pos, false)) {
             selectedItems.delete(pos);
@@ -247,17 +241,17 @@ public class FilterResultAdapter extends RecyclerView.Adapter {
         notifyItemChanged(pos);
     }
 
-    public void clearSelections() {
+    private void clearSelections() {
         reverseAllAnimations = true;
         selectedItems.clear();
         notifyDataSetChanged();
     }
 
-    public int getSelectedItemCount() {
+    private int getSelectedItemCount() {
         return selectedItems.size();
     }
 
-    public List<Integer> getSelectedItems() {
+    private List<Integer> getSelectedItems() {
         List<Integer> items =
                 new ArrayList<>(selectedItems.size());
         for (int i = 0; i < selectedItems.size(); i++) {
@@ -266,7 +260,7 @@ public class FilterResultAdapter extends RecyclerView.Adapter {
         return items;
     }
 
-    public void removeData(int position) {
+    private void removeData(int position) {
         messages.remove(position);
         resetCurrentIndex();
     }
@@ -285,3 +279,4 @@ public class FilterResultAdapter extends RecyclerView.Adapter {
         void onRowLongClicked(int position);
     }
 }
+*/

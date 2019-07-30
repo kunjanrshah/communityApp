@@ -3,16 +3,20 @@ package com.krs.community.fragments;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,45 +25,101 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
 import com.krs.community.adapter.AtoZBottomAdapter;
-import com.krs.community.adapter.FilterResultAdapter;
 import com.krs.community.model.Message;
+import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter;
+import com.krs.community.utils.FlipAnimator;
 import com.krs.community.utils.Utility;
+import com.nightonke.boommenu.BoomMenuButton;
 import com.orhanobut.dialogplus.DialogPlus;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SmartFilterResult extends Fragment implements FilterResultAdapter.FilterResultAdapterListener,SwipeRefreshLayout.OnRefreshListener{
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+
+public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private RecyclerView rv_filters;
     private ShimmerFrameLayout mShimmerViewContainer;
-    private FilterResultAdapter mAdapter;
+    //private FilterResultAdapter mAdapter;
     private List<Message> messages = new ArrayList<>();
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
     private SwipeRefreshLayout swipeRefreshLayout;
-
+    private ParallaxRecyclerAdapter<Message> adapter;
+    private SparseBooleanArray selectedItems;
+    private SparseBooleanArray animationItemsIndex;
+    private boolean reverseAllAnimations = false;
+    private int currentSelectedIndex = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_filter_result, container, false);
+        selectedItems = new SparseBooleanArray();
+        animationItemsIndex = new SparseBooleanArray();
 
-        ImageView iv_cancel=rootView.findViewById(R.id.iv_cancel);
-        iv_cancel.setOnClickListener(v -> {
-            Utility.movetoFragment(getActivity(),new ExpandableFilterListFragment());
-        });
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container);
         rv_filters =rootView.findViewById(R.id.lstFilter);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
         actionModeCallback = new ActionModeCallback();
-        ImageView iv_export=rootView.findViewById(R.id.iv_export);
-        ImageView iv_atoz=rootView.findViewById(R.id.iv_atoz);
+
+        adapter=new ParallaxRecyclerAdapter<Message>(messages) {
+            @Override
+            public void onBindViewHolderImpl(RecyclerView.ViewHolder viewHolder, ParallaxRecyclerAdapter<Message> adapter, int position) {
+
+                Message message = messages.get(position);
+                String name="Kunjan Shah";
+
+                ViewHolder holder= (ViewHolder) viewHolder;
+
+                holder.tv_name.setText(name);
+                holder.boomMenuButton.clearBuilders();
+
+                for(int i=0; i<holder.boomMenuButton.getPiecePlaceEnum().pieceNumber(); i++)
+                {
+                    holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder());
+                }
+                holder.boomMenuButton.setOnClickListener(v -> {
+                    holder.boomMenuButton.boom();
+                });
+
+                holder.iconText.setText(name.substring(0, 1));
+                holder.itemView.setActivated(selectedItems.get(position, false));
+                applyIconAnimation(holder, position);
+                applyProfilePicture(holder, message);
+                applyClickEvents(holder, position);
+            }
+
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolderImpl(ViewGroup viewGroup, ParallaxRecyclerAdapter<Message> adapter, int i) {
+                return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.filter_result_list, viewGroup, false));
+            }
+
+            @Override
+            public int getItemCountImpl(ParallaxRecyclerAdapter<Message> adapter) {
+                if (messages == null)
+                    return 0;
+                return messages.size();
+            }
+        };
+
+        View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_smart_filter, container, false);
+        ImageView iv_cancel = header.findViewById(R.id.iv_cancel);
+        iv_cancel.setOnClickListener(v -> {
+            Utility.movetoFragment(getActivity(), new ExpandableFilterListFragment());
+        });
+
+        ImageView iv_export=header.findViewById(R.id.iv_export);
+        ImageView iv_atoz=header.findViewById(R.id.iv_atoz);
         iv_atoz.setOnClickListener(v -> {
             AtoZBottomAdapter adapter=new AtoZBottomAdapter(getContext());
             DialogPlus dialog = DialogPlus.newDialog(getContext())
@@ -72,31 +132,17 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
             dialog.show();
         });
 
+        adapter.setParallaxHeader(header, rv_filters);
+
         setupList();
         getInbox();
         return rootView;
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mShimmerViewContainer.startShimmerAnimation();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-        DashboardActivity.spaceNavigationView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-        mShimmerViewContainer.stopShimmerAnimation();
-    }
-
     private void setupList() {
         rv_filters.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new FilterResultAdapter(getActivity(), messages, this);
-        rv_filters.setAdapter(mAdapter);
+        // mAdapter = new FilterResultAdapter(getActivity(), messages, this);
+        rv_filters.setAdapter(adapter);
 
         new Handler().postDelayed(() -> {
             mShimmerViewContainer.stopShimmerAnimation();
@@ -122,18 +168,194 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
             messages.add(message);
         }
 
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
     }
 
+    private void applyClickEvents(ViewHolder holder, final int position) {
+        holder.iconContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onIconClicked(position);
+            }
+        });
+
+
+        holder.messageContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onMessageRowClicked(position);
+            }
+        });
+
+        holder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+
+                onRowLongClicked(position);
+                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                return true;
+            }
+        });
+    }
+
+    private void applyProfilePicture(ViewHolder holder, Message message) {
+        if (!TextUtils.isEmpty(message.getPicture())) {
+            Glide.with(getActivity()).load(message.getPicture())
+                    .thumbnail(0.5f)
+                    .transition(withCrossFade())
+                    .apply(RequestOptions.circleCropTransform())
+                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                    .into(holder.imgProfile);
+            holder.imgProfile.setColorFilter(null);
+            holder.iconText.setVisibility(View.GONE);
+        } else {
+            holder.imgProfile.setImageResource(R.drawable.bg_circle);
+            holder.imgProfile.setColorFilter(message.getColor());
+            holder.iconText.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void applyIconAnimation(ViewHolder holder, int position) {
+        if (selectedItems.get(position, false)) {
+            holder.iconFront.setVisibility(View.GONE);
+            resetIconYAxis(holder.iconBack);
+            holder.iconBack.setVisibility(View.VISIBLE);
+            holder.iconBack.setAlpha(1);
+            if (currentSelectedIndex == position) {
+                FlipAnimator.flipView(getActivity(), holder.iconBack, holder.iconFront, true);
+                resetCurrentIndex();
+            }
+        } else {
+            holder.iconBack.setVisibility(View.GONE);
+            resetIconYAxis(holder.iconFront);
+            holder.iconFront.setVisibility(View.VISIBLE);
+            holder.iconFront.setAlpha(1);
+            if ((reverseAllAnimations && animationItemsIndex.get(position, false)) || currentSelectedIndex == position) {
+                FlipAnimator.flipView(getActivity(), holder.iconBack, holder.iconFront, false);
+                resetCurrentIndex();
+            }
+        }
+    }
+
+    private void resetIconYAxis(View view) {
+        if (view.getRotationY() != 0) {
+            view.setRotationY(0);
+        }
+    }
+
+    private void resetAnimationIndex() {
+        reverseAllAnimations = false;
+        animationItemsIndex.clear();
+    }
+
+    private void toggleSelected(int pos) {
+        currentSelectedIndex = pos;
+        if (selectedItems.get(pos, false)) {
+            selectedItems.delete(pos);
+            animationItemsIndex.delete(pos);
+        } else {
+            selectedItems.put(pos, true);
+            animationItemsIndex.put(pos, true);
+        }
+        adapter.notifyItemChanged(pos);
+    }
+
+    private void clearSelections() {
+        reverseAllAnimations = true;
+        selectedItems.clear();
+        adapter.notifyDataSetChanged();
+    }
+
+    private int getSelectedItemCount() {
+        return selectedItems.size();
+    }
+
+    private List<Integer> getSelectedItems() {
+        List<Integer> items =
+                new ArrayList<>(selectedItems.size());
+        for (int i = 0; i < selectedItems.size(); i++) {
+            items.add(selectedItems.keyAt(i));
+        }
+        return items;
+    }
+
+    private void removeData(int position) {
+        messages.remove(position);
+        resetCurrentIndex();
+    }
+
+    private void resetCurrentIndex() {
+        currentSelectedIndex = -1;
+    }
+
+
+    private class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener{
+
+        private ImageView iv_profile;
+        private BoomMenuButton boomMenuButton;
+        private TextView tv_area;
+        private TextView tv_role;
+        private TextView tv_mobile;
+        private TextView tv_email;
+
+        RelativeLayout iconContainer, iconBack, iconFront;
+        TextView iconText,tv_name;
+        ImageView imgProfile;
+        LinearLayout messageContainer;
+
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            iv_profile= itemView.findViewById(R.id.iv_profile);
+            boomMenuButton = itemView.findViewById(R.id.bmb1);
+            tv_name = itemView.findViewById(R.id.tv_name);
+            tv_area = itemView.findViewById(R.id.tv_area);
+            tv_role = itemView.findViewById(R.id.tv_role);
+            tv_mobile= itemView.findViewById(R.id.tv_mobile);
+            tv_email = itemView.findViewById(R.id.tv_email);
+
+            tv_name = itemView.findViewById(R.id.tv_name);
+            iconText =  itemView.findViewById(R.id.icon_text);
+            iconBack =  itemView.findViewById(R.id.icon_back);
+            iconFront =  itemView.findViewById(R.id.icon_front);
+            imgProfile =  itemView.findViewById(R.id.icon_profile);
+            messageContainer =  itemView.findViewById(R.id.message_container);
+            iconContainer =  itemView.findViewById(R.id.icon_container);
+            itemView.setOnLongClickListener(this);
+
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            onRowLongClicked(getAdapterPosition());
+            v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            return true;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mShimmerViewContainer.startShimmerAnimation();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        DashboardActivity.spaceNavigationView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        mShimmerViewContainer.stopShimmerAnimation();
+    }
 
     private void deleteMessages() {
-        mAdapter.resetAnimationIndex();
-        List<Integer> selectedItemPositions = mAdapter.getSelectedItems();
+        resetAnimationIndex();
+        List<Integer> selectedItemPositions = getSelectedItems();
         for (int i = selectedItemPositions.size() - 1; i >= 0; i--) {
-            mAdapter.removeData(selectedItemPositions.get(i));
+            removeData(selectedItemPositions.get(i));
         }
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -146,7 +368,6 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.menu_action_mode, menu);
 
-            // disable swipe refresh if action mode is enabled
             swipeRefreshLayout.setEnabled(false);
             return true;
         }
@@ -162,7 +383,6 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete:
-                    // delete all the selected messages
                     deleteMessages();
                     mode.finish();
                     return true;
@@ -174,32 +394,28 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            mAdapter.clearSelections();
+            clearSelections();
             swipeRefreshLayout.setEnabled(true);
             actionMode = null;
-          //  ll_title.setVisibility(View.VISIBLE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
             }
             rv_filters.post(new Runnable() {
                 @Override
                 public void run() {
-                    mAdapter.resetAnimationIndex();
-                    // mAdapter.notifyDataSetChanged();
+                    resetAnimationIndex();
                 }
             });
         }
     }
 
     private void toggleSelection(int position) {
-        mAdapter.toggleSelection(position);
-        int count = mAdapter.getSelectedItemCount();
+        toggleSelected(position);
+        int count = getSelectedItemCount();
 
         if (count == 0) {
             actionMode.finish();
-           // ll_title.setVisibility(View.VISIBLE);
         } else {
-          //  ll_title.setVisibility(View.GONE);
             actionMode.setTitle(String.valueOf(count));
             actionMode.invalidate();
         }
@@ -212,45 +428,36 @@ public class SmartFilterResult extends Fragment implements FilterResultAdapter.F
         toggleSelection(position);
     }
 
-    @Override
-    public void onIconClicked(int position) {
+
+    private void onIconClicked(int position) {
         if (actionMode == null) {
             actionMode = getActivity().startActionMode(actionModeCallback);
         }
         toggleSelection(position);
     }
 
-    @Override
-    public void onIconImportantClicked(int position) {
-        // Star icon is clicked,
-        // mark the message as important
+
+    private void onIconImportantClicked(int position) {
         Message message = messages.get(position);
         message.setImportant(!message.isImportant());
         messages.set(position, message);
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onMessageRowClicked(int position) {
-        // verify whether action mode is enabled or not
-        // if enabled, change the row state to activated
-        if (mAdapter.getSelectedItemCount() > 0) {
+    private void onMessageRowClicked(int position) {
+        if (getSelectedItemCount() > 0) {
             enableActionMode(position);
         } else {
-            // read the message which removes bold from the row
             Message message = messages.get(position);
             message.setRead(true);
             messages.set(position, message);
-            mAdapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
 
             Toast.makeText(getActivity(), "Read: " + message.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    @Override
-    public void onRowLongClicked(int position) {
-        // long press is performed, enable action mode
-    //    ll_title.setVisibility(View.GONE);
+    private void onRowLongClicked(int position) {
         enableActionMode(position);
     }
 }

@@ -9,61 +9,6 @@
     android:layout_margin="5dp"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/ll_title"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/iv_cancel"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/left_arrow" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="match_parent"/>
-        <ImageView
-            android:id="@+id/iv_export"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/export" />
-
-        <ImageView
-            android:id="@+id/iv_atoz"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="20dp"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/atoz" />
-
-    </LinearLayout>
-
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/montserrat_semibold"
-        android:text="Search List"
-        android:textColor="#272727"
-        android:textSize="20sp" />
-
-    <com.iammert.library.ui.multisearchviewlib.MultiSearchView
-        android:id="@+id/multiSearchView"
-        style="@style/SearchTextStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp" />
-
-
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_view_container"
         android:layout_width="match_parent"
@@ -102,10 +47,6 @@
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
@@ -120,14 +61,10 @@
             android:clipToPadding="false"
             android:layoutAnimation="@anim/layout_animation_fall_down"
             android:overScrollMode="never"
-            android:padding="8dp"
             tools:itemCount="4"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/row_list_header"/>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 </LinearLayout>

@@ -10,9 +10,9 @@
 
         <ImageView
             android:id="@+id/iv_cancel"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_margin="10dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="5dp"
             android:background="@drawable/left_arrow" />
 
         <View
@@ -20,24 +20,23 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
+        <TextView
+            android:id="@+id/tv_apply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black1"
+            android:layout_marginRight="20dp"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="Apply"
+            android:textSize="18sp" />
+
         <ImageView
             android:id="@+id/iv_filter"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center_vertical"
             android:layout_margin="5dp"
-            android:background="@drawable/filter_menu" />
-
-        <TextView
-            android:id="@+id/tv_apply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp"
-            android:fontFamily="@font/montserrat_medium"
-            android:text="Apply"
-            android:textSize="18sp" />
+            android:background="@drawable/view_all_48" />
 
     </LinearLayout>
 

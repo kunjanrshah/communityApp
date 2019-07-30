@@ -28,15 +28,9 @@ class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentAct
                                                        var onClickListener: View.OnClickListener? = null, var listener: RecyclerAdapterListener? = null)
     : RecyclerView.Adapter<RecyclerAdapter.BaseViewHolder.CardViewHolder<MutableList<Message>>>() {
 
-
     private var selectedItems: SparseBooleanArray? = SparseBooleanArray()
-
-    // array used to perform multiple animation at once
     private var animationItemsIndex: SparseBooleanArray? = SparseBooleanArray()
     private var reverseAllAnimations = false
-
-    // index is used to animate only the selected row
-    // dirty fix, find a better solution
     private var currentSelectedIndex = -1
 
     @Suppress("UNCHECKED_CAST")
@@ -64,17 +58,12 @@ class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentAct
 
         holder.bind(messages[position], itemClickListener, onClickListener)
 
-        // change the row state to activated
         holder.itemView.setActivated(selectedItems!!.get(position, false))
 
         val message = messages!!.get(position)
         applyProfilePicture(holder,message)
-
         applyIconAnimation(holder,position)
-
-        // apply click events
         applyClickEvents(holder, position)
-
     }
 
     interface ItemClickListener {
@@ -113,7 +102,6 @@ class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentAct
             }
         }
     }
-
 
     private fun applyClickEvents(holder: BaseViewHolder.CardViewHolder<MutableList<Message>>, position: Int) {
         holder.icon_container1.setOnClickListener({ listener?.onIconClicked(position) })
@@ -166,9 +154,6 @@ class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentAct
         }
     }
 
-
-    // As the views will be reused, sometimes the icon appears as
-    // flipped because older view is reused. Reset the Y-axis to 0
     private fun resetIconYAxis(view: View) {
         if (view.rotationY != 0f) {
             view.rotationY = 0f
@@ -181,7 +166,6 @@ class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentAct
             animationItemsIndex!!.clear()
         }
     }
-
 
     fun toggleSelection(pos: Int) {
         currentSelectedIndex = pos

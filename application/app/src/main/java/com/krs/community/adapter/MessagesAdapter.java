@@ -1,3 +1,4 @@
+/*
 package com.krs.community.adapter;
 
 import android.content.Context;
@@ -264,3 +265,4 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
         void onRowLongClicked(int position);
     }
 }
+*/

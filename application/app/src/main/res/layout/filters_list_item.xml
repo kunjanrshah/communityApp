@@ -26,10 +26,11 @@
 
             <TextView
                 android:id="@+id/tv_name"
+                android:layout_marginTop="-5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/montserrat_semibold"
+                android:fontFamily="@font/montserrat_medium"
                 android:text="Filter Name"
                 android:textColor="@color/black1"
                 android:textSize="18sp" />
@@ -37,7 +38,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:background="@drawable/edit" />
+                android:background="@drawable/settings" />
 
 
         </LinearLayout>
@@ -51,8 +52,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_weight="1">
 
                 <com.google.android.flexbox.FlexboxLayout

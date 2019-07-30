@@ -1,7 +1,5 @@
 package com.krs.community.fragments;
 
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -30,10 +28,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.krs.community.R;
-import com.krs.community.adapter.MessagesAdapter;
 import com.krs.community.model.Message;
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter;
 import com.krs.community.utils.FlipAnimator;
@@ -53,11 +48,10 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
     private List<Message> messages = new ArrayList<>();
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
-    private LinearLayout ll_title;
     private SparseBooleanArray selectedItems;
     private SparseBooleanArray animationItemsIndex;
     private boolean reverseAllAnimations = false;
-    private static int currentSelectedIndex = -1;
+    private int currentSelectedIndex = -1;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,7 +61,7 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
         selectedItems = new SparseBooleanArray();
         animationItemsIndex = new SparseBooleanArray();
 
-        ll_title=root.findViewById(R.id.ll_title);
+      //  ll_title=root.findViewById(R.id.ll_title);
         recyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -101,7 +95,7 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
 
             @Override
             public RecyclerView.ViewHolder onCreateViewHolderImpl(ViewGroup viewGroup, ParallaxRecyclerAdapter<Message> adapter, int i) {
-                return new MyViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.message_list_row, viewGroup, false));
+                return new MyViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_row_nonactives, viewGroup, false));
             }
 
             @Override
@@ -128,30 +122,16 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
         return root;
     }
 
-
     private void applyClickEvents(MyViewHolder holder, final int position) {
-        holder.iconContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onIconClicked(position);
-            }
-        });
+        holder.iconContainer.setOnClickListener(view -> onIconClicked(position));
 
-        holder.messageContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onMessageRowClicked(position);
-            }
-        });
+        holder.messageContainer.setOnClickListener(view -> onMessageRowClicked(position));
 
-        holder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
+        holder.messageContainer.setOnLongClickListener(view -> {
 
-                onRowLongClicked(position);
-                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                return true;
-            }
+            onRowLongClicked(position);
+            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            return true;
         });
     }
 
@@ -227,14 +207,11 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
 
         @Override
         public boolean onLongClick(View view) {
-            //listener.onRowLongClicked(getAdapterPosition());
-            ll_title.setVisibility(View.GONE);
             enableActionMode(getAdapterPosition());
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             return true;
         }
     }
-
 
     @Override
     public void onResume() {
@@ -248,12 +225,11 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 
-    public void resetAnimationIndex() {
+    private void resetAnimationIndex() {
         reverseAllAnimations = false;
         animationItemsIndex.clear();
     }
 
-    // deleting the messages from recycler view
     private void deleteMessages() {
         resetAnimationIndex();
         List<Integer> selectedItemPositions = getSelectedItems();
@@ -263,7 +239,7 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
         adapter.notifyDataSetChanged();
     }
 
-    public void removeData(int position) {
+    private void removeData(int position) {
         messages.remove(position);
         resetCurrentIndex();
     }
@@ -295,8 +271,6 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
         adapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
     }
-
-
 
     private void onIconClicked(int position) {
         if (actionMode == null) {
@@ -332,27 +306,17 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
 
         if (count == 0) {
             actionMode.finish();
-            ll_title.setVisibility(View.VISIBLE);
+           // ll_title.setVisibility(View.VISIBLE);
         } else {
-            ll_title.setVisibility(View.GONE);
+           // ll_title.setVisibility(View.GONE);
             actionMode.setTitle(String.valueOf(count));
             actionMode.invalidate();
         }
     }
-/*
-     public void onIconImportantClicked(int position) {
-        // Star icon is clicked,
-        // mark the message as important
-        Message message = messages.get(position);
-        message.setImportant(!message.isImportant());
-        messages.set(position, message);
-        adapter.notifyDataSetChanged();
-    }*/
 
     private int getSelectedItemCount() {
         return selectedItems.size();
     }
-
 
     private void onMessageRowClicked(int position) {
         // verify whether action mode is enabled or not
@@ -370,10 +334,7 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
         }
     }
 
-
     private void onRowLongClicked(int position) {
-        // long press is performed, enable action mode
-        ll_title.setVisibility(View.GONE);
         enableActionMode(position);
     }
 
@@ -431,7 +392,7 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
             clearSelections();
             swipeRefreshLayout.setEnabled(true);
             actionMode = null;
-            ll_title.setVisibility(View.VISIBLE);
+           // ll_title.setVisibility(View.VISIBLE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
             }
@@ -444,5 +405,4 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
             });
         }
     }
-
 }
