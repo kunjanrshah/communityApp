@@ -1,10 +1,10 @@
 package com.krs.community.fragments
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
-import android.transition.TransitionInflater
 import android.util.SparseBooleanArray
 import android.view.*
 import android.widget.*
@@ -21,15 +21,18 @@ import com.bumptech.glide.request.RequestOptions
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.iammert.library.ui.multisearchviewlib.MultiSearchView
 import com.krs.community.R
+import com.krs.community.activity.FamilyTreeListView
 import com.krs.community.adapter.AtoZBottomAdapter
 import com.krs.community.model.Message
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
-import com.krs.community.utils.*
+import com.krs.community.utils.FlipAnimator
+import com.krs.community.utils.Utility
+import com.krs.community.utils.copyViewImage
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_search_result.*
-
 
 class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
 
@@ -140,7 +143,21 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
                 viewHolder.boomMenuButton.clearBuilders()
 
                 for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
-                    viewHolder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder())
+                   val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
+                    if (builder != null) {
+                        builder.listener {
+                            if(it==1)
+                            {
+                                val intent:Intent=Intent(activity, FamilyTreeListView::class.java)
+                                startActivity(intent)
+
+                            }else
+                            {
+                                Toast.makeText(activity, "Clicked " + it, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                    viewHolder.boomMenuButton.addBuilder(builder)
                 }
                 viewHolder.boomMenuButton.setOnClickListener { v -> viewHolder.boomMenuButton.boom() }
 

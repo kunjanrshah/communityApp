@@ -4,9 +4,9 @@
     android:id="@+id/card_view_list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
     android:layout_marginBottom="12dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
     android:background="@drawable/round_corner_itemlist"
     android:orientation="vertical"
     android:padding="16dp"
@@ -19,7 +19,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,79 +29,34 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <RelativeLayout
-                    android:id="@+id/icon_container"
+                <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:id="@+id/icon_back"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fillAfter="false"
-                        android:fillEnabled="false">
-
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/bg_circle" />
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:src="@drawable/ic_done_white_24dp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/icon_front"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fillAfter="false"
-                        android:fillEnabled="false">
-
-                        <ImageView
-                            android:id="@+id/icon_profile"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp" />
-
-                        <TextView
-                            android:id="@+id/icon_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:textColor="@android:color/white"
-                            android:textSize="22sp" />
-                    </RelativeLayout>
-
-                </RelativeLayout>
+                    android:background="@drawable/round_corner_profile"
+                    android:src="@drawable/user" />
 
                 <com.nightonke.boommenu.BoomMenuButton
                     android:id="@+id/boomMenuButton"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:layout_marginLeft="-8dp"
-                    android:layout_marginTop="-5dp"
                     app:bmb_buttonEnum="textInsideCircle"
                     app:bmb_buttonPlaceEnum="buttonPlace_sc_6_1"
                     app:bmb_inList="true"
+                    android:layout_marginLeft="-8dp"
+                    android:layout_marginTop="-5dp"
                     app:bmb_piecePlaceEnum="piecePlace_dot_6_1" />
+
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/message_container"
-                android:clickable="true"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -114,15 +68,14 @@
                             android:id="@+id/tv_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_semibold"
                             android:text="Kunjan Patel"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/tv_subtext"
+                            android:id="@+id/tv_area"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_regular"
                             android:text="Maninagar, Ahmedabad"
                             android:textSize="12sp" />
 
@@ -143,6 +96,7 @@
                         android:textSize="11sp" />
 
                 </LinearLayout>
+
 
                 <View
                     android:layout_width="match_parent"
@@ -179,7 +133,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
-                            android:fontFamily="@font/montserrat_regular"
                             android:text="9825450261"
                             android:textColor="@color/com_facebook_blue"
                             android:textSize="12sp" />
@@ -203,7 +156,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
-                            android:fontFamily="@font/montserrat_regular"
                             android:text="kunjanshah@gmail.com"
                             android:textSize="12sp" />
 
