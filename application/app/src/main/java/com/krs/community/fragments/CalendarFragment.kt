@@ -209,7 +209,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
                     .setHeaderColor(resources.getColor(R.color.colorPrimary))
                     .setBackgroundColor(Color.parseColor("#ffffff"))
                     .setSelectedColor(Color.parseColor("#c48395"))
-                    .show(activity?.getSupportFragmentManager(), "TAG_SLYCALENDAR")
+                    .show(activity!!.getSupportFragmentManager(), "TAG_SLYCALENDAR")
         }
         fab.setOnClickListener {
             Toast.makeText(activity, "search", Toast.LENGTH_LONG).show()

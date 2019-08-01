@@ -21,7 +21,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.iammert.library.ui.multisearchviewlib.MultiSearchView
 import com.krs.community.R
-import com.krs.community.activity.FamilyTreeListView
+import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.adapter.AtoZBottomAdapter
 import com.krs.community.model.Message
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
@@ -148,7 +148,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
                         builder.listener {
                             if(it==1)
                             {
-                                val intent:Intent=Intent(activity, FamilyTreeListView::class.java)
+                                val intent: Intent =Intent(activity, FamilyTreeListActivity::class.java)
                                 startActivity(intent)
 
                             }else

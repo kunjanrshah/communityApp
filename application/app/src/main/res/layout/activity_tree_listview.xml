@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.github.florent37.parallax.ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sv_tree"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient1">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/gradient"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="20dp"
             android:tag="parallax=0.8">
 
             <LinearLayout
@@ -42,6 +42,7 @@
                     android:background="@drawable/filter" />
 
                 <ImageView
+                    android:id="@+id/iv_tree"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="15dp"
@@ -103,7 +104,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="2000dp"
+            android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/popup_top_corner"
@@ -119,26 +120,23 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="30dp"
                 android:background="@drawable/round_corner_gray"
-                android:hint="Find Person..."
-                android:drawablePadding="10dp"
                 android:drawableStart="@drawable/home_search"
+                android:drawablePadding="10dp"
+                android:hint="Find Person..."
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp" />
 
 
             <LinearLayout
+                android:id="@+id/ll_parent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></LinearLayout>
-
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                android:paddingBottom="80dp" />
 
 
         </LinearLayout>
-
-
-
-
-
-
 
     </LinearLayout>
 

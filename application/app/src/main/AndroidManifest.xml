@@ -23,7 +23,9 @@
         android:largeHeap="true"
         android:theme="@style/MyMaterialTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -59,7 +61,7 @@
 
         <activity
             android:name="com.zfdang.multiple_images_selector.ImagesSelectorActivity"
-            android:configChanges="orientation|screenSize"/>
+            android:configChanges="orientation|screenSize" />
 
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
@@ -100,7 +102,7 @@
             android:name="com.krs.community.activity.ChooseLanActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan">
 
 
         </activity>
@@ -109,17 +111,11 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name="com.krs.community.activity.FamilyTreeDetailView"
-
+        <activity
+            android:name="com.krs.community.activity.FamilyTreeDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            />
-        <activity android:name="com.krs.community.activity.FamilyTreeListView"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            >
+            android:windowSoftInputMode="adjustPan" >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -129,6 +125,13 @@
 
 
         </activity>
+
+        <activity
+            android:name=".activity.FamilyTreeListActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
 
         <service android:name="com.krs.community.service.MyLocationService" />
         <service android:name="com.krs.community.service.LocationAlertService" />
