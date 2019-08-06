@@ -23,11 +23,6 @@ import com.bumptech.glide.Glide;
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
 import com.krs.community.utils.Utility;
-
-import org.w3c.dom.Text;
-
-import spencerstudios.com.bungeelib.Bungee;
-
 import static com.bumptech.glide.Glide.*;
 
 public class ContactUsFragment extends Fragment {

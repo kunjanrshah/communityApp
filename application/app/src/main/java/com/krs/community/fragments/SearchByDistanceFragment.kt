@@ -220,7 +220,7 @@ class SearchByDistanceFragment : Fragment() {
 
         //   fragmentTransaction!!.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right)
         fragmentTransaction?.commitAllowingStateLoss()
-        //  Bungee.fade(context);
+        //  Utility.fade(context);
 
 
         /* AnimatorInflater.loadAnimator(activity, R.animator.main_list_animator).apply {
@@ -234,7 +234,7 @@ class SearchByDistanceFragment : Fragment() {
                  view.animate().y(229f).start()
                 // fragmentTransaction!!.setCustomAnimations(R.anim.pull_in_left, R.anim.push_out_right)
                  fragmentTransaction?.commitAllowingStateLoss()
-                 Bungee.fade(context);
+                 Utility.fade(context);
                  *//*activity?.myAppBar!!.animate()
                         .translationY(-activity!!.myAppBar.height.toFloat())
                         .alpha(0f)

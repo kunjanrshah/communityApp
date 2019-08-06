@@ -53,7 +53,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import spencerstudios.com.bungeelib.Bungee;
+
 
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
@@ -98,7 +98,7 @@ public class RegisterActivty extends Activity {
             mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(mIntent);
             finish();
-            Bungee.fade(this);
+            Utility.fade(this);
         });
 
         img_back.setOnClickListener(v -> {
@@ -106,7 +106,7 @@ public class RegisterActivty extends Activity {
             mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(mIntent);
             finish();
-            Bungee.fade(this);
+            Utility.fade(this);
         });
 
         btn_register.setOnClickListener(v -> {

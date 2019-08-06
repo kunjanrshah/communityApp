@@ -23,7 +23,6 @@ import com.krs.community.utils.supportsLollipop
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_search_list_detail.*
 import kotlinx.android.synthetic.main.row_list.*
-import spencerstudios.com.bungeelib.Bungee
 import java.util.ArrayList
 
 class SearchbyDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter.ItemClickListener {
@@ -31,7 +30,7 @@ class SearchbyDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter
         val intent = Intent(activity, ProfileDetailActivity::class.java)
         intent.putExtra("id",id)
         startActivity(intent)
-        Bungee.fade(context)
+        Utility.fade(context)
     }
 
     private lateinit var coordinates: FloatArray

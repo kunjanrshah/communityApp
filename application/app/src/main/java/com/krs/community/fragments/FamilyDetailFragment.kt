@@ -31,7 +31,6 @@ import com.krs.community.utils.Utility
 import com.krs.community.utils.Utility.hideKeyboard
 import com.nightonke.boommenu.BoomMenuButton
 import kotlinx.android.synthetic.main.family_header_detail.view.*
-import spencerstudios.com.bungeelib.Bungee
 
 
 class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListener{
@@ -40,7 +39,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
         val intent = Intent(activity, ProfileDetailActivity::class.java)
         intent.putExtra("id",id)
         startActivity(intent)
-        Bungee.fade(context)
+        Utility.fade(context)
     }
 
     private lateinit var coordinates: FloatArray
@@ -120,7 +119,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
         *//*   details_card.setOnClickListener {
                val intent = Intent(activity, ProfileDetailActivity::class.java)
                startActivity(intent)
-               Bungee.fade(context)
+               Utility.fade(context)
            }*//*
 
         // fab_negative.setOnClickListener { onBackPressed() }
@@ -188,7 +187,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra("id",id)
             startActivity(intent)
-            Bungee.fade(context)
+            Utility.fade(context)
 
             /*val fragmentTransaction = initFragmentTransaction(v)
             val copy = view!!.copyViewImage()
@@ -208,7 +207,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra("id",id)
             startActivity(intent)
-            Bungee.fade(context)
+            Utility.fade(context)
         }
 
         val tv_add:TextView
@@ -217,7 +216,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra("id",id)
             startActivity(intent)
-            Bungee.fade(context)
+            Utility.fade(context)
         }
 
         header.img_cancel.setOnClickListener {
@@ -307,7 +306,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
                      intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                      startActivity(intent)
                      activity?.finish()
-                     Bungee.fade(context)
+                     Utility.fade(context)
                  }
                  .setInterpolator(AnticipateInterpolator(2f))
                  .start()

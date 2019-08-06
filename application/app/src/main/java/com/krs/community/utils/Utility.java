@@ -82,7 +82,6 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import spencerstudios.com.bungeelib.Bungee;
 
 public class Utility {
 
@@ -109,6 +108,10 @@ public class Utility {
         Matcher matcher = pattern.matcher(time);
         return !matcher.matches();
 
+    }
+
+    public static void fade(Context context) {
+        ((Activity) context).overridePendingTransition(R.anim.fade_enter, R.anim.fade_exit);
     }
 
 
@@ -353,7 +356,7 @@ public class Utility {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getSimpleName()).commit();
-        Bungee.fade(activity);
+        fade(activity);
     }
 
 

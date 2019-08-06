@@ -1,22 +1,21 @@
 package com.krs.community.activity;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RadioButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import com.github.florent37.materialviewpager.MaterialViewPager;
+import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.krs.community.R;
-import com.krs.community.app.AppController;
-import com.krs.community.utils.Utility;
+import com.krs.community.fragments.RecyclerViewFragment;
 
 public class FamilyTreeDetailActivity extends AppCompatActivity {
+
+
+    MaterialViewPager mViewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,64 +24,86 @@ public class FamilyTreeDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tree_detailview);
 
 
-        RadioButton rbFact = findViewById(R.id.rbFact);
-        RadioButton rbPhoto = findViewById(R.id.rbPhoto);
-        RadioButton rbRel = findViewById(R.id.rbRel);
+        mViewPager = findViewById(R.id.materialViewPager);
+        setTitle("");
 
-        rbFact.setOnClickListener(new View.OnClickListener() {
+        mViewPager.getViewPager().setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+
             @Override
-            public void onClick(View v) {
-                if (rbFact.isChecked()) {
-                    rbFact.setTypeface(AppController.getInstance().typeface_bold);
-                    rbPhoto.setTypeface(AppController.getInstance().typeface);
-                    rbRel.setTypeface(AppController.getInstance().typeface);
+            public Fragment getItem(int position) {
+                switch (position % 4) {
+                    //case 0:
+                    //    return RecyclerViewFragment.newInstance();
+                    //case 1:
+                    //    return RecyclerViewFragment.newInstance();
+                    //case 2:
+                    //   return WebViewFragment.newInstance();
+                    default:
+                        return RecyclerViewFragment.newInstance();
                 }
+            }
+
+            @Override
+            public int getCount() {
+                return 4;
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                switch (position % 4) {
+                    case 0:
+                        return "Relatives";
+                    case 1:
+                        return "Photo";
+                    case 2:
+                        return "Facts";
+                    case 3:
+                        return "Divertissement";
+                }
+                return "";
             }
         });
 
-        rbPhoto.setOnClickListener(new View.OnClickListener() {
+        mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
             @Override
-            public void onClick(View v) {
-                if (rbPhoto.isChecked()) {
-                    rbFact.setTypeface(AppController.getInstance().typeface);
-                    rbPhoto.setTypeface(AppController.getInstance().typeface_bold);
-                    rbRel.setTypeface(AppController.getInstance().typeface);
+            public HeaderDesign getHeaderDesign(int page) {
+                switch (page) {
+                    case 0:
+                        return HeaderDesign.fromColorResAndDrawable(
+                                R.color.green, getDrawable(R.drawable.img_splash));
+                    case 1:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.blue,
+                                "http://www.hdiphonewallpapers.us/phone-wallpapers/540x960-1/540x960-mobile-wallpapers-hd-2218x5ox3.jpg");
+                    case 2:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.cyan,
+                                "http://www.droid-life.com/wp-content/uploads/2014/10/lollipop-wallpapers10.jpg");
+                    case 3:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.red,
+                                "http://www.tothemobile.com/wp-content/uploads/2014/07/original.jpg");
                 }
+
+                //execute others actions if needed (ex : modify your header logo)
+
+                return null;
             }
         });
 
-        rbRel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (rbRel.isChecked()) {
-                    rbFact.setTypeface(AppController.getInstance().typeface);
-                    rbPhoto.setTypeface(AppController.getInstance().typeface);
-                    rbRel.setTypeface(AppController.getInstance().typeface_bold);
+        mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
+        mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
+
+       /* final View logo = findViewById(R.id.logo_white);
+        if (logo != null) {
+            logo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mViewPager.notifyHeaderChanged();
+                    Toast.makeText(getApplicationContext(), "Yes, the title is clickable", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
-        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.arati);
-        ImageView iv_profile = findViewById(R.id.iv_profile);
-
-        ImageView iv_bg = findViewById(R.id.iv_bg);
-
-        Bitmap bitmapImage= Utility.fastblur(icon,1,100);
-        try {
-            Glide.with(this).load(bitmapImage).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(iv_bg);
-          // Bitmap icon1= Utility.getRoundedCornerBitmap(icon,150);
-            Glide.with(this).load(icon).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(iv_profile);
-        } catch (Exception e) {
-            e.getMessage();
-        }
-
-/*
-        LinearLayout ll_blure=findViewById(R.id.ll_blure);
-
-        Bitmap bitmapImage=Utility.fastblur(icon,1,100);
-        BitmapDrawable background = new BitmapDrawable(getResources(), bitmapImage);
-        ll_blure.setBackground(background);*/
-
+            });
+        }*/
 
     }
 
