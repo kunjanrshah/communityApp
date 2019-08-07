@@ -30,6 +30,7 @@ import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.krs.community.R;
 import com.krs.community.utils.Utility;
 
@@ -167,10 +168,11 @@ public class HeaderAutoFooterRecyclerAdapter extends RecyclerView.Adapter<Recycl
 
         if (viewHolder instanceof ItemViewHolder) {
             ItemViewHolder itemViewHolder = ((ItemViewHolder) viewHolder);
-            Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.enjoy);
+           // Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.enjoy);
 
             if (itemViewHolder.iv_photo != null) {
-                itemViewHolder.iv_photo.setImageBitmap(Utility.getRoundedCornerBitmap(icon, 10));
+                String url="https://cdn-30-skcir4i63ajp.netdna-ssl.com/wp-content/uploads/2018/12/Aamir-Khan.png";
+                itemViewHolder.iv_photo.setImageURI(url);
             }
 
             storeHeightOfView(itemViewHolder.mView, position);
@@ -220,7 +222,7 @@ public class HeaderAutoFooterRecyclerAdapter extends RecyclerView.Adapter<Recycl
 
     static class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView iv_photo;
+        SimpleDraweeView iv_photo;
         View mView;
 
         public ItemViewHolder(View v) {

@@ -124,7 +124,7 @@ dependencies {
     implementation 'com.nightonke:boommenu:2.1.1'
 
     // Fresco
-    implementation "com.facebook.fresco:fresco:1.11.0"
+    implementation "com.facebook.fresco:fresco:$rootProject.FRESCO_VERSION"
     // For animated GIF support
     implementation "com.facebook.fresco:animated-gif:$rootProject.FRESCO_VERSION"
     // For WebP support, including animated WebP

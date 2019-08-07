@@ -5,11 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.krs.community.R;
+
 import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 
