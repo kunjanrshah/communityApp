@@ -1,9 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">SlyCalendarView</string>
 
-    <string name="slycalendar_singledate" translatable="false">EE, dd MMMM</string>
-    <string name="slycalendar_short" translatable="false">EE, dd</string>
-    <string name="slycalendar_short_month" translatable="false">EE, dd MMM</string>
     <string name="slycalendar_dates_period" translatable="false">%1$s – %2$s</string>
 
     <string name="slycalendar_cancel">Cancel</string>

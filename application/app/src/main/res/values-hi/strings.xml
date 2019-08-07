@@ -28,8 +28,6 @@
     <string name="err_msg_blank">कृपया खाली विवरण दर्ज करें</string>
     <string name="nav_item_change_password">पासवर्ड बदलें</string>
     <string name="err_msg_invalid_mobile">अमान्य मोबाइल नंबर</string>
-    <string name="err_msg_email">मान्य ईमेल दर्ज करें</string>
-    <string name="err_msg_password">पासवर्ड दर्ज करे</string>
     <string name="type_otp">ओटीपी टाइप करें</string>
     <string name="registraion_request_pending">रजिस्ट्रेशन रिक्वेस्ट पेंडिंग हे. कृपया व्यवस्थापक से संपर्क करें।</string>
     <string name="invalid_username">इनवैलिड यूजर</string>
@@ -37,7 +35,6 @@
     <string name="update_profile_photo">क्या आप फ़ोटो अपडेट करना चाहते हैं?</string>
     <string name="yes">यस </string>
     <string name="no">नहीं</string>
-    <string name="how_to_login">लॉगइन  कैसे करे</string>
     <string name="invalid_username_password">उपयोगकर्ता नाम या पासवर्ड गलत है</string>
     <string name="loading">काम चालू है...</string>
     <string name="user_not_found" >यूजर नॉट फाउंड!</string>
@@ -46,8 +43,6 @@
     <string name="register_now">रजिस्टर करें</string>
     <string name="already_have_a_account_sign_in">क्या आपके पास पहले से एक खाता मौजूद है? </string>
     <string name="hint_name">परिवार के मुखिया का नाम</string>
-    <string name="hint_head_surname">परिवार के मुखिया का उपनाम</string>
-    <string name="hint_spouse_name">जीवनसाथी का नाम</string>
     <string name="hint_email">ईमेल आईडी</string>
     <string name="hint_mobile">मोबाइल नंबर</string>
     <string name="hint_password">पासवर्ड</string>

@@ -68,7 +68,7 @@ class SearchDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter.I
 
         recycle_view = root.findViewById(R.id.recycler_view)
 
-        return   root;
+        return   root
     }
 
 

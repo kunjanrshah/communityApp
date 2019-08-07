@@ -68,7 +68,7 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
 
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container);
         rv_filters =rootView.findViewById(R.id.lstFilter);
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
         actionModeCallback = new ActionModeCallback();
 

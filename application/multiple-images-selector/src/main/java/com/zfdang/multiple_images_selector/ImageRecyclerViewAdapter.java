@@ -120,13 +120,13 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mDrawee = (SimpleDraweeView) view.findViewById(R.id.image_drawee);
+            mDrawee = view.findViewById(R.id.image_drawee);
             assert mDrawee != null;
             mMask = view.findViewById(R.id.image_mask);
             assert mMask != null;
-            mChecked = (ImageView) view.findViewById(R.id.image_checked);
+            mChecked = view.findViewById(R.id.image_checked);
             assert mChecked != null;
-            mImageName = (TextView) view.findViewById(R.id.image_name);
+            mImageName = view.findViewById(R.id.image_name);
             assert mImageName != null;
         }
 

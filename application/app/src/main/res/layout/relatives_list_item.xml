@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/card_view_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/round_corner_itemlist"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/user_profile2" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="Kunjan Patel"
+                android:textColor="@color/black1"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_relation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="This is you"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="1987"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/iv_user_in_tree"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:src="@drawable/view_all_48" />
+
+    </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

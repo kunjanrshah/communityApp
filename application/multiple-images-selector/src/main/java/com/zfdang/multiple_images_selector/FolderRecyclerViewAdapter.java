@@ -87,11 +87,11 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            folderCover = (SimpleDraweeView) view.findViewById(R.id.folder_cover_image);
-            folderName = (TextView) view.findViewById(R.id.folder_name);
-            folderPath = (TextView) view.findViewById(R.id.folder_path);
-            folderSize = (TextView) view.findViewById(R.id.folder_size);
-            folderIndicator = (ImageView) view.findViewById(R.id.folder_selected_indicator);
+            folderCover = view.findViewById(R.id.folder_cover_image);
+            folderName = view.findViewById(R.id.folder_name);
+            folderPath = view.findViewById(R.id.folder_path);
+            folderSize = view.findViewById(R.id.folder_size);
+            folderIndicator = view.findViewById(R.id.folder_selected_indicator);
         }
 
         @Override

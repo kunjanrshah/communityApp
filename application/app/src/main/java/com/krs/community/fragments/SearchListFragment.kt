@@ -99,7 +99,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
     }
 
     fun removeData(position: Int) {
-        messages!!.removeAt(position)
+        messages.removeAt(position)
         resetCurrentIndex()
     }
 
@@ -153,7 +153,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
 
                             }else
                             {
-                                Toast.makeText(activity, "Clicked " + it, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity, "Clicked " + it, Toast.LENGTH_SHORT).show()
                             }
                         }
                     }
@@ -162,7 +162,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
                 viewHolder.boomMenuButton.setOnClickListener { v -> viewHolder.boomMenuButton.boom() }
 
                 viewHolder.iconText.text = name.substring(0, 1)
-                viewHolder.itemView.setActivated(selectedItems!!.get(position, false))
+                viewHolder.itemView.isActivated = selectedItems!!.get(position, false)
 
                 applyIconAnimation(viewHolder, position)
                 applyProfilePicture(viewHolder, message)

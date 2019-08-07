@@ -91,7 +91,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
 
         rv_detail.setHasFixedSize(true)
         val mLayoutManager = LinearLayoutManager(FacebookSdk.getApplicationContext())
-        rv_detail.layoutManager = mLayoutManager as RecyclerView.LayoutManager?
+        rv_detail.layoutManager = mLayoutManager
         rv_detail.itemAnimator = DefaultItemAnimator()
         createCardAdapter(rv_detail,position)
 
@@ -158,10 +158,10 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
 
         val adapter = object : ParallaxRecyclerAdapter<String>(content) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<String>, i: Int) {
-                 (viewHolder as HeaderViewHolder).tv_name.setText("Kunjan Shah")
-                viewHolder.tv_subtext.setText("Son")
-                viewHolder.tv_email.setText("kunjanrshah@gmail.com")
-                viewHolder.tv_mobile.setText("9427051418")
+                (viewHolder as HeaderViewHolder).tv_name.text = "Kunjan Shah"
+                viewHolder.tv_subtext.text = "Son"
+                viewHolder.tv_email.text = "kunjanrshah@gmail.com"
+                viewHolder.tv_mobile.text = "9427051418"
 
                 viewHolder.bmb1.clearBuilders()
                 for (i in 0 until viewHolder.bmb1.piecePlaceEnum.pieceNumber()) {
@@ -273,7 +273,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
         init {
             tv_name = v.findViewById<View>(com.krs.community.R.id.tv_name) as TextView
             tv_subtext = v.findViewById(R.id.tv_subtext)
-            tv_subtext.setTypeface(AppController.getInstance().typeface_bold)
+            tv_subtext.typeface = AppController.getInstance().typeface_bold
             tv_email = v.findViewById(R.id.tv_email)
             tv_mobile = v.findViewById(R.id.tv_mobile)
             bmb1=v.findViewById(R.id.bmb1)

@@ -1,5 +1,6 @@
 package com.krs.community.activity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -77,7 +78,7 @@ public class FamilyTreeListActivity extends AppCompatActivity {
             }
         });
 
-        ViewGroup ll_parent = (ViewGroup) findViewById(R.id.ll_parent);
+        ViewGroup ll_parent = findViewById(R.id.ll_parent);
         for (int i = 0; i < 10; i++) {
             View view = LayoutInflater.from(this).inflate(R.layout.row_list_tree, ll_parent, false);
 
@@ -86,7 +87,15 @@ public class FamilyTreeListActivity extends AppCompatActivity {
             TextView tv_name=view.findViewById(R.id.tv_name);
             TextView tv_relation=view.findViewById(R.id.tv_relation);
             TextView tv_year=view.findViewById(R.id.tv_year);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
+                    Intent mIntent=new Intent(FamilyTreeListActivity.this,FamilyTreeDetailActivity.class);
+                    startActivity(mIntent);
+
+                }
+            });
             ll_parent.addView(view);
         }
     }

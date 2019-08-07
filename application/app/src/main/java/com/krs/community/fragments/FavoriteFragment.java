@@ -228,7 +228,7 @@ public class FavoriteFragment extends Fragment {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(getActivity(), R.color.colorBG, false);
             }
-            rv_favorite.post((Runnable) () -> {
+            rv_favorite.post(() -> {
                 resetAnimationIndex();
                  adapter.notifyDataSetChanged();
             });

@@ -42,18 +42,18 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
             var str: String
             if (secondDate == null) {
 
-                str = SimpleDateFormat(getString(R.string.dateFormat)).format(firstDate.getTime())
+                str = SimpleDateFormat(getString(R.string.dateFormat)).format(firstDate.time)
                 Log.d(TAG, str)
 
             } else {
                 str = getString(
                         R.string.period,
-                        SimpleDateFormat(getString(R.string.dateFormat)).format(firstDate.getTime()),
-                        SimpleDateFormat(getString(R.string.dateFormat)).format(secondDate.getTime())
+                        SimpleDateFormat(getString(R.string.dateFormat)).format(firstDate.time),
+                        SimpleDateFormat(getString(R.string.dateFormat)).format(secondDate.time)
                 )
                 Log.d(TAG, str)
             }
-            txtdate.setText(str)
+            txtdate.text = str
         }
     }
 
@@ -92,7 +92,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         recyclerView = root.findViewById<RecyclerView>(com.krs.community.R.id.recycler_view)
         recyclerView.setHasFixedSize(true)
         val mLayoutManager = LinearLayoutManager(FacebookSdk.getApplicationContext())
-        recyclerView.layoutManager = mLayoutManager as RecyclerView.LayoutManager?
+        recyclerView.layoutManager = mLayoutManager
         recyclerView.itemAnimator = DefaultItemAnimator()
         createCardAdapter(recyclerView)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -133,11 +133,11 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
 
         val adapter = object : ParallaxRecyclerAdapter<String>(content) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<String>, i: Int) {
-                (viewHolder as CalendarViewHolder).tv_name.setText("Kunjan Shah")
-                viewHolder.tv_area.setText("Maninagar, Ahmedabad")
-                viewHolder.tv_email.setText("kunjanrshah@gmail.com")
-                viewHolder.tv_mobile.setText("9427051418")
-                viewHolder.tv_role.setText("Family Head")
+                (viewHolder as CalendarViewHolder).tv_name.text = "Kunjan Shah"
+                viewHolder.tv_area.text = "Maninagar, Ahmedabad"
+                viewHolder.tv_email.text = "kunjanrshah@gmail.com"
+                viewHolder.tv_mobile.text = "9427051418"
+                viewHolder.tv_role.text = "Family Head"
 
                 viewHolder.bmb1.clearBuilders()
                 for (i in 0 until viewHolder.bmb1.piecePlaceEnum.pieceNumber()) {
@@ -190,16 +190,16 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         MyLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         if (lstCalFliter != null) {
             var list: ArrayList<String>
-            list = ArrayList();
+            list = ArrayList()
             list.add("Tithi")
             list.add("Panchang")
             list.add("Birthday")
             list.add("Anniversary")
             list.add("Reminder")
 
-            lstCalFliter.setAdapter(FilterAdapter(list))
+            lstCalFliter.adapter = FilterAdapter(list)
         }
-        lstCalFliter.setLayoutManager(MyLayoutManager)
+        lstCalFliter.layoutManager = MyLayoutManager
 
 
         imgCalendar.setOnClickListener {
@@ -209,14 +209,14 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
                     .setHeaderColor(resources.getColor(R.color.colorPrimary))
                     .setBackgroundColor(Color.parseColor("#ffffff"))
                     .setSelectedColor(Color.parseColor("#c48395"))
-                    .show(activity!!.getSupportFragmentManager(), "TAG_SLYCALENDAR")
+                    .show(activity!!.supportFragmentManager, "TAG_SLYCALENDAR")
         }
         fab.setOnClickListener {
             Toast.makeText(activity, "search", Toast.LENGTH_LONG).show()
         }
 
         val str = SimpleDateFormat(getString(R.string.dateFormat)).format(Date())
-        txtdate.setText(str)
+        txtdate.text = str
 
         layoutManagerFixed.setHeaderIncrementFixer(header)
         adapter.isShouldClipView = false
@@ -239,18 +239,18 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
             val typeface: Typeface = AppController.getInstance().typeface
             val typeface_bold: Typeface = AppController.getInstance().typeface_bold
             tv_name = v.findViewById<View>(com.krs.community.R.id.tv_name) as TextView
-            tv_name.setTypeface(typeface_bold)
+            tv_name.typeface = typeface_bold
 
             tv_area = v.findViewById(R.id.tv_area)
-            tv_area.setTypeface(typeface)
+            tv_area.typeface = typeface
             tv_event = v.findViewById(R.id.tv_event)
-            tv_event.setTypeface(typeface)
+            tv_event.typeface = typeface
             tv_email = v.findViewById(R.id.tv_email)
-            tv_email.setTypeface(typeface)
+            tv_email.typeface = typeface
             tv_mobile = v.findViewById(R.id.tv_mobile)
-            tv_mobile.setTypeface(typeface)
+            tv_mobile.typeface = typeface
             tv_role = v.findViewById(R.id.tv_role)
-            tv_role.setTypeface(typeface_bold)
+            tv_role.typeface = typeface_bold
 
             bmb1=v.findViewById(R.id.bmb1)
 

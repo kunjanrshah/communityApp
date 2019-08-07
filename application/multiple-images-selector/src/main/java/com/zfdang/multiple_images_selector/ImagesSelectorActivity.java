@@ -118,10 +118,10 @@ public class ImagesSelectorActivity extends Activity
         StrictMode.setVmPolicy(newbuilder.build());
 
         // initialize widgets in custom actionbar
-        mButtonBack = (ImageView) findViewById(R.id.selector_button_back);
+        mButtonBack = findViewById(R.id.selector_button_back);
         mButtonBack.setOnClickListener(this);
 
-        mButtonConfirm = (Button) findViewById(R.id.selector_button_confirm);
+        mButtonConfirm = findViewById(R.id.selector_button_confirm);
         mButtonConfirm.setOnClickListener(this);
 
         // initialize recyclerview
@@ -137,7 +137,7 @@ public class ImagesSelectorActivity extends Activity
             }
             recyclerView.setAdapter(new ImageRecyclerViewAdapter(ImageListContent.IMAGES, this));
 
-            VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) findViewById(R.id.recyclerview_fast_scroller);
+            VerticalRecyclerViewFastScroller fastScroller = findViewById(R.id.recyclerview_fast_scroller);
             // Connect the recycler to the scroller (to let the scroller scroll the list)
             fastScroller.setRecyclerView(recyclerView);
             // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)
@@ -148,7 +148,7 @@ public class ImagesSelectorActivity extends Activity
         mPopupAnchorView = findViewById(R.id.selector_footer);
 
         // initialize buttons in footer
-        mFolderSelectButton = (TextView) findViewById(R.id.selector_image_folder_button);
+        mFolderSelectButton = findViewById(R.id.selector_image_folder_button);
         mFolderSelectButton.setText(R.string.selector_folder_all);
         mFolderSelectButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,7 +200,7 @@ public class ImagesSelectorActivity extends Activity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_STORAGE_CODE: {
                 // If request is cancelled, the result arrays are empty.

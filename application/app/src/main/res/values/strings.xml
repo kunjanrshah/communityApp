@@ -1,172 +1,17 @@
 <resources>
-    <string name="theme_app_name">Community</string>
     <string name="app_name">Community</string>
 
-    <string name="hint_other">If Other (Please Specify)</string>
-    <string name="hint_email_mobile">Email or Mobile</string>
 
-    <string name="long_text"> \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 Android is a mobile operating system developed by Google, based on a modified version of the Linux kernel and other open source software and designed primarily for touchscreen mobile devices such as smartphones and tablets. In addition, Google has further developed Android TV for televisions, Android Auto for cars, and Android Wear for wrist watches, each with a specialized user interface. Variants of Android are also used on game consoles, digital cameras, PCs and other electronics.
-
-Initially developed by Android Inc., which Google bought in 2005, Android was unveiled in 2007, with the first commercial Android device launched in September 2008. The operating system has since gone through multiple major releases, with the current version being 8.1 "Oreo", released in December 2017.
-
-Android has been the best-selling OS worldwide on smartphones since 2011 and on tablets since 2013. As of May 2017, it has over two billion monthly active users, the largest installed base of any operating system, and as of 2017, the Google Play store features over 3.5 million apps.\n\n\tAndroid\'s default user interface is mainly based on direct manipulation, using touch inputs that loosely correspond to real-world actions, like swiping, tapping, pinching, and reverse pinching to manipulate on-screen objects, along with a virtual keyboard. Game controllers and full-size physical keyboards are supported via Bluetooth or USB. The response to user input is designed to be immediate and provides a fluid touch interface, often using the vibration capabilities of the device to provide haptic feedback to the user. Internal hardware, such as accelerometers, gyroscopes and proximity sensors are used by some applications to respond to additional user actions, for example adjusting the screen from portrait to landscape depending on how the device is oriented, or allowing the user to steer a vehicle in a racing game by rotating the device, simulating control of a steering wheel.
-
-Android devices boot to the homescreen, the primary navigation and information "hub" on Android devices, analogous to the desktop found on personal computers. Android homescreens are typically made up of app icons and widgets; app icons launch the associated app, whereas widgets display live, auto-updating content, such as a weather forecast, the user\'s email inbox, or a news ticker directly on the homescreen. A homescreen may be made up of several pages, between which the user can swipe back and forth. Third-party apps available on Google Play and other app stores can extensively re-theme the homescreen, and even mimic the look of other operating systems, such as Windows Phone. Most manufacturers customize the look and features of their Android devices to differentiate themselves from their competitors.
-
-Along the top of the screen is a status bar, showing information about the device and its connectivity. This status bar can be "pulled" down to reveal a notification screen where apps display important information or updates. Notifications are "short, timely, and relevant information about your app when it’s not in use", and when tapped, users are directed to a screen inside the app relating to the notification. Beginning with Android 4.1 "Jelly Bean", "expandable notifications" allow the user to tap an icon on the notification in order for it to expand and display more information and possible app actions right from the notification.</string>
-
-
-    <string name="hint_native">Native Place</string>
-    <string name="btn_sign_up">SIGN UP</string>
-    <string name="btn_add_new">ADD NEW</string>
-    <string name="btn_sign_in">SIGN IN</string>
-
-    <string name="hint_head_surname">Family Head SurName</string>
-
-    <string name="hint_father_name">Father Name</string>
-    <string name="hint_mother_name">Mother Name</string>
-    <string name="hint_birth_date">Birth Date</string>
-    <string name="hint_sponse_birth">Spouse Birth</string>
-    <string name="hint_sponse_mobile">Spouse Mobile</string>
-    <string name="hint_birth_date_from">Birth Date From</string>
-    <string name="hint_birth_time">Birth Time</string>
-    <string name="hint_birth_date_to">Birth Date To</string>
-    <string name="hint_education">Education </string>
-    <string name="hint_birth_place">Birth Place </string>
-    <string name="hint_sponse_native">Spouse Native</string>
-    <string name="hint_land_line">Land Line </string>
-    <string name="hint_gotra">Gotra </string>
-
-
-    <string name="err_msg_search">Enter search string</string>
-
-
-
-    <string name="err_msg_conform_password">wrong password try again</string>
-    <string name="forgot_password"><u>Forgot Password</u></string>
-    <string name="sync_data"><u>Sync Data</u></string>
-    <string name="err_msg_name">Enter your name</string>
-    <string name="err_msg_spouse_name">Enter your spouse name</string>
-    <string name="err_msg_surname">Enter your surname</string>
-    <string name="err_msg_native">Enter your native place</string>
-    <string name="err_msg_address">Enter your address </string>
-
-    <string name="go_to_whatsapp">Go to WhatsApp ?</string>
-    <string name="action_search">Search</string>
-    <string name="action_save">Save</string>
-    <string name="action_nonActives">NonActives</string>
-    <string name="action_Activate">Activate</string>
-    <string name="action_deActivate">DeActivate</string>
     <string name="action_delete">Delete</string>
-    <string name="action_add">Add New</string>
-    <string name="action_clear_search">Clear</string>
-    <string name="action_toggle">Toggle</string>
-    <string name="action_admin">Admins</string>
-    <string name="action_share_event">Share Event</string>
-    <string name="action_voice">Voice</string>
-    <string name="action_advsearch">Advanced Search</string>
-    <string name="action_export">Export Search</string>
 
-    <string name="action_change_role">Change Role</string>
-    <string name="action_block_users">Block Users</string>
-    <string name="action_scan">Scan QRCode</string>
-    <string name="action_scan_img">QRCode Image</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="nav_item_home">Home</string>
-    <string name="nav_item_my_profile">My Profile</string>
-    <string name="nav_item_near_by">Near by</string>
-    <string name="nav_item_shared_users">Shared Users</string>
 
-    <string name="nav_item_help">Help</string>
-    <string name="nav_item_2017_matrimony">2017 Matrimony</string>
-    <string name="nav_item_matrimony">Matrimony</string>
-    <string name="nav_item_calendar">Calendar</string>
-    <string name="nav_item_language">Language</string>
-    <string name="nav_item_intro">Tour Video</string>
-    <string name="nav_item_logout">Logout</string>
     <string name="nav_item_filter">Filters</string>
     <string name="nav_item_statistic" translatable="false">Statistics</string>
     <string name="nav_item_committee" translatable="false">Committee</string>
-    <string name="nav_item_events">News &amp; Events</string>
-    <string name="nav_item_fa_profie">Search by Distance</string>
-    <string name="nav_item_filters">Settings</string>
 
-    <string name="event_url">http://www.superbinstruments.com/directory-dev/admin/events</string>
-
-    <string name="my_profile">માય પ્રોફાઈલ</string>
-    <string name="advance_search">એડવાન્સ સેર્ચ</string>
-    <string name="search_by_distance">અંતર દ્વારા સર્ચ</string>
-    <string name="quick_search">ઝડપી સેર્ચ</string>
-    <string name="search_by_city">શહેર દ્વારા સર્ચ</string>
-    <string name="alphabetic_search">મૂળાક્ષર દ્વારા સર્ચ</string>
-    <string name="favorite_search">મનપસંદ સર્ચ</string>
-    <string name="calendar">કૅલેન્ડર</string>
-    <string name="matrimony">લગ્ન ઇચ્છુક</string>
-    <string name="shared_profile">સ્થાન શેરિંગ પ્રોફાઇલ્સ</string>
-    <string name="scan_qr_code">સ્કેન QR કોડ</string>
-    <string name="qr_code_image">QR કોડ ઇમેજ</string>
-    <string name="events">ઇવેન્ટ્સ</string>
-    <string name="matrimony_form">લગ્ન ઇચ્છુક ફોર્મ</string>
-    <string name="medical_form">તબીબી રાહત ફોર્મ</string>
-    <string name="add_new">નવો ઉમેરો</string>
-    <string name="nonActives">રજિસ્ટર પ્રોફાઇલ્સ</string>
-    <string name="share_events">શેર ઇવેન્ટ્સ</string>
-    <string name="change_language">ભાષા બદલો</string>
-    <string name="app_theme">એપ રંગ બદલો</string>
-    <string name="change_password">પાસવર્ડ બદલો</string>
-    <string name="app_tour">એપ ટૂર</string>
-    <string name="help">મદદ</string>
-
-
-
-
-    <string-array name="yt_gotra">
-        <item>GAUDANA</item>
-        <item>VASIYANA</item>
-        <item>MERVANA</item>
-        <item>KAGRANU</item>
-        <item>NANDOLA</item>
-        <item>NARSANA</item>
-        <item>BHATSYANA</item>
-        <item>SAVALANA</item>
-        <item>NADIYANA</item>
-        <item>SALISANA</item>
-        <item>NAANU</item>
-        <item>KALYANU</item>
-    </string-array>
-
-    <string-array name="yt_titles">
-        <item>@string/how_to_update_profile_4</item>
-        <item>@string/how_search_profile_2</item>
-        <item>@string/how_to_forgot_1</item>
-        <item>@string/how_share_code_10</item>
-        <item>@string/how_to_event_list_3</item>
-        <item>@string/how_share_loc_6</item>
-        <item>@string/how_near_by_7</item>
-        <item>@string/how_matrimony_8</item>
-        <item>@string/how_export_search_9</item>
-        <item>@string/how_calendar_11</item>
-        <item>@string/how_ror_5</item>
-        <item>@string/how_event_manage_12</item>
-        <item>@string/how_admin_manage_13</item>
-
-    </string-array>
-
-    <string name="how_to_update_profile_4">1.તમારી પ્રોફાઇલ વિગતો કેવી રીતે અપડેટ કરવી અને સાચવવી</string>
-    <string name="how_search_profile_2">2.પ્રોફાઇલ કેવી રીતે શોધવું અને ફિલ્ટર કેવી રીતે વાપરવું</string>
-    <string name="how_to_forgot_1">3.શું તમે તમારો પાસવર્ડ ભૂલી ગયા છો ફક્ત "forgot password" પર ક્લિક કરો અને તમારું ઇમેઇલ દાખલ કરો. તમારો પાસવર્ડ તમારા ઇમેઇલ સરનામાંમાં મોકલવામાં આવશે.</string>
-    <string name="how_share_code_10">4.QR કોડ સાથે તમારી પ્રોફાઇલ અન્ય લોકોને કેવી રીતે શેર કરવી</string>
-    <string name="how_to_event_list_3">5.સંચાલક દ્વારા શેર કરેલ ઇવેન્ટ્સ કેવી રીતે ચકાસવી?</string>
-    <string name="how_share_loc_6">6.તમારુ અને તમારા ઘરના સ્થાનને નકશા સાથે કેવી રીતે શેર કરવું
-</string>
-    <string name="how_near_by_7">7.કિલોમીટર અંતર સાથે તમારી નજીકના પ્રોફાઇલ્સ કેવી રીતે શોધવી</string>
-    <string name="how_matrimony_8">8.છોકરાઓ અને છોકરીઓને રસ હોય તેવા લગ્ન સંબંધોની વિગતો કેવી રીતે શોધવી?</string>
-    <string name="how_export_search_9">9. એક્સેલ ફાઇલમાં તમારી શોધ સૂચિની વિગતો કેવી રીતે મેળવવી?</string>
-    <string name="how_calendar_11">10.કૅલેન્ડર સાથે પ્રોફાઇલની જન્મ તારીખ અને લગ્ન તારીખ કેવી રીતે ચકાસવી અને આપમેળે રીમાઇન્ડર અને મેસેજ સેટ કરો જેથી સંદેશ તે તારીખે એપ્લિકેશન દ્વારા મોકલવામાં આવશે</string>
-    <string name="how_ror_5">11.તમારા સંબંધીઓના સંબંધ માટે વિનંતી કેવી રીતે મોકલવી</string>
-    <string name="how_event_manage_12">12. એડમિન દ્વારા ઇવેન્ટ્સ કેવી રીતે સંચાલિત અને શેર કરવી</string>
-    <string name="how_admin_manage_13">13. સંચાલક દ્વારા વિનંતી કેવી રીતે મંજૂર કરવી અથવા કાઢી નાખવી</string>
 
     <!-- <string name="how_to_forgot_1">1. If you forgot your password</string>
      <string name="how_search_profile_2">2. Search Profiles</string>
@@ -183,38 +28,7 @@ Along the top of the screen is a status bar, showing information about the devic
      <string name="how_admin_manage_13">13. Admin Management</string>-->
 
 
-    <string-array name="yt_code">
-        <item>@string/update_profile_4</item>
-        <item>@string/search_profile_2</item>
-        <item>@string/forgot_1</item>
-        <item>@string/share_code_10</item>
-        <item>@string/event_list_3</item>
-        <item>@string/share_loc_6</item>
-        <item>@string/near_by_7</item>
-        <item>@string/matrimony_8</item>
-        <item>@string/export_search_9</item>
-        <item>@string/calendar_11</item>
-        <item>@string/ror_5</item>
-        <item>@string/event_manage_12</item>
-        <item>@string/admin_manage_13</item>
-
-    </string-array>
     <string name="login_1">Ii5POjxrXA4</string>
-    <string name="forgot_1">N1DmqA8q8qM</string>
-    <string name="search_profile_2">lW5Z9jrtcQQ</string>
-    <string name="event_list_3">NpkgGGNNZbY</string>
-    <string name="update_profile_4">eEuE3CdTZ9s</string>
-    <string name="ror_5">vGu_EEzXpbk</string>
-    <string name="share_loc_6">eEuE3CdTZ9s</string>
-    <string name="near_by_7">FgTNH4XxqHo</string>
-    <string name="matrimony_8">265YIBfOuNQ</string>
-    <string name="export_search_9">JQ9dJ3Z2uRs</string>
-    <string name="share_code_10">2Ka3Nk4tO5I</string>
-    <string name="calendar_11">wcS-2vvguhg</string>
-    <string name="event_manage_12">-cuP2ICdQOQ</string>
-    <string name="admin_manage_13">ie5uXjVdzPA</string>
-
-
 
 
     <string-array name="languages">
@@ -250,163 +64,12 @@ Along the top of the screen is a status bar, showing information about the devic
 
     </string-array>
 
-    <string name="title_filter">Advance Search</string>
-    <string name="title_help">Help</string>
-    <string name="title_shared_users">Shared Users</string>
-    <string name="title_near_by_users">NearBy Users</string>
-    <string name="title_matrimony">Matrimony</string>
-    <string name="title_events">Events</string>
-    <string name="title_relatives">My Relatives</string>
-    <string name="title_calendar">Calendar</string>
-    <string name="title_admins">Admins</string>
-    <string name="title_share_event">Share Event</string>
-    <string name="title_sync">Sync</string>
-    <string name="spinner_blood">Select BloodGroup</string>
-    <string name="spinner_gotra">Select Gotra</string>
-
-    <string name="start_age">Start Age</string>
-    <string name="end_age">End Age</string>
-
-    <string name="start">Start</string>
-
-    <string name="home_location">Are you at your home ?\nMobile will set this location for your home.</string>
-    <string name="office_location">Are you at your office ?\nMobile will set this location for your office.</string>
-
-    <string name="player_error">Error initializing YouTube player: %s</string>
+    <string name="fragment_title_1" translatable="false">Relatives</string>
+    <string name="fragment_title_2" translatable="false">Photo</string>
+    <string name="fragment_title_3" translatable="false">Facts</string>
 
 
-    <string name="nice_html">
-<![CDATA[
- \nHi, This is %s from Vastipatrak App. \n જૈ જૈ શ્રી ગોકુલેશ %s
- \n\n => આપણે જોઇએ છે કે આપણી Vastipatrak એપને આપ સૌનો સારો પ્રતિસાદ મળી રહ્યો છે...
-  \n\n
-પણ અમે જોયું કે...
-
-\n\n૧) *એપ આપ સૌ એ ડાઉનલોડ કરી છે પણ આપની પ્રોફાઈલ અપડેટ નથી કરી..તો એ ખાસ કરવી..*
-\n\n
-  *3 પ્રકારની માહિતી આપને ભરવી જરૂરી છે..*
-\n1. *પોતાની પ્રોફાઈલ*
-\n2. *Occupation (ધંધાને લગતી વિગતો)*
-\n3. *My family (પરિવાર ની વિગતો)*
-
- \n\n*1.પરિણીત વ્યક્તિ કુટુંબના વડા ના નામ થી સાઇન અપ કરી શકે છે.*\n*2. અપરિણિત વ્યક્તિ પિતા નામ સાથે સાઇન અપ કરો.*\n*3. ચકાસણી કૉલ માટે રાહ જુઓ*.
-
-
-\n\n*આપનો data Secure છે તમે તમારો data MEDK ખડાયતા સમાજને  જ આપી રહ્યાં છો... એટલે નિશ્ચિંત બની તમામ ડેટા અપડેટ કરો....*
-
-\n\nકંઇ પણ query હોય તો જણાવેલ નંબર પર *whats app કે call કરો* જેથી આપણી એપમાં લેટેસ્ટ ડેટા આવી શકે અને સૌ એનો ઉપયોગ પણ કરી શકે...
-\n\n
-*Kunjan Shah* +91 9427051418
-\n *Ripal Shah* +91 9579230549
-\n *Kamlesh Shah* +91 9033300872
-\n *Akshay Shah* +91 9370317331
-\n\n
-
-એપના ઘણા ફિચર્સ active કરવાના હોઈ આપ પ્રથમ આટલી કાળજી રાખી ડેટા update કરવામાં મદદરૂપ બનશો...
-\n\n
-આભાર...
-\n\n
-https://play.google.com/store/apps/details?id=com.krs.community
-\n
-]]>
-</string>
-
-    <string name="nice_signup">
-<![CDATA[
- 1.પરિણીત વ્યક્તિ કુટુંબના વડા ના નામ થી સાઇન અપ કરી શકે છે.\n2. અપરિણિત વ્યક્તિ પિતા નામ સાથે સાઇન અપ કરો.\n3. ચકાસણી કૉલ માટે રાહ જુઓ.
-]]>
-</string>
-
-
-
-    <string name="gotra">Gotra :</string>
-    <string name="blood_group">Blood Group :</string>
-    <string name="mobile">Mobile :</string>
-    <string name="address">Address :</string>
-    <string name="birth_place">Birth Place :</string>
-    <string name="birth_time">Birth Time :</string>
-    <string name="birth_date">Birth Date :</string>
-    <string name="no_set_location">User has not set location</string>
-    <string name="enable_location">Need to enable location</string>
-    <string name="km">Km</string>
-    <string name="days">days</string>
-    <string name="_0">0</string>
-    <string name="every">Every</string>
-    <string name="todo">TODO</string>
-    <string name="search">Search</string>
-    <string name="i_am_interested">I am Interested</string>
-    <string name="i_am_not_interested">I am not Interested</string>
-    <string name="male">Male</string>
-    <string name="female">Female</string>
-    <string name="no_records_found">No records found!</string>
-    <string name="title_activity_share_event">ShareEventActivity</string>
-
-    <string name="tour_video">Tour Video</string>
-
-
-    <string name="language">Language</string>
-    <string name="select_subcast">Select Subcast</string>
-    <string name="select_ekdo">Select Ekdo</string>
-
-    <string name="marquee_text">Technical help: 9427051418 Kunjan R. Shah (Ahmedabad) </string>
-    <string name="_2_technical_help_9427051418_kunjan_r_shah_ahmedabad">2. Technical help: 9427051418 Kunjan R. Shah (Ahmedabad)</string>
-    <string name="_1_if_you_have_xiomi_vivo_or_oppo_phone_then_please_enable_auto_start_option">1. If you have Xiomi,Vivo or Oppo Phone then Please Enable AutoStart Option</string>
-    <string name="not_connected">Not connected to internet</string>
-
-    <string name="ft_intent">FT_Intent</string>
-    <string name="FT_ID">id</string>
-    <string name="FT_IMG">profile_pic</string>
-    <string name="FT_IDENTIFIER">identifier</string>
-    <string name="FT_PROFILE_ID">profile_id</string>
-    <string name="FT_NAME">name</string>
-
-
-
-    <string name="near_by_home">Home</string>
-    <string name="near_by_office">Office</string>
-    <string name="near_by_users">User</string>
-    <string name="isEnable">isEnable</string>
-    <string name="ver">Ver. 1.15 </string>
-    <string name="AGE">AGE</string>
-    <string name="search_date_info">search_date_info</string>
-    <string name="type">type</string>
-    <string name="date">date</string>
-    <string name="date_type">date_type</string>
-    <string name="age">age</string>
-    <string name="name">name</string>
-    <string name="hint_spouse_name">Spouse name</string>
-
-
-    <string name="next">NEXT</string>
-    <string name="skip">SKIP</string>
-    <string name="_start">GOT IT</string>
-
-    <string name="slide_1_title"></string>
-    <string name="slide_1_desc"> તમે આપણાં સમાજ ની કોઈ પણ  વ્યક્તિની વિગતસર માહિતી મેળવી શકો છો.
- જેમ કે વ્યક્તિના
-૧ વડીલનું નામ
-૨ માતા નું નામ
-૩ તેની જન્મતારીખ, જન્મસમય.
-૪ મૂળ વતન
-૫ હાલનું સરનામું
-૬ વ્યવસાયનું સરનામું, અને તેની વિગત.
-૭ તેમજ તેના ફેમિલી મેમ્બર ના બધાજ સભ્યોનું ઉપર લખેલી બધી વિગતો.</string>
-
-    <string name="is_first_time">IsFirstTimeLaunch</string>
-    <string name="understand">ખબર પડી</string>
-    <string name="press_for_city">Press for City</string>
-    <string name="realm_name">vastipatrak.realm</string>
-    <string name="_gotra">gotra</string>
-
-    <string name="listview">listview</string>
-    <string name="title">title</string>
-    <string name="selection">selection</string>
-    <string name="_native">native</string>
-    <string name="_education">occupation</string>
-    <string name="FT_LEVEL">level</string>
     <string name="app_create">app_create</string>
-    <string name="first_time_main">first_time_main</string>
-    <string name="location">location</string>
 
     <string name="facebook_app_id">1749295805152367</string>
     <string name="fb_login_protocol_scheme">fb1749295805152367</string>
@@ -444,8 +107,6 @@ https://play.google.com/store/apps/details?id=com.krs.community
     <string name="nav_item_change_password">Change Password</string>
     <string name="err_msg_invalid_mobile">Invalid Mobile Number</string>
     <string name="invalid_mobile" translatable="false">Invalid Mobile Number</string>
-    <string name="err_msg_email">Enter valid email</string>
-    <string name="err_msg_password">Enter the password</string>
     <string name="type_otp">Type OTP</string>
     <string name="registraion_request_pending">Registration request is pending. Please contact to Admin !!</string>
     <string name="invalid_username">Invalid username</string>
@@ -453,7 +114,6 @@ https://play.google.com/store/apps/details?id=com.krs.community
     <string name="update_profile_photo">Do you want to update Profile Photo?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="how_to_login">How to login?</string>
     <string name="invalid_username_password">Invalid username or password</string>
     <string name="loading">Loading...</string>
     <string name="incorrect" translatable="false">incorrect</string>
@@ -474,8 +134,6 @@ https://play.google.com/store/apps/details?id=com.krs.community
     <string name="already_have_a_account_sign_in">Already have a account?</string>
     <string name="hint_surname">Last Name</string>
     <string name="hint_city">City</string>
-    <string name="hint_community">Community</string>
-    <string name="hint_region">Region</string>
     <string name="invalid_mobile_range">Mobile number must be 10 digit</string>
     <string name="invalid_email">Invalid Email Address!</string>
     <string name="err_invalid_email" translatable="false">Invalid Email Address!</string>
@@ -563,7 +221,6 @@ https://play.google.com/store/apps/details?id=com.krs.community
     <string name="ss_bplace">BPlace</string>
 
     <string name="dateFormat" translatable="false">EE, dd MMM</string>
-    <string name="timeFormat" translatable="false">EE, dd MMM HH:mm</string>
     <string name="period" translatable="false">%1$s – %2$s</string>
     <string name="text_inside_circle_button_text_normal">Text Inside Circle Button(Normal)</string>
 

@@ -123,9 +123,13 @@ public class Utility {
 
         Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
 
-        if (radius < 1) { return (null); } int w = bitmap.getWidth(); int h = bitmap.getHeight(); int[] pix = new int[w * h]; Log.e("pix", w + " " + h + " " + pix.length); bitmap.getPixels(pix, 0, w, 0, 0, w, h); int wm = w - 1; int hm = h - 1; int wh = w * h; int div = radius + radius + 1; int r[] = new int[wh]; int g[] = new int[wh]; int b[] = new int[wh]; int rsum, gsum, bsum, x, y, i, p, yp, yi, yw; int vmin[] = new int[Math.max(w, h)]; int divsum = (div + 1) >> 1;
+        if (radius < 1) { return (null); } int w = bitmap.getWidth(); int h = bitmap.getHeight(); int[] pix = new int[w * h]; Log.e("pix", w + " " + h + " " + pix.length); bitmap.getPixels(pix, 0, w, 0, 0, w, h); int wm = w - 1; int hm = h - 1; int wh = w * h; int div = radius + radius + 1;
+        int[] r = new int[wh];
+        int[] g = new int[wh];
+        int[] b = new int[wh]; int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
+        int[] vmin = new int[Math.max(w, h)]; int divsum = (div + 1) >> 1;
         divsum *= divsum;
-        int dv[] = new int[256 * divsum];
+        int[] dv = new int[256 * divsum];
         for (i = 0; i < 256 * divsum; i++) {
             dv[i] = (i / divsum);
         }

@@ -44,7 +44,7 @@ class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentAct
         }*/
     }
 
-    override fun getItemCount() = messages!!.size
+    override fun getItemCount() = messages.size
 
     override fun getItemViewType(position: Int): Int {
         val type = messages[0].javaClass
@@ -58,9 +58,9 @@ class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentAct
 
         holder.bind(messages[position], itemClickListener, onClickListener)
 
-        holder.itemView.setActivated(selectedItems!!.get(position, false))
+        holder.itemView.isActivated = selectedItems!!.get(position, false)
 
-        val message = messages!!.get(position)
+        val message = messages.get(position)
         applyProfilePicture(holder,message)
         applyIconAnimation(holder,position)
         applyClickEvents(holder, position)
@@ -88,17 +88,17 @@ class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentAct
 
                 boomMenuButton1!!.clearBuilders()
 
-                for (i in 0 until boomMenuButton1!!.getPiecePlaceEnum().pieceNumber()) {
+                for (i in 0 until boomMenuButton1!!.piecePlaceEnum.pieceNumber()) {
                     boomMenuButton1!!.addBuilder(Utility.getTextInsideCircleButtonBuilder())
                 }
                 boomMenuButton1!!.setOnClickListener({ v -> boomMenuButton1!!.boom() })
 
                 // val message = messages[position]
                 val name = "Kunjan Shah"
-                tv_name1!!.setText(name)
+                tv_name1!!.text = name
 
                 // displaying the first letter of From in icon text
-                icon_text1!!.setText(name.substring(0, 1))
+                icon_text1!!.text = name.substring(0, 1)
             }
         }
     }
@@ -124,29 +124,29 @@ class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentAct
                     .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
                     .into(holder.icon_profile1!!)
             //holder.imgProfile.setColorFilter(null)
-            holder.icon_text1!!.setVisibility(View.GONE)
+            holder.icon_text1!!.visibility = View.GONE
         } else {
             holder.icon_profile1!!.setImageResource(R.drawable.bg_circle)
             holder.icon_profile1!!.setColorFilter(message.color)
-            holder.icon_text1!!.setVisibility(View.VISIBLE)
+            holder.icon_text1!!.visibility = View.VISIBLE
         }
     }
 
     private fun applyIconAnimation(holder: BaseViewHolder.CardViewHolder<MutableList<Message>>, position: Int) {
         if (selectedItems!!.get(position, false)) {
-            holder.icon_front1!!.setVisibility(View.GONE)
+            holder.icon_front1!!.visibility = View.GONE
             resetIconYAxis(holder.icon_back1!!)
-            holder.icon_back1!!.setVisibility(View.VISIBLE)
-            holder.icon_back1!!.setAlpha(1f)
+            holder.icon_back1!!.visibility = View.VISIBLE
+            holder.icon_back1!!.alpha = 1f
             if (currentSelectedIndex == position) {
                 FlipAnimator.flipView(mContext, holder.icon_back1, holder.icon_front1, true)
                 resetCurrentIndex()
             }
         } else {
-            holder.icon_back1!!.setVisibility(View.GONE)
+            holder.icon_back1!!.visibility = View.GONE
             holder.icon_front1?.let { resetIconYAxis(it) }
-            holder.icon_front1?.setVisibility(View.VISIBLE)
-            holder.icon_front1?.setAlpha(1f)
+            holder.icon_front1?.visibility = View.VISIBLE
+            holder.icon_front1?.alpha = 1f
             if (reverseAllAnimations && animationItemsIndex!!.get(position, false) || currentSelectedIndex == position) {
                 FlipAnimator.flipView(mContext, holder.icon_back1, holder.icon_front1, false)
                 resetCurrentIndex()
@@ -198,7 +198,7 @@ class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentAct
     }
 
     fun removeData(position: Int) {
-        messages!!.removeAt(position)
+        messages.removeAt(position)
         resetCurrentIndex()
     }
 

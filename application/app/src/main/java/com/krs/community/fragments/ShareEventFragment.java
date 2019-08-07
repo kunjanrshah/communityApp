@@ -274,7 +274,7 @@ public class ShareEventFragment extends Fragment {
                 Uri uri = Uri.fromFile(new File(filepath));
                 Bitmap bitmap = null;
                 try {
-                    bitmap = (Bitmap) MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                     if (bitmap != null) {
                         Bitmap bmp = Utility.getRoundedCornerBitmap(bitmap, 100);
                         Glide.with(getContext()).load(bmp).thumbnail(0.5f).transition(withCrossFade()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.iv_event);

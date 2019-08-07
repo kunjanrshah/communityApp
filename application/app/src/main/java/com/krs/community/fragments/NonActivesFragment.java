@@ -62,8 +62,8 @@ public class NonActivesFragment extends Fragment implements SwipeRefreshLayout.O
         animationItemsIndex = new SparseBooleanArray();
 
       //  ll_title=root.findViewById(R.id.ll_title);
-        recyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
-        swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout);
+        recyclerView = root.findViewById(R.id.recycler_view);
+        swipeRefreshLayout = root.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         adapter=new ParallaxRecyclerAdapter<Message>(messages) {

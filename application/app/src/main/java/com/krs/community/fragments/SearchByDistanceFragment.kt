@@ -40,7 +40,7 @@ class SearchByDistanceFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         val mLayoutManager = LinearLayoutManager(getApplicationContext())
         recyclerView.layoutManager = mLayoutManager
-        recyclerView.itemAnimator = DefaultItemAnimator() as RecyclerView.ItemAnimator?
+        recyclerView.itemAnimator = DefaultItemAnimator()
         createCardAdapter(recyclerView)
 
         (activity as AppCompatActivity).supportActionBar!!.title = "Search by Distance"
@@ -121,19 +121,19 @@ class SearchByDistanceFragment : Fragment() {
 
         val adapter = object : ParallaxRecyclerAdapter<String>(content) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<String>, i: Int) {
-                (viewHolder as DistanceViewHolder).tv_name.setText("Kunjan Shah")
-                (viewHolder as DistanceViewHolder).tv_area.setText("Maninagar, Ahmedabad")
-                (viewHolder as DistanceViewHolder).tv_email.setText("kunjanrshah@gmail.com")
-                (viewHolder as DistanceViewHolder).tv_mobile.setText("9427051418")
-                (viewHolder as DistanceViewHolder).tv_role.setText("Family Head")
+                (viewHolder as DistanceViewHolder).tv_name.text = "Kunjan Shah"
+                viewHolder.tv_area.text = "Maninagar, Ahmedabad"
+                viewHolder.tv_email.text = "kunjanrshah@gmail.com"
+                viewHolder.tv_mobile.text = "9427051418"
+                viewHolder.tv_role.text = "Family Head"
 
-                (viewHolder as DistanceViewHolder).bmb1.clearBuilders()
-                for (i in 0 until (viewHolder as DistanceViewHolder).bmb1.piecePlaceEnum.pieceNumber()) {
-                    (viewHolder as DistanceViewHolder).bmb1.addBuilder(Utility.getTextInsideCircleButtonBuilder())
+                viewHolder.bmb1.clearBuilders()
+                for (i in 0 until viewHolder.bmb1.piecePlaceEnum.pieceNumber()) {
+                    viewHolder.bmb1.addBuilder(Utility.getTextInsideCircleButtonBuilder())
                 }
 
-                (viewHolder as DistanceViewHolder).bmb1.setOnClickListener {
-                    (viewHolder as DistanceViewHolder).bmb1.boom()
+                viewHolder.bmb1.setOnClickListener {
+                    viewHolder.bmb1.boom()
                 }
             }
 
@@ -174,16 +174,16 @@ class SearchByDistanceFragment : Fragment() {
             val typeface: Typeface = AppController.getInstance().typeface
             val typeface_bold: Typeface = AppController.getInstance().typeface_bold
             tv_name = v.findViewById<View>(com.krs.community.R.id.tv_name) as TextView
-            tv_name.setTypeface(typeface_bold)
+            tv_name.typeface = typeface_bold
 
             tv_area = v.findViewById(R.id.tv_area)
-            tv_area.setTypeface(typeface)
+            tv_area.typeface = typeface
             tv_email = v.findViewById(R.id.tv_email)
-            tv_email.setTypeface(typeface)
+            tv_email.typeface = typeface
             tv_mobile = v.findViewById(R.id.tv_mobile)
-            tv_mobile.setTypeface(typeface)
+            tv_mobile.typeface = typeface
             tv_role = v.findViewById(R.id.tv_role)
-            tv_role.setTypeface(typeface_bold)
+            tv_role.typeface = typeface_bold
 
             bmb1=v.findViewById(R.id.bmb1)
         }
