@@ -15,8 +15,10 @@ import android.view.ViewOutlineProvider;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
@@ -35,6 +37,8 @@ import com.krs.community.awareviewpager.SlidingTabLayout;
 import com.krs.community.awareviewpager.ViewPagerFragmentBase;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
+
+import java.lang.reflect.Method;
 
 public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewPagerFragmentBase.FragmentListener {
 
@@ -144,6 +148,35 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         //position views dependent on other views positions. Views need to be added before calculations can be done.
         //TODO: if possible, change all view dimensions to constants in dimens file to allow for measurement in onCreate
         adjustLayoutSetConstants();
+
+        mOverFlow.setOnClickListener(v -> {
+            try {
+                PopupMenu popup = new PopupMenu(this, v);
+                popup.getMenuInflater().inflate(R.menu.menu_tree_detail_item, popup.getMenu());
+
+                popup.getMenu().getItem(0).setOnMenuItemClickListener(item -> {
+                    Toast.makeText(this, "TimeLine", Toast.LENGTH_SHORT).show();
+                    return false;
+                });
+
+                popup.getMenu().getItem(1).setOnMenuItemClickListener(item -> {
+                    Toast.makeText(this, "view in tree", Toast.LENGTH_SHORT).show();
+                    return false;
+                });
+
+                popup.getMenu().getItem(2).setOnMenuItemClickListener(item -> {
+                    Toast.makeText(this, "Profile Detail", Toast.LENGTH_SHORT).show();
+                    return false;
+                });
+
+                Method method = popup.getMenu().getClass().getDeclaredMethod("setOptionalIconsVisible", boolean.class);
+                method.setAccessible(true);
+                method.invoke(popup.getMenu(), true);
+                popup.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 

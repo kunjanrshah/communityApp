@@ -83,18 +83,45 @@ public class FamilyTreeListActivity extends AppCompatActivity {
             View view = LayoutInflater.from(this).inflate(R.layout.row_list_tree, ll_parent, false);
 
             ImageView iv_profile=view.findViewById(R.id.iv_profile);
-            ImageView iv_user_in_tree=view.findViewById(R.id.iv_user_in_tree);
             TextView tv_name=view.findViewById(R.id.tv_name);
             TextView tv_relation=view.findViewById(R.id.tv_relation);
             TextView tv_year=view.findViewById(R.id.tv_year);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    Intent mIntent=new Intent(FamilyTreeListActivity.this,FamilyTreeDetailActivity.class);
-                    startActivity(mIntent);
+            ImageView iv_menu=view.findViewById(R.id.iv_menu);
+            iv_menu.setOnClickListener(v -> {
+                try {
+                    PopupMenu popup = new PopupMenu(this, v);
+                    popup.getMenuInflater().inflate(R.menu.menu_tree_list_item, popup.getMenu());
 
+                    popup.getMenu().getItem(0).setOnMenuItemClickListener(item -> {
+                        Toast.makeText(this, "Add relative", Toast.LENGTH_SHORT).show();
+                        return false;
+                    });
+
+                    popup.getMenu().getItem(1).setOnMenuItemClickListener(item -> {
+                        Toast.makeText(this, "view in tree", Toast.LENGTH_SHORT).show();
+                        return false;
+                    });
+
+                    popup.getMenu().getItem(2).setOnMenuItemClickListener(item -> {
+                        Toast.makeText(this, "Profile Detail", Toast.LENGTH_SHORT).show();
+                        return false;
+                    });
+
+                    Method method = popup.getMenu().getClass().getDeclaredMethod("setOptionalIconsVisible", boolean.class);
+                    method.setAccessible(true);
+                    method.invoke(popup.getMenu(), true);
+                    popup.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            });
+
+            view.setOnClickListener(v -> {
+
+                Intent mIntent=new Intent(FamilyTreeListActivity.this,FamilyTreeDetailActivity.class);
+                startActivity(mIntent);
+
             });
             ll_parent.addView(view);
         }

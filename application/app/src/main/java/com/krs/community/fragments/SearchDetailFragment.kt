@@ -142,12 +142,12 @@ class SearchDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter.I
         recycle_view.adapter=adapter1
         recycle_view.setHasFixedSize(true)
 
-        with(recycler_view) {
+        /*with(recycler_view) {
             fab_negative.doOnLayout {
                 val paddingBottom = (paddingBottom + fab_negative.height * 1.5).toInt()
                 updatePadding(bottom = paddingBottom)
             }
-        }
+        }*/
     }
 
 

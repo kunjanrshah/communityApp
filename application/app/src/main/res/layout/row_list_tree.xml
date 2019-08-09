@@ -61,10 +61,10 @@
 
 
             <ImageView
-                android:id="@+id/iv_user_in_tree"
+                android:id="@+id/iv_menu"
                 android:layout_width="40dp"
                 android:layout_height="20dp"
-                android:src="@drawable/view_all_48" />
+                android:src="@drawable/overflow" />
 
         </LinearLayout>
 

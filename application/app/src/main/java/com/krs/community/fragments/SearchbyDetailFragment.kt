@@ -113,10 +113,10 @@ class SearchbyDetailFragment : Fragment(), OnBackPressedListener,RecyclerAdapter
            var adapter1 = RecyclerAdapter<MutableList<Message>>(activity,messages,this@SearchbyDetailFragment)
 
             setHasFixedSize(true)
-            fab_negative.doOnLayout {
+           /* fab_negative.doOnLayout {
                 val paddingBottom = (paddingBottom + fab_negative.height * 1.5).toInt()
                 updatePadding(bottom = paddingBottom)
-            }
+            }*/
         }
     }
 
