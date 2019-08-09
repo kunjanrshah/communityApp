@@ -356,7 +356,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
         rv_search!!.adapter = adapter
         rv_search!!.setHasFixedSize(true)
         Handler().postDelayed({
-            // stop animating Shimmer and hide the layout
+            // stop animating Shimmer and hideOverlay the layout
             mShimmerViewContainer!!.stopShimmerAnimation()
             mShimmerViewContainer!!.visibility = View.GONE
         }, 3000)

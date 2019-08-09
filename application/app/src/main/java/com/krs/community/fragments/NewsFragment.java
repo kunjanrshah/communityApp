@@ -255,7 +255,7 @@ public class NewsFragment extends Fragment {
 
                 feedItems.add(item);
             }
-            // stop animating Shimmer and hide the layout
+            // stop animating Shimmer and hideOverlay the layout
             mShimmerViewContainer.stopShimmerAnimation();
             mShimmerViewContainer.setVisibility(View.GONE);
             // notify data changes to list adapater

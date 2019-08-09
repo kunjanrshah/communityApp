@@ -4,29 +4,25 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.krs.community.R;
-import com.krs.community.adapter.BottomSheetAdapter;
-import com.krs.community.fabtransitionlayout.BottomSheetLayout;
-import com.krs.community.model.BottomSheet;
+import com.krs.community.activity.FamilyTreeDetailActivity;
+import com.leinardi.android.speeddial.SpeedDialOverlayLayout;
+import com.leinardi.android.speeddial.SpeedDialView;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 
-public class RelativesFragment extends ViewPagerFragmentBase {
+public class RelativesFragment extends ViewPagerFragmentBase implements FamilyTreeDetailActivity.IhideView {
 
     private final static String TAG = RelativesFragment.class.getSimpleName();
 
     private View mRoot;
     private ObservableRecyclerView mRecyclerView;
-
-    private ListView mMenuList;
-    private FloatingActionButton mFab;
-    private BottomSheetLayout mBottomSheetLayout;
+    private SpeedDialOverlayLayout overlay;
+    private SpeedDialView mSpeedDialView;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,21 +36,20 @@ public class RelativesFragment extends ViewPagerFragmentBase {
 
         mRecyclerView = mRoot.findViewById(R.id.recyclerView);
         setupRecyclerView(mRecyclerView);
-        mMenuList=mRoot.findViewById(R.id.list_menu);
-        mFab=mRoot.findViewById(R.id.fab);
-        mBottomSheetLayout =mRoot.findViewById(R.id.bottom_sheet);
 
+         mSpeedDialView = mRoot.findViewById(R.id.speedDial);
+        initSpeedDial(mSpeedDialView);
+
+        overlay = mRoot.findViewById(R.id.overlay);
+        setOverlay(overlay);
         updateModuleRecyclerData(getRandomizedData());
-        initListMenu();
-        mBottomSheetLayout.setFab(mFab);
-
-        mFab.setOnClickListener(v -> mBottomSheetLayout.expandFab());
     }
+
 
     private ArrayList<String> getRandomizedData() {
         ArrayList<String> arrayList = new ArrayList<>();
 
-        int random = (int )(Math.random() * 40 + 5);
+        int random = (int) (Math.random() * 40 + 5);
         for (int i = 0; i < random; i++) {
             arrayList.add(" number " + i);
         }
@@ -62,24 +57,25 @@ public class RelativesFragment extends ViewPagerFragmentBase {
         return arrayList;
     }
 
-
     private void updateModuleRecyclerData(ArrayList<String> arrayList) {
         if (!isAdded()) {
             return;
         }
-        mRecyclerView.setAdapter(new HeaderAutoFooterRecyclerAdapter(getActivity(),arrayList, R.layout.relatives_list_item,getHeaderHeight()));
+        mRecyclerView.setAdapter(new HeaderAutoFooterRecyclerAdapter(getActivity(), arrayList, R.layout.relatives_list_item, getHeaderHeight()));
         initiateScrollPosition();
     }
 
-    private void initListMenu() {
-        ArrayList<BottomSheet> bottomSheets = new ArrayList<>();
-        bottomSheets.add(BottomSheet.to().setBottomSheetMenuType(BottomSheet.BottomSheetMenuType.EMAIL));
-        bottomSheets.add(BottomSheet.to().setBottomSheetMenuType(BottomSheet.BottomSheetMenuType.ACCOUNT));
-        bottomSheets.add(BottomSheet.to().setBottomSheetMenuType(BottomSheet.BottomSheetMenuType.SETTING));
-        BottomSheetAdapter adapter = new BottomSheetAdapter(getActivity(), bottomSheets);
-        mMenuList.setFooterDividersEnabled(true);
-        mMenuList.setHeaderDividersEnabled(true);
-        mMenuList.setDividerHeight(5);
-        mMenuList.setAdapter(adapter);
+    @Override
+    public void hideOverlay() {
+        if(mSpeedDialView.isOpen())
+        {
+            mSpeedDialView.close(true);
+            overlay.hide(true);
+        }
+    }
+
+    @Override
+    public void hideSpeedDialView() {
+
     }
 }

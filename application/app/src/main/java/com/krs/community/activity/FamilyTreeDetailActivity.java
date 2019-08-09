@@ -76,15 +76,20 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
     protected float diffHolder = 1; //used to keep track of compact toolbar recall.
     protected boolean mainFabShown = false;
     protected boolean fabOpen = false;
+
     //To add or remove viewPager fragments, add or remove titles
     int[] mViewPagerFragmentTitles = new int[]{
             R.string.fragment_title_1,
             R.string.fragment_title_2,
             R.string.fragment_title_3,
     };
+    RelativesFragment relativesFragment = new RelativesFragment();
+    PhotosFragment photosFragment = new PhotosFragment();
+    FactsFragment factsFragment = new FactsFragment();
     private KenBurnsView kv_header_img;
     private ImageView back_button_icon;
     private Handler mHandler;
+    private IhideView ihideOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,8 +182,32 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
                 e.printStackTrace();
             }
         });
-    }
 
+        mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                if (position == 0) {
+                    ihideOverlay = relativesFragment;
+                } else if (position == 1) {
+                    ihideOverlay = photosFragment;
+                } else if (position == 2) {
+                    ihideOverlay = factsFragment;
+                }
+                ihideOverlay.hideOverlay();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
 
     /**
      * Watches the state of the current fragments scrolling and translates views accordingly
@@ -341,7 +370,7 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
             }
         }
 
-        //hide show the fab once scroll has reached a defined point
+        //hideOverlay show the fab once scroll has reached a defined point
         if (mOffset > mBeginTransformations) {
             if (mainFabShown) {
                 mainFabShown = false;
@@ -355,12 +384,6 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         }
         mPreviousOffset = mGeneralScrollWatch;
     }
-
-
-    //given a value, if that value is between a defined range, will return the linear equivalent of another range
-    //for example. given the range [100-200] as the input range and [5-1] as the output range, given a value of 100, getScaleBetweenRange will
-    //return 5.
-    //if given a value outside of [100-200] such as 95, getScaleBetweenRange will default to the min value, which in this case would be 5.
 
     /**
      * @param value     input value to return linear output equivalent
@@ -381,6 +404,24 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         }
     }
 
+    @Override
+    public void onBackPressed() {
+
+        ihideOverlay.hideSpeedDialView();
+
+       /* if (mSpeedDialView.isOpen()) {
+            mSpeedDialView.close();
+        } else {
+            super.onBackPressed();
+        }*/
+    }
+
+
+    //given a value, if that value is between a defined range, will return the linear equivalent of another range
+    //for example. given the range [100-200] as the input range and [5-1] as the output range, given a value of 100, getScaleBetweenRange will
+    //return 5.
+    //if given a value outside of [100-200] such as 95, getScaleBetweenRange will default to the min value, which in this case would be 5.
+
     //The title area and slidingTabLayout is not elevated when scrolled all the way down, but when pulled back down as a sticky
     //header in its compacted form, it does.
     private void setHeaderGroupElevation(int elevation) {
@@ -398,7 +439,6 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
             ViewCompat.setElevation(mTitleBox, elevation);
         }
     }
-
 
     /**
      * Broaadcasts an update to all attached fragments once the current fragment stops scrolling
@@ -436,7 +476,6 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         return Math.max(mOffset, 0);
     }
 
-
     private int getDimPx(int resourceId) {
         return getResources().getDimensionPixelSize(resourceId);
     }
@@ -455,7 +494,6 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         }
 
     }
-
 
     /**
      * Set the height of the header area.
@@ -535,6 +573,11 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         }
     }
 
+    public interface IhideView {
+        void hideOverlay();
+        void hideSpeedDialView();
+    }
+
     private class FragmentViewPagerAdapter extends FragmentPagerAdapter {
 
         FragmentViewPagerAdapter(FragmentManager fm) {
@@ -545,12 +588,11 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         public Fragment getItem(int i) {
 
             if (i == 0) {
-                return new RelativesFragment();
-
+                return relativesFragment;
             } else if (i == 1) {
-                return new PhotosFragment();
+                return photosFragment;
             } else {
-                return new FactsFragment();
+                return factsFragment;
             }
 
             /*ViewPagerFragment moduleFragment = new ViewPagerFragment();

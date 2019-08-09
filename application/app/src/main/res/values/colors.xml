@@ -8,6 +8,8 @@
 <!--
      <color name="colorPrimaryDark">#C51162</color>
 -->
+    <color name="material_green_500">#4CAF50</color>
+
     <color name="colorPrivacyPolictyBG">#f2f2f2</color>
 
     <color name="colorPrimaryDark">#843f52</color>
@@ -24,7 +26,9 @@
 
     <!--<color name="colorAccent">#FF80AB</color>-->
     <color name="colorAccent">@color/colorTree</color>
-
+    <color name="material_purple_200">#CE93D8</color>
+    <color name="material_orange_500">#FF9800</color>
+    <color name="material_white_1000">#ffffff</color>
     <!--<color name="ripple">#F06292</color>
     <color name="accent">#E91E63</color>
     <color name="accent_pressed">#C2185B</color>-->

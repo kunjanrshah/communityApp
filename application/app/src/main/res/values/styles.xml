@@ -98,4 +98,11 @@
         <item name="android:textColor">#000</item>
     </style>
 
+    <style name="AppTheme.Purple" parent="MyMaterialTheme">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/dark_color_primary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/material_purple_200</item>
+    </style>
+
 </resources>

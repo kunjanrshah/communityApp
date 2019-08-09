@@ -6,19 +6,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.krs.community.R;
+import com.krs.community.activity.FamilyTreeDetailActivity;
+import com.leinardi.android.speeddial.SpeedDialOverlayLayout;
+import com.leinardi.android.speeddial.SpeedDialView;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 
-public class FactsFragment extends ViewPagerFragmentBase {
+public class FactsFragment extends ViewPagerFragmentBase  implements FamilyTreeDetailActivity.IhideView {
 
     private final static String TAG = FactsFragment.class.getSimpleName();
 
     private View mRoot;
     private ObservableRecyclerView mRecyclerView;
-
+    private SpeedDialOverlayLayout overlay;
+    private SpeedDialView mSpeedDialView;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,7 +38,11 @@ public class FactsFragment extends ViewPagerFragmentBase {
         mRecyclerView = mRoot.findViewById(R.id.recyclerView);
         setupRecyclerView(mRecyclerView);
 
+        mSpeedDialView = mRoot.findViewById(R.id.speedDial);
+        initSpeedDial(mSpeedDialView);
 
+        overlay = mRoot.findViewById(R.id.overlay);
+        setOverlay(overlay);
         updateModuleRecyclerData(getRandomizedData());
 
     }
@@ -57,5 +65,15 @@ public class FactsFragment extends ViewPagerFragmentBase {
         }
         mRecyclerView.setAdapter(new HeaderAutoFooterRecyclerAdapter(getActivity(), arrayList, R.layout.facts_list_item, getHeaderHeight()));
         initiateScrollPosition();
+    }
+
+    @Override
+    public void hideOverlay() {
+        if(mSpeedDialView.isOpen())
+        {
+            mSpeedDialView.close(true);
+            overlay.hide();
+        }
+
     }
 }

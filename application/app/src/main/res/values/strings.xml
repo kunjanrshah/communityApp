@@ -12,7 +12,11 @@
     <string name="nav_item_statistic" translatable="false">Statistics</string>
     <string name="nav_item_committee" translatable="false">Committee</string>
 
-
+    <string name="label_custom_color">Custom colors</string>
+    <string name="label_add_action">Add action</string>
+    <string name="label_custom_theme">Custom theme</string>
+    <string name="label_replace_action">Replace action</string>
+    <string name="label_remove_action">Remove action</string>
     <!-- <string name="how_to_forgot_1">1. If you forgot your password</string>
      <string name="how_search_profile_2">2. Search Profiles</string>
      <string name="how_to_event_list_3">3. Event list</string>
