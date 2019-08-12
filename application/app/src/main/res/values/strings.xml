@@ -6,17 +6,19 @@
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
-    <string name="nav_item_home">Home</string>
 
-    <string name="nav_item_filter">Filters</string>
+    <string name="nav_item_home" translatable="false">Home</string>
+    <string name="nav_item_filter" translatable="false">Filters</string>
     <string name="nav_item_statistic" translatable="false">Statistics</string>
     <string name="nav_item_committee" translatable="false">Committee</string>
 
-    <string name="label_custom_color">Custom colors</string>
-    <string name="label_add_action">Add action</string>
-    <string name="label_custom_theme">Custom theme</string>
-    <string name="label_replace_action">Replace action</string>
-    <string name="label_remove_action">Remove action</string>
+
+    <string name="label_add_fact" translatable="false">Add Fact</string>
+    <string name="label_add_photos" translatable="false">Add Photos</string>
+    <string name="label_scan_photos" translatable="false">Scan Photos</string>
+    <string name="label_add_audio" translatable="false">Add Audio</string>
+    <string name="label_add_relative" translatable="false">Add Relative</string>
+
     <!-- <string name="how_to_forgot_1">1. If you forgot your password</string>
      <string name="how_search_profile_2">2. Search Profiles</string>
      <string name="how_to_event_list_3">3. Event list</string>
@@ -42,9 +44,9 @@
     <item>@string/_hindi</item>
     </string-array>
 
-    <string name="_english">English</string>
-    <string name="_gujarati">ગુજરાતી</string>
-    <string name="_hindi">हिन्दी</string>
+    <string name="_english" translatable="false">English</string>
+    <string name="_gujarati" translatable="false">ગુજરાતી</string>
+    <string name="_hindi" translatable="false">हिन्दी</string>
     
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">
@@ -52,21 +54,30 @@
         <item>@string/nav_item_filter</item>
         <item>@string/nav_item_statistic</item>
         <item>@string/nav_item_committee</item>
-        <!--<item>@string/nav_item_fa_profie</item>
-        <item>@string/nav_item_filters</item>-->
-        <!--<item>@string/nav_item_my_profile</item>
-        <item>@string/nav_item_near_by</item>
-        <item>@string/nav_item_shared_users</item>
-        <item>@string/nav_item_2017_matrimony</item>
-        <item>@string/nav_item_matrimony</item>
-        <item>@string/nav_item_calendar</item>
-        <item>@string/nav_item_language</item>
-        <item>@string/nav_item_change_password</item>
-        <item>@string/nav_item_intro</item>
-        <item>@string/nav_item_help</item>-->
-
 
     </string-array>
+
+
+    <!-- navigation drawer item labels  -->
+    <string-array name="add_relative_labels">
+        <item>@string/partner</item>
+        <item>@string/father</item>
+        <item>@string/mother</item>
+        <item>@string/brother</item>
+        <item>@string/sister</item>
+        <item>@string/son</item>
+        <item>@string/daughter</item>
+
+    </string-array>
+
+    <string name="partner" translatable="false">Partner</string>
+    <string name="father" translatable="false">Father</string>
+    <string name="mother" translatable="false">Mother</string>
+    <string name="brother" translatable="false">Brother</string>
+    <string name="sister" translatable="false">Sister</string>
+    <string name="son" translatable="false">Son</string>
+    <string name="daughter" translatable="false">Daughter</string>
+
 
     <string name="fragment_title_1" translatable="false">Relatives</string>
     <string name="fragment_title_2" translatable="false">Photo</string>

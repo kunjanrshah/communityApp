@@ -73,11 +73,7 @@
 
 
         </activity>
-        <activity
-            android:name="com.krs.community.activity.ChooseLanguageActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name="com.krs.community.activity.RegisterActivty"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -94,6 +90,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden">
+
 
 
         </activity>
@@ -118,6 +115,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" >
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
 
         </activity>
@@ -128,13 +130,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" >
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            
         </activity>
 
 

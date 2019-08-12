@@ -62,10 +62,9 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     class MyViewHolder extends RecyclerView.ViewHolder {
         final TextView title;
         final ImageView imgDrawer;
-        LinearLayout ll_item;
+
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            ll_item = itemView.findViewById(R.id.ll_item);
             title = itemView.findViewById(R.id.title);
             imgDrawer = itemView.findViewById(R.id.imgDrawer);
         }

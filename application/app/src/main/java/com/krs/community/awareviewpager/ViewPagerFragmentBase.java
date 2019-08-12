@@ -1,18 +1,16 @@
 package com.krs.community.awareviewpager;
 
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,10 +18,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.krs.community.R;
 import com.krs.community.activity.FamilyTreeDetailActivity;
-import com.leinardi.android.speeddial.FabWithLabelView;
+import com.krs.community.fragments.AddFactsFragment;
+import com.krs.community.fragments.AddRelativeFragment;
+import com.krs.community.utils.Utility;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialOverlayLayout;
 import com.leinardi.android.speeddial.SpeedDialView;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
+import com.zfdang.multiple_images_selector.SelectorSettings;
+
+import java.util.ArrayList;
 
 /**
  * Handles keeping track of its child fragment recyclerView and it's scroll position in relation to other fragments in the viewPager
@@ -36,18 +42,22 @@ public class ViewPagerFragmentBase extends Fragment {
     public static final String BROADCAST_TYPE_UPDATE_SCROLL_POSITION = "broadcast_lesson_update_module_scroll_position";
     public static final String BROADCAST_KEY_SCROLL_POSITION = "key_scroll_position";
     public static final String BROADCAST_KEY_OFFSET_POSITION = "key_offset_position";
-    protected static final int ADD_ACTION_POSITION = 4;
     private static final String TAG = ViewPagerFragmentBase.class.getSimpleName();
-    protected ObservableRecyclerView mRecyclerView;
-    protected LinearLayoutManager mLinearLayoutManager;
-    protected int scrollCumulator = 0;
+    private final int REQUEST_CODE = 123;
+    protected SpeedDialView mSpeedDialView;
+    protected HeaderAutoFooterRecyclerAdapter rvdapter;
+    protected SpeedDialOverlayLayout overlay;
+
+    private LinearLayoutManager mLinearLayoutManager;
+    private int scrollCumulator = 0;
+    private ArrayList<String> imgListUrls = new ArrayList<>();
     /**
      * Used to track the scroll position of all module fragments
      * recyclerViews and send the data to the lesson activity. The lesson
      * activity will then translate the appropriate views in sync with the scrolling
      * of the recyclerview.
      */
-    protected RecyclerView.OnScrollListener mRecyclerScrollListener = new RecyclerView.OnScrollListener() {
+    private RecyclerView.OnScrollListener mRecyclerScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
@@ -87,7 +97,7 @@ public class ViewPagerFragmentBase extends Fragment {
             }
         }
     };
-    private SpeedDialOverlayLayout overlay;
+
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -109,9 +119,6 @@ public class ViewPagerFragmentBase extends Fragment {
 
     }
 
-    void setOverlay(SpeedDialOverlayLayout overlay) {
-        this.overlay = overlay;
-    }
 
     @Override
     public void onResume() {
@@ -119,8 +126,38 @@ public class ViewPagerFragmentBase extends Fragment {
         initiateScrollPosition();
 
         //view pager events and scroll position updates are sent to fragments through a local broadcast. Register the receiver
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver,
-                new IntentFilter(LESSON_TO_MODULE_BROADCAST));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, new IntentFilter(LESSON_TO_MODULE_BROADCAST));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (mSpeedDialView.isOpen()) {
+            mSpeedDialView.close(true);
+            overlay.hide(true);
+        }
+
+        if (resultCode == REQUEST_CODE) {
+
+
+
+            imgListUrls = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
+            assert imgListUrls != null;
+
+            // show results in textview
+            StringBuffer sb = new StringBuffer();
+            sb.append(String.format("Totally %d images selected:", imgListUrls.size())).append("\n");
+            for (String result : imgListUrls) {
+                sb.append(result).append("\n");
+            }
+
+            //upload multiple images
+
+            rvdapter.notifyDataSetChanged();
+            return;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -135,7 +172,7 @@ public class ViewPagerFragmentBase extends Fragment {
     }
 
     protected void setupRecyclerView(RecyclerView recyclerView) {
-        mRecyclerView = (ObservableRecyclerView) recyclerView;
+        ObservableRecyclerView mRecyclerView = (ObservableRecyclerView) recyclerView;
         mRecyclerView.setOnScrollListener(mRecyclerScrollListener);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -184,37 +221,32 @@ public class ViewPagerFragmentBase extends Fragment {
 
     protected void initSpeedDial(SpeedDialView speedDialView) {
 
-
-        speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_no_label, R.drawable.ic_link_white_24dp).create());
-
-        Drawable drawable = AppCompatResources.getDrawable(getActivity(), R.drawable.ic_custom_color);
-        FabWithLabelView fabWithLabelView = speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id
-                .fab_custom_color, drawable)
-                .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, getActivity().getTheme()))
-                .setLabel(R.string.label_custom_color)
-                .setLabelColor(Color.WHITE)
-                .setLabelBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, getActivity().getTheme()))
+        speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_add_fact, R.drawable.calendar4)
+                .setFabBackgroundColor(getActivity().getResources().getColor(R.color.white))
+                .setFabImageTintColor(getActivity().getResources().getColor(R.color.colorPrimary))
+                .setLabel(getString(R.string.label_add_fact))
+                .setTheme(R.style.AppTheme_Purple)
                 .create());
 
-        if (fabWithLabelView != null) {
-            fabWithLabelView.setSpeedDialActionItem(fabWithLabelView.getSpeedDialActionItemBuilder().setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.material_white_1000, getActivity().getTheme()))
-                    .create());
-        }
-
-        speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_long_label, R.drawable.ic_lorem_ipsum)
-                .setLabel("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor " +
-                        "incididunt ut labore et dolore magna aliqua.")
+        speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_add_photo, R.drawable.add_photo)
+                .setFabBackgroundColor(getActivity().getResources().getColor(R.color.white))
+                .setFabImageTintColor(getActivity().getResources().getColor(R.color.colorPrimary))
+                .setLabel(getString(R.string.label_add_photos))
+                .setTheme(R.style.AppTheme_Purple)
                 .create());
 
-        drawable = AppCompatResources.getDrawable(getActivity(), R.drawable.ic_add_white_24dp);
-        speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_add_action, drawable)
-                .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.material_green_500, getActivity().getTheme()))
-                .setLabel(R.string.label_add_action)
-                .setLabelBackgroundColor(Color.TRANSPARENT)
+
+        speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_add_audio, R.drawable.add_audio)
+                .setFabBackgroundColor(getActivity().getResources().getColor(R.color.white))
+                .setFabImageTintColor(getActivity().getResources().getColor(R.color.colorPrimary))
+                .setLabel(getString(R.string.label_add_audio))
+                .setTheme(R.style.AppTheme_Purple)
                 .create());
 
-        speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_custom_theme, R.drawable.ic_theme_white_24dp)
-                .setLabel(getString(R.string.label_custom_theme))
+        speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_add_relative, R.drawable.add_relative)
+                .setFabBackgroundColor(getActivity().getResources().getColor(R.color.white))
+                .setFabImageTintColor(getActivity().getResources().getColor(R.color.colorPrimary))
+                .setLabel(getString(R.string.label_add_relative))
                 .setTheme(R.style.AppTheme_Purple)
                 .create());
 
@@ -238,52 +270,30 @@ public class ViewPagerFragmentBase extends Fragment {
             }
         });
 
-        speedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
-            @Override
-            public boolean onActionSelected(SpeedDialActionItem actionItem) {
-                switch (actionItem.getId()) {
-                    case R.id.fab_no_label:
-                        Toast.makeText(getActivity(), "No label action clicked!\nClosing with animation", Toast.LENGTH_SHORT).show();
-                        speedDialView.close(); // To close the Speed Dial with animation
-                        return true; // false will close it without animation
-                    case R.id.fab_long_label:
-                        //showSnackbar(actionItem.getLabel(getActivity()) + " clicked!");
-                        Toast.makeText(getActivity(), actionItem.getLabel(getActivity()) + " clicked!", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.fab_custom_color:
-                        //showToast(actionItem.getLabel(getActivity()) + " clicked!\nClosing without animation.");
-                        Toast.makeText(getActivity(), actionItem.getLabel(getActivity()) + " clicked!\nClosing without animation.", Toast.LENGTH_SHORT).show();
-                        return false; // closes without animation (same as speedDialView.close(false); return false;)
-                    case R.id.fab_custom_theme:
-                        Toast.makeText(getActivity(), actionItem.getLabel(getActivity()) + " clicked!", Toast.LENGTH_SHORT).show();
-                        //showToast(actionItem.getLabel(getActivity()) + " clicked!");
-                        break;
-                    case R.id.fab_add_action:
-                        speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_replace_action,
-                                R.drawable.ic_replace_white_24dp)
-                                .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color
-                                                .material_orange_500,
-                                        getActivity().getTheme()))
-                                .setLabel(getString(R.string.label_replace_action))
-                                .create(), ADD_ACTION_POSITION);
-                        break;
-                    case R.id.fab_replace_action:
-                        speedDialView.replaceActionItem(new SpeedDialActionItem.Builder(R.id
-                                .fab_remove_action,
-                                R.drawable.ic_delete_white_24dp)
-                                .setLabel(getString(R.string.label_remove_action))
-                                .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent,
-                                        getActivity().getTheme()))
-                                .create(), ADD_ACTION_POSITION);
-                        break;
-                    case R.id.fab_remove_action:
-                        speedDialView.removeActionItemById(R.id.fab_remove_action);
-                        break;
-                    default:
-                        break;
-                }
-                return true; // To keep the Speed Dial open
+        speedDialView.setOnActionSelectedListener(actionItem -> {
+            switch (actionItem.getId()) {
+                case R.id.fab_add_photo:
+                    Intent intent = new Intent(getActivity(), ImagesSelectorActivity.class);
+                    intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 15);
+                    intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 100000);
+                    intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
+                    intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, imgListUrls);
+                    startActivityForResult(intent, REQUEST_CODE);
+                    break;
+                case R.id.fab_add_fact:
+                    getActivity().getSupportFragmentManager().beginTransaction().add(android.R.id.content, new AddFactsFragment()).commit();
+                    Utility.fade(getActivity());
+                    break;
+                case R.id.fab_add_relative:
+                    getActivity().getSupportFragmentManager().beginTransaction().add(android.R.id.content, new AddRelativeFragment()).commit();
+                    Utility.fade(getActivity());
+                    break;
+                case R.id.fab_add_audio:
+                    break;
+                default:
+                    break;
             }
+            return true; // To keep the Speed Dial open
         });
 
     }

@@ -16,11 +16,10 @@
   -->
 
 <resources>
-    <item name="fab_no_label" type="id" />
-    <item name="fab_custom_color" type="id" />
-    <item name="fab_long_label" type="id" />
-    <item name="fab_custom_theme" type="id" />
-    <item name="fab_add_action" type="id" />
-    <item name="fab_replace_action" type="id" />
-    <item name="fab_remove_action" type="id" />
+    <item name="fab_add_relative" type="id" />
+    <item name="fab_add_photo" type="id" />
+    <item name="fab_scan_photo" type="id" />
+    <item name="fab_add_fact" type="id" />
+    <item name="fab_add_audio" type="id" />
+
 </resources>

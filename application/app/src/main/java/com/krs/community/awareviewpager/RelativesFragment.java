@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.krs.community.R;
 import com.krs.community.activity.FamilyTreeDetailActivity;
 import com.leinardi.android.speeddial.SpeedDialOverlayLayout;
-import com.leinardi.android.speeddial.SpeedDialView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,8 +20,7 @@ public class RelativesFragment extends ViewPagerFragmentBase implements FamilyTr
 
     private View mRoot;
     private ObservableRecyclerView mRecyclerView;
-    private SpeedDialOverlayLayout overlay;
-    private SpeedDialView mSpeedDialView;
+
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,11 +35,11 @@ public class RelativesFragment extends ViewPagerFragmentBase implements FamilyTr
         mRecyclerView = mRoot.findViewById(R.id.recyclerView);
         setupRecyclerView(mRecyclerView);
 
-         mSpeedDialView = mRoot.findViewById(R.id.speedDial);
+        mSpeedDialView = mRoot.findViewById(R.id.speedDial);
         initSpeedDial(mSpeedDialView);
 
         overlay = mRoot.findViewById(R.id.overlay);
-        setOverlay(overlay);
+
         updateModuleRecyclerData(getRandomizedData());
     }
 
@@ -61,21 +59,22 @@ public class RelativesFragment extends ViewPagerFragmentBase implements FamilyTr
         if (!isAdded()) {
             return;
         }
-        mRecyclerView.setAdapter(new HeaderAutoFooterRecyclerAdapter(getActivity(), arrayList, R.layout.relatives_list_item, getHeaderHeight()));
+        rvdapter = new HeaderAutoFooterRecyclerAdapter(getActivity(), arrayList, R.layout.relatives_list_item, getHeaderHeight());
+        mRecyclerView.setAdapter(rvdapter);
         initiateScrollPosition();
     }
 
     @Override
     public void hideOverlay() {
-        if(mSpeedDialView.isOpen())
-        {
+        if (mSpeedDialView.isOpen()) {
             mSpeedDialView.close(true);
             overlay.hide(true);
         }
     }
 
     @Override
-    public void hideSpeedDialView() {
-
+    public boolean isOpen() {
+        return mSpeedDialView.isOpen();
     }
+
 }

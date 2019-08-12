@@ -50,10 +50,10 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 public class ShareEventFragment extends Fragment {
 
     // class variables
-    private static final int REQUEST_CODE = 123;
-    ImagesAdapter adapter;
+    private final int REQUEST_CODE = 123;
+    private ImagesAdapter adapter;
     private ArrayList<String> mResults = new ArrayList<>();
-    ArrayList<String> yURLs = new ArrayList<>();
+    private ArrayList<String> yURLs = new ArrayList<>();
 
     @Nullable
     @Override

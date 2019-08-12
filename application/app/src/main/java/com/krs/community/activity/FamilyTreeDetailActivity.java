@@ -1,10 +1,12 @@
 package com.krs.community.activity;
 
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Outline;
 import android.graphics.Point;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -84,7 +87,7 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
             R.string.fragment_title_3,
     };
     RelativesFragment relativesFragment = new RelativesFragment();
-    PhotosFragment photosFragment = new PhotosFragment();
+    public static PhotosFragment photosFragment = new PhotosFragment();
     FactsFragment factsFragment = new FactsFragment();
     private KenBurnsView kv_header_img;
     private ImageView back_button_icon;
@@ -153,7 +156,7 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         //position views dependent on other views positions. Views need to be added before calculations can be done.
         //TODO: if possible, change all view dimensions to constants in dimens file to allow for measurement in onCreate
         adjustLayoutSetConstants();
-
+        ihideOverlay=relativesFragment;
         mOverFlow.setOnClickListener(v -> {
             try {
                 PopupMenu popup = new PopupMenu(this, v);
@@ -186,7 +189,7 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                Log.d(TAG,"onPageScrolled: "+position);
             }
 
             @Override
@@ -204,10 +207,16 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
+                Log.d(TAG,"onPageScrollStateChanged: "+state);
             }
         });
+
+        ActivityCompat.requestPermissions(FamilyTreeDetailActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
     }
+
+
+
 
     /**
      * Watches the state of the current fragments scrolling and translates views accordingly
@@ -406,16 +415,12 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
 
     @Override
     public void onBackPressed() {
-
-        ihideOverlay.hideSpeedDialView();
-
-       /* if (mSpeedDialView.isOpen()) {
-            mSpeedDialView.close();
+        if (ihideOverlay.isOpen()) {
+            ihideOverlay.hideOverlay();
         } else {
             super.onBackPressed();
-        }*/
+        }
     }
-
 
     //given a value, if that value is between a defined range, will return the linear equivalent of another range
     //for example. given the range [100-200] as the input range and [5-1] as the output range, given a value of 100, getScaleBetweenRange will
@@ -575,7 +580,7 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
 
     public interface IhideView {
         void hideOverlay();
-        void hideSpeedDialView();
+        boolean isOpen();
     }
 
     private class FragmentViewPagerAdapter extends FragmentPagerAdapter {

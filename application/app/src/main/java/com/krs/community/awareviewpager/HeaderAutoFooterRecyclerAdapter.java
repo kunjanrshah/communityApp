@@ -82,6 +82,12 @@ public class HeaderAutoFooterRecyclerAdapter extends RecyclerView.Adapter<Recycl
         mAllItemHeightTotalMap = new HashMap<>();
     }
 
+
+    /*public void setImgList(ArrayList<String> itemList)
+    {
+        mItemList = itemList;
+    }*/
+
     protected View createPlaceHolder(int placeHolderHeight) {
         View paceHolderView = new View(mContext);
         paceHolderView.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, placeHolderHeight));
@@ -171,6 +177,7 @@ public class HeaderAutoFooterRecyclerAdapter extends RecyclerView.Adapter<Recycl
            // Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.enjoy);
 
             if (itemViewHolder.iv_photo != null) {
+                //mItemList.get(position);
                 String url="https://cdn-30-skcir4i63ajp.netdna-ssl.com/wp-content/uploads/2018/12/Aamir-Khan.png";
                 itemViewHolder.iv_photo.setImageURI(url);
             }
