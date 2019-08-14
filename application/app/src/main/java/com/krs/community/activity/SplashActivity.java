@@ -20,7 +20,7 @@ import com.krs.community.app.AppController;
 import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.Utility;
 
-public class ChooseLanActivity extends Activity {
+public class SplashActivity extends Activity {
 
     private KenBurnsView kbv;
     private View imglogo,darkoverlay, ll_spinner, ll_login;
@@ -34,7 +34,7 @@ public class ChooseLanActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_choose_lan);
+        setContentView(R.layout.activity_splash);
 
         MemoryAllocation();
         setAnimation();
@@ -52,23 +52,27 @@ public class ChooseLanActivity extends Activity {
         btn_login.setOnClickListener(v -> {
             if (!is_login) {
                 is_login = true;
-                Intent mIntent = new Intent(ChooseLanActivity.this, LoginActivity.class);
+                Intent mIntent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(mIntent);
+                finish();
+                Utility.fade(this);
             }
         });
 
         btn_register.setOnClickListener(v -> {
             if (!is_register) {
                 is_register = true;
-                Intent mIntent = new Intent(ChooseLanActivity.this, RegisterActivty.class);
+                Intent mIntent = new Intent(SplashActivity.this, RegisterActivty.class);
                 startActivity(mIntent);
+                finish();
+                Utility.fade(this);
             }
         });
 
         splanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Utility.changeLang(ChooseLanActivity.this, splanguage.getSelectedItem().toString());
+                Utility.changeLang(SplashActivity.this, splanguage.getSelectedItem().toString());
                 btn_login.setText(getResources().getString(R.string.login));
                 btn_register.setText(getResources().getString(R.string.register));
             }
@@ -87,7 +91,7 @@ public class ChooseLanActivity extends Activity {
         if (!is_home) {
             return;
         }
-        Intent mIntent = new Intent(ChooseLanActivity.this, DashboardActivity.class);
+        Intent mIntent = new Intent(SplashActivity.this, DashboardActivity.class);
         mIntent.putExtra(AppConstants.USER_ID, AppController.getInstance().mSharedPreferences.getString(AppConstants.USER_ID, ""));
         startActivity(mIntent);
         finish();
@@ -115,17 +119,17 @@ public class ChooseLanActivity extends Activity {
 
     private void setAnimation()
     {
-        RandomTransitionGenerator generator = new RandomTransitionGenerator(20000, new AccelerateDecelerateInterpolator());
+        RandomTransitionGenerator generator = new RandomTransitionGenerator(19000, new AccelerateDecelerateInterpolator());
         kbv.setTransitionGenerator(generator);
-        imglogo.animate().setStartDelay(4000).setDuration(2000).alpha(1).start();
+        imglogo.animate().setStartDelay(3000).setDuration(2000).alpha(1).start();
 
-        darkoverlay.animate().setStartDelay(4000).setDuration(3000).alpha(0.6f).start();
+        darkoverlay.animate().setStartDelay(3000).setDuration(3000).alpha(0.6f).start();
 
         ll_spinner.animate().translationY(dm.heightPixels).setStartDelay(0).setDuration(0).start();
-        ll_spinner.animate().translationY(0).setDuration(2000).alpha(1).setStartDelay(6000).start();
+        ll_spinner.animate().translationY(0).setDuration(2000).alpha(1).setStartDelay(5000).start();
 
         ll_login.animate().translationX(dm.widthPixels+ ll_login.getMeasuredWidth()).setDuration(0).setStartDelay(0).start();
-        ll_login.animate().translationX(0).setStartDelay(6500).setDuration(2000).setInterpolator(new OvershootInterpolator()).start();
+        ll_login.animate().translationX(0).setStartDelay(5500).setDuration(2000).setInterpolator(new OvershootInterpolator()).start();
     }
 
     private void MemoryAllocation()

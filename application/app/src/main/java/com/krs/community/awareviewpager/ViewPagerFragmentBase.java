@@ -1,17 +1,16 @@
 package com.krs.community.awareviewpager;
 
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,12 +19,9 @@ import com.krs.community.R;
 import com.krs.community.activity.FamilyTreeDetailActivity;
 import com.krs.community.fragments.AddFactsFragment;
 import com.krs.community.fragments.AddRelativeFragment;
-import com.krs.community.utils.Utility;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialOverlayLayout;
 import com.leinardi.android.speeddial.SpeedDialView;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
 import com.zfdang.multiple_images_selector.SelectorSettings;
 
@@ -138,7 +134,6 @@ public class ViewPagerFragmentBase extends Fragment {
         }
 
         if (resultCode == REQUEST_CODE) {
-
 
 
             imgListUrls = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
@@ -280,14 +275,21 @@ public class ViewPagerFragmentBase extends Fragment {
                     intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, imgListUrls);
                     startActivityForResult(intent, REQUEST_CODE);
                     break;
+
                 case R.id.fab_add_fact:
-                    getActivity().getSupportFragmentManager().beginTransaction().add(android.R.id.content, new AddFactsFragment()).commit();
-                    Utility.fade(getActivity());
+                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    ft.setCustomAnimations(R.anim.fade_enter, R.anim.fade_exit, R.anim.fade_enter, R.anim.fade_exit);
+                    ft.replace(android.R.id.content, new AddFactsFragment());
+                    ft.commit();
                     break;
+
                 case R.id.fab_add_relative:
-                    getActivity().getSupportFragmentManager().beginTransaction().add(android.R.id.content, new AddRelativeFragment()).commit();
-                    Utility.fade(getActivity());
+                    ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    ft.setCustomAnimations(R.anim.fade_enter, R.anim.fade_exit, R.anim.fade_enter, R.anim.fade_exit);
+                    ft.replace(android.R.id.content, new AddRelativeFragment());
+                    ft.commit();
                     break;
+
                 case R.id.fab_add_audio:
                     break;
                 default:
