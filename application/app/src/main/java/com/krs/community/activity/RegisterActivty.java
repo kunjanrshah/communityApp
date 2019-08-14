@@ -186,11 +186,11 @@ public class RegisterActivty extends Activity {
         });
 
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (Utility.canCallPhone(this) || !Utility.canAccessLocation(this) || !Utility.canSMS(this)) {
+      /*  if (Build.VERSION.SDK_INT >= 23) {
+            if (Utility.canCallPhone(this) || !Utility.canAccessLocation(this) || !Utility.haveSMS(this)) {
                 requestPermissions(AppConstants.INIT_PERMS, AppConstants.INIT_REQUEST);
             }
-        }
+        }*/
 
         spinnerCountries.setAdapter(new ArrayAdapter<String>(RegisterActivty.this, R.layout.my_spinner_style, CountryData.countryNames) {
 

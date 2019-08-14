@@ -43,11 +43,6 @@ public class SplashActivity extends Activity {
         ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, languages);
         splanguage.setAdapter(aa);
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (Utility.canCallPhone(this) || !Utility.canAccessLocation(this) || !Utility.canSMS(this)) {
-                requestPermissions(AppConstants.INIT_PERMS, AppConstants.INIT_REQUEST);
-            }
-        }
 
         btn_login.setOnClickListener(v -> {
             if (!is_login) {

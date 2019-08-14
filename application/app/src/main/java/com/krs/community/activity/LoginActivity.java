@@ -1,9 +1,11 @@
 package com.krs.community.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -78,6 +81,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
 import static com.krs.community.utils.AppConstants.INIT_TIMEOUT;
@@ -100,7 +105,7 @@ public class LoginActivity extends Activity {
     private ImageView img_back, img_login_fb, img_login_google;
     private TextView txt_forgot_pass, txt_do_you_have, txt_cancel;
     private Button btn_mobile, btn_email, btn_login;
-    private EditText edt_username, edt_pass,edt_cpass;
+    private EditText edt_username, edt_pass, edt_cpass;
     private boolean isShow = true;
     private SharedPreferences mSharedPreferences = null;
     private SharedPreferences.Editor mEditor = null;
@@ -152,7 +157,7 @@ public class LoginActivity extends Activity {
             mEditor.apply();
         });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(this,R.color.colorBG,false);
+            Utility.changeStatusbarColor(this, R.color.colorBG, false);
         }
         btn_mobile.setOnClickListener(v -> {
             isSelected = Mobile;
@@ -458,13 +463,46 @@ public class LoginActivity extends Activity {
 
         });
 
-
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (Utility.canCallPhone(this) || !Utility.canAccessLocation(this) || !Utility.canSMS(this)) {
-                requestPermissions(AppConstants.INIT_PERMS, AppConstants.INIT_REQUEST);
+        /*if (Build.VERSION.SDK_INT >= 23) {
+            if (!Utility.haveSMS(this)) {
+                new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                        .setTitleText("SMS Permission")
+                        .setContentText("App will send SMS your password on your mobile. To work this feature allow SMS permission")
+                        .setConfirmText("Yes, please!")
+                        .setCancelText("No!")
+                        .showCancelButton(true)
+                        .setConfirmClickListener(sDialog -> {
+                            sDialog.dismiss();
+                            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_SMS}, 1);
+                        })
+                        .show();
             }
-        }
+        }*/
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(LoginActivity.this, "Permission denied to SMS your External storage", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     private void signIn() {
@@ -710,7 +748,7 @@ public class LoginActivity extends Activity {
         AppController.getInstance().addToRequestQueue(jsonObjReq, "");
     }
 
-    private void call_change_password_ws(String str1,String str2) {
+    private void call_change_password_ws(String str1, String str2) {
 
         if (Utility.isOnline(this)) {
 

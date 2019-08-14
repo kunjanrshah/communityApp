@@ -341,7 +341,7 @@ public class Utility {
         return (hasPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION));
     }
 
-    public static boolean canSMS(@NonNull Context mContext) {
+    public static boolean haveSMS(@NonNull Context mContext) {
         return (hasPermission(mContext, Manifest.permission.SEND_SMS)); }
 
     public static boolean canReadContacts(@NonNull Context mContext) {

@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.krs.community.R;
 import com.krs.community.activity.RegisterActivty;
 import com.krs.community.model.FavProfiles;
+import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.ExpandableHeightGridView;
 import com.krs.community.utils.Utility;
 import com.nightonke.boommenu.Util;
@@ -49,10 +50,10 @@ public class DashboardFragment extends Fragment {
     ExpandableHeightGridView gridMenu;
     EditText edt_search;
     ArrayList<FavProfiles> listProfiles = new ArrayList<>();
-    String[] ProfileNames = {"Rajendra", "Tejas", "Kunjan", "Mukund", "Kushal"};
+    String[] ProfileNames = {"Rajendra", "Tejas", "Kunjan", "Kushal","Mukund"};
     int[] ProfileImages = {R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg};
 
-    String[] MenuNames = {"My QRCode","My Family", "By Distance", "Matrimony", "Documents", "Paytm","App Tour", "Admins", "NonActives", "Add New", "Share Event"};
+    String[] MenuNames = {"Browse","My QRCode", "By Distance", "Matrimony", "Documents", "Paytm","App Tour", "Admins", "NonActives", "Add New", "Share Event"};
     int[] MenuImages = {R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon,R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon};
     private boolean isTouch = false;
 
@@ -81,7 +82,6 @@ public class DashboardFragment extends Fragment {
                 isTouch = true;
                 Utility.movetoFragment(getActivity(),new SearchListFragment());
             }
-
             return false;
         });
 
@@ -100,6 +100,8 @@ public class DashboardFragment extends Fragment {
         });
 
         Utility.changeStatusbarColor(getActivity(),R.color.white,false);
+
+
         return rootView;
     }
 
