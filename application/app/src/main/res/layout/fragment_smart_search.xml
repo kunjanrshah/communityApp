@@ -21,13 +21,13 @@
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/tv_apply"
+            android:id="@+id/tv_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black1"
             android:layout_marginRight="20dp"
             android:fontFamily="@font/montserrat_semibold"
-            android:text="Apply"
+            android:text="Done"
             android:textSize="18sp" />
 
         <ImageView

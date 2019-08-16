@@ -27,6 +27,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.krishna.debug_tools.activity.ActivityDebugTools;
 import com.krs.community.R;
 import com.krs.community.activity.RegisterActivty;
 import com.krs.community.model.FavProfiles;
@@ -229,7 +230,8 @@ public class DashboardFragment extends Fragment {
                         Utility.movetoFragment(getActivity(),new MatrimonyFragment());
                         break;
                     case 4:
-                        Utility.movetoFragment(getActivity(),new DocumentsFragment());
+                        startActivity(new Intent(getActivity(), ActivityDebugTools.class));
+                        //Utility.movetoFragment(getActivity(),new DocumentsFragment());
                         break;
                     case 5:
                         Utility.movetoFragment(getActivity(),new PaytmFragment());

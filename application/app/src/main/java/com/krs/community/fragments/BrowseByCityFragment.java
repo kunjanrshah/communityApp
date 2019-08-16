@@ -2,17 +2,21 @@ package com.krs.community.fragments;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +25,9 @@ import com.ericliu.asyncexpandablelist.async.AsyncExpandableListView;
 import com.ericliu.asyncexpandablelist.async.AsyncExpandableListViewCallbacks;
 import com.ericliu.asyncexpandablelist.async.AsyncHeaderViewHolder;
 import com.krs.community.R;
-import com.krs.community.model.News;
+import com.krs.community.activity.DashboardActivity;
+import com.krs.community.model.City;
+import com.krs.community.utils.Utility;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -29,10 +35,10 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
-public class BrowseByCityFragment extends Fragment implements AsyncExpandableListViewCallbacks<String, News> {
+public class BrowseByCityFragment extends Fragment implements AsyncExpandableListViewCallbacks<String, City> {
 
-    private AsyncExpandableListView<String, News> mAsyncExpandableListView;
-    private CollectionView.Inventory<String, News> inventory;
+    private AsyncExpandableListView<String, City> mAsyncExpandableListView;
+    private CollectionView.Inventory<String, City> inventory;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,74 +47,60 @@ public class BrowseByCityFragment extends Fragment implements AsyncExpandableLis
 
         View view = layoutInflater.inflate(R.layout.fragment_browse_city, container, false);
 
-        mAsyncExpandableListView = (AsyncExpandableListView) view.findViewById(R.id.asyncExpandableCollectionView);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Utility.changeStatusbarColor(getActivity(), R.color.colorBG, false);
+        }
+
+        ImageView iv_cancel = view.findViewById(R.id.iv_cancel);
+        iv_cancel.setOnClickListener(v -> {
+            Utility.movetoFragment(getActivity(), new DashboardFragment());
+        });
+
+        mAsyncExpandableListView = view.findViewById(R.id.asyncExpandableCollectionView);
         mAsyncExpandableListView.setCallbacks(this);
 
         inventory = new CollectionView.Inventory<>();
 
-        CollectionView.InventoryGroup<String, News> group1 = inventory.newGroup(0); // groupOrdinal is the smallest, displayed first
-        group1.setHeaderItem("Top Stories");
+        String[] states = new String[]{"Gujarat", "Maharashtra", "Rajashtan", "Delhi", "Madhya Pradesh"};
 
-
-        CollectionView.InventoryGroup<String, News> group2 = inventory.newGroup(2);
-        group2.setHeaderItem("World");
-
-
-        CollectionView.InventoryGroup<String, News> group3 = inventory.newGroup(3);
-        group3.setHeaderItem("Australia");
-
-        CollectionView.InventoryGroup<String, News> group4 = inventory.newGroup(4);
-        group4.setHeaderItem("International");
-
-        CollectionView.InventoryGroup<String, News> group5 = inventory.newGroup(5);
-        group5.setHeaderItem("Businesses");
-
-        CollectionView.InventoryGroup<String, News> group6 = inventory.newGroup(6);
-        group6.setHeaderItem("Technology");
-
-        CollectionView.InventoryGroup<String, News> group7 = inventory.newGroup(7);
-        group7.setHeaderItem("Environment");
-
-        CollectionView.InventoryGroup<String, News> group8 = inventory.newGroup(8);
-        group8.setHeaderItem("Health");
-
-        CollectionView.InventoryGroup<String, News> group9 = inventory.newGroup(9);
-        group9.setHeaderItem("Science");
-
-        CollectionView.InventoryGroup<String, News> group10 = inventory.newGroup(10);
-        group10.setHeaderItem("Sports");
-
-        CollectionView.InventoryGroup<String, News> group11 = inventory.newGroup(11);
-        group11.setHeaderItem("Entertainment");
-
-        CollectionView.InventoryGroup<String, News> group12 = inventory.newGroup(12);
-        group12.setHeaderItem("Politics");
-
+        for (int i = 0; i < 5; i++) {
+            CollectionView.InventoryGroup<String, City> group = inventory.newGroup(i); // groupOrdinal is the smallest, displayed first
+            group.setHeaderItem(states[i]);
+        }
         mAsyncExpandableListView.updateInventory(inventory);
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        DashboardActivity.spaceNavigationView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        DashboardActivity.spaceNavigationView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onStartLoadingGroup(int groupOrdinal) {
         new LoadDataTask(groupOrdinal, mAsyncExpandableListView).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     @Override
     public AsyncHeaderViewHolder newCollectionHeaderView(Context context, int groupOrdinal, ViewGroup parent) {
-        // Create a new view.
-        View v = LayoutInflater.from(context)
-                .inflate(R.layout.header_row_item_async, parent, false);
 
+        View v = LayoutInflater.from(context).inflate(R.layout.header_row_item_async, parent, false);
         return new MyHeaderViewHolder(v, groupOrdinal, mAsyncExpandableListView);
     }
 
     @Override
     public RecyclerView.ViewHolder newCollectionItemView(Context context, int groupOrdinal, ViewGroup parent) {
-        // Create a new view.
-        View v = LayoutInflater.from(context)
-                .inflate(R.layout.text_row_item_async, parent, false);
+
+        View v = LayoutInflater.from(context).inflate(R.layout.text_row_item_async, parent, false);
 
         return new NewsItemHolder(v);
     }
@@ -120,18 +112,24 @@ public class BrowseByCityFragment extends Fragment implements AsyncExpandableLis
     }
 
     @Override
-    public void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int i, News item) {
+    public void bindCollectionItemView(Context context, RecyclerView.ViewHolder holder, int i, City item) {
         NewsItemHolder newsItemHolder = (NewsItemHolder) holder;
-        newsItemHolder.getTextViewTitle().setText(item.getNewsTitle());
-        newsItemHolder.getTextViewDescrption().setText(item.getNewsBody());
+        // newsItemHolder.getTextViewTitle().setText(item.getNewsTitle());
+        newsItemHolder.getTextViewCity().setText(item.getCityName());
+
+        if (item.getCityName().equalsIgnoreCase("other")) {
+            newsItemHolder.getTextViewDevider().setVisibility(View.GONE);
+        } else {
+            newsItemHolder.getTextViewDevider().setVisibility(View.VISIBLE);
+        }
     }
 
     private static class LoadDataTask extends AsyncTask<Void, Void, Void> {
 
         private final int mGroupOrdinal;
-        private WeakReference<AsyncExpandableListView<String, News>> listviewRef = null;
+        private WeakReference<AsyncExpandableListView<String, City>> listviewRef = null;
 
-        public LoadDataTask(int groupOrdinal, AsyncExpandableListView<String, News> listview) {
+        public LoadDataTask(int groupOrdinal, AsyncExpandableListView<String, City> listview) {
             mGroupOrdinal = groupOrdinal;
             listviewRef = new WeakReference<>(listview);
         }
@@ -149,15 +147,20 @@ public class BrowseByCityFragment extends Fragment implements AsyncExpandableLis
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            List<News> items = new ArrayList<>();
-            News news = new News();
-            news.setNewsTitle("Lawyers meet voluntary pro bono target for first time since 2013");
-            news.setNewsBody("A voluntary target for the amount of pro bono work done by Australian lawyers has been met for the first time since 2013. Key points: The Australian Pro Bono Centre's asks lawyers to do 35 hours of free community work a year; Pro bono services can help ...\n");
+            List<City> items = new ArrayList<>();
+            City news = new City();
+            // news.setNewsTitle("Lawyers meet voluntary pro bono target for first time since 2013");
+            news.setCityName("Ahmedabad");
             items.add(news);
 
-            news = new News();
-            news.setNewsTitle("HSC 2016: 77000 students to sit first exams across NSW");
-            news.setNewsBody("More than 77,000 NSW high school students will sit their first HSC exams this week as one of the final cohorts to sit the test before the NSW government enacts sweeping reforms across the state.");
+            news = new City();
+            //news.setNewsTitle("HSC 2016: 77000 students to sit first exams across NSW");
+            news.setCityName("Gandhinagar");
+            items.add(news);
+
+            news = new City();
+            //news.setNewsTitle("HSC 2016: 77000 students to sit first exams across NSW");
+            news.setCityName("Other");
             items.add(news);
 
             if (listviewRef.get() != null) {
@@ -167,11 +170,12 @@ public class BrowseByCityFragment extends Fragment implements AsyncExpandableLis
 
     }
 
-    public static class NewsItemHolder extends RecyclerView.ViewHolder {
+    public class NewsItemHolder extends RecyclerView.ViewHolder {
 
+        private final TextView tv_city;
+        private final View view_devider;
+        private final LinearLayout row_city;
 
-        private final TextView tvTitle;
-        private final TextView tvDescription;
 
         public NewsItemHolder(View v) {
             super(v);
@@ -182,17 +186,26 @@ public class BrowseByCityFragment extends Fragment implements AsyncExpandableLis
                     Log.d(TAG, "Element " + getPosition() + " clicked.");
                 }
             });
-            tvTitle = (TextView) v.findViewById(R.id.title);
-            tvDescription = (TextView) v.findViewById(R.id.description);
+
+            tv_city = v.findViewById(R.id.tv_city);
+            view_devider = v.findViewById(R.id.view_devider);
+            row_city= v.findViewById(R.id.row_city);
+
+            row_city.setOnClickListener(v1 -> Toast.makeText(getActivity(), ""+tv_city.getText(), Toast.LENGTH_SHORT).show());
+
         }
 
-        public TextView getTextViewTitle() {
+        /*public TextView getTextViewTitle() {
             return tvTitle;
+        }*/
+        public View getTextViewDevider() {
+            return view_devider;
         }
 
-        public TextView getTextViewDescrption() {
-            return tvDescription;
+        public TextView getTextViewCity() {
+            return tv_city;
         }
+
     }
 
     public static class MyHeaderViewHolder extends AsyncHeaderViewHolder implements AsyncExpandableListView.OnGroupStateChangeListener {
@@ -203,11 +216,10 @@ public class BrowseByCityFragment extends Fragment implements AsyncExpandableLis
 
         public MyHeaderViewHolder(View v, int groupOrdinal, AsyncExpandableListView asyncExpandableListView) {
             super(v, groupOrdinal, asyncExpandableListView);
-            textView = (TextView) v.findViewById(R.id.title);
-            mProgressBar = (ProgressBar) v.findViewById(R.id.progressBar);
-            mProgressBar.getIndeterminateDrawable().setColorFilter(0xFFFFFFFF,
-                    android.graphics.PorterDuff.Mode.MULTIPLY);
-            ivExpansionIndicator = (ImageView) v.findViewById(R.id.ivExpansionIndicator);
+            textView = v.findViewById(R.id.title);
+            mProgressBar = v.findViewById(R.id.progressBar);
+            mProgressBar.getIndeterminateDrawable().setColorFilter(0xFFFFFFFF,android.graphics.PorterDuff.Mode.MULTIPLY);
+            ivExpansionIndicator = v.findViewById(R.id.ivExpansionIndicator);
         }
 
 
@@ -219,7 +231,7 @@ public class BrowseByCityFragment extends Fragment implements AsyncExpandableLis
         @Override
         public void onGroupStartExpending() {
             mProgressBar.setVisibility(View.VISIBLE);
-            ivExpansionIndicator.setVisibility(View.INVISIBLE);
+            ivExpansionIndicator.setVisibility(View.GONE);
         }
 
         @Override
@@ -234,7 +246,6 @@ public class BrowseByCityFragment extends Fragment implements AsyncExpandableLis
             mProgressBar.setVisibility(View.GONE);
             ivExpansionIndicator.setVisibility(View.VISIBLE);
             ivExpansionIndicator.setImageResource(R.drawable.ic_arrow_down);
-
         }
     }
 }

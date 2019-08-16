@@ -57,8 +57,8 @@ public class ExpandableFilterListFragment extends Fragment {
             Utility.movetoFragment(getActivity(),new FiltersFragment());
         });
 
-        TextView tv_apply=rootView.findViewById(R.id.tv_apply);
-        tv_apply.setOnClickListener(v -> {
+        TextView tv_done=rootView.findViewById(R.id.tv_done);
+        tv_done.setOnClickListener(v -> {
             Utility.hideKeyboard(getActivity());
 
             new Handler().postDelayed(() -> adapter.openBottomSheetDailog(),250);

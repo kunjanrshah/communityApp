@@ -422,6 +422,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
         val adapterPosition = rv_search!!.getChildAdapterPosition(view)
         val detailsFragment = FamilyDetailFragment.newInstance(positions, adapterPosition)
         val transaction = fragmentManager?.beginTransaction()
+                ?.setCustomAnimations(R.anim.fade_enter, R.anim.fade_exit, R.anim.fade_enter, R.anim.fade_exit)
                 ?.replace(R.id.container_body, detailsFragment, FamilyDetailFragment.TAG)
                 ?.addToBackStack(null)
 

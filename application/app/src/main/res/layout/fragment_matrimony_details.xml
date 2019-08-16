@@ -2,24 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/border"
+    android:padding="10dp"
     android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:background="@drawable/border"
-        android:orientation="vertical"
-        android:padding="5dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Matrimony"
-            android:fontFamily="@font/montserrat_semibold"
-            android:textSize="18sp"
-            android:textColor="@color/colorPrimary"
-            android:padding="10dp"  />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -30,19 +15,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
                 android:orientation="vertical"
-                android:paddingBottom="30dp">
+                android:paddingBottom="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Matrimony"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorPrimary"
+                          />
 
 
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:checked="true"
-                    android:text="Interested"
-                    android:textSize="20dp" />
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:checked="true"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Interested"
+                        android:textSize="14sp" />
+
+
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -330,5 +334,5 @@
             </LinearLayout>
 
         </ScrollView>
-    </LinearLayout>
+
 </LinearLayout>

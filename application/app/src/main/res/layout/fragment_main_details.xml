@@ -2,375 +2,368 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <LinearLayout
+    android:background="@drawable/border"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:background="@drawable/border"
-        android:orientation="vertical"
-        android:padding="5dp">
+        android:scrollbars="none">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Essential"
-            android:padding="10dp"
-            android:fontFamily="@font/montserrat_semibold"
-            android:textColor="@color/colorPrimary"
-            android:textSize="18sp"     />
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:orientation="vertical"
+            android:paddingBottom="15dp">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:padding="5dp"
+                android:text="Main"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:orientation="vertical"
-                android:paddingBottom="15dp">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Member Code"
-                            android:fontFamily="@font/montserrat_semibold"     />
-
-                        <EditText
-                            android:layout_width="150dp"
-                            android:layout_height="40dp"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:background="@drawable/border_color_gray"
-                            android:singleLine="true" />
-
-                    </LinearLayout>
-
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center|bottom"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/border"
-                        android:textAlignment="center">
-
-                        <Spinner
-                            style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:text="Relation" />
-                    </RelativeLayout>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="First Name"
-                            android:fontFamily="@font/montserrat_semibold" />
-
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:background="@drawable/border_color_gray"
-                            android:singleLine="true" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Last Name"
-                            android:fontFamily="@font/montserrat_semibold" />
-
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:background="@drawable/border_color_gray"
-                            android:singleLine="true" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Mobile"
-                            android:fontFamily="@font/montserrat_semibold" />
-
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:background="@drawable/border_color_gray"
-                            android:singleLine="true" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Email"
-                            android:fontFamily="@font/montserrat_semibold" />
-
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:background="@drawable/border_color_gray"
-                            android:singleLine="true" />
-
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:background="@drawable/border"
-                        android:gravity="center"
-                        android:textAlignment="center">
-
-                        <Spinner
-                            style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:text="Gender" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="5dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/border"
-                        android:gravity="center"
-                        android:textAlignment="center">
-
-                        <Spinner
-                            android:id="@+id/splanguage"
-                            style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:text="City" />
-                    </RelativeLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Birth Date"
-                                android:fontFamily="@font/montserrat_semibold" />
-
-                            <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="40dp"
-                                android:fontFamily="@font/montserrat_regular"
-                                android:background="@drawable/border_color_gray"
-                                android:singleLine="true" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:text="DD/MM/YYYY"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="5dp"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Expire Date"
-                                android:fontFamily="@font/montserrat_semibold" />
-
-                            <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="40dp"
-                                android:fontFamily="@font/montserrat_regular"
-                                android:background="@drawable/border_color_gray"
-                                android:singleLine="true" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:text="DD/MM/YYYY"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>
-
-                    <CheckBox
-                        android:id="@+id/chkExpired"
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="Member Code" />
+
+                    <EditText
+                        android:layout_width="150dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/border_color_gray"
                         android:fontFamily="@font/montserrat_regular"
-                        android:layout_gravity="center_vertical"
-                        android:checked="true" />
+                        android:singleLine="true" />
+
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center|bottom"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border"
+                    android:textAlignment="center">
+
+                    <Spinner
+                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="Relation" />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="First Name" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/border_color_gray"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:singleLine="true" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal">
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Local Address"
-                            android:fontFamily="@font/montserrat_semibold" />
-
-                        <EditText
-                            android:id="@+id/edtAddress"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/border_color_gray"
-                            android:drawablePadding="10dp"
-                            android:inputType="textMultiLine"
-                            android:lines="3"
-                            android:maxLines="3"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:minLines="3"
-                            android:scrollbars="vertical"
-                            android:singleLine="true" />
-
-                    </LinearLayout>
-
-
-                    <CheckBox
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="Last Name" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/border_color_gray"
                         android:fontFamily="@font/montserrat_regular"
-                        android:text="Rented" />
+                        android:singleLine="true" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="Mobile" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/border_color_gray"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:singleLine="true" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="Email" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/border_color_gray"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:singleLine="true" />
 
                 </LinearLayout>
 
 
             </LinearLayout>
-        </ScrollView>
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@drawable/border"
+                    android:gravity="center"
+                    android:textAlignment="center">
+
+                    <Spinner
+                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="Gender" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border"
+                    android:gravity="center"
+                    android:textAlignment="center">
+
+                    <Spinner
+                        android:id="@+id/splanguage"
+                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="City" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="Birth Date" />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/border_color_gray"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:singleLine="true" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="DD/MM/YYYY"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="Expire Date" />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/border_color_gray"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:singleLine="true" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="DD/MM/YYYY"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/chkExpired"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:checked="true"
+                    android:fontFamily="@font/montserrat_regular" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="Local Address" />
+
+                    <EditText
+                        android:id="@+id/edtAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border_color_gray"
+                        android:drawablePadding="10dp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:inputType="textMultiLine"
+                        android:lines="3"
+                        android:maxLines="3"
+                        android:minLines="3"
+                        android:scrollbars="vertical"
+                        android:singleLine="true" />
+
+                </LinearLayout>
+
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="5dp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:text="Rented" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

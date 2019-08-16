@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.krs.community.R;
+import com.krs.community.fragments.BrowseByCityFragment;
 import com.krs.community.fragments.CalendarFragment;
 import com.krs.community.fragments.CommitteeFragment;
 import com.krs.community.fragments.DashboardFragment;

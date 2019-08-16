@@ -18,6 +18,7 @@ import com.krs.community.fragments.MainDetailsFragment;
 import com.krs.community.fragments.MatrimonyDetailsFragment;
 import com.krs.community.fragments.PersonalDetailsFragment;
 import com.krs.community.fragments.ProfessionalDetailsFragment;
+import com.krs.community.utils.ImageSteps;
 import com.krs.community.utils.Utility;
 
 
@@ -68,6 +69,12 @@ public class ProfileDetailActivity extends AppCompatActivity {
         adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         viewpager.setAdapter(adapterViewPager);
 
+
+        ImageSteps imageSteps=findViewById(R.id.imageSteps);
+        imageSteps.setSteps(R.drawable.one,R.drawable.two,R.drawable.three,R.drawable.four);
+        imageSteps.setScaleUp(2.0f);
+        imageSteps.setAnimationDuration(500);
+        imageSteps.setupWithViewPager(viewpager);
 
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/img_close"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:background="@drawable/left_arrow" />
 
         <TextView
@@ -27,13 +27,26 @@
             android:layout_marginLeft="18dp"
             android:layout_weight="1"
             android:text="My Profile"
+            android:textColor="@color/black1"
             android:fontFamily="@font/montserrat_semibold"
             android:textSize="18sp"     />
 
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:textSize="18sp"
+            android:text="Save"
+            android:fontFamily="@font/montserrat_medium"
+            android:textColor="@color/black"
+            android:layout_height="wrap_content" />
+
         <ImageView
-            android:layout_width="25dp"
+            android:layout_marginLeft="20dp"
+            android:layout_width="22dp"
             android:background="@drawable/delete_color_black"
-            android:layout_height="25dp" />
+            android:layout_height="22dp" />
+
+
 
 
     </LinearLayout>
@@ -72,7 +85,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_margin="10dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -84,8 +97,8 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:background="@drawable/view_family" />
 
             <TextView
@@ -110,8 +123,8 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:background="@drawable/user_edit" />
 
             <TextView
@@ -135,9 +148,18 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:layout_width="wrap_content"
-                android:layout_height="30dp" />
+
+            <com.github.angads25.toggle.widget.LabeledSwitch
+                android:id="@+id/switch4"
+                android:layout_width="55dp"
+                android:layout_height="25dp"
+                android:textSize="10sp"
+                app:on="false"
+                app:textOn="ON"
+                app:textOff="OFF"
+                app:colorOn="@color/colorPrimary"
+                app:colorBorder="@color/colorPrimary"/>
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -153,6 +175,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginLeft="20dp"
+        android:visibility="gone"
         android:layout_marginRight="20dp"
         android:gravity="center_vertical">
 
@@ -229,8 +252,17 @@
 
     </FrameLayout>
 
+
+    <com.krs.community.utils.ImageSteps
+        android:background="@color/white"
+        android:id="@+id/imageSteps"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:default_color="@color/gray_btn_bg_color"/>
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -239,10 +271,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_mid_light_gray"
+        android:background="@drawable/round1_corner_mid_gray"
         android:gravity="bottom|center_horizontal"
         android:orientation="horizontal"
-        android:paddingTop="5dp"
+
+        android:visibility="gone"
         android:paddingBottom="5dp">
 
         <Button

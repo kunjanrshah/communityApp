@@ -3,25 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:background="@drawable/border"
-        android:orientation="vertical"
-        android:padding="5dp">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Personal"
-        android:padding="10dp"
-        android:fontFamily="@font/montserrat_semibold"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-         />
+    android:background="@drawable/border"
+    android:orientation="vertical"
+    android:padding="10dp"   >
 
     <ScrollView
         android:layout_width="match_parent"
@@ -40,6 +24,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Personal"
+                    android:padding="5dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -286,5 +280,4 @@
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
 </LinearLayout>
