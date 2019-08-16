@@ -217,10 +217,10 @@ public class DashboardFragment extends Fragment {
                 switch (position)
                 {
                    case 0:
-                        Utility.movetoFragment(getActivity(),new ByQRCodeFragment());
+                        Utility.movetoFragment(getActivity(),new BrowseByCityFragment());
                        break;
                     case 1:
-
+                        Utility.movetoFragment(getActivity(),new ByQRCodeFragment());
                         break;
                     case 2:
                         Utility.movetoFragment(getActivity(),new SearchByDistanceFragment());
