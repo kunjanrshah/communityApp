@@ -51,12 +51,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.krs.community.R;
+import com.krs.community.activity.BaseActivity;
 import com.krs.community.app.AppController;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 import com.nightonke.boommenu.Util;
@@ -329,6 +331,7 @@ public class Utility {
         return true;
     }
 
+
     public static boolean hasCAMARA(@NonNull Context mContext) {
         return (hasPermission(mContext, Manifest.permission.CAMERA));
     }
@@ -350,6 +353,7 @@ public class Utility {
     public static boolean hasPermission(@NonNull Context mContext, @NonNull String perm) {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
     }
+
 
     public static void movetoFragment(Activity activity, Fragment fragment) {
         FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();

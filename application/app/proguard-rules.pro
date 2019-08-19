@@ -19,3 +19,6 @@
 -keep class androidx.appcompat.widget.SearchView { *; }
 -keepattributes Signature
 -keepattributes *Annotation*
+-dontwarn com.yalantis.ucrop**
+-keep class com.yalantis.ucrop** { *; }
+-keep interface com.yalantis.ucrop** { *; }

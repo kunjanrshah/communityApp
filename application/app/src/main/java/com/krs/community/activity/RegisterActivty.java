@@ -1,8 +1,8 @@
 package com.krs.community.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -12,6 +12,8 @@ import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,16 +27,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkError;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.krs.community.R;
 import com.krs.community.app.AppController;
 import com.krs.community.utils.AppConstants;
@@ -42,6 +37,10 @@ import com.krs.community.utils.CountryData;
 import com.krs.community.utils.Utility;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+import com.yalantis.ucrop.UCrop;
+import com.yalantis.ucrop.UCropFragment;
+import com.yalantis.ucrop.UCropFragmentCallback;
+import com.yalantis.ucrop.model.AspectRatio;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,20 +48,22 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
-
-import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
-import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
-import static com.krs.community.utils.AppConstants.INIT_TIMEOUT;
-import static com.krs.community.utils.Utility.hideProgressDialog;
 import static com.krs.community.utils.Utility.watchYoutubeVideo;
+import static com.yalantis.ucrop.UCrop.Options;
+import static com.yalantis.ucrop.UCrop.REQUEST_CROP;
+import static com.yalantis.ucrop.UCrop.RESULT_ERROR;
+import static com.yalantis.ucrop.UCrop.getError;
+import static com.yalantis.ucrop.UCrop.getOutput;
+import static com.yalantis.ucrop.UCrop.of;
 
-public class RegisterActivty extends Activity {
+public class RegisterActivty extends BaseActivity implements UCropFragmentCallback {
 
+    private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage";
     private static String TAG = RegisterActivty.class.getSimpleName();
     private TextView txt_already, txt_how_register;
     private ImageView img_back;
@@ -78,6 +79,8 @@ public class RegisterActivty extends Activity {
     private Spinner spinnerCountries;
     private Spinner sp_community, sp_region;
     private AutoCompleteTextView txtCity;
+    private int requestMode = 1;
+    private boolean mShowLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,15 +112,6 @@ public class RegisterActivty extends Activity {
             Utility.fade(this);
         });
 
-        btn_register.setOnClickListener(v -> {
-
-            Intent mIntent = new Intent(RegisterActivty.this, DashboardActivity.class);
-            startActivity(mIntent);
-            finish();
-            //RegistrationWS();
-        });
-
-        img_profile.setOnClickListener(v -> cropImageActivity());
 
         img_cancel.setOnClickListener(v -> {
             img_profile.setImageResource(R.drawable.man_reg);
@@ -197,7 +191,7 @@ public class RegisterActivty extends Activity {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
                 ((TextView) v).setTextSize(18);
-                ((TextView) v).setGravity(Gravity.LEFT| Gravity.CENTER_VERTICAL);
+                ((TextView) v).setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
                 ((TextView) v).setTextColor(getResources().getColor(R.color.colorHint));
                 return v;
             }
@@ -249,7 +243,87 @@ public class RegisterActivty extends Activity {
             Utility.changeStatusbarColor(this, R.color.colorBG, false);
         }
 
+
+        MaterialTapTargetPrompt registerPrompt = new MaterialTapTargetPrompt.Builder(RegisterActivty.this)
+                .setTarget(R.id.btn_register)
+                .setBackButtonDismissEnabled(false)
+                .setBackgroundColour(getResources().getColor(R.color.colorPrimary))
+                .setPrimaryText("નવો પરિવાર રેજીસ્ટર કરો.")
+                .setSecondaryText("બધી જ અગત્ય ની ફેમિલી હેડ ની વીગતો ભરી નવી ફેમિલી બનાવા માટે રેજીસ્ટર બટન પર ક્લિક કરો.")
+                .setPromptStateChangeListener((prompt, state) -> {
+                    if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+                        prompt.dismiss();
+                    }
+                }).create();
+
+        MaterialTapTargetPrompt photoPrompt = new MaterialTapTargetPrompt.Builder(RegisterActivty.this)
+                .setTarget(R.id.img_profile)
+                .setAutoFinish(false)
+                .setAutoDismiss(false)
+                .setBackButtonDismissEnabled(false)
+                .setBackgroundColour(getResources().getColor(R.color.colorPrimary))
+                .setPrimaryText("તમારો પ્રોફાઈલ ફોટો અપલોડ કરો.")
+                .setSecondaryText("મોબાઈલ ગેલેરી માંથી તમારો મનપસંદ ફોટો સિલેક્ટ કરો અને મનપસંદ ઈફેક્ટ આપી ને સેવ કરો.")
+                .setPromptStateChangeListener((prompt, state) -> {
+                    if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+                        prompt.dismiss();
+                        assert registerPrompt != null;
+                        registerPrompt.show();
+                    }
+                })
+                .show();
+
+
+        img_profile.setOnClickListener(v ->
+        {
+            if (photoPrompt.getState() == MaterialTapTargetPrompt.STATE_DISMISSED) {
+                pickFromGallery();
+            }
+
+        });
+
+
+        btn_register.setOnClickListener(v -> {
+
+            if (registerPrompt.getState() == MaterialTapTargetPrompt.STATE_DISMISSED) {
+                Intent mIntent = new Intent(RegisterActivty.this, DashboardActivity.class);
+                startActivity(mIntent);
+                finish();
+            }
+        });
     }
+
+
+    private void pickFromGallery() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (!Utility.hasPermission(this,"READ_EXTERNAL_STORAGE")) {
+                    new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                            .setTitleText("Storage read Permission")
+                            .setContentText("Permission is needed to pick image from gallery for your profile")
+                            .setConfirmText("Yes, please!")
+                            .setCancelText("No!")
+                            .showCancelButton(true)
+                            .setConfirmClickListener(sDialog -> {
+                                sDialog.dismiss();
+                                requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, "Storage read permission is needed to pick files.", REQUEST_STORAGE_READ_ACCESS_PERMISSION);
+                            })
+                            .show();
+                }
+            }
+        } else {
+
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT).setType("image/*").addCategory(Intent.CATEGORY_OPENABLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                String[] mimeTypes = {"image/jpeg", "image/png"};
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+            }
+
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestMode);
+        }
+    }
+
 
     private void setCityListAdapter() {
         String citylist = AppController.getInstance().mSharedPreferences.getString(getString(R.string.CityList_SP), "");
@@ -309,7 +383,24 @@ public class RegisterActivty extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Uri imageUri = null;
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == requestMode) {
+                final Uri selectedUri = data.getData();
+                if (selectedUri != null) {
+                    startCrop(selectedUri);
+                } else {
+                    Toast.makeText(RegisterActivty.this, "Cannot retrieve selected image", Toast.LENGTH_SHORT).show();
+                }
+            } else if (requestCode == REQUEST_CROP) {
+                handleCropResult(data);
+            }
+        }
+        if (resultCode == RESULT_ERROR) {
+            handleCropError(data);
+        }
+
+        /*Uri imageUri = null;
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             imageUri = CropImage.getPickImageResultUri(RegisterActivty.this, data);
             if (CropImage.hasPermissionInManifest(RegisterActivty.this, Manifest.permission.READ_EXTERNAL_STORAGE) && CropImage.hasPermissionInManifest(RegisterActivty.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -344,155 +435,136 @@ public class RegisterActivty extends Activity {
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(RegisterActivty.this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
             }
+        }*/
+    }
+
+    private void handleCropResult(@NonNull Intent result) {
+        final Uri resultUri = getOutput(result);
+        if (resultUri != null) {
+
+            Log.d(TAG, "resultUri: " + resultUri);
+
+            try {
+
+                File f = new File(String.valueOf(resultUri.getPath()));
+
+                runOnUiThread(() -> {
+                    Bitmap bmp1 = null;
+                    try {
+                        bmp1 = Utility.getBitmap(this, f);
+                        str_profile_hash = Utility.getBase64(bmp1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                //Bitmap bmp= decodeFile(f);
+                //runOnUiThread(() -> str_profile_hash = Utility.getBase64(bmp));
+
+                img_cancel.setVisibility(View.VISIBLE);
+                img_profile.setImageURI(resultUri);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            Toast.makeText(RegisterActivty.this, "Cannot retrieve cropped image", Toast.LENGTH_SHORT).show();
         }
     }
 
-
-    private void RegistrationWS() {
-        if (Utility.isOnline(this)) {
-            String name = edt_head_name.getText().toString().trim();
-            String surname = edt_head_surname.getText().toString().trim();
-            String email = edt_email_id.getText().toString().trim();
-            String mobile = edt_mobile.getText().toString().trim();
-            String password = edt_password.getText().toString().trim();
-            String cpassword = edt_cpassword.getText().toString().trim();
-            String address = edt_address.getText().toString().trim();
-            String city = txtCity.getText().toString().trim();
-
-            if (!name.isEmpty()
-                    && !surname.isEmpty()
-                    && !email.isEmpty()
-                    && !mobile.isEmpty()
-                    && !password.isEmpty()
-                    && !cpassword.isEmpty()
-                    && !city.isEmpty()
-                    && !address.isEmpty()) {
-            } else {
-                Utility.alert(RegisterActivty.this, getString(R.string.err_msg_blank));
-                return;
-            }
-
-            if (mobile.length() != 10) {
-                Utility.alert(RegisterActivty.this, getString(R.string.invalid_mobile_range));
-                return;
-            }
-            /*String code = CountryData.countryAreaCodes[spinnerCountries.getSelectedItemPosition()];
-            mobile=code+mobile;*/
-
-            if (!email.isEmpty()) {
-                if (Utility.isValidEmail(email)) {
-                    Utility.alert(RegisterActivty.this, getString(R.string.invalid_email));
-                    return;
-                }
-            }
-
-            if (!password.isEmpty() && !cpassword.isEmpty()) {
-                if (!password.equals(cpassword)) {
-                    Utility.alert(RegisterActivty.this, getString(R.string.err_msg_repeat_password));
-                    return;
-                }
-            }
-
-            if (!surname.isEmpty() && !city.isEmpty() && !email.isEmpty() && !name.isEmpty() && !mobile.isEmpty() && !password.isEmpty() && !cpassword.isEmpty() && !address.isEmpty()) {
-                if (password.equalsIgnoreCase(cpassword)) {
-                    if (mobile.length() == 10) {
-                        try {
-                            Utility.showProgressDialog(this);
-                            json = new JSONObject();
-                            json.put(AppConstants.FIRST_NAME, name);
-                            json.put(AppConstants.LAST_NAME, surname);
-                            json.put(AppConstants.EMAIL_ADDRESS, email);
-                            json.put(AppConstants.MOBILE, mobile);
-                            json.put(AppConstants.PASSWORD, password);
-                            json.put(AppConstants.REPEAT_PASSWORD, cpassword);
-                            json.put(AppConstants.ADDRESS, address);
-                            json.put(AppConstants.CITY, city);
-
-                            if (add_new != null && add_new.equalsIgnoreCase(AppConstants.SEARCH_FRAGMENT)) {
-                                json.put(AppConstants.STATUS, "1");
-                            } else {
-                                json.put(AppConstants.STATUS, "0");
-                            }
-
-                            if (!str_profile_hash.isEmpty()) {
-                                json.put(AppConstants.PROFILE_PIC, str_profile_hash);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConstants.SIGNUP_URL, json, response -> {
-                            Log.d(TAG, "SignupWS: " + response.toString());
-
-                            try {
-                                hideProgressDialog();
-                                boolean success = response.getBoolean(AppConstants.SUCCESS);
-                                String message = response.getString(AppConstants.MESSAGE);
-/*                                    if (success) {
-                                    if (message.contains("admin")) {
-                                        inputName.setText("");
-                                        inputEmail.setText("");
-                                        inputMobile.setText("");
-                                        inputPassword.setText("");
-                                        inputConformPassword.setText("");
-                                        inputPassword.setText("");
-                                        edt_spouse_name.setText("");
-                                        edt_address.setText("");
-                                        togglePage();
-                                    }
-                                }*/
-                                Utility.alert(RegisterActivty.this, message);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }, error -> {
-                            hideProgressDialog();
-                            VolleyLog.d(TAG, "Error: " + error.getMessage());
-                            String message = null;
-                            if (error instanceof NetworkError) {
-                                message = getString(R.string.can_not_connect_to_internet);
-                            } else if (error instanceof ServerError) {
-                                message = getString(R.string.server_could_not_found);
-                            } else if (error instanceof AuthFailureError) {
-                                message = getString(R.string.can_not_connect_to_internet);
-                            } else if (error instanceof ParseError) {
-                                message = getString(R.string.parsing_error);
-                            } else if (error instanceof TimeoutError) {
-                                message = getString(R.string.connection_timeout);
-                            }
-                            //Toast.makeText(RegisterActivty.this, "" + message, Toast.LENGTH_LONG).show();
-                            Utility.alert(RegisterActivty.this, message);
-                        }) {
-                            @NonNull
-                            @Override
-                            public Map<String, String> getHeaders() {
-                                Map<String, String> params = new HashMap<>();
-                                params.put(AppConstants.API_KEY, AppConstants.API_KEY_VALUE);
-                                params.put(AppConstants.DEVICE_TYPE, AppConstants.DEVICE_TYPE_VALUE);
-                                params.put(AppConstants.DEVICE_ID, AppConstants.DEVICE_ID_VALUE);
-                                assert AppController.getInstance().mSharedPreferences != null;
-                                params.put(AppConstants.DEVICE_TOKEN, AppController.getInstance().mSharedPreferences.getString(AppConstants.DEVICE_TOKEN, ""));
-                                return params;
-                            }
-                        };
-
-                        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
-                        AppController.getInstance().addToRequestQueue(jsonObjReq, "");
-                    } else {
-                        Utility.alert(RegisterActivty.this, getString(R.string.invalid_mobile_range));
-                        //Toast.makeText(RegisterActivty.this, getString(R.string.err_msg_invalid_mobile), Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Utility.alert(RegisterActivty.this, getString(R.string.err_msg_repeat_password));
-                    //Toast.makeText(RegisterActivty.this, getString(R.string.err_msg_repeat_password), Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Utility.alert(RegisterActivty.this, getString(R.string.err_msg_blank));
-                //Toast.makeText(RegisterActivty.this, getString(R.string.err_msg_blank), Toast.LENGTH_LONG).show();
-            }
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+    private void handleCropError(@NonNull Intent result) {
+        final Throwable cropError = getError(result);
+        if (cropError != null) {
+            Log.e(TAG, "handleCropError: ", cropError);
+            Toast.makeText(RegisterActivty.this, cropError.getMessage(), Toast.LENGTH_LONG).show();
         } else {
-            Utility.alert(RegisterActivty.this, getString(R.string.can_not_connect_to_internet));
-            //Toast.makeText(RegisterActivty.this, AppConstants.NO_CONNECTION, Toast.LENGTH_LONG).show();
+            Toast.makeText(RegisterActivty.this, "Unexpected error", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void startCrop(@NonNull Uri uri) {
+        String destinationFileName = SAMPLE_CROPPED_IMAGE_NAME + ".jpg";
+        UCrop uCrop = of(uri, Uri.fromFile(new File(getCacheDir(), destinationFileName)));
+        uCrop = advancedConfig(uCrop);
+        uCrop.start(RegisterActivty.this);
+    }
+
+    private UCrop advancedConfig(@NonNull UCrop uCrop) {
+        Options options = new Options();
+        options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+
+        options.setCompressionQuality(100);
+
+        options.setHideBottomControls(false);
+        options.setFreeStyleCropEnabled(true);
+
+        options.setBrightnessEnabled(true);
+        options.setContrastEnabled(true);
+        options.setSaturationEnabled(true);
+        options.setSharpnessEnabled(true);
+
+        options.setImageToCropBoundsAnimDuration(666);
+        //  options.setDimmedLayerColor(getResources().getColor(R.color.colorPrimary));
+        //options.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        options.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
+        options.setActiveWidgetColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        options.setToolbarWidgetColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        //options.setRootViewBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+
+        // Aspect ratio options
+        options.setAspectRatioOptions(1,
+                new AspectRatio("WOW", 1, 2),
+                new AspectRatio("MUCH", 3, 4),
+                new AspectRatio("RATIO", 0f, 0f),
+                new AspectRatio("SO", 16, 9),
+                new AspectRatio("ASPECT", 1, 1));
+
+        return uCrop.withOptions(options);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_STORAGE_READ_ACCESS_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pickFromGallery();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.menu_crop).setVisible(!mShowLoader);
+        menu.findItem(R.id.menu_loader).setVisible(mShowLoader);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void loadingProgress(boolean showLoader) {
+        mShowLoader = showLoader;
+        supportInvalidateOptionsMenu();
+    }
+
+    @Override
+    public void onCropFinish(UCropFragment.UCropResult result) {
+        switch (result.mResultCode) {
+            case RESULT_OK:
+                handleCropResult(result.mResultData);
+                break;
+            case RESULT_ERROR:
+                handleCropError(result.mResultData);
+                break;
         }
     }
 }
