@@ -1,6 +1,7 @@
 package com.krs.community.activity;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -27,11 +28,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.krs.community.R;
-import com.krs.community.app.AppController;
 import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.CountryData;
 import com.krs.community.utils.Utility;
@@ -42,12 +44,10 @@ import com.yalantis.ucrop.UCropFragment;
 import com.yalantis.ucrop.UCropFragmentCallback;
 import com.yalantis.ucrop.model.AspectRatio;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -94,7 +94,7 @@ public class RegisterActivty extends BaseActivity implements UCropFragmentCallba
             Utility.changeStatusbarColor(this, R.color.colorBG, false);
         }
         Memory_Allocation();
-        runOnUiThread(() -> setCityListAdapter());
+        /*runOnUiThread(() -> setCityListAdapter());*/
 
         txt_already.setOnClickListener(v -> {
             Intent mIntent = new Intent(RegisterActivty.this, LoginActivity.class);
@@ -293,24 +293,11 @@ public class RegisterActivty extends BaseActivity implements UCropFragmentCallba
         });
     }
 
-
     private void pickFromGallery() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
             if (Build.VERSION.SDK_INT >= 23) {
-                if (!Utility.hasPermission(this,"READ_EXTERNAL_STORAGE")) {
-                    new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                            .setTitleText("Storage read Permission")
-                            .setContentText("Permission is needed to pick image from gallery for your profile")
-                            .setConfirmText("Yes, please!")
-                            .setCancelText("No!")
-                            .showCancelButton(true)
-                            .setConfirmClickListener(sDialog -> {
-                                sDialog.dismiss();
-                                requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, "Storage read permission is needed to pick files.", REQUEST_STORAGE_READ_ACCESS_PERMISSION);
-                            })
-                            .show();
-                }
+                prompt_read_permission();
             }
         } else {
 
@@ -325,7 +312,25 @@ public class RegisterActivty extends BaseActivity implements UCropFragmentCallba
     }
 
 
-    private void setCityListAdapter() {
+    private void prompt_read_permission() {
+        if (!Utility.hasPermission(this, "READ_EXTERNAL_STORAGE")) {
+            new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                    .setTitleText("Storage read Permission")
+                    .setContentText("Permission is needed to pick image from gallery for your Profile")
+                    .setConfirmText("Yes, please!")
+                    .setCancelText("No!")
+                    .showCancelButton(true)
+                    .setConfirmClickListener(sDialog -> {
+                        sDialog.dismiss();
+                        ActivityCompat.requestPermissions(RegisterActivty.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_STORAGE_READ_ACCESS_PERMISSION);
+                        //requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, "Storage read permission is needed to pick files.", REQUEST_STORAGE_READ_ACCESS_PERMISSION);
+                    })
+                    .show();
+        }
+    }
+
+
+    /* private void setCityListAdapter() {
         String citylist = AppController.getInstance().mSharedPreferences.getString(getString(R.string.CityList_SP), "");
         ArrayList<String> lstCities = new ArrayList<>();
         try {
@@ -342,7 +347,7 @@ public class RegisterActivty extends BaseActivity implements UCropFragmentCallba
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, lstCities);
         txtCity.setThreshold(2);
         txtCity.setAdapter(adapter);
-    }
+    }*/
 
     private void Memory_Allocation() {
         sp_community = findViewById(R.id.sp_community);
@@ -523,18 +528,45 @@ public class RegisterActivty extends BaseActivity implements UCropFragmentCallba
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_STORAGE_READ_ACCESS_PERMISSION:
+
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickFromGallery();
+                } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
+                    displayNeverAskAgainDialog();
+                } else {
+                    prompt_read_permission();
                 }
                 break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
+
+    private void displayNeverAskAgainDialog() {
+
+        new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                .setTitleText("Storage read Permission")
+                .setContentText("Permission is needed to pick image from gallery for your Profile. Please permit the permission through "
+                        + "Settings screen.\n\nSelect Permissions -> Enable permission")
+                .setConfirmText("Permit Manually")
+                .setCancelText("Cancel")
+                .showCancelButton(true)
+                .setConfirmClickListener(sDialog -> {
+                    sDialog.dismiss();
+                    Intent intent = new Intent();
+                    intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                })
+                .show();
+        }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {

@@ -258,7 +258,7 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
             selectedItems.put(pos, true);
             animationItemsIndex.put(pos, true);
         }
-        adapter.notifyItemChanged(pos);
+        adapter.notifyItemChanged(pos+1);
     }
 
     private void clearSelections() {

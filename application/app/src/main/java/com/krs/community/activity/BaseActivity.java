@@ -39,14 +39,14 @@ public class BaseActivity extends AppCompatActivity {
      */
     protected void requestPermission(final String permission, String rationale, final int requestCode) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-            showAlertDialog("Permission needed", rationale,
+            ActivityCompat.requestPermissions(BaseActivity.this,new String[]{permission}, requestCode);
+            /*showAlertDialog("Permission needed", rationale,
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(BaseActivity.this,
-                                    new String[]{permission}, requestCode);
+
                         }
-                    }, "OK", null, "Cancel");
+                    }, "OK", null, "Cancel");*/
         } else {
             ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
         }

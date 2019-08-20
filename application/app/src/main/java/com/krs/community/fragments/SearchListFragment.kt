@@ -44,7 +44,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
     private var swipeRefreshLayout: SwipeRefreshLayout? = null
     private val messages = ArrayList<Message>()
     lateinit var view1: View
-    private var adapter: ParallaxRecyclerAdapter<Message>? =null
+    private var rvAdapter: ParallaxRecyclerAdapter<Message>? =null
     private var selectedItems: SparseBooleanArray? = SparseBooleanArray()
     private var animationItemsIndex: SparseBooleanArray? = SparseBooleanArray()
     private var reverseAllAnimations = false
@@ -67,7 +67,8 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
             selectedItems!!.put(pos, true)
             animationItemsIndex!!.put(pos, true)
         }
-        adapter!!.notifyItemChanged(pos)
+
+        rvAdapter?.notifyItemChanged(pos+1)
     }
 
     private fun toggleSelection(position: Int) {
@@ -76,7 +77,6 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
 
         if (count == 0) {
             actionMode!!.finish()
-
         } else {
             actionMode!!.title = count.toString()
             actionMode!!.invalidate()
@@ -109,7 +109,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
         for (i in selectedItemPositions.indices.reversed()) {
             removeData(selectedItemPositions.get(i))
         }
-        adapter?.notifyDataSetChanged()
+        rvAdapter?.notifyDataSetChanged()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -128,7 +128,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
         actionModeCallback = ActionModeCallback()
         (activity as AppCompatActivity).supportActionBar!!.title = "Smart Search"
 
-        adapter=object: ParallaxRecyclerAdapter<Message>(messages) {
+        rvAdapter=object: ParallaxRecyclerAdapter<Message>(messages) {
             override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<Message>?): Int {
                 return messages.size
             }
@@ -216,7 +216,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
             Utility.movetoFragment(activity, DashboardFragment())
         }
 
-        adapter?.setParallaxHeader(header, rv_search)
+        rvAdapter?.setParallaxHeader(header, rv_search)
 
         getInbox()
         setupList()
@@ -251,14 +251,14 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
     private fun applyClickEvents(holder: MyViewHolder, position: Int) {
         holder.iconContainer.setOnClickListener { view -> onIconClicked(position) }
 
-        holder.messageContainer.setOnClickListener { view -> onMessageRowClicked(position,holder.itemView) }
+        /*holder.messageContainer.setOnClickListener { view -> onMessageRowClicked(position,holder.itemView) }
 
         holder.messageContainer.setOnLongClickListener { view ->
 
             enableActionMode(position)
 
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-        }
+        }*/
     }
 
     private fun applyProfilePicture(holder: MyViewHolder, message: Message) {
@@ -309,7 +309,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
     fun clearSelections() {
         reverseAllAnimations = true
         selectedItems!!.clear()
-        adapter!!.notifyDataSetChanged()
+        rvAdapter!!.notifyDataSetChanged()
     }
 
     private fun resetCurrentIndex() {
@@ -351,9 +351,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
 
         rv_search!!.layoutManager = LinearLayoutManager(activity)
 
-
-
-        rv_search!!.adapter = adapter
+        rv_search!!.adapter = rvAdapter
         rv_search!!.setHasFixedSize(true)
         Handler().postDelayed({
             // stop animating Shimmer and hideOverlay the layout
@@ -380,7 +378,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
             messages.add(message)
         }
 
-        adapter?.notifyDataSetChanged()
+        rvAdapter?.notifyDataSetChanged()
         swipeRefreshLayout?.isRefreshing = false
     }
 
