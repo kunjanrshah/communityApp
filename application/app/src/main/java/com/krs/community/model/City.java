@@ -8,8 +8,6 @@ public class City {
 
     private String cityName;
 
-
-
     public String getCityName() {
         return cityName;
     }

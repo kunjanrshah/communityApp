@@ -57,11 +57,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.gson.Gson;
 import com.krs.community.R;
 import com.krs.community.activity.BaseActivity;
 import com.krs.community.app.AppController;
+import com.krs.community.model.ErrorObject;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 import com.nightonke.boommenu.Util;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -87,6 +91,8 @@ import java.util.regex.Pattern;
 
 public class Utility {
 
+    private static Logger logger = new Logger(Utility.class.getSimpleName());
+
     public static final int REQ_CODE_SPEECH_INPUT = 100;
     public static String Title = "";
     public static String yyyy_MM_dd = "yyyy-MM-dd";
@@ -103,6 +109,40 @@ public class Utility {
     private static int[] textResources = new int[]{R.string._export, R.string._qrcode, R.string._share, R.string._location, R.string._whatsapp, R.string._family_tree};
     private static int imageResourceIndex = 0;
     private static int textResourceIndex = 0;
+
+    /**
+     * This method returns a Json object for handling Force update error
+     *
+     * @return
+     */
+    public static JSONObject getServerErrorJsonObject(Context context) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put(AppConstants.ErrorClass.STATUS, 505);
+            jsonObject.put(AppConstants.ErrorClass.CODE, 3000);
+            jsonObject.put(AppConstants.ErrorClass.MESSAGE, context.getString(R.string.server_not_available));
+            jsonObject.put(AppConstants.ErrorClass.DEVELOPER_MESSAGE, context.getString(R.string.server_not_available));
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        return jsonObject;
+    }
+
+    /**
+     * This method returns a Json object for handling Force update error
+     *
+     * @return
+     */
+    public static ErrorObject getServerErrorPojo(Context context) {
+        try {
+            Gson gson = new Gson();
+            return gson.fromJson(getServerErrorJsonObject(context).toString(), ErrorObject.class);
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        return null;
+    }
+
 
     public static boolean IsValidate(@NonNull final String time) {
         String TIME24HOURS_PATTERN = "([01]?[0-9]|2[0-3]):[0-5][0-9]";

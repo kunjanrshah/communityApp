@@ -33,6 +33,7 @@
      <string name="how_event_manage_12">12. Event management by Admin</string>
      <string name="how_admin_manage_13">13. Admin Management</string>-->
 
+    <string name="server_not_available">Server error</string>
 
     <string name="login_1">Ii5POjxrXA4</string>
 
@@ -245,6 +246,10 @@
     <string name="_location">Location</string>
     <string name="_whatsapp">WhatsApp</string>
     <string name="_family_tree">Family Tree</string>
+    <string name="last_name">Last Name</string>
+    <string name="apikey" translatable="false">apikey</string>
+    <string name="devicetoken" translatable="false">devicetoken</string>
+    <string name="intudid" translatable="false">intudid</string>
 
 
 </resources>

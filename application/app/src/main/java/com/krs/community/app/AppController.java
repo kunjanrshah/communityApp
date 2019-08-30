@@ -24,9 +24,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.krs.community.R;
+import com.krs.community.retrofit.ApiServices;
+import com.krs.community.retrofit.RetrofitBase;
 import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.ConnectivityReceiver;
 import com.krs.community.utils.LocaleHelper;
+import com.krs.community.utils.Logger;
 import com.krs.community.volley.LruBitmapCache;
 
 import java.util.ArrayList;
@@ -54,6 +57,7 @@ public class AppController extends Application {
     private ImageLoader mImageLoader;
     LruBitmapCache mLruBitmapCache;
     public Typeface typeface,typeface_bold;
+    public RetrofitBase retrofitBase;
 
     public static synchronized AppController getInstance() {
         return mInstance;
@@ -65,6 +69,7 @@ public class AppController extends Application {
 
         typeface = ResourcesCompat.getFont(getApplicationContext(),R.font.montserrat_regular);
         typeface_bold = ResourcesCompat.getFont(getApplicationContext(),R.font.montserrat_semibold);
+        retrofitBase=new RetrofitBase(this,false);
 
         Fresco.initialize(getApplicationContext());
 

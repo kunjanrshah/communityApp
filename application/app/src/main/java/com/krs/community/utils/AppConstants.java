@@ -253,6 +253,9 @@ public class AppConstants {
     public static final String IMG_SFATHER_URL = "img_sfather_url";
     public static final String IMG_SMOTHER_URL = "img_smother_url";
     public static final String CHILD_IMAGE_URL = "child_image_url";
+
+    public static final String APPLICATION_BASE_URL = "https://www.muslimghanchisamaj.in/API/";
+
     private static final String BASE_URL = "http://www.superbinstruments.com/directory-dev";
     //  private static final String BASE_URL = "http://www.superbinstruments.com/yadav";
     public static final String LOGIN_URL = BASE_URL + "/API/login";
@@ -282,4 +285,40 @@ public class AppConstants {
     public static final String GET_MASTER_DATA_URL = BASE_URL + "/API/getMasterData";
     public static final String GET_USERS_BY_DATE_URL = BASE_URL + "/API/getUsersByDate";
     public static String DEVICE_ID_VALUE = "";
+
+
+    public static class StateRequest {
+        final String state_id;
+        public StateRequest(String state_id) {
+            this.state_id = state_id;
+        }
+    }
+
+    public interface UrlPath {
+        String GET_CITIES = "GetCities";//"yourUrl/here/{parameter}";
+        String GET_STATE = "GetState";
+        String GET_SUBCASTE = "GetLastName";
+    }
+
+    public interface TimeOut {
+        int IMAGE_UPLOAD_CONNECTION_TIMEOUT = 120;
+        int IMAGE_UPLOAD_SOCKET_TIMEOUT = 120;
+        int SOCKET_TIME_OUT = 60;
+        int CONNECTION_TIME_OUT = 60;
+    }
+
+    public interface ErrorClass {
+        String CODE = "code";
+        String STATUS = "status";
+        String MESSAGE = "message";
+        String DEVELOPER_MESSAGE = "developerMessage";
+    }
+
+    //Need unique flags for all apis in case if hitting multiple apis in same activity/fragment
+    public interface ApiFlags {
+        int GET_STATES = 1;
+        int GET_CITIES = 2;
+        int GET_SUBCASTE = 3;
+    }
+
 }

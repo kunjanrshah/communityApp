@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <data>
+        <variable
+            name="registerviewmodel"
+            type="com.krs.community.viewmodel.RegisterViewModel" />
+    </data>
+
+
+<LinearLayout
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBG"
@@ -16,13 +28,14 @@
             android:id="@+id/img_back"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:background="@drawable/left_arrow"
             android:padding="5dp"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal">
@@ -31,27 +44,24 @@
                 android:id="@+id/img_header_logo"
                 android:layout_width="250dp"
                 android:layout_height="23dp"
+                tools:ignore="ContentDescription"
                 android:background="@drawable/app_text_title" />
         </LinearLayout>
 
         <ImageView
             android:layout_width="30dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:orientation="vertical">
-
             <LinearLayout
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -64,26 +74,27 @@
                         android:id="@+id/img_profile"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginStart="30dp"
                         android:src="@drawable/man_reg" />
 
                     <ImageView
                         android:id="@+id/img_cancel"
                         android:layout_width="20dip"
                         android:layout_height="20dip"
-                        android:layout_marginLeft="60dp"
+                        android:layout_marginStart="60dp"
                         android:padding="5dp"
                         android:src="@drawable/add_profile"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        tools:ignore="ContentDescription" />
 
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginEnd="30dp"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:gravity="right"
+                        android:gravity="end"
                         android:text="@string/register_now"
                         android:textSize="20sp" />
 
@@ -98,25 +109,31 @@
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/man_user"
                     android:drawablePadding="10dp"
+                    android:text="@={registerviewmodel.fname}"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_name"
                     android:inputType="textCapSentences"
-                    android:paddingLeft="10dp"
-                    android:singleLine="true" />
+                    android:paddingStart="10dp"
+                    android:paddingEnd="0dp"
+                    android:singleLine="true"
+                    tools:ignore="Autofill" />
 
-                <EditText
-                    android:id="@+id/edt_head_surname"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/register_field_height"
+                    android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/border"
-                    android:drawableStart="@drawable/man_user"
-                    android:drawablePadding="10dp"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:hint="@string/hint_surname"
-                    android:inputType="textCapSentences"
-                    android:paddingLeft="10dp"
-                    android:singleLine="true" />
+                    android:background="@drawable/border">
+
+                    <Spinner
+                        android:id="@+id/sp_lastname"
+                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/register_field_height"
+                        android:spinnerMode="dropdown"
+                        android:text="@string/last_name"
+                        android:textSize="18sp" />
+                </RelativeLayout>
 
 
                 <EditText
@@ -129,9 +146,11 @@
                     android:drawablePadding="10dp"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_email"
-                    android:inputType="textCapSentences"
-                    android:paddingLeft="10dp"
-                    android:singleLine="true" />
+                    android:inputType="textEmailAddress"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="0dp"
+                    android:singleLine="true"
+                    tools:ignore="Autofill" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -157,7 +176,7 @@
                         android:id="@+id/edt_mobile"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         android:background="@drawable/border"
                         android:drawableStart="@drawable/icon"
                         android:drawablePadding="10dp"
@@ -165,8 +184,10 @@
                         android:hint="@string/hint_mobile"
                         android:inputType="number"
                         android:maxLength="10"
-                        android:paddingLeft="10dp"
-                        android:singleLine="true" />
+                        android:paddingEnd="0dp"
+                        android:paddingStart="10dp"
+                        android:singleLine="true"
+                        tools:ignore="Autofill" />
                 </LinearLayout>
 
                 <EditText
@@ -183,9 +204,11 @@
                     android:inputType="textPassword"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    tools:ignore="Autofill" />
 
                 <EditText
+                    tools:ignore="Autofill"
                     android:id="@+id/edt_cpassword"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/register_field_height"
@@ -199,7 +222,7 @@
                     android:inputType="textPassword"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:singleLine="true" />
+                    android:singleLine="true"                   />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -211,8 +234,6 @@
                         android:id="@+id/txtCity"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
                         android:background="@drawable/border"
                         android:drawableStart="@drawable/_city"
                         android:drawablePadding="10dp"
@@ -227,6 +248,7 @@
                 </LinearLayout>
 
                 <EditText
+                    tools:ignore="Autofill"
                     android:id="@+id/edt_address"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
@@ -238,7 +260,8 @@
                     android:hint="@string/hint_address"
                     android:imeOptions="actionDone"
                     android:inputType="textCapSentences"
-                    android:paddingLeft="10dp"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="10dp"
                     android:singleLine="true" />
 
                 <RelativeLayout
@@ -253,7 +276,6 @@
                         style="@style/Widget.AppCompat.DropDownItem.Spinner"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
-                        android:text="Community"
                         android:textSize="18sp" />
                 </RelativeLayout>
 
@@ -305,7 +327,8 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+
     </ScrollView>
 
 </LinearLayout>
+</layout>
