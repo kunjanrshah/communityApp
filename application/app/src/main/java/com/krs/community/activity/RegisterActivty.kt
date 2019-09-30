@@ -19,6 +19,9 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.krs.community.R
 import com.krs.community.app.AppController
@@ -30,6 +33,7 @@ import com.krs.community.utils.CountryData
 import com.krs.community.utils.Logger
 import com.krs.community.utils.Utility
 import com.krs.community.utils.Utility.watchYoutubeVideo
+import com.krs.community.viewmodel.RegisterViewModel
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import com.yalantis.ucrop.UCrop
@@ -45,72 +49,61 @@ import retrofit2.Response
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import java.io.File
 import java.io.IOException
-import android.widget.ArrayAdapter as ArrayAdapter1
+import android.widget.ArrayAdapter
+import com.krs.community.interfaces.IregisterActivity
 
-class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnItemSelectedListener {
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-
-    }
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-
-    }
+class RegisterActivty : BaseActivity(), UCropFragmentCallback, IregisterActivity {
 
     private var str_profile_hash = ""
     private var isShow = true
     private var isShow1 = true
-    private var add_new: String? = ""
+    //private var add_new: String? = ""
     private var mShowLoader: Boolean = false
-    private val requestMode = 1
+    private val PICK_GALLERY_REQUEST = 1
     private lateinit var logger: Logger
-    private lateinit var binding: ActivityRegisterBinding
+    var listStates: ArrayList<String>? = null
+    private lateinit var model:RegisterViewModel
 
-    var listStates: Array<String>? = null
+    companion object {
+        private val SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage"
+        private val TAG = RegisterActivty::class.java.simpleName
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        logger = Logger(TAG)
+        model = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_register)
-        logger = Logger(RegisterActivty.TAG)
+        val binding= DataBindingUtil.setContentView(this,R.layout.activity_register) as ActivityRegisterBinding
 
+        binding.registerviewmodel=model
+        binding.setLifecycleOwner(this)
 
-        val mBundle = intent.extras
-        if (mBundle != null) {
-            add_new = mBundle.getString(AppConstants.SCREEN)
-        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(this, R.color.colorBG, false)
         }
 
+        /*val mBundle = intent.extras
+        if (mBundle != null) {
+            add_new = mBundle.getString(AppConstants.SCREEN)
+        }*/
+
         Memory_Allocation()
 
-        txt_already.setOnClickListener { _ ->
-            val mIntent = Intent(this@RegisterActivty, LoginActivity::class.java)
-            mIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(mIntent)
-            finish()
-            Utility.fade(this)
-        }
+        btn_register?.setOnClickListener { model.onRegisterButtonClick(this)  }
 
-        img_back.setOnClickListener { _ ->
-            val mIntent = Intent(this@RegisterActivty, SplashActivity::class.java)
-            mIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(mIntent)
-            finish()
-            Utility.fade(this)
-        }
+        txt_already?.setOnClickListener { model.onTextAlreadyClicked(this) }
 
+        txt_how_register.setOnClickListener { model.onHowRegisterClicked(this) }
 
-        img_cancel.setOnClickListener { _ ->
-            img_profile!!.setImageResource(R.drawable.man_reg)
+        img_cancel.setOnClickListener {
+            img_profile.setImageResource(R.drawable.man_reg)
+            img_cancel.visibility = View.GONE
             val icon = BitmapFactory.decodeResource(resources, R.drawable.man_reg)
             if (icon != null) {
                 str_profile_hash = Utility.getBase64(icon)
             }
-            img_cancel.visibility = View.GONE
         }
-
-        txt_how_register.setOnClickListener { _ -> watchYoutubeVideo(this@RegisterActivty, resources.getString(R.string.login_1)) }
 
         edt_password.setOnTouchListener(fun(_: View, event: MotionEvent): Boolean {
             val DRAWABLE_RIGHT = 2
@@ -163,8 +156,23 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnIte
             return false
         })
 
+        val arrayAdapter = ArrayAdapter(this, R.layout.my_spinner_style, CountryData.countryNames)
+        spinnerCountries.adapter = arrayAdapter
 
-        spinnerCountries.adapter = object : ArrayAdapter1<String>(this@RegisterActivty, R.layout.my_spinner_style, CountryData.countryNames) {
+        model.getUserStates()
+
+        /*spinnerCountries.onItemSelectedListener=object :AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+              //  Toast.makeText(applicationContext, CountryData.countryNames[position], Toast.LENGTH_SHORT).show()
+            }
+        }*/
+
+/*
+        val adapter = ArrayAdapter<String>(this@RegisterActivty, R.layout.my_spinner_style, CountryData.countryNames) {
 
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val v = super.getView(position, convertView, parent)
@@ -180,7 +188,6 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnIte
                 return v
             }
         }
-
 
         sp_community.adapter = object : ArrayAdapter1<String>(this@RegisterActivty, R.layout.my_spinner_style, CountryData.communityNames) {
 
@@ -199,7 +206,6 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnIte
             }
         }
 
-
         sp_region.adapter = object : ArrayAdapter1<String>(this@RegisterActivty, R.layout.my_spinner_style, CountryData.regionNames) {
 
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -216,14 +222,13 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnIte
                 return v
             }
         }
+*/
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(this, R.color.colorBG, false)
-        }
 
         val registerPrompt = MaterialTapTargetPrompt.Builder(this@RegisterActivty)
                 .setTarget(R.id.btn_register)
+                .setAutoFinish(false)
+                .setAutoDismiss(true)
                 .setBackButtonDismissEnabled(false)
                 .setBackgroundColour(resources.getColor(R.color.colorPrimary))
                 .setPrimaryText("નવો પરિવાર રેજીસ્ટર કરો.")
@@ -251,26 +256,16 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnIte
                 }
                 .show()
 
-
         img_profile.setOnClickListener { v ->
             if (photoPrompt!!.state == MaterialTapTargetPrompt.STATE_DISMISSED) {
                 pickFromGallery()
             }
-
         }
 
 
-        btn_register.setOnClickListener { v ->
 
-            if (registerPrompt!!.state == MaterialTapTargetPrompt.STATE_DISMISSED) {
-                val mIntent = Intent(this@RegisterActivty, DashboardActivity::class.java)
-                startActivity(mIntent)
-                finish()
-            }
-        }
-
-
-        val call = AppController.getInstance().retrofitBase.apiServices.states
+        model.getUserStates()
+        val call = AppController.getInstance().retrofitBase.apiServices.getUserState()
         call.enqueue(object : Callback<RBStates> {
             override fun onResponse(call: Call<RBStates>, response: Response<RBStates>) {
                 if (response.code() == 200) {
@@ -279,10 +274,28 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnIte
 
                         var stateDatum: MutableList<StateDatum>? = stateResponse.data
 
-                        listStates = Array(stateResponse.data.size) {}
+                        /*sp_state.adapter = object : ArrayAdapter1<String>(this@RegisterActivty, R.layout.my_spinner_style, stateDatum)
+                        {
+
+                            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                                val v = super.getView(position, convertView, parent)
+                                (v as TextView).textSize = 18f
+                                v.gravity = Gravity.LEFT or Gravity.CENTER_VERTICAL
+                                v.setTextColor(resources.getColor(R.color.colorHint))
+                                return v
+                            }
+
+                            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                                val v = super.getDropDownView(position, convertView, parent)
+                                (v as TextView).textSize = 20f
+                                return v
+                            }
+                        }*/
+
+                       listStates = ArrayList<String>();
                         var i = 1
                         for (state in stateDatum!!) {
-                            listStates?.set(i, state.state)
+                            listStates?.add( state.state)
                             i++
                         }
 
@@ -298,6 +311,10 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnIte
         })
     }
 
+    override fun getStateList() {
+
+    }
+
     private fun pickFromGallery() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
@@ -308,7 +325,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnIte
             val intent = Intent(Intent.ACTION_GET_CONTENT).setType("image/*").addCategory(Intent.CATEGORY_OPENABLE)
             val mimeTypes = arrayOf("image/jpeg", "image/png")
             intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestMode)
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_GALLERY_REQUEST)
         }
     }
 
@@ -334,7 +351,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnIte
     private fun Memory_Allocation() {
 
         val str = resources.getString(R.string.already_have_a_account_sign_in) + "<b>" + " " + getString(R.string.login) + "</b>"
-        txt_already.text = Html.fromHtml(str)
+        txt_already?.text = Html.fromHtml(str)
     }
 
     private fun cropImageActivity() {
@@ -351,7 +368,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnIte
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RESULT_OK) {
-            if (requestCode == requestMode) {
+            if (requestCode == PICK_GALLERY_REQUEST) {
                 val selectedUri = data!!.data
                 if (selectedUri != null) {
                     startCrop(selectedUri)
@@ -372,7 +389,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnIte
         val resultUri = getOutput(result)
         if (resultUri != null) {
 
-            Log.d(TAG, "resultUri: $resultUri")
+            logger.debug( "resultUri: $resultUri")
 
             try {
 
@@ -404,7 +421,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnIte
     private fun handleCropError(result: Intent) {
         val cropError = getError(result)
         if (cropError != null) {
-            Log.e(TAG, "handleCropError: ", cropError)
+            logger.error(cropError)
             Toast.makeText(this@RegisterActivty, cropError.message, Toast.LENGTH_LONG).show()
         } else {
             Toast.makeText(this@RegisterActivty, "Unexpected error", Toast.LENGTH_SHORT).show()
@@ -497,7 +514,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnIte
 
     override fun loadingProgress(showLoader: Boolean) {
         mShowLoader = showLoader
-        supportInvalidateOptionsMenu()
+      //  supportInvalidateOptionsMenu()
     }
 
     override fun onCropFinish(result: UCropFragment.UCropResult) {
@@ -507,11 +524,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, AdapterView.OnIte
         }
     }
 
-    companion object {
 
-        private val SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage"
-        private val TAG = RegisterActivty::class.java.simpleName
-    }
 }
 
 private operator fun AdapterView.OnItemSelectedListener.invoke(callback: Callback<RBStates>) {

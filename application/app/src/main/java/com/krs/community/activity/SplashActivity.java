@@ -139,6 +139,6 @@ public class SplashActivity extends Activity {
 
         splanguage = findViewById(R.id.splanguage);
         btn_login = findViewById(R.id.btn_login);
-        btn_register = findViewById(R.id.btn_register);
+        btn_register = findViewById(R.id.btn_register1);
     }
 }

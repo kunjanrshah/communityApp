@@ -33,7 +33,6 @@ public class RetrofitBase {
     public RetrofitBase(Context context, boolean addTimeout) {
         this.context = context;
 
-
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         if (BuildConfig.DEBUG) {
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

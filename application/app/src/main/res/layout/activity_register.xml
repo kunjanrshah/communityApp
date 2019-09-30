@@ -7,6 +7,7 @@
         <variable
             name="registerviewmodel"
             type="com.krs.community.viewmodel.RegisterViewModel" />
+
     </data>
 
 
@@ -123,7 +124,7 @@
                     android:layout_height="@dimen/register_field_height"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/border">
+                    android:background="@drawable/name_gradient_spinner">
 
                     <Spinner
                         android:id="@+id/sp_lastname"
@@ -144,6 +145,7 @@
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/close_envelope"
                     android:drawablePadding="10dp"
+                    android:text="@={registerviewmodel.email}"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_email"
                     android:inputType="textEmailAddress"
@@ -199,6 +201,7 @@
                     android:drawableStart="@drawable/lock"
                     android:drawableEnd="@drawable/pwd_hide"
                     android:drawablePadding="10dp"
+                    android:text="@={registerviewmodel.pass}"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_password"
                     android:inputType="textPassword"
@@ -217,6 +220,7 @@
                     android:drawableStart="@drawable/lock"
                     android:drawableEnd="@drawable/pwd_hide"
                     android:drawablePadding="10dp"
+                    android:text="@={registerviewmodel.cpass}"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_conform_password"
                     android:inputType="textPassword"
@@ -224,28 +228,41 @@
                     android:paddingRight="10dp"
                     android:singleLine="true"                   />
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/register_field_height"
+                    android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:orientation="vertical">
+                    android:background="@drawable/state_gradient_spinner">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/txtCity"
+                    <Spinner
+                        android:id="@+id/sp_state"
+                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
-                        android:background="@drawable/border"
-                        android:drawableStart="@drawable/_city"
-                        android:drawablePadding="10dp"
-                        android:ems="10"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:gravity="center_vertical"
-                        android:hint="@string/hint_city"
-                        android:imeOptions="actionNext"
-                        android:padding="10dp"
-                        android:singleLine="true"
+                        android:spinnerMode="dropdown"
+                        android:text="@string/last_name"
                         android:textSize="18sp" />
-                </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/register_field_height"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/gradient_spinner">
+
+                    <Spinner
+                        android:id="@+id/sp_city"
+                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/register_field_height"
+                        android:spinnerMode="dropdown"
+                        android:text="@string/last_name"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+
+
 
                 <EditText
                     tools:ignore="Autofill"
@@ -258,6 +275,7 @@
                     android:drawablePadding="10dp"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_address"
+                    android:text="@={registerviewmodel.address}"
                     android:imeOptions="actionDone"
                     android:inputType="textCapSentences"
                     android:paddingEnd="0dp"
@@ -319,15 +337,13 @@
                     android:id="@+id/txt_already"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="70dp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center_horizontal"
                     android:text="@string/already_have_a_account_sign_in"
                     android:textSize="16sp" />
 
             </LinearLayout>
-
-
     </ScrollView>
 
 </LinearLayout>
