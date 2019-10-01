@@ -13,8 +13,7 @@
 
             <padding android:bottom="3dp" android:left="10dp" android:right="3dp" android:top="3dp" />
         </shape></item>
-        <item ><bitmap android:gravity="left|center"
-            android:src="@drawable/ico_state" />
+        <item ><bitmap android:gravity="left|center" android:src="@drawable/_city" />
         </item>
     </layer-list></item>
 

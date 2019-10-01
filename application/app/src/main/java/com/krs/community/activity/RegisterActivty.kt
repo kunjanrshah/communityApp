@@ -10,29 +10,25 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.InputType
-import android.util.Log
-import android.view.*
+import android.view.Menu
+import android.view.MotionEvent
+import android.view.View
 import android.widget.AdapterView
-import android.widget.TextView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.krs.community.R
-import com.krs.community.app.AppController
 import com.krs.community.databinding.ActivityRegisterBinding
 import com.krs.community.model.RBStates
-import com.krs.community.model.StateDatum
-import com.krs.community.utils.AppConstants
 import com.krs.community.utils.CountryData
 import com.krs.community.utils.Logger
 import com.krs.community.utils.Utility
-import com.krs.community.utils.Utility.watchYoutubeVideo
 import com.krs.community.viewmodel.RegisterViewModel
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
@@ -42,17 +38,12 @@ import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
 import com.yalantis.ucrop.model.AspectRatio
 import kotlinx.android.synthetic.main.activity_register.*
-import kotlinx.android.synthetic.main.contact_details.*
-import retrofit2.Call
 import retrofit2.Callback
-import retrofit2.Response
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import java.io.File
 import java.io.IOException
-import android.widget.ArrayAdapter
-import com.krs.community.interfaces.IregisterActivity
 
-class RegisterActivty : BaseActivity(), UCropFragmentCallback, IregisterActivity {
+class RegisterActivty : BaseActivity(), UCropFragmentCallback {
 
     private var str_profile_hash = ""
     private var isShow = true
@@ -62,7 +53,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, IregisterActivity
     private val PICK_GALLERY_REQUEST = 1
     private lateinit var logger: Logger
     var listStates: ArrayList<String>? = null
-    private lateinit var model:RegisterViewModel
+    private lateinit var registerViewModel: RegisterViewModel
 
     companion object {
         private val SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage"
@@ -72,12 +63,13 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, IregisterActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         logger = Logger(TAG)
-        model = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
+        registerViewModel = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
+        registerViewModel.init()
 
-        val binding= DataBindingUtil.setContentView(this,R.layout.activity_register) as ActivityRegisterBinding
+        val binding = DataBindingUtil.setContentView(this, R.layout.activity_register) as ActivityRegisterBinding
 
-        binding.registerviewmodel=model
-        binding.setLifecycleOwner(this)
+        binding.registerviewmodel = registerViewModel
+        binding.lifecycleOwner = this
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(this, R.color.colorBG, false)
@@ -90,11 +82,11 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, IregisterActivity
 
         Memory_Allocation()
 
-        btn_register?.setOnClickListener { model.onRegisterButtonClick(this)  }
+        btn_register?.setOnClickListener { registerViewModel.onRegisterButtonClick(this) }
 
-        txt_already?.setOnClickListener { model.onTextAlreadyClicked(this) }
+        txt_already?.setOnClickListener { registerViewModel.onTextAlreadyClicked(this) }
 
-        txt_how_register.setOnClickListener { model.onHowRegisterClicked(this) }
+        txt_how_register.setOnClickListener { registerViewModel.onHowRegisterClicked(this) }
 
         img_cancel.setOnClickListener {
             img_profile.setImageResource(R.drawable.man_reg)
@@ -159,17 +151,48 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, IregisterActivity
         val arrayAdapter = ArrayAdapter(this, R.layout.my_spinner_style, CountryData.countryNames)
         spinnerCountries.adapter = arrayAdapter
 
-        model.getUserStates()
+        registerViewModel.getUserStates().observe(this, Observer {
+            if (it.success) {
+                val lstState = Array<String?>(it.data.size) { null }
+                for ((index, stateData) in it.data.withIndex()) {
+                    lstState[index] = stateData.state
+                }
+                val arrayAdapter = ArrayAdapter(this, R.layout.my_spinner_style, lstState)
+                spinnerStates.adapter = arrayAdapter
+            }
+        })
 
-        /*spinnerCountries.onItemSelectedListener=object :AdapterView.OnItemSelectedListener{
+        registerViewModel.lstCities?.observe(this, Observer {
+            if (it.success) {
+                val lstCity = Array<String?>(it.data.size) { null }
+                for ((index, cityData) in it.data.withIndex()) {
+                    lstCity[index] = cityData.city
+                }
+                val arrayAdapter = ArrayAdapter(this, R.layout.my_spinner_style, lstCity)
+                spinnerCities.adapter = arrayAdapter
+            }
+        })
+
+        /*  registerViewModel.getCities()?.observe(this, Observer {
+              if (it.success) {
+                  val lstCity =  Array<String?>(it.data.size) { null }
+                  for ((index, cityData) in it.data.withIndex()) {
+                      lstCity[index]=cityData.city
+                  }
+                  val arrayAdapter = ArrayAdapter(this, R.layout.my_spinner_style, lstCity)
+                  spinnerCities.adapter = arrayAdapter
+              }
+          })*/
+
+        spinnerStates.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-              //  Toast.makeText(applicationContext, CountryData.countryNames[position], Toast.LENGTH_SHORT).show()
+                registerViewModel.fetchCitiesForStateId(spinnerStates.selectedItemPosition + 1)
+                Toast.makeText(applicationContext, "" + spinnerStates.selectedItemPosition, Toast.LENGTH_SHORT).show()
             }
-        }*/
+        }
 
 /*
         val adapter = ArrayAdapter<String>(this@RegisterActivty, R.layout.my_spinner_style, CountryData.countryNames) {
@@ -263,8 +286,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, IregisterActivity
         }
 
 
-
-        model.getUserStates()
+        /*registerViewModel.getUserStates()
         val call = AppController.getInstance().retrofitBase.apiServices.getUserState()
         call.enqueue(object : Callback<RBStates> {
             override fun onResponse(call: Call<RBStates>, response: Response<RBStates>) {
@@ -274,7 +296,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, IregisterActivity
 
                         var stateDatum: MutableList<StateDatum>? = stateResponse.data
 
-                        /*sp_state.adapter = object : ArrayAdapter1<String>(this@RegisterActivty, R.layout.my_spinner_style, stateDatum)
+                        *//*sp_state.adapter = object : ArrayAdapter1<String>(this@RegisterActivty, R.layout.my_spinner_style, stateDatum)
                         {
 
                             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -290,12 +312,12 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, IregisterActivity
                                 (v as TextView).textSize = 20f
                                 return v
                             }
-                        }*/
+                        }*//*
 
-                       listStates = ArrayList<String>();
+                        listStates = ArrayList<String>()
                         var i = 1
                         for (state in stateDatum!!) {
-                            listStates?.add( state.state)
+                            listStates?.add(state.state)
                             i++
                         }
 
@@ -308,12 +330,9 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, IregisterActivity
             override fun onFailure(call: Call<RBStates>, t: Throwable) {
                 logger.error(t)
             }
-        })
+        })*/
     }
 
-    override fun getStateList() {
-
-    }
 
     private fun pickFromGallery() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -389,7 +408,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, IregisterActivity
         val resultUri = getOutput(result)
         if (resultUri != null) {
 
-            logger.debug( "resultUri: $resultUri")
+            logger.debug("resultUri: $resultUri")
 
             try {
 
@@ -514,7 +533,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback, IregisterActivity
 
     override fun loadingProgress(showLoader: Boolean) {
         mShowLoader = showLoader
-      //  supportInvalidateOptionsMenu()
+        //  supportInvalidateOptionsMenu()
     }
 
     override fun onCropFinish(result: UCropFragment.UCropResult) {

@@ -236,12 +236,13 @@
                     android:background="@drawable/state_gradient_spinner">
 
                     <Spinner
-                        android:id="@+id/sp_state"
+                        android:id="@+id/spinnerStates"
                         style="@style/Widget.AppCompat.DropDownItem.Spinner"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
+                        android:paddingStart="30dp"
+                        android:textAlignment="center"
                         android:spinnerMode="dropdown"
-                        android:text="@string/last_name"
                         android:textSize="18sp" />
                 </RelativeLayout>
 
@@ -253,12 +254,13 @@
                     android:background="@drawable/gradient_spinner">
 
                     <Spinner
-                        android:id="@+id/sp_city"
+                        android:id="@+id/spinnerCities"
                         style="@style/Widget.AppCompat.DropDownItem.Spinner"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
                         android:spinnerMode="dropdown"
-                        android:text="@string/last_name"
+                        android:paddingStart="30dp"
+                        android:textAlignment="center"
                         android:textSize="18sp" />
                 </RelativeLayout>
 

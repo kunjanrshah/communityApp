@@ -4,16 +4,16 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.util.Log
-import android.view.View
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.LoginActivity
+import com.krs.community.model.RBCities
+import com.krs.community.model.RBStates
 import com.krs.community.utils.Utility
 import repositories.RegisterRepository
+
 
 class RegisterViewModel(app: Application) : AndroidViewModel(app) {
 
@@ -24,10 +24,23 @@ class RegisterViewModel(app: Application) : AndroidViewModel(app) {
     var address: String? = null
     var TAG:String=RegisterViewModel::class.java.simpleName
 
-    fun getUserStates():LiveData<List<String>> {
+    private var registerRepository: RegisterRepository? = null
+    var lstCities: MutableLiveData<RBCities>? = null
 
-         RegisterRepository().userState()
-            return
+    fun init() {
+        registerRepository = RegisterRepository().getInstance()
+    }
+
+    fun getUserStates(): MutableLiveData<RBStates> {
+        return registerRepository!!.userState()
+    }
+
+    fun fetchCitiesForStateId(id: Int) {
+        lstCities = registerRepository?.userCity(id)!!
+    }
+
+    fun getCities(): MutableLiveData<RBCities>? {
+        return lstCities
     }
 
     fun onRegisterButtonClick(activity: Activity) {
@@ -37,8 +50,7 @@ class RegisterViewModel(app: Application) : AndroidViewModel(app) {
         Log.d(TAG,"onRegisterButtonClick")
     }
 
-    fun onTextAlreadyClicked(activity: Activity)
-    {
+    fun onTextAlreadyClicked(activity: Activity) {
         val mIntent = Intent(activity, LoginActivity::class.java)
         mIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         activity.startActivity(mIntent)
@@ -46,8 +58,7 @@ class RegisterViewModel(app: Application) : AndroidViewModel(app) {
         Utility.fade(activity)
     }
 
-    fun onHowRegisterClicked(activity: Activity)
-    {
+    fun onHowRegisterClicked(activity: Activity) {
         Utility.watchYoutubeVideo(activity, activity.resources.getString(R.string.login_1))
     }
 }

@@ -287,9 +287,10 @@ public class AppConstants {
     public static String DEVICE_ID_VALUE = "";
 
 
-    public static class StateRequest {
+    public static class CitiesRequest {
         final String state_id;
-        public StateRequest(String state_id) {
+
+        public CitiesRequest(String state_id) {
             this.state_id = state_id;
         }
     }
