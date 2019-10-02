@@ -12,35 +12,43 @@ import com.krs.community.activity.LoginActivity
 import com.krs.community.model.RBCities
 import com.krs.community.model.RBStates
 import com.krs.community.utils.Utility
-import repositories.RegisterRepository
+import com.krs.community.repositories.RegisterRepository
+import com.krs.community.model.LastName
+import com.krs.community.model.SubCommunity
 
 
-class RegisterViewModel(app: Application) : AndroidViewModel(app) {
+class RegisterViewModel(var app: Application) : AndroidViewModel(app) {
 
     var fname: String? = null
     var email: String? = null
     var pass: String? = null
     var cpass: String? = null
     var address: String? = null
+
     var TAG:String=RegisterViewModel::class.java.simpleName
 
-    private var registerRepository: RegisterRepository? = null
-    var lstCities: MutableLiveData<RBCities>? = null
+    private lateinit var registerRepository: RegisterRepository
+
+    var lstCities: MutableLiveData<RBCities> =  MutableLiveData<RBCities>()
 
     fun init() {
         registerRepository = RegisterRepository().getInstance()
     }
 
     fun getUserStates(): MutableLiveData<RBStates> {
-        return registerRepository!!.userState()
+        return registerRepository.userState()
     }
 
-    fun fetchCitiesForStateId(id: Int) {
-        lstCities = registerRepository?.userCity(id)!!
+    fun getUserLastName(): MutableLiveData<LastName> {
+        return registerRepository.userLastName()
     }
 
-    fun getCities(): MutableLiveData<RBCities>? {
-        return lstCities
+    fun getLstSubCommunity(): MutableLiveData<SubCommunity>  {
+        return registerRepository.userSubCommunity()
+    }
+
+    fun fetchCitiesForStateId(id: Int){
+        registerRepository.userCity(id,lstCities)
     }
 
     fun onRegisterButtonClick(activity: Activity) {

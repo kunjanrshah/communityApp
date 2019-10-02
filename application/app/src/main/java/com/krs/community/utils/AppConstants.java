@@ -16,7 +16,6 @@ public class AppConstants {
     public static final String  TRANSITION_TOOLBAR = "toolbar_transition";
 
 
-
     public static final String ADMIN = "ADMIN";
     public static final String USER = "USER";
 
@@ -298,7 +297,8 @@ public class AppConstants {
     public interface UrlPath {
         String GET_CITIES = "GetCities";//"yourUrl/here/{parameter}";
         String GET_STATE = "GetState";
-        String GET_SUBCASTE = "GetLastName";
+        String GET_SUBCASTE = "GetSurname";
+        String GET_SUBLOCAL = "GetSubLocalCommunity";
     }
 
     public interface TimeOut {

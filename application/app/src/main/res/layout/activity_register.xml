@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -124,16 +125,24 @@
                     android:layout_height="@dimen/register_field_height"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
+                    android:gravity="center"
                     android:background="@drawable/name_gradient_spinner">
 
-                    <Spinner
-                        android:id="@+id/sp_lastname"
-                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                    <com.krs.community.jrspinner.JRSpinner
+                        android:id="@+id/spinnerLname"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/register_field_height"
-                        android:spinnerMode="dropdown"
-                        android:text="@string/last_name"
-                        android:textSize="18sp" />
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="Select Last Name"
+                        android:background="@null"
+                        android:layout_marginLeft="25dp"
+                        android:paddingRight="15dp"
+                        android:textColor="@color/black1"
+                        app:backgroundTint="@color/colorPrimary"
+                        app:jrs_icon_tint="@color/colorPrimary"
+                        app:jrs_multiple="false"
+                        app:jrs_title="Select Last Name" />
+
                 </RelativeLayout>
 
 
@@ -235,15 +244,21 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/state_gradient_spinner">
 
-                    <Spinner
+                    <com.krs.community.jrspinner.JRSpinner
                         android:id="@+id/spinnerStates"
-                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
-                        android:paddingStart="30dp"
-                        android:textAlignment="center"
-                        android:spinnerMode="dropdown"
-                        android:textSize="18sp" />
+                        android:singleLine="true"
+                        android:hint="Select State"
+                        android:background="@null"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="15dp"
+                        android:textColor="@color/black1"
+                        app:backgroundTint="@color/colorPrimary"
+                        app:jrs_icon_tint="@color/colorPrimary"
+                        app:jrs_multiple="false"
+                        app:jrs_title="State List" />
+
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -253,15 +268,22 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/gradient_spinner">
 
-                    <Spinner
+                    <com.krs.community.jrspinner.JRSpinner
                         android:id="@+id/spinnerCities"
-                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
-                        android:spinnerMode="dropdown"
-                        android:paddingStart="30dp"
-                        android:textAlignment="center"
-                        android:textSize="18sp" />
+                        android:singleLine="true"
+                        android:hint="Select City"
+                        android:background="@null"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="15dp"
+                        android:textColor="@color/black1"
+                        app:backgroundTint="@color/colorPrimary"
+                        app:jrs_icon_tint="@color/colorPrimary"
+                        app:jrs_multiple="false"
+                        app:jrs_title="City List" />
+
+
                 </RelativeLayout>
 
 
@@ -291,12 +313,21 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border">
 
-                    <Spinner
-                        android:id="@+id/sp_community"
-                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                    <com.krs.community.jrspinner.JRSpinner
+                        android:id="@+id/spinnerSub"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
-                        android:textSize="18sp" />
+                        android:singleLine="true"
+                        android:hint="Select Sub Community"
+                        android:background="@null"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:textColor="@color/black1"
+                        app:backgroundTint="@color/colorPrimary"
+                        app:jrs_icon_tint="@color/colorPrimary"
+                        app:jrs_multiple="false"
+                        app:jrs_title="Sub Community" />
+
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -306,12 +337,22 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border">
 
-                    <Spinner
-                        android:id="@+id/sp_region"
-                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+
+                    <com.krs.community.jrspinner.JRSpinner
+                        android:id="@+id/spinnerLocal"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
-                        android:textSize="18sp" />
+                        android:singleLine="true"
+                        android:hint="Select Local Community"
+                        android:background="@null"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:textColor="@color/black1"
+                        app:backgroundTint="@color/colorPrimary"
+                        app:jrs_icon_tint="@color/colorPrimary"
+                        app:jrs_multiple="false"
+                        app:jrs_title="Local Community" />
+
                 </RelativeLayout>
 
                 <TextView

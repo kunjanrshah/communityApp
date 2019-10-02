@@ -250,6 +250,10 @@
     <string name="apikey" translatable="false">apikey</string>
     <string name="devicetoken" translatable="false">devicetoken</string>
     <string name="intudid" translatable="false">intudid</string>
+    <string name="register_new_family">નવો પરિવાર રેજીસ્ટર કરો.</string>
+    <string name="click_on_register">બધી જ અગત્ય ની ફેમિલી હેડ ની વીગતો ભરી નવી ફેમિલી બનાવા માટે રેજીસ્ટર બટન પર ક્લિક કરો.</string>
+    <string name="upload_photo">તમારો પ્રોફાઈલ ફોટો અપલોડ કરો.</string>
+    <string name="select_photo">મોબાઈલ ગેલેરી માંથી તમારો મનપસંદ ફોટો સિલેક્ટ કરો અને મનપસંદ ઈફેક્ટ આપી ને સેવ કરો.</string>
 
 
 </resources>

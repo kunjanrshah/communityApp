@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,47 +24,45 @@ import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.adapter.RecyclerAdapter.ItemClickListener
 import com.krs.community.app.AppController
 import com.krs.community.interfaces.OnBackPressedListener
+import com.krs.community.model.DataProvider
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
-import com.krs.community.utils.AppConstants.EXTRA_COORDINATES
-import com.krs.community.utils.AppConstants.EXTRA_POSITION
+import com.krs.community.utils.AppConstants.*
 import com.krs.community.utils.Utility
-import com.krs.community.utils.Utility.hideKeyboard
+import com.krs.community.utils.copyViewImage
+import com.krs.community.utils.supportsLollipop
 import com.nightonke.boommenu.BoomMenuButton
+import kotlinx.android.synthetic.main.activity_dashboard.*
+import kotlinx.android.synthetic.main.family_header_detail.tv_title
 import kotlinx.android.synthetic.main.family_header_detail.view.*
+import kotlinx.android.synthetic.main.fragment_search_list_detail.*
+import kotlinx.android.synthetic.main.row_list.*
 
 
-class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListener{
+class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListener {
 
     override fun itemClick(id: Int) {
         val intent = Intent(activity, ProfileDetailActivity::class.java)
-        intent.putExtra("id",id)
+        intent.putExtra("id", id)
         startActivity(intent)
         Utility.fade(context)
     }
 
-    private lateinit var coordinates: FloatArray
+    // private lateinit var coordinates: FloatArray
     lateinit var rv_detail: RecyclerView
     lateinit var ll_root: LinearLayout
 
     companion object {
 
         const val TAG = "FamilyDetailFragment"
-        fun newInstance(coordinates: FloatArray, adapterPosition: Int): FamilyDetailFragment {
+        fun newInstance(adapterPosition: Int): FamilyDetailFragment {
             val bundle = Bundle().apply {
 
-                putFloatArray(EXTRA_COORDINATES, coordinates)
+                //putFloatArray(EXTRA_COORDINATES, coordinates)
                 putInt(EXTRA_POSITION, adapterPosition)
             }
 
             return FamilyDetailFragment().apply { arguments = bundle }
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            coordinates = it.getFloatArray(EXTRA_COORDINATES)
         }
     }
 
@@ -77,7 +76,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
         rv_detail = root.findViewById<RecyclerView>(com.krs.community.R.id.rv_detail)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(activity,R.color.colorPrimary,true)
+            Utility.changeStatusbarColor(activity, R.color.colorPrimary, true)
         }
 
         return root
@@ -93,47 +92,45 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
         val mLayoutManager = LinearLayoutManager(FacebookSdk.getApplicationContext())
         rv_detail.layoutManager = mLayoutManager
         rv_detail.itemAnimator = DefaultItemAnimator()
-        createCardAdapter(rv_detail,position)
+        createCardAdapter(rv_detail, position)
 
-        //setupViews(position)
-
-
+        setupViews(position)
     }
 
-    /*private fun setupViews(position: Int) {
-        *//* supportsLollipop {
-             details_card.transitionName = TRANSITION_CARD + position
-             toolbar_container.transitionName = TRANSITION_TOOLBAR
-         }
+    private fun setupViews(position: Int) {
+        supportsLollipop {
+            details_card.transitionName = TRANSITION_CARD + position
+            toolbar_container.transitionName = TRANSITION_TOOLBAR
+        }
 
-         (details_card.layoutParams as ViewGroup.MarginLayoutParams).topMargin = 229// coordinates[2].toInt()
- *//*
+        (details_card.layoutParams as ViewGroup.MarginLayoutParams).topMargin = 229// coordinates[2].toInt()
+
         val data = DataProvider.getCardData()[position]
-        *//* tv_title.text = data.name
-         tv_amount.text = data.amount
-         tv_date.text = data.date
-         tv_status.text = data.status.code
-         img_status.setImageResource(data.status.iconId)
-         img_card.setImageResource(data.imageId)*//*
+        tv_title.text = data.name
+        tv_amount.text = data.amount
+        tv_date.text = data.date
+        tv_status.text = data.status.code
+        img_status.setImageResource(data.status.iconId)
+        img_card.setImageResource(data.imageId)
 
-        *//*   details_card.setOnClickListener {
-               val intent = Intent(activity, ProfileDetailActivity::class.java)
-               startActivity(intent)
-               Utility.fade(context)
-           }*//*
+        details_card.setOnClickListener {
+            val intent = Intent(activity, ProfileDetailActivity::class.java)
+            startActivity(intent)
+            Utility.fade(context)
+        }
 
-        // fab_negative.setOnClickListener { onBackPressed() }
+       // fab_negative.setOnClickListener { onBackPressed() }
 
-        with(rv_detail) {
+        /*with(rv_detail) {
             adapter = RecyclerAdapter(DataProvider.getDetailsData(),this@FamilyDetailFragment)
 
             setHasFixedSize(true)
-            *//*fab_negative.doOnLayout {
+            fab_negative.doOnLayout {
                 val paddingBottom = (paddingBottom + fab_negative.height * 1.5).toInt()
                 updatePadding(bottom = paddingBottom)
-            }*//*
-        }
-    }*/
+            }
+        }*/
+    }
 
 
     override fun onResume() {
@@ -150,7 +147,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
         (activity as AppCompatActivity).supportActionBar!!.show()
     }
 
-    private fun createCardAdapter(recyclerView: RecyclerView,position: Int) {
+    private fun createCardAdapter(recyclerView: RecyclerView, position: Int) {
         val content = ArrayList<String>()
         for (i in 0..4) {
             content.add("item $i")
@@ -184,43 +181,43 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
 
         adapter.setOnClickEvent { v, position ->
 
-            val intent = Intent(activity, ProfileDetailActivity::class.java)
+            /*val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra("id",id)
             startActivity(intent)
-            Utility.fade(context)
+            Utility.fade(context)*/
 
-            /*val fragmentTransaction = initFragmentTransaction(v)
+            val fragmentTransaction = initFragmentTransaction(v)
             val copy = view!!.copyViewImage()
             copy.y += activity!!.myAppBar.height
             ll_root.addView(copy)
             view!!.visibility = View.INVISIBLE
-            startAnimation(copy, fragmentTransaction)*/
+            startAnimation(copy, fragmentTransaction)
         }
 
         val layoutManagerFixed = HeaderLayoutManagerFixed(activity)
         recyclerView.layoutManager = layoutManagerFixed
         val header = layoutInflater.inflate(com.krs.community.R.layout.family_header_detail, recyclerView, false)
-        val ll_family_head:LinearLayout
+        val ll_family_head: LinearLayout
 
-        ll_family_head=header.findViewById(R.id.ll_family_head)
+        ll_family_head = header.findViewById(R.id.ll_family_head)
         ll_family_head.setOnClickListener {
             val intent = Intent(activity, ProfileDetailActivity::class.java)
-            intent.putExtra("id",id)
+            intent.putExtra("id", id)
             startActivity(intent)
             Utility.fade(context)
         }
 
-        val tv_add:TextView
-        tv_add=header.findViewById(R.id.tv_add)
+        val tv_add: TextView
+        tv_add = header.findViewById(R.id.tv_add)
         tv_add.setOnClickListener {
             val intent = Intent(activity, ProfileDetailActivity::class.java)
-            intent.putExtra("id",id)
+            intent.putExtra("id", id)
             startActivity(intent)
             Utility.fade(context)
         }
 
         header.img_cancel.setOnClickListener {
-            Utility.movetoFragment(activity,SearchListFragment())
+            Utility.movetoFragment(activity, SearchListFragment())
         }
 
 
@@ -242,26 +239,26 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
 
     }
 
-  /*  private fun startAnimation(view: View, fragmentTransaction: FragmentTransaction?) {
+    private fun startAnimation(view: View, fragmentTransaction: FragmentTransaction?) {
         fragmentTransaction?.commitAllowingStateLoss()
     }
 
     private fun initFragmentTransaction(view: View): FragmentTransaction? {
-        val toY = view.resources.getDimensionPixelOffset(com.krs.community.R.dimen.details_toolbar_container_height) - view.height / 2f
+        /* val toY = view.resources.getDimensionPixelOffset(com.krs.community.R.dimen.details_toolbar_container_height) - view.height / 2f
 
-        val positions = FloatArray(3)
-        positions[0] = view.x
-        positions[1] = view.y + activity!!.myAppBar.height
-        positions[2] = toY
+         val positions = FloatArray(3)
+         positions[0] = view.x
+         positions[1] = view.y + activity!!.myAppBar.height
+         positions[2] = toY*/
 
         val adapterPosition = rv_detail.getChildAdapterPosition(view)
-        val detailsFragment = FamilyDetailFragment.newInstance(positions, adapterPosition)
+        val detailsFragment = newInstance(adapterPosition)
         val transaction = fragmentManager?.beginTransaction()
                 ?.replace(com.krs.community.R.id.container_body, detailsFragment, SearchDetailFragment.TAG)
                 ?.addToBackStack(null)
 
         return transaction
-    }*/
+    }
 
     internal class HeaderViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var tv_name: TextView
@@ -276,12 +273,12 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
             tv_subtext.typeface = AppController.getInstance().typeface_bold
             tv_email = v.findViewById(R.id.tv_email)
             tv_mobile = v.findViewById(R.id.tv_mobile)
-            bmb1=v.findViewById(R.id.bmb1)
+            bmb1 = v.findViewById(R.id.bmb1)
         }
     }
 
     override fun onBackPressed() {
-       // animateViewsOut()
+        //  animateViewsOut()
     }
 
     /* private fun animateViewsOut() {
@@ -316,15 +313,15 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener ,ItemClickListene
          //getActivity()?.overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left)
 
 
-         // animateToolbar(0f, 350)
-         //  activity!!.myAppBar.translationY = -getToolbarHeight(context).toFloat()
-         // activity!!.myAppBar.animate().translationY(0f).alpha(1f).setDuration(1000).start()
+          animateToolbar(0f, 350)
+           activity!!.myAppBar.translationY = -getToolbarHeight(context).toFloat()
+          activity!!.myAppBar.animate().translationY(0f).alpha(1f).setDuration(1000).start()
      }*/
 
 
-    private fun animateToolbar(alphaTo: Float = 1f, duration: Long = 1000) {
-        //    activity!!.myAppBar.animate().alpha(alphaTo).setDuration(duration).start()
-        // activity!!.myAppBar.translationY = -getToolbarHeight(context).toFloat()
-        // activity!!.myAppBar.animate().translationY(0f).alpha(1f).setDuration(1000).start()
-    }
+    /* private fun animateToolbar(alphaTo: Float = 1f, duration: Long = 1000) {
+             activity!!.myAppBar.animate().alpha(alphaTo).setDuration(duration).start()
+          activity!!.myAppBar.translationY = -getToolbarHeight(context).toFloat()
+          activity!!.myAppBar.animate().translationY(0f).alpha(1f).setDuration(1000).start()
+     }*/
 }

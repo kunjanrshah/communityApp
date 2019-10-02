@@ -48,6 +48,18 @@
     </com.facebook.shimmer.ShimmerFrameLayout>
 
 
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <View
+        android:id="@+id/details_toolbar_transition_helper"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/details_toolbar_container_height"
+        android:background="@color/colorAccent"
+        tools:translationY="-200dp" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
@@ -66,5 +78,8 @@
             tools:listitem="@layout/row_list_header"/>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</FrameLayout>
+
 
 </LinearLayout>

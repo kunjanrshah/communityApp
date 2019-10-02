@@ -30,8 +30,6 @@ import com.krs.community.utils.CountryData
 import com.krs.community.utils.Logger
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.RegisterViewModel
-import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.*
 import com.yalantis.ucrop.UCropFragment
@@ -67,9 +65,9 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
         registerViewModel.init()
 
         val binding = DataBindingUtil.setContentView(this, R.layout.activity_register) as ActivityRegisterBinding
-
-        binding.registerviewmodel = registerViewModel
         binding.lifecycleOwner = this
+        binding.registerviewmodel = registerViewModel
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(this, R.color.colorBG, false)
@@ -157,95 +155,59 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
                 for ((index, stateData) in it.data.withIndex()) {
                     lstState[index] = stateData.state
                 }
-                val arrayAdapter = ArrayAdapter(this, R.layout.my_spinner_style, lstState)
-                spinnerStates.adapter = arrayAdapter
+                spinnerStates.setItems(lstState)
+                spinnerStates.setExpandTint(R.color.black)
             }
         })
 
-        registerViewModel.lstCities?.observe(this, Observer {
+        spinnerStates.setOnItemClickListener {
+            registerViewModel.fetchCitiesForStateId(it + 1)
+        }
+
+        registerViewModel.lstCities.observe(this, Observer {
+            if (it == null) {
+                return@Observer
+            }
             if (it.success) {
                 val lstCity = Array<String?>(it.data.size) { null }
                 for ((index, cityData) in it.data.withIndex()) {
                     lstCity[index] = cityData.city
                 }
-                val arrayAdapter = ArrayAdapter(this, R.layout.my_spinner_style, lstCity)
-                spinnerCities.adapter = arrayAdapter
+                spinnerCities.setTitle("Select ${spinnerStates.text}'s City")
+                spinnerCities.setItems(lstCity)
+                spinnerCities.setExpandTint(R.color.black)
             }
         })
 
-        /*  registerViewModel.getCities()?.observe(this, Observer {
-              if (it.success) {
-                  val lstCity =  Array<String?>(it.data.size) { null }
-                  for ((index, cityData) in it.data.withIndex()) {
-                      lstCity[index]=cityData.city
-                  }
-                  val arrayAdapter = ArrayAdapter(this, R.layout.my_spinner_style, lstCity)
-                  spinnerCities.adapter = arrayAdapter
-              }
-          })*/
-
-        spinnerStates.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
+        registerViewModel.getUserLastName().observe(this, Observer {
+            if (it.success) {
+                val lstLastname = Array<String?>(it.data.size) { null }
+                for ((index, stateData) in it.data.withIndex()) {
+                    lstLastname[index] = stateData.name
+                }
+                spinnerLname.setItems(lstLastname)
+                spinnerLname.setExpandTint(R.color.black)
             }
+        })
 
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                registerViewModel.fetchCitiesForStateId(spinnerStates.selectedItemPosition + 1)
-                Toast.makeText(applicationContext, "" + spinnerStates.selectedItemPosition, Toast.LENGTH_SHORT).show()
+
+        registerViewModel.getLstSubCommunity().observe(this, Observer {
+            if (it.success) {
+                val lstSubCom = Array<String?>(it.data.size) { null }
+
+                for ((index, subData) in it.data.withIndex()) {
+                    lstSubCom[index] = subData.name
+                }
+                spinnerSub.setItems(lstSubCom)
             }
+        })
+
+        spinnerSub.setOnItemClickListener {
+
         }
 
-/*
-        val adapter = ArrayAdapter<String>(this@RegisterActivty, R.layout.my_spinner_style, CountryData.countryNames) {
 
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val v = super.getView(position, convertView, parent)
-                (v as TextView).textSize = 18f
-                v.gravity = Gravity.LEFT or Gravity.CENTER_VERTICAL
-                v.setTextColor(resources.getColor(R.color.colorHint))
-                return v
-            }
 
-            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val v = super.getDropDownView(position, convertView, parent)
-                (v as TextView).textSize = 20f
-                return v
-            }
-        }
-
-        sp_community.adapter = object : ArrayAdapter1<String>(this@RegisterActivty, R.layout.my_spinner_style, CountryData.communityNames) {
-
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val v = super.getView(position, convertView, parent)
-                (v as TextView).textSize = 18f
-                v.gravity = Gravity.LEFT or Gravity.CENTER_VERTICAL
-                v.setTextColor(resources.getColor(R.color.colorHint))
-                return v
-            }
-
-            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val v = super.getDropDownView(position, convertView, parent)
-                (v as TextView).textSize = 20f
-                return v
-            }
-        }
-
-        sp_region.adapter = object : ArrayAdapter1<String>(this@RegisterActivty, R.layout.my_spinner_style, CountryData.regionNames) {
-
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val v = super.getView(position, convertView, parent)
-                (v as TextView).textSize = 18f
-                v.gravity = Gravity.LEFT or Gravity.CENTER_VERTICAL
-                v.setTextColor(resources.getColor(R.color.colorHint))
-                return v
-            }
-
-            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val v = super.getDropDownView(position, convertView, parent)
-                (v as TextView).textSize = 20f
-                return v
-            }
-        }
-*/
 
 
         val registerPrompt = MaterialTapTargetPrompt.Builder(this@RegisterActivty)
@@ -254,8 +216,8 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
                 .setAutoDismiss(true)
                 .setBackButtonDismissEnabled(false)
                 .setBackgroundColour(resources.getColor(R.color.colorPrimary))
-                .setPrimaryText("નવો પરિવાર રેજીસ્ટર કરો.")
-                .setSecondaryText("બધી જ અગત્ય ની ફેમિલી હેડ ની વીગતો ભરી નવી ફેમિલી બનાવા માટે રેજીસ્ટર બટન પર ક્લિક કરો.")
+                .setPrimaryText(getString(R.string.register_new_family))
+                .setSecondaryText(getString(R.string.click_on_register))
                 .setPromptStateChangeListener { prompt, state ->
                     if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
                         prompt.dismiss()
@@ -268,8 +230,8 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
                 .setAutoDismiss(false)
                 .setBackButtonDismissEnabled(false)
                 .setBackgroundColour(resources.getColor(R.color.colorPrimary))
-                .setPrimaryText("તમારો પ્રોફાઈલ ફોટો અપલોડ કરો.")
-                .setSecondaryText("મોબાઈલ ગેલેરી માંથી તમારો મનપસંદ ફોટો સિલેક્ટ કરો અને મનપસંદ ઈફેક્ટ આપી ને સેવ કરો.")
+                .setPrimaryText(getString(R.string.upload_photo))
+                .setSecondaryText(getString(R.string.select_photo))
                 .setPromptStateChangeListener { prompt, state ->
                     if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
                         prompt.dismiss()
@@ -286,51 +248,6 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
         }
 
 
-        /*registerViewModel.getUserStates()
-        val call = AppController.getInstance().retrofitBase.apiServices.getUserState()
-        call.enqueue(object : Callback<RBStates> {
-            override fun onResponse(call: Call<RBStates>, response: Response<RBStates>) {
-                if (response.code() == 200) {
-                    val stateResponse = response.body()!!
-                    if (stateResponse.success) {
-
-                        var stateDatum: MutableList<StateDatum>? = stateResponse.data
-
-                        *//*sp_state.adapter = object : ArrayAdapter1<String>(this@RegisterActivty, R.layout.my_spinner_style, stateDatum)
-                        {
-
-                            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                                val v = super.getView(position, convertView, parent)
-                                (v as TextView).textSize = 18f
-                                v.gravity = Gravity.LEFT or Gravity.CENTER_VERTICAL
-                                v.setTextColor(resources.getColor(R.color.colorHint))
-                                return v
-                            }
-
-                            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-                                val v = super.getDropDownView(position, convertView, parent)
-                                (v as TextView).textSize = 20f
-                                return v
-                            }
-                        }*//*
-
-                        listStates = ArrayList<String>()
-                        var i = 1
-                        for (state in stateDatum!!) {
-                            listStates?.add(state.state)
-                            i++
-                        }
-
-                    } else {
-                        logger.warn("" + stateResponse.message)
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<RBStates>, t: Throwable) {
-                logger.error(t)
-            }
-        })*/
     }
 
 
@@ -373,15 +290,15 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
         txt_already?.text = Html.fromHtml(str)
     }
 
-    private fun cropImageActivity() {
+    /*private fun cropImageActivity() {
         if (Utility.hasPermission(this@RegisterActivty, Manifest.permission.WRITE_EXTERNAL_STORAGE) && Utility.hasPermission(this@RegisterActivty, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             CropImage.startPickImageActivity(this@RegisterActivty)
         }
-    }
+    }*/
 
-    private fun startCropImageActivity(imageUri: Uri) {
-        CropImage.activity(imageUri).setGuidelines(CropImageView.Guidelines.ON).setMultiTouchEnabled(true).start(this@RegisterActivty)
-    }
+    /* private fun startCropImageActivity(imageUri: Uri) {
+         CropImage.activity(imageUri).setGuidelines(CropImageView.Guidelines.ON).setMultiTouchEnabled(true).start(this@RegisterActivty)
+     }*/
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -542,8 +459,6 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
             RESULT_ERROR -> handleCropError(result.mResultData)
         }
     }
-
-
 }
 
 private operator fun AdapterView.OnItemSelectedListener.invoke(callback: Callback<RBStates>) {

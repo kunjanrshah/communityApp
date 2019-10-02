@@ -1,10 +1,13 @@
 package com.krs.community.fragments
 
+import android.animation.AnimatorInflater
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
+import android.transition.TransitionInflater
 import android.util.SparseBooleanArray
 import android.view.*
 import android.widget.*
@@ -25,9 +28,8 @@ import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.adapter.AtoZBottomAdapter
 import com.krs.community.model.Message
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
-import com.krs.community.utils.FlipAnimator
-import com.krs.community.utils.Utility
-import com.krs.community.utils.copyViewImage
+import com.krs.community.utils.*
+import com.krs.community.utils.AppConstants.TRANSITION_TOOLBAR
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
@@ -112,6 +114,16 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
         rvAdapter?.notifyDataSetChanged()
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+       /* supportsLollipop {
+            details_toolbar_transition_helper.transitionName = TRANSITION_TOOLBAR
+        }
+
+        details_toolbar_transition_helper.translationY = -resources.getDimension(R.dimen.details_toolbar_container_height)
+        toolbar.translationY = -toolbar.context.getToolbarHeight().toFloat()*/
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_search_result, container, false)
@@ -120,6 +132,8 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
+
+
 
         rv_search = rootView.findViewById(R.id.rv_search)
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
@@ -146,13 +160,10 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
                    val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
                     if (builder != null) {
                         builder.listener {
-                            if(it==1)
-                            {
+                            if(it==1) {
                                 val intent: Intent =Intent(activity, FamilyTreeListActivity::class.java)
                                 startActivity(intent)
-
-                            }else
-                            {
+                            }else  {
                                 Toast.makeText(activity, "Clicked " + it, Toast.LENGTH_SHORT).show()
                             }
                         }
@@ -167,7 +178,6 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
                 applyIconAnimation(viewHolder, position)
                 applyProfilePicture(viewHolder, message)
                 applyClickEvents(viewHolder, position)
-
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Message>?, i: Int): RecyclerView.ViewHolder {
@@ -243,17 +253,60 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
             ll_root.addView(copy)
             view!!.visibility = View.INVISIBLE
             fragmentTransaction?.commitAllowingStateLoss()
-            // startAnimation(copy, fragmentTransaction)
+            startAnimation(copy, fragmentTransaction)
 
+        }
+    }
+
+
+    private fun startAnimation(view: View, fragmentTransaction: FragmentTransaction?) {
+        AnimatorInflater.loadAnimator(activity, R.animator.main_list_animator).apply {
+            setTarget(rv_search)
+            withStartAction {  animateToolbarElevation(true) }
+            withEndAction {
+                rv_search?.visibility = View.INVISIBLE
+
+                val toY = view.resources.getDimensionPixelOffset(R.dimen.details_toolbar_container_height) - view.height / 2f
+
+                view.animate().y(toY).start()
+
+                toolbar.animate()
+                        .translationY(-toolbar.height.toFloat())
+                        .alpha(0f)
+                        .setDuration(600)
+                        .withStartAction {
+                          //  bottomNavListener?.hideBottomNavigationView()
+                            details_toolbar_transition_helper.animate().translationY(0f).setDuration(500).start()
+                        }
+                        .withEndAction {
+                            fragmentTransaction?.commitAllowingStateLoss()
+                        }
+                        .start()
+            }
+            start()
+        }
+    }
+
+    private fun animateToolbarElevation(animateOut: Boolean) {
+        var valueFrom = resources.getDimension(R.dimen.space_tiny)
+        var valueTo = 0f
+        if (!animateOut) {
+            valueTo = valueFrom
+            valueFrom = 0f
+        }
+        ValueAnimator.ofFloat(valueFrom, valueTo).setDuration(250).apply {
+            startDelay = 0
+          //  addUpdateListener { toolbar.cardElevation = it.animatedValue as Float }
+            start()
         }
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int) {
         holder.iconContainer.setOnClickListener { view -> onIconClicked(position) }
 
-        /*holder.messageContainer.setOnClickListener { view -> onMessageRowClicked(position,holder.itemView) }
+        holder.messageContainer.setOnClickListener { view -> onMessageRowClicked(position,holder.itemView) }
 
-        holder.messageContainer.setOnLongClickListener { view ->
+        /*holder.messageContainer.setOnLongClickListener { view ->
 
             enableActionMode(position)
 
@@ -410,19 +463,29 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
     }
 
     private fun initFragmentTransaction(view: View): FragmentTransaction? {
-        val toY = view.resources.getDimensionPixelOffset(R.dimen.details_toolbar_container_height) - view.height / 2f
+        /*val toY = view.resources.getDimensionPixelOffset(R.dimen.details_toolbar_container_height) - view.height / 2f
 
         val positions = FloatArray(3)
         positions[0] = view.x
         positions[1] = view.y + activity!!.myAppBar.height
-        positions[2] = toY
+        positions[2] = toY*/
 
         val adapterPosition = rv_search!!.getChildAdapterPosition(view)
-        val detailsFragment = FamilyDetailFragment.newInstance(positions, adapterPosition)
+        val detailsFragment = FamilyDetailFragment.newInstance(adapterPosition)
         val transaction = fragmentManager?.beginTransaction()
                 ?.setCustomAnimations(R.anim.fade_enter, R.anim.fade_exit, R.anim.fade_enter, R.anim.fade_exit)
                 ?.replace(R.id.container_body, detailsFragment, FamilyDetailFragment.TAG)
                 ?.addToBackStack(null)
+
+
+        /*supportsLollipop {
+            val transition = TransitionInflater.from(context).inflateTransition(R.transition.shared_element_transition)
+            detailsFragment.sharedElementEnterTransition = transition
+
+            transaction
+                    ?.addSharedElement(view, view.transitionName)
+                    ?.addSharedElement(details_toolbar_transition_helper, details_toolbar_transition_helper.transitionName)
+        }*/
 
         return transaction
     }

@@ -46,4 +46,6 @@
     <dimen name="action_bar_height">56dp</dimen>
     <dimen name="small_tab_size">42dp</dimen>
 
+    <dimen name="space_tiny">4dp</dimen>
+
 </resources>

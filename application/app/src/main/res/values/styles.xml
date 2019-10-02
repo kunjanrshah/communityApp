@@ -106,7 +106,16 @@
     </style>
 
 
+    <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
 
+        <!--change to true if want fullscreen without statusbar-->
+        <item name="android:windowFullscreen">false</item>
+
+        <item name="android:windowIsFloating">false</item>
+
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 
 
 </resources>
