@@ -51,7 +51,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -59,7 +58,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.gson.Gson;
 import com.krs.community.R;
-import com.krs.community.activity.BaseActivity;
 import com.krs.community.app.AppController;
 import com.krs.community.model.ErrorObject;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
@@ -88,23 +86,25 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 public class Utility {
-
-    private static Logger logger = new Logger(Utility.class.getSimpleName());
 
     public static final int REQ_CODE_SPEECH_INPUT = 100;
     public static String Title = "";
     public static String yyyy_MM_dd = "yyyy-MM-dd";
     public static String dd_MMM_yyyy = "dd-MMM-yyyy";
     public static String ddMMMyyyy = "dd/MM/yyyy";
+    public static SweetAlertDialog dialog = null;
+    private static Logger logger = new Logger(Utility.class.getSimpleName());
     private static ProgressDialog pDialog;
-   /* public static Bitmap scaleDown(Bitmap realImage, float maxImageSize, boolean filter) {
-        float ratio = Math.min(maxImageSize / realImage.getWidth(), maxImageSize / realImage.getHeight());
-        int width = Math.round(ratio * realImage.getWidth());
-        int height = Math.round(ratio * realImage.getHeight());
-        return Bitmap.createScaledBitmap(realImage, width, height, filter);
-    }*/
+    /* public static Bitmap scaleDown(Bitmap realImage, float maxImageSize, boolean filter) {
+         float ratio = Math.min(maxImageSize / realImage.getWidth(), maxImageSize / realImage.getHeight());
+         int width = Math.round(ratio * realImage.getWidth());
+         int height = Math.round(ratio * realImage.getHeight());
+         return Bitmap.createScaledBitmap(realImage, width, height, filter);
+     }*/
     private static int[] imageResources = new int[]{R.drawable.export_dot, R.drawable.family_tree_dot, R.drawable.whatsapp_dot, R.drawable.qr_code_dot, R.drawable.share_dot, R.drawable.location_dot};
     private static int[] textResources = new int[]{R.string._export, R.string._qrcode, R.string._share, R.string._location, R.string._whatsapp, R.string._family_tree};
     private static int imageResourceIndex = 0;
@@ -143,7 +143,6 @@ public class Utility {
         return null;
     }
 
-
     public static boolean IsValidate(@NonNull final String time) {
         String TIME24HOURS_PATTERN = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
         Pattern pattern = Pattern.compile(TIME24HOURS_PATTERN);
@@ -156,7 +155,6 @@ public class Utility {
         ((Activity) context).overridePendingTransition(R.anim.fade_enter, R.anim.fade_exit);
     }
 
-
     public static Bitmap fastblur(Bitmap sentBitmap, float scale, int radius) {
 
         int width = Math.round(sentBitmap.getWidth() * scale);
@@ -165,11 +163,24 @@ public class Utility {
 
         Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
 
-        if (radius < 1) { return (null); } int w = bitmap.getWidth(); int h = bitmap.getHeight(); int[] pix = new int[w * h]; Log.e("pix", w + " " + h + " " + pix.length); bitmap.getPixels(pix, 0, w, 0, 0, w, h); int wm = w - 1; int hm = h - 1; int wh = w * h; int div = radius + radius + 1;
+        if (radius < 1) {
+            return (null);
+        }
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+        int[] pix = new int[w * h];
+        Log.e("pix", w + " " + h + " " + pix.length);
+        bitmap.getPixels(pix, 0, w, 0, 0, w, h);
+        int wm = w - 1;
+        int hm = h - 1;
+        int wh = w * h;
+        int div = radius + radius + 1;
         int[] r = new int[wh];
         int[] g = new int[wh];
-        int[] b = new int[wh]; int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
-        int[] vmin = new int[Math.max(w, h)]; int divsum = (div + 1) >> 1;
+        int[] b = new int[wh];
+        int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
+        int[] vmin = new int[Math.max(w, h)];
+        int divsum = (div + 1) >> 1;
         divsum *= divsum;
         int[] dv = new int[256 * divsum];
         for (i = 0; i < 256 * divsum; i++) {
@@ -189,7 +200,10 @@ public class Utility {
 
         for (y = 0; y < h; y++) {
             rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
-            for (i = -radius; i <= radius; i++) { p = pix[yi + Math.min(wm, Math.max(i, 0))]; sir = stack[i + radius]; sir[0] = (p & 0xff0000) >> 16;
+            for (i = -radius; i <= radius; i++) {
+                p = pix[yi + Math.min(wm, Math.max(i, 0))];
+                sir = stack[i + radius];
+                sir[0] = (p & 0xff0000) >> 16;
                 sir[1] = (p & 0x00ff00) >> 8;
                 sir[2] = (p & 0x0000ff);
                 rbs = r1 - Math.abs(i);
@@ -208,7 +222,23 @@ public class Utility {
             }
             stackpointer = radius;
 
-            for (x = 0; x < w; x++) { r[yi] = dv[rsum]; g[yi] = dv[gsum]; b[yi] = dv[bsum]; rsum -= routsum; gsum -= goutsum; bsum -= boutsum; stackstart = stackpointer - radius + div; sir = stack[stackstart % div]; routsum -= sir[0]; goutsum -= sir[1]; boutsum -= sir[2]; if (y == 0) { vmin[x] = Math.min(x + radius + 1, wm); } p = pix[yw + vmin[x]]; sir[0] = (p & 0xff0000) >> 16;
+            for (x = 0; x < w; x++) {
+                r[yi] = dv[rsum];
+                g[yi] = dv[gsum];
+                b[yi] = dv[bsum];
+                rsum -= routsum;
+                gsum -= goutsum;
+                bsum -= boutsum;
+                stackstart = stackpointer - radius + div;
+                sir = stack[stackstart % div];
+                routsum -= sir[0];
+                goutsum -= sir[1];
+                boutsum -= sir[2];
+                if (y == 0) {
+                    vmin[x] = Math.min(x + radius + 1, wm);
+                }
+                p = pix[yw + vmin[x]];
+                sir[0] = (p & 0xff0000) >> 16;
                 sir[1] = (p & 0x00ff00) >> 8;
                 sir[2] = (p & 0x0000ff);
 
@@ -238,15 +268,25 @@ public class Utility {
         for (x = 0; x < w; x++) {
             rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
             yp = -radius * w;
-            for (i = -radius; i <= radius; i++) { yi = Math.max(0, yp) + x; sir = stack[i + radius]; sir[0] = r[yi]; sir[1] = g[yi]; sir[2] = b[yi]; rbs = r1 - Math.abs(i); rsum += r[yi] * rbs; gsum += g[yi] * rbs; bsum += b[yi] * rbs; if (i > 0) {
-                rinsum += sir[0];
-                ginsum += sir[1];
-                binsum += sir[2];
-            } else {
-                routsum += sir[0];
-                goutsum += sir[1];
-                boutsum += sir[2];
-            }
+            for (i = -radius; i <= radius; i++) {
+                yi = Math.max(0, yp) + x;
+                sir = stack[i + radius];
+                sir[0] = r[yi];
+                sir[1] = g[yi];
+                sir[2] = b[yi];
+                rbs = r1 - Math.abs(i);
+                rsum += r[yi] * rbs;
+                gsum += g[yi] * rbs;
+                bsum += b[yi] * rbs;
+                if (i > 0) {
+                    rinsum += sir[0];
+                    ginsum += sir[1];
+                    binsum += sir[2];
+                } else {
+                    routsum += sir[0];
+                    goutsum += sir[1];
+                    boutsum += sir[2];
+                }
 
                 if (i < hm) {
                     yp += w;
@@ -256,7 +296,7 @@ public class Utility {
             stackpointer = radius;
             for (y = 0; y < h; y++) {
                 // Preserve alpha channel: ( 0xff000000 & pix[yi] )
-                pix[yi] = ( 0xff000000 & pix[yi] ) | ( dv[rsum] << 16 ) | ( dv[gsum] << 8 ) | dv[bsum];
+                pix[yi] = (0xff000000 & pix[yi]) | (dv[rsum] << 16) | (dv[gsum] << 8) | dv[bsum];
 
                 rsum -= routsum;
                 gsum -= goutsum;
@@ -306,7 +346,6 @@ public class Utility {
 
         return (bitmap);
     }
-
 
     public static TextInsideCircleButton.Builder getTextInsideCircleButtonBuilder() {
         return new TextInsideCircleButton.Builder().normalColor(Color.WHITE).pieceColor(Color.GRAY).normalImageRes(getImageResource()).normalTextRes(getTextResource());
@@ -371,7 +410,6 @@ public class Utility {
         return true;
     }
 
-
     public static boolean hasCAMARA(@NonNull Context mContext) {
         return (hasPermission(mContext, Manifest.permission.CAMERA));
     }
@@ -385,13 +423,28 @@ public class Utility {
     }
 
     public static boolean haveSMS(@NonNull Context mContext) {
-        return (hasPermission(mContext, Manifest.permission.SEND_SMS)); }
+        return (hasPermission(mContext, Manifest.permission.SEND_SMS));
+    }
 
     public static boolean canReadContacts(@NonNull Context mContext) {
-        return (Utility.hasPermission(mContext, Manifest.permission.READ_CONTACTS)); }
+        return (Utility.hasPermission(mContext, Manifest.permission.READ_CONTACTS));
+    }
 
     public static boolean hasPermission(@NonNull Context mContext, @NonNull String perm) {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
+    }
+
+    public static void startProgress(Context context) {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+            dialog=null;
+        }
+        dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE)
+                .setTitleText("Storage read Permission")
+                .setContentText("Permission is needed to pick image from gallery for your Profile")
+                .setConfirmText("Yes, please!")
+                .setCancelText("No!")
+                .showCancelButton(true);
     }
 
 

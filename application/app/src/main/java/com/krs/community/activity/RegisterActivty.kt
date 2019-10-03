@@ -30,6 +30,7 @@ import com.krs.community.utils.CountryData
 import com.krs.community.utils.Logger
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.RegisterViewModel
+import com.wdullaer.materialdatetimepicker.Utils
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.*
 import com.yalantis.ucrop.UCropFragment
@@ -50,7 +51,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
     private var mShowLoader: Boolean = false
     private val PICK_GALLERY_REQUEST = 1
     private lateinit var logger: Logger
-    var listStates: ArrayList<String>? = null
+
     private lateinit var registerViewModel: RegisterViewModel
 
     companion object {
@@ -161,6 +162,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
         })
 
         spinnerStates.setOnItemClickListener {
+            Utility.startProgress(this)
             registerViewModel.fetchCitiesForStateId(it + 1)
         }
 
@@ -173,25 +175,18 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
                 for ((index, cityData) in it.data.withIndex()) {
                     lstCity[index] = cityData.city
                 }
+                spinnerCities.clear()
                 spinnerCities.setTitle("Select ${spinnerStates.text}'s City")
                 spinnerCities.setItems(lstCity)
                 spinnerCities.setExpandTint(R.color.black)
             }
-        })
-
-        registerViewModel.getUserLastName().observe(this, Observer {
-            if (it.success) {
-                val lstLastname = Array<String?>(it.data.size) { null }
-                for ((index, stateData) in it.data.withIndex()) {
-                    lstLastname[index] = stateData.name
-                }
-                spinnerLname.setItems(lstLastname)
-                spinnerLname.setExpandTint(R.color.black)
+            if(Utility.dialog!=null && Utility.dialog.isShowing) {
+                Utility.dialog.dismissWithAnimation()
             }
+
         })
 
-
-        registerViewModel.getLstSubCommunity().observe(this, Observer {
+       registerViewModel.getLstSubCommunity().observe(this, Observer {
             if (it.success) {
                 val lstSubCom = Array<String?>(it.data.size) { null }
 
@@ -203,12 +198,40 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
         })
 
         spinnerSub.setOnItemClickListener {
-
+            Utility.startProgress(this)
+            registerViewModel.getLstLocalCommunity(it + 1)
         }
 
+        registerViewModel.lstLocalComm.observe(this, Observer {
+            if (it == null) {
+                return@Observer
+            }
+            if (it.success) {
+                val lstLocal = Array<String?>(it.data.size) { null }
+                for ((index, LocalData) in it.data.withIndex()) {
+                    lstLocal[index] = LocalData.name
+                }
+                spinnerLocal.clear()
+                spinnerLocal.setTitle("Select ${spinnerSub.text}'s Local Community")
+                spinnerLocal.setItems(lstLocal)
+                spinnerLocal.setExpandTint(R.color.black)
+            }
+            if(Utility.dialog!=null && Utility.dialog.isShowing) {
+                Utility.dialog.dismissWithAnimation()
+            }
+        })
 
 
-
+        registerViewModel.getUserLastName().observe(this, Observer {
+            if (it.success) {
+                val lstLastname = Array<String?>(it.data.size) { null }
+                for ((index, stateData) in it.data.withIndex()) {
+                    lstLastname[index] = stateData.name
+                }
+                spinnerLname.setItems(lstLastname)
+                spinnerLname.setExpandTint(R.color.black)
+            }
+        })
 
         val registerPrompt = MaterialTapTargetPrompt.Builder(this@RegisterActivty)
                 .setTarget(R.id.btn_register)
@@ -442,8 +465,8 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.findItem(R.id.menu_crop).isVisible = !mShowLoader
-        menu.findItem(R.id.menu_loader).isVisible = mShowLoader
+      //  menu.findItem(R.id.menu_crop).isVisible = !mShowLoader
+       // menu.findItem(R.id.menu_loader).isVisible = mShowLoader
         return super.onPrepareOptionsMenu(menu)
     }
 

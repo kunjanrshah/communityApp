@@ -7,5 +7,6 @@
     android:startDelay="0">
     <changeClipBounds/>
     <changeTransform/>
+    <changeImageTransform />
     <changeBounds/>
 </transitionSet>

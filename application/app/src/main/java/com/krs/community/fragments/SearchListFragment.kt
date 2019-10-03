@@ -1,12 +1,12 @@
 package com.krs.community.fragments
 
 import android.animation.AnimatorInflater
-import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
+import android.transition.Fade
 import android.transition.TransitionInflater
 import android.util.SparseBooleanArray
 import android.view.*
@@ -26,15 +26,16 @@ import com.iammert.library.ui.multisearchviewlib.MultiSearchView
 import com.krs.community.R
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.adapter.AtoZBottomAdapter
+import com.krs.community.app.DetailsTransition
 import com.krs.community.model.Message
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.utils.*
-import com.krs.community.utils.AppConstants.TRANSITION_TOOLBAR
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
 import kotlinx.android.synthetic.main.activity_dashboard.*
-import kotlinx.android.synthetic.main.fragment_search_result.*
+import kotlinx.android.synthetic.main.fragment_search_list.*
+import kotlinx.android.synthetic.main.row_list_search.view.*
 
 class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
 
@@ -126,14 +127,12 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val rootView = inflater.inflate(R.layout.fragment_search_result, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_search_list, container, false)
         view1 = rootView
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
-
-
 
         rv_search = rootView.findViewById(R.id.rv_search)
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
@@ -178,6 +177,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
                 applyIconAnimation(viewHolder, position)
                 applyProfilePicture(viewHolder, message)
                 applyClickEvents(viewHolder, position)
+
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Message>?, i: Int): RecyclerView.ViewHolder {
@@ -246,23 +246,21 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
         if (getSelectedItemCount() > 0) {
             enableActionMode(position)
         } else {
-
             val fragmentTransaction = initFragmentTransaction(v)
-            val copy = view!!.copyViewImage()
+            fragmentTransaction?.commitAllowingStateLoss()
+            /*val copy = view!!.copyViewImage()
             copy.y += activity!!.myAppBar.height
             ll_root.addView(copy)
             view!!.visibility = View.INVISIBLE
-            fragmentTransaction?.commitAllowingStateLoss()
-            startAnimation(copy, fragmentTransaction)
-
+            startAnimation(copy, fragmentTransaction)*/
         }
     }
 
 
-    private fun startAnimation(view: View, fragmentTransaction: FragmentTransaction?) {
+/*    private fun startAnimation(view: View, fragmentTransaction: FragmentTransaction?) {
         AnimatorInflater.loadAnimator(activity, R.animator.main_list_animator).apply {
             setTarget(rv_search)
-            withStartAction {  animateToolbarElevation(true) }
+           // withStartAction {  animateToolbarElevation(true) }
             withEndAction {
                 rv_search?.visibility = View.INVISIBLE
 
@@ -270,13 +268,15 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
 
                 view.animate().y(toY).start()
 
-                toolbar.animate()
-                        .translationY(-toolbar.height.toFloat())
+                var animView:View=view1.findViewById<View>(R.id.animateView)
+
+                animView.animate()
+                        .translationY(-animView.height.toFloat())
                         .alpha(0f)
-                        .setDuration(600)
+                        .setDuration(800)
                         .withStartAction {
                           //  bottomNavListener?.hideBottomNavigationView()
-                            details_toolbar_transition_helper.animate().translationY(0f).setDuration(500).start()
+                      //      details_toolbar_transition_helper.animate().translationY(0f).setDuration(500).start()
                         }
                         .withEndAction {
                             fragmentTransaction?.commitAllowingStateLoss()
@@ -285,9 +285,9 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
             }
             start()
         }
-    }
+    }*/
 
-    private fun animateToolbarElevation(animateOut: Boolean) {
+   /* private fun animateToolbarElevation(animateOut: Boolean) {
         var valueFrom = resources.getDimension(R.dimen.space_tiny)
         var valueTo = 0f
         if (!animateOut) {
@@ -299,7 +299,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
           //  addUpdateListener { toolbar.cardElevation = it.animatedValue as Float }
             start()
         }
-    }
+    }*/
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int) {
         holder.iconContainer.setOnClickListener { view -> onIconClicked(position) }
@@ -371,17 +371,17 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
 
 
     inner class MyViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view), View.OnLongClickListener {
-        internal var iconText: TextView
-        internal var tv_name: TextView
-        internal var imgProfile: ImageView
-        internal var messageContainer: LinearLayout
-        internal var iconContainer: RelativeLayout
-        internal var iconBack: RelativeLayout
-        internal var iconFront: RelativeLayout
-        internal var boomMenuButton: BoomMenuButton
+        var iconText: TextView
+        var tv_name: TextView
+        var imgProfile: ImageView
+        var messageContainer: LinearLayout
+        var iconContainer: RelativeLayout
+        var iconBack: RelativeLayout
+        var iconFront: RelativeLayout
+        var boomMenuButton: BoomMenuButton
+
 
         init {
-
             boomMenuButton = view.findViewById(R.id.boomMenuButton1)
             tv_name = view.findViewById(R.id.tv_name1)
             iconText = view.findViewById(R.id.icon_text1)
@@ -463,32 +463,31 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
     }
 
     private fun initFragmentTransaction(view: View): FragmentTransaction? {
-        /*val toY = view.resources.getDimensionPixelOffset(R.dimen.details_toolbar_container_height) - view.height / 2f
-
-        val positions = FloatArray(3)
-        positions[0] = view.x
-        positions[1] = view.y + activity!!.myAppBar.height
-        positions[2] = toY*/
 
         val adapterPosition = rv_search!!.getChildAdapterPosition(view)
         val detailsFragment = FamilyDetailFragment.newInstance(adapterPosition)
-        val transaction = fragmentManager?.beginTransaction()
-                ?.setCustomAnimations(R.anim.fade_enter, R.anim.fade_exit, R.anim.fade_enter, R.anim.fade_exit)
-                ?.replace(R.id.container_body, detailsFragment, FamilyDetailFragment.TAG)
-                ?.addToBackStack(null)
+/*
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-
-        /*supportsLollipop {
             val transition = TransitionInflater.from(context).inflateTransition(R.transition.shared_element_transition)
-            detailsFragment.sharedElementEnterTransition = transition
+            detailsFragment.sharedElementEnterTransition = DetailsTransition()
+            detailsFragment.setEnterTransition(Fade())
 
-            transaction
-                    ?.addSharedElement(view, view.transitionName)
-                    ?.addSharedElement(details_toolbar_transition_helper, details_toolbar_transition_helper.transitionName)
+            exitTransition = Fade()
+            detailsFragment.sharedElementReturnTransition = DetailsTransition()
         }*/
+
+        val transaction= fragmentManager?.beginTransaction()
+             //   ?.addSharedElement(view,view.transitionName)
+                ?.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                ?.replace(R.id.container_body,  detailsFragment, FamilyDetailFragment.TAG)
+                ?.addToBackStack(null)
 
         return transaction
     }
+
+
+
 
     private inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {

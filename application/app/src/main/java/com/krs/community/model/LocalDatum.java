@@ -4,7 +4,7 @@ package com.krs.community.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Localcommunity {
+public class LocalDatum {
 
     @SerializedName("id")
     @Expose

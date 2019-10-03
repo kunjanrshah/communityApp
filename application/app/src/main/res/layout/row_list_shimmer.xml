@@ -18,7 +18,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/img_card"
+            android:id="@+id/img_card_shimmer"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:background="@color/placeholder_bg"
@@ -27,7 +27,7 @@
              />
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tv_title_shimmer"
             android:background="@color/placeholder_bg"
             android:textColor="@color/placeholder_bg"
             android:layout_width="wrap_content"
@@ -35,13 +35,13 @@
             android:layout_marginStart="16dp"
 
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            app:layout_constraintBottom_toBottomOf="@+id/img_card"
-            app:layout_constraintStart_toEndOf="@+id/img_card"
-            app:layout_constraintTop_toTopOf="@+id/img_card"
+            app:layout_constraintBottom_toBottomOf="@+id/img_card_shimmer"
+            app:layout_constraintStart_toEndOf="@+id/img_card_shimmer"
+            app:layout_constraintTop_toTopOf="@+id/img_card_shimmer"
             tools:text="Twitter" />
 
         <TextView
-            android:id="@+id/tv_title_amount"
+            android:id="@+id/tv_title_amount_shimmer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -49,32 +49,32 @@
             android:background="@color/placeholder_bg"
             android:textColor="@color/placeholder_bg"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintStart_toStartOf="@+id/img_card"
-            app:layout_constraintTop_toBottomOf="@+id/img_card" />
+            app:layout_constraintStart_toStartOf="@+id/img_card_shimmer"
+            app:layout_constraintTop_toBottomOf="@+id/img_card_shimmer" />
 
         <TextView
-            android:id="@+id/tv_title_date"
+            android:id="@+id/tv_title_date_shimmer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Date"
             android:background="@color/placeholder_bg"
             android:textColor="@color/placeholder_bg"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_title_amount"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_title_amount_shimmer"
             app:layout_constraintStart_toStartOf="@+id/guideline_0"
-            app:layout_constraintTop_toTopOf="@+id/tv_title_amount" />
+            app:layout_constraintTop_toTopOf="@+id/tv_title_amount_shimmer" />
 
         <TextView
-            android:id="@+id/tv_title_status"
+            android:id="@+id/tv_title_status_shimmer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Status"
             android:background="@color/placeholder_bg"
             android:textColor="@color/placeholder_bg"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_title_date"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_title_date_shimmer"
             app:layout_constraintStart_toStartOf="@+id/guideline_1"
-            app:layout_constraintTop_toTopOf="@+id/tv_title_date" />
+            app:layout_constraintTop_toTopOf="@+id/tv_title_date_shimmer" />
 
         <TextView
             android:id="@+id/tv_amount"
@@ -85,8 +85,8 @@
             android:background="@color/placeholder_bg"
             android:textColor="@color/placeholder_bg"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_title_amount"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title_amount"
+            app:layout_constraintStart_toStartOf="@+id/tv_title_amount_shimmer"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title_amount_shimmer"
             tools:text="11,550.00" />
 
         <TextView
@@ -97,7 +97,7 @@
             android:textColor="@color/placeholder_bg"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
             app:layout_constraintBaseline_toBaselineOf="@+id/tv_amount"
-            app:layout_constraintStart_toStartOf="@+id/tv_title_date"
+            app:layout_constraintStart_toStartOf="@+id/tv_title_date_shimmer"
             tools:text="27.08.2018" />
 
         <TextView
@@ -108,7 +108,7 @@
             android:textColor="@color/placeholder_bg"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
             app:layout_constraintBaseline_toBaselineOf="@+id/tv_date"
-            app:layout_constraintStart_toStartOf="@+id/tv_title_status"
+            app:layout_constraintStart_toStartOf="@+id/tv_title_status_shimmer"
             tools:text="Correct" />
 
         <ImageView

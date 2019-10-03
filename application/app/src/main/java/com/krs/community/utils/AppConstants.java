@@ -2,6 +2,8 @@ package com.krs.community.utils;
 
 import android.Manifest;
 
+import com.krs.community.model.LocalComm;
+
 public class AppConstants {
 
     public static final String[] INIT_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS};
@@ -294,11 +296,20 @@ public class AppConstants {
         }
     }
 
+    public static class LocalCommRequest {
+        final String subcommunityid;
+
+        public LocalCommRequest(String subcommunityid) {
+            this.subcommunityid = subcommunityid;
+        }
+    }
+
     public interface UrlPath {
         String GET_CITIES = "GetCities";//"yourUrl/here/{parameter}";
         String GET_STATE = "GetState";
         String GET_SUBCASTE = "GetSurname";
-        String GET_SUBLOCAL = "GetSubLocalCommunity";
+        String GET_SUBCOMM = "GetSubCommunity";
+        String GET_LOCALCOMM = "GetLocalCommunity";
     }
 
     public interface TimeOut {

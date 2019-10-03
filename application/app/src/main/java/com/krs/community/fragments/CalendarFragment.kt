@@ -110,7 +110,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         positions[2] = toY
 
         val adapterPosition = recyclerView.getChildAdapterPosition(view)
-        val detailsFragment = FamilyDetailFragment.newInstance(positions, adapterPosition)
+        val detailsFragment = FamilyDetailFragment.newInstance(adapterPosition)
 
         //Utility.movetoFragment(activity,FamilyDetailFragment())
 

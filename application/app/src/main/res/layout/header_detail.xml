@@ -32,6 +32,8 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/card_view_list1"
+        android:transitionName="@string/headanimation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">

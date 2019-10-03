@@ -2,10 +2,7 @@ package com.krs.community.retrofit
 
 
 import com.krs.community.app.AppController
-import com.krs.community.model.LastName
-import com.krs.community.model.RBCities
-import com.krs.community.model.RBStates
-import com.krs.community.model.SubCommunity
+import com.krs.community.model.*
 import com.krs.community.utils.AppConstants
 
 
@@ -22,8 +19,11 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_SUBCASTE)
     fun getUserLastName(): Call<LastName>
 
-    @POST(AppConstants.UrlPath.GET_SUBLOCAL)
-    fun getSubLocalCommunity(): Call<SubCommunity>
+    @POST(AppConstants.UrlPath.GET_SUBCOMM)
+    fun getSubCommunity(): Call<SubComm>
+
+    @POST(AppConstants.UrlPath.GET_LOCALCOMM)
+    fun getLocalCommunity(@Body request: AppConstants.LocalCommRequest): Call<LocalComm>
 
     @POST(AppConstants.UrlPath.GET_CITIES)
     fun getUserCities(@Body request: AppConstants.CitiesRequest): Call<RBCities>

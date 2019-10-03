@@ -9,12 +9,9 @@ import androidx.lifecycle.MutableLiveData
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.LoginActivity
-import com.krs.community.model.RBCities
-import com.krs.community.model.RBStates
+import com.krs.community.model.*
 import com.krs.community.utils.Utility
 import com.krs.community.repositories.RegisterRepository
-import com.krs.community.model.LastName
-import com.krs.community.model.SubCommunity
 
 
 class RegisterViewModel(var app: Application) : AndroidViewModel(app) {
@@ -30,6 +27,7 @@ class RegisterViewModel(var app: Application) : AndroidViewModel(app) {
     private lateinit var registerRepository: RegisterRepository
 
     var lstCities: MutableLiveData<RBCities> =  MutableLiveData<RBCities>()
+    var lstLocalComm: MutableLiveData<LocalComm> =  MutableLiveData<LocalComm>()
 
     fun init() {
         registerRepository = RegisterRepository().getInstance()
@@ -43,8 +41,12 @@ class RegisterViewModel(var app: Application) : AndroidViewModel(app) {
         return registerRepository.userLastName()
     }
 
-    fun getLstSubCommunity(): MutableLiveData<SubCommunity>  {
+    fun getLstSubCommunity(): MutableLiveData<SubComm>  {
         return registerRepository.userSubCommunity()
+    }
+
+    fun getLstLocalCommunity(id: Int) {
+        registerRepository.getLocalCommunity(id,lstLocalComm)
     }
 
     fun fetchCitiesForStateId(id: Int){

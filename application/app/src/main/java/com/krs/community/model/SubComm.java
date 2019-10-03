@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SubCommunity {
+public class SubComm {
 
     @SerializedName("success")
     @Expose
@@ -15,7 +15,7 @@ public class SubCommunity {
     private String message;
     @SerializedName("data")
     @Expose
-    private List<CommunityDatum> data = null;
+    private List<SubDatum> data = null;
 
     public Boolean getSuccess() {
         return success;
@@ -33,11 +33,11 @@ public class SubCommunity {
         this.message = message;
     }
 
-    public List<CommunityDatum> getData() {
+    public List<SubDatum> getData() {
         return data;
     }
 
-    public void setData(List<CommunityDatum> data) {
+    public void setData(List<SubDatum> data) {
         this.data = data;
     }
 

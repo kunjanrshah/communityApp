@@ -14,7 +14,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,19 +23,12 @@ import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.adapter.RecyclerAdapter.ItemClickListener
 import com.krs.community.app.AppController
 import com.krs.community.interfaces.OnBackPressedListener
-import com.krs.community.model.DataProvider
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
-import com.krs.community.utils.AppConstants.*
+import com.krs.community.utils.AppConstants.EXTRA_POSITION
 import com.krs.community.utils.Utility
-import com.krs.community.utils.copyViewImage
-import com.krs.community.utils.supportsLollipop
 import com.nightonke.boommenu.BoomMenuButton
-import kotlinx.android.synthetic.main.activity_dashboard.*
-import kotlinx.android.synthetic.main.family_header_detail.tv_title
-import kotlinx.android.synthetic.main.family_header_detail.view.*
-import kotlinx.android.synthetic.main.fragment_search_list_detail.*
-import kotlinx.android.synthetic.main.row_list.*
+import kotlinx.android.synthetic.main.header_detail.view.*
 
 
 class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListener {
@@ -94,34 +86,34 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
         rv_detail.itemAnimator = DefaultItemAnimator()
         createCardAdapter(rv_detail, position)
 
-        setupViews(position)
+        //    setupViews(position)
     }
 
-    private fun setupViews(position: Int) {
-        supportsLollipop {
-            details_card.transitionName = TRANSITION_CARD + position
-            toolbar_container.transitionName = TRANSITION_TOOLBAR
-        }
+    /* private fun setupViews(position: Int) {
+         supportsLollipop {
+             details_card.transitionName = TRANSITION_CARD + position
+             toolbar_container.transitionName = TRANSITION_TOOLBAR
+         }
 
-        (details_card.layoutParams as ViewGroup.MarginLayoutParams).topMargin = 229// coordinates[2].toInt()
+         (details_card.layoutParams as ViewGroup.MarginLayoutParams).topMargin = 229// coordinates[2].toInt()
 
-        val data = DataProvider.getCardData()[position]
-        tv_title.text = data.name
-        tv_amount.text = data.amount
-        tv_date.text = data.date
-        tv_status.text = data.status.code
-        img_status.setImageResource(data.status.iconId)
-        img_card.setImageResource(data.imageId)
+         val data = DataProvider.getCardData()[position]
+         tv_title.text = data.name
+         tv_amount.text = data.amount
+         tv_date.text = data.date
+         tv_status.text = data.status.code
+         img_status.setImageResource(data.status.iconId)
+         img_card.setImageResource(data.imageId)
 
-        details_card.setOnClickListener {
-            val intent = Intent(activity, ProfileDetailActivity::class.java)
-            startActivity(intent)
-            Utility.fade(context)
-        }
+         details_card.setOnClickListener {
+             val intent = Intent(activity, ProfileDetailActivity::class.java)
+             startActivity(intent)
+             Utility.fade(context)
+         }
 
-       // fab_negative.setOnClickListener { onBackPressed() }
+        // fab_negative.setOnClickListener { onBackPressed() }
 
-        /*with(rv_detail) {
+         *//*with(rv_detail) {
             adapter = RecyclerAdapter(DataProvider.getDetailsData(),this@FamilyDetailFragment)
 
             setHasFixedSize(true)
@@ -129,8 +121,8 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
                 val paddingBottom = (paddingBottom + fab_negative.height * 1.5).toInt()
                 updatePadding(bottom = paddingBottom)
             }
-        }*/
-    }
+        }*//*
+    }*/
 
 
     override fun onResume() {
@@ -171,7 +163,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<String>, i: Int): RecyclerView.ViewHolder {
-                return HeaderViewHolder(layoutInflater.inflate(R.layout.row_list_header, viewGroup, false))
+                return HeaderViewHolder(layoutInflater.inflate(R.layout.row_list_family_detail, viewGroup, false))
             }
 
             override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<String>): Int {
@@ -181,22 +173,22 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
 
         adapter.setOnClickEvent { v, position ->
 
-            /*val intent = Intent(activity, ProfileDetailActivity::class.java)
+            val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra("id",id)
             startActivity(intent)
-            Utility.fade(context)*/
+            Utility.fade(context)
 
-            val fragmentTransaction = initFragmentTransaction(v)
+           /* val fragmentTransaction = initFragmentTransaction(v)
             val copy = view!!.copyViewImage()
             copy.y += activity!!.myAppBar.height
             ll_root.addView(copy)
             view!!.visibility = View.INVISIBLE
-            startAnimation(copy, fragmentTransaction)
+            fragmentTransaction?.commitAllowingStateLoss()*/
         }
 
         val layoutManagerFixed = HeaderLayoutManagerFixed(activity)
         recyclerView.layoutManager = layoutManagerFixed
-        val header = layoutInflater.inflate(com.krs.community.R.layout.family_header_detail, recyclerView, false)
+        val header = layoutInflater.inflate(com.krs.community.R.layout.header_detail, recyclerView, false)
         val ll_family_head: LinearLayout
 
         ll_family_head = header.findViewById(R.id.ll_family_head)
@@ -239,17 +231,14 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
 
     }
 
-    private fun startAnimation(view: View, fragmentTransaction: FragmentTransaction?) {
-        fragmentTransaction?.commitAllowingStateLoss()
-    }
 
-    private fun initFragmentTransaction(view: View): FragmentTransaction? {
-        /* val toY = view.resources.getDimensionPixelOffset(com.krs.community.R.dimen.details_toolbar_container_height) - view.height / 2f
+    /*private fun initFragmentTransaction(view: View): FragmentTransaction? {
+        *//* val toY = view.resources.getDimensionPixelOffset(com.krs.community.R.dimen.details_toolbar_container_height) - view.height / 2f
 
          val positions = FloatArray(3)
          positions[0] = view.x
          positions[1] = view.y + activity!!.myAppBar.height
-         positions[2] = toY*/
+         positions[2] = toY*//*
 
         val adapterPosition = rv_detail.getChildAdapterPosition(view)
         val detailsFragment = newInstance(adapterPosition)
@@ -258,7 +247,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
                 ?.addToBackStack(null)
 
         return transaction
-    }
+    }*/
 
     internal class HeaderViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var tv_name: TextView

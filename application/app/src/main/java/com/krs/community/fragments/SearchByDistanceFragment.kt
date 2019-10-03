@@ -198,7 +198,7 @@ class SearchByDistanceFragment : Fragment() {
         positions[2] = toY
 
         val adapterPosition = recyclerView.getChildAdapterPosition(view)
-        val detailsFragment = FamilyDetailFragment.newInstance(positions, adapterPosition)
+        val detailsFragment = FamilyDetailFragment.newInstance(adapterPosition)
         val transaction = fragmentManager?.beginTransaction()
                 ?.replace(R.id.container_body, detailsFragment, FamilyDetailFragment.TAG)
                 ?.addToBackStack(null)

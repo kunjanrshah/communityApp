@@ -1,10 +1,7 @@
 package com.krs.community.repositories
 
 import androidx.lifecycle.MutableLiveData
-import com.krs.community.model.LastName
-import com.krs.community.model.RBCities
-import com.krs.community.model.RBStates
-import com.krs.community.model.SubCommunity
+import com.krs.community.model.*
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.utils.AppConstants
 import retrofit2.Call
@@ -71,21 +68,36 @@ class RegisterRepository {
         return userLastName
     }
 
-    fun userSubCommunity():MutableLiveData<SubCommunity> {
-        val userSubCommunity = MutableLiveData<SubCommunity>()
-        ApiServices().getSubLocalCommunity()
-                .enqueue(object : Callback<SubCommunity> {
-                    override fun onFailure(call: Call<SubCommunity>, t: Throwable) {
+    fun userSubCommunity():MutableLiveData<SubComm> {
+        val userSubCommunity = MutableLiveData<SubComm>()
+        ApiServices().getSubCommunity()
+                .enqueue(object : Callback<SubComm> {
+                    override fun onFailure(call: Call<SubComm>, t: Throwable) {
                         userSubCommunity.value = null
                     }
 
-                    override fun onResponse(call: Call<SubCommunity>, response: Response<SubCommunity>) {
+                    override fun onResponse(call: Call<SubComm>, response: Response<SubComm>) {
                         if (response.isSuccessful) {
                             userSubCommunity.value = response.body()
                         }
                     }
                 })
         return userSubCommunity
+    }
+
+    fun getLocalCommunity(id: Int,userLocalComm:MutableLiveData<LocalComm>) {
+        ApiServices().getLocalCommunity(AppConstants.LocalCommRequest(id.toString()))
+                .enqueue(object : Callback<LocalComm> {
+                    override fun onFailure(call: Call<LocalComm>, t: Throwable) {
+                        userLocalComm.value = null
+                    }
+
+                    override fun onResponse(call: Call<LocalComm>, response: Response<LocalComm>) {
+                        if (response.isSuccessful) {
+                            userLocalComm.value = response.body()
+                        }
+                    }
+                })
     }
 
 }

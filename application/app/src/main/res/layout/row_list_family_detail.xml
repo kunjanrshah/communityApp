@@ -15,12 +15,6 @@
     app:cardElevation="@dimen/card_elevation"
     app:contentPadding="10dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +53,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-
                         android:orientation="vertical">
 
                         <TextView
@@ -147,6 +140,8 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
         </LinearLayout>
-    </LinearLayout>
+
+
 </LinearLayout>
