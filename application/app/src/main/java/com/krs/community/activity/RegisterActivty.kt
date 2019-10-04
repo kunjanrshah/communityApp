@@ -30,7 +30,6 @@ import com.krs.community.utils.CountryData
 import com.krs.community.utils.Logger
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.RegisterViewModel
-import com.wdullaer.materialdatetimepicker.Utils
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.*
 import com.yalantis.ucrop.UCropFragment
@@ -65,7 +64,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
         registerViewModel = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
         registerViewModel.init()
 
-        val binding = DataBindingUtil.setContentView(this, R.layout.activity_register) as ActivityRegisterBinding
+        val binding:ActivityRegisterBinding = DataBindingUtil.setContentView(this, R.layout.activity_register)
         binding.lifecycleOwner = this
         binding.registerviewmodel = registerViewModel
 
