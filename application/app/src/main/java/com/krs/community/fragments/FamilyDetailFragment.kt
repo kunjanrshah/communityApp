@@ -40,7 +40,6 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
         Utility.fade(context)
     }
 
-    // private lateinit var coordinates: FloatArray
     lateinit var rv_detail: RecyclerView
     lateinit var ll_root: LinearLayout
 
@@ -49,8 +48,6 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
         const val TAG = "FamilyDetailFragment"
         fun newInstance(adapterPosition: Int): FamilyDetailFragment {
             val bundle = Bundle().apply {
-
-                //putFloatArray(EXTRA_COORDINATES, coordinates)
                 putInt(EXTRA_POSITION, adapterPosition)
             }
 
@@ -85,44 +82,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
         rv_detail.layoutManager = mLayoutManager
         rv_detail.itemAnimator = DefaultItemAnimator()
         createCardAdapter(rv_detail, position)
-
-        //    setupViews(position)
     }
-
-    /* private fun setupViews(position: Int) {
-         supportsLollipop {
-             details_card.transitionName = TRANSITION_CARD + position
-             toolbar_container.transitionName = TRANSITION_TOOLBAR
-         }
-
-         (details_card.layoutParams as ViewGroup.MarginLayoutParams).topMargin = 229// coordinates[2].toInt()
-
-         val data = DataProvider.getCardData()[position]
-         tv_title.text = data.name
-         tv_amount.text = data.amount
-         tv_date.text = data.date
-         tv_status.text = data.status.code
-         img_status.setImageResource(data.status.iconId)
-         img_card.setImageResource(data.imageId)
-
-         details_card.setOnClickListener {
-             val intent = Intent(activity, ProfileDetailActivity::class.java)
-             startActivity(intent)
-             Utility.fade(context)
-         }
-
-        // fab_negative.setOnClickListener { onBackPressed() }
-
-         *//*with(rv_detail) {
-            adapter = RecyclerAdapter(DataProvider.getDetailsData(),this@FamilyDetailFragment)
-
-            setHasFixedSize(true)
-            fab_negative.doOnLayout {
-                val paddingBottom = (paddingBottom + fab_negative.height * 1.5).toInt()
-                updatePadding(bottom = paddingBottom)
-            }
-        }*//*
-    }*/
 
 
     override fun onResume() {
@@ -178,12 +138,6 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
             startActivity(intent)
             Utility.fade(context)
 
-           /* val fragmentTransaction = initFragmentTransaction(v)
-            val copy = view!!.copyViewImage()
-            copy.y += activity!!.myAppBar.height
-            ll_root.addView(copy)
-            view!!.visibility = View.INVISIBLE
-            fragmentTransaction?.commitAllowingStateLoss()*/
         }
 
         val layoutManagerFixed = HeaderLayoutManagerFixed(activity)
@@ -231,24 +185,6 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
 
     }
 
-
-    /*private fun initFragmentTransaction(view: View): FragmentTransaction? {
-        *//* val toY = view.resources.getDimensionPixelOffset(com.krs.community.R.dimen.details_toolbar_container_height) - view.height / 2f
-
-         val positions = FloatArray(3)
-         positions[0] = view.x
-         positions[1] = view.y + activity!!.myAppBar.height
-         positions[2] = toY*//*
-
-        val adapterPosition = rv_detail.getChildAdapterPosition(view)
-        val detailsFragment = newInstance(adapterPosition)
-        val transaction = fragmentManager?.beginTransaction()
-                ?.replace(com.krs.community.R.id.container_body, detailsFragment, SearchDetailFragment.TAG)
-                ?.addToBackStack(null)
-
-        return transaction
-    }*/
-
     internal class HeaderViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var tv_name: TextView
         var tv_subtext: TextView
@@ -270,47 +206,4 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
         //  animateViewsOut()
     }
 
-    /* private fun animateViewsOut() {
-         val translateTo = fab_negative.height * 2f
-         AnimatorInflater.loadAnimator(activity, R.animator.main_list_animator).apply {
-             setTarget(recycler_view)
-             start()
-         }
-
-         fab_negative.animate()
-                 .translationY(translateTo)
-                 .setDuration(1000)
-                 .setInterpolator(AnticipateInterpolator(2f))
-                 .start()
-         fab_positive.animate()
-                 .translationY(translateTo)
-                 .setStartDelay(50)
-                 .setDuration(1000)
-                 .withEndAction {
-                     //activity?.supportFragmentManager?.popBackStack()
-                     val intent = Intent(activity, DashboardActivity::class.java)
-                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                     startActivity(intent)
-                     activity?.finish()
-                     Utility.fade(context)
-                 }
-                 .setInterpolator(AnticipateInterpolator(2f))
-                 .start()
-
-
-
-         //getActivity()?.overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left)
-
-
-          animateToolbar(0f, 350)
-           activity!!.myAppBar.translationY = -getToolbarHeight(context).toFloat()
-          activity!!.myAppBar.animate().translationY(0f).alpha(1f).setDuration(1000).start()
-     }*/
-
-
-    /* private fun animateToolbar(alphaTo: Float = 1f, duration: Long = 1000) {
-             activity!!.myAppBar.animate().alpha(alphaTo).setDuration(duration).start()
-          activity!!.myAppBar.translationY = -getToolbarHeight(context).toFloat()
-          activity!!.myAppBar.animate().translationY(0f).alpha(1f).setDuration(1000).start()
-     }*/
 }

@@ -439,12 +439,8 @@ public class Utility {
             dialog.dismiss();
             dialog=null;
         }
-        dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE)
-                .setTitleText("Storage read Permission")
-                .setContentText("Permission is needed to pick image from gallery for your Profile")
-                .setConfirmText("Yes, please!")
-                .setCancelText("No!")
-                .showCancelButton(true);
+        dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE).setContentText("Please wait...");
+        dialog.show();
     }
 
 
