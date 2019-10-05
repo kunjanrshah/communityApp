@@ -10,11 +10,9 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.InputType
-import android.view.Menu
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -146,8 +144,8 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
             return false
         })
 
-        val arrayAdapter = ArrayAdapter(this, R.layout.my_spinner_style, CountryData.countryNames)
-        spinnerCountries.adapter = arrayAdapter
+        spinnerCountries.setItems(CountryData.countryNames)
+        spinnerCountries.setExpandTint(R.color.black)
 
         registerViewModel.getUserStates().observe(this, Observer {
             if (it.success) {
@@ -161,7 +159,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
         })
 
         spinnerStates.setOnItemClickListener {
-            Utility.startProgress(this)
+            Utility.startProgress(this,"Fetching Cities of ${spinnerStates.text}","Loading...")
             registerViewModel.fetchCitiesForStateId(it + 1)
         }
 
@@ -197,7 +195,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
         })
 
         spinnerSub.setOnItemClickListener {
-            Utility.startProgress(this)
+            Utility.startProgress(this,"Fetching Local Communities of ${spinnerSub.text}","Loading...")
             registerViewModel.getLstLocalCommunity(it + 1)
         }
 
@@ -461,12 +459,6 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
                     startActivity(intent)
                 }
                 .show()
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-      //  menu.findItem(R.id.menu_crop).isVisible = !mShowLoader
-       // menu.findItem(R.id.menu_loader).isVisible = mShowLoader
-        return super.onPrepareOptionsMenu(menu)
     }
 
 

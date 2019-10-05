@@ -434,12 +434,13 @@ public class Utility {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
     }
 
-    public static void startProgress(Context context) {
+    public static void startProgress(Context context,String title,String message) {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
             dialog=null;
         }
-        dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE).setContentText("Please wait...");
+        dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE).setContentText(message);
+        dialog.setTitleText(title);
         dialog.show();
     }
 

@@ -171,16 +171,21 @@
                     android:orientation="horizontal">
 
                     <RelativeLayout
-                        android:layout_width="120dp"
+                        android:layout_width="130dp"
                         android:layout_height="50dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/border">
+                        android:background="@drawable/country_gradient_spinner"
+                        android:layout_gravity="center">
 
-                        <Spinner
+                        <com.krs.community.jrspinner.JRSpinner
                             android:id="@+id/spinnerCountries"
+                            app:jrs_multiple="false"
+                            android:singleLine="true"
+                            android:layout_marginLeft="20dp"
+                            android:hint="Code"
+                            android:background="@null"
                             style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                            android:layout_width="120dp"
-                            android:layout_height="50dp" />
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
                     </RelativeLayout>
 
                     <EditText
@@ -311,13 +316,14 @@
                     android:layout_height="@dimen/register_field_height"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/border">
+                    android:background="@drawable/community_gradient_spinner">
 
                     <com.krs.community.jrspinner.JRSpinner
                         android:id="@+id/spinnerSub"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
                         android:singleLine="true"
+                        android:layout_marginLeft="25dp"
                         android:hint="Select Sub Community"
                         android:background="@null"
                         android:paddingLeft="15dp"
@@ -335,7 +341,7 @@
                     android:layout_height="@dimen/register_field_height"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/border">
+                    android:background="@drawable/community_gradient_spinner">
 
 
                     <com.krs.community.jrspinner.JRSpinner
@@ -343,6 +349,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
                         android:singleLine="true"
+                        android:layout_marginLeft="25dp"
                         android:hint="Select Local Community"
                         android:background="@null"
                         android:paddingLeft="15dp"
