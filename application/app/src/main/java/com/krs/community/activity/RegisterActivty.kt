@@ -18,12 +18,12 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.krs.community.R
 import com.krs.community.databinding.ActivityRegisterBinding
-import com.krs.community.model.RBStates
+import com.krs.community.interfaces.IRegisterListener
+import com.krs.community.model.*
 import com.krs.community.utils.CountryData
 import com.krs.community.utils.Logger
 import com.krs.community.utils.Utility
@@ -39,7 +39,7 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import java.io.File
 import java.io.IOException
 
-class RegisterActivty : BaseActivity(), UCropFragmentCallback {
+class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener{
 
     private var str_profile_hash = ""
     private var isShow = true
@@ -61,6 +61,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
         logger = Logger(TAG)
         registerViewModel = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
         registerViewModel.init()
+        registerViewModel.iRegisterListener=this
 
         val binding:ActivityRegisterBinding = DataBindingUtil.setContentView(this, R.layout.activity_register)
         binding.lifecycleOwner = this
@@ -144,91 +145,25 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
             return false
         })
 
+        /*get Lastnames */
+        registerViewModel.getUserLastName()
+        /*get countries */
         spinnerCountries.setItems(CountryData.countryNames)
         spinnerCountries.setExpandTint(R.color.black)
 
-        registerViewModel.getUserStates().observe(this, Observer {
-            if (it.success) {
-                val lstState = Array<String?>(it.data.size) { null }
-                for ((index, stateData) in it.data.withIndex()) {
-                    lstState[index] = stateData.state
-                }
-                spinnerStates.setItems(lstState)
-                spinnerStates.setExpandTint(R.color.black)
-            }
-        })
-
+        /*get states */
+        registerViewModel.getUserStates()
         spinnerStates.setOnItemClickListener {
             Utility.startProgress(this,"Fetching Cities of ${spinnerStates.text}","Loading...")
             registerViewModel.fetchCitiesForStateId(it + 1)
         }
 
-        registerViewModel.lstCities.observe(this, Observer {
-            if (it == null) {
-                return@Observer
-            }
-            if (it.success) {
-                val lstCity = Array<String?>(it.data.size) { null }
-                for ((index, cityData) in it.data.withIndex()) {
-                    lstCity[index] = cityData.city
-                }
-                spinnerCities.clear()
-                spinnerCities.setTitle("Select ${spinnerStates.text}'s City")
-                spinnerCities.setItems(lstCity)
-                spinnerCities.setExpandTint(R.color.black)
-            }
-            if(Utility.dialog!=null && Utility.dialog.isShowing) {
-                Utility.dialog.dismissWithAnimation()
-            }
-
-        })
-
-       registerViewModel.getLstSubCommunity().observe(this, Observer {
-            if (it.success) {
-                val lstSubCom = Array<String?>(it.data.size) { null }
-
-                for ((index, subData) in it.data.withIndex()) {
-                    lstSubCom[index] = subData.name
-                }
-                spinnerSub.setItems(lstSubCom)
-            }
-        })
-
+        /*get sub communities */
+        registerViewModel.getLstSubCommunity()
         spinnerSub.setOnItemClickListener {
             Utility.startProgress(this,"Fetching Local Communities of ${spinnerSub.text}","Loading...")
             registerViewModel.getLstLocalCommunity(it + 1)
         }
-
-        registerViewModel.lstLocalComm.observe(this, Observer {
-            if (it == null) {
-                return@Observer
-            }
-            if (it.success) {
-                val lstLocal = Array<String?>(it.data.size) { null }
-                for ((index, LocalData) in it.data.withIndex()) {
-                    lstLocal[index] = LocalData.name
-                }
-                spinnerLocal.clear()
-                spinnerLocal.setTitle("Select ${spinnerSub.text}'s Local Community")
-                spinnerLocal.setItems(lstLocal)
-                spinnerLocal.setExpandTint(R.color.black)
-            }
-            if(Utility.dialog!=null && Utility.dialog.isShowing) {
-                Utility.dialog.dismissWithAnimation()
-            }
-        })
-
-
-        registerViewModel.getUserLastName().observe(this, Observer {
-            if (it.success) {
-                val lstLastname = Array<String?>(it.data.size) { null }
-                for ((index, stateData) in it.data.withIndex()) {
-                    lstLastname[index] = stateData.name
-                }
-                spinnerLname.setItems(lstLastname)
-                spinnerLname.setExpandTint(R.color.black)
-            }
-        })
 
         val registerPrompt = MaterialTapTargetPrompt.Builder(this@RegisterActivty)
                 .setTarget(R.id.btn_register)
@@ -266,10 +201,71 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback {
                 pickFromGallery()
             }
         }
-
-
     }
 
+    override fun getStates(data: List<StateDatum>) {
+        val lstState = Array<String?>(data.size) { null }
+        for ((index, stateData) in data.withIndex()) {
+            lstState[index] = stateData.state
+        }
+        spinnerStates.setItems(lstState)
+        spinnerStates.setExpandTint(R.color.black)
+    }
+
+    override fun getCities(data: List<CitiesDatum>) {
+        val lstCity = Array<String?>(data.size) { null }
+        for ((index, cityData) in data.withIndex()) {
+            lstCity[index] = cityData.city
+        }
+        spinnerCities.clear()
+        spinnerCities.setTitle("Select ${spinnerStates.text}'s City")
+        spinnerCities.setItems(lstCity)
+        spinnerCities.setExpandTint(R.color.black)
+        if(Utility.dialog!=null && Utility.dialog.isShowing) {
+            Utility.dialog.dismissWithAnimation()
+        }
+        if(Utility.dialog!=null && Utility.dialog.isShowing) {
+            Utility.dialog.dismissWithAnimation()
+        }
+    }
+
+    override fun getSubCommunity(data: List<SubDatum>) {
+        val lstSubCom = Array<String?>(data.size) { null }
+        for ((index, subData) in data.withIndex()) {
+            lstSubCom[index] = subData.name
+        }
+        spinnerSub.setItems(lstSubCom)
+    }
+
+    override fun getLocalCommunity(data: List<LocalDatum>) {
+        val lstLocal = Array<String?>(data.size) { null }
+        for ((index, LocalData) in data.withIndex()) {
+            lstLocal[index] = LocalData.name
+        }
+        spinnerLocal.clear()
+        spinnerLocal.setTitle("Select ${spinnerSub.text}'s Local Community")
+        spinnerLocal.setItems(lstLocal)
+        spinnerLocal.setExpandTint(R.color.black)
+        if(Utility.dialog!=null && Utility.dialog.isShowing) {
+            Utility.dialog.dismissWithAnimation()
+        }
+    }
+
+    override fun getLastname(data: List<LastNameDatum>) {
+        val lstLastname = Array<String?>(data.size) { null }
+        for ((index, stateData) in data.withIndex()) {
+            lstLastname[index] = stateData.name
+        }
+        spinnerLname.setItems(lstLastname)
+        spinnerLname.setExpandTint(R.color.black)
+    }
+
+    override fun getFailure(message: String) {
+        Utility.toast(this,message)
+        if(Utility.dialog!=null && Utility.dialog.isShowing) {
+            Utility.dialog.dismissWithAnimation()
+        }
+    }
 
     private fun pickFromGallery() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {

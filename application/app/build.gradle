@@ -146,10 +146,14 @@ dependencies {
     implementation 'uk.co.samuelwall:material-tap-target-prompt:3.0.0'
 
 
-    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+
+    //Kotlin Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1"
 
 
 }

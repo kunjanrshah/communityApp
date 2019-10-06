@@ -128,6 +128,10 @@ public class Utility {
         return jsonObject;
     }
 
+    public static void toast(Context context,String message){
+        Toast.makeText(context, ""+message, Toast.LENGTH_SHORT).show();
+    }
+
     /**
      * This method returns a Json object for handling Force update error
      *
