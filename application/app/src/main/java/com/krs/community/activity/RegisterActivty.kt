@@ -27,19 +27,25 @@ import com.krs.community.model.*
 import com.krs.community.utils.CountryData
 import com.krs.community.utils.Logger
 import com.krs.community.utils.Utility
+import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.RegisterViewModel
+import com.krs.community.viewmodel.RegisterViewModelFactory
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.*
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
 import com.yalantis.ucrop.model.AspectRatio
 import kotlinx.android.synthetic.main.activity_register.*
+import org.kodein.di.KodeinAware
 import retrofit2.Callback
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import java.io.File
 import java.io.IOException
+import org.kodein.di.android.kodein
+import org.kodein.di.generic.instance
+import kotlin.Exception as Exception1
 
-class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener{
+class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener,KodeinAware{
 
     private var str_profile_hash = ""
     private var isShow = true
@@ -56,10 +62,14 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         private val TAG = RegisterActivty::class.java.simpleName
     }
 
+    override val kodein by kodein()
+    private val factory:RegisterViewModelFactory by instance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         logger = Logger(TAG)
-        registerViewModel = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
+
+        registerViewModel = ViewModelProviders.of(this,factory).get(RegisterViewModel::class.java)
         registerViewModel.init()
         registerViewModel.iRegisterListener=this
 
@@ -147,6 +157,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
 
         /*get Lastnames */
         registerViewModel.getUserLastName()
+
         /*get countries */
         spinnerCountries.setItems(CountryData.countryNames)
         spinnerCountries.setExpandTint(R.color.black)
@@ -164,6 +175,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
             Utility.startProgress(this,"Fetching Local Communities of ${spinnerSub.text}","Loading...")
             registerViewModel.getLstLocalCommunity(it + 1)
         }
+
 
         val registerPrompt = MaterialTapTargetPrompt.Builder(this@RegisterActivty)
                 .setTarget(R.id.btn_register)
@@ -251,6 +263,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         }
     }
 
+
     override fun getLastname(data: List<LastNameDatum>) {
         val lstLastname = Array<String?>(data.size) { null }
         for ((index, stateData) in data.withIndex()) {
@@ -261,10 +274,12 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
     }
 
     override fun getFailure(message: String) {
-        Utility.toast(this,message)
+
         if(Utility.dialog!=null && Utility.dialog.isShowing) {
             Utility.dialog.dismissWithAnimation()
         }
+        //Utility.toast(this,message)
+        root_layout.snackbar(message)
     }
 
     private fun pickFromGallery() {

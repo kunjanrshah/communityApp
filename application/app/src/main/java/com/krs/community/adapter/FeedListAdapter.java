@@ -25,7 +25,7 @@ import java.util.List;
 
 
 public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.FeedListViewHolder> {
-    ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+    ImageLoader imageLoader = AppController.mApplication.getImageLoader();
     private List<FeedItem> feedItems;
 
     public FeedListAdapter(Activity activity, List<FeedItem> feedItems) {
@@ -40,7 +40,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.FeedLi
 
     @Override
     public void onBindViewHolder(@NonNull FeedListViewHolder holder, int position) {
-        if (imageLoader == null) imageLoader = AppController.getInstance().getImageLoader();
+        if (imageLoader == null) imageLoader = AppController.mApplication.getImageLoader();
 
         FeedItem item = feedItems.get(position);
 

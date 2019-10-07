@@ -158,7 +158,7 @@ public class LocationAlertService extends Service {
                 }
             };
             // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(jsonObjReq, "tag_json_obj");
+            AppController.mApplication.addToRequestQueue(jsonObjReq, "tag_json_obj");
         } else {
 
             new Handler(Looper.getMainLooper()).post(new Runnable() {

@@ -14,7 +14,7 @@ interface ApiServices {
     suspend fun getUserState(): Response<RBStates>
 
     @POST(AppConstants.UrlPath.GET_SUBCASTE)
-    suspend fun getUserLastName(): LastName
+    suspend fun getUserLastName(): Response<LastName>
 
     @POST(AppConstants.UrlPath.GET_SUBCOMM)
     suspend fun getSubCommunity(): Response<SubComm>
@@ -27,7 +27,7 @@ interface ApiServices {
 
     companion object{
         operator fun invoke():ApiServices{
-            return AppController.getInstance().retrofitBase.apiServices
+            return AppController.mApplication?.retrofitBase?.apiServices!!
         }
     }
 }

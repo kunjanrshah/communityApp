@@ -195,7 +195,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
         init {
             tv_name = v.findViewById<View>(com.krs.community.R.id.tv_name) as TextView
             tv_subtext = v.findViewById(R.id.tv_subtext)
-            tv_subtext.typeface = AppController.getInstance().typeface_bold
+            tv_subtext.typeface = AppController.mApplication.typeface_bold
             tv_email = v.findViewById(R.id.tv_email)
             tv_mobile = v.findViewById(R.id.tv_mobile)
             bmb1 = v.findViewById(R.id.bmb1)

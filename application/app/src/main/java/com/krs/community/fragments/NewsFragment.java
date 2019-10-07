@@ -54,7 +54,7 @@ public class NewsFragment extends Fragment {
     private List<FeedItem> feedItems;
     private String URL_FEED = "https://api.androidhive.info/feed/feed.json";
     private ShimmerFrameLayout mShimmerViewContainer;
-    ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+    ImageLoader imageLoader = AppController.mApplication.getImageLoader();
     ParallaxRecyclerAdapter<FeedItem> adapter = null;
 
     @Override
@@ -75,7 +75,7 @@ public class NewsFragment extends Fragment {
 
             @Override
             public void onBindViewHolderImpl(RecyclerView.ViewHolder viewHolder, ParallaxRecyclerAdapter<FeedItem> adapter, int position) {
-                if (imageLoader == null) imageLoader = AppController.getInstance().getImageLoader();
+                if (imageLoader == null) imageLoader = AppController.mApplication.getImageLoader();
 
                 FeedItem item = feedItems.get(position);
                 FeedListViewHolder holder = (FeedListViewHolder) viewHolder;
@@ -162,7 +162,7 @@ public class NewsFragment extends Fragment {
 
 
         // We first check for cached request
-        Cache cache = AppController.getInstance().getRequestQueue().getCache();
+        Cache cache = AppController.mApplication.getRequestQueue().getCache();
         //Cache.Entry entry = cache.get(URL_FEED);
         Cache.Entry entry = null;
         if (entry != null) {
@@ -189,7 +189,7 @@ public class NewsFragment extends Fragment {
             }, error -> VolleyLog.d(TAG, "Error: " + error.getMessage()));
 
             // Adding request to volley request queue
-            AppController.getInstance().addToRequestQueue(jsonReq);
+            AppController.mApplication.addToRequestQueue(jsonReq);
         }
 
         return rootView;

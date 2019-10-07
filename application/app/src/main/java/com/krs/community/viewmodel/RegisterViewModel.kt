@@ -5,19 +5,20 @@ import android.app.Application
 import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.LoginActivity
 import com.krs.community.interfaces.IRegisterListener
-import com.krs.community.model.LocalComm
-import com.krs.community.model.RBCities
 import com.krs.community.repositories.RegisterRepository
+import com.krs.community.utils.ApiException
 import com.krs.community.utils.Coroutines
+import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
-import kotlinx.coroutines.Dispatchers
+import java.lang.Exception
 
-class RegisterViewModel(var app: Application) : AndroidViewModel(app) {
+class RegisterViewModel(
+        private val registerRepository:RegisterRepository,
+        var app: Application) : AndroidViewModel(app) {
 
     var fname: String? = null
     var email: String? = null
@@ -27,82 +28,101 @@ class RegisterViewModel(var app: Application) : AndroidViewModel(app) {
     var iRegisterListener:IRegisterListener?=null
     var TAG:String=RegisterViewModel::class.java.simpleName
 
-    private lateinit var registerRepository: RegisterRepository
-
-    var lstCities: MutableLiveData<RBCities> =  MutableLiveData<RBCities>()
-    var lstLocalComm: MutableLiveData<LocalComm> =  MutableLiveData<LocalComm>()
+    //private lateinit var registerRepository: RegisterRepository
 
     fun init() {
-        registerRepository = RegisterRepository().getInstance()
+       // registerRepository = RegisterRepository().getInstance()
     }
+
     fun getUserStates() {
         Coroutines.main {
-            val response=registerRepository.userState()
-            if(response.isSuccessful){
-                response.body()?.data?.let { iRegisterListener?.getStates(it) }
-            }else{
-                response.code().let {
-                    iRegisterListener?.getFailure(response.body()?.message as String)
+            try{
+                val response=registerRepository.userState()
+                response.data?.let {
+                    iRegisterListener?.getStates(response.data)
+                    return@main
                 }
+                iRegisterListener?.getFailure(response.message as String)
+            }catch (e:ApiException){
+                e.message?.let { iRegisterListener?.getFailure(it) }
+            }catch (e:NoInternetException){
+                e.message?.let { iRegisterListener?.getFailure(it) }
+            }catch (e:Exception){
+                e.message?.let { iRegisterListener?.getFailure(it) }
             }
         }
     }
+
     fun fetchCitiesForStateId(id: Int){
         Coroutines.main {
-            val response=registerRepository.userCity(id)
-            if(response.isSuccessful){
-                response.body()?.data?.let { iRegisterListener?.getCities(it) }
-            }else{
-                response.code().let {
-                    iRegisterListener?.getFailure(response.body()?.message as String)
+            try{
+                val response=registerRepository.userCity(id)
+                response.data?.let {
+                    iRegisterListener?.getCities(response.data)
+                    return@main
                 }
+                iRegisterListener?.getFailure(response.message)
+            }catch (e:ApiException){
+                e.message?.let { iRegisterListener?.getFailure(it) }
+            }catch (e:NoInternetException){
+                e.message?.let { iRegisterListener?.getFailure(it) }
+            }catch (e:Exception){
+                e.message?.let { iRegisterListener?.getFailure(it) }
             }
         }
-    }
-
-    val lastname = liveData(Dispatchers.IO){
-
     }
 
     fun getUserLastName() {
-
-
-
-
-        Coroutines.main {
-            val response=registerRepository.userLastName()
-            if(response.isSuccessful){
-                response.body().data.let { iRegisterListener?.getLastname(it) }
-            }else{
-                response.code().let {
-                    iRegisterListener?.getFailure(response.body().message as String)
-                }
-            }
-        }
+         Coroutines.main {
+             try {
+                 val response=registerRepository.userLastName()
+                 response.data?.let {
+                     iRegisterListener?.getLastname(response.data)
+                     return@main
+                 }
+                 iRegisterListener?.getFailure(response.message)
+             }catch (e:ApiException){
+                 e.message?.let { iRegisterListener?.getFailure(it) }
+             }catch (e:NoInternetException){
+                 e.message?.let { iRegisterListener?.getFailure(it) }
+             }catch (e:Exception){
+                 e.message?.let { iRegisterListener?.getFailure(it) }
+             }
+         }
     }
 
     fun getLstSubCommunity() {
         Coroutines.main {
-            val response=registerRepository.userSubCommunity()
-            if(response.isSuccessful){
-                response.body()?.data?.let { iRegisterListener?.getSubCommunity(it) }
-            }else{
-                response.code().let {
-                    iRegisterListener?.getFailure(response.body()?.message as String)
+            try {
+                val response=registerRepository.userSubCommunity()
+                response.data?.let {
+                    iRegisterListener?.getSubCommunity(response.data)
+                    return@main
                 }
+                iRegisterListener?.getFailure(response.message)
+            }catch (e:ApiException){
+                e.message?.let { iRegisterListener?.getFailure(it) }
+            }catch (e:NoInternetException){
+                e.message?.let { iRegisterListener?.getFailure(it) }
             }
         }
     }
 
     fun getLstLocalCommunity(id: Int) {
         Coroutines.main {
-            val response=registerRepository.getLocalCommunity(id)
-            if(response.isSuccessful){
-                response.body()?.data?.let { iRegisterListener?.getLocalCommunity(it) }
-            }else{
-                response.code().let {
-                    iRegisterListener?.getFailure(response.body()?.message as String)
+            try {
+                val response=registerRepository.getLocalCommunity(id)
+                response.data?.let {
+                    iRegisterListener?.getLocalCommunity(response.data)
+                    return@main
                 }
+                iRegisterListener?.getFailure(response.message)
+            }catch (e:ApiException){
+                e.message?.let { iRegisterListener?.getFailure(it) }
+            }catch (e:NoInternetException){
+                e.message?.let { iRegisterListener?.getFailure(it) }
+            }catch (e:Exception){
+                e.message?.let { iRegisterListener?.getFailure(it) }
             }
         }
     }

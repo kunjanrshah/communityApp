@@ -132,6 +132,8 @@ public class Utility {
         Toast.makeText(context, ""+message, Toast.LENGTH_SHORT).show();
     }
 
+
+
     /**
      * This method returns a Json object for handling Force update error
      *
@@ -1364,8 +1366,8 @@ public class Utility {
         } else if (lang.equals(context.getResources().getString(R.string._hindi))) {
             loc = "hi";
         }
-        AppController.getInstance().mEditor.putString(context.getResources().getString(R.string.locale_sp), lang);
-        AppController.getInstance().mEditor.apply();
+        AppController.mApplication.getMEditor().putString(context.getResources().getString(R.string.locale_sp), lang);
+        AppController.mApplication.getMEditor().apply();
         Locale myLocale = new Locale(loc);
         Locale.setDefault(myLocale);
         android.content.res.Configuration config = new android.content.res.Configuration();

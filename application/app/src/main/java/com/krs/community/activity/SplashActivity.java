@@ -82,12 +82,12 @@ public class SplashActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        boolean is_home = AppController.getInstance().mSharedPreferences.getBoolean(AppConstants.IS_HOME, false);
+        boolean is_home = AppController.mApplication.getMSharedPreferences().getBoolean(AppConstants.IS_HOME, false);
         if (!is_home) {
             return;
         }
         Intent mIntent = new Intent(SplashActivity.this, DashboardActivity.class);
-        mIntent.putExtra(AppConstants.USER_ID, AppController.getInstance().mSharedPreferences.getString(AppConstants.USER_ID, ""));
+        mIntent.putExtra(AppConstants.USER_ID, AppController.mApplication.getMSharedPreferences().getString(AppConstants.USER_ID, ""));
         startActivity(mIntent);
         finish();
     }
@@ -95,7 +95,7 @@ public class SplashActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        String locale = AppController.getInstance().mSharedPreferences.getString(getResources().getString(R.string.locale_sp), getResources().getString(R.string._english));
+        String locale = AppController.mApplication.getMSharedPreferences().getString(getResources().getString(R.string.locale_sp), getResources().getString(R.string._english));
         if (locale.equalsIgnoreCase(getResources().getString(R.string._gujarati))) {
             splanguage.setSelection(2);
         } else if (locale.equalsIgnoreCase(getResources().getString(R.string._hindi))) {

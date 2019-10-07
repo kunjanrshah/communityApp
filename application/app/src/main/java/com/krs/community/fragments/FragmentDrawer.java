@@ -181,8 +181,8 @@ public class FragmentDrawer extends Fragment {
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
 
-                if (AppController.getInstance().isUpdate) {
-                    AppController.getInstance().isUpdate = false;
+                if (AppController.mApplication.getIsUpdate()) {
+                    AppController.mApplication.setIsUpdate(false);
                    /* try {
                         Glide.with(getActivity()).load(mSharedPreferences.getString(AppConstants.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
                     } catch (Exception e) {

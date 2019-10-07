@@ -506,15 +506,15 @@ public class LoginActivity extends Activity {
     }
 
     private void signIn() {
-        Intent signInIntent = AppController.getInstance().mGoogleSignInClient.getSignInIntent();
+        Intent signInIntent = AppController.mApplication.getMGoogleSignInClient().getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     private void MemoryAllocation() {
         mCallbackManager = CallbackManager.Factory.create();
         mAuth = FirebaseAuth.getInstance();
-        mSharedPreferences = AppController.getInstance().mSharedPreferences;
-        mEditor = AppController.getInstance().mEditor;
+        mSharedPreferences = AppController.mApplication.getMSharedPreferences();
+        mEditor = AppController.mApplication.getMEditor();
         img_back = findViewById(R.id.img_back);
         edt_username = findViewById(R.id.edt_username);
         edt_pass = findViewById(R.id.edt_pass);
@@ -745,7 +745,7 @@ public class LoginActivity extends Activity {
             }
         };
         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
-        AppController.getInstance().addToRequestQueue(jsonObjReq, "");
+        AppController.mApplication.addToRequestQueue(jsonObjReq, "");
     }
 
     private void call_change_password_ws(String str1, String str2) {
@@ -822,7 +822,7 @@ public class LoginActivity extends Activity {
             };
 
             jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
-            AppController.getInstance().addToRequestQueue(jsonObjReq, "");
+            AppController.mApplication.addToRequestQueue(jsonObjReq, "");
         }
     }
 
@@ -884,7 +884,7 @@ public class LoginActivity extends Activity {
         };
         // Adding request to request queue
         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, AppConstants.DEFAULT_MAX_RETRIES, AppConstants.DEFAULT_BACKOFF_MULT));
-        AppController.getInstance().addToRequestQueue(jsonObjReq, "");
+        AppController.mApplication.addToRequestQueue(jsonObjReq, "");
     }
 
     private void LoginWS(FirebaseUser user, JSONObject data, int is_from) {
@@ -1087,7 +1087,7 @@ public class LoginActivity extends Activity {
             }
         };
         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
-        AppController.getInstance().addToRequestQueue(jsonObjReq, "");
+        AppController.mApplication.addToRequestQueue(jsonObjReq, "");
     }
 
     private void AfterValidCheck(JSONObject response, boolean isLoginSuccess) throws Exception {
@@ -1133,7 +1133,7 @@ public class LoginActivity extends Activity {
             Bundle fb_bundle = new Bundle();
             fb_bundle.putInt(FirebaseAnalytics.Param.ITEM_ID, Integer.parseInt(user_id));
             fb_bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, first_name + " " + last_name);
-            /*  AppController.getInstance().firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, fb_bundle);
+            /*  AppController.mApplication.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, fb_bundle);
                 if (user_id.equalsIgnoreCase(AppConstants.ADMIN_1) || user_id.equalsIgnoreCase(AppConstants.ADMIN_2)) {
                 AppController.isAdmin = true;
               }*/

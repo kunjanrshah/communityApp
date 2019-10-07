@@ -29,10 +29,10 @@ public class RetrofitBase {
     private Logger logger;
 
 
-
     public RetrofitBase(Context context, boolean addTimeout) {
         this.context = context;
 
+        NetworkConnectionInterceptor networkConnectionInterceptor=new NetworkConnectionInterceptor(context);
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         if (BuildConfig.DEBUG) {
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -40,7 +40,10 @@ public class RetrofitBase {
             interceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         }
 
-        OkHttpClient.Builder httpClientBuilder = new OkHttpClient().newBuilder().addInterceptor(interceptor);
+        OkHttpClient.Builder httpClientBuilder = new OkHttpClient().newBuilder()
+                .addInterceptor(interceptor)
+                .addInterceptor(networkConnectionInterceptor);
+
         if (addTimeout) {
             httpClientBuilder.readTimeout(AppConstants.TimeOut.SOCKET_TIME_OUT, TimeUnit.SECONDS);
             httpClientBuilder.connectTimeout(AppConstants.TimeOut.CONNECTION_TIME_OUT, TimeUnit.SECONDS);
@@ -58,6 +61,7 @@ public class RetrofitBase {
                 .create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(AppConstants.APPLICATION_BASE_URL)
+               // .client(okkHttpclient)
                 .client(httpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();

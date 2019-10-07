@@ -171,8 +171,8 @@ class SearchByDistanceFragment : Fragment() {
         var bmb1: BoomMenuButton
 
         init {
-            val typeface: Typeface = AppController.getInstance().typeface
-            val typeface_bold: Typeface = AppController.getInstance().typeface_bold
+            val typeface: Typeface = AppController.mApplication?.typeface!!
+            val typeface_bold: Typeface = AppController.mApplication?.typeface_bold!!
             tv_name = v.findViewById<View>(com.krs.community.R.id.tv_name) as TextView
             tv_name.typeface = typeface_bold
 
