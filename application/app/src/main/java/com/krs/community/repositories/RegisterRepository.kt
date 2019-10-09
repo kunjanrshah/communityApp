@@ -8,16 +8,6 @@ class RegisterRepository(
     private val api:ApiServices
 ): SafeApiRequest() {
 
-    private var registerRepository: RegisterRepository? = null
-
-    fun getInstance(): RegisterRepository {
-        if (registerRepository == null) {
-            registerRepository = RegisterRepository(api)
-
-        }
-        return registerRepository as RegisterRepository
-    }
-
     suspend fun userState(): RBStates {
         return apiRequest{
             api.getUserState()
