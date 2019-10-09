@@ -14,9 +14,12 @@ import com.krs.community.utils.ApiException
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 
 class RegisterViewModel(
-        private val registerRepository:RegisterRepository,
+        private val registerRepository: RegisterRepository,
         var app: Application) : AndroidViewModel(app) {
 
     var fname: String? = null
@@ -24,104 +27,156 @@ class RegisterViewModel(
     var pass: String? = null
     var cpass: String? = null
     var address: String? = null
-    var iRegisterListener:IRegisterListener?=null
-    var TAG:String=RegisterViewModel::class.java.simpleName
+    var iRegisterListener: IRegisterListener? = null
+    var TAG: String = RegisterViewModel::class.java.simpleName
 
-    //private lateinit var registerRepository: RegisterRepository
+    var job_states: CompletableJob? = null
+    var job_cities: CompletableJob? = null
+    var job_lastname: CompletableJob? = null
+    var job_subcommunity: CompletableJob? = null
+    var job_localcommunity: CompletableJob? = null
 
-    fun init() {
-       // registerRepository = RegisterRepository().getInstance()
+
+    fun cancelAllJobs() {
+        job_states?.cancel()
+        job_cities?.cancel()
+        job_lastname?.cancel()
+        job_subcommunity?.cancel()
+        job_localcommunity?.cancel()
     }
 
-   fun getUserStates() {
-        Coroutines.main {
-            try{
-                val response=registerRepository.userState()
-                response.data?.let {
-                    iRegisterListener?.getStates(response.data)
-                    return@main
+    fun getUserStates() {
+        job_states = Job()
+        job_states.let { thejob ->
+
+            CoroutineScope(IO + thejob!!).launch {
+                try {
+                    val response = registerRepository.userState()
+                    response.data?.let {
+                        withContext(Main) {
+                            iRegisterListener?.getStates(response.data)
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                    iRegisterListener?.getFailure(response.message as String)
+                } catch (e: ApiException) {
+                    e.message?.let {
+                        iRegisterListener?.getFailure(it)
+                    }
+                } catch (e: NoInternetException) {
+                    e.message?.let {
+                        iRegisterListener?.getFailure(it)
+                    }
+                } catch (e: Exception) {
+                    e.message?.let {
+                        iRegisterListener?.getFailure(it)
+                    }
                 }
-                iRegisterListener?.getFailure(response.message as String)
-            }catch (e:ApiException){
-                e.message?.let { iRegisterListener?.getFailure(it) }
-            }catch (e:NoInternetException){
-                e.message?.let { iRegisterListener?.getFailure(it) }
-            }catch (e:Exception){
-                e.message?.let { iRegisterListener?.getFailure(it) }
+                thejob.complete()
             }
         }
     }
 
-    fun fetchCitiesForStateId(id: Int){
-        Coroutines.main {
-            try{
-                val response=registerRepository.userCity(id)
-                response.data?.let {
-                    iRegisterListener?.getCities(response.data)
-                    return@main
+    fun fetchCitiesForStateId(id: Int) {
+        job_cities = Job()
+
+        job_cities.let {thejob ->
+            CoroutineScope(IO + thejob!!).launch {
+                try {
+                    val response = registerRepository.userCity(id)
+                    response.data?.let {
+                        withContext(Main) {
+                            iRegisterListener?.getCities(response.data)
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                    iRegisterListener?.getFailure(response.message)
+                } catch (e: ApiException) {
+                    e.message?.let { iRegisterListener?.getFailure(it) }
+                } catch (e: NoInternetException) {
+                    e.message?.let { iRegisterListener?.getFailure(it) }
+                } catch (e: Exception) {
+                    e.message?.let { iRegisterListener?.getFailure(it) }
                 }
-                iRegisterListener?.getFailure(response.message)
-            }catch (e:ApiException){
-                e.message?.let { iRegisterListener?.getFailure(it) }
-            }catch (e:NoInternetException){
-                e.message?.let { iRegisterListener?.getFailure(it) }
-            }catch (e:Exception){
-                e.message?.let { iRegisterListener?.getFailure(it) }
+                thejob.complete()
             }
         }
     }
 
     fun getUserLastName() {
-         Coroutines.main {
-             try {
-                 val response=registerRepository.userLastName()
-                 response.data?.let {
-                     iRegisterListener?.getLastname(response.data)
-                     return@main
-                 }
-                 iRegisterListener?.getFailure(response.message)
-             }catch (e:ApiException){
-                 e.message?.let { iRegisterListener?.getFailure(it) }
-             }catch (e:NoInternetException){
-                 e.message?.let { iRegisterListener?.getFailure(it) }
-             }catch (e:Exception){
-                 e.message?.let { iRegisterListener?.getFailure(it) }
-             }
-         }
+        job_lastname=Job()
+        job_lastname.let {thejob ->
+            CoroutineScope(IO+thejob!!).launch {
+                try {
+                    val response = registerRepository.userLastName()
+                    response.data?.let {
+                        withContext(Main) {
+                            iRegisterListener?.getLastname(response.data)
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                    iRegisterListener?.getFailure(response.message)
+                } catch (e: ApiException) {
+                    e.message?.let { iRegisterListener?.getFailure(it) }
+                } catch (e: NoInternetException) {
+                    e.message?.let { iRegisterListener?.getFailure(it) }
+                } catch (e: Exception) {
+                    e.message?.let { iRegisterListener?.getFailure(it) }
+                }
+                thejob.complete()
+            }
+        }
     }
 
     fun getLstSubCommunity() {
-        Coroutines.main {
-            try {
-                val response=registerRepository.userSubCommunity()
-                response.data?.let {
-                    iRegisterListener?.getSubCommunity(response.data)
-                    return@main
+        job_subcommunity=Job()
+        job_subcommunity.let {thejob ->
+            CoroutineScope(IO + thejob!!).launch {
+                try {
+                    val response = registerRepository.userSubCommunity()
+                    response.data?.let {
+                        withContext(Main) {
+                            iRegisterListener?.getSubCommunity(response.data)
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                    iRegisterListener?.getFailure(response.message)
+                } catch (e: ApiException) {
+                    e.message?.let { iRegisterListener?.getFailure(it) }
+                } catch (e: NoInternetException) {
+                    e.message?.let { iRegisterListener?.getFailure(it) }
                 }
-                iRegisterListener?.getFailure(response.message)
-            }catch (e:ApiException){
-                e.message?.let { iRegisterListener?.getFailure(it) }
-            }catch (e:NoInternetException){
-                e.message?.let { iRegisterListener?.getFailure(it) }
+                thejob.complete()
             }
         }
     }
 
     fun getLstLocalCommunity(id: Int) {
-        Coroutines.main {
-            try {
-                val response=registerRepository.getLocalCommunity(id)
-                response.data?.let {
-                    iRegisterListener?.getLocalCommunity(response.data)
-                    return@main
+        job_localcommunity=Job()
+        job_localcommunity.let {thejob ->
+            CoroutineScope(IO +thejob!!).launch {
+                try {
+                    val response = registerRepository.getLocalCommunity(id)
+                    response.data?.let {
+                        withContext(Main) {
+                            iRegisterListener?.getLocalCommunity(response.data)
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                    iRegisterListener?.getFailure(response.message)
+                } catch (e: ApiException) {
+                    e.message?.let { iRegisterListener?.getFailure(it) }
+                } catch (e: NoInternetException) {
+                    e.message?.let { iRegisterListener?.getFailure(it) }
+                } catch (e: Exception) {
+                    e.message?.let { iRegisterListener?.getFailure(it) }
                 }
-                iRegisterListener?.getFailure(response.message)
-            }catch (e:ApiException){
-                e.message?.let { iRegisterListener?.getFailure(it) }
-            }catch (e:NoInternetException){
-                e.message?.let { iRegisterListener?.getFailure(it) }
-            }catch (e:Exception){
-                e.message?.let { iRegisterListener?.getFailure(it) }
+                thejob.complete()
             }
         }
     }
@@ -130,7 +185,7 @@ class RegisterViewModel(
         val mIntent = Intent(activity, DashboardActivity::class.java)
         activity.startActivity(mIntent)
         activity.finish()
-        Log.d(TAG,"onRegisterButtonClick")
+        Log.d(TAG, "onRegisterButtonClick")
     }
 
     fun onTextAlreadyClicked(activity: Activity) {

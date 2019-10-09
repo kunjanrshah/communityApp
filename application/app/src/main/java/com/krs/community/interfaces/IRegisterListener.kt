@@ -8,5 +8,5 @@ interface IRegisterListener {
     fun getLastname(data:List<LastNameDatum>)
     fun getCities(data:List<CitiesDatum>)
     fun getStates(data:List<StateDatum>)
-    fun getFailure(message:String)
+   suspend fun getFailure(message:String)
 }

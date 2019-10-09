@@ -27,6 +27,7 @@ import com.krs.community.retrofit.ApiServices
 import com.krs.community.retrofit.RetrofitBase
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.ConnectivityReceiver
+import com.krs.community.utils.Coroutines
 import com.krs.community.utils.LocaleHelper
 import com.krs.community.viewmodel.RegisterViewModelFactory
 import com.krs.community.volley.LruBitmapCache
@@ -67,9 +68,9 @@ class AppController : Application(), KodeinAware {
         bind() from singleton { ApiServices() }
         bind() from singleton {  RegisterRepository(instance()) }
         bind() from provider { RegisterViewModelFactory(instance()) }
-
-
     }
+
+
 
 
     @SuppressLint("CommitPrefEdits")
@@ -160,5 +161,4 @@ class AppController : Application(), KodeinAware {
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(LocaleHelper.onAttach(base, "en"))
     }
-
 }

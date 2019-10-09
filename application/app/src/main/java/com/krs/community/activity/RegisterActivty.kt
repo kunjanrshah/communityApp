@@ -12,7 +12,6 @@ import android.text.Html
 import android.text.InputType
 import android.view.MotionEvent
 import android.view.View
-import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -36,10 +35,11 @@ import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
 import com.yalantis.ucrop.model.AspectRatio
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.withContext
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
-import retrofit2.Callback
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import java.io.File
 import java.io.IOException
@@ -69,7 +69,6 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         logger = Logger(TAG)
 
         registerViewModel = ViewModelProviders.of(this,factory).get(RegisterViewModel::class.java)
-        registerViewModel.init()
         registerViewModel.iRegisterListener=this
 
         val binding:ActivityRegisterBinding = DataBindingUtil.setContentView(this, R.layout.activity_register)
@@ -214,6 +213,8 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         }
     }
 
+
+
     override fun getStates(data: List<StateDatum>) {
         val lstState = Array<String?>(data.size) { null }
         for ((index, stateData) in data.withIndex()) {
@@ -270,13 +271,15 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         spinnerLname.setExpandTint(R.color.black)
     }
 
-    override fun getFailure(message: String) {
+    override suspend fun getFailure(message: String) {
 
-        if(Utility.dialog!=null && Utility.dialog.isShowing) {
-            Utility.dialog.dismissWithAnimation()
+        withContext(Main){
+            if(Utility.dialog!=null && Utility.dialog.isShowing) {
+                Utility.dialog.dismissWithAnimation()
+            }
+            //Utility.toast(this,message)
+            root_layout.snackbar(message)
         }
-        //Utility.toast(this,message)
-        root_layout.snackbar(message)
     }
 
     private fun pickFromGallery() {
@@ -481,9 +484,10 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
             RESULT_ERROR -> handleCropError(result.mResultData)
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        registerViewModel.cancelAllJobs()
+    }
 }
 
-private operator fun AdapterView.OnItemSelectedListener.invoke(callback: Callback<RBStates>) {
-
-
-}
