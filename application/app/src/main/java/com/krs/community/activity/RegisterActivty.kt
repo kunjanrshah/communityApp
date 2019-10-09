@@ -37,13 +37,12 @@ import com.yalantis.ucrop.UCropFragmentCallback
 import com.yalantis.ucrop.model.AspectRatio
 import kotlinx.android.synthetic.main.activity_register.*
 import org.kodein.di.KodeinAware
+import org.kodein.di.android.kodein
+import org.kodein.di.generic.instance
 import retrofit2.Callback
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import java.io.File
 import java.io.IOException
-import org.kodein.di.android.kodein
-import org.kodein.di.generic.instance
-import kotlin.Exception as Exception1
 
 class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener,KodeinAware{
 
@@ -236,9 +235,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         if(Utility.dialog!=null && Utility.dialog.isShowing) {
             Utility.dialog.dismissWithAnimation()
         }
-        if(Utility.dialog!=null && Utility.dialog.isShowing) {
-            Utility.dialog.dismissWithAnimation()
-        }
+
     }
 
     override fun getSubCommunity(data: List<SubDatum>) {

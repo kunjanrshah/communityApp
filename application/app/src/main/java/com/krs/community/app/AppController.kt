@@ -8,9 +8,11 @@ import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.os.StrictMode
+import android.text.TextUtils
 import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import androidx.multidex.MultiDex
+import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.Volley
@@ -52,6 +54,12 @@ class AppController : Application(), KodeinAware {
     lateinit var mLruBitmapCache: LruBitmapCache
     lateinit var mImageLoader: ImageLoader
 
+
+    companion object {
+        val TAG = AppController::class.java.simpleName
+        lateinit var mApplication: AppController
+    }
+
     override val kodein= Kodein.lazy {
 
         import(androidXModule(this@AppController))
@@ -82,13 +90,11 @@ class AppController : Application(), KodeinAware {
 
         MultiDex.install(this)
 
-
+        mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE)
+        mEditor = mSharedPreferences.edit()
         Log.d(TAG, "AppController Screen")
         mEditor.putBoolean(getString(R.string.app_create), true)
         mEditor.apply()
-
-        mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE)
-        mEditor = mSharedPreferences.edit()
 
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
@@ -105,9 +111,21 @@ class AppController : Application(), KodeinAware {
 
     fun getRequestQueue(): RequestQueue {
         if(mRequestQueue==null){
-            mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+            mRequestQueue = Volley.newRequestQueue(applicationContext)
         }
-        return mRequestQueue;
+        return mRequestQueue
+    }
+
+    fun <T> addToRequestQueue(req: Request<T>,tag:String){
+        // set the default tag if tag is empty
+        req.tag = TextUtils.isEmpty(tag)
+        getRequestQueue().add(req)
+    }
+
+    fun <T> addToRequestQueue(req: Request<T>){
+        // set the default tag if tag is empty
+        req.tag = TAG
+        getRequestQueue().add(req)
     }
 
     fun getImageLoader(): ImageLoader {
@@ -122,9 +140,9 @@ class AppController : Application(), KodeinAware {
 
     fun getLruBitmapCache():LruBitmapCache{
         if (mLruBitmapCache == null){
-            mLruBitmapCache = LruBitmapCache();
+            mLruBitmapCache = LruBitmapCache()
         }
-        return mLruBitmapCache;
+        return mLruBitmapCache
     }
 
     override fun onTerminate() {
@@ -143,8 +161,4 @@ class AppController : Application(), KodeinAware {
         super.attachBaseContext(LocaleHelper.onAttach(base, "en"))
     }
 
-    companion object {
-        private val TAG = AppController::class.java.simpleName
-        lateinit var mApplication: AppController
-    }
 }

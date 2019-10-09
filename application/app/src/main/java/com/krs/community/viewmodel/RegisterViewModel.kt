@@ -14,7 +14,6 @@ import com.krs.community.utils.ApiException
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
-import java.lang.Exception
 
 class RegisterViewModel(
         private val registerRepository:RegisterRepository,
@@ -34,7 +33,7 @@ class RegisterViewModel(
        // registerRepository = RegisterRepository().getInstance()
     }
 
-    fun getUserStates() {
+   fun getUserStates() {
         Coroutines.main {
             try{
                 val response=registerRepository.userState()

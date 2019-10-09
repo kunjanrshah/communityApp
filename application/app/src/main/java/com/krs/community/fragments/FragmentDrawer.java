@@ -27,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.krs.community.R;
 import com.krs.community.activity.LoginActivity;
 import com.krs.community.adapter.NavigationDrawerAdapter;
-import com.krs.community.app.AppController;
 import com.krs.community.model.NavDrawerItem;
 import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.Utility;
@@ -181,16 +180,16 @@ public class FragmentDrawer extends Fragment {
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
 
-                if (AppController.mApplication.getIsUpdate()) {
+                /*if (AppController.mApplication.getIsUpdate()) {
                     AppController.mApplication.setIsUpdate(false);
-                   /* try {
+                   *//* try {
                         Glide.with(getActivity()).load(mSharedPreferences.getString(AppConstants.PROFILE_PIC_URL, "")).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(img_profile);
                     } catch (Exception e) {
                         e.getMessage();
-                    }*/
+                    }*//*
                     String name = mSharedPreferences.getString(AppConstants.FIRST_NAME, "") + " " + mSharedPreferences.getString(AppConstants.LAST_NAME, "");
                     //  txt_name.setText(name);
-                }
+                }*/
                 //  getActivity().invalidateOptionsMenu();
                 Utility.hideKeyboard(getActivity());
             }
