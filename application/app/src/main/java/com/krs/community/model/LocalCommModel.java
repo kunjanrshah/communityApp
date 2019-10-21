@@ -5,17 +5,17 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class RBStates {
+public class LocalCommModel {
 
     @SerializedName("success")
     @Expose
     private Boolean success;
     @SerializedName("message")
     @Expose
-    private Object message;
+    private String message;
     @SerializedName("data")
     @Expose
-    private List<StateDatum> data = null;
+    private List<LocalDatum> data = null;
 
     public Boolean getSuccess() {
         return success;
@@ -25,19 +25,19 @@ public class RBStates {
         this.success = success;
     }
 
-    public Object getMessage() {
+    public String getMessage() {
         return message;
     }
 
-    public void setMessage(Object message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 
-    public List<StateDatum> getData() {
+    public List<LocalDatum> getData() {
         return data;
     }
 
-    public void setData(List<StateDatum> data) {
+    public void setData(List<LocalDatum> data) {
         this.data = data;
     }
 

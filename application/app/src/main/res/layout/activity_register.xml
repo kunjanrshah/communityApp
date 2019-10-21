@@ -182,6 +182,7 @@
                             android:singleLine="true"
                             android:layout_marginLeft="20dp"
                             android:hint="Code"
+
                             android:background="@null"
                             style="@style/Widget.AppCompat.DropDownItem.Spinner"
                             android:layout_width="match_parent"
@@ -198,6 +199,7 @@
                         android:drawablePadding="10dp"
                         android:fontFamily="@font/montserrat_regular"
                         android:hint="@string/hint_mobile"
+                        android:text="@={registerviewmodel.mobile}"
                         android:inputType="number"
                         android:maxLength="10"
                         android:paddingEnd="0dp"

@@ -1,8 +1,6 @@
 package com.krs.community.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -30,7 +28,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -69,10 +69,15 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.krs.community.R;
 import com.krs.community.app.AppController;
+import com.krs.community.databinding.ActivityLoginBinding;
+import com.krs.community.interfaces.ILoginListener;
+import com.krs.community.model.LoginData;
 import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.CountryData;
 import com.krs.community.utils.Utility;
+import com.krs.community.viewmodel.LoginViewModel;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -80,8 +85,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
@@ -92,7 +95,7 @@ import static com.krs.community.utils.Utility.isValidMobile;
 import static com.krs.community.utils.Utility.showProgressDialog;
 
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity implements ILoginListener {
 
     private static final int RC_SIGN_IN = 9001;
     private final String TAG = LoginActivity.class.getSimpleName();
@@ -117,6 +120,9 @@ public class LoginActivity extends Activity {
     private RelativeLayout rl_spinner;
     private String isSelected = Mobile;
     private String mobile_no = "";
+
+    private LoginViewModel loginViewModel;
+
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         @Override
@@ -146,7 +152,12 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_login);
+        loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
+        loginViewModel.iLoginListener = this;
+
+        ActivityLoginBinding binding= DataBindingUtil.setContentView(LoginActivity.this, R.layout.activity_login);
+        binding.setLifecycleOwner(this);
+        binding.setLoginViewModel(loginViewModel);
 
         MemoryAllocation();
 
@@ -159,6 +170,7 @@ public class LoginActivity extends Activity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(this, R.color.colorBG, false);
         }
+
         btn_mobile.setOnClickListener(v -> {
             isSelected = Mobile;
             rl_spinner.setVisibility(View.VISIBLE);
@@ -343,9 +355,17 @@ public class LoginActivity extends Activity {
 
         btn_login.setOnClickListener(v -> {
 
-            Intent mIntent = new Intent(LoginActivity.this, DashboardActivity.class);
+
+            AppConstants.LoginRequest loginRequest = new AppConstants.LoginRequest();
+            loginViewModel.getLoginUser(loginRequest);
+
+            AppConstants.ForgotPass forgotPassRequest = new AppConstants.ForgotPass();
+            loginViewModel.userForgotPassword(forgotPassRequest);
+
+
+           /* Intent mIntent = new Intent(LoginActivity.this, DashboardActivity.class);
             startActivity(mIntent);
-            finish();
+            finish();*/
             /*
             String str = edt_username.getText().toString().trim();
 
@@ -441,7 +461,7 @@ public class LoginActivity extends Activity {
             if (hint.contains(getString(R.string.email))) {
                 btn_login.setText(getString(R.string.send_email));
             } else {
-                btn_login.setText(getString(R.string.send_otp));
+                btn_login.setText(getString(R.string.send_sms));
             }
         });
 
@@ -1151,6 +1171,21 @@ public class LoginActivity extends Activity {
         } else {
             Utility.alert(LoginActivity.this, getString(R.string.registraion_request_pending));
         }
+    }
+
+    @Override
+    public void getFailure(@NotNull String message) {
+        Log.d(TAG, "login data: " + message);
+    }
+
+    @Override
+    public void userForgotPass(@NotNull String data) {
+        Log.d(TAG, "forgot data: " + data.toString());
+    }
+
+    @Override
+    public void getUserLogin(@NotNull LoginData data) {
+        Log.d(TAG, "login data: " + data.toString());
     }
 
     class GetBase64String extends AsyncTask<String, Void, String> {

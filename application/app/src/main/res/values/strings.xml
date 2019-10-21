@@ -115,7 +115,7 @@
     <string name="_forgot_password">Forgot Password?</string>
     <string name="or_login_with">Or Login with</string>
     <string name="enter_email_id">Enter Email ID</string>
-    <string name="send_otp">Send OTP</string>
+    <string name="send_sms">Send SMS</string>
     <string name="resend_otp">Resend OTP</string>
     <string name="send_email">send email</string>
     <string name="do_you_have_an_account_register_now">Do you have an account?</string>
@@ -255,6 +255,20 @@
     <string name="upload_photo">તમારો પ્રોફાઈલ ફોટો અપલોડ કરો.</string>
     <string name="select_photo">મોબાઈલ ગેલેરી માંથી તમારો મનપસંદ ફોટો સિલેક્ટ કરો અને મનપસંદ ઈફેક્ટ આપી ને સેવ કરો.</string>
     <string name="headanimation">headanimation</string>
+    <string name="enter_firstname">Please enter your FirstName</string>
+    <string name="enter_lastname">Please enter your LastName</string>
+    <string name="enter_email">Please enter your Email</string>
+    <string name="enter_mobile">Please enter your Mobile</string>
+    <string name="select_country_code">Please select your Country</string>
+    <string name="enter_password">Please enter your Password</string>
+    <string name="confirm_password">Please enter to confirm Password</string>
+    <string name="password_mismatch">Password is mismatch</string>
+    <string name="enter_home_address">Please enter your home address</string>
+    <string name="select_city">Please select state</string>
+    <string name="select_state">Please select state</string>
+    <string name="select_sub_comm">Please select Sub Community</string>
+    <string name="select_local">Please select Local Community</string>
+    <string name="make_strong_pass">Make more than 6 characters long your password to make strong</string>
 
 
 </resources>
