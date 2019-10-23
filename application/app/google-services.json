@@ -1,64 +1,39 @@
 {
   "project_info": {
-    "project_number": "900336668958",
-    "firebase_url": "https://vastipatrak-5e514.firebaseio.com",
-    "project_id": "vastipatrak-5e514",
-    "storage_bucket": "vastipatrak-5e514.appspot.com"
+    "project_number": "317054014432",
+    "firebase_url": "https://community-1dfcb.firebaseio.com",
+    "project_id": "community-1dfcb",
+    "storage_bucket": "community-1dfcb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:900336668958:android:0f010b4ec4bc6247",
+        "mobilesdk_app_id": "1:317054014432:android:84c342342f84e1a56f5185",
         "android_client_info": {
           "package_name": "com.krs.community"
         }
       },
       "oauth_client": [
         {
-          "client_id": "900336668958-av3010hfeu6bpu3e6bcecl7v1v68qf3n.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.krs.community",
-            "certificate_hash": "de12b244f93c21617c5650694e13d0c78a3e9700"
-          }
-        },
-        {
-          "client_id": "900336668958-jl3sl5u1e5nefcqeocj3mq08h5kdd9dn.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.krs.community",
-            "certificate_hash": "3c85f9a35af74d3cef2e586b98692e610083f8a4"
-          }
-        },
-        {
-          "client_id": "900336668958-gdm42jrfhf5kb36d27jg68qjh2rvm5qk.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.krs.community",
-            "certificate_hash": "808f04ac7223825e66de31ce260fa63a072ef6b6"
-          }
-        },
-        {
-          "client_id": "900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com",
+          "client_id": "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCz56UacSMTJKFApD0nR24GPtf1kZWHUSg"
+          "current_key": "AIzaSyA2cZ8FFm81LTd7V4ANEpNZ0wFTpI54WZo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com",
+              "client_id": "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
         }
-      },
-      "admob_app_id": "ca-app-pub-8416782517840563~2944903715"
+      }
     }
   ],
   "configuration_version": "1"

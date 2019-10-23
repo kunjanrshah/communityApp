@@ -1021,6 +1021,7 @@ public class Utility {
     public static void getDeviceId(Context mContext) {
         @SuppressLint("HardwareIds") String m_androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         AppConstants.DEVICE_ID_VALUE = m_androidId;
+        Log.d("DEVICE_ID","m_androidId: "+m_androidId);
     }
 
     @NonNull

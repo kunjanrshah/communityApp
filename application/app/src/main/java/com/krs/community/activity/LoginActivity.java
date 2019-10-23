@@ -1,6 +1,5 @@
 package com.krs.community.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -30,7 +29,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -80,8 +78,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
@@ -463,6 +459,8 @@ public class LoginActivity extends Activity {
 
         });
 
+
+        Utility.getDeviceId(this);
         /*if (Build.VERSION.SDK_INT >= 23) {
             if (!Utility.haveSMS(this)) {
                 new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
