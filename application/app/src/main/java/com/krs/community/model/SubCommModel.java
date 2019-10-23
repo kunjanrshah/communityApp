@@ -1,12 +1,11 @@
 
 package com.krs.community.model;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
-public class RBCities {
+public class SubCommModel {
 
     @SerializedName("success")
     @Expose
@@ -16,7 +15,7 @@ public class RBCities {
     private String message;
     @SerializedName("data")
     @Expose
-    private List<CitiesDatum> data = null;
+    private List<SubDatum> data = null;
 
     public Boolean getSuccess() {
         return success;
@@ -34,11 +33,11 @@ public class RBCities {
         this.message = message;
     }
 
-    public List<CitiesDatum> getData() {
+    public List<SubDatum> getData() {
         return data;
     }
 
-    public void setData(List<CitiesDatum> data) {
+    public void setData(List<SubDatum> data) {
         this.data = data;
     }
 

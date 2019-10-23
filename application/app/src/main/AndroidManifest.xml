@@ -75,10 +75,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
 
         </activity>
 
@@ -86,7 +83,12 @@
             android:name="com.krs.community.activity.LoginActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name="com.krs.community.activity.DashboardActivity"
@@ -134,9 +136,9 @@
 
         </activity>
 
-
         <service android:name="com.krs.community.service.MyLocationService" />
         <service android:name="com.krs.community.service.LocationAlertService" />
+
 
         <!-- Firebase Notifications -->
         <service

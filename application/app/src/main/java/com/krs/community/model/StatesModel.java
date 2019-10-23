@@ -5,17 +5,17 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SubComm {
+public class StatesModel {
 
     @SerializedName("success")
     @Expose
     private Boolean success;
     @SerializedName("message")
     @Expose
-    private String message;
+    private Object message;
     @SerializedName("data")
     @Expose
-    private List<SubDatum> data = null;
+    private List<StateDatum> data = null;
 
     public Boolean getSuccess() {
         return success;
@@ -25,19 +25,19 @@ public class SubComm {
         this.success = success;
     }
 
-    public String getMessage() {
+    public Object getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(Object message) {
         this.message = message;
     }
 
-    public List<SubDatum> getData() {
+    public List<StateDatum> getData() {
         return data;
     }
 
-    public void setData(List<SubDatum> data) {
+    public void setData(List<StateDatum> data) {
         this.data = data;
     }
 

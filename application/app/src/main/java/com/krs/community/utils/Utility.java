@@ -97,8 +97,10 @@ public class Utility {
     public static String dd_MMM_yyyy = "dd-MMM-yyyy";
     public static String ddMMMyyyy = "dd/MM/yyyy";
     public static SweetAlertDialog dialog = null;
-    private static Logger logger = new Logger(Utility.class.getSimpleName());
     private static ProgressDialog pDialog;
+
+    private static Logger logger = new Logger(Utility.class.getSimpleName());
+
     /* public static Bitmap scaleDown(Bitmap realImage, float maxImageSize, boolean filter) {
          float ratio = Math.min(maxImageSize / realImage.getWidth(), maxImageSize / realImage.getHeight());
          int width = Math.round(ratio * realImage.getWidth());
@@ -440,15 +442,7 @@ public class Utility {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
     }
 
-    public static void startProgress(Context context,String title,String message) {
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
-            dialog=null;
-        }
-        dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE).setContentText(message);
-        dialog.setTitleText(title);
-        dialog.show();
-    }
+
 
 
     public static void movetoFragment(Activity activity, Fragment fragment) {
@@ -1055,7 +1049,7 @@ public class Utility {
         }
     }
 
-    public static void hideProgressDialog() {
+      public static void hideProgressDialog() {
         try {
             if (pDialog != null && pDialog.isShowing()) pDialog.cancel();
             pDialog = null;
@@ -1063,6 +1057,47 @@ public class Utility {
             e.printStackTrace();
         }
     }
+
+    public static void startProgress(Context context,String title,String message) {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+            dialog=null;
+        }
+        dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE).setContentText(message);
+        dialog.setTitleText(title);
+        dialog.show();
+    }
+
+    public static void hideProgress() {
+        try {
+            if (dialog != null && dialog.isShowing()) dialog.cancel();
+            dialog = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean isEmailValid(String email)
+    {
+        String regExpn =
+                "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
+                        +"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+                        +"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+                        +"([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
+
+        CharSequence inputStr = email;
+
+        Pattern pattern = Pattern.compile(regExpn,Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(inputStr);
+
+        if(matcher.matches())
+            return true;
+        else
+            return false;
+    }
+
 
     public static void hideKeyboard(Activity activity) {
         try {

@@ -22,12 +22,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.krs.community.R
+import com.krs.community.repositories.LoginRepository
 import com.krs.community.repositories.RegisterRepository
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.retrofit.RetrofitBase
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.ConnectivityReceiver
+import com.krs.community.utils.Coroutines
 import com.krs.community.utils.LocaleHelper
+import com.krs.community.viewmodel.LoginViewModelFactory
 import com.krs.community.viewmodel.RegisterViewModelFactory
 import com.krs.community.volley.LruBitmapCache
 import io.fabric.sdk.android.Fabric
@@ -66,10 +69,13 @@ class AppController : Application(), KodeinAware {
 
         bind() from singleton { ApiServices() }
         bind() from singleton {  RegisterRepository(instance()) }
+        bind() from singleton {  LoginRepository(instance()) }
         bind() from provider { RegisterViewModelFactory(instance()) }
-
+        bind() from provider { LoginViewModelFactory(instance()) }
 
     }
+
+
 
 
     @SuppressLint("CommitPrefEdits")
@@ -160,5 +166,4 @@ class AppController : Application(), KodeinAware {
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(LocaleHelper.onAttach(base, "en"))
     }
-
 }

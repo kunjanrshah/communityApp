@@ -1,27 +1,26 @@
 
 package com.krs.community.model;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LocalComm {
+public class RegisterModel {
 
     @SerializedName("success")
     @Expose
-    private Boolean success;
+    private String success;
     @SerializedName("message")
     @Expose
     private String message;
-    @SerializedName("data")
+    @SerializedName("user_id")
     @Expose
-    private List<LocalDatum> data = null;
+    private Integer userId;
 
-    public Boolean getSuccess() {
+    public String getSuccess() {
         return success;
     }
 
-    public void setSuccess(Boolean success) {
+    public void setSuccess(String success) {
         this.success = success;
     }
 
@@ -33,12 +32,12 @@ public class LocalComm {
         this.message = message;
     }
 
-    public List<LocalDatum> getData() {
-        return data;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setData(List<LocalDatum> data) {
-        this.data = data;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
 }
