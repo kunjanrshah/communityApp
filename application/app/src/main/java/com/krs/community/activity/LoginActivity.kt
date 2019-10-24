@@ -375,8 +375,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
         btn_login?.setOnClickListener { v ->
 
 
-            val loginRequest = AppConstants.LoginRequest()
-            loginViewModel?.getLoginUser(loginRequest)
+
 
             val forgotPassRequest = AppConstants.ForgotPass()
             loginViewModel?.userForgotPassword(forgotPassRequest)
@@ -687,7 +686,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.id!!)
-        Utility.showProgressDialog(this)
+        showProgressDialog(this)
 
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
         mAuth?.signInWithCredential(credential)?.addOnCompleteListener(this) { task ->
@@ -938,30 +937,33 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
     private fun LoginWS(user: FirebaseUser?, data: JSONObject?, is_from: Int) {
 
         if (Utility.isOnline(this)) {
-            var username: String? = ""
-            var email_or_mobile = ""
-            var password = ""
-            val json = JSONObject()
-
+          //  var username: String? = ""
+            //var email_or_mobile = ""
+            //var password = ""
+          //  val json = JSONObject()
+            var loginuser:String= loginViewModel?.username.toString()
+            val password:String=loginViewModel?.password.toString()
+            val loginRequest = AppConstants.LoginRequest()
             if (is_from == is_from_normal) {
-                email_or_mobile = edt_username?.text.toString().trim { it <= ' ' }
-                password = edt_pass?.text.toString()
-                if (!email_or_mobile.isEmpty() && !password.isEmpty()) {
+
+                if (loginuser.isNotEmpty() && password.isNotEmpty()) {
                     try {
-                        if (isSelected.equals(Email, ignoreCase = true)) {
-                            if (!isValidEmail(email_or_mobile)) {
-                                json.put(AppConstants.USERNAME, email_or_mobile)
-                                json.put(AppConstants.PASSWORD, password)
-                                fetchLoginData(json)
+
+                        loginRequest.username = loginuser
+                        loginRequest.password = password
+
+                        if (isSelected.equals(Email)) {
+                            if (!isValidEmail(loginuser)) {
+                                loginRequest.login_type ="0"
+                                loginViewModel?.getLoginUser(loginRequest)
                             } else {
                                 Utility.alert(this@LoginActivity, resources.getString(R.string.invalid_email))
                                 return
                             }
                         } else {
-                            if (isValidMobile(email_or_mobile)) {
-                                json.put(AppConstants.USERNAME, email_or_mobile)
-                                json.put(AppConstants.PASSWORD, password)
-                                fetchLoginData(json)
+                            if (isValidMobile(loginuser)) {
+                                loginRequest.login_type ="1"
+                                loginViewModel?.getLoginUser(loginRequest)
                             } else {
                                 Utility.alert(this@LoginActivity, resources.getString(R.string.err_msg_invalid_mobile))
                                 return
@@ -989,7 +991,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
                     return
                 }
 
-                if (!fb_profile_url.isEmpty()) {
+               /* if (!fb_profile_url.isEmpty()) {
 
                     val finalFb_email = fb_email
                     val finalFb_profile_url = fb_profile_url
@@ -1020,20 +1022,22 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
                         e.printStackTrace()
                     }
 
-                }
+                }*/
             } else if (is_from == is_from_google) {
 
                 if (user != null) {
                     Log.e(TAG, " email: " + user.email + " phone: " + user.phoneNumber + " Id: " + user.uid + " Name: " + user.displayName)
-                    username = user.email
-                    if (username != null && !username.isEmpty()) {
-                    } else {
-                        username = user.phoneNumber
+                    loginuser = user.email.toString()
+                    if (loginuser.isNotEmpty() && loginuser.isNotBlank()) {
+                        loginRequest.username = loginuser
+                        loginRequest.login_type = "2"
+                        loginViewModel?.getLoginUser(loginRequest)
+                        /*username = user.phoneNumber
                         if (username != null && !username.isEmpty()) {
                         } else {
                             Utility.alert(this@LoginActivity, resources.getString(R.string.error_msg_get_data_social_site))
                             return
-                            /* return AlertDialog.Builder(this).setTitle(getString(R.string.app_name)).setMessage(resources.getString(R.string.update_profile_photo)).setIcon(R.drawable.app_icon).setCancelable(false).setPositiveButton(getString(R.string.yes), dialog, whichButton) -> {
+                            *//* return AlertDialog.Builder(this).setTitle(getString(R.string.app_name)).setMessage(resources.getString(R.string.update_profile_photo)).setIcon(R.drawable.app_icon).setCancelable(false).setPositiveButton(getString(R.string.yes), dialog, whichButton) -> {
                                  try {
                                      json.put(AppConstants.USERNAME, finalFb_email);
                                      json.put(AppConstants.IS_SOCIAL, "1");
@@ -1041,11 +1045,11 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
                                      e.printStackTrace();
                                  }
                                  new GetBase64String json.execute(finalFb_profile_url);
-                             }).setNegativeButton*/
-                        }
+                             }).setNegativeButton*//*
+                        }*/
                     }
 
-                    if (!user.photoUrl!!.toString().isEmpty()) {
+                   /* if (!user.photoUrl!!.toString().isEmpty()) {
 
                         val finalUsername = username
                         AlertDialog.Builder(this).setTitle(getString(R.string.app_name)).setMessage(resources.getString(R.string.update_profile_photo)).setIcon(R.drawable.app_icon).setCancelable(false).setPositiveButton(getString(R.string.yes)) { dialog, whichButton ->
@@ -1077,7 +1081,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
                             e.printStackTrace()
                         }
 
-                    }
+                    }*/
                 }
             }
 

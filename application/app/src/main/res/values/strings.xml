@@ -87,9 +87,11 @@
 
     <string name="app_create">app_create</string>
 
-    <string name="facebook_app_id">1749295805152367</string>
-    <string name="fb_login_protocol_scheme">fb1749295805152367</string>
-    <string name="web_client_id">900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com</string>
+    <string name="facebook_app_id" translatable="false">1749295805152367</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb1749295805152367</string>
+
+   <!-- <string name="web_client_id" translatable="false">900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com</string>-->
+    <string name="web_client_id" translatable="false">317054014432-ns6e6r26hvd1jju005tu35bab6r7460p.apps.googleusercontent.com</string>
 
 
     <!--Splash screen -->
