@@ -1,6 +1,7 @@
 package com.krs.community.activity
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -28,7 +29,6 @@ import android.widget.RelativeLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
@@ -88,11 +88,14 @@ import java.util.concurrent.TimeUnit
 
 import com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
 import com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.credentials.HintRequest
 import com.krs.community.utils.AppConstants.INIT_TIMEOUT
 import com.krs.community.utils.Utility.hideProgressDialog
 import com.krs.community.utils.Utility.isValidEmail
 import com.krs.community.utils.Utility.isValidMobile
 import com.krs.community.utils.Utility.showProgressDialog
+import jxl.biff.CountryCode
 import org.kodein.di.generic.instance
 
 import org.kodein.di.KodeinAware
@@ -129,7 +132,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
     private var spinnerCountries: Spinner? = null
     private var rl_spinner: RelativeLayout? = null
     private var isSelected = Mobile
-    private var mobile_no = ""
+    //private var mobile_no = ""
     private var loginViewModel: LoginViewModel? = null
 
     private val mRegistrationBroadcastReceiver = object : BroadcastReceiver() {
@@ -162,10 +165,13 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
             if (code != null) {
                 edt_username!!.setText(code)
                 verifyCode(code)
+            }else {
+                Utility.hideProgress()
             }
         }
 
         override fun onVerificationFailed(e: FirebaseException) {
+            Utility.hideProgress()
             Utility.alert(this@LoginActivity, e.message)
         }
     }
@@ -198,7 +204,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
         }
 
 
-        btn_mobile!!.setOnClickListener { v ->
+        btn_mobile?.setOnClickListener { v ->
             isSelected = Mobile
             rl_spinner?.visibility = View.VISIBLE
             edt_username?.hint = getString(R.string.enter_mobile_no)
@@ -217,7 +223,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
             btn_email?.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
 
             edt_pass?.hint = getString(R.string.password)
-            edt_pass?.visibility = View.VISIBLE
+            //edt_pass?.visibility = View.VISIBLE
 
             txt_cancel?.visibility = View.GONE
             btn_login?.text = getString(R.string.login)
@@ -242,7 +248,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
             btn_mobile?.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
 
             edt_pass?.hint = getString(R.string.password)
-            edt_pass?.visibility = View.VISIBLE
+          //  edt_pass?.visibility = View.VISIBLE
             txt_cancel?.visibility = View.GONE
             btn_login?.text = getString(R.string.login)
             txt_forgot_pass?.visibility = View.VISIBLE
@@ -293,12 +299,12 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
                 btn_mobile?.performClick()
             }
             edt_username?.setText("")
-            edt_pass?.setText("")
+           // edt_pass?.setText("")
             edt_cpass?.setText("")
             edt_username?.visibility = View.VISIBLE
             edt_cpass?.visibility = View.GONE
-            edt_pass?.hint = getString(R.string.password)
-            edt_pass?.visibility = View.VISIBLE
+         //   edt_pass?.hint = getString(R.string.password)
+         //   edt_pass?.visibility = View.VISIBLE
             txt_cancel?.visibility = View.GONE
             btn_login?.text = getString(R.string.login)
             txt_forgot_pass?.visibility = View.VISIBLE
@@ -374,8 +380,26 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
 
         btn_login?.setOnClickListener { v ->
 
+            if(isSelected.equals(Mobile))
+            {
+               val mobilenumber= loginViewModel?.username
+                if (mobilenumber!!.isEmpty()) {
+                    binding.edtUsername.setError("Phone number is required")
+                    binding.edtUsername.requestFocus()
+                    return@setOnClickListener
+                }
 
+                if (mobilenumber.length < 10) {
+                    binding.edtUsername.setError("Please enter a valid phone")
+                    binding.edtUsername.requestFocus()
+                    return@setOnClickListener
+                }
 
+                val num="+"+CountryData.countryAreaCodes[spinnerCountries!!.selectedItemPosition]+mobilenumber
+                sendVerificationCode(num);
+            }else {
+
+            }
 
             val forgotPassRequest = AppConstants.ForgotPass()
             loginViewModel?.userForgotPassword(forgotPassRequest)
@@ -448,7 +472,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
            return@setOnTouchListener false
         }
 
-        edt_pass?.setOnTouchListener { v, event ->
+      /*  edt_pass?.setOnTouchListener { v, event ->
 
             val DRAWABLE_RIGHT = 2
             if (event.action == MotionEvent.ACTION_UP) {
@@ -468,7 +492,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
                 }
             }
             return@setOnTouchListener false
-        }
+        }*/
 
 
         txt_forgot_pass?.setOnClickListener { v ->
@@ -516,7 +540,13 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
                         .show();
             }
         }*/
+
+
+
     }
+
+
+
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
@@ -537,6 +567,19 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
             }
         }// other 'case' lines to check for other
         // permissions this app might request
+    }
+
+
+    private fun requestHint(){
+
+        var hintRequest:HintRequest=HintRequest.Builder().setPhoneNumberIdentifierSupported(true).build()
+         /*PendingIntent intent = Auth.CredentialsApi.getHintPickerIntent(
+            apiClient, hintRequest);
+    startIntentSenderForResult(intent.getIntentSender(),
+            RESOLVE_HINT, null, 0, 0, 0);*/
+
+        //var intent:PendingIntent= Auth.CredentialsApi.getHintPickerIntent(apiC,hintRequest)
+
     }
 
     // Fetches reg id from shared preferences
@@ -707,8 +750,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
 
 
     private fun sendVerificationCode(number: String) {
+        Utility.startProgress(this,"Seat back & Relax! while we verify your mobile number","Loading...")
         PhoneAuthProvider.getInstance().verifyPhoneNumber(number, 60, TimeUnit.SECONDS, TaskExecutors.MAIN_THREAD, mCallBack)
-        Toast.makeText(this@LoginActivity, "OTP Send Please wait for a minute", Toast.LENGTH_LONG).show()
     }
 
     private fun verifyCode(code: String?) {
@@ -719,19 +762,15 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
     private fun signInWithCredential(credential: PhoneAuthCredential) {
         mAuth?.signInWithCredential(credential)?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                edt_username?.setText("")
-                edt_pass?.setText("")
-                edt_pass?.visibility = View.VISIBLE
-                edt_cpass?.visibility = View.VISIBLE
-                edt_username?.visibility = View.GONE
-                btn_login?.text = getString(R.string.nav_item_change_password)
+                Utility.hideProgress()
             } else {
+                Utility.hideProgress()
                 Toast.makeText(this@LoginActivity, task.exception?.message, Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    private fun verifyValidUser(username: String, isEmail: Boolean) {
+    /*private fun verifyValidUser(username: String, isEmail: Boolean) {
         val json = JSONObject()
         try {
             json.put(AppConstants.USERNAME, username.trim { it <= ' ' })
@@ -761,7 +800,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
                             edt_username?.setText("")
                             btn_login?.text = getString(R.string.resend_otp)
                             edt_username?.hint = getString(R.string.type_otp)
-                            mobile_no = number
+                          //  mobile_no = number
                             sendVerificationCode(number)
                         } else {
                             Utility.alert(this@LoginActivity, getString(R.string.registraion_request_pending))
@@ -795,9 +834,9 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
                 params[AppConstants.API_KEY] = AppConstants.API_KEY_VALUE
                 params[AppConstants.DEVICE_TYPE] = AppConstants.DEVICE_TYPE_VALUE
                 params[AppConstants.DEVICE_ID] = AppConstants.DEVICE_ID_VALUE
-                /*params[AppConstants.DEVICE_TOKEN] {
+                *//*params[AppConstants.DEVICE_TOKEN] {
                     if (mSharedPreferences != null) mSharedPreferences!!.getString(AppConstants.DEVICE_TOKEN, "") else null
-                }*/
+                }*//*
                 if (mSharedPreferences != null) {
                     params[AppConstants.DEVICE_TOKEN] = mSharedPreferences?.getString(AppConstants.DEVICE_TOKEN, "")!!
                 }
@@ -806,7 +845,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
         }
         jsonObjReq.retryPolicy = DefaultRetryPolicy(INIT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT)
         AppController.mApplication.addToRequestQueue(jsonObjReq, "")
-    }
+    }*/
 
    /* private fun call_change_password_ws(str1: String, str2: String) {
 
@@ -937,18 +976,12 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
     private fun LoginWS(user: FirebaseUser?, data: JSONObject?, is_from: Int) {
 
         if (Utility.isOnline(this)) {
-          //  var username: String? = ""
-            //var email_or_mobile = ""
-            //var password = ""
-          //  val json = JSONObject()
             var loginuser:String= loginViewModel?.username.toString()
             val password:String=loginViewModel?.password.toString()
             val loginRequest = AppConstants.LoginRequest()
             if (is_from == is_from_normal) {
-
                 if (loginuser.isNotEmpty() && password.isNotEmpty()) {
                     try {
-
                         loginRequest.username = loginuser
                         loginRequest.password = password
 
@@ -978,53 +1011,20 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
                     return
                 }
             } else if (is_from == is_from_fb) {
-                var fb_email = ""
-                var fb_profile_url = ""
                 try {
-                    fb_email = data!!.getString("email")
-                    fb_profile_url = data!!.getString("url")
+                    loginuser = data!!.getString("email")
+                    //fb_profile_url = data.getString("url")
+                    if (loginuser.isEmpty()) {
+                        Toast.makeText(this,"Facebook user not found!",Toast.LENGTH_SHORT).show()
+                        return
+                    }
+                    loginRequest.username = loginuser
+                    loginRequest.login_type = "2"
+                    loginViewModel?.getLoginUser(loginRequest)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-
-                if (fb_email.isEmpty()) {
-                    return
-                }
-
-               /* if (!fb_profile_url.isEmpty()) {
-
-                    val finalFb_email = fb_email
-                    val finalFb_profile_url = fb_profile_url
-                    AlertDialog.Builder(this).setTitle(getString(R.string.app_name)).setMessage(resources.getString(R.string.update_profile_photo)).setIcon(R.drawable.app_icon).setCancelable(false).setPositiveButton(getString(R.string.yes)) { dialog, whichButton ->
-                        try {
-                            json.put(AppConstants.USERNAME, finalFb_email)
-                            json.put(AppConstants.IS_SOCIAL, "1")
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-
-                        GetBase64String(json).execute(finalFb_profile_url)
-                    }.setNegativeButton(getString(R.string.no)) { dialog, which ->
-                        try {
-                            json.put(AppConstants.USERNAME, finalFb_email)
-                            json.put(AppConstants.IS_SOCIAL, "1")
-                            fetchLoginData(json)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }.show()
-                } else {
-                    try {
-                        json.put(AppConstants.USERNAME, fb_email)
-                        json.put(AppConstants.IS_SOCIAL, "1")
-                        fetchLoginData(json)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-
-                }*/
             } else if (is_from == is_from_google) {
-
                 if (user != null) {
                     Log.e(TAG, " email: " + user.email + " phone: " + user.phoneNumber + " Id: " + user.uid + " Name: " + user.displayName)
                     loginuser = user.email.toString()
@@ -1032,62 +1032,10 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
                         loginRequest.username = loginuser
                         loginRequest.login_type = "2"
                         loginViewModel?.getLoginUser(loginRequest)
-                        /*username = user.phoneNumber
-                        if (username != null && !username.isEmpty()) {
-                        } else {
-                            Utility.alert(this@LoginActivity, resources.getString(R.string.error_msg_get_data_social_site))
-                            return
-                            *//* return AlertDialog.Builder(this).setTitle(getString(R.string.app_name)).setMessage(resources.getString(R.string.update_profile_photo)).setIcon(R.drawable.app_icon).setCancelable(false).setPositiveButton(getString(R.string.yes), dialog, whichButton) -> {
-                                 try {
-                                     json.put(AppConstants.USERNAME, finalFb_email);
-                                     json.put(AppConstants.IS_SOCIAL, "1");
-                                 } catch (Exception e) {
-                                     e.printStackTrace();
-                                 }
-                                 new GetBase64String json.execute(finalFb_profile_url);
-                             }).setNegativeButton*//*
-                        }*/
                     }
-
-                   /* if (!user.photoUrl!!.toString().isEmpty()) {
-
-                        val finalUsername = username
-                        AlertDialog.Builder(this).setTitle(getString(R.string.app_name)).setMessage(resources.getString(R.string.update_profile_photo)).setIcon(R.drawable.app_icon).setCancelable(false).setPositiveButton(getString(R.string.yes)) { dialog, whichButton ->
-                            try {
-                                json.put(AppConstants.USERNAME, finalUsername)
-                                json.put(AppConstants.IS_SOCIAL, "1")
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
-
-                            GetBase64String(json).execute(user.photoUrl?.toString()?.replace("s96-c", "s240-c"))
-                        }.setNegativeButton(getString(R.string.no)) { dialog, which ->
-                            try {
-                                json.put(AppConstants.USERNAME, finalUsername)
-                                json.put(AppConstants.IS_SOCIAL, "1")
-                                fetchLoginData(json)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
-
-
-                        }.show()
-                    } else {
-                        try {
-                            json.put(AppConstants.USERNAME, username)
-                            json.put(AppConstants.IS_SOCIAL, "1")
-                            fetchLoginData(json)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-
-                    }*/
                 }
             }
-
-
         }
-
     }
 
     private fun fetchLoginData(json: JSONObject) {
@@ -1145,10 +1093,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener , KodeinAware {
                 params[AppConstants.API_KEY] = AppConstants.API_KEY_VALUE
                 params[AppConstants.DEVICE_TYPE] = AppConstants.DEVICE_TYPE_VALUE
                 params[AppConstants.DEVICE_ID] = AppConstants.DEVICE_ID_VALUE
-
-
-
-
 
                 if (mSharedPreferences != null) {
                     params[AppConstants.DEVICE_TOKEN] = mSharedPreferences?.getString(AppConstants.DEVICE_TOKEN, "")!!
