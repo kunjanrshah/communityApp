@@ -1,7 +1,6 @@
 package com.krs.community.viewmodel
 
 import android.app.Application
-import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import com.krs.community.interfaces.ILoginListener
 import com.krs.community.repositories.LoginRepository
@@ -18,8 +17,9 @@ class LoginViewModel(private val loginRepository: LoginRepository,
     var TAG: String = LoginViewModel::class.java.simpleName
     var job_login: CompletableJob? = null
     var job_forgot: CompletableJob? = null
-    var password:String?= null
-    var username:String?=null
+    var mobile:String?=""
+    var country_code:String?=""
+
 
     fun cancelAllJobs() {
         job_login?.cancel()
@@ -34,30 +34,30 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                     val response = loginRepository.userForgotPass(req_forgot)
                     response.data?.let {
                         withContext(Dispatchers.Main) {
-                            iLoginListener?.userForgotPass(response.data)
+                            iLoginListener.userForgotPass(response.data)
                             thejob.complete()
                         }
                         return@launch
                     }
                     withContext(Dispatchers.Main) {
-                        iLoginListener?.getFailure(response.msg as String)
+                        iLoginListener.getFailure(response.msg as String)
                     }
                 } catch (e: ApiException) {
                     e.message?.let {
                         withContext(Dispatchers.Main) {
-                            iLoginListener?.getFailure(it)
+                            iLoginListener.getFailure(it)
                         }
                     }
                 } catch (e: NoInternetException) {
                     e.message?.let {
                         withContext(Dispatchers.Main) {
-                            iLoginListener?.getFailure(it)
+                            iLoginListener.getFailure(it)
                         }
                     }
                 } catch (e: Exception) {
                     e.message?.let {
                         withContext(Dispatchers.Main) {
-                            iLoginListener?.getFailure(it)
+                            iLoginListener.getFailure(it)
                         }
                     }
                 }
@@ -84,19 +84,19 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                 } catch (e: ApiException) {
                     e.message?.let {
                         withContext(Dispatchers.Main) {
-                            iLoginListener?.getFailure(it)
+                            iLoginListener.getFailure(it)
                         }
                     }
                 } catch (e: NoInternetException) {
                     e.message?.let {
                         withContext(Dispatchers.Main) {
-                            iLoginListener?.getFailure(it)
+                            iLoginListener.getFailure(it)
                         }
                     }
                 } catch (e: Exception) {
                     e.message?.let {
                         withContext(Dispatchers.Main) {
-                            iLoginListener?.getFailure(it)
+                            iLoginListener.getFailure(it)
                         }
                     }
                 }

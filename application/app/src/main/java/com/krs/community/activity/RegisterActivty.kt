@@ -26,7 +26,10 @@ import com.krs.community.databinding.ActivityRegisterBinding
 import com.krs.community.interfaces.IRegisterListener
 import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.model.*
-import com.krs.community.utils.*
+import com.krs.community.utils.CountryData
+import com.krs.community.utils.Logger
+import com.krs.community.utils.Utility
+import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.RegisterViewModel
 import com.krs.community.viewmodel.RegisterViewModelFactory
 import com.yalantis.ucrop.UCrop
@@ -34,10 +37,7 @@ import com.yalantis.ucrop.UCrop.*
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
 import com.yalantis.ucrop.model.AspectRatio
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_register.*
-import kotlinx.android.synthetic.main.activity_register.spinnerCountries
-import kotlinx.android.synthetic.main.jrspinner_item.view.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.withContext
 import org.kodein.di.KodeinAware

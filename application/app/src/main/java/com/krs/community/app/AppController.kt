@@ -5,19 +5,17 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.IntentFilter
-import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.os.StrictMode
 import android.text.TextUtils
-import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import androidx.multidex.MultiDex
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.ImageLoader
-import com.android.volley.toolbox.Volley
 import com.crashlytics.android.Crashlytics
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.github.squti.guru.GuruConfig
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -28,7 +26,6 @@ import com.krs.community.retrofit.ApiServices
 import com.krs.community.retrofit.RetrofitBase
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.ConnectivityReceiver
-import com.krs.community.utils.Coroutines
 import com.krs.community.utils.LocaleHelper
 import com.krs.community.viewmodel.LoginViewModelFactory
 import com.krs.community.viewmodel.RegisterViewModelFactory
@@ -45,8 +42,6 @@ import org.kodein.di.generic.singleton
 
 class AppController : Application(), KodeinAware {
 
-    lateinit var mSharedPreferences: SharedPreferences
-    lateinit var mEditor: SharedPreferences.Editor
     internal var broadcastRevcevier: ConnectivityReceiver? = null
     lateinit var mGoogleSignInClient: GoogleSignInClient
 
@@ -75,9 +70,6 @@ class AppController : Application(), KodeinAware {
 
     }
 
-
-
-
     @SuppressLint("CommitPrefEdits")
     override fun onCreate() {
         super.onCreate()
@@ -96,11 +88,11 @@ class AppController : Application(), KodeinAware {
 
         MultiDex.install(this)
 
-        mSharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE)
-        mEditor = mSharedPreferences.edit()
-        Log.d(TAG, "AppController Screen")
-        mEditor.putBoolean(getString(R.string.app_create), true)
-        mEditor.apply()
+        GuruConfig.initDefault(GuruConfig.Builder()
+                .setFileName(AppConstants.PREF_NAME)
+                .setMode(Context.MODE_PRIVATE)
+                .build())
+
 
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
@@ -116,9 +108,6 @@ class AppController : Application(), KodeinAware {
     }
 
     fun getRequestQueue(): RequestQueue {
-        if(mRequestQueue==null){
-            mRequestQueue = Volley.newRequestQueue(applicationContext)
-        }
         return mRequestQueue
     }
 
@@ -136,18 +125,10 @@ class AppController : Application(), KodeinAware {
 
     fun getImageLoader(): ImageLoader {
         getRequestQueue()
-        if (mImageLoader == null) {
-            getLruBitmapCache()
-            mImageLoader = ImageLoader(this.mRequestQueue, mLruBitmapCache)
-        }
-
         return this.mImageLoader
     }
 
     fun getLruBitmapCache():LruBitmapCache{
-        if (mLruBitmapCache == null){
-            mLruBitmapCache = LruBitmapCache()
-        }
         return mLruBitmapCache
     }
 

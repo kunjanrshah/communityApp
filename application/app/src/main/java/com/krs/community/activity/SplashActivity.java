@@ -2,7 +2,6 @@ package com.krs.community.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -15,8 +14,8 @@ import android.widget.Spinner;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
+import com.github.squti.guru.Guru;
 import com.krs.community.R;
-import com.krs.community.app.AppController;
 import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.Utility;
 
@@ -47,7 +46,7 @@ public class SplashActivity extends Activity {
         btn_login.setOnClickListener(v -> {
             if (!is_login) {
                 is_login = true;
-                Intent mIntent = new Intent(SplashActivity.this, LoginActivity.class);
+                Intent mIntent = new Intent(SplashActivity.this, DashboardActivity.class);
                 startActivity(mIntent);
                 finish();
                 Utility.fade(this);
@@ -82,12 +81,12 @@ public class SplashActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        boolean is_home = AppController.mApplication.getMSharedPreferences().getBoolean(AppConstants.IS_HOME, false);
+        boolean is_home = Guru.getBoolean(AppConstants.IS_HOME, false);
         if (!is_home) {
             return;
         }
         Intent mIntent = new Intent(SplashActivity.this, DashboardActivity.class);
-        mIntent.putExtra(AppConstants.USER_ID, AppController.mApplication.getMSharedPreferences().getString(AppConstants.USER_ID, ""));
+        mIntent.putExtra(AppConstants.USER_ID, Guru.getString(AppConstants.USER_ID, ""));
         startActivity(mIntent);
         finish();
     }
@@ -95,7 +94,7 @@ public class SplashActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        String locale = AppController.mApplication.getMSharedPreferences().getString(getResources().getString(R.string.locale_sp), getResources().getString(R.string._english));
+        String locale = Guru.getString(getResources().getString(R.string.locale_sp), getResources().getString(R.string._english));
         if (locale.equalsIgnoreCase(getResources().getString(R.string._gujarati))) {
             splanguage.setSelection(2);
         } else if (locale.equalsIgnoreCase(getResources().getString(R.string._hindi))) {

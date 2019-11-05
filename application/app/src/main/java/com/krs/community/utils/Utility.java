@@ -56,9 +56,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.github.squti.guru.Guru;
 import com.google.gson.Gson;
 import com.krs.community.R;
-import com.krs.community.app.AppController;
 import com.krs.community.model.ErrorObject;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 import com.nightonke.boommenu.Util;
@@ -1092,10 +1092,7 @@ public class Utility {
         Pattern pattern = Pattern.compile(regExpn,Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(inputStr);
 
-        if(matcher.matches())
-            return true;
-        else
-            return false;
+        return matcher.matches();
     }
 
 
@@ -1402,8 +1399,7 @@ public class Utility {
         } else if (lang.equals(context.getResources().getString(R.string._hindi))) {
             loc = "hi";
         }
-        AppController.mApplication.getMEditor().putString(context.getResources().getString(R.string.locale_sp), lang);
-        AppController.mApplication.getMEditor().apply();
+        Guru.putString(context.getResources().getString(R.string.locale_sp), lang);
         Locale myLocale = new Locale(loc);
         Locale.setDefault(myLocale);
         android.content.res.Configuration config = new android.content.res.Configuration();

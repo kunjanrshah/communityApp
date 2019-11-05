@@ -12,7 +12,6 @@ import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.Logger;
 import com.krs.community.utils.Utility;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -27,8 +26,6 @@ public class RetrofitBase {
     public ApiServices apiServices;
     protected Context context;
     private Logger logger;
-
-
     public RetrofitBase(Context context, boolean addTimeout) {
         this.context = context;
 
