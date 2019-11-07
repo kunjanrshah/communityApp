@@ -40,8 +40,10 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:background="@drawable/password"
                 android:layout_marginLeft="20dp"
-                android:background="@drawable/password" />
+
+                 />
 
             <TextView
                 android:layout_width="match_parent"

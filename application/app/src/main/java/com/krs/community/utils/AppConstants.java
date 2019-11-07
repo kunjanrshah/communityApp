@@ -103,7 +103,7 @@ public class AppConstants {
     public static final String REJECTED = "REJECTED";
 
     public static final String EMAIL_ADDRESS = "email_address";
-    public static final String PASSWORD = "password";
+    public static final String PASSWORD = "hashcode";
     public static final String INSERT = "insert";
     public static final String VERSION = "version";
 
@@ -474,7 +474,7 @@ public class AppConstants {
 
     public static class LoginRequest {
         String username;
-        String password;
+        String hashcode;
         String login_type;
 
         public String getLogin_type() {
@@ -493,12 +493,12 @@ public class AppConstants {
             this.username = username;
         }
 
-        public String getPassword() {
-            return password;
+        public String getHashcode() {
+            return hashcode;
         }
 
-        public void setPassword(String password) {
-            this.password = password;
+        public void setHashcode(String hashkey) {
+            this.hashcode = hashkey;
         }
     }
 

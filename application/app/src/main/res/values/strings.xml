@@ -19,7 +19,7 @@
     <string name="label_add_audio" translatable="false">Add Audio</string>
     <string name="label_add_relative" translatable="false">Add Relative</string>
 
-    <!-- <string name="how_to_forgot_1">1. If you forgot your password</string>
+    <!-- <string name="how_to_forgot_1">1. If you forgot your hashkey</string>
      <string name="how_search_profile_2">2. Search Profiles</string>
      <string name="how_to_event_list_3">3. Event list</string>
      <string name="how_to_update_profile_4">4. Update your Profile</string>
@@ -113,7 +113,7 @@
     <string name="_mobile">Mobile</string>
     <string name="email">Email</string>
     <string name="enter_mobile_no">Enter Mobile no</string>
-    <string name="password">Password</string>
+    <string name="hashkey">Password</string>
     <string name="_forgot_password">Forgot Password?</string>
     <string name="or_login_with">Or Login with</string>
     <string name="enter_email_id">Enter Email ID</string>
@@ -132,7 +132,7 @@
     <string name="update_profile_photo">Do you want to update Profile Photo?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="invalid_username_password">Invalid username or password</string>
+    <string name="invalid_username_password">Invalid username or hashkey</string>
     <string name="loading">Loading...</string>
     <string name="incorrect" translatable="false">incorrect</string>
 
@@ -155,7 +155,7 @@
     <string name="invalid_mobile_range">Mobile number must be 10 digit</string>
     <string name="invalid_email">Invalid Email Address!</string>
     <string name="err_invalid_email" translatable="false">Invalid Email Address!</string>
-    <string name="err_msg_repeat_password" >Password and Repeat password not match</string>
+    <string name="err_msg_repeat_password" >Password and Repeat hashkey not match</string>
     <string name="user_not" translatable="false">User not</string>
     <string name="user_not_found" >User not found!</string>
 
@@ -270,8 +270,9 @@
     <string name="select_state">Please select state</string>
     <string name="select_sub_comm">Please select Sub Community</string>
     <string name="select_local">Please select Local Community</string>
-    <string name="make_strong_pass">Make more than 6 characters long your password to make strong</string>
+    <string name="make_strong_pass">Make more than 6 characters long your hashkey to make strong</string>
     <string name="_continue">Continue</string>
+    <string name="hash_key">hash_key</string>
 
 
 </resources>

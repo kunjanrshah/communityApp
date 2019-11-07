@@ -20,7 +20,7 @@
     <string name="email">ઇમેઇલ</string>
     <string name="enter_mobile_no">એન્ટર મોબાઈલ નંબર</string>
     <string name="enter_email_id">એન્ટર ઇમેઇલ આઈડી</string>
-    <string name="password">પાસવર્ડ</string>
+    <string name="hashkey">પાસવર્ડ</string>
     <string name="_forgot_password">પાસવર્ડ ભૂલી ગયા છો?</string>
     <string name="or_login_with">ઓર લોગઇન વિથ</string>
     <string name="do_you_have_an_account_register_now">શું તમારી પાસે એકાઉન્ટ છે?</string>

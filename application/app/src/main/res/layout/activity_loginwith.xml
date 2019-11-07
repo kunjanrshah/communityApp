@@ -36,6 +36,7 @@
          android:layout_marginRight="25dp"
          android:layout_gravity="center"
          app:cardCornerRadius="15dp"
+         android:id="@+id/card_view_mobile"
          android:layout_height="270dp">
 
          <LinearLayout
@@ -57,7 +58,7 @@
             android:text="Phone Number"
             android:textSize="20sp"
             android:layout_marginTop="20dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="25dp"
             android:fontFamily="@font/montserrat_semibold"
             android:layout_height="wrap_content"/>
 
@@ -66,12 +67,12 @@
                  android:layout_marginTop="10dp"
                  android:layout_marginLeft="10dp"
                  android:layout_marginRight="20dp"
-
                  android:layout_width="match_parent"
                  android:layout_height="45dp">
 
                  <RelativeLayout
                      android:layout_width="100dp"
+                     android:visibility="gone"
                      android:layout_height="match_parent"
                      android:background="@drawable/round_corner_mid_light_gray"
                      android:layout_gravity="center">
@@ -91,7 +92,7 @@
              <EditText
                  android:id="@+id/edt_mobile"
                  android:background="@drawable/round_corner_mid_light_gray"
-                 android:layout_width="match_parent"
+                 android:layout_width="280dp"
                  android:layout_height="match_parent"
                  android:hint="Enter Number"
                  android:text="@={loginViewModel.mobile}"
@@ -106,7 +107,7 @@
                  android:textSize="18sp" />
              </LinearLayout>
              <TextView
-                 android:layout_marginTop="5dp"
+                 android:layout_marginTop="10dp"
                  android:layout_marginLeft="20dp"
                  android:layout_marginRight="10dp"
                  android:textColor="@color/mdtp_transparent_black"
@@ -122,6 +123,7 @@
 
         <androidx.cardview.widget.CardView
             android:visibility="gone"
+            android:id="@+id/card_view_otp"
             android:layout_width="match_parent"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
@@ -161,7 +163,6 @@
                     android:layout_height="wrap_content"/>
 
                 <com.poovam.pinedittextfield.SquarePinField
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
@@ -254,13 +255,13 @@
                     android:layout_width="160dp"
                     android:id="@+id/btn_login_google"
                     android:layout_marginBottom="10dp"
-                    android:background="@drawable/round_corner_white"
+                    android:background="@drawable/google"
                     android:layout_height="50dp"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_login_fb"
                     android:layout_width="160dp"
-                    android:background="@drawable/round_corner_white"
+                    android:background="@drawable/facebook"
                     android:layout_marginLeft="15dp"
                     android:layout_marginBottom="10dp"
                     android:layout_height="50dp"/>
@@ -276,9 +277,6 @@
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>
-
-
-
 
     </FrameLayout>
 

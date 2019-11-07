@@ -9,6 +9,11 @@ public class LoginModel {
     @SerializedName("success")
     @Expose
     private Boolean success;
+
+    @SerializedName("OTP")
+    @Expose
+    private String OTP;
+
     @SerializedName("data")
     @Expose
     private LoginData data;
@@ -29,4 +34,11 @@ public class LoginModel {
         this.data = data;
     }
 
+    public String getOTP() {
+        return OTP;
+    }
+
+    public void setOTP(String OTP) {
+        this.OTP = OTP;
+    }
 }

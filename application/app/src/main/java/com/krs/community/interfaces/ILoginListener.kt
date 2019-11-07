@@ -4,6 +4,6 @@ import com.krs.community.model.*
 
 interface ILoginListener {
     fun userForgotPass(data:String)
-    fun getUserLogin(data:LoginData)
+    fun getUserLogin(data:LoginModel)
     fun getFailure(message:String)
 }

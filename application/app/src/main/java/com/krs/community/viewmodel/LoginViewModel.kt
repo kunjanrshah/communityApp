@@ -76,7 +76,7 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                     val response = loginRepository.getLogin(req_login)
                     response.let {
                         withContext(Dispatchers.Main) {
-                            iLoginListener.getUserLogin(response.data)
+                            iLoginListener.getUserLogin(response)
                             thejob.complete()
                         }
                         return@launch
