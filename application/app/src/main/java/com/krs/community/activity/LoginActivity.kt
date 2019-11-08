@@ -146,7 +146,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         val appSignatureHashHelper = AppSignatureHashHelper(this)
         Guru.putString(getString(R.string.hash_key), appSignatureHashHelper.appSignatures.get(0));
         Log.e(TAG,"hashcode: "+appSignatureHashHelper.appSignatures.get(0))
-        startSMSListener()
 
         edt_mobile?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -234,9 +233,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 edt_mobile.requestFocus()
                 return@setOnClickListener
             }
-
-            LoginUsingMobile(mobilenumber, Guru.getString(getString(R.string.hash_key), "").toString())
-            // sendVerificationCode(num)
+            loginViewModel?.LoginUsingMobile()
         }
 
         // val forgotPassRequest = AppConstants.ForgotPass()
@@ -266,47 +263,22 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
             val task = client.startSmsRetriever()
             task.addOnSuccessListener {
+                loginViewModel?.startTimer()
                 //toast("API successfully started")
+                Log.d(TAG,"API successfully started")
             }
 
             task.addOnFailureListener {
                 // Fail to start API
-                toast("Fail to start API")
+                Log.d(TAG,"Fail to start API")
+                //toast("Fail to start API")
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun LoginUsingMobile(loginuser: String, hashcode: String) {
-        if (isOnline(this)) {
-            if (loginuser.isNotEmpty()) {
-                try {
-                    val loginRequest = AppConstants.LoginRequest()
-                    loginRequest.username = loginuser
-                    loginRequest.hashcode = hashcode
-                    if (isValidMobile(loginuser)) {
-                        loginRequest.login_type = "1"
-                        loginViewModel?.getLoginUser(loginRequest)
-                        card_view_mobile.visibility= View.GONE
-                        card_view_otp.visibility=View.VISIBLE
-                        /*Handler().postDelayed(Runnable {
-                            startProgress(this,"Seat back & Relax!","Loading...")
-                        },2000);*/
 
-                    } else {
-                        alert(this@LoginActivity, resources.getString(R.string.err_msg_invalid_mobile))
-                        return
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            } else {
-                alert(this@LoginActivity, getString(R.string.err_msg_blank))
-                return
-            }
-        }
-    }
 
     private fun LoginUsingFB(data: JSONObject) {
         try {
@@ -395,14 +367,18 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
     override fun onOTPTimeOut() {
-        toast("OTP Time out")
+        Log.d(TAG,"OTP Time out")
+        //toast("OTP Time out")
     }
 
     override fun getUserLogin(model: LoginModel) {
-        /*Handler().postDelayed(Runnable {
-            hideProgress()
-        },3000);*/
+        hideProgress()
+        if(!model.otp.isNullOrBlank()){
+            card_view_mobile.visibility= View.GONE
+            card_view_otp.visibility=View.VISIBLE
+            startSMSListener()
 
+        }
         Log.d(TAG, "login data: $model")
         loginModel=model
     }
