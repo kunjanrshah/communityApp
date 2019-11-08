@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
@@ -144,7 +145,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
         val appSignatureHashHelper = AppSignatureHashHelper(this)
         Guru.putString(getString(R.string.hash_key), appSignatureHashHelper.appSignatures.get(0));
-
+        Log.e(TAG,"hashcode: "+appSignatureHashHelper.appSignatures.get(0))
         startSMSListener()
 
         edt_mobile?.addTextChangedListener(object : TextWatcher {
@@ -286,9 +287,13 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                     loginRequest.hashcode = hashcode
                     if (isValidMobile(loginuser)) {
                         loginRequest.login_type = "1"
+                        loginViewModel?.getLoginUser(loginRequest)
                         card_view_mobile.visibility= View.GONE
                         card_view_otp.visibility=View.VISIBLE
-                        loginViewModel?.getLoginUser(loginRequest)
+                        /*Handler().postDelayed(Runnable {
+                            startProgress(this,"Seat back & Relax!","Loading...")
+                        },2000);*/
+
                     } else {
                         alert(this@LoginActivity, resources.getString(R.string.err_msg_invalid_mobile))
                         return
@@ -379,6 +384,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             unregisterReceiver(smsReceiver)
             smsReceiver = null
         }
+
         if(loginModel!=null){
             if(loginModel!!.otp.equals(otp1)){
                 val intent = Intent(applicationContext, DashboardActivity::class.java)
@@ -393,6 +399,10 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
     override fun getUserLogin(model: LoginModel) {
+        /*Handler().postDelayed(Runnable {
+            hideProgress()
+        },3000);*/
+
         Log.d(TAG, "login data: $model")
         loginModel=model
     }
