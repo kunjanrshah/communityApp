@@ -85,10 +85,10 @@
     <string name="fragment_title_3" translatable="false">Facts</string>
 
 
-    <string name="app_create">app_create</string>
+    <string name="app_create" translatable="false">app_create</string>
 
-    <string name="facebook_app_id" translatable="false">1749295805152367</string>
-    <string name="fb_login_protocol_scheme" translatable="false">fb1749295805152367</string>
+    <string name="facebook_app_id" translatable="false">2264814596961704</string>//1749295805152367
+    <string name="fb_login_protocol_scheme" translatable="false">fb2264814596961704</string>
 
    <!-- <string name="web_client_id" translatable="false">900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com</string>-->
     <string name="web_client_id" translatable="false">317054014432-ns6e6r26hvd1jju005tu35bab6r7460p.apps.googleusercontent.com</string>
@@ -113,7 +113,7 @@
     <string name="_mobile">Mobile</string>
     <string name="email">Email</string>
     <string name="enter_mobile_no">Enter Mobile no</string>
-    <string name="hashkey">Password</string>
+    <string name="password">Password</string>
     <string name="_forgot_password">Forgot Password?</string>
     <string name="or_login_with">Or Login with</string>
     <string name="enter_email_id">Enter Email ID</string>
@@ -273,6 +273,6 @@
     <string name="make_strong_pass">Make more than 6 characters long your hashkey to make strong</string>
     <string name="_continue">Continue</string>
     <string name="hash_key">hash_key</string>
-
+    <string name="seat_back_relax">Seat back &amp; Relax!</string>
 
 </resources>

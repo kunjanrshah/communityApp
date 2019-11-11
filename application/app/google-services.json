@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "317054014432-iju6lle9egmmp39hdidl3kk0jpgp76te.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.krs.community",
+            "certificate_hash": "808f04ac7223825e66de31ce260fa63a072ef6b6"
+          }
+        },
+        {
           "client_id": "317054014432-t27jbab2jqqike18su3c0mdj9blkaood.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -36,7 +44,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com",
+              "client_id": "317054014432-ns6e6r26hvd1jju005tu35bab6r7460p.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -46,7 +46,7 @@ public class SplashActivity extends Activity {
         btn_login.setOnClickListener(v -> {
             if (!is_login) {
                 is_login = true;
-                Intent mIntent = new Intent(SplashActivity.this, DashboardActivity.class);
+                Intent mIntent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(mIntent);
                 finish();
                 Utility.fade(this);

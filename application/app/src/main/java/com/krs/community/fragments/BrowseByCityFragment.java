@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ericliu.asyncexpandablelist.CollectionView;
@@ -28,6 +29,8 @@ import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
 import com.krs.community.model.City;
 import com.krs.community.utils.Utility;
+import com.krs.community.viewmodel.BrowseCityViewModel;
+import com.krs.community.viewmodel.RegisterViewModel;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -39,6 +42,8 @@ public class BrowseByCityFragment extends Fragment implements AsyncExpandableLis
 
     private AsyncExpandableListView<String, City> mAsyncExpandableListView;
     private CollectionView.Inventory<String, City> inventory;
+    private BrowseCityViewModel browseCityViewModel;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,6 +55,9 @@ public class BrowseByCityFragment extends Fragment implements AsyncExpandableLis
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(), R.color.colorBG, false);
         }
+
+        browseCityViewModel = ViewModelProviders.of(this,factory).get(RegisterViewModel::class.java)
+        browseCityViewModel.iBrow=this;
 
         ImageView iv_cancel = view.findViewById(R.id.iv_cancel);
         iv_cancel.setOnClickListener(v -> {

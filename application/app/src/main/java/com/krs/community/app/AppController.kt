@@ -14,11 +14,13 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.ImageLoader
 import com.crashlytics.android.Crashlytics
+import com.facebook.FacebookSdk
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.github.squti.guru.GuruConfig
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.FirebaseApp
 import com.krs.community.R
 import com.krs.community.repositories.LoginRepository
 import com.krs.community.repositories.RegisterRepository
@@ -75,7 +77,7 @@ class AppController : Application(), KodeinAware {
         super.onCreate()
 
         mApplication = this
-
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
         typeface = ResourcesCompat.getFont(applicationContext, R.font.montserrat_regular)
         typeface_bold = ResourcesCompat.getFont(applicationContext, R.font.montserrat_semibold)
 
