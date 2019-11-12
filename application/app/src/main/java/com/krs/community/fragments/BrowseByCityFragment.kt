@@ -63,6 +63,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
         mAsyncExpandableListView.setCallbacks(this)
 
         inventory = CollectionView.Inventory()
+
         Utility.startProgress(activity, getString(R.string.fetching_states), getString(R.string.loading))
         browseCityViewModel?.getUserStates()
 

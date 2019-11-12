@@ -31,7 +31,6 @@ public class MonthPagerAdapter extends PagerAdapter {
     MonthPagerAdapter(SlyCalendarData slyCalendarData, DateSelectListener listener) {
         this.slyCalendarData = slyCalendarData;
         this.listener = listener;
-
     }
 
     @Override

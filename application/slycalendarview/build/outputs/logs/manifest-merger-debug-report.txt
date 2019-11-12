@@ -1,0 +1,31 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml:1:1-2:46
+INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml:1:1-2:46
+INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml:1:1-2:46
+INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml:1:1-2:46
+INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml:1:1-2:46
+INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml:1:1-2:46
+INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml:1:1-2:46
+	package
+		ADDED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml:2:5-43
+		INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml
+		INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml
+		ADDED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml:1:1-2:46
+		INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml
+		ADDED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml:1:1-2:46
+		INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml:1:11-69
+uses-sdk
+INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml
+INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml
+		ADDED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml
+		INJECTED from /home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml

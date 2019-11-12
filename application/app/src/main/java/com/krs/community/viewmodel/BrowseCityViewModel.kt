@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.krs.community.interfaces.IBrowseCityListener
 import com.krs.community.interfaces.IRegisterListener
+import com.krs.community.interfaces.IbrowseCityRecordsListener
 import com.krs.community.model.CitiesDatum
+import com.krs.community.model.SearchByCityData
 import com.krs.community.repositories.BrowseCityRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
@@ -17,6 +19,7 @@ class BrowseCityViewModel(
     var job_states: CompletableJob? = null
     var job_cities: CompletableJob? = null
     var iBrowsecityListener: IBrowseCityListener? = null
+    var ibrowseCityRecordsListener: IbrowseCityRecordsListener?=null
     var TAG: String = BrowseCityViewModel::class.java.simpleName
 
     fun getUserStates() {
@@ -66,6 +69,32 @@ class BrowseCityViewModel(
                         return@launch
                     }
                     iBrowsecityListener?.getFailure(response.message)
+                } catch (e: ApiException) {
+                    e.message?.let { iBrowsecityListener?.getFailure(it) }
+                } catch (e: NoInternetException) {
+                    e.message?.let { iBrowsecityListener?.getFailure(it) }
+                } catch (e: Exception) {
+                    e.message?.let { iBrowsecityListener?.getFailure(it) }
+                }
+                thejob.complete()
+            }
+        }
+    }
+
+    fun fetchRecordsByCity(data: SearchByCityData) {
+        job_cities = Job()
+        job_cities.let {thejob ->
+            CoroutineScope(Dispatchers.IO + thejob!!).launch {
+                try {
+                    val response = browsCityRepository.userRecords(data)
+                    response.let {
+                        withContext(Dispatchers.Main) {
+                            ibrowseCityRecordsListener?.getSearchRecords(response)
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                    ibrowseCityRecordsListener?.getFailure(response.success)
                 } catch (e: ApiException) {
                     e.message?.let { iBrowsecityListener?.getFailure(it) }
                 } catch (e: NoInternetException) {

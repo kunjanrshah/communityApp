@@ -289,6 +289,7 @@ public class AppConstants {
         String GET_SUBCASTE = "GetSurname";
         String GET_STATE = "GetState";
         String GET_CITIES = "GetCities";
+        String GET_SEARCH_BY_CITY = "SearchByCity";
         String GET_SUBCOMM = "GetSubCommunity";
         String GET_LOCALCOMM = "GetLocalCommunity";
         String GET_REGISTER = "Registration";

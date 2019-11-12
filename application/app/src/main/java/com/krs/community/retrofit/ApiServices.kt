@@ -19,6 +19,9 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_CITIES)
     suspend fun getUserCities(@Body request: AppConstants.CitiesRequest): Response<CitiesModel>
 
+    @POST(AppConstants.UrlPath.GET_SEARCH_BY_CITY)
+    suspend fun getSearchByCity(@Body request: SearchByCityData): Response<SearchByCityModel>
+
     @POST(AppConstants.UrlPath.GET_SUBCOMM)
     suspend fun getSubCommunity(): Response<SubCommModel>
 

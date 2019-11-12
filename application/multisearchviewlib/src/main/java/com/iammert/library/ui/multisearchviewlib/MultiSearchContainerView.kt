@@ -39,7 +39,7 @@ class MultiSearchContainerView @JvmOverloads constructor(
 
     private var isInSearchMode = false
 
-    private var selectedTab: ViewItemBinding? = null
+    var selectedTab: ViewItemBinding? = null
 
     private var multiSearchViewListener: MultiSearchView.MultiSearchViewListener? = null
 
