@@ -22,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.FirebaseApp
 import com.krs.community.R
+import com.krs.community.repositories.BrowseCityRepository
 import com.krs.community.repositories.LoginRepository
 import com.krs.community.repositories.RegisterRepository
 import com.krs.community.retrofit.ApiServices
@@ -29,6 +30,7 @@ import com.krs.community.retrofit.RetrofitBase
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.ConnectivityReceiver
 import com.krs.community.utils.LocaleHelper
+import com.krs.community.viewmodel.BrowseCityViewModelFactory
 import com.krs.community.viewmodel.LoginViewModelFactory
 import com.krs.community.viewmodel.RegisterViewModelFactory
 import com.krs.community.volley.LruBitmapCache
@@ -67,9 +69,10 @@ class AppController : Application(), KodeinAware {
         bind() from singleton { ApiServices() }
         bind() from singleton {  RegisterRepository(instance()) }
         bind() from singleton {  LoginRepository(instance()) }
+        bind() from singleton {  BrowseCityRepository(instance()) }
         bind() from provider { RegisterViewModelFactory(instance()) }
         bind() from provider { LoginViewModelFactory(instance()) }
-
+        bind() from provider { BrowseCityViewModelFactory(instance()) }
     }
 
     @SuppressLint("CommitPrefEdits")

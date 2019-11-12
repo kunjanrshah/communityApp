@@ -3,6 +3,8 @@ package com.krs.community.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.krs.community.interfaces.IBrowseCityListener
+import com.krs.community.interfaces.IRegisterListener
+import com.krs.community.model.CitiesDatum
 import com.krs.community.repositories.BrowseCityRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
@@ -15,8 +17,8 @@ class BrowseCityViewModel(
     var job_states: CompletableJob? = null
     var job_cities: CompletableJob? = null
     var iBrowsecityListener: IBrowseCityListener? = null
-    var TAG: String = RegisterViewModel::class.java.simpleName
-    
+    var TAG: String = BrowseCityViewModel::class.java.simpleName
+
     fun getUserStates() {
         job_states = Job()
         job_states.let { thejob ->
@@ -52,14 +54,13 @@ class BrowseCityViewModel(
 
     fun fetchCitiesForStateId(id: Int) {
         job_cities = Job()
-
         job_cities.let {thejob ->
             CoroutineScope(Dispatchers.IO + thejob!!).launch {
                 try {
                     val response = browsCityRepository.userCity(id)
                     response.data?.let {
                         withContext(Dispatchers.Main) {
-                            iBrowsecityListener?.getCities(response.data)
+                            iBrowsecityListener?.getCities(id,response.data)
                             thejob.complete()
                         }
                         return@launch
