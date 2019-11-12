@@ -46,6 +46,7 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private var animationItemsIndex: SparseBooleanArray? = SparseBooleanArray()
     private var reverseAllAnimations = false
     private var currentSelectedIndex = -1
+    private var TAG:String?=SearchListFragment::class.qualifiedName
 
     fun getSelectedItemCount(): Int {
         return selectedItems!!.size()
@@ -118,10 +119,12 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
 
+
+
         rv_search = rootView.findViewById(R.id.rv_search)
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
         swipeRefreshLayout = rootView.findViewById<View>(R.id.swipe_refresh_layout) as SwipeRefreshLayout
-        swipeRefreshLayout!!.setOnRefreshListener(this)
+        swipeRefreshLayout?.setOnRefreshListener(this)
         actionModeCallback = ActionModeCallback()
         (activity as AppCompatActivity).supportActionBar!!.title = "Smart Search"
 
@@ -170,9 +173,9 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_smart_search, container, false)
-
-
         multiSearchView = header.findViewById(R.id.multiSearchView)
+        //multiSearchView?.binding!!.searchViewContainer.get(0).editTextSearch.text.insert(0,"Kunjan")
+
         val iv_atoz = header.findViewById(R.id.iv_atoz) as ImageView
         iv_atoz.setOnClickListener {
 
@@ -187,9 +190,9 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             dialog.show()
         }
 
-        multiSearchView!!.setSearchViewListener(object : MultiSearchView.MultiSearchViewListener {
+        multiSearchView?.setSearchViewListener(object : MultiSearchView.MultiSearchViewListener {
             override fun onTextChanged(index: Int, s: CharSequence) {
-                // Toast.makeText(getActivity(), "onTextChanged", Toast.LENGTH_SHORT).show();
+                 Toast.makeText(getActivity(), "onTextChanged", Toast.LENGTH_SHORT).show();
             }
 
             override fun onSearchComplete(index: Int, s: CharSequence) {

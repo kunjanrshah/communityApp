@@ -63,8 +63,8 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
         mAsyncExpandableListView.setCallbacks(this)
 
         inventory = CollectionView.Inventory()
+        Utility.startProgress(activity, getString(R.string.fetching_states), getString(R.string.loading))
         browseCityViewModel?.getUserStates()
-
 
         view.iv_cancel.setOnClickListener { v -> Utility.movetoFragment(activity, DashboardFragment()) }
         return view
@@ -83,13 +83,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
     }
 
     override fun onStartLoadingGroup(groupOrdinal: Int) {
-        /*try {
-                Thread.sleep(1500);
-            } catch (e:InterruptedException) {
-                e.printStackTrace();
-            }*/
-        browseCityViewModel?.fetchCitiesForStateId(groupOrdinal)
-        //browseCityViewModel?.let { LoadDataTask(it,groupOrdinal, mAsyncExpandableListView).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR) }
+        browseCityViewModel?.fetchCitiesForStateId(groupOrdinal+1)
     }
 
     override fun newCollectionHeaderView(context: Context, groupOrdinal: Int, parent: ViewGroup): AsyncHeaderViewHolder {
@@ -118,17 +112,17 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
         }
     }
 
-
-
     override fun getStates(data: List<StateDatum>) {
         for ((index, stateData) in data.withIndex()) {
             val group = inventory?.newGroup(index) // groupOrdinal is the smallest, displayed first
             group?.headerItem = stateData.state
         }
+        Utility.hideProgress()
         mAsyncExpandableListView.updateInventory(inventory)
     }
-    override suspend fun getFailure(message: String) {
 
+    override suspend fun getFailure(message: String) {
+        Utility.hideProgress()
     }
 
     override fun getCities(id:Int,data: List<CitiesDatum>) {
@@ -140,27 +134,9 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
                 items.add(city)
             }
         }
-        mAsyncExpandableListView.onFinishLoadingGroup(id,items)
+        mAsyncExpandableListView.onFinishLoadingGroup(id-1,items)
     }
 
-    /*private class LoadDataTask internal constructor(var browseCityViewModel: BrowseCityViewModel, private val mGroupOrdinal: Int, listview: AsyncExpandableListView<String, City>) : AsyncTask<Void, Void, Void>() {
-        private var listviewRef: WeakReference<AsyncExpandableListView<String, City>>? = null
-
-        init {
-            listviewRef = WeakReference(listview)
-        }
-
-        override fun doInBackground(vararg params: Void): Void? {
-            browseCityViewModel.fetchCitiesForStateId(mGroupOrdinal)
-            return null
-        }
-
-        override fun onPostExecute(data: Void) {
-            if (listviewRef!!.get() != null) {
-                listviewRef!!.get()?.onFinishLoadingGroup(mGroupOrdinal, items)
-            }
-        }
-    }*/
 
     inner class CityItemHolder internal constructor(v: View) : RecyclerView.ViewHolder(v) {
 
@@ -175,7 +151,13 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
             textViewDevider = v.findViewById(R.id.view_devider)
             val row_city = v.findViewById<LinearLayout>(R.id.row_city)
 
-            row_city.setOnClickListener { v1 -> Toast.makeText(activity, "" + textViewCity.text, Toast.LENGTH_SHORT).show() }
+            row_city.setOnClickListener { v1 ->
+                val fragment=SearchCityResult()
+                val mBundle = Bundle()
+                mBundle.putString("city_name", textViewCity.text.toString())
+                fragment.setArguments(mBundle)
+                Utility.movetoFragment(activity, fragment)
+             }
         }
     }
 

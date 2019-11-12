@@ -274,5 +274,6 @@
     <string name="_continue">Continue</string>
     <string name="hash_key">hash_key</string>
     <string name="seat_back_relax">Seat back &amp; Relax!</string>
+    <string name="fetching_states">Fetching States</string>
 
 </resources>

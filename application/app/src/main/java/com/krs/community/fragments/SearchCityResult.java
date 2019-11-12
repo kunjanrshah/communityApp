@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -44,7 +45,7 @@ import java.util.List;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
-public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class SearchCityResult extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private RecyclerView rv_filters;
     private ShimmerFrameLayout mShimmerViewContainer;
@@ -58,7 +59,8 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
     private SparseBooleanArray animationItemsIndex;
     private boolean reverseAllAnimations = false;
     private int currentSelectedIndex = -1;
-
+    private String city_name;
+    
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
 
@@ -72,8 +74,8 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
         swipeRefreshLayout.setOnRefreshListener(this);
         actionModeCallback = new ActionModeCallback();
 
-
-
+        city_name= this.getArguments() != null ? this.getArguments().getString("city_name") : null;
+        
         adapter=new ParallaxRecyclerAdapter<Message>(messages) {
             @Override
             public void onBindViewHolderImpl(RecyclerView.ViewHolder viewHolder, ParallaxRecyclerAdapter<Message> adapter, int position) {
@@ -117,6 +119,12 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
         View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_smart_filter, container, false);
         ImageView iv_cancel = header.findViewById(R.id.iv_cancel);
 
+        TextView tvTitle= header.findViewById(R.id.tvTitle);
+        tvTitle.setText(city_name);
+
+        EditText fitlerName= header.findViewById(R.id.edt_filter_name);
+        fitlerName.setVisibility(View.GONE);
+        
         iv_cancel.setOnClickListener(v -> {
             Utility.movetoFragment(getActivity(), new ExpandableFilterListFragment());
         });
