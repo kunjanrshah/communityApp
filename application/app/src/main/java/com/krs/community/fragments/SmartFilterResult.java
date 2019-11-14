@@ -295,13 +295,12 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
 
     private class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener{
 
-        private ImageView iv_profile;
+
         private BoomMenuButton boomMenuButton;
         private TextView tv_area;
         private TextView tv_role;
         private TextView tv_mobile;
         private TextView tv_email;
-
         RelativeLayout iconContainer, iconBack, iconFront;
         TextView iconText,tv_name;
         ImageView imgProfile;
@@ -310,19 +309,17 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
 
         ViewHolder(View itemView) {
             super(itemView);
-            iv_profile= itemView.findViewById(R.id.iv_profile);
+
+            imgProfile =  itemView.findViewById(R.id.icon_profile);
             boomMenuButton = itemView.findViewById(R.id.bmb1);
             tv_name = itemView.findViewById(R.id.tv_name);
             tv_area = itemView.findViewById(R.id.tv_area);
             tv_role = itemView.findViewById(R.id.tv_role);
             tv_mobile= itemView.findViewById(R.id.tv_mobile);
             tv_email = itemView.findViewById(R.id.tv_email);
-
-            tv_name = itemView.findViewById(R.id.tv_name);
             iconText =  itemView.findViewById(R.id.icon_text);
             iconBack =  itemView.findViewById(R.id.icon_back);
             iconFront =  itemView.findViewById(R.id.icon_front);
-            imgProfile =  itemView.findViewById(R.id.icon_profile);
             messageContainer =  itemView.findViewById(R.id.message_container);
             iconContainer =  itemView.findViewById(R.id.icon_container);
             itemView.setOnLongClickListener(this);

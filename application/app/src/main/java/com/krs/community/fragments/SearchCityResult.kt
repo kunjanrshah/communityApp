@@ -2,7 +2,6 @@ package com.krs.community.fragments
 
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
 import android.util.SparseBooleanArray
@@ -22,6 +21,7 @@ import android.widget.TextView
 import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,11 +31,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.adapter.AtoZBottomAdapter
-import com.krs.community.model.Message
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.utils.FlipAnimator
 import com.krs.community.utils.Utility
@@ -45,67 +43,90 @@ import com.orhanobut.dialogplus.DialogPlus
 import java.util.ArrayList
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.krs.community.databinding.FragmentFilterResultBinding
 import com.krs.community.interfaces.IbrowseCityRecordsListener
-import com.krs.community.model.SearchByCityModel
+import com.krs.community.model.*
 import com.krs.community.viewmodel.BrowseCityViewModel
 import com.krs.community.viewmodel.BrowseCityViewModelFactory
+import kotlinx.android.synthetic.main.fragment_filter_result.view.*
+import kotlinx.android.synthetic.main.fragment_filters.*
+import kotlinx.android.synthetic.main.fragment_filters.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
 class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, KodeinAware, IbrowseCityRecordsListener {
     override fun getSearchRecords(data: SearchByCityModel) {
-        Log.d("SearchCityResult","data: "+data)
+
+        if(data.success){
+            data.totalHead
+            data.totalMem
+            data.users.size
+            for (user in data.users){
+                users.add(user)
+            }
+            adapter?.notifyDataSetChanged()
+            rootView?.swipe_refresh_layout?.isRefreshing = false
+            rootView?.shimmer_view_container?.stopShimmerAnimation()
+            rootView?.shimmer_view_container?.visibility = View.GONE
+        }
+        Log.d("SearchCityResult","data: "+data.toString())
     }
 
     override suspend fun getFailure(message: Boolean) {
         Log.d("SearchCityResult","message: "+message)
     }
-
-    private var rv_filters: RecyclerView? = null
-    private var mShimmerViewContainer: ShimmerFrameLayout? = null
-    private val messages = ArrayList<Message>()
+    private val start:String?="0"
+    private val length:String?="25"
+    private var city_id:String?=""
+    private val users = ArrayList<User>()
     private var actionModeCallback: ActionModeCallback? = null
     private var actionMode: ActionMode? = null
-    private var swipeRefreshLayout: SwipeRefreshLayout? = null
-    private var adapter: ParallaxRecyclerAdapter<Message>? = null
+    private var adapter: ParallaxRecyclerAdapter<User>? = null
     private var selectedItems: SparseBooleanArray? = null
     private var animationItemsIndex: SparseBooleanArray? = null
     private var reverseAllAnimations = false
     private var currentSelectedIndex = -1
     private val selectedItemCount: Int get() = selectedItems!!.size()
-
+    private var rootView: View?=null
+    private var TAG:String =SearchCityResult::class.java.simpleName
     private val factory: BrowseCityViewModelFactory by instance()
     internal var browseCityViewModel: BrowseCityViewModel? = null
     override val kodein by kodein()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val rootView = inflater.inflate(R.layout.fragment_filter_result, container, false)
+        val binding: FragmentFilterResultBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_filter_result, container, false)
+        rootView=  binding.root
+
         selectedItems = SparseBooleanArray()
         animationItemsIndex = SparseBooleanArray()
-        mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
-        rv_filters = rootView.findViewById(R.id.lstFilter)
-        swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout)
-        swipeRefreshLayout!!.setOnRefreshListener(this)
+        rootView?.swipe_refresh_layout?.setOnRefreshListener(this)
         actionModeCallback = ActionModeCallback()
-
-        val city_name = if (this.arguments != null) this.arguments!!.getString("city_name") else null
-
         browseCityViewModel = ViewModelProviders.of(this,factory).get(BrowseCityViewModel::class.java)
         browseCityViewModel?.ibrowseCityRecordsListener=this
 
-        adapter = object : ParallaxRecyclerAdapter<Message>(messages) {
-            override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Message>, position: Int) {
+        val city_name = if (this.arguments != null) this.arguments!!.getString("city_name") else null
+        city_id = if (this.arguments != null) this.arguments!!.getString("city_id") else null
 
-                val message = messages[position]
-                val name = "Kunjan Shah"
+        adapter = object : ParallaxRecyclerAdapter<User>(users) {
+            override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<User>, position: Int) {
+
+                val user = users[position]
+                val name = user.firstName+" "+user.lastName
 
                 val holder =  viewHolder as SearchCityResult.ViewHolder
-
                 holder.tv_name.setText(name)
-                holder.boomMenuButton.clearBuilders()
+                holder.tv_area.setText(user.area+" "+user.city)
+                holder.tv_email.setText(user.emailAddress)
+                holder.tv_mobile.setText(user.mobile)
+                if(user.headId.equals("0")){
+                    holder.tv_role.setText("Head")
+                }else{
+                    holder.tv_role.setText("Member")
+                }
 
+                holder.boomMenuButton.clearBuilders()
                 for (i in 0 until holder.boomMenuButton.getPiecePlaceEnum().pieceNumber()) {
                     holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder())
                 }
@@ -114,29 +135,29 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
                 holder.iconText.setText(name.substring(0, 1))
                 holder.itemView.isActivated = selectedItems!!.get(position, false)
                 applyIconAnimation(holder, position)
-                applyProfilePicture(holder, message)
+                applyProfilePicture(holder, user)
                 applyClickEvents(holder, position)
             }
 
-            override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Message>, i: Int): RecyclerView.ViewHolder {
+            override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<User>, i: Int): RecyclerView.ViewHolder {
                 return ViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.filter_result_list, viewGroup, false))
             }
 
-            override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<Message>): Int {
-                return messages?.size ?: 0
+            override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<User>): Int {
+                return users.size ?: 0
             }
         }
 
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_smart_filter, container, false)
-        val iv_cancel = header.findViewById<ImageView>(R.id.iv_cancel)
-
+        Log.d(TAG,"City Name: "+city_name)
         val tvTitle = header.findViewById<TextView>(R.id.tvTitle)
         tvTitle.text = city_name
 
-        val fitlerName = header.findViewById<EditText>(R.id.edt_filter_name)
-        fitlerName.visibility = View.GONE
+        val edt_filter_name = header.findViewById<EditText>(R.id.edt_filter_name)
+        edt_filter_name.visibility = View.GONE
 
+        val iv_cancel = header.findViewById<ImageView>(R.id.iv_cancel)
         iv_cancel.setOnClickListener { v -> Utility.movetoFragment(activity, ExpandableFilterListFragment()) }
 
         val iv_export = header.findViewById<ImageView>(R.id.iv_export)
@@ -153,52 +174,52 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
             dialog.show()
         }
 
-        adapter!!.setParallaxHeader(header, rv_filters!!)
+        adapter?.setParallaxHeader(header, rootView?.lstFilter)
+        rootView?.lstFilter?.layoutManager = LinearLayoutManager(activity)
+        rootView?.lstFilter?.adapter = adapter
 
         setupList()
-        getInbox()
         return rootView
     }
 
     private fun setupList() {
-        rv_filters!!.layoutManager = LinearLayoutManager(activity)
-        // mAdapter = new FilterResultAdapter(getActivity(), messages, this);
-        rv_filters!!.adapter = adapter
-
-        Handler().postDelayed({
-            mShimmerViewContainer!!.stopShimmerAnimation()
-            mShimmerViewContainer!!.visibility = View.GONE
-        }, 2000)
+        val data= SearchByCityData()
+        data.start=start
+        data.length=length
+        val filterBy= FilterBy()
+        filterBy.cityId=city_id
+        data.filterBy=filterBy
+        users.clear()
+        rootView?.swipe_refresh_layout?.isRefreshing = true
+        rootView?.shimmer_view_container?.startShimmerAnimation()
+        browseCityViewModel?.fetchRecordsByCity(data)
     }
 
-    private fun getInbox() {
-        swipeRefreshLayout!!.isRefreshing = true
-        messages.clear()
+   /* private fun getInbox() {
+        swipeRefreshLayout?.isRefreshing = true
+        users.clear()
 
         for (i in 0..19) {
-            val message = Message()
-            message.id = 1
-            message.isImportant = false
-            message.message = "Now android supports multiple voice recogonization"
-            message.picture = "https://api.androidhive.info/json/google.png"
-            message.isRead = false
-            message.timestamp = "10:30 AM"
-            message.from = "Google Alerts"
-            message.subject = "Google Alert - android"
-            message.color = Utility.getRandomMaterialColor(activity!!, "400")
-            messages.add(message)
+            val user = User()
+            user.id = 1
+            user.isImportant = false
+            user.message = "Now android supports multiple voice recogonization"
+            user.picture = "https://api.androidhive.info/json/google.png"
+            user.isRead = false
+            user.timestamp = "10:30 AM"
+            user.from = "Google Alerts"
+            user.subject = "Google Alert - android"
+            user.color = Utility.getRandomMaterialColor(activity!!, "400")
+            users.add(user)
         }
 
         adapter!!.notifyDataSetChanged()
         swipeRefreshLayout!!.isRefreshing = false
-    }
+    }*/
 
     private fun applyClickEvents(holder: ViewHolder, position: Int) {
         holder.iconContainer.setOnClickListener { onIconClicked(position) }
-
-
         holder.messageContainer.setOnClickListener { onMessageRowClicked(position) }
-
         holder.messageContainer.setOnLongClickListener { view ->
             onRowLongClicked(position)
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
@@ -206,9 +227,9 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
         }
     }
 
-    private fun applyProfilePicture(holder: ViewHolder, message: Message) {
-        if (!TextUtils.isEmpty(message.picture)) {
-            Glide.with(activity!!).load(message.picture)
+    private fun applyProfilePicture(holder: ViewHolder, user: User) {
+        if (!TextUtils.isEmpty(user.profilePic) && user.profilePic.contains("http://")) {
+            Glide.with(activity!!).load(user.profilePic)
                     .thumbnail(0.5f)
                     .transition(withCrossFade())
                     .apply(RequestOptions.circleCropTransform())
@@ -218,7 +239,7 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
             holder.iconText.visibility = View.GONE
         } else {
             holder.imgProfile.setImageResource(R.drawable.bg_circle)
-            holder.imgProfile.setColorFilter(message.color)
+            holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(activity!!, "400"))
             holder.iconText.visibility = View.VISIBLE
         }
     }
@@ -283,7 +304,7 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
     }
 
     private fun removeData(position: Int) {
-        messages.removeAt(position)
+        users.removeAt(position)
         resetCurrentIndex()
     }
 
@@ -291,43 +312,35 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
         currentSelectedIndex = -1
     }
 
-
     private inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnLongClickListener {
 
-        private val iv_profile: ImageView
         val boomMenuButton: BoomMenuButton
-        private val tv_area: TextView
-        private val tv_role: TextView
-        private val tv_mobile: TextView
-        private val tv_email: TextView
-
-        internal var iconContainer: RelativeLayout
-        internal var iconBack: RelativeLayout
-        internal var iconFront: RelativeLayout
-        internal var iconText: TextView
-        internal var tv_name: TextView
-        internal var imgProfile: ImageView
-        internal var messageContainer: LinearLayout
-
+        var imgProfile: ImageView
+        var tv_name: TextView
+        val tv_area: TextView
+        val tv_role: TextView
+        val tv_mobile: TextView
+        val tv_email: TextView
+        var iconContainer: RelativeLayout
+        var iconBack: RelativeLayout
+        var iconFront: RelativeLayout
+        var iconText: TextView
+        var messageContainer: LinearLayout
 
         init {
-            iv_profile = itemView.findViewById(R.id.iv_profile)
-            boomMenuButton = itemView.findViewById(R.id.bmb1)
+            imgProfile = itemView.findViewById(R.id.icon_profile)
             tv_name = itemView.findViewById(R.id.tv_name)
-            tv_area = itemView.findViewById(R.id.tv_area)
-            tv_role = itemView.findViewById(R.id.tv_role)
             tv_mobile = itemView.findViewById(R.id.tv_mobile)
             tv_email = itemView.findViewById(R.id.tv_email)
-
-            tv_name = itemView.findViewById(R.id.tv_name)
+            tv_area = itemView.findViewById(R.id.tv_area)
+            tv_role = itemView.findViewById(R.id.tv_role)
+            boomMenuButton = itemView.findViewById(R.id.bmb1)
             iconText = itemView.findViewById(R.id.icon_text)
             iconBack = itemView.findViewById(R.id.icon_back)
             iconFront = itemView.findViewById(R.id.icon_front)
-            imgProfile = itemView.findViewById(R.id.icon_profile)
             messageContainer = itemView.findViewById(R.id.message_container)
             iconContainer = itemView.findViewById(R.id.icon_container)
             itemView.setOnLongClickListener(this)
-
         }
 
         override fun onLongClick(v: View): Boolean {
@@ -339,7 +352,6 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
 
     override fun onResume() {
         super.onResume()
-        mShimmerViewContainer!!.startShimmerAnimation()
         (activity as AppCompatActivity).supportActionBar!!.hide()
         DashboardActivity.spaceNavigationView.visibility = View.VISIBLE
     }
@@ -347,7 +359,8 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity).supportActionBar!!.show()
-        mShimmerViewContainer!!.stopShimmerAnimation()
+        rootView?.shimmer_view_container?.stopShimmerAnimation()
+        rootView?.shimmer_view_container?.visibility = View.GONE
     }
 
     private fun deleteMessages() {
@@ -360,14 +373,14 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
     }
 
     override fun onRefresh() {
-        getInbox()
+       // setupList()
     }
 
     private inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
             mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
 
-            swipeRefreshLayout!!.isEnabled = false
+            rootView!!.swipe_refresh_layout.isEnabled = false
             return true
         }
 
@@ -391,12 +404,12 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
 
         override fun onDestroyActionMode(mode: ActionMode) {
             clearSelections()
-            swipeRefreshLayout!!.isEnabled = true
+            rootView?.swipe_refresh_layout!!.isEnabled = true
             actionMode = null
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(activity, R.color.colorBG, false)
             }
-            rv_filters!!.post { resetAnimationIndex() }
+            rootView?.lstFilter!!.post { resetAnimationIndex() }
         }
     }
 
@@ -427,24 +440,22 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
         toggleSelection(position)
     }
 
-
-    private fun onIconImportantClicked(position: Int) {
-        val message = messages[position]
+    /*private fun onIconImportantClicked(position: Int) {
+        val user = users[position]
         message.isImportant = !message.isImportant
-        messages[position] = message
+        users[position] = message
         adapter!!.notifyDataSetChanged()
-    }
+    }*/
 
     private fun onMessageRowClicked(position: Int) {
         if (selectedItemCount > 0) {
             enableActionMode(position)
         } else {
-            val message = messages[position]
-            message.isRead = true
-            messages[position] = message
-            adapter!!.notifyDataSetChanged()
-
-            Toast.makeText(activity, "Read: " + message.message, Toast.LENGTH_SHORT).show()
+            /*val user = users[position]
+            user.isRead = true
+            users[position] = user
+            adapter!!.notifyDataSetChanged()*/
+            Toast.makeText(activity, "Read: " + position, Toast.LENGTH_SHORT).show()
         }
     }
 

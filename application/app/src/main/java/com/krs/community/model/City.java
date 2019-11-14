@@ -7,6 +7,7 @@ package com.krs.community.model;
 public class City {
 
     private String cityName;
+    private String cityId;
 
     public String getCityName() {
         return cityName;
@@ -14,5 +15,13 @@ public class City {
 
     public void setCityName(String cityName) {
         this.cityName = cityName;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
     }
 }

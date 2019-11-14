@@ -19,6 +19,7 @@ import com.ericliu.asyncexpandablelist.CollectionView
 import com.ericliu.asyncexpandablelist.async.AsyncExpandableListView
 import com.ericliu.asyncexpandablelist.async.AsyncExpandableListViewCallbacks
 import com.ericliu.asyncexpandablelist.async.AsyncHeaderViewHolder
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.databinding.FragmentBrowseCityBinding
@@ -30,6 +31,7 @@ import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.BrowseCityViewModel
 import com.krs.community.viewmodel.BrowseCityViewModelFactory
 import kotlinx.android.synthetic.main.fragment_browse_city.view.*
+import kotlinx.android.synthetic.main.fragment_filter_result.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,6 +44,8 @@ import java.util.*
 class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String, City>, IBrowseCityListener,KodeinAware {
 
     private lateinit var mAsyncExpandableListView: AsyncExpandableListView<String, City>
+    private lateinit var shimmer_view_container: ShimmerFrameLayout
+
     private var inventory: CollectionView.Inventory<String, City>? = null
     private val factory: BrowseCityViewModelFactory by instance()
     internal var browseCityViewModel: BrowseCityViewModel? = null
@@ -64,7 +68,10 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
 
         inventory = CollectionView.Inventory()
 
-        Utility.startProgress(activity, getString(R.string.fetching_states), getString(R.string.loading))
+        shimmer_view_container=view.findViewById(R.id.shimmer_view_container)
+        //Utility.startProgress(activity, getString(R.string.fetching_states), getString(R.string.loading))
+        shimmer_view_container.startShimmerAnimation()
+        shimmer_view_container.visibility = View.VISIBLE
         browseCityViewModel?.getUserStates()
 
         view.iv_cancel.setOnClickListener { v -> Utility.movetoFragment(activity, DashboardFragment()) }
@@ -105,7 +112,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
     override fun bindCollectionItemView(context: Context, holder: RecyclerView.ViewHolder, i: Int, item: City) {
         val cityItemHolder = holder as CityItemHolder
         cityItemHolder.textViewCity.text = item.cityName
-
+        cityItemHolder.city_id=item.cityId
         if (item.cityName.equals("other", ignoreCase = true)) {
             cityItemHolder.textViewDevider.visibility = View.GONE
         } else {
@@ -118,7 +125,8 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
             val group = inventory?.newGroup(index) // groupOrdinal is the smallest, displayed first
             group?.headerItem = stateData.state
         }
-        Utility.hideProgress()
+        shimmer_view_container.stopShimmerAnimation()
+        shimmer_view_container.visibility = View.GONE
         mAsyncExpandableListView.updateInventory(inventory)
     }
 
@@ -131,6 +139,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
         if(!data.isNullOrEmpty()){
             for ((index, value) in data.withIndex()) {
                 val city = City()
+                city.cityId = data.get(index).id
                 city.cityName = data.get(index).city
                 items.add(city)
             }
@@ -143,19 +152,21 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
 
         internal val textViewCity: TextView
         internal val textViewDevider: View
+        internal var city_id:String=""
 
         init {
             // Define click listener for the ViewHolder's View.
             v.setOnClickListener { Log.d(TAG, "Element $position clicked.") }
 
             textViewCity = v.findViewById(R.id.tv_city)
-            textViewDevider = v.findViewById(R.id.view_devider)
+            textViewDevider= v.findViewById(R.id.view_devider)
             val row_city = v.findViewById<LinearLayout>(R.id.row_city)
 
             row_city.setOnClickListener { v1 ->
                 val fragment=SearchCityResult()
                 val mBundle = Bundle()
                 mBundle.putString("city_name", textViewCity.text.toString())
+                mBundle.putString("city_id", city_id)
                 fragment.setArguments(mBundle)
                 Utility.movetoFragment(activity, fragment)
              }
