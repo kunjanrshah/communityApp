@@ -4,12 +4,18 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.os.Build;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.krs.community.R;
+import com.krs.community.model.User;
 
 import java.util.List;
 
@@ -18,8 +24,9 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
 
     public static class VIEW_TYPES {
         public static final int NORMAL = 1;
-        public static final int HEADER = 2;
-        public static final int FIRST_VIEW = 3;
+        public  static final int HEADER = 2;
+        public  static final int FIRST_VIEW = 3;
+       public static final int VIEW_TYPE_LOADING = 4;
     }
 
     public abstract void onBindViewHolderImpl(RecyclerView.ViewHolder viewHolder, ParallaxRecyclerAdapter<T> adapter, int i);
@@ -118,6 +125,12 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
+
+      /*  if(i==VIEW_TYPES.VIEW_TYPE_LOADING){
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_loading, viewGroup, false);
+            return new LoadingViewHolder(view);
+        }*/
+
         if (i == VIEW_TYPES.HEADER && mHeader != null) {
             return new ViewHolder(mHeader);
         }
@@ -127,6 +140,8 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
                 translateHeader(-holder.itemView.getTop());
             }
         }
+
+
         final RecyclerView.ViewHolder holder = onCreateViewHolderImpl(viewGroup, this, i);
         if (mOnClickEvent != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +152,16 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
             });
         }
         return holder;
+    }
+
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+
+        ProgressBar progressBar;
+
+        public LoadingViewHolder(@NonNull View itemView) {
+            super(itemView);
+            progressBar = itemView.findViewById(R.id.progressBar);
+        }
     }
 
     /**
@@ -201,8 +226,13 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 1)
+
+        if (position == 1){
             return VIEW_TYPES.FIRST_VIEW;
+        }else if(position==mData.size()){
+            return VIEW_TYPES.VIEW_TYPE_LOADING;
+        }
+
         return position == 0 && mHeader != null ? VIEW_TYPES.HEADER : VIEW_TYPES.NORMAL;
     }
 

@@ -69,7 +69,6 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
         inventory = CollectionView.Inventory()
 
         shimmer_view_container=view.findViewById(R.id.shimmer_view_container)
-        //Utility.startProgress(activity, getString(R.string.fetching_states), getString(R.string.loading))
         shimmer_view_container.startShimmerAnimation()
         shimmer_view_container.visibility = View.VISIBLE
         browseCityViewModel?.getUserStates()

@@ -25,4 +25,5 @@
     <attr name="jrs_multiple" format="boolean"/>
   </declare-styleable>
 
+
 </resources>

@@ -158,6 +158,8 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/ll_mobile"
+                        android:clickable="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -181,6 +183,9 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_email"
+                        android:clickable="true"
+                        android:autoLink="email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -193,6 +198,7 @@
 
                         <TextView
                             android:id="@+id/tv_email"
+                            android:autoLink="email"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"

@@ -1,7 +1,10 @@
 package com.krs.community.fragments
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
 import android.util.SparseBooleanArray
@@ -19,13 +22,16 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.NonNull
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.bumptech.glide.Glide
@@ -46,16 +52,22 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.krs.community.databinding.FragmentFilterResultBinding
 import com.krs.community.interfaces.IbrowseCityRecordsListener
 import com.krs.community.model.*
+import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter.VIEW_TYPES.VIEW_TYPE_LOADING
 import com.krs.community.viewmodel.BrowseCityViewModel
 import com.krs.community.viewmodel.BrowseCityViewModelFactory
 import kotlinx.android.synthetic.main.fragment_filter_result.view.*
-import kotlinx.android.synthetic.main.fragment_filters.*
-import kotlinx.android.synthetic.main.fragment_filters.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, KodeinAware, IbrowseCityRecordsListener {
+class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, KodeinAware, IbrowseCityRecordsListener{
+
+   /* override fun onRefresh(direction: SwipyRefreshLayoutDirection?) {
+        start=start+length
+     //   rootView?.swipyrefreshlayout?.setRefreshing(true)
+        setupList()
+    }*/
+
     override fun getSearchRecords(data: SearchByCityModel) {
 
         if(data.success){
@@ -66,7 +78,7 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
                 users.add(user)
             }
             adapter?.notifyDataSetChanged()
-            rootView?.swipe_refresh_layout?.isRefreshing = false
+         //   rootView?.swipyrefreshlayout?.setRefreshing(false)
             rootView?.shimmer_view_container?.stopShimmerAnimation()
             rootView?.shimmer_view_container?.visibility = View.GONE
         }
@@ -76,8 +88,10 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
     override suspend fun getFailure(message: Boolean) {
         Log.d("SearchCityResult","message: "+message)
     }
-    private val start:String?="0"
-    private val length:String?="25"
+
+    var isLoading = false
+    private var start:String?="0"
+    private val length:String?="30"
     private var city_id:String?=""
     private val users = ArrayList<User>()
     private var actionModeCallback: ActionModeCallback? = null
@@ -101,10 +115,12 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
 
         selectedItems = SparseBooleanArray()
         animationItemsIndex = SparseBooleanArray()
-        rootView?.swipe_refresh_layout?.setOnRefreshListener(this)
+
         actionModeCallback = ActionModeCallback()
         browseCityViewModel = ViewModelProviders.of(this,factory).get(BrowseCityViewModel::class.java)
         browseCityViewModel?.ibrowseCityRecordsListener=this
+      //  rootView?.swipyrefreshlayout?.setOnRefreshListener(this)
+    //    rootView?.swipyrefreshlayout?.setDirection(SwipyRefreshLayoutDirection.BOTTOM)
 
         val city_name = if (this.arguments != null) this.arguments!!.getString("city_name") else null
         city_id = if (this.arguments != null) this.arguments!!.getString("city_id") else null
@@ -115,28 +131,31 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
                 val user = users[position]
                 val name = user.firstName+" "+user.lastName
 
-                val holder =  viewHolder as SearchCityResult.ViewHolder
-                holder.tv_name.setText(name)
-                holder.tv_area.setText(user.area+" "+user.city)
-                holder.tv_email.setText(user.emailAddress)
-                holder.tv_mobile.setText(user.mobile)
-                if(user.headId.equals("0")){
-                    holder.tv_role.setText("Head")
-                }else{
-                    holder.tv_role.setText("Member")
-                }
+              //  if(!adapter.getItemViewType(position+1).equals(VIEW_TYPE_LOADING)){
+                    val holder =  viewHolder as SearchCityResult.ViewHolder
+                    holder.tv_name.setText(name)
+                    holder.tv_area.setText(user.area+" "+user.city)
+                    holder.tv_email.setText(user.emailAddress)
+                    holder.tv_mobile.setText(user.mobile)
+                    if(user.headId.equals("0")){
+                        holder.tv_role.setText("Head")
+                    }else{
+                        holder.tv_role.setText("Member")
+                    }
 
-                holder.boomMenuButton.clearBuilders()
-                for (i in 0 until holder.boomMenuButton.getPiecePlaceEnum().pieceNumber()) {
-                    holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder())
-                }
-                holder.boomMenuButton.setOnClickListener({ v -> holder.boomMenuButton.boom() })
+                    holder.boomMenuButton.clearBuilders()
+                    for (i in 0 until holder.boomMenuButton.getPiecePlaceEnum().pieceNumber()) {
+                        holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder())
+                    }
+                    holder.boomMenuButton.setOnClickListener({ v -> holder.boomMenuButton.boom() })
 
-                holder.iconText.setText(name.substring(0, 1))
-                holder.itemView.isActivated = selectedItems!!.get(position, false)
-                applyIconAnimation(holder, position)
-                applyProfilePicture(holder, user)
-                applyClickEvents(holder, position)
+                    holder.iconText.setText(name.substring(0, 1))
+                    holder.itemView.isActivated = selectedItems!!.get(position, false)
+                    applyIconAnimation(holder, position)
+                    applyProfilePicture(holder, user)
+                    applyClickEvents(holder, position)
+                //}
+
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<User>, i: Int): RecyclerView.ViewHolder {
@@ -177,9 +196,38 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
         adapter?.setParallaxHeader(header, rootView?.lstFilter)
         rootView?.lstFilter?.layoutManager = LinearLayoutManager(activity)
         rootView?.lstFilter?.adapter = adapter
+        rootView?.lstFilter?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(@NonNull recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+
+            override fun onScrolled(@NonNull recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
+
+                /*if (!isLoading) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() === users.size - 1) {
+                        //bottom of list!
+                 //       loadMore()
+                        isLoading = true
+                    }
+                }*/
+            }
+        })
+
 
         setupList()
         return rootView
+    }
+
+    private fun loadMore() {
+
+       // adapter?.notifyItemInserted(users.size - 1)
+        Handler().postDelayed(Runnable {
+            isLoading = false
+        },2000)
+
     }
 
     private fun setupList() {
@@ -189,36 +237,24 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
         val filterBy= FilterBy()
         filterBy.cityId=city_id
         data.filterBy=filterBy
-        users.clear()
-        rootView?.swipe_refresh_layout?.isRefreshing = true
         rootView?.shimmer_view_container?.startShimmerAnimation()
         browseCityViewModel?.fetchRecordsByCity(data)
     }
 
-   /* private fun getInbox() {
-        swipeRefreshLayout?.isRefreshing = true
-        users.clear()
-
-        for (i in 0..19) {
-            val user = User()
-            user.id = 1
-            user.isImportant = false
-            user.message = "Now android supports multiple voice recogonization"
-            user.picture = "https://api.androidhive.info/json/google.png"
-            user.isRead = false
-            user.timestamp = "10:30 AM"
-            user.from = "Google Alerts"
-            user.subject = "Google Alert - android"
-            user.color = Utility.getRandomMaterialColor(activity!!, "400")
-            users.add(user)
-        }
-
-        adapter!!.notifyDataSetChanged()
-        swipeRefreshLayout!!.isRefreshing = false
-    }*/
-
     private fun applyClickEvents(holder: ViewHolder, position: Int) {
         holder.iconContainer.setOnClickListener { onIconClicked(position) }
+        holder.ll_email.setOnClickListener {
+            Toast.makeText(activity,"Email Id",Toast.LENGTH_SHORT).show()
+        }
+
+        holder.ll_mobile.setOnClickListener {
+            Toast.makeText(activity,"Mobile",Toast.LENGTH_SHORT).show()
+            val intent=Intent(Intent.ACTION_DIAL)
+            val str="tel:"+holder.tv_mobile.text
+            intent.setData(Uri.parse(str));
+            startActivity(intent);
+        }
+
         holder.messageContainer.setOnClickListener { onMessageRowClicked(position) }
         holder.messageContainer.setOnLongClickListener { view ->
             onRowLongClicked(position)
@@ -326,6 +362,8 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
         var iconFront: RelativeLayout
         var iconText: TextView
         var messageContainer: LinearLayout
+        var ll_mobile:LinearLayout
+        var ll_email:LinearLayout
 
         init {
             imgProfile = itemView.findViewById(R.id.icon_profile)
@@ -340,6 +378,9 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
             iconFront = itemView.findViewById(R.id.icon_front)
             messageContainer = itemView.findViewById(R.id.message_container)
             iconContainer = itemView.findViewById(R.id.icon_container)
+            ll_mobile = itemView.findViewById(R.id.ll_mobile)
+            ll_email = itemView.findViewById(R.id.ll_email)
+
             itemView.setOnLongClickListener(this)
         }
 
@@ -380,7 +421,7 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
             mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
 
-            rootView!!.swipe_refresh_layout.isEnabled = false
+           // rootView!!.swipe_refresh_layout.isEnabled = false
             return true
         }
 
@@ -404,7 +445,7 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
 
         override fun onDestroyActionMode(mode: ActionMode) {
             clearSelections()
-            rootView?.swipe_refresh_layout!!.isEnabled = true
+          //  rootView?.swipe_refresh_layout!!.isEnabled = true
             actionMode = null
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(activity, R.color.colorBG, false)
