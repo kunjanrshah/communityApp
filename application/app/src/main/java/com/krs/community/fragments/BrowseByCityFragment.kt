@@ -2,14 +2,16 @@ package com.krs.community.fragments
 
 import android.content.ContentValues.TAG
 import android.content.Context
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -31,14 +33,9 @@ import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.BrowseCityViewModel
 import com.krs.community.viewmodel.BrowseCityViewModelFactory
 import kotlinx.android.synthetic.main.fragment_browse_city.view.*
-import kotlinx.android.synthetic.main.fragment_filter_result.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.lang.ref.WeakReference
 import java.util.*
 
 class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String, City>, IBrowseCityListener,KodeinAware {

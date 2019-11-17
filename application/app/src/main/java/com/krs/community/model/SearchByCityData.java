@@ -12,6 +12,11 @@ public class SearchByCityData {
     @SerializedName("length")
     @Expose
     private String length;
+
+    @SerializedName("alpha")
+    @Expose
+    private String alpha;
+
     @SerializedName("filter_by")
     @Expose
     private FilterBy filterBy;
@@ -40,4 +45,11 @@ public class SearchByCityData {
         this.filterBy = filterBy;
     }
 
+    public String getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(String alpha) {
+        this.alpha = alpha;
+    }
 }

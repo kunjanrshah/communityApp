@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.krs.community.R;
+import com.krs.community.fragments.SearchCityResult;
 import com.krs.community.model.User;
 
 import java.util.List;
@@ -36,35 +37,27 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
     public abstract int getItemCountImpl(ParallaxRecyclerAdapter<T> adapter);
 
     public interface OnClickEvent {
-        /**
-         * Event triggered when you click on a item of the adapter
-         *
-         * @param v        view
-         * @param position position on the array
-         */
         void onClick(View v, int position);
     }
 
     public interface OnParallaxScroll {
-        /**
-         * Event triggered when the parallax is being scrolled.
-         */
         void onParallaxScroll(float percentage, float offset, View parallax);
+    }
+
+    public interface OnLoadMore{
+        void loadApi();
     }
 
     private List<T> mData;
     private CustomRelativeWrapper mHeader;
     private OnClickEvent mOnClickEvent;
     private OnParallaxScroll mParallaxScroll;
+    private OnLoadMore mOnLoadMore;
     private RecyclerView mRecyclerView;
     private boolean mShouldClipView = true;
+    private Context mContext;
 
-    /**
-     * Translates the adapter in Y
-     *
-     * @param of offset in px
-     */
-    public void translateHeader(float of) {
+    private void translateHeader(float of) {
         float ofCalculated = of * mScrollMultiplier;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && of < mHeader.getHeight()) {
             mHeader.setTranslationY(ofCalculated);
@@ -87,12 +80,6 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
         }
     }
 
-    /**
-     * Set the view as header.
-     *
-     * @param header The inflated header
-     * @param view   The RecyclerView to set scroll listeners
-     */
     public void setParallaxHeader(View header, final RecyclerView view) {
         mRecyclerView = view;
         mHeader = new CustomRelativeWrapper(header.getContext(), mShouldClipView);
@@ -103,9 +90,7 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (mHeader != null) {
-                    translateHeader(mRecyclerView.getLayoutManager().getChildAt(0) == mHeader ?
-                            mRecyclerView.computeVerticalScrollOffset() : mHeader.getHeight());
-
+                    translateHeader(mRecyclerView.getLayoutManager().getChildAt(0) == mHeader ? mRecyclerView.computeVerticalScrollOffset() : mHeader.getHeight());
                 }
             }
         });
@@ -113,6 +98,12 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int i) {
+
+        if(viewHolder instanceof LoadingViewHolder){
+            showLoadingView((LoadingViewHolder) viewHolder, i);
+            return;
+        }
+
         if (mHeader != null) {
             if (i == 0) {
                 return;
@@ -126,10 +117,10 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
 
-      /*  if(i==VIEW_TYPES.VIEW_TYPE_LOADING){
+        if(i==VIEW_TYPES.VIEW_TYPE_LOADING){
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_loading, viewGroup, false);
             return new LoadingViewHolder(view);
-        }*/
+        }
 
         if (i == VIEW_TYPES.HEADER && mHeader != null) {
             return new ViewHolder(mHeader);
@@ -154,19 +145,19 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
         return holder;
     }
 
-    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+    private void showLoadingView(LoadingViewHolder viewHolder, int position) {
+        //ProgressBar would be displayed
+    }
+
+    static class LoadingViewHolder extends RecyclerView.ViewHolder {
 
         ProgressBar progressBar;
-
-        public LoadingViewHolder(@NonNull View itemView) {
+        LoadingViewHolder(@NonNull View itemView) {
             super(itemView);
             progressBar = itemView.findViewById(R.id.progressBar);
         }
     }
 
-    /**
-     * @return true if there is a header on this adapter, false otherwise
-     */
     public boolean hasHeader() {
         return mHeader != null;
     }
@@ -195,6 +186,10 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
 
     public ParallaxRecyclerAdapter(List<T> data) {
         mData = data;
+    }
+
+    public void setContext(OnLoadMore mOnLoadMore){
+        this.mOnLoadMore= mOnLoadMore;
     }
 
     public List<T> getData() {
@@ -229,7 +224,9 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
 
         if (position == 1){
             return VIEW_TYPES.FIRST_VIEW;
-        }else if(position==mData.size()){
+        }
+        else if(position==mData.size() && !SearchCityResult.Companion.getStop()){
+            mOnLoadMore.loadApi();
             return VIEW_TYPES.VIEW_TYPE_LOADING;
         }
 
@@ -237,7 +234,7 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
         }
     }
@@ -265,19 +262,11 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
             invalidate();
         }
     }
-    /**
-     * Set parallax scroll multiplier.
-     *
-     * @param mul The multiplier
-     */
+
     public void setScrollMultiplier(float mul) {
         this.mScrollMultiplier = mul;
     }
 
-    /**
-     * Get the current parallax scroll multiplier.
-     *
-     */
     public float getScrollMultiplier() {
         return this.mScrollMultiplier;
     }

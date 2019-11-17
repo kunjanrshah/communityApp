@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -23,12 +24,14 @@ import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.adapter.RecyclerAdapter.ItemClickListener
 import com.krs.community.app.AppController
 import com.krs.community.interfaces.OnBackPressedListener
+import com.krs.community.model.User
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.utils.AppConstants.EXTRA_POSITION
 import com.krs.community.utils.Utility
 import com.nightonke.boommenu.BoomMenuButton
 import kotlinx.android.synthetic.main.header_detail.view.*
+import java.io.Serializable
 
 
 class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListener {
@@ -42,6 +45,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
 
     lateinit var rv_detail: RecyclerView
     lateinit var ll_root: LinearLayout
+    lateinit var  user:User;
 
     companion object {
 
@@ -68,6 +72,8 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
             Utility.changeStatusbarColor(activity, R.color.colorPrimary, true)
         }
 
+       Toast.makeText(context,""+user.firstName,Toast.LENGTH_SHORT).show()
+
         return root
     }
 
@@ -77,11 +83,13 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
         val position = if (arguments != null) (arguments as Bundle).getInt(EXTRA_POSITION)
         else 0
 
+        user = arguments?.getSerializable("user") as User
+
         rv_detail.setHasFixedSize(true)
         val mLayoutManager = LinearLayoutManager(FacebookSdk.getApplicationContext())
         rv_detail.layoutManager = mLayoutManager
         rv_detail.itemAnimator = DefaultItemAnimator()
-        createCardAdapter(rv_detail, position)
+        createCardAdapter()
     }
 
 
@@ -99,7 +107,7 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
         (activity as AppCompatActivity).supportActionBar!!.show()
     }
 
-    private fun createCardAdapter(recyclerView: RecyclerView, position: Int) {
+    private fun createCardAdapter() {
         val content = ArrayList<String>()
         for (i in 0..4) {
             content.add("item $i")
@@ -132,17 +140,15 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
         }
 
         adapter.setOnClickEvent { v, position ->
-
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra("id",id)
             startActivity(intent)
             Utility.fade(context)
-
         }
 
         val layoutManagerFixed = HeaderLayoutManagerFixed(activity)
-        recyclerView.layoutManager = layoutManagerFixed
-        val header = layoutInflater.inflate(com.krs.community.R.layout.header_detail, recyclerView, false)
+        rv_detail.layoutManager = layoutManagerFixed
+        val header = layoutInflater.inflate(com.krs.community.R.layout.header_detail, rv_detail, false)
         val ll_family_head: LinearLayout
 
         ll_family_head = header.findViewById(R.id.ll_family_head)
@@ -166,8 +172,6 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
             Utility.movetoFragment(activity, SearchListFragment())
         }
 
-
-
         header.bmb.clearBuilders()
         for (i in 0 until header.bmb.piecePlaceEnum.pieceNumber()) {
             header.bmb.addBuilder(Utility.getTextInsideCircleButtonBuilder())
@@ -179,10 +183,9 @@ class FamilyDetailFragment : Fragment(), OnBackPressedListener, ItemClickListene
 
         layoutManagerFixed.setHeaderIncrementFixer(header)
         adapter.isShouldClipView = false
-        adapter.setParallaxHeader(header, recyclerView)
+        adapter.setParallaxHeader(header, rv_detail)
         adapter.data = content
-        recyclerView.adapter = adapter
-
+        rv_detail.adapter = adapter
     }
 
     internal class HeaderViewHolder(v: View) : RecyclerView.ViewHolder(v) {
