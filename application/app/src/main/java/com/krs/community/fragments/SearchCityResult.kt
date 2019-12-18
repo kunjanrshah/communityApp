@@ -1,5 +1,6 @@
 package com.krs.community.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -15,83 +16,97 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
+import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
+import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.adapter.AtoZBottomAdapter
 import com.krs.community.databinding.FragmentFilterResultBinding
 import com.krs.community.interfaces.IbrowseCityRecordsListener
-import com.krs.community.jrspinner.Dialog
 import com.krs.community.model.FilterBy
+import com.krs.community.model.Member
 import com.krs.community.model.SearchByCityData
 import com.krs.community.model.SearchByCityModel
-import com.krs.community.model.User
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
+import com.krs.community.utils.Coroutines
 import com.krs.community.utils.FlipAnimator
 import com.krs.community.utils.Utility
-import com.krs.community.utils.Utility.dialog
 import com.krs.community.viewmodel.BrowseCityViewModel
 import com.krs.community.viewmodel.BrowseCityViewModelFactory
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
+import kotlinx.android.synthetic.main.dashboard_menu.*
 import kotlinx.android.synthetic.main.fragment_filter_result.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.util.*
 
-class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, KodeinAware, IbrowseCityRecordsListener, ParallaxRecyclerAdapter.OnLoadMore,AtoZBottomAdapter.ISortingRecords {
+class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, ParallaxRecyclerAdapter.OnLoadMore,AtoZBottomAdapter.ISortingRecords {
 
     override fun getRecords() {
-            users.clear()
+            members.clear()
             stop=false
-            start="0"
+            start=0
             setupList()
     }
 
     override fun loadApi() {
         if (!stop) {
-            start = (users.size+1).toString()
+            start = (members.size+1)
             setupList()
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun getSearchRecords(data: SearchByCityModel) {
 
         if (data.success) {
-            data.totalHead
-            data.totalMem
-            if (data.users.size > 0) {
-                for (user in data.users) {
-                    users.add(user)
+            if (data.members.size > 0) {
+                val count= data.totalHead+ data.totalMem
+                tvCount.text="Families: ${data.totalHead}. Members: $count"
+                for (user in data.members) {
+                    members.add(user)
                 }
 
                 adapter?.notifyDataSetChanged()
-                rootView!!.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
-                selectedPosition = users.size - 1
+                binding.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
+                selectedPosition = members.size - 1
                 stop = false
+
+                if(data.totalHead<=length){
+                    stop = true
+                    Snackbar.make(binding.llParent, "End of $alpha Records", Snackbar.LENGTH_LONG).show()
+                }
+
             } else {
                 stop = true
-                rootView!!.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
-                Snackbar.make(rootView!!.ll_parent, "End of $alpha Records", Snackbar.LENGTH_LONG).show()
+                //rootView!!.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
+                Snackbar.make(binding.llParent, "End of $alpha Records", Snackbar.LENGTH_LONG).show()
             }
         } else {
             stop = false
         }
-        rootView?.shimmer_view_container?.stopShimmerAnimation()
-        rootView?.shimmer_view_container?.visibility = View.GONE
+
+        binding.shimmerViewContainer.stopShimmerAnimation()
+        binding.shimmerViewContainer.visibility = View.GONE
     }
 
-    override suspend fun getFailure(message: Boolean) {
-        Snackbar.make(rootView!!.ll_parent, "Something went wrong!", Snackbar.LENGTH_LONG).show()
-        rootView?.shimmer_view_container?.stopShimmerAnimation()
-        rootView?.shimmer_view_container?.visibility = View.GONE
-        stop = false
+    override suspend fun getFailure(message: String) {
+      try{
+          stop = false
+          binding.shimmerViewContainer.stopShimmerAnimation()
+          binding.shimmerViewContainer.visibility = View.GONE
+          Snackbar.make(binding.llParent, "Something went wrong!", Snackbar.LENGTH_LONG).show()
+      }catch (e:Exception){
+          e.printStackTrace()
+      }
+
     }
 
     companion object {
@@ -101,28 +116,36 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
     }
 
     private var selectedPosition = 0
-    private var start: String? = "0"
-    private val length: String? = "30"
-    private var city_id: String? = ""
-    private val users = ArrayList<User?>()
+    private var start: Int = 0
+    private val length: Int = 30
+    private lateinit var city_id:String
+    private lateinit var city_name:String
+
+    private val members = ArrayList<Member>()
     private var actionModeCallback: ActionModeCallback? = null
     private var actionMode: ActionMode? = null
-    private var adapter: ParallaxRecyclerAdapter<User>? = null
+    private var adapter: ParallaxRecyclerAdapter<Member>? = null
     private var selectedItems: SparseBooleanArray? = null
     private var animationItemsIndex: SparseBooleanArray? = null
     private var reverseAllAnimations = false
     private var currentSelectedIndex = -1
     private val selectedItemCount: Int get() = selectedItems!!.size()
-    private var rootView: View? = null
+   // private var rootView: View? = null
     private var TAG: String = SearchCityResult::class.java.simpleName
     private val factory: BrowseCityViewModelFactory by instance()
     internal var browseCityViewModel: BrowseCityViewModel? = null
     override val kodein by kodein()
+    private lateinit var tvCount:TextView
+    lateinit var binding: FragmentFilterResultBinding
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val binding: FragmentFilterResultBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_filter_result, container, false)
-        rootView = binding.root
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_filter_result, container, false)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Utility.changeStatusbarColor(activity, R.color.white, false)
+        }
 
         selectedItems = SparseBooleanArray()
         animationItemsIndex = SparseBooleanArray()
@@ -131,22 +154,33 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
         browseCityViewModel = ViewModelProviders.of(this, factory).get(BrowseCityViewModel::class.java)
         browseCityViewModel?.ibrowseCityRecordsListener = this
 
-        val city_name = if (this.arguments != null) this.arguments!!.getString("city_name") else null
-        city_id = if (this.arguments != null) this.arguments!!.getString("city_id") else null
 
-        adapter = object : ParallaxRecyclerAdapter<User>(users) {
-            override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<User>, position: Int) {
 
-                val user = users[position]
-                val name = user!!.firstName + " " + user.lastName
+        if (this.arguments != null){
+            city_name = this.arguments!!.getString("city_name").toString()
+            city_id =  this.arguments!!.getString("city_id").toString()
+            Guru.putString("user_city",city_name)
+            Guru.putString("user_city_id",city_id)
+        }
 
+        members.clear()
+        adapter = object : ParallaxRecyclerAdapter<Member>(members) {
+            override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
+
+                val member = members[position]
                 val holder = viewHolder as SearchCityResult.ViewHolder
-                holder.tv_name.text = name
-                holder.tv_area.text = user.area + " " + user.city
-                holder.tv_email.text = user.emailAddress
-                holder.tv_mobile.text = user.mobile
-                if (user.headId.equals("0")) {
-                    holder.tv_role.text = "Head"
+                val name=member.firstName
+
+                Coroutines.main {
+                 val lastname=   browseCityViewModel?.getLastName(Integer.parseInt(member.subCastId.toString()))
+                    holder.tv_name.text= "$name $lastname"
+                }
+
+                holder.tv_area.text = member.area
+                holder.tv_email.text = member.emailAddress
+                holder.tv_mobile.text = member.mobile
+                if (member.headId.equals("0")) {
+                    holder.tv_role.text = "Family Head"
                 } else {
                     holder.tv_role.text = "Member"
                 }
@@ -160,16 +194,16 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
                 holder.iconText.text = name.substring(0, 1)
                 holder.itemView.isActivated = selectedItems!!.get(position, false)
                 applyIconAnimation(holder, position)
-                applyProfilePicture(holder, user)
+                applyProfilePicture(holder, member)
                 applyClickEvents(holder, position)
             }
 
-            override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<User>, i: Int): RecyclerView.ViewHolder {
+            override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
                 return ViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.filter_result_list, viewGroup, false))
             }
 
-            override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<User>): Int {
-                return users.size
+            override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<Member>): Int {
+                return members.size
             }
         }
 
@@ -182,9 +216,14 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
         edt_filter_name.visibility = View.GONE
 
         val iv_cancel = header.findViewById<ImageView>(R.id.iv_cancel)
-        iv_cancel.setOnClickListener { v -> Utility.movetoFragment(activity, ExpandableFilterListFragment()) }
+        iv_cancel.setOnClickListener { v -> Utility.movetoFragment(activity, BrowseByCityFragment()) }
 
         val iv_export = header.findViewById<ImageView>(R.id.iv_export)
+        iv_export.setOnClickListener {
+
+        }
+        tvCount= header.findViewById<TextView>(R.id.tvCount)
+
         val iv_atoz = header.findViewById<ImageView>(R.id.iv_atoz)
         iv_atoz.setOnClickListener { v ->
             val adapter = AtoZBottomAdapter(context)
@@ -199,29 +238,29 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
             dialog?.show()
         }
 
-        adapter?.setParallaxHeader(header, rootView?.lstFilter)
-        rootView?.lstFilter?.layoutManager = LinearLayoutManager(activity)
-        rootView?.lstFilter?.adapter = adapter
+        adapter?.setParallaxHeader(header, binding.lstFilter)
+        binding.lstFilter.layoutManager = LinearLayoutManager(activity)
+        binding.lstFilter.adapter = adapter
         adapter?.setContext(this)
         stop=false
         alpha=""
         setupList()
-        return rootView
+        return binding.root
     }
 
-    fun setupList() {
+    private fun setupList() {
         if (!stop) {
             stop = true
             val data = SearchByCityData()
-            data.start = start
-            data.length = length
+            data.start = start.toString()
+            data.length = length.toString()
             data.alpha= alpha
             val filterBy = FilterBy()
             filterBy.cityId = city_id
             data.filterBy = filterBy
-            if(start.equals("0")){
-                rootView?.shimmer_view_container?.startShimmerAnimation()
-                rootView?.shimmer_view_container?.visibility = View.VISIBLE
+            if(start==0){
+                binding.shimmerViewContainer.startShimmerAnimation()
+                binding.shimmerViewContainer.visibility = View.VISIBLE
             }
             browseCityViewModel?.fetchRecordsByCity(data)
         }
@@ -245,9 +284,9 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
         }
     }
 
-    private fun applyProfilePicture(holder: ViewHolder, user: User) {
-        if (!TextUtils.isEmpty(user.profilePic) && user.profilePic.contains("http://")) {
-            Glide.with(activity!!).load(user.profilePic)
+    private fun applyProfilePicture(holder: ViewHolder, member: Member) {
+        if (!TextUtils.isEmpty(member.profilePic) && member.profilePic.contains("http://")) {
+            Glide.with(activity!!).load(member.profilePic)
                     .thumbnail(0.5f)
                     .transition(withCrossFade())
                     .apply(RequestOptions.circleCropTransform())
@@ -322,7 +361,7 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
     }
 
     private fun removeData(position: Int) {
-        users.removeAt(position)
+        members.removeAt(position)
         resetCurrentIndex()
     }
 
@@ -382,8 +421,8 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity).supportActionBar!!.show()
-        rootView?.shimmer_view_container?.stopShimmerAnimation()
-        rootView?.shimmer_view_container?.visibility = View.GONE
+        binding.shimmerViewContainer.stopShimmerAnimation()
+        binding.shimmerViewContainer.visibility = View.GONE
     }
 
     private fun deleteMessages() {
@@ -395,9 +434,6 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
         adapter!!.notifyDataSetChanged()
     }
 
-    override fun onRefresh() {
-        // setupList()
-    }
 
     private inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
@@ -432,7 +468,8 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(activity, R.color.colorBG, false)
             }
-            rootView?.lstFilter!!.post { resetAnimationIndex() }
+
+            binding.lstFilter.post { resetAnimationIndex() }
         }
     }
 
@@ -478,11 +515,17 @@ class SearchCityResult : Fragment(), SwipeRefreshLayout.OnRefreshListener, Kodei
             user.isRead = true
             users[position] = user
             adapter!!.notifyDataSetChanged()*/
-            val fragmemnt= FamilyDetailFragment()
+            val intent=Intent(activity,ProfileDetailActivity::class.java)
+            intent.putExtra("member",members.get(position))
+            //intent.putExtra("id",members.get(position)?.id)
+            startActivity(intent)
+            Utility.fade(activity)
+            /*val fragmemnt= FamilyDetailFragment()
             val bundle=Bundle()
-            bundle.putSerializable("user",users.get(position))
+            bundle.putString("screen_name",SearchCityResult::class.java.simpleName)
+            bundle.putSerializable("user",members.get(position))
             fragmemnt.arguments=bundle
-            Utility.movetoFragment(activity,fragmemnt)
+            Utility.movetoFragment(activity,fragmemnt)*/
             //Toast.makeText(activity, "Read: " + position, Toast.LENGTH_SHORT).show()
         }
     }

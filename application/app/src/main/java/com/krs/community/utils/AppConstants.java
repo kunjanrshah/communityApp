@@ -286,17 +286,37 @@ public class AppConstants {
     public static String DEVICE_ID_VALUE = "";
 
     public interface UrlPath {
-        String GET_SUBCASTE = "GetSurname";
+        String GET_SUB_COMM = "GetSubCommunity";
+        String GET_LOCAL_COMM = "GetLocalCommunity";
+        String GET_LIST_LOCAL_COMM = "GetListLocalCommunity";
+        String GET_LIST_CITY = "GetListCity";
+        String GET_LIST_BUSINESS_SUB_CATEGORY = "GetListBusinessSubCategory";
+        String GET_RELATIONS = "GetRelations";
         String GET_STATE = "GetState";
         String GET_CITIES = "GetCities";
+        String GET_SUBCASTE = "GetSurname";
+        String GET_NATIVE = "GetNative";
+        String GET_GOTRA = "getGotra";
+        String GET_EDUCATION = "getEducation";
+        String GET_ACTIVITY = "getActivity";
+        String GET_BUSINESS_CATEGORY = "getBusinessCategory";
+        String GET_BUSINESS_SUB_CATEGORY = "GetBusinessSubCategory";
+        String GET_OCCUPATION = "GetOccupation";
+        String GET_COMMITTEE = "GetCommittee";
+        String GET_DESIGNATION = "GetDesignation";
+
+        String ADD_MEMBER = "AddMember";
+        String DELETE_MEMBER = "DeleteMember";
+        String GET_STATISTICS = "GetStatistics";
+        String UPDATE_PROFILE = "EditProfile";
+        String GET_SMART_FILTER = "SmartFilter";
+        String GET_SEARCH_NEAR_BY = "GetNearByUsers";
         String GET_SEARCH_BY_CITY = "SearchByCity";
-        String GET_SUBCOMM = "GetSubCommunity";
-        String GET_LOCALCOMM = "GetLocalCommunity";
+        String GET_FAMILY_MEMBER = "GetFamilyMembers";
         String GET_REGISTER = "Registration";
         String GET_LOGIN = "Login";
         String GET_FORGOT_PASS = "ForgotPassword";
         String GET_CHANGE_PASS = "ChangePassword";
-        String GET_SEARCH_DATA = "GetSearchData";
     }
 
     public interface TimeOut {
@@ -468,8 +488,6 @@ public class AppConstants {
         public void setType(String type) {
             this.type = type;
         }
-
-
     }
 
 
@@ -502,21 +520,4 @@ public class AppConstants {
             this.hashcode = hashkey;
         }
     }
-
-    public static class CitiesRequest {
-        final String state_id;
-
-        public CitiesRequest(String state_id) {
-            this.state_id = state_id;
-        }
-    }
-
-    public static class LocalCommRequest {
-        final String subcommunityid;
-
-        public LocalCommRequest(String subcommunityid) {
-            this.subcommunityid = subcommunityid;
-        }
-    }
-
 }

@@ -23,12 +23,12 @@ class RegisterViewModel(
     var cpass: String? = null
     var address: String? = null
     var mobile: String? = null
-    var lastname_id:String?=null
-    var state_id:String?=null
+    var lastname_id:Int?=null
+    var state_id:Int?=null
     var country_code:String?=null
-    var city_id:String?=null
-    var local_comm_id:String?=null
-    var sub_comm_id:String?=null
+    var city_id:Int?=null
+    var local_comm_id:Int?=null
+    var sub_comm_id:Int?=null
 
     var iRegisterListener: IRegisterListener? = null
     var TAG: String = RegisterViewModel::class.java.simpleName
@@ -57,7 +57,7 @@ class RegisterViewModel(
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.enter_firstname),1)
                 return
             }
-            if(lastname_id.isNullOrBlank()){
+            if(lastname_id == null){
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.enter_lastname),2)
                 return
             }
@@ -67,10 +67,10 @@ class RegisterViewModel(
                 return
             }
 
-            if(country_code.isNullOrBlank()){
+            /*if(country_code.isNullOrBlank()){
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.select_country_code),4)
                 return
-            }
+            }*/
 
             if(mobile.isNullOrBlank() || mobile?.length!=10){
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.enter_mobile),5)
@@ -104,36 +104,36 @@ class RegisterViewModel(
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.enter_home_address),8)
                 return
             }
-            if(state_id.isNullOrBlank()){
+            if(state_id==null){
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.select_city),9)
                 return
             }
 
-            if(city_id.isNullOrBlank()){
+            if(city_id==null){
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.select_state),10)
                 return
             }
 
-            if(sub_comm_id.isNullOrBlank()){
+            if(sub_comm_id==null){
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.select_sub_comm),11)
                 return
             }
 
-            if(local_comm_id.isNullOrBlank()){
+            if(local_comm_id==null){
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.select_local),12)
                 return
             }
 
         register.first_name=fname
-        register.sub_cast_id=lastname_id
+        register.sub_cast_id=lastname_id.toString()
         register.email_address=email
-        register.mobile=country_code+""+mobile
+        register.mobile=mobile
         register.plain_password=pass
         register.address=address
-        register.state_id=state_id
-        register.city_id=city_id
-        register.sub_community_id =sub_comm_id
-        register.local_community_id =local_comm_id
+        register.state_id=state_id.toString()
+        register.city_id=city_id.toString()
+        register.sub_community_id =sub_comm_id.toString()
+        register.local_community_id =local_comm_id.toString()
 
 
         job_registration = Job()
@@ -149,7 +149,6 @@ class RegisterViewModel(
                             }else  {
                                 iRegisterListener?.getRegisterFailure(response.message,0)
                             }
-
                             thejob.complete()
                         }
                         return@launch
@@ -258,7 +257,7 @@ class RegisterViewModel(
             CoroutineScope(IO + thejob!!).launch {
                 try {
                     val response = registerRepository.userSubCommunity()
-                    response.data?.let {
+                    response!!.data?.let {
                         withContext(Main) {
                             iRegisterListener?.getSubCommunity(response.data)
                             thejob.complete()

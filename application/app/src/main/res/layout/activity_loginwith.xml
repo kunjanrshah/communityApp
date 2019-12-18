@@ -5,7 +5,6 @@
         <variable
             name="loginViewModel"
             type="com.krs.community.viewmodel.LoginViewModel" />
-
     </data>
 
     <FrameLayout
@@ -13,272 +12,291 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:weightSum="1"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:background="@drawable/hands1"
-            android:layout_width="match_parent"
-            android:layout_weight="0.60"
-            android:layout_height="match_parent"/>
         <LinearLayout
-            android:layout_weight="0.40"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="1">
 
-    </LinearLayout>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.60"
+                android:background="@drawable/hands1" />
 
-    <androidx.cardview.widget.CardView
-         android:layout_width="match_parent"
-         android:layout_marginLeft="25dp"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.40" />
 
-         android:layout_marginRight="25dp"
-         android:layout_gravity="center"
-         app:cardCornerRadius="15dp"
-         android:id="@+id/card_view_mobile"
-         android:layout_height="270dp">
-
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:orientation="vertical"
-             android:layout_height="match_parent">
-         <TextView
-             android:layout_width="wrap_content"
-             android:text="Welcome !"
-             android:layout_marginTop="10dp"
-             android:textSize="26sp"
-             android:fontFamily="@font/montserrat_semibold"
-             android:layout_gravity="center_horizontal"
-             android:textColor="@color/black"
-             android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="Mobile"
-            android:textSize="20sp"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="25dp"
-            android:fontFamily="@font/montserrat_semibold"
-            android:layout_height="wrap_content"/>
-
-             <LinearLayout
-                 android:orientation="horizontal"
-                 android:layout_marginTop="5dp"
-                 android:layout_marginLeft="10dp"
-                 android:layout_marginRight="20dp"
-                 android:layout_width="match_parent"
-                 android:layout_height="45dp">
-
-                 <RelativeLayout
-                     android:layout_width="100dp"
-                     android:visibility="gone"
-                     android:layout_height="match_parent"
-                     android:background="@drawable/round_corner_mid_light_gray"
-                     android:layout_gravity="center">
-
-                     <com.krs.community.jrspinner.JRSpinner
-                         android:id="@+id/spinnerCountries"
-                         app:jrs_multiple="false"
-                         android:singleLine="true"
-                         android:layout_marginLeft="5dp"
-                         android:hint="Code"
-                         android:background="@null"
-                         style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                         android:layout_width="match_parent"
-                         android:layout_height="match_parent" />
-                 </RelativeLayout>
-
-             <EditText
-                 android:id="@+id/edt_mobile"
-                 android:background="@drawable/round_corner_mid_light_gray"
-                 android:layout_width="280dp"
-                 android:layout_height="match_parent"
-                 android:hint="10 digit number"
-                 android:text="@={loginViewModel.mobile}"
-                 android:layout_marginLeft="10dp"
-                 android:paddingLeft="20dp"
-                 android:inputType="number"
-                 android:digits="0123456789"
-                 android:textColorHint="@color/dialogplus_black_overlay"
-                 android:fontFamily="@font/montserrat_semibold"
-                 android:textColor="@color/black"
-                 android:singleLine="true"
-                 android:textSize="18sp" />
-             </LinearLayout>
-             <TextView
-                 android:layout_marginTop="10dp"
-                 android:layout_marginLeft="20dp"
-                 android:layout_marginRight="10dp"
-                 android:textColor="@color/mdtp_transparent_black"
-                 android:fontFamily="@font/montserrat_light"
-                 android:layout_width="match_parent"
-                 android:textSize="14sp"
-                 android:text="4 digit OTP will be sent via SMS to verify your mobile number!"
-                 android:layout_height="wrap_content"/>
-
-         </LinearLayout>
-
-     </androidx.cardview.widget.CardView>
+        </LinearLayout>
 
         <androidx.cardview.widget.CardView
-            android:visibility="gone"
-            android:id="@+id/card_view_otp"
+            android:id="@+id/card_view_mobile"
             android:layout_width="match_parent"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
+            android:layout_height="230dp"
             android:layout_gravity="center"
-            app:cardCornerRadius="15dp"
-            android:layout_height="270dp">
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="15dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
-                    android:text="OTP Verification"
-                    android:layout_marginTop="10dp"
-                    android:textSize="26sp"
-                    android:fontFamily="@font/montserrat_semibold"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textColor="@color/black"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Enter the OTP you have received to "
-                    android:textSize="14sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginLeft="15dp"
-                    android:fontFamily="@font/montserrat_light"
-                    android:layout_height="wrap_content"/>
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="Welcome !"
+                    android:textColor="@color/black"
+                    android:textSize="26sp" />
+
                 <TextView
                     android:layout_width="wrap_content"
-                    android:textSize="16sp"
-                    android:text="@={loginViewModel.mobile}"
-                    android:textColor="@color/dark_color_primary"
-                    android:layout_marginLeft="15dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:layout_height="wrap_content"/>
+                    android:text="Mobile"
+                    android:textSize="20sp" />
 
-                <com.poovam.pinedittextfield.SquarePinField
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@drawable/round_corner_mid_light_gray"
+                        android:visibility="gone">
+
+                        <com.krs.community.jrspinner.JRSpinner
+                            android:id="@+id/spinnerCountries"
+                            style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="5dp"
+                            android:background="@null"
+                            android:hint="Code"
+                            android:singleLine="true"
+                            app:jrs_multiple="false" />
+                    </RelativeLayout>
+
+                    <EditText
+                        android:id="@+id/edt_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/round_corner_mid_light_gray"
+                        android:digits="0123456789"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:hint="10 digit number"
+                        android:inputType="number"
+                        android:paddingLeft="20dp"
+                        android:singleLine="true"
+                        android:text="@={loginViewModel.mobile}"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/dialogplus_black_overlay"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:textSize="22sp"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="20dp"
-                    app:cornerRadius="10dp"
-                    app:fieldBgColor="#ddd"
-                    app:noOfFields="4"
-                    android:textSelectHandle="@drawable/text_handle"
-                    android:id="@+id/squareField"
-                    android:layout_marginTop="15dp"/>
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="4 digit OTP will be sent via SMS to verify your mobile number!"
+                    android:textColor="@color/mdtp_transparent_black"
+                    android:textSize="14sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="15dp"
-                android:layout_height="wrap_content">
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_resend"
-                    android:layout_width="match_parent"
-                    android:text="Resend OTP?"
-                    android:textColor="@color/light_gray"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:text="@={loginViewModel.otp_timer}"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnContinue"
-        android:layout_gravity="center"
-        android:layout_width="170dp"
-         android:textColor="@color/white"
-         android:textSize="18sp"
-         android:fontFamily="@font/montserrat_semibold"
-         android:text="@string/_continue"
-        android:textAllCaps="false"
-         android:background="@drawable/round_corner_primary"
-         android:layout_marginTop="130dp"
-        android:layout_height="55dp"/>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view_otp"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="15dp">
 
-        <LinearLayout
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="30dp"
-            android:layout_width="wrap_content"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
-
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:orientation="horizontal"
-               android:layout_marginBottom="40dp"
-               android:layout_gravity="center"
-               android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:text="- - - - - - - - - - - - -"
-                android:layout_height="wrap_content"/>
-
-               <TextView
-                   android:layout_marginLeft="20dp"
-                   android:layout_marginRight="20dp"
-                   android:layout_width="wrap_content"
-                   android:text="or Login with"
-                   android:fontFamily="@font/montserrat_medium"
-                   android:layout_height="wrap_content"/>
-
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:text="- - - - - - - - - - - - - - - "
-                   android:layout_height="wrap_content"/>
-
-           </LinearLayout>
+            <ImageView
+                android:id="@+id/img_cancel"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="right"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="2dp"
+                android:background="@drawable/cancel_gray" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="5dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="OTP Verification"
+                    android:textColor="@color/black"
+                    android:textSize="26sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="Enter the OTP you have received to "
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="@={loginViewModel.mobile}"
+                    android:textColor="@color/dark_color_primary"
+                    android:textSize="16sp" />
+
+                <com.poovam.pinedittextfield.SquarePinField
+                    android:id="@+id/squareField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="20dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:inputType="number"
+                    android:textSelectHandle="@drawable/text_handle"
+                    android:textSize="22sp"
+                    app:cornerRadius="10dp"
+                    app:fieldBgColor="#ddd"
+                    app:noOfFields="4" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="15dp"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_resend"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="false"
+                        android:enabled="false"
+                        android:text="Resend OTP?"
+                        android:textColor="@color/light_gray" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@={loginViewModel.otp_timer}" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnContinue"
+            android:layout_width="170dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="90dp"
+            android:background="@drawable/round_corner_primary"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="@string/_continue"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- - - - - -  - - - - -" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="or Login with" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- - - - - - - - - - - -" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="160dp"
                     android:id="@+id/btn_login_google"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/google"
-                    android:layout_height="50dp"/>
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/google" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_login_fb"
-                    android:layout_width="160dp"
-                    android:background="@drawable/facebook"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_height="50dp"/>
+                    android:background="@drawable/facebook" />
 
             </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="wrap_content"
                 android:id="@+id/have_acc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@color/dark_color_primary"
+                android:layout_marginBottom="60dp"
                 android:text="Do you have an account?"
-                android:layout_height="wrap_content"/>
+                android:textColor="@color/dark_color_primary" />
 
         </LinearLayout>
 

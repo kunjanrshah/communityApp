@@ -38,6 +38,28 @@
     <string name="login_1">Ii5POjxrXA4</string>
 
 
+    <string-array name="bloodGroup">
+        <item>O+Ve</item>
+        <item>O-Ve</item>
+        <item>B+Ve</item>
+        <item>B-Ve</item>
+        <item>A+Ve</item>
+        <item>A-Ve</item>
+        <item>AB+Ve</item>
+        <item>AB-Ve</item>
+    </string-array>
+
+
+    <string-array name="marital">
+        <item>Single</item>
+        <item>Engaged</item>
+        <item>Married</item>
+        <item>Widow</item>
+        <item>Widower</item>
+        <item>Separated</item>
+        <item>Divorce</item>
+    </string-array>
+
     <string-array name="languages">
     <item>Choose Language</item>
     <item>@string/_english</item>
@@ -145,7 +167,7 @@
     <string name="register_now">REGISTER NOW</string>
     <string name="hint_name">Family Head First Name</string>
     <string name="hint_email">Email ID</string>
-    <string name="hint_mobile">Mobile No</string>
+    <string name="hint_mobile">10 digit mobile</string>
     <string name="hint_password">Password</string>
     <string name="hint_conform_password">Confirm Password</string>
     <string name="how_to_register">How to Register?</string>
@@ -248,7 +270,6 @@
     <string name="_location">Location</string>
     <string name="_whatsapp">WhatsApp</string>
     <string name="_family_tree">Family Tree</string>
-    <string name="last_name">Last Name</string>
     <string name="apikey" translatable="false">apikey</string>
     <string name="devicetoken" translatable="false">devicetoken</string>
     <string name="intudid" translatable="false">intudid</string>
@@ -273,7 +294,77 @@
     <string name="make_strong_pass">Make more than 6 characters long your hashkey to make strong</string>
     <string name="_continue">Continue</string>
     <string name="hash_key">hash_key</string>
+    <string name="otp_send">Messaging OTP Code on your number!</string>
     <string name="seat_back_relax">Seat back &amp; Relax!</string>
     <string name="fetching_states">Fetching States</string>
+    <string name="restrict_space" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
+    <string name="only_chars" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz</string>
+    <string name="member_code" translatable="false">member_code</string>
+    <string name="first_name" translatable="false">first_name</string>
+    <string name="father_name" translatable="false">father_name</string>
+    <string name="mother_name" translatable="false">mother_name</string>
+    <string name="mobile" translatable="false">mobile</string>
+    <string name="email_address" translatable="false">email_address</string>
+    <string name="address" translatable="false">address</string>
+    <string name="gender" translatable="false">gender</string>
+    <string name="area" translatable="false">area</string>
+    <string name="pincode" translatable="false">pincode</string>
+    <string name="relation_id" translatable="false">relation_id</string>
+    <string name="sub_cast_id" translatable="false">sub_cast_id</string>
+    <string name="state_id" translatable="false">state_id</string>
+    <string name="city_id" translatable="false">city_id</string>
+    <string name="is_rented" translatable="false">is_rented</string>
+    <string name="role" translatable="false">role</string>
+    <string name="native_place_id" translatable="false">native_place_id</string>
+    <string name="birth_date" translatable="false">birth_date</string>
+    <string name="expire_date" translatable="false">expire_date</string>
+    <string name="is_expired" translatable="false">is_expired</string>
+    <string name="is_donor" translatable="false">is_donor</string>
+    <string name="blood_group" translatable="false">blood_group</string>
+    <string name="gotra_id" translatable="false">gotra_id</string>
+    <string name="education_id" translatable="false">education_id</string>
+    <string name="current_activity_id" translatable="false">current_activity_id</string>
+    <string name="marital_status" translatable="false">marital_status</string>
+    <string name="marriage_date" translatable="false">marriage_date</string>
+    <string name="local_address" translatable="false">local_address</string>
+    <string name="business_address" translatable="false">business_address</string>
+    <string name="work_details" translatable="false">work_details</string>
+    <string name="website" translatable="false">website</string>
+    <string name="occupation_id" translatable="false">occupation_id</string>
+    <string name="business_sub_category_id" translatable="false">business_sub_category_id</string>
+    <string name="business_category_id" translatable="false">business_category_id</string>
+    <string name="company_name" translatable="false">company_name</string>
+    <string name="business_logo" translatable="false">business_logo</string>
+    <string name="about_me" translatable="false">about_me</string>
+    <string name="facebook_profile" translatable="false">facebook_profile</string>
+    <string name="birth_time" translatable="false">birth_time</string>
+    <string name="birth_place" translatable="false">birth_place</string>
+    <string name="hobby" translatable="false">hobby</string>
+    <string name="expectation" translatable="false">expectation</string>
+    <string name="weight" translatable="false">weight</string>
+    <string name="height" translatable="false">height</string>
+    <string name="matrimony" translatable="false">matrimony</string>
+    <string name="is_spect" translatable="false">is_spect</string>
+    <string name="is_mangal" translatable="false">is_mangal</string>
+    <string name="is_shani" translatable="false">is_shani</string>
+    <string name="updated_dt" translatable="false">updated_dt</string>
+    <string name="user_id" translatable="false">user_id</string>
+    <string name="access_token" translatable="false">access_token</string>
+    <string name="date" translatable="false">date</string>
+    <string name="state" translatable="false">state</string>
+    <string name="designation" translatable="false">designation</string>
+    <string name="committee" translatable="false">committee</string>
+    <string name="sub_community" translatable="false">sub_community</string>
+    <string name="local_community" translatable="false">local_community</string>
+    <string name="last_name" translatable="false">last_name</string>
+    <string name="education" translatable="false">education</string>
+    <string name="gotra" translatable="false">gotra</string>
+    <string name="city" translatable="false">city</string>
+    <string name="business_category" translatable="false">business_category</string>
+    <string name="current_activity" translatable="false">current_activity</string>
+    <string name="relation" translatable="false">relation</string>
+    <string name="occupation" translatable="false">occupation</string>
+    <string name="_native" translatable="false">native</string>
+    <string name="business_sub_category" translatable="false">business_sub_category</string>
 
 </resources>

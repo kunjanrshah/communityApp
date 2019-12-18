@@ -209,7 +209,20 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:gravity="right"
+                    android:fontFamily="@font/montserrat_light"
+                    android:textSize="12sp"
+                    android:layout_width="match_parent"
+                    android:text="12-12-2019 12:30"
+                    android:layout_height="wrap_content"/>
+
             </LinearLayout>
+
+
+
+
         </LinearLayout>
 
     </LinearLayout>

@@ -9,9 +9,7 @@ public class LocalDatum {
     @SerializedName("id")
     @Expose
     private String id;
-    @SerializedName("sub_community_id")
-    @Expose
-    private String subCommunityId;
+
     @SerializedName("name")
     @Expose
     private String name;
@@ -22,14 +20,6 @@ public class LocalDatum {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getSubCommunityId() {
-        return subCommunityId;
-    }
-
-    public void setSubCommunityId(String subCommunityId) {
-        this.subCommunityId = subCommunityId;
     }
 
     public String getName() {

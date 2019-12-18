@@ -2,20 +2,20 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-
+apply plugin: 'kotlin-kapt'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
     mavenCentral()
 }
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.krs.community"
         minSdkVersion 21
-        versionCode 19
-        versionName "1.19.0"
+        versionCode 1
+        versionName "1.0"
         multiDexEnabled true
     }
     buildTypes {
@@ -58,6 +58,9 @@ repositories {
 }
 
 dependencies {
+
+    def room_version = "1.1.1"
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/OvteBase64.jar')
 
@@ -144,11 +147,9 @@ dependencies {
     debugImplementation 'com.github.kk121:Android-Debug-Tools:1.0'
 
     implementation 'com.github.angads25:toggle:1.1.0'
-
     implementation 'com.github.krokyze:ucropnedit:2.2.4'
 
-    implementation 'uk.co.samuelwall:material-tap-target-prompt:3.0.0'
-
+    implementation 'com.github.wooplr:Spotlight:1.2.3'
 
     implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
@@ -167,6 +168,14 @@ dependencies {
     implementation'com.github.squti:Guru:1.0.1'
     implementation 'com.github.orangegangsters:swipy:1.2.3@aar'
 
+    //room
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    kapt  "android.arch.persistence.room:compiler:$room_version"
+    testImplementation "android.arch.persistence.room:testing:$room_version"
 
+    implementation 'com.github.philliphsu:numberpadtimepicker:1.1.1'
+    implementation 'com.github.drawers:SpinnerDatePicker:2.0.1'
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
+    implementation "com.github.VaibhavLakhera:Circular-Progress-View:0.1.2"
 }
 apply plugin: 'com.google.gms.google-services'

@@ -22,7 +22,7 @@ import com.krs.community.utils.Utility;
 public class SplashActivity extends Activity {
 
     private KenBurnsView kbv;
-    private View imglogo,darkoverlay, ll_spinner, ll_login;
+    private View imglogo,darkoverlay, ll_spinner;//, ll_login;
     private Button btn_login, btn_register;
     private Spinner splanguage;
     private DisplayMetrics dm;
@@ -67,7 +67,7 @@ public class SplashActivity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Utility.changeLang(SplashActivity.this, splanguage.getSelectedItem().toString());
-                btn_login.setText(getResources().getString(R.string.login));
+               // btn_login.setText(getResources().getString(R.string.login));
                 btn_register.setText(getResources().getString(R.string.register));
             }
 
@@ -122,8 +122,11 @@ public class SplashActivity extends Activity {
         ll_spinner.animate().translationY(dm.heightPixels).setStartDelay(0).setDuration(0).start();
         ll_spinner.animate().translationY(0).setDuration(2000).alpha(1).setStartDelay(5000).start();
 
-        ll_login.animate().translationX(dm.widthPixels+ ll_login.getMeasuredWidth()).setDuration(0).setStartDelay(0).start();
-        ll_login.animate().translationX(0).setStartDelay(5500).setDuration(2000).setInterpolator(new OvershootInterpolator()).start();
+        btn_login.animate().translationX(dm.widthPixels+ btn_login.getMeasuredWidth()).setDuration(0).setStartDelay(0).start();
+        btn_login.animate().translationX(0).setStartDelay(5500).setDuration(2000).setInterpolator(new OvershootInterpolator()).start();
+
+        btn_register.animate().translationX(dm.widthPixels+ btn_register.getMeasuredWidth()).setDuration(0).setStartDelay(0).start();
+        btn_register.animate().translationX(0).setStartDelay(5500).setDuration(2000).setInterpolator(new OvershootInterpolator()).start();
     }
 
     private void MemoryAllocation()
@@ -133,11 +136,11 @@ public class SplashActivity extends Activity {
         kbv= findViewById(R.id.fragmentloginKenBurnsView1);
         darkoverlay=findViewById(R.id.fragmentloginView1);
         ll_spinner =findViewById(R.id.ll_spinner);
-        ll_login =findViewById(R.id.ll_login);
-        ll_login.setTag(0);
-
+       // btn_login =findViewById(R.id.btn_login);
         splanguage = findViewById(R.id.splanguage);
         btn_login = findViewById(R.id.btn_login);
+        btn_login.setTag(0);
         btn_register = findViewById(R.id.btn_register1);
+        btn_register.setTag(0);
     }
 }

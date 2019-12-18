@@ -1,14 +1,17 @@
 package com.krs.community.interfaces
 
+import com.krs.community.entities.LastName
+import com.krs.community.entities.States
+import com.krs.community.entities.SubCommunity
 import com.krs.community.model.*
 
 interface IRegisterListener {
+    fun getSubCommunity(data:List<SubCommunity>)
+    fun getLocalCommunity(data:List<Datum>)
+    fun getLastname(data:List<LastName>)
+    fun getCities(data:List<Datum>)
+    fun getStates(data:List<States>)
     fun getRegisterSuccess(data:RegisterModel)
-    fun getSubCommunity(data:List<SubDatum>)
-    fun getLocalCommunity(data:List<LocalDatum>)
-    fun getLastname(data:List<LastNameDatum>)
-    fun getCities(data:List<CitiesDatum>)
-    fun getStates(data:List<StateDatum>)
     fun getRegisterFailure(message:String,field:Int)
    suspend fun getFailure(message:String)
 }

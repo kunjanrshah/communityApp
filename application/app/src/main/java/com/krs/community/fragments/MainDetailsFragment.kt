@@ -1,0 +1,246 @@
+package com.krs.community.fragments
+
+import android.annotation.SuppressLint
+import android.os.Bundle
+import android.text.Editable
+import android.text.InputFilter
+import android.text.TextWatcher
+import android.util.Log
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.krs.community.R
+import com.krs.community.databinding.FragmentMainDetailsBinding
+import com.krs.community.model.Member
+import com.krs.community.utils.Coroutines
+import com.krs.community.utils.Utility
+import com.krs.community.viewmodel.ProfileDetailViewModel
+import com.krs.community.viewmodel.ProfileDetailViewModelFactory
+import com.tsongkha.spinnerdatepicker.DatePicker
+import com.tsongkha.spinnerdatepicker.DatePickerDialog
+import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
+import okhttp3.internal.Util
+import org.json.JSONObject
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.kodein
+import org.kodein.di.generic.instance
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+
+
+class MainDetailsFragment : Fragment(), KodeinAware {
+
+    private lateinit var binding: FragmentMainDetailsBinding
+    private lateinit var member: Member
+    private lateinit var profileDetailViewModel: ProfileDetailViewModel
+    private val factory: ProfileDetailViewModelFactory by instance()
+    var numberOfLines=5
+
+    override val kodein by kodein()
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_details, container, false)
+        profileDetailViewModel = ViewModelProviders.of(this, factory).get(ProfileDetailViewModel::class.java)
+
+        member = arguments?.getSerializable("member") as Member
+        if(member.memberCode.isNullOrEmpty()){
+            binding.llMcode.visibility=View.GONE
+        }else{
+            binding.llMcode.visibility=View.VISIBLE
+            binding.edtCode.setText(member.memberCode)
+        }
+
+        binding.fname.setText(member.firstName)
+        binding.edtFather.setText(member.fatherName)
+        binding.edtMother.setText(member.motherName)
+        binding.edtMobile.setText(member.mobile)
+        binding.edtEmail.setText(member.emailAddress)
+        binding.edtEmail.setFilters(arrayOf(Utility.filter));
+        binding.edtAddr.setText(member.address)
+        binding.spGender.setText(member.gender)
+        binding.edtArea.setText(member.area)
+        binding.edtPincode.setText(member.pincode)
+        binding.chkRented.isChecked = member.isRented.equals("1")
+
+        binding.edtAddr.addTextChangedListener(object:TextWatcher{
+            private var text: String? = null
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                text = s.toString()
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val lineCount: Int = binding.edtAddr.getLineCount()
+                if (lineCount > numberOfLines) {
+                    binding.edtAddr.setText(text)
+                }
+            }
+        })
+
+        binding.edtAddr.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action === KeyEvent.ACTION_DOWN) {
+                val editTextLineCount: Int = (v as EditText).getLineCount()
+                if (editTextLineCount >= numberOfLines) return@OnKeyListener true
+            }
+            false
+        })
+
+        binding.spState.setOnItemClickListener {
+            profileDetailViewModel.selectedStateId = profileDetailViewModel.lstStateId[it]
+            Coroutines.main {
+               val cities=  profileDetailViewModel.getCityNamebyState(profileDetailViewModel.selectedStateId)
+                binding.spCity.clear()
+                binding.spCity.setText("Select")
+                profileDetailViewModel.selectedCityId=0
+                binding.spCity.setItems(cities.toTypedArray())
+                binding.spCity.setExpandTint(R.color.black)
+            }
+        }
+
+        binding.spCity.setOnItemClickListener {
+            profileDetailViewModel.selectedCityName = binding.spCity.text.toString().trim()
+            Coroutines.main {
+                profileDetailViewModel.cityId.await().observe(this, Observer {
+                    profileDetailViewModel.selectedCityId = it
+                })
+            }
+        }
+
+        binding.spRelation.setOnItemClickListener {
+            profileDetailViewModel.selectedRelationId = profileDetailViewModel.lstRelationId[it]
+        }
+
+        binding.spLastname.setOnItemClickListener {
+            profileDetailViewModel.selectedLastNameId = profileDetailViewModel.lstLastNameId[it]
+        }
+
+        setMemberRelation()
+        setMemberLastname()
+        setMemberState()
+        setMemberCity()
+        getMasterList()
+        return binding.root
+    }
+
+    fun getSaveData(jsonObject:JSONObject){
+        try {
+            jsonObject.put(getString(R.string.member_code),binding.edtCode.text.trim())
+            jsonObject.put(getString(R.string.first_name),binding.fname.text.trim())
+            jsonObject.put(getString(R.string.father_name),binding.edtFather.text.trim())
+            jsonObject.put(getString(R.string.mother_name),binding.edtMother.text.trim())
+            jsonObject.put(getString(R.string.mobile),binding.edtMobile.text.trim())
+            jsonObject.put(getString(R.string.email_address),binding.edtEmail.text.trim())
+            jsonObject.put(getString(R.string.address),binding.edtAddr.text.trim())
+            jsonObject.put(getString(R.string.gender),binding.spGender.text)
+            jsonObject.put(getString(R.string.area),binding.edtArea.text.trim())
+            jsonObject.put(getString(R.string.pincode),binding.edtPincode.text.trim())
+            jsonObject.put(getString(R.string.relation_id),profileDetailViewModel.selectedRelationId)
+            jsonObject.put(getString(R.string.sub_cast_id),profileDetailViewModel.selectedLastNameId)
+            jsonObject.put(getString(R.string.state_id),profileDetailViewModel.selectedStateId)
+            jsonObject.put(getString(R.string.city_id),profileDetailViewModel.selectedCityId)
+            if(binding.chkRented.isChecked){
+                jsonObject.put(getString(R.string.is_rented),1)
+            }else{
+                jsonObject.put(getString(R.string.is_rented),0)
+            }    
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+        
+    }
+
+    private fun setMemberRelation() = Coroutines.main {
+        if(member.relationId.isNotEmpty()){
+            if(!member.relationId.equals("0")){
+                profileDetailViewModel.selectedRelationId = Integer.parseInt(member.relationId)
+                profileDetailViewModel.relationName.await().observeForever {
+                    binding.spRelation.setText(it)
+                }
+            }else{
+                binding.spRelation.setText("Family Head")
+            }
+        }
+    }
+
+    private fun setMemberLastname() = Coroutines.main {
+     if(member.subCastId.isNotEmpty()){
+         profileDetailViewModel.selectedLastNameId = Integer.parseInt(member.subCastId)
+         profileDetailViewModel.lastName.await().observeForever {
+             binding.spLastname.setText(it)
+         }
+     }
+    }
+
+    private fun setMemberState() = Coroutines.main {
+     if(member.stateId.isNotEmpty()){
+         profileDetailViewModel.selectedStateId = Integer.parseInt(member.stateId)
+         profileDetailViewModel.stateName.await().observeForever {
+             binding.spState.setText(it)
+         }
+     }
+    }
+
+    private fun setMemberCity() = Coroutines.main {
+     if(member.cityId.isNotEmpty()){
+         profileDetailViewModel.selectedCityId = Integer.parseInt(member.cityId)
+         profileDetailViewModel.cityName.await().observeForever {
+             binding.spCity.setText(it)
+         }
+     }
+
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        Utility.hideKeyboard(activity)
+    }
+
+    private fun getMasterList() = Coroutines.main {
+
+        val lstGender = arrayOf("Male", "Female")
+        binding.spGender.setItems(lstGender)
+        binding.spGender.setExpandTint(R.color.black)
+
+        profileDetailViewModel.lstRelationName.await().observe(this, Observer {
+           if(!member.relationId.equals("0")){
+               binding.spRelation.setItems(it.subList(1,it.size).toTypedArray())
+               binding.spRelation.setExpandTint(R.color.black)
+           }
+        })
+        profileDetailViewModel.lstLastName.await().observe(this, Observer {
+            binding.spLastname.setItems(it.toTypedArray())
+            binding.spLastname.setExpandTint(R.color.black)
+        })
+        profileDetailViewModel.lstStateName.await().observe(this, Observer {
+            binding.spState.setItems(it.toTypedArray())
+            binding.spState.setExpandTint(R.color.black)
+        })
+
+        profileDetailViewModel.stateIds.await().observe(this, Observer {
+            profileDetailViewModel.lstStateId = it
+        })
+
+        profileDetailViewModel.relationIds.await().observe(this, Observer {
+            profileDetailViewModel.lstRelationId = it.subList(1,it.size)
+        })
+        profileDetailViewModel.lastNameIds.await().observe(this, Observer {
+            profileDetailViewModel.lstLastNameId = it
+        })
+
+        val cities= profileDetailViewModel.getCityNamebyState(profileDetailViewModel.selectedStateId)
+        binding.spCity.setItems(cities.toTypedArray())
+        binding.spCity.setExpandTint(R.color.black)
+    }
+}
+

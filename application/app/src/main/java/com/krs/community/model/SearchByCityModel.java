@@ -19,9 +19,9 @@ public class SearchByCityModel {
     @SerializedName("searchByCityData")
     @Expose
     private SearchByCityData searchByCityData;
-    @SerializedName("users")
+    @SerializedName("members")
     @Expose
-    private List<User> users = null;
+    private List<Member> members = null;
 
     public Boolean getSuccess() {
         return success;
@@ -55,12 +55,12 @@ public class SearchByCityModel {
         this.searchByCityData = searchByCityData;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<Member> getMembers() {
+        return members;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setMembers(List<Member> members) {
+        this.members = members;
     }
 
 }

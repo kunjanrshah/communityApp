@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<LinearLayout
+    android:id="@+id/ll_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/mdtp_white"
@@ -15,7 +17,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/img_close"
+            android:id="@+id/img_back"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:background="@drawable/left_arrow" />
@@ -31,224 +33,127 @@
             android:fontFamily="@font/montserrat_semibold"
             android:textSize="18sp"     />
 
-
         <TextView
+            android:id="@+id/tv_save"
             android:layout_width="wrap_content"
-            android:textSize="18sp"
             android:text="Save"
-            android:fontFamily="@font/montserrat_medium"
-            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:padding="3dp"
+            android:fontFamily="@font/montserrat_semibold"
+            android:textColor="@color/colorPrimary"
             android:layout_height="wrap_content" />
 
-        <ImageView
-            android:layout_marginLeft="20dp"
-            android:layout_width="22dp"
-            android:background="@drawable/delete_color_black"
-            android:layout_height="22dp" />
-
-
-
-
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:background="@drawable/user_profile" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_semibold"
-            android:text="Pratik Soni"
-            android:textColor="@color/colorPrimary"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_semibold"
-            android:text="New Naroda, Ahmedabad"
-            android:textColor="@color/mdtp_transparent_black"
-            android:textSize="18sp"
-             />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/view_family" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_semibold"
-                android:text="View Family" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="10dp"
-            android:background="@color/mdtp_transparent_black" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/user_edit" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_semibold"
-                android:text="Edit Profile" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="10dp"
-            android:background="@color/mdtp_transparent_black" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-
-            <com.github.angads25.toggle.widget.LabeledSwitch
-                android:id="@+id/switch4"
-                android:layout_width="55dp"
-                android:layout_height="25dp"
-                android:textSize="10sp"
-                app:on="false"
-                app:textOn="ON"
-                app:textOff="OFF"
-                app:colorOn="@color/colorPrimary"
-                app:colorBorder="@color/colorPrimary"/>
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_semibold"
-                android:text="Share Location" />
-        </LinearLayout>
-
-    </LinearLayout>
-
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="20dp"
-        android:visibility="gone"
-        android:layout_marginRight="20dp"
-        android:gravity="center_vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/color_mid_light_gray" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_percent"
+            android:layout_width="wrap_content"
+            android:textSize="22sp"
+            android:layout_marginTop="-7dp"
+            android:layout_marginLeft="60dp"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/montserrat_medium"
+            android:textColor="@color/colorPrimary"
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/ll_view_family"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/img_one"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:background="@drawable/one_step" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/img_two"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:background="@drawable/two_step_gray" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/img_three"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:background="@drawable/three_step_gray" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:gravity="right">
+                android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/img_four"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:background="@drawable/four_step_gray" />
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/view_family" />
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="View Family" />
             </LinearLayout>
 
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp">
+                <com.vaibhavlakhera.circularprogressview.CircularProgressView
+                    android:id="@+id/progressView"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:animate="true"
+                    app:animateDuration="600"
+                    app:fillColor="@color/colorPrimary"
+                    app:progressColor="#FFF"
+                    app:progressInterpolator="@android:anim/accelerate_decelerate_interpolator"
+                    app:progressRoundCap="true"
+                    app:progressTextColor="#FFF"
+                    app:progressTextEnabled="true"
+                    app:progressTextSize="32sp"
+                    app:progressTextType="progress"
+                    app:progressWidth="10dp"
+                    app:startAngle="270"
+                    app:totalValue="100"
+                    app:totalColor="@color/colorPrimaryDark"
+                    app:totalWidth="20dp" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:alpha="0.0"
+                    android:layout_gravity="center"
+                    android:id="@+id/img_profile"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:background="@drawable/user_profile" />
+
+            </FrameLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+
+                <com.github.angads25.toggle.widget.LabeledSwitch
+                    android:id="@+id/switch4"
+                    android:layout_width="60dp"
+                    android:layout_height="30dp"
+                    android:textSize="12sp"
+                    app:on="false"
+                    app:textOn="ON"
+                    app:textOff="OFF"
+                    app:colorOn="@color/colorPrimary"
+                    app:colorBorder="@color/colorPrimary"/>
+
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="Share Location" />
+            </LinearLayout>
 
         </LinearLayout>
-
 
     </FrameLayout>
 
@@ -265,8 +170,7 @@
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -302,3 +206,4 @@
 
 
 </LinearLayout>
+</layout>

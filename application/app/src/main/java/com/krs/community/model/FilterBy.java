@@ -10,6 +10,10 @@ public class FilterBy {
     @Expose
     private String cityId;
 
+    @SerializedName("id")
+    @Expose
+    private String id;
+
     public String getCityId() {
         return cityId;
     }
@@ -18,4 +22,11 @@ public class FilterBy {
         this.cityId = cityId;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

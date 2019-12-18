@@ -35,6 +35,9 @@ public class User implements Serializable {
     @SerializedName("area")
     @Expose
     private String area;
+    @SerializedName("address")
+    @Expose
+    private String address;
     @SerializedName("role")
     @Expose
     private String role;
@@ -185,4 +188,11 @@ public class User implements Serializable {
         this.members = members;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

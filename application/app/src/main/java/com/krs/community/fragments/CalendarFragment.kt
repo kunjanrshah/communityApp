@@ -101,7 +101,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         return root
     }
 
-    private fun initFragmentTransaction(view: View): FragmentTransaction? {
+   /* private fun initFragmentTransaction(view: View): FragmentTransaction? {
         val toY = view.resources.getDimensionPixelOffset(com.krs.community.R.dimen.details_toolbar_container_height) - view.height / 2f
 
         val positions = FloatArray(3)
@@ -110,12 +110,12 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         positions[2] = toY
 
         val adapterPosition = recyclerView.getChildAdapterPosition(view)
-        val detailsFragment = FamilyDetailFragment.newInstance(adapterPosition)
+        val detailsFragment = FamilyDetailActivity.newInstance(adapterPosition)
 
         //Utility.movetoFragment(activity,FamilyDetailFragment())
 
         val transaction = fragmentManager?.beginTransaction()
-                ?.replace(com.krs.community.R.id.container_body, detailsFragment, FamilyDetailFragment.TAG)
+                ?.replace(com.krs.community.R.id.container_body, detailsFragment, FamilyDetailActivity.TAG)
                 ?.addToBackStack(null)
 
          return transaction
@@ -123,7 +123,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
 
     private fun startAnimation(view: View, fragmentTransaction: FragmentTransaction?) {
         fragmentTransaction?.commitAllowingStateLoss()
-    }
+    }*/
 
     private fun createCardAdapter(recyclerView: RecyclerView) {
         val content = ArrayList<String>()
@@ -159,12 +159,14 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         }
 
         adapter.setOnClickEvent { v, position ->
-            val fragmentTransaction = initFragmentTransaction(v)
+
+
+            /*val fragmentTransaction = initFragmentTransaction(v)
             val copy = view!!.copyViewImage()
             copy.y += activity!!.myAppBar.height
             ll_root.addView(copy)
             view!!.visibility = View.INVISIBLE
-            startAnimation(copy, fragmentTransaction)
+            startAnimation(copy, fragmentTransaction)*/
         }
 
         val layoutManagerFixed = HeaderLayoutManagerFixed(activity)

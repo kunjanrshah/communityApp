@@ -35,6 +35,8 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.text.Html;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.format.DateFormat;
 import android.util.Base64;
 import android.util.Log;
@@ -63,6 +65,7 @@ import com.krs.community.model.ErrorObject;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 import com.nightonke.boommenu.Util;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -83,21 +86,38 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static java.util.Calendar.DATE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
+
 
 public class Utility {
 
-    public static final int REQ_CODE_SPEECH_INPUT = 100;
+    static final int REQ_CODE_SPEECH_INPUT = 100;
     public static String Title = "";
     public static String yyyy_MM_dd = "yyyy-MM-dd";
+    public static String dd_MM_yyyy = "dd-MM-yyyy";
+
     public static String dd_MMM_yyyy = "dd-MMM-yyyy";
     public static String ddMMMyyyy = "dd/MM/yyyy";
     public static SweetAlertDialog dialog = null;
     private static ProgressDialog pDialog;
+    private static final String ALLOWED_CHARACTERS ="0123456789qwertyuiopasdfghjklzxcvbnm";
+
+    public static String getRandomString(final int sizeOfRandomString)
+    {
+        final Random random=new Random();
+        final StringBuilder sb=new StringBuilder(sizeOfRandomString);
+        for(int i=0;i<sizeOfRandomString;++i)
+            sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
+        return sb.toString();
+    }
 
     private static Logger logger = new Logger(Utility.class.getSimpleName());
 
@@ -134,6 +154,18 @@ public class Utility {
         Toast.makeText(context, ""+message, Toast.LENGTH_SHORT).show();
     }
 
+    public static InputFilter filter = new InputFilter() {
+        public CharSequence filter(CharSequence source, int start, int end,
+                                   Spanned dest, int dstart, int dend) {
+            for (int i = start; i < end; i++) {
+                if (Character.isWhitespace(source.charAt(i))) {
+                    return "";
+                }
+            }
+            return null;
+        }
+
+    };
 
 
     /**
@@ -158,6 +190,20 @@ public class Utility {
         return !matcher.matches();
 
     }
+
+    public static String changeDateFormat(String inputDateStr,String input,String output){
+        String outputDateStr=inputDateStr;
+        try{
+            SimpleDateFormat inputFormat = new SimpleDateFormat(input);
+            SimpleDateFormat outputFormat = new SimpleDateFormat(output);
+            Date date = inputFormat.parse(inputDateStr);
+            outputDateStr = outputFormat.format(date);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return outputDateStr;
+    }
+
 
     public static void fade(Context context) {
         ((Activity) context).overridePendingTransition(R.anim.fade_enter, R.anim.fade_exit);
@@ -969,9 +1015,8 @@ public class Utility {
         }).show();
     }*/
 
-
-    public static String DatetoString(Date date) {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public static String DatetoString(Date date,String pattern) {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         try {
             String dateTime = dateFormat.format(date);
             System.out.println("Current Date Time : " + dateTime);
@@ -982,8 +1027,8 @@ public class Utility {
         return "";
     }
 
-    public static Date StringToDate(String dtStart) {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    public static Date StringToDate(String dtStart,String pattern) {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat(pattern);
         try {
             return format.parse(dtStart);
         } catch (ParseException e) {
@@ -995,7 +1040,7 @@ public class Utility {
     public static String ChangedateFormat(String strDate) {
         //String mStringDate = "25-Nov-15 14:23:34";
         String oldFormat = "yyyy-MM-dd";
-        String newFormat = "dd/MM/yyyy";
+        String newFormat = "dd-MM-yyyy";
 
         String formatedDate = "";
         SimpleDateFormat dateFormat = new SimpleDateFormat(oldFormat);
@@ -1017,6 +1062,60 @@ public class Utility {
         AppConstants.DEVICE_ID_VALUE = m_androidId;
         Log.d("DEVICE_ID","m_androidId: "+m_androidId);
     }
+
+
+
+    public static int getDiffYears(Date first, Date last) {
+        Calendar a = getCalendar(first);
+        Calendar b = getCalendar(last);
+        int diff = b.get(YEAR) - a.get(YEAR);
+        if (a.get(MONTH) > b.get(MONTH) ||
+                (a.get(MONTH) == b.get(MONTH) && a.get(DATE) > b.get(DATE))) {
+            diff--;
+        }
+        return diff;
+    }
+
+    public static Calendar getCalendar(Date date) {
+        Calendar cal = Calendar.getInstance(Locale.US);
+        cal.setTime(date);
+        return cal;
+    }
+
+    public static int getAge(String dobString){
+
+        Date date = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            date = sdf.parse(dobString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if(date == null) return 0;
+
+        Calendar dob = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+
+        dob.setTime(date);
+
+        int year = dob.get(YEAR);
+        int month = dob.get(MONTH);
+        int day = dob.get(Calendar.DAY_OF_MONTH);
+
+        dob.set(year, month+1, day);
+
+        int age = today.get(YEAR) - dob.get(YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
+            age--;
+        }
+
+
+
+        return (age+1);
+    }
+
 
     @NonNull
     public static String getUpdatedTime(String timestamp) {
@@ -1058,7 +1157,7 @@ public class Utility {
         }
     }
 
-    public static void startProgress(Context context,String title,String message) {
+    public static void startSweetProgress(Context context, String title, String message) {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
             dialog=null;
@@ -1068,7 +1167,7 @@ public class Utility {
         dialog.show();
     }
 
-    public static void hideProgress() {
+    public static void hideSweetProgress() {
         try {
             if (dialog != null && dialog.isShowing()) dialog.cancel();
             dialog = null;

@@ -4,260 +4,250 @@ package com.krs.community.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Member {
+import java.io.Serializable;
 
+public class Member implements Serializable {
+
+    @SerializedName("profile_completed")
+    @Expose
+    private String profileCompleted="0%";
+    @SerializedName("distance")
+    @Expose
+    private String distance="";
     @SerializedName("id")
     @Expose
-    private String id;
+    private String id="";
     @SerializedName("role")
     @Expose
-    private String role;
+    private String role="";
     @SerializedName("head_id")
     @Expose
-    private String headId;
+    private String headId="0";
     @SerializedName("member_code")
     @Expose
-    private String memberCode;
-    @SerializedName("relation_id")
-    @Expose
-    private String relationId;
-    @SerializedName("sub_community_id")
-    @Expose
-    private String subCommunityId;
-    @SerializedName("local_community_id")
-    @Expose
-    private String localCommunityId;
-    @SerializedName("committee_id")
-    @Expose
-    private String committeeId;
-    @SerializedName("designation_id")
-    @Expose
-    private String designationId;
-    @SerializedName("first_name")
-    @Expose
-    private String firstName;
-    @SerializedName("last_name")
-    @Expose
-    private String lastName;
-    @SerializedName("sub_cast_id")
-    @Expose
-    private String subCastId;
+    private String memberCode="";
     @SerializedName("email_address")
     @Expose
-    private String emailAddress;
-    @SerializedName("password")
-    @Expose
-    private String password;
-    @SerializedName("plain_password")
-    @Expose
-    private Object plainPassword;
-    @SerializedName("status")
-    @Expose
-    private String status;
-    @SerializedName("gender")
-    @Expose
-    private String gender;
-    @SerializedName("address")
-    @Expose
-    private String address;
-    @SerializedName("local_address")
-    @Expose
-    private String localAddress;
-    @SerializedName("city_id")
-    @Expose
-    private Object cityId;
-    @SerializedName("state_id")
-    @Expose
-    private String stateId;
-    @SerializedName("area")
-    @Expose
-    private String area;
-    @SerializedName("pincode")
-    @Expose
-    private String pincode;
+    private String emailAddress="";
     @SerializedName("mobile")
     @Expose
-    private String mobile;
-    @SerializedName("phone")
+    private String mobile="";
+    @SerializedName("plain_password")
     @Expose
-    private String phone;
-    @SerializedName("matrimony")
+    private String plainPassword="";
+    @SerializedName("password")
     @Expose
-    private String matrimony;
-    @SerializedName("birth_date")
+    private String password="";
+    @SerializedName("relation_id")
     @Expose
-    private String birthDate;
-    @SerializedName("birth_time")
-    @Expose
-    private String birthTime;
-    @SerializedName("birth_place")
-    @Expose
-    private String birthPlace;
-    @SerializedName("distinct_id")
-    @Expose
-    private String distinctId;
-    @SerializedName("native_place_id")
-    @Expose
-    private String nativePlaceId;
-    @SerializedName("blood_group")
-    @Expose
-    private String bloodGroup;
-    @SerializedName("about_me")
-    @Expose
-    private String aboutMe;
-    @SerializedName("weight")
-    @Expose
-    private String weight;
-    @SerializedName("height")
-    @Expose
-    private String height;
-    @SerializedName("is_spect")
-    @Expose
-    private String isSpect;
-    @SerializedName("is_mangal")
-    @Expose
-    private String isMangal;
-    @SerializedName("is_shani")
-    @Expose
-    private String isShani;
-    @SerializedName("hobby")
-    @Expose
-    private String hobby;
-    @SerializedName("facebook_profile")
-    @Expose
-    private String facebookProfile;
-    @SerializedName("expectation")
-    @Expose
-    private String expectation;
-    @SerializedName("mosaad_id")
-    @Expose
-    private String mosaadId;
-    @SerializedName("current_activity_id")
-    @Expose
-    private String currentActivityId;
-    @SerializedName("marital_status")
-    @Expose
-    private String maritalStatus;
-    @SerializedName("marriage_date")
-    @Expose
-    private Object marriageDate;
-    @SerializedName("gotra_id")
-    @Expose
-    private Object gotraId;
-    @SerializedName("profile_pic")
-    @Expose
-    private String profilePic;
-    @SerializedName("region")
-    @Expose
-    private String region;
-    @SerializedName("is_rented")
-    @Expose
-    private String isRented;
-    @SerializedName("is_expired")
-    @Expose
-    private String isExpired;
-    @SerializedName("expire_date")
-    @Expose
-    private String expireDate;
-    @SerializedName("is_donor")
-    @Expose
-    private String isDonor;
-    @SerializedName("business_category_id")
-    @Expose
-    private String businessCategoryId;
-    @SerializedName("business_sub_category_id")
-    @Expose
-    private String businessSubCategoryId;
-    @SerializedName("work_details")
-    @Expose
-    private String workDetails;
-    @SerializedName("company_name")
-    @Expose
-    private String companyName;
-    @SerializedName("business_address")
-    @Expose
-    private String businessAddress;
-    @SerializedName("business_logo")
-    @Expose
-    private String businessLogo;
-    @SerializedName("website")
-    @Expose
-    private String website;
-    @SerializedName("education_id")
-    @Expose
-    private String educationId;
-    @SerializedName("occupation_id")
-    @Expose
-    private String occupationId;
-    @SerializedName("user_lat")
-    @Expose
-    private Object userLat;
-    @SerializedName("user_lng")
-    @Expose
-    private Object userLng;
-    @SerializedName("deleted")
-    @Expose
-    private String deleted;
-    @SerializedName("is_location_enable")
-    @Expose
-    private String isLocationEnable;
-    @SerializedName("updated_time")
-    @Expose
-    private String updatedTime;
-    @SerializedName("created_dt")
-    @Expose
-    private String createdDt;
-    @SerializedName("created_by")
-    @Expose
-    private String createdBy;
-    @SerializedName("updated_dt")
-    @Expose
-    private String updatedDt;
-    @SerializedName("updated_by")
-    @Expose
-    private String updatedBy;
-    @SerializedName("city")
-    @Expose
-    private Object city;
-    @SerializedName("state")
-    @Expose
-    private Object state;
-    @SerializedName("sub_community")
-    @Expose
-    private String subCommunity;
-    @SerializedName("local_community")
-    @Expose
-    private String localCommunity;
+    private String relationId="";
+
     @SerializedName("relation")
     @Expose
-    private String relation;
-    @SerializedName("designation")
+    private String relation="";
+
+    @SerializedName("sub_community_id")
     @Expose
-    private String designation;
-    @SerializedName("native")
+    private String subCommunityId="";
+    @SerializedName("local_community_id")
     @Expose
-    private String _native;
-    @SerializedName("mossad")
+    private String localCommunityId="";
+    @SerializedName("committee_id")
     @Expose
-    private Object mossad;
-    @SerializedName("current_activity")
+    private String committeeId="";
+    @SerializedName("designation_id")
     @Expose
-    private String currentActivity;
-    @SerializedName("gotra")
+    private String designationId="";
+    @SerializedName("first_name")
     @Expose
-    private Object gotra;
-    @SerializedName("business_category")
+    private String firstName="";
+    @SerializedName("last_name")
     @Expose
-    private String businessCategory;
-    @SerializedName("business_sub_category")
+    private String lastName="";
+    @SerializedName("father_name")
     @Expose
-    private String businessSubCategory;
-    @SerializedName("education")
+    private String fatherName="";
+    @SerializedName("mother_name")
     @Expose
-    private String education;
-    @SerializedName("occupation")
+    private String motherName="";
+    @SerializedName("sub_cast_id")
     @Expose
-    private String occupation;
+    private String subCastId="";
+    @SerializedName("status")
+    @Expose
+    private String status="";
+    @SerializedName("gender")
+    @Expose
+    private String gender="";
+    @SerializedName("address")
+    @Expose
+    private String address="";
+    @SerializedName("local_address")
+    @Expose
+    private String localAddress="";
+    @SerializedName("city_id")
+    @Expose
+    private String cityId="";
+    @SerializedName("city")
+    @Expose
+    private String city="";
+    @SerializedName("state_id")
+    @Expose
+    private String stateId="";
+    @SerializedName("area")
+    @Expose
+    private String area="";
+    @SerializedName("pincode")
+    @Expose
+    private String pincode="";
+    @SerializedName("phone")
+    @Expose
+    private String phone="";
+    @SerializedName("matrimony")
+    @Expose
+    private String matrimony="NO";
+    @SerializedName("birth_date")
+    @Expose
+    private String birthDate="";
+    @SerializedName("birth_time")
+    @Expose
+    private String birthTime="";
+    @SerializedName("birth_place")
+    @Expose
+    private String birthPlace="";
+    @SerializedName("distinct_id")
+    @Expose
+    private String distinctId="";
+    @SerializedName("native_place_id")
+    @Expose
+    private String nativePlaceId="";
+    @SerializedName("blood_group")
+    @Expose
+    private String bloodGroup="";
+    @SerializedName("about_me")
+    @Expose
+    private String aboutMe="";
+    @SerializedName("weight")
+    @Expose
+    private String weight="";
+    @SerializedName("height")
+    @Expose
+    private String height="";
+    @SerializedName("is_spect")
+    @Expose
+    private String isSpect="0";
+    @SerializedName("is_mangal")
+    @Expose
+    private String isMangal="0";
+    @SerializedName("is_shani")
+    @Expose
+    private String isShani="0";
+    @SerializedName("hobby")
+    @Expose
+    private String hobby="";
+    @SerializedName("facebook_profile")
+    @Expose
+    private String facebookProfile="";
+    @SerializedName("expectation")
+    @Expose
+    private String expectation="";
+    @SerializedName("mosaad_id")
+    @Expose
+    private String mosaadId="";
+    @SerializedName("current_activity_id")
+    @Expose
+    private String currentActivityId="";
+    @SerializedName("marital_status")
+    @Expose
+    private String maritalStatus="";
+    @SerializedName("marriage_date")
+    @Expose
+    private String marriageDate="";
+    @SerializedName("gotra_id")
+    @Expose
+    private String gotraId="";
+    @SerializedName("profile_pic")
+    @Expose
+    private String profilePic="";
+    @SerializedName("region")
+    @Expose
+    private String region="";
+    @SerializedName("is_rented")
+    @Expose
+    private String isRented="0";
+    @SerializedName("is_expired")
+    @Expose
+    private String isExpired="";
+    @SerializedName("expire_date")
+    @Expose
+    private String expireDate="";
+    @SerializedName("is_donor")
+    @Expose
+    private String isDonor="0";
+    @SerializedName("business_category_id")
+    @Expose
+    private String businessCategoryId="";
+    @SerializedName("business_sub_category_id")
+    @Expose
+    private String businessSubCategoryId="";
+    @SerializedName("work_details")
+    @Expose
+    private String workDetails="";
+    @SerializedName("company_name")
+    @Expose
+    private String companyName="";
+    @SerializedName("business_address")
+    @Expose
+    private String businessAddress="";
+    @SerializedName("business_logo")
+    @Expose
+    private String businessLogo="";
+    @SerializedName("website")
+    @Expose
+    private String website="";
+    @SerializedName("education_id")
+    @Expose
+    private String educationId="";
+    @SerializedName("occupation_id")
+    @Expose
+    private String occupationId="";
+    @SerializedName("user_lat")
+    @Expose
+    private String userLat="";
+    @SerializedName("user_lng")
+    @Expose
+    private String userLng="";
+    @SerializedName("home_lat")
+    @Expose
+    private String homeLat="";
+    @SerializedName("home_lng")
+    @Expose
+    private String homeLng="";
+    @SerializedName("office_lat")
+    @Expose
+    private String officeLat="";
+    @SerializedName("office_lng")
+    @Expose
+    private String officeLng="";
+    @SerializedName("is_location_enable")
+    @Expose
+    private String isLocationEnable="0";
+
+    public String getProfileCompleted() {
+        return profileCompleted;
+    }
+
+    public void setProfileCompleted(String profileCompleted) {
+        this.profileCompleted = profileCompleted;
+    }
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
 
     public String getId() {
         return id;
@@ -289,6 +279,38 @@ public class Member {
 
     public void setMemberCode(String memberCode) {
         this.memberCode = memberCode;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getPlainPassword() {
+        return plainPassword;
+    }
+
+    public void setPlainPassword(String plainPassword) {
+        this.plainPassword = plainPassword;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getRelationId() {
@@ -347,36 +369,28 @@ public class Member {
         this.lastName = lastName;
     }
 
+    public String getFatherName() {
+        return fatherName;
+    }
+
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
+    }
+
+    public String getMotherName() {
+        return motherName;
+    }
+
+    public void setMotherName(String motherName) {
+        this.motherName = motherName;
+    }
+
     public String getSubCastId() {
         return subCastId;
     }
 
     public void setSubCastId(String subCastId) {
         this.subCastId = subCastId;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Object getPlainPassword() {
-        return plainPassword;
-    }
-
-    public void setPlainPassword(Object plainPassword) {
-        this.plainPassword = plainPassword;
     }
 
     public String getStatus() {
@@ -411,11 +425,11 @@ public class Member {
         this.localAddress = localAddress;
     }
 
-    public Object getCityId() {
+    public String getCityId() {
         return cityId;
     }
 
-    public void setCityId(Object cityId) {
+    public void setCityId(String cityId) {
         this.cityId = cityId;
     }
 
@@ -441,14 +455,6 @@ public class Member {
 
     public void setPincode(String pincode) {
         this.pincode = pincode;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
     }
 
     public String getPhone() {
@@ -611,19 +617,19 @@ public class Member {
         this.maritalStatus = maritalStatus;
     }
 
-    public Object getMarriageDate() {
+    public String getMarriageDate() {
         return marriageDate;
     }
 
-    public void setMarriageDate(Object marriageDate) {
+    public void setMarriageDate(String marriageDate) {
         this.marriageDate = marriageDate;
     }
 
-    public Object getGotraId() {
+    public String getGotraId() {
         return gotraId;
     }
 
-    public void setGotraId(Object gotraId) {
+    public void setGotraId(String gotraId) {
         this.gotraId = gotraId;
     }
 
@@ -747,28 +753,52 @@ public class Member {
         this.occupationId = occupationId;
     }
 
-    public Object getUserLat() {
+    public String getUserLat() {
         return userLat;
     }
 
-    public void setUserLat(Object userLat) {
+    public void setUserLat(String userLat) {
         this.userLat = userLat;
     }
 
-    public Object getUserLng() {
+    public String getUserLng() {
         return userLng;
     }
 
-    public void setUserLng(Object userLng) {
+    public void setUserLng(String userLng) {
         this.userLng = userLng;
     }
 
-    public String getDeleted() {
-        return deleted;
+    public String getHomeLat() {
+        return homeLat;
     }
 
-    public void setDeleted(String deleted) {
-        this.deleted = deleted;
+    public void setHomeLat(String homeLat) {
+        this.homeLat = homeLat;
+    }
+
+    public String getHomeLng() {
+        return homeLng;
+    }
+
+    public void setHomeLng(String homeLng) {
+        this.homeLng = homeLng;
+    }
+
+    public String getOfficeLat() {
+        return officeLat;
+    }
+
+    public void setOfficeLat(String officeLat) {
+        this.officeLat = officeLat;
+    }
+
+    public String getOfficeLng() {
+        return officeLng;
+    }
+
+    public void setOfficeLng(String officeLng) {
+        this.officeLng = officeLng;
     }
 
     public String getIsLocationEnable() {
@@ -779,76 +809,12 @@ public class Member {
         this.isLocationEnable = isLocationEnable;
     }
 
-    public String getUpdatedTime() {
-        return updatedTime;
-    }
-
-    public void setUpdatedTime(String updatedTime) {
-        this.updatedTime = updatedTime;
-    }
-
-    public String getCreatedDt() {
-        return createdDt;
-    }
-
-    public void setCreatedDt(String createdDt) {
-        this.createdDt = createdDt;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public String getUpdatedDt() {
-        return updatedDt;
-    }
-
-    public void setUpdatedDt(String updatedDt) {
-        this.updatedDt = updatedDt;
-    }
-
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-    public Object getCity() {
+    public String getCity() {
         return city;
     }
 
-    public void setCity(Object city) {
+    public void setCity(String city) {
         this.city = city;
-    }
-
-    public Object getState() {
-        return state;
-    }
-
-    public void setState(Object state) {
-        this.state = state;
-    }
-
-    public String getSubCommunity() {
-        return subCommunity;
-    }
-
-    public void setSubCommunity(String subCommunity) {
-        this.subCommunity = subCommunity;
-    }
-
-    public String getLocalCommunity() {
-        return localCommunity;
-    }
-
-    public void setLocalCommunity(String localCommunity) {
-        this.localCommunity = localCommunity;
     }
 
     public String getRelation() {
@@ -858,77 +824,4 @@ public class Member {
     public void setRelation(String relation) {
         this.relation = relation;
     }
-
-    public String getDesignation() {
-        return designation;
-    }
-
-    public void setDesignation(String designation) {
-        this.designation = designation;
-    }
-
-    public String getNative() {
-        return _native;
-    }
-
-    public void setNative(String _native) {
-        this._native = _native;
-    }
-
-    public Object getMossad() {
-        return mossad;
-    }
-
-    public void setMossad(Object mossad) {
-        this.mossad = mossad;
-    }
-
-    public String getCurrentActivity() {
-        return currentActivity;
-    }
-
-    public void setCurrentActivity(String currentActivity) {
-        this.currentActivity = currentActivity;
-    }
-
-    public Object getGotra() {
-        return gotra;
-    }
-
-    public void setGotra(Object gotra) {
-        this.gotra = gotra;
-    }
-
-    public String getBusinessCategory() {
-        return businessCategory;
-    }
-
-    public void setBusinessCategory(String businessCategory) {
-        this.businessCategory = businessCategory;
-    }
-
-    public String getBusinessSubCategory() {
-        return businessSubCategory;
-    }
-
-    public void setBusinessSubCategory(String businessSubCategory) {
-        this.businessSubCategory = businessSubCategory;
-    }
-
-    public String getEducation() {
-        return education;
-    }
-
-    public void setEducation(String education) {
-        this.education = education;
-    }
-
-    public String getOccupation() {
-        return occupation;
-    }
-
-    public void setOccupation(String occupation) {
-        this.occupation = occupation;
-    }
-
 }

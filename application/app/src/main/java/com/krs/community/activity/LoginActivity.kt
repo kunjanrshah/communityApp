@@ -12,6 +12,8 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -40,7 +42,6 @@ import com.krs.community.viewmodel.LoginViewModel
 import com.krs.community.viewmodel.LoginViewModelFactory
 import kotlinx.android.synthetic.main.activity_loginwith.*
 import org.json.JSONException
-import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -75,6 +76,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     private var mCallbackManager: CallbackManager? = null
     private var loginViewModel: LoginViewModel? = null
     private var ReceviedOTP:String?=null
+    private lateinit var  login_model: LoginModel
     companion object {
         private val RC_SIGN_IN = 9001
     }
@@ -128,6 +130,19 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
             }
         })
+
+        edt_mobile?.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                btnContinue.performClick()
+                true;
+            }
+            false;
+        })
+
+        img_cancel.setOnClickListener {
+            card_view_otp.visibility=View.GONE
+            card_view_mobile.visibility=View.VISIBLE
+        }
 
         btn_login_fb.setOnClickListener { v ->
 
@@ -194,19 +209,26 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 return@setOnClickListener
             }
             if (isOnline(this)) {
-                startProgress(this, getString(R.string.seat_back_relax), getString(R.string.loading))
+                startSweetProgress(this, getString(R.string.otp_send), getString(R.string.loading))
                 loginViewModel?.loginWithMobile()
             }
         }
+
+        loginViewModel?.stopTime?.observe(this, androidx.lifecycle.Observer {stopTIme ->
+            if(stopTIme==true){
+                tv_resend.isClickable=true
+                tv_resend.isEnabled=true
+                tv_resend.setTextColor(resources.getColor(R.color.black1))
+            }
+        })
 
         loginViewModel?.status?.observe(this, androidx.lifecycle.Observer {status ->
            if (status==false){
                loginViewModel?.status?.value = null
                hideProgressDialog()
-               hideProgress()
+               hideSweetProgress()
               Snackbar.make(findViewById(R.id.ll_login), "Authentication Failed.", Snackbar.LENGTH_LONG).show()
             }
-
         })
 
         /*
@@ -291,9 +313,12 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
     override fun getUserLogin(model: LoginModel) {
-        hideProgress()
+        hideSweetProgress()
         hideProgressDialog()
         Log.d(TAG, "login data: $model")
+
+        login_model=model
+
         if(!model.otp.isNullOrBlank()){
             card_view_mobile.visibility= View.GONE
             card_view_otp.visibility=View.VISIBLE
@@ -305,6 +330,9 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
     fun goToDashboardScreen(){
+        Guru.putString("access_token",login_model.data.accessToken)
+        Guru.putString("user_id",login_model.data.id)
+        Guru.putString("user_mobile",login_model.data.mobile)
         val intent = Intent(applicationContext, DashboardActivity::class.java)
         startActivity(intent)
         finish()
@@ -371,13 +399,14 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         if (smsReceiver != null) {
             unregisterReceiver(smsReceiver)
         }
+        loginViewModel?.cancelAllJobs()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN) {
             try {
-                startProgress(this@LoginActivity, getString(R.string.seat_back_relax), getString(R.string.loading))
+                startSweetProgress(this@LoginActivity, getString(R.string.seat_back_relax), getString(R.string.loading))
                 loginViewModel?.loginWithGoogle(data)
             } catch (e: ApiException) {
                 Log.w(TAG, "Google sign in failed", e)

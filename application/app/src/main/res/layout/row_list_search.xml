@@ -134,7 +134,7 @@
                         android:gravity="center"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
-                        android:text="Head"
+                        android:text="Family Head"
                         android:textColor="@color/white"
                         android:textSize="11sp" />
 

@@ -69,76 +69,64 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_regular"
                             android:text="Maninagar, Ahmedabad"
-                            android:textSize="12sp" />
+                            android:textSize="13sp" />
 
-                    </LinearLayout>
-
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/colorGray" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@color/colorGray" />
 
 
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:background="@drawable/phone" />
-
-                        <TextView
-                            android:id="@+id/tv_mobile"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="5dp"
-                            android:text="9825450261"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textColor="@color/com_facebook_blue"
-                            android:textSize="12sp" />
+                            android:orientation="horizontal">
 
-                    </LinearLayout>
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:background="@drawable/ic_email" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/tv_email"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="5dp"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="kunjanshah@gmail.com"
+                                android:textSize="13sp" />
 
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:background="@drawable/ic_email" />
+                        </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/tv_email"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="5dp"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:text="kunjanshah@gmail.com"
-                            android:textSize="12sp" />
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:background="@drawable/phone" />
+
+                            <TextView
+                                android:id="@+id/tv_mobile"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="5dp"
+                                android:text="9825450261"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:textColor="@color/com_facebook_blue"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
-                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

@@ -117,5 +117,10 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="NumberPickerStyle">
+        <item name="android:textSize">22dp</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="android:colorControlNormal">@color/colorPrimaryDark</item>
+    </style>
 
 </resources>

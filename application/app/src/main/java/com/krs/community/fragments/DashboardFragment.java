@@ -101,8 +101,6 @@ public class DashboardFragment extends Fragment {
         });
 
         Utility.changeStatusbarColor(getActivity(),R.color.white,false);
-
-
         return rootView;
     }
 

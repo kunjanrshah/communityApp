@@ -57,6 +57,8 @@
     </LinearLayout>
 
     <ScrollView
+        android:id="@+id/scroll"
+        android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -76,17 +78,16 @@
                         android:id="@+id/img_profile"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="20dp"
                         android:src="@drawable/man_reg" />
 
                     <ImageView
                         android:id="@+id/img_cancel"
-                        android:layout_width="20dip"
-                        android:layout_height="20dip"
-                        android:layout_marginStart="60dp"
+                        android:layout_width="25dip"
+                        android:layout_height="25dip"
+                        android:layout_marginStart="80dp"
                         android:padding="5dp"
-                        android:src="@drawable/add_profile"
-                        android:visibility="gone"
+                        android:src="@drawable/cancel"
                         tools:ignore="ContentDescription" />
 
 
@@ -94,9 +95,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="30dp"
                         android:fontFamily="@font/montserrat_semibold"
                         android:gravity="end"
+                        android:layout_marginEnd="10dp"
                         android:text="@string/register_now"
                         android:textSize="20sp" />
 
@@ -107,7 +108,10 @@
                     android:id="@+id/edt_head_name"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/register_field_height"
+                    android:nextFocusDown="@+id/spinnerLname"
+                    android:imeOptions="actionNext"
                     android:layout_marginTop="10dp"
+                    android:digits= "@string/only_chars"
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/man_user"
                     android:drawablePadding="10dp"
@@ -135,6 +139,8 @@
                         android:singleLine="true"
                         android:hint="Select Last Name"
                         android:background="@null"
+                        android:nextFocusDown="@+id/edt_email_id"
+                        android:imeOptions="actionNext"
                         android:layout_marginLeft="25dp"
                         android:paddingRight="15dp"
                         android:textColor="@color/black1"
@@ -161,6 +167,8 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="0dp"
                     android:singleLine="true"
+                    android:nextFocusDown="@+id/edt_mobile"
+                    android:imeOptions="actionNext"
                     tools:ignore="Autofill" />
 
                 <LinearLayout
@@ -171,6 +179,7 @@
                     android:orientation="horizontal">
 
                     <RelativeLayout
+                        android:visibility="gone"
                         android:layout_width="130dp"
                         android:layout_height="50dp"
                         android:background="@drawable/country_gradient_spinner"
@@ -204,6 +213,8 @@
                         android:paddingEnd="0dp"
                         android:paddingStart="10dp"
                         android:singleLine="true"
+                        android:nextFocusDown="@+id/edt_password"
+                        android:imeOptions="actionNext"
                         tools:ignore="Autofill" />
                 </LinearLayout>
 
@@ -223,6 +234,8 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:singleLine="true"
+                    android:nextFocusDown="@+id/edt_cpassword"
+                    android:imeOptions="actionNext"
                     tools:ignore="Autofill" />
 
                 <EditText
@@ -241,6 +254,8 @@
                     android:inputType="textPassword"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
+                    android:nextFocusDown="@+id/spinnerStates"
+                    android:imeOptions="actionNext"
                     android:singleLine="true"                   />
 
                 <RelativeLayout
@@ -263,6 +278,8 @@
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
+                        android:nextFocusDown="@+id/spinnerCities"
+                        android:imeOptions="actionNext"
                         app:jrs_title="State List" />
 
                 </RelativeLayout>
@@ -287,6 +304,8 @@
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
+                        android:nextFocusDown="@+id/edt_address"
+                        android:imeOptions="actionNext"
                         app:jrs_title="City List" />
 
 
@@ -306,10 +325,11 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_address"
                     android:text="@={registerviewmodel.address}"
-                    android:imeOptions="actionDone"
                     android:inputType="textCapSentences"
                     android:paddingEnd="0dp"
                     android:paddingStart="10dp"
+                    android:nextFocusDown="@+id/spinnerSub"
+                    android:imeOptions="actionNext"
                     android:singleLine="true" />
 
                 <RelativeLayout
@@ -333,6 +353,8 @@
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
+                        android:nextFocusDown="@+id/spinnerLocal"
+                        android:imeOptions="actionNext"
                         app:jrs_title="Sub Community" />
 
                 </RelativeLayout>
@@ -355,10 +377,13 @@
                         android:background="@null"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
+
                         android:textColor="@color/black1"
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
+                        android:nextFocusDown="@+id/btn_register"
+                        android:imeOptions="actionDone"
                         app:jrs_title="Local Community" />
 
                 </RelativeLayout>
@@ -367,7 +392,7 @@
                     android:id="@+id/txt_how_register"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="15dp"
                     android:gravity="center_horizontal"
                     android:text="@string/how_to_register"
                     android:textSize="16sp" />

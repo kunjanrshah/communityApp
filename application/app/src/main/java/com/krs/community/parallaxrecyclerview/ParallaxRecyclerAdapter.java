@@ -226,10 +226,11 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
             return VIEW_TYPES.FIRST_VIEW;
         }
         else if(position==mData.size() && !SearchCityResult.Companion.getStop()){
-            mOnLoadMore.loadApi();
-            return VIEW_TYPES.VIEW_TYPE_LOADING;
+            if(mOnLoadMore!=null){
+                mOnLoadMore.loadApi();
+                return VIEW_TYPES.VIEW_TYPE_LOADING;
+            }
         }
-
         return position == 0 && mHeader != null ? VIEW_TYPES.HEADER : VIEW_TYPES.NORMAL;
     }
 

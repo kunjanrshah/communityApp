@@ -4,8 +4,9 @@ package com.krs.community.model;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.krs.community.entities.SubCommunity;
 
-public class SubCommModel {
+public class ResponseModel {
 
     @SerializedName("success")
     @Expose
@@ -15,7 +16,7 @@ public class SubCommModel {
     private String message;
     @SerializedName("data")
     @Expose
-    private List<SubDatum> data = null;
+    private List<Datum> data = null;
 
     public Boolean getSuccess() {
         return success;
@@ -33,11 +34,11 @@ public class SubCommModel {
         this.message = message;
     }
 
-    public List<SubDatum> getData() {
+    public List<Datum> getData() {
         return data;
     }
 
-    public void setData(List<SubDatum> data) {
+    public void setData(List<Datum> data) {
         this.data = data;
     }
 

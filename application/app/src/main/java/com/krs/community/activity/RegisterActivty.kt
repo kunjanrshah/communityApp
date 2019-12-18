@@ -1,71 +1,67 @@
 package com.krs.community.activity
 
-import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Html
 import android.text.InputType
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
-import cn.pedant.SweetAlert.SweetAlertDialog
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.databinding.ActivityRegisterBinding
+import com.krs.community.entities.LastName
+import com.krs.community.entities.States
+import com.krs.community.entities.SubCommunity
 import com.krs.community.interfaces.IRegisterListener
 import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.model.*
-import com.krs.community.utils.CountryData
-import com.krs.community.utils.Logger
-import com.krs.community.utils.Utility
-import com.krs.community.utils.snackbar
+import com.krs.community.utils.*
 import com.krs.community.viewmodel.RegisterViewModel
 import com.krs.community.viewmodel.RegisterViewModelFactory
-import com.yalantis.ucrop.UCrop
+import com.wooplr.spotlight.SpotlightView
+import com.wooplr.spotlight.prefs.PreferencesManager
+import com.wooplr.spotlight.utils.SpotlightSequence
 import com.yalantis.ucrop.UCrop.*
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
-import com.yalantis.ucrop.model.AspectRatio
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.withContext
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
-import java.io.File
-import java.io.IOException
 
 class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener,KodeinAware{
 
     private var str_profile_hash = ""
     private var isShow = true
     private var isShow1 = true
-    //private var add_new: String? = ""
+    private var isShow2 = true
+    private lateinit var mPreferencesManager:PreferencesManager;
     private var mShowLoader: Boolean = false
     private val PICK_GALLERY_REQUEST = 1
     private lateinit var logger: Logger
-    lateinit var lstLastnameId:Array<String?>
-    lateinit var lstStateId:Array<String?>
-    lateinit var lstCityId:Array<String?>
-    lateinit var lstSubCommId:Array<String?>
-    lateinit var lstLocalCommId:Array<String?>
+    lateinit var lstLastnameId:Array<Int?>
+    lateinit var lstStateId:Array<Int?>
+    lateinit var lstCityId:Array<Int?>
+    lateinit var lstSubCommId:Array<Int?>
+    lateinit var lstLocalCommId:Array<Int?>
     lateinit var binding:ActivityRegisterBinding
     private lateinit var registerViewModel: RegisterViewModel
 
     companion object {
-        private val SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage"
         private val TAG = RegisterActivty::class.java.simpleName
     }
 
@@ -83,20 +79,14 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         binding.lifecycleOwner = this
         binding.registerviewmodel = registerViewModel
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(this, R.color.colorBG, false)
         }
 
-        /*val mBundle = intent.extras
-        if (mBundle != null) {
-            add_new = mBundle.getString(AppConstants.SCREEN)
-        }*/
-
         Memory_Allocation()
 
         btn_register?.setOnClickListener {
-            Utility.startProgress(this,"Regsitering your family","Loading...")
+            Utility.startSweetProgress(this,"Registering your family","Loading...")
             registerViewModel.getUserRegistration()
         }
 
@@ -115,22 +105,18 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
 
         edt_password.setOnTouchListener(fun(_: View, event: MotionEvent): Boolean {
             val DRAWABLE_RIGHT = 2
-
             if (event.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= edt_password!!.right - edt_password!!.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
                     if (isShow) {
                         edt_password!!.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_show, 0)
                         edt_password!!.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-
                         isShow = false
                     } else {
                         edt_password!!.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_hide, 0)
                         edt_password!!.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
-
                         isShow = true
                     }
                     edt_password!!.setSelection(edt_password!!.length())
-
                     return true
                 }
             }
@@ -138,9 +124,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         })
 
         edt_cpassword.setOnTouchListener(fun(v: View, event: MotionEvent): Boolean {
-
             val DRAWABLE_RIGHT = 2
-
             if (event.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= edt_cpassword!!.right - edt_cpassword!!.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
                     if (isShow1) {
@@ -157,7 +141,6 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
-
                     return true
                 }
             }
@@ -168,10 +151,10 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         registerViewModel.getUserLastName()
 
         /*get countries */
-        spinnerCountries.setItems(CountryData.countryNames)
+        /*spinnerCountries.setItems(CountryData.countryNames)
         spinnerCountries.setExpandTint(R.color.black)
         spinnerCountries.select(0)
-        registerViewModel.country_code=CountryData.countryAreaCodes[0]
+        registerViewModel.country_code=CountryData.countryAreaCodes[0]*/
 
         spinnerCountries.setOnItemClickListener(JRSpinner.OnItemClickListener {pos->
             registerViewModel.country_code =CountryData.countryAreaCodes[pos]
@@ -180,8 +163,8 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         /*get states */
         registerViewModel.getUserStates()
         spinnerStates.setOnItemClickListener {
-            //Utility.startProgress(this,"Fetching Cities of ${spinnerStates.text}","Loading...")
-            Utility.startProgress(this,"Cities","Loading...")
+            //Utility.startSweetProgress(this,"Fetching Cities of ${spinnerStates.text}","Loading...")
+            Utility.startSweetProgress(this,"List of City","Loading...")
             registerViewModel.state_id=lstStateId[it]
             registerViewModel.fetchCitiesForStateId(it + 1)
         }
@@ -190,8 +173,8 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         /*get sub communities */
         registerViewModel.getLstSubCommunity()
         spinnerSub.setOnItemClickListener {
-            Utility.startProgress(this,"Local Communities","Loading...")
-            //Utility.startProgress(this,"Fetching Local Communities of ${spinnerSub.text}","Loading...")
+            Utility.startSweetProgress(this,"List of local Community","Loading...")
+            //Utility.startSweetProgress(this,"Fetching Local Communities of ${spinnerSub.text}","Loading...")
             registerViewModel.sub_comm_id=lstSubCommId[it]
             registerViewModel.getLstLocalCommunity(it + 1)
         }
@@ -211,47 +194,68 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
             registerViewModel.local_comm_id=lstLocalCommId[position]
         }
 
+        binding.imgProfile.setOnClickListener { v ->
+                pickFromGallery(this)
+        }
 
-        val registerPrompt = MaterialTapTargetPrompt.Builder(this@RegisterActivty)
-                .setTarget(R.id.btn_register)
-                .setAutoFinish(false)
-                .setAutoDismiss(true)
-                .setBackButtonDismissEnabled(false)
-                .setBackgroundColour(resources.getColor(R.color.colorPrimary))
-                .setPrimaryText(getString(R.string.register_new_family))
-                .setSecondaryText(getString(R.string.click_on_register))
-                .setPromptStateChangeListener { prompt, state ->
-                    if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-                        prompt.dismiss()
-                    }
-                }.create()
+        mPreferencesManager=PreferencesManager(this)
+        mPreferencesManager.resetAll()
+        Handler(Looper.getMainLooper()).postDelayed({
+            showPhotoIntro()
+        }, 400)
 
-        val photoPrompt = MaterialTapTargetPrompt.Builder(this@RegisterActivty)
-                .setTarget(R.id.img_profile)
-                .setAutoFinish(false)
-                .setAutoDismiss(false)
-                .setBackButtonDismissEnabled(false)
-                .setBackgroundColour(resources.getColor(R.color.colorPrimary))
-                .setPrimaryText(getString(R.string.upload_photo))
-                .setSecondaryText(getString(R.string.select_photo))
-                .setPromptStateChangeListener { prompt, state ->
-                    if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-                        prompt.dismiss()
-                        assert(registerPrompt != null)
-                        registerPrompt!!.show()
-                    }
-                }
-                .show()
-
-        img_profile.setOnClickListener { v ->
-            if (photoPrompt!!.state == MaterialTapTargetPrompt.STATE_DISMISSED) {
-                pickFromGallery()
+        scroll.getViewTreeObserver().addOnScrollChangedListener {
+            if (scroll.getChildAt(0).getBottom()  > (scroll.getHeight() + scroll.getScrollY())) {
+               if(isShow2){
+                   isShow2=false
+                   Handler(Looper.getMainLooper()).postDelayed({
+                       scroll.scrollToBottom()
+                       showSequence()
+                   }, 400)
+               }
             }
         }
     }
 
+    fun ScrollView.scrollToBottom() {
+        val lastChild = getChildAt(childCount - 1)
+        val bottom = lastChild.bottom + paddingBottom
+        val delta = bottom - (scrollY+ height)
+        smoothScrollBy(0, delta)
+    }
+
+    fun showSequence(){
+        SpotlightSequence.getInstance(this, null)
+                .addSpotlight(txt_how_register, "Youtube Video", "How to Register?", "how_register")
+                .addSpotlight(btn_register, "Register Button", "Fill up your details\n" +"Click here to Register", "btn_register")
+                .startSequence()
+    }
+
+    fun showPhotoIntro(){
+        SpotlightView.Builder(this)
+                .introAnimationDuration(400)
+                .enableRevealAnimation(false)
+                .performClick(true)
+                .fadeinTextDuration(400)
+                .headingTvColor(Color.parseColor("#eb273f"))
+                .headingTvSize(32)
+                .headingTvText("Profile Photo")
+                .subHeadingTvColor(Color.parseColor("#ffffff"))
+                .subHeadingTvSize(16)
+                .subHeadingTvText("Upload your Photo")
+                .maskColor(Color.parseColor("#dc000000"))
+                .target(img_profile)
+                .lineAnimDuration(400)
+                .lineAndArcColor(Color.parseColor("#eb273f"))
+                .dismissOnTouch(true)
+                .dismissOnBackPress(true)
+                .enableDismissAfterShown(true)
+                .usageId("img_profile") //UNIQUE ID
+                .show()
+    }
+
     override fun getRegisterFailure(message: String,filed:Int) {
-        Utility.hideProgress()
+        Utility.hideSweetProgress()
         root_layout.snackbar(message, Snackbar.LENGTH_LONG)
         when(filed){
             1 -> binding.edtHeadName.requestFocus()
@@ -271,31 +275,31 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
     }
 
     override fun getRegisterSuccess(data: RegisterModel) {
-        Utility.hideProgress()
+        Utility.hideSweetProgress()
         root_layout.snackbar(data.message, Snackbar.LENGTH_INDEFINITE)
-        /*Log.d(TAG, "onRegisterButtonClick")
-        val mIntent = Intent(this, DashboardActivity::class.java)
+        Log.d(TAG, "onRegisterButtonClick")
+        val mIntent = Intent(this, LoginActivity::class.java)
         startActivity(mIntent)
-        finish()*/
+        finish()
     }
 
-    override fun getStates(data: List<StateDatum>) {
+    override fun getStates(data: List<States>) {
         val lstState = Array<String?>(data.size) { null }
-        lstStateId = Array<String?>(data.size) { null }
+        lstStateId = Array(data.size) { null }
         for ((index, stateData) in data.withIndex()) {
-            lstState[index] = stateData.state
+            lstState[index] = stateData.name
             lstStateId[index] = stateData.id
         }
         spinnerStates.setItems(lstState)
         spinnerStates.setExpandTint(R.color.black)
     }
 
-    override fun getCities(data: List<CitiesDatum>) {
+    override fun getCities(data: List<Datum>) {
         val lstCity = Array<String?>(data.size) { null }
-        lstCityId = Array<String?>(data.size) { null }
+        lstCityId = Array(data.size) { null }
         for ((index, cityData) in data.withIndex()) {
-            lstCity[index] = cityData.city
-            lstCityId[index] = cityData.id
+            lstCity[index] = cityData.name
+            lstCityId[index] = Integer.parseInt(cityData.id)
         }
         spinnerCities.clear()
         spinnerCities.setTitle("Select ${spinnerStates.text}'s City")
@@ -307,9 +311,9 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
 
     }
 
-    override fun getSubCommunity(data: List<SubDatum>) {
+    override fun getSubCommunity(data: List<SubCommunity>) {
         val lstSubCom = Array<String?>(data.size) { null }
-        lstSubCommId = Array<String?>(data.size) { null }
+        lstSubCommId = Array(data.size) { null }
         for ((index, subData) in data.withIndex()) {
             lstSubCom[index] = subData.name
             lstSubCommId[index] = subData.id
@@ -317,12 +321,12 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         spinnerSub.setItems(lstSubCom)
     }
 
-    override fun getLocalCommunity(data: List<LocalDatum>) {
+    override fun getLocalCommunity(data: List<Datum>) {
         val lstLocal = Array<String?>(data.size) { null }
-        lstLocalCommId = Array<String?>(data.size) { null }
+        lstLocalCommId = Array(data.size) { null }
         for ((index, LocalData) in data.withIndex()) {
             lstLocal[index] = LocalData.name
-            lstLocalCommId[index] = LocalData.id
+            lstLocalCommId[index] = Integer.parseInt(LocalData.id)
         }
         spinnerLocal.clear()
         spinnerLocal.setTitle("Select ${spinnerSub.text}'s Local Community")
@@ -334,9 +338,9 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
     }
 
 
-    override fun getLastname(data: List<LastNameDatum>) {
+    override fun getLastname(data: List<LastName>) {
         val lstLastname = Array<String?>(data.size) { null }
-        lstLastnameId = Array<String?>(data.size) { null }
+        lstLastnameId = Array(data.size) { null }
         for ((index, stateData) in data.withIndex()) {
             lstLastname[index] = stateData.name
             lstLastnameId[index]=stateData.id
@@ -352,40 +356,8 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
             if(Utility.dialog!=null && Utility.dialog.isShowing) {
                 Utility.dialog.dismissWithAnimation()
             }
-            Utility.hideProgress()
+            Utility.hideSweetProgress()
             root_layout.snackbar(message,Snackbar.LENGTH_INDEFINITE)
-        }
-    }
-
-    private fun pickFromGallery() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            if (Build.VERSION.SDK_INT >= 23) {
-                prompt_read_permission()
-            }
-        } else {
-            val intent = Intent(Intent.ACTION_GET_CONTENT).setType("image/*").addCategory(Intent.CATEGORY_OPENABLE)
-            val mimeTypes = arrayOf("image/jpeg", "image/png")
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_GALLERY_REQUEST)
-        }
-    }
-
-
-    private fun prompt_read_permission() {
-        if (!Utility.hasPermission(this, "READ_EXTERNAL_STORAGE")) {
-            SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                    .setTitleText("Storage read Permission")
-                    .setContentText("Permission is needed to pick image from gallery for your Profile")
-                    .setConfirmText("Yes, please!")
-                    .setCancelText("No!")
-                    .showCancelButton(true)
-                    .setConfirmClickListener { sDialog ->
-                        sDialog.dismiss()
-                        ActivityCompat.requestPermissions(this@RegisterActivty, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), BaseActivity.REQUEST_STORAGE_READ_ACCESS_PERMISSION)
-                        //requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, "Storage read permission is needed to pick files.", REQUEST_STORAGE_READ_ACCESS_PERMISSION);
-                    }
-                    .show()
         }
     }
 
@@ -396,16 +368,6 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         txt_already?.text = Html.fromHtml(str)
     }
 
-    /*private fun cropImageActivity() {
-        if (Utility.hasPermission(this@RegisterActivty, Manifest.permission.WRITE_EXTERNAL_STORAGE) && Utility.hasPermission(this@RegisterActivty, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            CropImage.startPickImageActivity(this@RegisterActivty)
-        }
-    }*/
-
-    /* private fun startCropImageActivity(imageUri: Uri) {
-         CropImage.activity(imageUri).setGuidelines(CropImageView.Guidelines.ON).setMultiTouchEnabled(true).start(this@RegisterActivty)
-     }*/
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -413,140 +375,37 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
             if (requestCode == PICK_GALLERY_REQUEST) {
                 val selectedUri = data!!.data
                 if (selectedUri != null) {
-                    startCrop(selectedUri)
+                    startCrop(selectedUri,this)
                 } else {
                     Toast.makeText(this@RegisterActivty, "Cannot retrieve selected image", Toast.LENGTH_SHORT).show()
                 }
             } else if (requestCode == REQUEST_CROP) {
-                handleCropResult(data!!)
+                handleCropResult(data!!,this,binding.imgProfile)
             }
         }
         if (resultCode == RESULT_ERROR) {
-            handleCropError(data!!)
+            handleCropError(data!!,this)
         }
 
     }
 
-    private fun handleCropResult(result: Intent) {
-        val resultUri = getOutput(result)
-        if (resultUri != null) {
-
-            logger.debug("resultUri: $resultUri")
-
-            try {
-
-                val f = File(resultUri.path.toString())
-
-                runOnUiThread {
-                    var bmp1: Bitmap? = null
-                    try {
-                        bmp1 = Utility.getBitmap(this, f)
-                        str_profile_hash = Utility.getBase64(bmp1!!)
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
-                }
-                //Bitmap bmp= decodeFile(f);
-                //runOnUiThread(() -> str_profile_hash = Utility.getBase64(bmp));
-
-                img_cancel!!.visibility = View.VISIBLE
-                img_profile!!.setImageURI(resultUri)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-        } else {
-            Toast.makeText(this@RegisterActivty, "Cannot retrieve cropped image", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun handleCropError(result: Intent) {
-        val cropError = getError(result)
-        if (cropError != null) {
-            logger.error(cropError)
-            Toast.makeText(this@RegisterActivty, cropError.message, Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(this@RegisterActivty, "Unexpected error", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun startCrop(uri: Uri) {
-        val destinationFileName = "$SAMPLE_CROPPED_IMAGE_NAME.jpg"
-        var uCrop = of(uri, Uri.fromFile(File(cacheDir, destinationFileName)))
-        uCrop = advancedConfig(uCrop)
-        uCrop.start(this@RegisterActivty)
-    }
-
-    private fun advancedConfig(uCrop: UCrop): UCrop {
-        val options = Options()
-        options.setCompressionFormat(Bitmap.CompressFormat.JPEG)
-
-        options.setCompressionQuality(100)
-
-        options.setHideBottomControls(false)
-        options.setFreeStyleCropEnabled(true)
-
-        options.setBrightnessEnabled(true)
-        options.setContrastEnabled(true)
-        options.setSaturationEnabled(true)
-        options.setSharpnessEnabled(true)
-
-        options.setImageToCropBoundsAnimDuration(666)
-        //  options.setDimmedLayerColor(getResources().getColor(R.color.colorPrimary));
-        //options.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        options.setStatusBarColor(ContextCompat.getColor(this, R.color.white))
-        options.setActiveWidgetColor(ContextCompat.getColor(this, R.color.colorPrimary))
-        options.setToolbarWidgetColor(ContextCompat.getColor(this, R.color.colorPrimary))
-        //options.setRootViewBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
-
-        // Aspect ratio options
-        options.setAspectRatioOptions(1,
-                AspectRatio("WOW", 1f, 2f),
-                AspectRatio("MUCH", 3f, 4f),
-                AspectRatio("RATIO", 0f, 0f),
-                AspectRatio("SO", 16f, 9f),
-                AspectRatio("ASPECT", 1f, 1f))
-
-        return uCrop.withOptions(options)
-    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            BaseActivity.REQUEST_STORAGE_READ_ACCESS_PERMISSION ->
+            REQUEST_STORAGE_READ_ACCESS_PERMISSION ->
 
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    pickFromGallery()
+                    pickFromGallery(this)
                 } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
-                    displayNeverAskAgainDialog()
+                    displayNeverAskAgainDialog(this)
                 } else {
-                    prompt_read_permission()
+                    promptReadPermission(this)
                 }
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
-
-
-    private fun displayNeverAskAgainDialog() {
-
-        SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                .setTitleText("Storage read Permission")
-                .setContentText("Permission is needed to pick image from gallery for your Profile. Please permit the permission through " + "Settings screen.\n\nSelect Permissions -> Enable permission")
-                .setConfirmText("Permit Manually")
-                .setCancelText("Cancel")
-                .showCancelButton(true)
-                .setConfirmClickListener { sDialog ->
-                    sDialog.dismiss()
-                    val intent = Intent()
-                    intent.action = android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                    val uri = Uri.fromParts("package", packageName, null)
-                    intent.data = uri
-                    startActivity(intent)
-                }
-                .show()
-    }
-
 
     override fun loadingProgress(showLoader: Boolean) {
         mShowLoader = showLoader
@@ -555,8 +414,8 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
 
     override fun onCropFinish(result: UCropFragment.UCropResult) {
         when (result.mResultCode) {
-            RESULT_OK -> handleCropResult(result.mResultData)
-            RESULT_ERROR -> handleCropError(result.mResultData)
+            RESULT_OK -> handleCropResult(result.mResultData,this,binding.imgProfile)
+            RESULT_ERROR -> handleCropError(result.mResultData,this)
         }
     }
 

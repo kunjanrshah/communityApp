@@ -9,10 +9,10 @@
         android:layout_height="120dp"
         android:background="@drawable/round_bottom_corner_colorprimary"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:paddingTop="30dp">
 
         <ImageView
-            android:id="@+id/img_cancel"
+            android:id="@+id/img_cancel1"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginLeft="10dp"
@@ -33,10 +33,11 @@
 
     <LinearLayout
         android:id="@+id/ll_header"
-        android:transitionName="@string/headanimation"
+        android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:transitionName="@string/headanimation">
 
         <LinearLayout
             android:id="@+id/ll_family_head"
@@ -48,7 +49,7 @@
             android:background="@drawable/round_corner_itemlist"
             android:elevation="8dp"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:padding="12dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -56,6 +57,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/imgProfile"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="@drawable/round_corner_profile"
@@ -75,7 +77,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="20dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:gravity="center"
                     android:text="Address"
@@ -103,17 +105,18 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/tv_name"
+                            android:id="@+id/tv_name1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_semibold"
                             android:text="Kunjan Patel"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/tv_area"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_medium"
                             android:text="Maninagar, Ahmedabad"
                             android:textSize="12sp" />
 
@@ -128,78 +131,78 @@
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/colorGray" />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="25dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <LinearLayout
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@drawable/phone" />
+
+                    <TextView
+                        android:id="@+id/tv_mobile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
-                        android:orientation="horizontal">
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="9825450261"
+                        android:textColor="@color/com_facebook_blue"
+                        android:textSize="12sp" />
 
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:background="@drawable/phone" />
-
-                        <TextView
-                            android:id="@+id/tv_mobile"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="5dp"
-                            android:text="9825450261"
-                            android:textColor="@color/com_facebook_blue"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:background="@drawable/ic_email" />
-
-                        <TextView
-                            android:id="@+id/tv_email"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="5dp"
-                            android:text="kunjanshah@gmail.com"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorGray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@drawable/ic_email" />
+
+                    <TextView
+                        android:id="@+id/tv_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="kunjanshah@gmail.com"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="5dp"
                     android:background="@color/colorGray" />
 
                 <TextView
-                    android:id="@+id/tv_event"
+                    android:id="@+id/tv_addr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
+                    android:fontFamily="@font/montserrat_medium"
                     android:text="8/B Jay Garvi Gujarat Soc., Gor no Kuwa, Jashoda cross road. Maninagar(E)"
                     android:textSize="12sp" />
 
@@ -211,12 +214,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="15dp"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/tv_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -227,12 +231,12 @@
             <TextView
                 android:id="@+id/tv_add"
                 android:layout_width="wrap_content"
-                android:text="Add Member"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="30dp"
-                android:textSize="14sp"
-                android:textColor="@color/colorPrimary"
                 android:fontFamily="@font/montserrat_semibold"
-                android:layout_height="wrap_content" />
+                android:text="Add Member"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
             <!--<ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"

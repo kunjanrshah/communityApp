@@ -25,10 +25,8 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.databinding.FragmentBrowseCityBinding
-import com.krs.community.interfaces.IBrowseCityListener
-import com.krs.community.model.CitiesDatum
-import com.krs.community.model.City
-import com.krs.community.model.StateDatum
+import com.krs.community.entities.City
+import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.BrowseCityViewModel
 import com.krs.community.viewmodel.BrowseCityViewModelFactory
@@ -36,9 +34,8 @@ import kotlinx.android.synthetic.main.fragment_browse_city.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.util.*
 
-class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String, City>, IBrowseCityListener,KodeinAware {
+class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String, City>,KodeinAware {
 
     private lateinit var mAsyncExpandableListView: AsyncExpandableListView<String, City>
     private lateinit var shimmer_view_container: ShimmerFrameLayout
@@ -58,7 +55,6 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
         val view=  binding.root
 
         browseCityViewModel = ViewModelProviders.of(this,factory).get(BrowseCityViewModel::class.java)
-        browseCityViewModel?.iBrowsecityListener=this
 
         mAsyncExpandableListView = view.findViewById(R.id.asyncExpandableCollectionView)
         mAsyncExpandableListView.setCallbacks(this)
@@ -68,11 +64,32 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
         shimmer_view_container=view.findViewById(R.id.shimmer_view_container)
         shimmer_view_container.startShimmerAnimation()
         shimmer_view_container.visibility = View.VISIBLE
-        browseCityViewModel?.getUserStates()
+
+        getStatesFromDB()
 
         view.iv_cancel.setOnClickListener { v -> Utility.movetoFragment(activity, DashboardFragment()) }
         return view
     }
+
+    private fun getStatesFromDB()=Coroutines.main{
+        browseCityViewModel?.getStates()?.observeForever {
+            for ((index, stateData) in it.withIndex()) {
+                val group = inventory?.newGroup(index) //Integer.parseInt(stateData.id)// groupOrdinal is the smallest, displayed first
+                group?.headerItem = stateData.name
+            }
+            shimmer_view_container.stopShimmerAnimation()
+            shimmer_view_container.visibility = View.GONE
+            mAsyncExpandableListView.updateInventory(inventory)
+        }
+    }
+
+    private fun getCityFromDB(stateId:Int)=Coroutines.main{
+        browseCityViewModel?.getCitiesByState(stateId)?.observeForever {
+            val groupOrdinal=stateId-1
+            mAsyncExpandableListView.onFinishLoadingGroup(groupOrdinal,it)
+        }
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -87,7 +104,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
     }
 
     override fun onStartLoadingGroup(groupOrdinal: Int) {
-        browseCityViewModel?.fetchCitiesForStateId(groupOrdinal+1)
+        getCityFromDB(groupOrdinal+1)
     }
 
     override fun newCollectionHeaderView(context: Context, groupOrdinal: Int, parent: ViewGroup): AsyncHeaderViewHolder {
@@ -107,42 +124,14 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
 
     override fun bindCollectionItemView(context: Context, holder: RecyclerView.ViewHolder, i: Int, item: City) {
         val cityItemHolder = holder as CityItemHolder
-        cityItemHolder.textViewCity.text = item.cityName
-        cityItemHolder.city_id=item.cityId
-        if (item.cityName.equals("other", ignoreCase = true)) {
+        cityItemHolder.textViewCity.text = item.name
+        cityItemHolder.city_id=item.id.toString()
+        if (item.name.equals("other", ignoreCase = true)) {
             cityItemHolder.textViewDevider.visibility = View.GONE
         } else {
             cityItemHolder.textViewDevider.visibility = View.VISIBLE
         }
     }
-
-    override fun getStates(data: List<StateDatum>) {
-        for ((index, stateData) in data.withIndex()) {
-            val group = inventory?.newGroup(index) // groupOrdinal is the smallest, displayed first
-            group?.headerItem = stateData.state
-        }
-        shimmer_view_container.stopShimmerAnimation()
-        shimmer_view_container.visibility = View.GONE
-        mAsyncExpandableListView.updateInventory(inventory)
-    }
-
-    override suspend fun getFailure(message: String) {
-        Utility.hideProgress()
-    }
-
-    override fun getCities(id:Int,data: List<CitiesDatum>) {
-        val items = ArrayList<City>()
-        if(!data.isNullOrEmpty()){
-            for ((index, value) in data.withIndex()) {
-                val city = City()
-                city.cityId = data.get(index).id
-                city.cityName = data.get(index).city
-                items.add(city)
-            }
-        }
-        mAsyncExpandableListView.onFinishLoadingGroup(id-1,items)
-    }
-
 
     inner class CityItemHolder internal constructor(v: View) : RecyclerView.ViewHolder(v) {
 
@@ -181,6 +170,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
             mProgressBar.indeterminateDrawable.setColorFilter(-0x1, android.graphics.PorterDuff.Mode.MULTIPLY)
             ivExpansionIndicator = v.findViewById(R.id.ivExpansionIndicator)
         }
+
 
         override fun onGroupStartExpending() {
             mProgressBar.visibility = View.VISIBLE

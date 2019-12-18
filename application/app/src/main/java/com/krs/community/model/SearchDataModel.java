@@ -16,7 +16,7 @@ public class SearchDataModel {
     @SerializedName("totalMem")
     @Expose
     private Integer totalMem;
-    @SerializedName("data")
+    @SerializedName("members")
     @Expose
     private SearchData data;
     @SerializedName("users")

@@ -259,6 +259,16 @@ public class AtoZBottomAdapter extends BaseAdapter {
                 SearchCityResult.Companion.getDialog().dismiss();
             }
         });
+
+        viewHolder.tv_all.setOnClickListener(v -> {
+            Toast.makeText(_context, "Selected 'ALL'", Toast.LENGTH_SHORT).show();
+            SearchCityResult.Companion.setAlpha("");
+            mISortingRecords.getRecords();
+            if (SearchCityResult.Companion.getDialog() != null) {
+                SearchCityResult.Companion.getDialog().dismiss();
+            }
+        });
+
         return convertView;
     }
 
@@ -268,7 +278,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
 
     private class AtoZViewHolder {
         TextView tv_a, tv_b, tv_c, tv_d, tv_e, tv_f, tv_g, tv_h, tv_i, tv_j, tv_k, tv_l,
-                tv_m, tv_n, tv_o, tv_p, tv_q, tv_r, tv_s, tv_t, tv_u, tv_v, tv_w, tv_x, tv_y, tv_z;
+                tv_m, tv_n, tv_o, tv_p, tv_q, tv_r, tv_s, tv_t, tv_u, tv_v, tv_w, tv_x, tv_y, tv_z,tv_all;
 
         AtoZViewHolder(View view) {
             tv_a = view.findViewById(R.id.tv_a);
@@ -297,7 +307,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             tv_x = view.findViewById(R.id.tv_x);
             tv_y = view.findViewById(R.id.tv_y);
             tv_z = view.findViewById(R.id.tv_z);
-
+            tv_all= view.findViewById(R.id.tv_all);
         }
     }
 

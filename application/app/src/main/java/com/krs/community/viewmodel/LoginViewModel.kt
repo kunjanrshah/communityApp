@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Intent
 import android.os.CountDownTimer
 import android.util.Log
-import android.widget.Toast
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -21,7 +20,6 @@ import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import org.json.JSONObject
 
 
 class LoginViewModel(private val loginRepository: LoginRepository,
@@ -37,6 +35,7 @@ class LoginViewModel(private val loginRepository: LoginRepository,
     var mAuth: FirebaseAuth? = null
     var cTimer: CountDownTimer? = null
     var status = MutableLiveData<Boolean?>()
+    var stopTime = MutableLiveData<Boolean?>()
 
     fun startTimer() {
         cTimer = object : CountDownTimer(1000 * 60 * 2, 1000) {
@@ -57,11 +56,13 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                     secs = seconds.toString()
                 }
                 otp_timer?.set("$mins:$secs")
-
+                stopTime.value=false
                 Log.d(TAG, "remaining time: " + otp_timer?.get())
             }
 
             override fun onFinish() {
+                stopTime.value=true
+
                 Log.d(TAG, "onFinish")
             }
         }
@@ -87,7 +88,7 @@ class LoginViewModel(private val loginRepository: LoginRepository,
             loginRequest.login_type = "1"
             getLoginUser(loginRequest)
         } catch (e: Exception) {
-            Utility.hideProgress()
+            Utility.hideSweetProgress()
             e.printStackTrace()
         }
     }
@@ -112,11 +113,11 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                         getLoginUser(loginRequest)
                     } else {
                         status.value=false
-                        Utility.hideProgress()
+                        Utility.hideSweetProgress()
                     }
                 }
             } else {
-                Utility.hideProgress()
+                Utility.hideSweetProgress()
                 status.value=false
                 Log.w(TAG, "signInWithCredential:failure", task.exception)
             }

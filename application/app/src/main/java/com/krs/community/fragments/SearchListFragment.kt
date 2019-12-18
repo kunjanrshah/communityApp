@@ -119,8 +119,6 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
 
-
-
         rv_search = rootView.findViewById(R.id.rv_search)
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
         swipeRefreshLayout = rootView.findViewById<View>(R.id.swipe_refresh_layout) as SwipeRefreshLayout
@@ -233,9 +231,8 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if (getSelectedItemCount() > 0) {
             enableActionMode(position)
         } else {
-            val fragmentTransaction = initFragmentTransaction(v)
-            fragmentTransaction?.commitAllowingStateLoss()
-
+            /*val fragmentTransaction = initFragmentTransaction(v)
+            fragmentTransaction.commitAllowingStateLoss()*/
         }
     }
 
@@ -400,17 +397,17 @@ class SearchListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }, 500)
     }
 
-    private fun initFragmentTransaction(view: View): FragmentTransaction? {
+   /* private fun initFragmentTransaction(view: View): FragmentTransaction? {
 
         val adapterPosition = rv_search!!.getChildAdapterPosition(view)
-        val detailsFragment = FamilyDetailFragment.newInstance(adapterPosition)
+        val detailsFragment = FamilyDetailActivity.newInstance(adapterPosition)
          val transaction = fragmentManager?.beginTransaction()
                 ?.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                ?.replace(R.id.container_body, detailsFragment, FamilyDetailFragment.TAG)
+                ?.replace(R.id.container_body, detailsFragment, FamilyDetailActivity.TAG)
                 ?.addToBackStack(null)
 
         return transaction
-    }
+    }*/
 
 
     private inner class ActionModeCallback : ActionMode.Callback {

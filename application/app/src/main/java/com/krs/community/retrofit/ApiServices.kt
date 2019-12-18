@@ -1,8 +1,10 @@
 package com.krs.community.retrofit
 
 
+import com.google.gson.JsonObject
 import com.krs.community.app.AppController
 import com.krs.community.model.*
+import com.krs.community.responses.*
 import com.krs.community.utils.AppConstants
 import retrofit2.Response
 import retrofit2.http.Body
@@ -10,23 +12,83 @@ import retrofit2.http.POST
 
 interface ApiServices {
 
-    @POST(AppConstants.UrlPath.GET_SUBCASTE)
-    suspend fun getUserLastName(): Response<LastNameModel>
+    @POST(AppConstants.UrlPath.UPDATE_PROFILE)
+    suspend fun updateProfile(@Body request:JsonObject): Response<UpdateProfileResponse>
+
+    @POST(AppConstants.UrlPath.GET_COMMITTEE)
+    suspend fun getCommittee(@Body request:JsonObject): Response<CommitteeResponse>
+
+    @POST(AppConstants.UrlPath.GET_DESIGNATION)
+    suspend fun getDesignation(@Body request:JsonObject): Response<DesignationResponse>
+
+    @POST(AppConstants.UrlPath.GET_SUB_COMM)
+    suspend fun getSubCommunity(@Body request:JsonObject): Response<SubCommResponse>
+
+    @POST(AppConstants.UrlPath.GET_LOCAL_COMM)
+    suspend fun getLocalCommunity(@Body request:JsonObject): Response<ResponseModel>
+
+    @POST(AppConstants.UrlPath.GET_LIST_LOCAL_COMM)
+    suspend fun getListLocalCommunity(@Body request:JsonObject): Response<LocalCommResponse>
+
+    @POST(AppConstants.UrlPath.GET_LIST_CITY)
+    suspend fun getListCity(@Body request:JsonObject): Response<CityResponse>
+
+    @POST(AppConstants.UrlPath.GET_LIST_BUSINESS_SUB_CATEGORY)
+    suspend fun getListBusinessSubCategory(@Body request:JsonObject): Response<BusinessSubResponse>
+
+    @POST(AppConstants.UrlPath.GET_RELATIONS)
+    suspend fun getRelations(@Body request:JsonObject): Response<RelationsResponse>
 
     @POST(AppConstants.UrlPath.GET_STATE)
-    suspend fun getUserState(): Response<StatesModel>
+    suspend fun getUserState(@Body request:JsonObject): Response<StateResponse>
 
     @POST(AppConstants.UrlPath.GET_CITIES)
-    suspend fun getUserCities(@Body request: AppConstants.CitiesRequest): Response<CitiesModel>
+    suspend fun getUserCities(@Body request:JsonObject): Response<ResponseModel>
+
+    @POST(AppConstants.UrlPath.GET_NATIVE)
+    suspend fun getNative(@Body request:JsonObject): Response<NativeResponse>
+
+    @POST(AppConstants.UrlPath.GET_SUBCASTE)
+    suspend fun getUserLastName(@Body request:JsonObject): Response<LastNameResponse>
+
+    @POST(AppConstants.UrlPath.GET_GOTRA)
+    suspend fun getGotra(@Body request:JsonObject): Response<GotraResponse>
+
+    @POST(AppConstants.UrlPath.GET_EDUCATION)
+    suspend fun getEducation(@Body request:JsonObject): Response<EducationResponse>
+
+    @POST(AppConstants.UrlPath.GET_ACTIVITY)
+    suspend fun getActivity(@Body request:JsonObject): Response<ActivityResponse>
+
+    @POST(AppConstants.UrlPath.GET_BUSINESS_CATEGORY)
+    suspend fun getBusinessCategory(@Body request:JsonObject): Response<BusinessCategoryResponse>
+
+    @POST(AppConstants.UrlPath.GET_BUSINESS_SUB_CATEGORY)
+    suspend fun getBusinessSubCategory(@Body request:JsonObject): Response<ResponseModel>
+
+    @POST(AppConstants.UrlPath.GET_OCCUPATION)
+    suspend fun getOccupation(@Body request:JsonObject): Response<OccupationResponse>
+
+    @POST(AppConstants.UrlPath.ADD_MEMBER)
+    suspend fun addMember(@Body request:JsonObject): Response<AddProfileResponse>
+
+    @POST(AppConstants.UrlPath.DELETE_MEMBER)
+    suspend fun deleteMember(@Body request:JsonObject): Response<DeleteProfileResponse>
+
+    @POST(AppConstants.UrlPath.GET_STATISTICS)
+    suspend fun getStatistics(@Body request:JsonObject): Response<StatisticResponse>
+
+    @POST(AppConstants.UrlPath.GET_SMART_FILTER)
+    suspend fun getSearchByFilter(@Body request: SearchData): Response<SmartFilterResponse>
+
+    @POST(AppConstants.UrlPath.GET_SEARCH_NEAR_BY)
+    suspend fun getSearchByDistance(@Body request: ByDistanceModel): Response<ByDistanceResponse>
+
+    @POST(AppConstants.UrlPath.GET_FAMILY_MEMBER)
+    suspend fun getFamilyMembers(@Body request: JsonObject): Response<FamilyDetailResponse>
 
     @POST(AppConstants.UrlPath.GET_SEARCH_BY_CITY)
     suspend fun getSearchByCity(@Body request: SearchByCityData): Response<SearchByCityModel>
-
-    @POST(AppConstants.UrlPath.GET_SUBCOMM)
-    suspend fun getSubCommunity(): Response<SubCommModel>
-
-    @POST(AppConstants.UrlPath.GET_LOCALCOMM)
-    suspend fun getLocalCommunity(@Body request: AppConstants.LocalCommRequest): Response<LocalCommModel>
 
     @POST(AppConstants.UrlPath.GET_REGISTER)
     suspend fun getUserRegister(@Body request: AppConstants.UserRegister): Response<RegisterModel>
@@ -40,12 +102,10 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_CHANGE_PASS)
     suspend fun getUserChangePass(@Body request: AppConstants.ChangePass): Response<ChangePassModel>
 
-    @POST(AppConstants.UrlPath.GET_SEARCH_DATA)
-    suspend fun getSearchData(@Body request: AppConstants.ChangePass): Response<SearchDataModel>
 
     companion object{
         operator fun invoke():ApiServices{
-            return AppController.mApplication?.retrofitBase?.apiServices!!
+            return AppController.mApplication.retrofitBase.apiServices
         }
     }
 }

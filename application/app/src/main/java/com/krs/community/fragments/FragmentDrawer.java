@@ -24,8 +24,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.squti.guru.Guru;
+import com.krs.community.BuildConfig;
 import com.krs.community.R;
 import com.krs.community.activity.LoginActivity;
+import com.krs.community.activity.SplashActivity;
 import com.krs.community.adapter.NavigationDrawerAdapter;
 import com.krs.community.model.NavDrawerItem;
 import com.krs.community.utils.AppConstants;
@@ -97,11 +100,15 @@ public class FragmentDrawer extends Fragment {
 
         LinearLayout ll_logout=layout.findViewById(R.id.ll_logout);
         ll_logout.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            Guru.clear();
+            Intent intent = new Intent(getActivity(), SplashActivity.class);
             startActivity(intent);
             getActivity().finish();
             Utility.fade(getActivity());
         });
+
+        TextView tv_version=layout.findViewById(R.id.tv_version);
+        tv_version.setText("Version "+BuildConfig.VERSION_NAME);
 
         tv_settings.setOnClickListener(v -> {
             mDrawerLayout.closeDrawers();
