@@ -1,0 +1,25 @@
+package com.krs.community.dao
+
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.krs.community.entities.Educations
+import com.krs.community.entities.SubCommunity
+
+@Dao
+interface EducationDao {
+
+    @Query("SELECT name FROM Educations")
+    fun getEducations() : LiveData<List<String>>
+
+    @Query("SELECT id FROM Educations")
+    fun getEducationIds() : LiveData<List<Int>>
+
+    @Query("SELECT name FROM Educations WHERE id == :id")
+    fun getEducationById(id:Int) : LiveData<String>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveAllEducation(educations : List<Educations>)
+}

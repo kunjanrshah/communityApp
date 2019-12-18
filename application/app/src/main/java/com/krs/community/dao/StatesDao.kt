@@ -1,0 +1,28 @@
+package com.krs.community.dao
+
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.krs.community.entities.States
+import com.krs.community.entities.SubCommunity
+
+@Dao
+interface StatesDao {
+
+    @Query("SELECT * FROM States")
+    fun getStates() : LiveData<List<States>>
+
+    @Query("SELECT name FROM States")
+    fun getStateNames() : LiveData<List<String>>
+
+    @Query("SELECT name FROM States WHERE id == :id")
+    fun getstateNameById(id:Int) : LiveData<String>
+
+    @Query("SELECT id FROM States")
+    fun getStateIds() : LiveData<List<Int>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveAllStates(state : List<States>)
+}

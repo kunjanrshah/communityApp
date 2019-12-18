@@ -1,0 +1,26 @@
+package com.krs.community.dao
+
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.krs.community.entities.BusinessCategory
+import com.krs.community.entities.CurrentActivity
+import com.krs.community.entities.SubCommunity
+
+@Dao
+interface CurrentActivityDao {
+
+    @Query("SELECT name FROM CurrentActivity")
+    fun getCurrentActivity() : LiveData<List<String>>
+
+    @Query("SELECT id FROM CurrentActivity")
+    fun getCurrentActivityIds() : LiveData<List<Int>>
+
+    @Query("SELECT name FROM CurrentActivity WHERE id == :id")
+    fun getCurrentActivityById(id:Int) : LiveData<String>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveAllCurrentActivity(currentActivity : List<CurrentActivity>)
+}

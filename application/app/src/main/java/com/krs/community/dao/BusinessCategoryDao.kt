@@ -1,0 +1,25 @@
+package com.krs.community.dao
+
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.krs.community.entities.BusinessCategory
+import com.krs.community.entities.SubCommunity
+
+@Dao
+interface BusinessCategoryDao {
+
+    @Query("SELECT name FROM BusinessCategory")
+    fun getBusinessCategorys() : LiveData<List<String>>
+
+    @Query("SELECT id FROM BusinessCategory")
+    fun getBusinessCategoryIds() : LiveData<List<Int>>
+
+    @Query("SELECT name FROM BusinessCategory WHERE id == :id")
+    fun getBusinessCategoryById(id:Int) : LiveData<String>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveAllBusinessCategory(businessCategory : List<BusinessCategory>)
+}
