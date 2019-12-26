@@ -8,15 +8,9 @@ class LoginRepository(
     private val api:ApiServices
 ): SafeApiRequest() {
 
-    suspend fun getLogin(userLogin: AppConstants.LoginRequest): LoginModel {
+    suspend fun getLogin(userLogin: AppConstants.LoginRequest): LoginResponse {
         return apiRequest{
             api.getUserLogin(userLogin)
-        }
-    }
-
-    suspend fun userForgotPass(userPass: AppConstants.ForgotPass): ForgotPassModel {
-        return apiRequest{
-            api.getUserForgotPass(userPass)
         }
     }
 }

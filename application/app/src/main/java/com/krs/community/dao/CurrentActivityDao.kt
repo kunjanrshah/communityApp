@@ -21,6 +21,12 @@ interface CurrentActivityDao {
     @Query("SELECT name FROM CurrentActivity WHERE id == :id")
     fun getCurrentActivityById(id:Int) : LiveData<String>
 
+    @Query("SELECT id FROM CurrentActivity WHERE id NOT IN (:Ids)")
+    fun getRemovedActivityIds(Ids: List<String>) : List<Int>
+
+    @Query("DELETE FROM CurrentActivity WHERE id IN (:Ids)")
+    fun deleteActivityByIds(Ids: List<Int>) : Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllCurrentActivity(currentActivity : List<CurrentActivity>)
 }

@@ -6,6 +6,7 @@ import android.app.Application
 import android.content.Context
 import android.content.IntentFilter
 import android.graphics.Typeface
+import android.location.Location
 import android.os.StrictMode
 import android.text.TextUtils
 import androidx.core.content.res.ResourcesCompat
@@ -20,6 +21,7 @@ import com.github.squti.guru.GuruConfig
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.location.LocationRequest
 import com.krs.community.R
 import com.krs.community.repositories.*
 import com.krs.community.retrofit.ApiServices
@@ -39,18 +41,17 @@ import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
 
 
-class AppController : Application(), KodeinAware {
+class AppController : Application(), KodeinAware{
 
     internal var broadcastRevcevier: ConnectivityReceiver? = null
     lateinit var mGoogleSignInClient: GoogleSignInClient
 
-    var typeface: Typeface? = null
-    var typeface_bold: Typeface? = null
+    lateinit var typeface: Typeface
+    lateinit var typeface_bold: Typeface
     lateinit var retrofitBase: RetrofitBase
     lateinit var mRequestQueue: RequestQueue
     lateinit var mLruBitmapCache: LruBitmapCache
     lateinit var mImageLoader: ImageLoader
-
 
     companion object {
         val TAG = AppController::class.java.simpleName
@@ -67,11 +68,13 @@ class AppController : Application(), KodeinAware {
         bind() from singleton {  RegisterRepository(instance(),instance()) }
         bind() from singleton {  LoginRepository(instance()) }
         bind() from singleton {  BrowseCityRepository(instance(),instance()) }
-        bind() from singleton {  ByDistanceRepository(instance()) }
+        bind() from singleton {  ByDistanceRepository(instance(),instance()) }
         bind() from singleton {  FamilyDetailRepository(instance()) }
         bind() from singleton {  ProfileDetailRepository(instance(),instance()) }
         bind() from singleton {  DashboardRepository(instance(),instance()) }
+        bind() from singleton {  StatisticsRepository(instance(),instance()) }
 
+        bind() from provider { StatisticsViewModelFactory(instance()) }
         bind() from provider { FamilyDetailViewModelFactory(instance()) }
         bind() from provider { RegisterViewModelFactory(instance()) }
         bind() from provider { LoginViewModelFactory(instance()) }
@@ -86,9 +89,10 @@ class AppController : Application(), KodeinAware {
         super.onCreate()
 
         mApplication = this
-        FacebookSdk.sdkInitialize(this.getApplicationContext());
-        typeface = ResourcesCompat.getFont(applicationContext, R.font.montserrat_regular)
-        typeface_bold = ResourcesCompat.getFont(applicationContext, R.font.montserrat_semibold)
+        FacebookSdk.sdkInitialize(applicationContext);
+
+        typeface = ResourcesCompat.getFont(applicationContext, R.font.montserrat_regular)!!
+        typeface_bold = ResourcesCompat.getFont(applicationContext, R.font.montserrat_semibold)!!
 
         retrofitBase = RetrofitBase(this, false)
 
@@ -158,4 +162,6 @@ class AppController : Application(), KodeinAware {
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(LocaleHelper.onAttach(base, "en"))
     }
+
+
 }

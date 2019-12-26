@@ -14,9 +14,17 @@ import kotlinx.coroutines.withContext
 class ProfileDetailRepository (private val api: ApiServices,private val db:AppDatabase
 ): SafeApiRequest()  {
 
+
+
     suspend fun updateProfile(profile: JsonObject): UpdateProfileResponse {
         return apiRequest{
             api.updateProfile(profile)
+        }
+    }
+
+    suspend fun addProfile(profile: JsonObject): UpdateProfileResponse {
+        return apiRequest{
+            api.addMember(profile)
         }
     }
 

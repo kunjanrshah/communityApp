@@ -8,11 +8,13 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
+import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.ViewUtils
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -47,6 +49,23 @@ fun View.snackbar(message: String,snack:Int ){
             snackbar.dismiss()
         }
     }.show()
+}
+
+fun View.snack(message:String, left:Int = 10, top:Int = 10, right:Int = 10, bottom:Int = 10, duration:Int = Snackbar.LENGTH_SHORT){
+    Snackbar.make(this, message, duration).apply {
+
+        val params = CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT )
+        params.setMargins(left, top, right, bottom)
+        params.gravity = Gravity.BOTTOM
+        params.anchorGravity = Gravity.BOTTOM
+
+        view.layoutParams = params
+        show()
+    }
+}
+
+fun View.longSnack(message:String){
+    snack(message, duration = Snackbar.LENGTH_LONG)
 }
 
 var logger: Logger=Logger(ViewUtils::class.java.simpleName)

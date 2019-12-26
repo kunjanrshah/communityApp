@@ -13,21 +13,22 @@ public class StatisticResponse {
     private Boolean success;
     @SerializedName("data")
     @Expose
-    private List<Statistics> data = null;
+    private Statistics data;
 
-    public List<Statistics> getData() {
-        return data;
-    }
-
-    public void setData(List<Statistics> data) {
-        this.data = data;
-    }
     public Boolean getSuccess() {
         return success;
     }
 
     public void setSuccess(Boolean success) {
         this.success = success;
+    }
+
+    public Statistics getData() {
+        return data;
+    }
+
+    public void setData(Statistics data) {
+        this.data = data;
     }
 
 }

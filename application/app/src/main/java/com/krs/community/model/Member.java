@@ -8,6 +8,9 @@ import java.io.Serializable;
 
 public class Member implements Serializable {
 
+    @SerializedName("access_token")
+    @Expose
+    private String accessToken="";
     @SerializedName("profile_completed")
     @Expose
     private String profileCompleted="0%";
@@ -232,6 +235,11 @@ public class Member implements Serializable {
     @SerializedName("is_location_enable")
     @Expose
     private String isLocationEnable="0";
+
+    @SerializedName("updated_dt")
+    @Expose
+    private String updatedDt="0";
+
 
     public String getProfileCompleted() {
         return profileCompleted;
@@ -823,5 +831,21 @@ public class Member implements Serializable {
 
     public void setRelation(String relation) {
         this.relation = relation;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getUpdatedDt() {
+        return updatedDt;
+    }
+
+    public void setUpdatedDt(String updatedDt) {
+        this.updatedDt = updatedDt;
     }
 }

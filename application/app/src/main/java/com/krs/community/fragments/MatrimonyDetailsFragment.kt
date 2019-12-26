@@ -37,7 +37,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_matrimony_details, container, false)
 
         profileDetailViewModel = ViewModelProviders.of(this, factory).get(ProfileDetailViewModel::class.java)
-        member = arguments?.getSerializable("member") as Member
+        member = arguments?.getSerializable(getString(R.string.member)) as Member
 
 
         binding.edtAbout.setText(member.aboutMe)
@@ -76,7 +76,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         })
 
         binding.edtAbout.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action === KeyEvent.ACTION_DOWN) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN) {
                 val editTextLineCount: Int = (v as EditText).getLineCount()
                 if (editTextLineCount >= numberOfLines) return@OnKeyListener true
             }

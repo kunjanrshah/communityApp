@@ -2,6 +2,7 @@ package com.krs.community.responses;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.krs.community.model.Member;
 
 public class UpdateProfileResponse {
 
@@ -11,6 +12,9 @@ public class UpdateProfileResponse {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("data")
+    @Expose
+    private Member member;
 
     public String getMessage() {
         return message;
@@ -26,5 +30,13 @@ public class UpdateProfileResponse {
 
     public void setSuccess(Boolean success) {
         this.success = success;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 }

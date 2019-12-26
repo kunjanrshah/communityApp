@@ -25,6 +25,14 @@ public class ByDistanceModel {
     @Expose
     private String km;
 
+    @SerializedName("start")
+    @Expose
+    private String start;
+
+    @SerializedName("length")
+    @Expose
+    private String length;
+
     public String getUserId() {
         return userId;
     }
@@ -73,4 +81,19 @@ public class ByDistanceModel {
         this.km = km;
     }
 
+    public String getLength() {
+        return length;
+    }
+
+    public void setLength(String length) {
+        this.length = length;
+    }
+
+    public String getStart() {
+        return start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
 }

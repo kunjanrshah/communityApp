@@ -20,6 +20,12 @@ interface BusinessSubCategoryDao {
     @Query("SELECT name FROM BusinessSubCategory WHERE id == :id")
     fun getBusinessSubCategoryById(id:Int) : LiveData<String>
 
+    @Query("SELECT id FROM BusinessSubCategory WHERE id NOT IN (:Ids)")
+    fun getRemovedSubCategoryIds(Ids: List<String>) : List<Int>
+
+    @Query("DELETE FROM BusinessSubCategory WHERE id IN (:Ids)")
+    fun deleteSubCategoryByIds(Ids: List<Int>) : Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllBusinessSubCategory(businessSubCategory : List<BusinessSubCategory>)
 }

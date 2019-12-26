@@ -23,6 +23,14 @@ interface StatesDao {
     @Query("SELECT id FROM States")
     fun getStateIds() : LiveData<List<Int>>
 
+    @Query("SELECT id FROM States WHERE id NOT IN (:Ids)")
+    fun getRemovedStateIds(Ids: List<String>) : List<Int>
+
+    @Query("DELETE FROM States WHERE id IN (:Ids)")
+    fun deleteStateByIds(Ids: List<Int>) : Int
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllStates(state : List<States>)
+
 }

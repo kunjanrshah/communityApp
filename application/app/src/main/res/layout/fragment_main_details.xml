@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 <LinearLayout
+    android:id="@+id/ll_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/border"
@@ -527,15 +528,44 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/ll_home"
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/location"
+                        android:layout_height="15dp" />
+                    <TextView
+                        android:id="@+id/tv_distance"
+                        android:layout_width="wrap_content"
+                        android:text="Home"
+                        android:textSize="14sp"
+                        android:singleLine="true"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
 
                 <CheckBox
                     android:id="@+id/chk_rented"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/montserrat_regular"
                     android:text="Rented" />
+                </LinearLayout>
 
             </LinearLayout>
 

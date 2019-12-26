@@ -16,6 +16,12 @@ interface CommitteeDao {
     @Query("SELECT * FROM Committee")
     fun getCommittee() : LiveData<List<Committee>>
 
+    @Query("SELECT id FROM Committee WHERE id NOT IN (:Ids)")
+    fun getRemovedCommitteeIds(Ids: List<String>) : List<Int>
+
+    @Query("DELETE FROM Committee WHERE id IN (:Ids)")
+    fun deleteCommitteeByIds(Ids: List<Int>) : Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllCommittee(committee : List<Committee>)
 }

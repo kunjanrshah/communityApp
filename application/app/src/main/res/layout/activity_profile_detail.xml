@@ -53,9 +53,9 @@
         <TextView
             android:id="@+id/tv_percent"
             android:layout_width="wrap_content"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:layout_marginTop="-7dp"
-            android:layout_marginLeft="60dp"
+            android:layout_marginLeft="75dp"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/montserrat_medium"
             android:textColor="@color/colorPrimary"
@@ -134,7 +134,7 @@
 
 
                 <com.github.angads25.toggle.widget.LabeledSwitch
-                    android:id="@+id/switch4"
+                    android:id="@+id/user_location"
                     android:layout_width="60dp"
                     android:layout_height="30dp"
                     android:textSize="12sp"
@@ -144,13 +144,37 @@
                     app:colorOn="@color/colorPrimary"
                     app:colorBorder="@color/colorPrimary"/>
 
+                <LinearLayout
+                    android:id="@+id/ll_work"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
-                <TextView
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/location" />
+
+                    <TextView
+                        android:id="@+id/tv_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:singleLine="true"
+                        android:text="User"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+                <!--<TextView
                     android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:text="Share Location" />
+                    android:text="User Location" />-->
             </LinearLayout>
 
         </LinearLayout>

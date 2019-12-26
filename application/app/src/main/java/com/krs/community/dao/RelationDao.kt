@@ -19,6 +19,12 @@ interface RelationDao {
     @Query("SELECT name FROM Relations WHERE id == :id")
     fun getRelationById(id:Int) : LiveData<String>
 
+    @Query("SELECT id FROM Relations WHERE id NOT IN (:Ids)")
+    fun getRemovedRelationIds(Ids: List<String>) : List<Int>
+
+    @Query("DELETE FROM Relations WHERE id IN (:Ids)")
+    fun deleteRelationByIds(Ids: List<Int>) : Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllRelation(subCommunity : List<Relations>)
 }

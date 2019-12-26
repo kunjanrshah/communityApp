@@ -23,6 +23,11 @@ interface LastNameDao {
     @Query("SELECT name FROM LastName WHERE id == :id")
     fun getLastName(id:Int) : String
 
+    @Query("SELECT id FROM LastName WHERE id NOT IN (:Ids)")
+    fun getRemovedLastNameIds(Ids: List<String>) : List<Int>
+
+    @Query("DELETE FROM LastName WHERE id IN (:Ids)")
+    fun deleteLastNameByIds(Ids: List<Int>) : Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllLastName(subCommunity : List<LastName>)

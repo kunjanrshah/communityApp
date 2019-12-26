@@ -15,6 +15,12 @@ interface DesignationDao {
     @Query("SELECT * FROM Designation")
     fun getDesignation() : LiveData<List<Designation>>
 
+    @Query("SELECT id FROM Designation WHERE id NOT IN (:Ids)")
+    fun getRemovedDesignationIds(Ids: List<String>) : List<Int>
+
+    @Query("DELETE FROM Designation WHERE id IN (:Ids)")
+    fun deleteDesignationByIds(Ids: List<Int>) : Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllDesignation(designation : List<Designation>)
 }

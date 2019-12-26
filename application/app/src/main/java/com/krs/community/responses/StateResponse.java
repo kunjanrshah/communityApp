@@ -24,7 +24,9 @@ public class StateResponse {
     @SerializedName("data")
     @Expose
     private List<States> data = null;
-
+    @SerializedName("deleted")
+    @Expose
+    private List<String> deleted = null;
     public Boolean getSuccess() {
         return success;
     }
@@ -55,5 +57,13 @@ public class StateResponse {
 
     public void setLast_updated(String last_updated) {
         this.last_updated = last_updated;
+    }
+
+    public List<String> getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(List<String> deleted) {
+        this.deleted = deleted;
     }
 }

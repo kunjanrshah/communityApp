@@ -14,6 +14,10 @@ public class ByDistanceResponse {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("total_records")
+    @Expose
+    private String totalRecords;
+
     @SerializedName("members")
     @Expose
     private List<Member> member = null;
@@ -42,4 +46,11 @@ public class ByDistanceResponse {
         this.member = member;
     }
 
+    public String getTotalRecords() {
+        return totalRecords;
+    }
+
+    public void setTotalRecords(String totalRecords) {
+        this.totalRecords = totalRecords;
+    }
 }

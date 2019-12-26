@@ -14,6 +14,12 @@ interface LocalCommunityDao {
     @Query("SELECT * FROM LocalCommunity")
     fun getLocalCommunity() : LiveData<List<LocalCommunity>>
 
+    @Query("SELECT id FROM LocalCommunity WHERE id NOT IN (:Ids)")
+    fun getRemovedLocalCommunityIds(Ids: List<String>) : List<Int>
+
+    @Query("DELETE FROM LocalCommunity WHERE id IN (:Ids)")
+    fun deleteLocalCommunityByIds(Ids: List<Int>) : Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllLocalCommunities(subCommunity : List<LocalCommunity>)
 }

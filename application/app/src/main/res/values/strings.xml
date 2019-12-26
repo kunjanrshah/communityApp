@@ -349,6 +349,7 @@
     <string name="is_shani" translatable="false">is_shani</string>
     <string name="updated_dt" translatable="false">updated_dt</string>
     <string name="user_id" translatable="false">user_id</string>
+    <string name="user_mobile" translatable="false">user_mobile</string>
     <string name="access_token" translatable="false">access_token</string>
     <string name="date" translatable="false">date</string>
     <string name="state" translatable="false">state</string>
@@ -366,5 +367,15 @@
     <string name="occupation" translatable="false">occupation</string>
     <string name="_native" translatable="false">native</string>
     <string name="business_sub_category" translatable="false">business_sub_category</string>
+    <string name="id" translatable="false">id</string>
+    <string name="is_location_enable" translatable="false">is_location_enable</string>
+    <string name="user_lat" translatable="false">user_lat</string>
+    <string name="user_lng" translatable="false">user_lng</string>
+    <string name="home_lat" translatable="false">home_lat</string>
+    <string name="home_lng" translatable="false">home_lng</string>
+    <string name="office_lat" translatable="false">office_lat</string>
+    <string name="office_lng" translatable="false">office_lng</string>
+    <string name="loginUser" translatable="false">loginUser</string>
+    <string name="member" translatable="false">member</string>
 
 </resources>

@@ -2,6 +2,7 @@ package com.krs.community.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import com.krs.community.interfaces.ByDistanceListener
 import com.krs.community.model.ByDistanceModel
 import com.krs.community.repositories.BrowseCityRepository
@@ -17,6 +18,11 @@ class ByDistanceViewModel(
     var job_by_distance: CompletableJob? = null
     var TAG: String = ByDistanceViewModel::class.java.simpleName
     var mByDistanceListener: ByDistanceListener? = null
+
+
+    suspend fun getCityNamebyId(id:String):LiveData<String>{
+       return mByDistanceRepository.getCityName(id)
+    }
 
     fun getUserByDistance(distance: ByDistanceModel) {
         job_by_distance = Job()

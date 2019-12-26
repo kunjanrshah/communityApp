@@ -15,7 +15,8 @@ class FamilyDetailViewModel(
 
 
     var job_users: CompletableJob? = null
-    var mIFamilyMembersListener: IFamilyMembersListener?=null
+    lateinit var mIFamilyMembersListener: IFamilyMembersListener
+
     var TAG: String = FamilyDetailViewModel::class.java.simpleName
 
     fun getFamilyDetails(data: JsonObject) {
@@ -26,20 +27,46 @@ class FamilyDetailViewModel(
                     val response = mFamilyDetailRepository.getFamilyMembers(data)
                     response.let {
                         withContext(Dispatchers.Main) {
-                            mIFamilyMembersListener?.getFamilyMembers(response)
+                            mIFamilyMembersListener.getFamilyMembers(response)
                             thejob.complete()
                         }
                         return@launch
                     }
                 } catch (e: ApiException) {
-                    e.message?.let { mIFamilyMembersListener?.getFailure(it) }
+                    e.message?.let { mIFamilyMembersListener.getFailure(it) }
                 } catch (e: NoInternetException) {
-                    e.message?.let { mIFamilyMembersListener?.getFailure(it) }
+                    e.message?.let { mIFamilyMembersListener.getFailure(it) }
                 } catch (e: Exception) {
-                    e.message?.let { mIFamilyMembersListener?.getFailure(it) }
+                    e.message?.let { mIFamilyMembersListener.getFailure(it) }
                 }
                 thejob.complete()
             }
         }
     }
+
+    fun deleteMember(data: JsonObject) {
+        job_users = Job()
+        job_users.let { thejob ->
+            CoroutineScope(Dispatchers.IO + thejob!!).launch {
+                try {
+                    val response = mFamilyDetailRepository.deleteMember(data)
+                    response.let {
+                        withContext(Dispatchers.Main) {
+                            mIFamilyMembersListener.getMessage(response)
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                } catch (e: ApiException) {
+                    e.message?.let { mIFamilyMembersListener.getFailure(it) }
+                } catch (e: NoInternetException) {
+                    e.message?.let { mIFamilyMembersListener.getFailure(it) }
+                } catch (e: Exception) {
+                    e.message?.let { mIFamilyMembersListener.getFailure(it) }
+                }
+                thejob.complete()
+            }
+        }
+    }
+
 }

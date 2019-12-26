@@ -14,10 +14,13 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProviders
+import com.github.squti.guru.Guru
 import com.google.android.material.appbar.AppBarLayout
+import com.google.gson.Gson
 import com.krs.community.R
 import com.krs.community.fragments.*
 import com.krs.community.fragments.FragmentDrawer.FragmentDrawerListener
+import com.krs.community.model.Member
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.DashboardViewModel
@@ -52,18 +55,18 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware {
      //  val from= intent.getStringExtra("from")
      //  val id= intent.getStringExtra("id")
 
-        /*if (Guru.getString("user_id", "")!!.isEmpty()) {
+        if (Guru.getString(getString(R.string.user_id), "")!!.isEmpty()) {
             val mIntent = Intent(this@DashboardActivity, SplashActivity::class.java)
             startActivity(mIntent)
             finish()
             Utility.fade(this)
-        }*/
+        }
         setContentView(R.layout.activity_dashboard)
         val mToolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(mToolbar)
         mToolbar.setTitleTextColor(resources.getColor(R.color.colorPrimary))
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setTitle("Home")
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setTitle("Home")
 
         myAppBar = findViewById(R.id.myAppBar)
         myAppBar.setTranslationY(-toolbarHeight.toFloat())
@@ -141,16 +144,8 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware {
         })
         getMasterList()
         //spaceNavigationView.showIconOnly();
-  /*     if(from.isNullOrEmpty()){
-
-       }else{
-           val fragment=FamilyDetailActivity()
-           val bundle=Bundle()
-           bundle.putString("id",id)
-           fragment.arguments=bundle
-           Utility.movetoFragment(this,fragment)
-       }*/
     }
+
     private fun getMasterList() = Coroutines.main {
          dashboardViewModel.fetchState()
          dashboardViewModel.fetchCity()
@@ -207,7 +202,11 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware {
         return when (item.itemId) {
             R.id.action_profile -> {
                 val intent= Intent(this,ProfileDetailActivity::class.java)
+                val memberString= Guru.getString(getString(R.string.loginUser),"")
+                val member=Gson().fromJson(memberString, Member::class.java)
+                intent.putExtra(getString(R.string.member),member)
                 startActivity(intent)
+                Utility.fade(this)
                 true
             }
             R.id.action_notify -> {

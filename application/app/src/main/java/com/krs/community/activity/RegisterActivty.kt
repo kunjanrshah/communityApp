@@ -106,17 +106,17 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         edt_password.setOnTouchListener(fun(_: View, event: MotionEvent): Boolean {
             val DRAWABLE_RIGHT = 2
             if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= edt_password!!.right - edt_password!!.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
+                if (event.rawX >= edt_password.right - edt_password!!.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
                     if (isShow) {
-                        edt_password!!.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_show, 0)
-                        edt_password!!.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        edt_password.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_show, 0)
+                        edt_password.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                         isShow = false
                     } else {
-                        edt_password!!.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_hide, 0)
-                        edt_password!!.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        edt_password.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_hide, 0)
+                        edt_password.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
                         isShow = true
                     }
-                    edt_password!!.setSelection(edt_password!!.length())
+                    edt_password.setSelection(edt_password.length())
                     return true
                 }
             }
@@ -128,16 +128,16 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
             if (event.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= edt_cpassword!!.right - edt_cpassword!!.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
                     if (isShow1) {
-                        edt_cpassword!!.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_show, 0)
-                        edt_cpassword!!.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        edt_cpassword.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_show, 0)
+                        edt_cpassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                         isShow1 = false
                     } else {
-                        edt_cpassword!!.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_hide, 0)
-                        edt_cpassword!!.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        edt_cpassword.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.pwd_hide, 0)
+                        edt_cpassword.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
                         isShow1 = true
                     }
                     try {
-                        edt_cpassword!!.setSelection(edt_cpassword!!.length())
+                        edt_cpassword.setSelection(edt_cpassword.length())
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

@@ -3,12 +3,14 @@ package com.krs.community.utils;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
@@ -45,6 +47,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,15 +56,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.github.squti.guru.Guru;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.krs.community.R;
+import com.krs.community.activity.BaseActivity;
 import com.krs.community.model.ErrorObject;
+import com.krs.community.model.Member;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 import com.nightonke.boommenu.Util;
 
@@ -84,6 +94,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
@@ -103,13 +114,14 @@ public class Utility {
     public static String Title = "";
     public static String yyyy_MM_dd = "yyyy-MM-dd";
     public static String dd_MM_yyyy = "dd-MM-yyyy";
-
+    public static String yyyy_MM_dd_TIME = "yyyy-MM-dd HH:mm:ss";
+    public static String dd_MM_yyyy_TIME = "dd-MM-yyyy h:mm a";
     public static String dd_MMM_yyyy = "dd-MMM-yyyy";
     public static String ddMMMyyyy = "dd/MM/yyyy";
     public static SweetAlertDialog dialog = null;
     private static ProgressDialog pDialog;
     private static final String ALLOWED_CHARACTERS ="0123456789qwertyuiopasdfghjklzxcvbnm";
-
+    public static long INTERVAL=5*60*1000;
     public static String getRandomString(final int sizeOfRandomString)
     {
         final Random random=new Random();
@@ -154,17 +166,163 @@ public class Utility {
         Toast.makeText(context, ""+message, Toast.LENGTH_SHORT).show();
     }
 
-    public static InputFilter filter = new InputFilter() {
-        public CharSequence filter(CharSequence source, int start, int end,
-                                   Spanned dest, int dstart, int dend) {
-            for (int i = start; i < end; i++) {
-                if (Character.isWhitespace(source.charAt(i))) {
-                    return "";
-                }
-            }
-            return null;
+    public static void displaySnackBarWithBottomMargin(View main,String message) {
+        Snackbar snackbar = Snackbar.make(main, message, Snackbar.LENGTH_LONG);
+        final FrameLayout snackBarView = (FrameLayout) snackbar.getView();
+
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackBarView   .getLayoutParams();
+        params.setMargins(params.leftMargin+15,
+                params.topMargin,
+                params.rightMargin+15,
+                params.bottomMargin + 150);
+        snackBarView.setLayoutParams(params);
+        snackbar.show();
+    }
+
+    public static int calculatePercentage(Member member){
+        int percentage=0;
+        int empty=0;
+        int total=41;
+        
+        if(member.getMemberCode()==null || member.getMemberCode().isEmpty() ){
+            empty++;
+        }
+        if(member.getRelationId()==null||member.getRelationId().isEmpty()){
+            empty++;
+        }
+        if(member.getMobile()==null||member.getMobile().isEmpty()){
+            empty++;
+        }
+        if(member.getEmailAddress()==null||member.getEmailAddress().isEmpty()){
+            empty++;
         }
 
+        if(member.getFirstName()==null||member.getFirstName().isEmpty()){
+            empty++;
+        }
+        if(member.getFatherName()==null||member.getFatherName().isEmpty()){
+            empty++;
+        }
+        if(member.getMotherName()==null||member.getMotherName().isEmpty()){
+            empty++;
+        }
+        if(member.getSubCastId()==null||member.getSubCastId().isEmpty()){
+            empty++;
+        }
+        if(member.getGender()==null||member.getGender().isEmpty()){
+            empty++;
+        }
+        if(member.getAddress()==null||member.getAddress().isEmpty()){
+            empty++;
+        }
+        if(member.getLocalAddress()==null||member.getLocalAddress().isEmpty()){
+            empty++;
+        }
+        if(member.getCityId()==null||member.getCityId().isEmpty()){
+            empty++;
+        }
+
+        if(member.getStateId()==null||member.getStateId().isEmpty()){
+            empty++;
+        }
+        if(member.getArea()==null||member.getArea().isEmpty()){
+            empty++;
+        }
+        if(member.getPincode()==null||member.getPincode().isEmpty()){
+            empty++;
+        }
+       /* if(member.getPhone()==null||member.getPhone().isEmpty()){
+            empty++;
+        }*/
+        if(member.getBirthDate()==null||member.getBirthDate().isEmpty()){
+            empty++;
+        }
+        if(member.getBirthTime()==null||member.getBirthTime().isEmpty()){
+            empty++;
+        }
+        if(member.getBirthPlace()==null||member.getBirthPlace().isEmpty()){
+            empty++;
+        }
+        if(member.getNativePlaceId()==null||member.getNativePlaceId().isEmpty()){
+            empty++;
+        }
+        if(member.getBloodGroup()==null||member.getBloodGroup().isEmpty()){
+            empty++;
+        }
+        if(member.getAboutMe()==null||member.getAboutMe().isEmpty()){
+            empty++;
+        }
+        if(member.getWeight()==null||member.getWeight().isEmpty()){
+            empty++;
+        }
+        if(member.getHeight()==null||member.getHeight().isEmpty()){
+            empty++;
+        }
+        if(member.getHobby()==null||member.getHobby().isEmpty()){
+            empty++;
+        }
+        if(member.getFacebookProfile()==null||member.getFacebookProfile().isEmpty()){
+            empty++;
+        }
+        if(member.getCurrentActivityId()==null||member.getCurrentActivityId().isEmpty()){
+            empty++;
+        }
+        if(member.getMaritalStatus()==null||member.getMaritalStatus().isEmpty()){
+            empty++;
+        }
+        if(member.getMarriageDate()==null||member.getMarriageDate().isEmpty()){
+            empty++;
+        }
+        if(member.getGotraId()==null||member.getGotraId().isEmpty()){
+            empty++;
+        }
+        if(member.getBusinessCategoryId()==null||member.getBusinessCategoryId().isEmpty()){
+            empty++;
+        }
+        if(member.getBusinessSubCategoryId()==null||member.getBusinessSubCategoryId().isEmpty()){
+            empty++;
+        }
+        if(member.getWorkDetails()==null||member.getWorkDetails().isEmpty()){
+            empty++;
+        }
+        if(member.getCompanyName()==null||member.getCompanyName().isEmpty()){
+            empty++;
+        }
+        if(member.getBusinessAddress()==null||member.getBusinessAddress().isEmpty()){
+            empty++;
+        }
+        if(member.getProfilePic()==null||member.getProfilePic().isEmpty()){
+            empty++;
+        }
+        if(member.getBusinessLogo()==null||member.getBusinessLogo().isEmpty()){
+            empty++;
+        }
+        if(member.getWebsite()==null||member.getWebsite().isEmpty()){
+            empty++;
+        }
+        if(member.getEducationId()==null||member.getEducationId().isEmpty()){
+            empty++;
+        }
+        if(member.getOccupationId()==null||member.getOccupationId().isEmpty()){
+            empty++;
+        }
+        if(member.getHomeLat()==null||member.getHomeLat().isEmpty()){
+            empty++;
+        }
+        if(member.getHomeLng()==null||member.getHomeLng().isEmpty()){
+            empty++;
+        }
+        percentage=(100*empty)/total;
+       return (100-percentage);
+    }
+
+    public static InputFilter filter = (source, start, end, dest, dstart, dend) -> {
+        for (int i = start; i < end; i++) {
+            if (Character.isWhitespace(source.charAt(i))) {
+                return "";
+            }
+        }
+        return null;
     };
 
 
@@ -196,14 +354,35 @@ public class Utility {
         try{
             SimpleDateFormat inputFormat = new SimpleDateFormat(input);
             SimpleDateFormat outputFormat = new SimpleDateFormat(output);
-            Date date = inputFormat.parse(inputDateStr);
-            outputDateStr = outputFormat.format(date);
+            if(!inputDateStr.isEmpty()){
+                Date date = inputFormat.parse(inputDateStr);
+                outputDateStr = outputFormat.format(date);
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
         return outputDateStr;
     }
 
+    public static boolean finePermissionIsGranted(Context context) {
+        int permissionState = ActivityCompat.checkSelfPermission(context,Manifest.permission.ACCESS_FINE_LOCATION);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
+
+   /* public static String distance(float lat1, float lng1, float lat2, float lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        float dist = (float) (earthRadius * c);
+           dist=dist/1000;
+
+        return String.format("%.02f", dist)+" KM";
+    }*/
 
     public static void fade(Context context) {
         ((Activity) context).overridePendingTransition(R.anim.fade_enter, R.anim.fade_exit);
@@ -1392,13 +1571,6 @@ public class Utility {
         return bigDecimal.doubleValue();
     }
 
-    private static double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-
-    private static double rad2deg(double rad) {
-        return (rad * 180.0 / Math.PI);
-    }
 
     public static void watchYoutubeVideo(Context context, String id) {
         Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));

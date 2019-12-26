@@ -10,6 +10,7 @@
         android:padding="10dp">
 
         <ScrollView
+            android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none">
@@ -53,6 +54,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16sp"
+                                android:focusable="true"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:text="Blood Donor?" />
@@ -444,65 +446,12 @@
                 </LinearLayout>
 
 
-
-                <!--<LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:text="Blood Group" />
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center|bottom"
-                            android:layout_weight="1"
-                            android:background="@drawable/border"
-                            android:gravity="center|bottom"
-                            android:textAlignment="center">
-
-                            <com.krs.community.jrspinner.JRSpinner
-                                android:id="@+id/sp_bg"
-                                app:backgroundTint="@color/colorPrimary"
-                                app:jrs_icon_tint="@color/colorPrimary"
-                                app:jrs_multiple="false"
-                                app:jrs_title="Select Blood Group"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="10dp"
-                                android:background="@null"
-                                android:fontFamily="@font/montserrat_regular"
-                                android:hint="Select"
-                                android:imeOptions="actionNext"
-                                android:nextFocusDown="@+id/fname"
-                                android:paddingRight="10dp"
-                                android:singleLine="true"
-                                android:textColor="@color/black1" />
-                        </RelativeLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>-->
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -599,6 +548,8 @@
                         android:text="Local Address (If any)"
                         android:fontFamily="@font/montserrat_semibold" />
 
+
+
                     <EditText
                         android:id="@+id/edt_local_addr"
                         android:layout_width="match_parent"
@@ -610,7 +561,6 @@
                         android:gravity="top|left"
                         android:maxLines="2"
                         android:minLines="2"
-                        android:focusable="false"
                         android:fontFamily="@font/montserrat_regular"
                         android:scrollbars="vertical"
                         android:singleLine="true" />

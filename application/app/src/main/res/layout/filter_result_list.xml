@@ -115,7 +115,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Kunjan Patel"
-                            android:textSize="16sp"
+                            android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -123,7 +123,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Maninagar, Ahmedabad"
-                            android:textSize="12sp" />
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
@@ -131,7 +131,7 @@
                         android:id="@+id/tv_role"
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:background="@drawable/round_corner_blue"
                         android:fontFamily="@font/montserrat_semibold"
                         android:gravity="center"
@@ -139,7 +139,7 @@
                         android:paddingRight="10dp"
                         android:text="Member"
                         android:textColor="@color/white"
-                        android:textSize="11sp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -155,7 +155,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/ll_mobile"
@@ -168,6 +168,7 @@
                         <ImageView
                             android:layout_width="15dp"
                             android:layout_height="15dp"
+                            android:layout_gravity="center_vertical"
                             android:background="@drawable/phone" />
 
                         <TextView
@@ -178,7 +179,7 @@
                             android:layout_marginLeft="5dp"
                             android:text="9825450261"
                             android:textColor="@color/com_facebook_blue"
-                            android:textSize="12sp" />
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
@@ -188,12 +189,14 @@
                         android:autoLink="email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         android:layout_marginLeft="5dp"
                         android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="15dp"
                             android:layout_height="15dp"
+                            android:layout_gravity="center_vertical"
                             android:background="@drawable/ic_email" />
 
                         <TextView
@@ -204,18 +207,19 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
                             android:text="kunjanshah@gmail.com"
-                            android:textSize="12sp" />
+                            android:textSize="14sp" />
 
                     </LinearLayout>
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/tv_update"
                     android:layout_marginTop="5dp"
                     android:gravity="right"
                     android:fontFamily="@font/montserrat_light"
                     android:textSize="12sp"
                     android:layout_width="match_parent"
-                    android:text="12-12-2019 12:30"
+                    android:text="12-12-2019"
                     android:layout_height="wrap_content"/>
 
             </LinearLayout>

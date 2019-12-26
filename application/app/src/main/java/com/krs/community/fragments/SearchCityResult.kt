@@ -40,8 +40,6 @@ import com.krs.community.viewmodel.BrowseCityViewModel
 import com.krs.community.viewmodel.BrowseCityViewModelFactory
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
-import kotlinx.android.synthetic.main.dashboard_menu.*
-import kotlinx.android.synthetic.main.fragment_filter_result.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -74,7 +72,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
                     members.add(user)
                 }
 
-                adapter?.notifyDataSetChanged()
+                adapter.notifyDataSetChanged()
                 binding.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
                 selectedPosition = members.size - 1
                 stop = false
@@ -123,17 +121,16 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
 
     private val members = ArrayList<Member>()
     private var actionModeCallback: ActionModeCallback? = null
-    private var actionMode: ActionMode? = null
-    private var adapter: ParallaxRecyclerAdapter<Member>? = null
-    private var selectedItems: SparseBooleanArray? = null
-    private var animationItemsIndex: SparseBooleanArray? = null
+    private lateinit var actionMode: ActionMode
+    private lateinit var adapter: ParallaxRecyclerAdapter<Member>
+    private lateinit var selectedItems: SparseBooleanArray
+    private lateinit var animationItemsIndex: SparseBooleanArray
     private var reverseAllAnimations = false
     private var currentSelectedIndex = -1
-    private val selectedItemCount: Int get() = selectedItems!!.size()
-   // private var rootView: View? = null
+    private val selectedItemCount: Int get() = selectedItems.size()
     private var TAG: String = SearchCityResult::class.java.simpleName
     private val factory: BrowseCityViewModelFactory by instance()
-    internal var browseCityViewModel: BrowseCityViewModel? = null
+    internal lateinit var browseCityViewModel: BrowseCityViewModel
     override val kodein by kodein()
     private lateinit var tvCount:TextView
     lateinit var binding: FragmentFilterResultBinding
@@ -152,9 +149,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
 
         actionModeCallback = ActionModeCallback()
         browseCityViewModel = ViewModelProviders.of(this, factory).get(BrowseCityViewModel::class.java)
-        browseCityViewModel?.ibrowseCityRecordsListener = this
-
-
+        browseCityViewModel.ibrowseCityRecordsListener = this
 
         if (this.arguments != null){
             city_name = this.arguments!!.getString("city_name").toString()
@@ -172,18 +167,20 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
                 val name=member.firstName
 
                 Coroutines.main {
-                 val lastname=   browseCityViewModel?.getLastName(Integer.parseInt(member.subCastId.toString()))
-                    holder.tv_name.text= "$name $lastname"
+                 val lastname= browseCityViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
+                    holder.tvName.text= "$name $lastname"
                 }
 
-                holder.tv_area.text = member.area
-                holder.tv_email.text = member.emailAddress
-                holder.tv_mobile.text = member.mobile
+                holder.tvArea.text = member.area
+                holder.tvEmail.text = member.emailAddress
+                holder.tvMobile.text = member.mobile
                 if (member.headId.equals("0")) {
-                    holder.tv_role.text = "Family Head"
+                    holder.tvRole.text = "Family Head"
                 } else {
-                    holder.tv_role.text = "Member"
+                    holder.tvRole.text = "Member"
                 }
+
+                holder.tvUpdate.text="updated "+Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
 
                 holder.boomMenuButton.clearBuilders()
                 for (i in 0 until holder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
@@ -192,7 +189,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
                 holder.boomMenuButton.setOnClickListener({ v -> holder.boomMenuButton.boom() })
 
                 holder.iconText.text = name.substring(0, 1)
-                holder.itemView.isActivated = selectedItems!!.get(position, false)
+                holder.itemView.isActivated = selectedItems.get(position, false)
                 applyIconAnimation(holder, position)
                 applyProfilePicture(holder, member)
                 applyClickEvents(holder, position)
@@ -238,10 +235,10 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
             dialog?.show()
         }
 
-        adapter?.setParallaxHeader(header, binding.lstFilter)
+        adapter.setParallaxHeader(header, binding.lstFilter)
         binding.lstFilter.layoutManager = LinearLayoutManager(activity)
         binding.lstFilter.adapter = adapter
-        adapter?.setContext(this)
+        adapter.setContext(this)
         stop=false
         alpha=""
         setupList()
@@ -262,16 +259,16 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
                 binding.shimmerViewContainer.startShimmerAnimation()
                 binding.shimmerViewContainer.visibility = View.VISIBLE
             }
-            browseCityViewModel?.fetchRecordsByCity(data)
+            browseCityViewModel.fetchRecordsByCity(data)
         }
     }
 
     private fun applyClickEvents(holder: ViewHolder, position: Int) {
         holder.iconContainer.setOnClickListener { onIconClicked(position) }
 
-        holder.ll_mobile.setOnClickListener {
+        holder.llMobile.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
-            val str = "tel:" + holder.tv_mobile.text
+            val str = "tel:" + holder.tvMobile.text
             intent.data = Uri.parse(str)
             startActivity(intent)
         }
@@ -302,7 +299,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
     }
 
     private fun applyIconAnimation(holder: ViewHolder, position: Int) {
-        if (selectedItems!!.get(position, false)) {
+        if (selectedItems.get(position, false)) {
             holder.iconFront.visibility = View.GONE
             resetIconYAxis(holder.iconBack)
             holder.iconBack.visibility = View.VISIBLE
@@ -316,7 +313,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
             resetIconYAxis(holder.iconFront)
             holder.iconFront.visibility = View.VISIBLE
             holder.iconFront.alpha = 1f
-            if (reverseAllAnimations && animationItemsIndex!!.get(position, false) || currentSelectedIndex == position) {
+            if (reverseAllAnimations && animationItemsIndex.get(position, false) || currentSelectedIndex == position) {
                 FlipAnimator.flipView(activity, holder.iconBack, holder.iconFront, false)
                 resetCurrentIndex()
             }
@@ -331,31 +328,31 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
 
     private fun resetAnimationIndex() {
         reverseAllAnimations = false
-        animationItemsIndex!!.clear()
+        animationItemsIndex.clear()
     }
 
     private fun toggleSelected(pos: Int) {
         currentSelectedIndex = pos
-        if (selectedItems!!.get(pos, false)) {
-            selectedItems!!.delete(pos)
-            animationItemsIndex!!.delete(pos)
+        if (selectedItems.get(pos, false)) {
+            selectedItems.delete(pos)
+            animationItemsIndex.delete(pos)
         } else {
-            selectedItems!!.put(pos, true)
-            animationItemsIndex!!.put(pos, true)
+            selectedItems.put(pos, true)
+            animationItemsIndex.put(pos, true)
         }
-        adapter!!.notifyItemChanged(pos + 1)
+        adapter.notifyItemChanged(pos + 1)
     }
 
     private fun clearSelections() {
         reverseAllAnimations = true
-        selectedItems!!.clear()
-        adapter!!.notifyDataSetChanged()
+        selectedItems.clear()
+        adapter.notifyDataSetChanged()
     }
 
     private fun getSelectedItems(): List<Int> {
-        val items = ArrayList<Int>(selectedItems!!.size())
-        for (i in 0 until selectedItems!!.size()) {
-            items.add(selectedItems!!.keyAt(i))
+        val items = ArrayList<Int>(selectedItems.size())
+        for (i in 0 until selectedItems.size()) {
+            items.add(selectedItems.keyAt(i))
         }
         return items
     }
@@ -371,37 +368,22 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
 
     private inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnLongClickListener {
 
-        val boomMenuButton: BoomMenuButton
-        var imgProfile: ImageView
-        var tv_name: TextView
-        val tv_area: TextView
-        val tv_role: TextView
-        val tv_mobile: TextView
-        val tv_email: TextView
-        var iconContainer: RelativeLayout
-        var iconBack: RelativeLayout
-        var iconFront: RelativeLayout
-        var iconText: TextView
-        var messageContainer: LinearLayout
-        var ll_mobile: LinearLayout
-        var ll_email: LinearLayout
-
+        val boomMenuButton: BoomMenuButton = itemView.findViewById(R.id.bmb1)
+        var imgProfile: ImageView = itemView.findViewById(R.id.icon_profile)
+        var tvName: TextView = itemView.findViewById(R.id.tv_name)
+        val tvArea: TextView = itemView.findViewById(R.id.tv_area)
+        val tvRole: TextView = itemView.findViewById(R.id.tv_role)
+        val tvMobile: TextView = itemView.findViewById(R.id.tv_mobile)
+        val tvEmail: TextView = itemView.findViewById(R.id.tv_email)
+        var iconContainer: RelativeLayout = itemView.findViewById(R.id.icon_container)
+        var iconBack: RelativeLayout = itemView.findViewById(R.id.icon_back)
+        var iconFront: RelativeLayout = itemView.findViewById(R.id.icon_front)
+        var iconText: TextView = itemView.findViewById(R.id.icon_text)
+        var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
+        var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
+        //var llEmail: LinearLayout = itemView.findViewById(R.id.ll_email)
+        var tvUpdate:TextView=  itemView.findViewById(R.id.tv_update)
         init {
-            imgProfile = itemView.findViewById(R.id.icon_profile)
-            tv_name = itemView.findViewById(R.id.tv_name)
-            tv_mobile = itemView.findViewById(R.id.tv_mobile)
-            tv_email = itemView.findViewById(R.id.tv_email)
-            tv_area = itemView.findViewById(R.id.tv_area)
-            tv_role = itemView.findViewById(R.id.tv_role)
-            boomMenuButton = itemView.findViewById(R.id.bmb1)
-            iconText = itemView.findViewById(R.id.icon_text)
-            iconBack = itemView.findViewById(R.id.icon_back)
-            iconFront = itemView.findViewById(R.id.icon_front)
-            messageContainer = itemView.findViewById(R.id.message_container)
-            iconContainer = itemView.findViewById(R.id.icon_container)
-            ll_mobile = itemView.findViewById(R.id.ll_mobile)
-            ll_email = itemView.findViewById(R.id.ll_email)
-
             itemView.setOnLongClickListener(this)
         }
 
@@ -431,7 +413,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         for (i in selectedItemPositions.indices.reversed()) {
             removeData(selectedItemPositions[i])
         }
-        adapter!!.notifyDataSetChanged()
+        adapter.notifyDataSetChanged()
     }
 
 
@@ -464,7 +446,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         override fun onDestroyActionMode(mode: ActionMode) {
             clearSelections()
             //  rootView?.swipe_refresh_layout!!.isEnabled = true
-            actionMode = null
+            //actionMode = null
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(activity, R.color.colorBG, false)
             }
@@ -478,25 +460,19 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         val count = selectedItemCount
 
         if (count == 0) {
-            actionMode!!.finish()
+            actionMode.finish()
         } else {
-            actionMode!!.title = count.toString()
-            actionMode!!.invalidate()
+            actionMode.title = count.toString()
+            actionMode.invalidate()
         }
     }
 
     private fun enableActionMode(position: Int) {
-        if (actionMode == null) {
-            actionMode = activity!!.startActionMode(actionModeCallback)
-        }
         toggleSelection(position)
     }
 
 
     private fun onIconClicked(position: Int) {
-        if (actionMode == null) {
-            actionMode = activity!!.startActionMode(actionModeCallback)
-        }
         toggleSelection(position)
     }
 
@@ -516,7 +492,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
             users[position] = user
             adapter!!.notifyDataSetChanged()*/
             val intent=Intent(activity,ProfileDetailActivity::class.java)
-            intent.putExtra("member",members.get(position))
+            intent.putExtra(getString(R.string.member),members.get(position))
             //intent.putExtra("id",members.get(position)?.id)
             startActivity(intent)
             Utility.fade(activity)

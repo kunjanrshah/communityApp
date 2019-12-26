@@ -70,7 +70,7 @@ interface ApiServices {
     suspend fun getOccupation(@Body request:JsonObject): Response<OccupationResponse>
 
     @POST(AppConstants.UrlPath.ADD_MEMBER)
-    suspend fun addMember(@Body request:JsonObject): Response<AddProfileResponse>
+    suspend fun addMember(@Body request:JsonObject): Response<UpdateProfileResponse>
 
     @POST(AppConstants.UrlPath.DELETE_MEMBER)
     suspend fun deleteMember(@Body request:JsonObject): Response<DeleteProfileResponse>
@@ -94,13 +94,7 @@ interface ApiServices {
     suspend fun getUserRegister(@Body request: AppConstants.UserRegister): Response<RegisterModel>
 
     @POST(AppConstants.UrlPath.GET_LOGIN)
-    suspend fun getUserLogin(@Body request: AppConstants.LoginRequest): Response<LoginModel>
-
-    @POST(AppConstants.UrlPath.GET_FORGOT_PASS)
-    suspend fun getUserForgotPass(@Body request: AppConstants.ForgotPass): Response<ForgotPassModel>
-
-    @POST(AppConstants.UrlPath.GET_CHANGE_PASS)
-    suspend fun getUserChangePass(@Body request: AppConstants.ChangePass): Response<ChangePassModel>
+    suspend fun getUserLogin(@Body request: AppConstants.LoginRequest): Response<LoginResponse>
 
 
     companion object{

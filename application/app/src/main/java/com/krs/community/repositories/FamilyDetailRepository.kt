@@ -1,6 +1,7 @@
 package com.krs.community.repositories
 
 import com.google.gson.JsonObject
+import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.FamilyDetailResponse
 import com.krs.community.retrofit.ApiServices
 
@@ -11,4 +12,11 @@ class FamilyDetailRepository(private val api: ApiServices): SafeApiRequest()  {
             api.getFamilyMembers(data)
         }
     }
+
+    suspend fun deleteMember(data: JsonObject): DeleteProfileResponse {
+        return apiRequest{
+            api.deleteMember(data)
+        }
+    }
+
 }

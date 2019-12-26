@@ -256,7 +256,7 @@ public class AppConstants {
     public static final String APPLICATION_BASE_URL = "https://www.muslimghanchisamaj.in/API/";
 
     //private static final String BASE_URL = "http://www.superbinstruments.com/directory-dev";
-      private static final String BASE_URL = "http://www.superbinstruments.com/yadav";
+      private static final String BASE_URL = "https://www.superbinstruments.com/yadav";
     public static final String LOGIN_URL = BASE_URL + "/API/login";
     public static final String SIGNUP_URL = BASE_URL + "/API/Userreg";
     public static final String FORGOT_PASSWORD_URL = BASE_URL + "/API/forgotPassword";
@@ -435,61 +435,6 @@ public class AppConstants {
             this.sub_community_id = sub_community_id;
         }
     }
-
-    public static class ChangePass{
-
-        String head_id;
-        String curr_pass;
-        String new_pass;
-
-        public String getHead_id() {
-            return head_id;
-        }
-
-        public void setHead_id(String head_id) {
-            this.head_id = head_id;
-        }
-
-        public String getCurr_pass() {
-            return curr_pass;
-        }
-
-        public void setCurr_pass(String curr_pass) {
-            this.curr_pass = curr_pass;
-        }
-
-        public String getNew_pass() {
-            return new_pass;
-        }
-
-        public void setNew_pass(String new_pass) {
-            this.new_pass = new_pass;
-        }
-    }
-
-
-    public static class ForgotPass{
-
-        String username;
-        String type;
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-    }
-
 
     public static class LoginRequest {
         String username;

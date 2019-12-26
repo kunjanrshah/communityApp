@@ -27,13 +27,15 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.gson.Gson
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.AppSignatureHashHelper
 import com.krs.community.app.SMSReceiver
 import com.krs.community.databinding.ActivityLoginwithBinding
 import com.krs.community.interfaces.ILoginListener
-import com.krs.community.model.LoginModel
+import com.krs.community.model.LoginResponse
+import com.krs.community.model.Member
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.NotificationUtils
 import com.krs.community.utils.Utility.*
@@ -76,7 +78,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     private var mCallbackManager: CallbackManager? = null
     private var loginViewModel: LoginViewModel? = null
     private var ReceviedOTP:String?=null
-    private lateinit var  login_model: LoginModel
+    private lateinit var  member: Member
     companion object {
         private val RC_SIGN_IN = 9001
     }
@@ -312,27 +314,27 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         //toast("OTP Time out")
     }
 
-    override fun getUserLogin(model: LoginModel) {
+    override fun getUserLogin(response: LoginResponse) {
         hideSweetProgress()
         hideProgressDialog()
-        Log.d(TAG, "login data: $model")
+        Log.d(TAG, "login data: $response")
 
-        login_model=model
-
-        if(!model.otp.isNullOrBlank()){
+        member=response.data
+        if(!response.otp.isNullOrBlank()){
             card_view_mobile.visibility= View.GONE
             card_view_otp.visibility=View.VISIBLE
             startSMSListener()
-            ReceviedOTP=model.otp
+            ReceviedOTP=response.otp
         }else{
             goToDashboardScreen()
         }
     }
 
     fun goToDashboardScreen(){
-        Guru.putString("access_token",login_model.data.accessToken)
-        Guru.putString("user_id",login_model.data.id)
-        Guru.putString("user_mobile",login_model.data.mobile)
+        Guru.putString(getString(R.string.loginUser),Gson().toJson(member))
+        Guru.putString(getString(R.string.user_mobile),member.mobile)
+        Guru.putString(getString(R.string.user_id),member.id)
+        Guru.putString(getString(R.string.access_token),member.accessToken)
         val intent = Intent(applicationContext, DashboardActivity::class.java)
         startActivity(intent)
         finish()

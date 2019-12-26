@@ -81,12 +81,12 @@ public class SplashActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        boolean is_home = Guru.getBoolean(AppConstants.IS_HOME, false);
-        if (!is_home) {
+        String userId=Guru.getString(getString(R.string.user_id),"");
+        if (userId==null || userId.isEmpty()) {
             return;
         }
         Intent mIntent = new Intent(SplashActivity.this, DashboardActivity.class);
-        mIntent.putExtra(AppConstants.USER_ID, Guru.getString(AppConstants.USER_ID, ""));
+        mIntent.putExtra(getString(R.string.user_id),userId);
         startActivity(mIntent);
         finish();
     }

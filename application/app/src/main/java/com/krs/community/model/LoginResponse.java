@@ -4,7 +4,7 @@ package com.krs.community.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LoginModel {
+public class LoginResponse {
 
     @SerializedName("success")
     @Expose
@@ -16,7 +16,7 @@ public class LoginModel {
 
     @SerializedName("data")
     @Expose
-    private LoginData data;
+    private Member data;
 
     public Boolean getSuccess() {
         return success;
@@ -26,11 +26,11 @@ public class LoginModel {
         this.success = success;
     }
 
-    public LoginData getData() {
+    public Member getData() {
         return data;
     }
 
-    public void setData(LoginData data) {
+    public void setData(Member data) {
         this.data = data;
     }
 

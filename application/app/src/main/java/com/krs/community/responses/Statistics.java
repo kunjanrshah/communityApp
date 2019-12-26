@@ -5,74 +5,83 @@ import com.google.gson.annotations.SerializedName;
 
 public class Statistics {
 
+    @SerializedName("TotalVillages")
+    @Expose
+    private Integer totalVillages;
     @SerializedName("TotalFamily")
     @Expose
-    private Boolean TotalFamily;
-
+    private Integer totalFamily;
     @SerializedName("TotalMembers")
     @Expose
-    private Boolean TotalMembers;
-
+    private Integer totalMembers;
     @SerializedName("TotalMale")
     @Expose
-    private Boolean TotalMale;
-
+    private Integer totalMale;
     @SerializedName("TotalFemale")
     @Expose
-    private Boolean TotalFemale;
+    private Integer totalFemale;
     @SerializedName("TotalUnmarriedMale")
     @Expose
-    private Boolean TotalUnmarriedMale;
+    private Integer totalUnmarriedMale;
     @SerializedName("TotalUnmarriedFemale")
     @Expose
-    private Boolean TotalUnmarriedFemale;
+    private Integer totalUnmarriedFemale;
 
-    public Boolean getTotalUnmarriedFemale() {
-        return TotalUnmarriedFemale;
+    public Integer getTotalVillages() {
+        return totalVillages;
     }
 
-    public void setTotalUnmarriedFemale(Boolean totalUnmarriedFemale) {
-        TotalUnmarriedFemale = totalUnmarriedFemale;
+    public void setTotalVillages(Integer totalVillages) {
+        this.totalVillages = totalVillages;
     }
 
-    public Boolean getTotalUnmarriedMale() {
-        return TotalUnmarriedMale;
+    public Integer getTotalFamily() {
+        return totalFamily;
     }
 
-    public void setTotalUnmarriedMale(Boolean totalUnmarriedMale) {
-        TotalUnmarriedMale = totalUnmarriedMale;
+    public void setTotalFamily(Integer totalFamily) {
+        this.totalFamily = totalFamily;
     }
 
-    public Boolean getTotalFemale() {
-        return TotalFemale;
+    public Integer getTotalMembers() {
+        return totalMembers;
     }
 
-    public void setTotalFemale(Boolean totalFemale) {
-        TotalFemale = totalFemale;
+    public void setTotalMembers(Integer totalMembers) {
+        this.totalMembers = totalMembers;
     }
 
-    public Boolean getTotalMale() {
-        return TotalMale;
+    public Integer getTotalMale() {
+        return totalMale;
     }
 
-    public void setTotalMale(Boolean totalMale) {
-        TotalMale = totalMale;
+    public void setTotalMale(Integer totalMale) {
+        this.totalMale = totalMale;
     }
 
-    public Boolean getTotalMembers() {
-        return TotalMembers;
+    public Integer getTotalFemale() {
+        return totalFemale;
     }
 
-    public void setTotalMembers(Boolean totalMembers) {
-        TotalMembers = totalMembers;
+    public void setTotalFemale(Integer totalFemale) {
+        this.totalFemale = totalFemale;
     }
 
-    public Boolean getTotalFamily() {
-        return TotalFamily;
+    public Integer getTotalUnmarriedMale() {
+        return totalUnmarriedMale;
     }
 
-    public void setTotalFamily(Boolean totalFamily) {
-        TotalFamily = totalFamily;
+    public void setTotalUnmarriedMale(Integer totalUnmarriedMale) {
+        this.totalUnmarriedMale = totalUnmarriedMale;
     }
+
+    public Integer getTotalUnmarriedFemale() {
+        return totalUnmarriedFemale;
+    }
+
+    public void setTotalUnmarriedFemale(Integer totalUnmarriedFemale) {
+        this.totalUnmarriedFemale = totalUnmarriedFemale;
+    }
+
 }
 

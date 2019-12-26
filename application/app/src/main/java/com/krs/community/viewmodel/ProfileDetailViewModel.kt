@@ -5,8 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
 import com.krs.community.app.lazyDeferred
 import com.krs.community.interfaces.EditMemberListener
-import com.krs.community.model.SearchData
 import com.krs.community.repositories.ProfileDetailRepository
+import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
 import kotlinx.coroutines.*
@@ -15,7 +15,7 @@ class ProfileDetailViewModel(
         private val mProfileDetailRepository: ProfileDetailRepository,
         var app: Application) : AndroidViewModel(app) {
 
-    var job_by_distance: CompletableJob? = null
+    var job_by_update: CompletableJob? = null
     var TAG: String = ProfileDetailViewModel::class.java.simpleName
     var mEditMemberListener: EditMemberListener? = null
 
@@ -152,13 +152,19 @@ class ProfileDetailViewModel(
        return mProfileDetailRepository.getCityName(id)
     }
 
-    fun updateProfile(profile: JsonObject) {
-        job_by_distance = Job()
-        job_by_distance.let { thejob ->
+    fun updateProfile(profile: JsonObject,isEdit:Boolean) {
+        job_by_update = Job()
+        job_by_update.let { thejob ->
 
             CoroutineScope(Dispatchers.IO + thejob!!).launch {
                 try {
-                    val response = mProfileDetailRepository.updateProfile(profile)
+                    val response: UpdateProfileResponse
+                    if(isEdit){
+                        response = mProfileDetailRepository.updateProfile(profile)
+                    }else{
+                        response = mProfileDetailRepository.addProfile(profile)
+                    }
+
                     response.let {
                         withContext(Dispatchers.Main) {
                             mEditMemberListener?.getMessage(response)

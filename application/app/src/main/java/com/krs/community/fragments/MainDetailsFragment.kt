@@ -3,9 +3,7 @@ package com.krs.community.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
-import android.text.InputFilter
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -13,44 +11,74 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import cn.pedant.SweetAlert.SweetAlertDialog
+import com.example.easywaylocation.EasyWayLocation
+import com.github.squti.guru.Guru
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.activity.ProfileDetailActivity
+import com.krs.community.activity.ProfileDetailActivity.Companion.setPercentage
 import com.krs.community.databinding.FragmentMainDetailsBinding
+import com.krs.community.interfaces.EditMemberListener
 import com.krs.community.model.Member
+import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModelFactory
-import com.tsongkha.spinnerdatepicker.DatePicker
-import com.tsongkha.spinnerdatepicker.DatePickerDialog
-import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
-import okhttp3.internal.Util
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
 
 
-class MainDetailsFragment : Fragment(), KodeinAware {
+class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
     private lateinit var binding: FragmentMainDetailsBinding
     private lateinit var member: Member
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: ProfileDetailViewModelFactory by instance()
     var numberOfLines=5
-
     override val kodein by kodein()
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_details, container, false)
         profileDetailViewModel = ViewModelProviders.of(this, factory).get(ProfileDetailViewModel::class.java)
+        profileDetailViewModel.mEditMemberListener=this
+        member = arguments?.getSerializable(getString(R.string.member)) as Member
+        val loginMember=Guru.getString(getString(R.string.loginUser),"")
+        val loginMem= Gson().fromJson(loginMember,Member::class.java)
+        if(loginMem.id == member.id){
+            binding.spState.isEnabled=true
+            binding.spCity.isEnabled=true
+            binding.edtArea.isFocusable=true
+            binding.edtAddr.isFocusable=true
+            binding.edtPincode.isFocusable=true
+            binding.chkRented.isEnabled=true
+        }else{
+            binding.spState.isEnabled=false
+            binding.spCity.isEnabled=false
+            binding.edtArea.isFocusable=false
+            binding.edtAddr.isFocusable=false
+            binding.edtPincode.isFocusable=false
+            binding.chkRented.isEnabled=false
+            member.stateId=loginMem.stateId
+            member.cityId=loginMem.cityId
+            member.city=loginMem.city
+            member.area=loginMem.area
+            member.pincode=loginMem.pincode
+            member.address=loginMem.address
+            member.isRented=loginMem.isRented
+        }
 
-        member = arguments?.getSerializable("member") as Member
         if(member.memberCode.isNullOrEmpty()){
             binding.llMcode.visibility=View.GONE
         }else{
@@ -69,6 +97,33 @@ class MainDetailsFragment : Fragment(), KodeinAware {
         binding.edtArea.setText(member.area)
         binding.edtPincode.setText(member.pincode)
         binding.chkRented.isChecked = member.isRented.equals("1")
+
+        binding.llHome.setOnClickListener {
+            SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                    .setTitleText("Home Location")
+                    .setContentText("With Google Map")
+                    .setConfirmText("Set")
+                    .setCancelText("View")
+                    .setConfirmClickListener {
+                        it.dismiss()
+                        val jsonObject = JSONObject()
+                        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
+                        jsonObject.put(getString(R.string.id), member.id)
+                        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token),""))
+                        jsonObject.put(getString(R.string.home_lat), ProfileDetailActivity.cur_lat.value)
+                        jsonObject.put(getString(R.string.home_lng), ProfileDetailActivity.cur_lng.value)
+
+                        val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
+
+                        Utility.startSweetProgress(activity, "Updating your home location", "Please wait...")
+                        profileDetailViewModel.updateProfile(profile, true)
+
+                    }
+                    .setCancelClickListener {
+                        it.dismiss()
+                    }
+                    .show()
+        }
 
         binding.edtAddr.addTextChangedListener(object:TextWatcher{
             private var text: String? = null
@@ -89,7 +144,7 @@ class MainDetailsFragment : Fragment(), KodeinAware {
         })
 
         binding.edtAddr.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action === KeyEvent.ACTION_DOWN) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN) {
                 val editTextLineCount: Int = (v as EditText).getLineCount()
                 if (editTextLineCount >= numberOfLines) return@OnKeyListener true
             }
@@ -130,8 +185,31 @@ class MainDetailsFragment : Fragment(), KodeinAware {
         setMemberState()
         setMemberCity()
         getMasterList()
+        setHomeLocation()
         return binding.root
     }
+
+    private fun setHomeLocation() {
+        if(!member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()){
+            ProfileDetailActivity.cur_lat.observeForever {
+                if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){
+                    var dist=EasyWayLocation.calculateDistance(member.homeLat.toDouble(),member.homeLng.toDouble(),ProfileDetailActivity.cur_lat.value!!.toDouble(),ProfileDetailActivity.cur_lng.value!!.toDouble())
+                    dist /= 1000
+                    binding.tvDistance.text=String.format("%.2f KM",dist)
+                }
+            }
+            ProfileDetailActivity.cur_lng.observeForever {
+                if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){
+                    var dist=EasyWayLocation.calculateDistance(member.homeLat.toDouble(),member.homeLng.toDouble(),ProfileDetailActivity.cur_lat.value!!.toDouble(),ProfileDetailActivity.cur_lng.value!!.toDouble())
+                    dist /= 1000
+                    binding.tvDistance.text=String.format("%.2f KM",dist)
+                }
+            }
+        }else{
+            binding.tvDistance.text="Home"
+        }
+    }
+
 
     fun getSaveData(jsonObject:JSONObject){
         try {
@@ -192,7 +270,7 @@ class MainDetailsFragment : Fragment(), KodeinAware {
     }
 
     private fun setMemberCity() = Coroutines.main {
-     if(member.cityId.isNotEmpty()){
+     if(!member.cityId.isNullOrEmpty()){
          profileDetailViewModel.selectedCityId = Integer.parseInt(member.cityId)
          profileDetailViewModel.cityName.await().observeForever {
              binding.spCity.setText(it)
@@ -213,15 +291,28 @@ class MainDetailsFragment : Fragment(), KodeinAware {
         binding.spGender.setExpandTint(R.color.black)
 
         profileDetailViewModel.lstRelationName.await().observe(this, Observer {
-           if(!member.relationId.equals("0")){
-               binding.spRelation.setItems(it.subList(1,it.size).toTypedArray())
-               binding.spRelation.setExpandTint(R.color.black)
+           if(member.relationId != "0"){
+               if(it.isNotEmpty()){
+                   binding.spRelation.setItems(it.subList(1,it.size).toTypedArray())
+                   binding.spRelation.setExpandTint(R.color.black)
+               }
+
            }
         })
+        profileDetailViewModel.relationIds.await().observe(this, Observer {
+          if(it.isNotEmpty()){
+              profileDetailViewModel.lstRelationId = it.subList(1,it.size)
+          }
+        })
+
         profileDetailViewModel.lstLastName.await().observe(this, Observer {
             binding.spLastname.setItems(it.toTypedArray())
             binding.spLastname.setExpandTint(R.color.black)
         })
+        profileDetailViewModel.lastNameIds.await().observe(this, Observer {
+            profileDetailViewModel.lstLastNameId = it
+        })
+
         profileDetailViewModel.lstStateName.await().observe(this, Observer {
             binding.spState.setItems(it.toTypedArray())
             binding.spState.setExpandTint(R.color.black)
@@ -230,17 +321,35 @@ class MainDetailsFragment : Fragment(), KodeinAware {
         profileDetailViewModel.stateIds.await().observe(this, Observer {
             profileDetailViewModel.lstStateId = it
         })
-
-        profileDetailViewModel.relationIds.await().observe(this, Observer {
-            profileDetailViewModel.lstRelationId = it.subList(1,it.size)
-        })
-        profileDetailViewModel.lastNameIds.await().observe(this, Observer {
-            profileDetailViewModel.lstLastNameId = it
-        })
-
         val cities= profileDetailViewModel.getCityNamebyState(profileDetailViewModel.selectedStateId)
         binding.spCity.setItems(cities.toTypedArray())
         binding.spCity.setExpandTint(R.color.black)
+
+    }
+
+
+
+    override fun getMessage(response: UpdateProfileResponse) {
+        Utility.hideSweetProgress()
+        val updatedMem = response.member
+        member.homeLat=ProfileDetailActivity.cur_lat.value.toString()
+        member.homeLng=ProfileDetailActivity.cur_lng.value.toString()
+        val percentage = Utility.calculatePercentage(updatedMem)
+        setPercentage(percentage)
+        if (updatedMem.headId == "0") {
+            Guru.putString(getString(R.string.loginUser), Gson().toJson(updatedMem))
+            Guru.putString(getString(R.string.user_mobile), updatedMem.mobile)
+        }
+        if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){
+            var dist=EasyWayLocation.calculateDistance(member.homeLat.toDouble(),member.homeLng.toDouble(),ProfileDetailActivity.cur_lat.value!!.toDouble(),ProfileDetailActivity.cur_lng.value!!.toDouble())
+            dist /= 1000
+            binding.tvDistance.text=String.format("%.2f KM",dist)
+        }
+        Utility.displaySnackBarWithBottomMargin(binding.llMain, "Home location updated!")
+    }
+
+    override fun getFailure(message: String) {
+        Utility.displaySnackBarWithBottomMargin(binding.llMain, message)
     }
 }
 

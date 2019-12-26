@@ -1,6 +1,8 @@
 package com.krs.community.fragments
 
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
@@ -8,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -49,7 +52,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
 
        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_personal_details, container, false)
        profileDetailViewModel = ViewModelProviders.of(this, factory).get(ProfileDetailViewModel::class.java)
-       member = arguments?.getSerializable("member") as Member
+       member = arguments?.getSerializable(getString(R.string.member)) as Member
 
         if(member.role.equals("LOCAL_ADMIN")){
             binding.edtRole.text = "Local Admin"
@@ -70,11 +73,11 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         binding.edtLocalAddr.addTextChangedListener(object : TextWatcher {
             private var text: String? = null
             override fun afterTextChanged(s: Editable?) {
-
+                text = s.toString()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                text = s.toString()
+
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -86,7 +89,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         })
 
         binding.edtLocalAddr.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action === KeyEvent.ACTION_DOWN) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN) {
                 val editTextLineCount: Int = (v as EditText).lineCount
                 if (editTextLineCount >= numberOfLines) return@OnKeyListener true
             }
@@ -225,8 +228,20 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             setDatePicker(mem_date)
         }
 
+
+
         getMasterList()
        return binding.root
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        if (isVisibleToUser) {
+
+            Handler().postDelayed(Runnable {
+                binding.scroll.fullScroll(ScrollView.FOCUS_UP);
+                binding.scroll.isSmoothScrollingEnabled=true
+            },1000)
+        }
     }
 
     fun getSaveData(json:JSONObject){

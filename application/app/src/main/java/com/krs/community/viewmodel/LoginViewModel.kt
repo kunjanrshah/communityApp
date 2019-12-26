@@ -141,45 +141,6 @@ class LoginViewModel(private val loginRepository: LoginRepository,
     }
 
 
-    fun userForgotPassword(req_forgot: AppConstants.ForgotPass) {
-        job_forgot = Job()
-        job_forgot.let { thejob ->
-            CoroutineScope(IO + thejob!!).launch {
-                try {
-                    val response = loginRepository.userForgotPass(req_forgot)
-                    response.data?.let {
-                        withContext(Dispatchers.Main) {
-                            iLoginListener.userForgotPass(response.data)
-                            thejob.complete()
-                        }
-                        return@launch
-                    }
-                    withContext(Dispatchers.Main) {
-                        iLoginListener.getFailure(response.msg as String)
-                    }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        withContext(Dispatchers.Main) {
-                            iLoginListener.getFailure(it)
-                        }
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        withContext(Dispatchers.Main) {
-                            iLoginListener.getFailure(it)
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        withContext(Dispatchers.Main) {
-                            iLoginListener.getFailure(it)
-                        }
-                    }
-                }
-                thejob.complete()
-            }
-        }
-    }
 
     fun getLoginUser(req_login: AppConstants.LoginRequest) {
         job_login = Job()
