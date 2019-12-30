@@ -28,11 +28,6 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-    suspend fun byFilter(filter: SearchData): SmartFilterResponse {
-        return apiRequest{
-            api.getSearchByFilter(filter)
-        }
-    }
 
     suspend fun getOccupationNames(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {

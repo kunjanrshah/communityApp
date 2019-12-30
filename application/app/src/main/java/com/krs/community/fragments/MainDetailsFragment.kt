@@ -32,6 +32,7 @@ import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModelFactory
+import kotlinx.android.synthetic.main.fragment_main_details.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -40,7 +41,7 @@ import org.kodein.di.generic.instance
 
 class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
-    private lateinit var binding: FragmentMainDetailsBinding
+    lateinit var binding: FragmentMainDetailsBinding
     private lateinit var member: Member
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: ProfileDetailViewModelFactory by instance()
@@ -106,25 +107,30 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                     .setCancelText("View")
                     .setConfirmClickListener {
                         it.dismiss()
-                        val jsonObject = JSONObject()
-                        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
-                        jsonObject.put(getString(R.string.id), member.id)
-                        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token),""))
-                        jsonObject.put(getString(R.string.home_lat), ProfileDetailActivity.cur_lat.value)
-                        jsonObject.put(getString(R.string.home_lng), ProfileDetailActivity.cur_lng.value)
+                        if(member.headId=="0" && !member.id.isNullOrEmpty()){
+                            val jsonObject = JSONObject()
+                            jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
+                            jsonObject.put(getString(R.string.id), member.id)
+                            jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token),""))
+                            jsonObject.put(getString(R.string.home_lat), ProfileDetailActivity.cur_lat.value)
+                            jsonObject.put(getString(R.string.home_lng), ProfileDetailActivity.cur_lng.value)
 
-                        val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
+                            val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
 
-                        Utility.startSweetProgress(activity, "Updating your home location", "Please wait...")
-                        profileDetailViewModel.updateProfile(profile, true)
+                            Utility.startSweetProgress(activity, "Updating your home location", "Please wait...")
+                            profileDetailViewModel.updateProfile(profile, true)
+                        }else{
+                            Utility.displaySnackBarWithBottomMargin(ll_main,"Only Family Head Set the Home Location")
+                        }
+
 
                     }
                     .setCancelClickListener {
                         it.dismiss()
+                        Utility.showDirections(activity,member.homeLat.toDouble(),member.homeLng.toDouble(),"${member.firstName}'s Home")
                     }
                     .show()
         }
-
         binding.edtAddr.addTextChangedListener(object:TextWatcher{
             private var text: String? = null
             override fun afterTextChanged(s: Editable?) {

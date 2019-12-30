@@ -51,8 +51,14 @@ class Service : android.app.Service(), Listener, AddressCallBack {
         val request = LocationRequest()
         request.interval = Utility.INTERVAL
         request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-        easyWayLocation = EasyWayLocation(this, request, false, this)
-        easyWayLocation.startLocation()
+
+        try{
+            easyWayLocation = EasyWayLocation(this, request, true, this)
+            easyWayLocation.startLocation()
+        }catch (e:Exception){
+            stopSelf()
+        }
+
 
         // it has been killed by Android and now it is restarted. We must make sure to have reinitialised everything
         if (intent == null) {
@@ -127,7 +133,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
     override fun locationOn() {}
     override fun currentLocation(location: Location) {
         Log.e("Location Service: ", "latitude: " + location.latitude + " longitude: " + location.longitude)
-        getLocationDetail.getAddress(location.latitude, location.longitude, "xyz")
+        getLocationDetail.getAddress(location.latitude, location.longitude, getString(R.string.map_api_key))
 
         completableJob = Job()
         completableJob.let { thejob ->

@@ -79,10 +79,13 @@ interface ApiServices {
     suspend fun getStatistics(@Body request:JsonObject): Response<StatisticResponse>
 
     @POST(AppConstants.UrlPath.GET_SMART_FILTER)
-    suspend fun getSearchByFilter(@Body request: SearchData): Response<SmartFilterResponse>
+    suspend fun getSearchByFilter(@Body request: JsonObject): Response<SmartFilterResponse>
 
     @POST(AppConstants.UrlPath.GET_SEARCH_NEAR_BY)
     suspend fun getSearchByDistance(@Body request: ByDistanceModel): Response<ByDistanceResponse>
+
+    @POST(AppConstants.UrlPath.SEARCH_BY_KEYWORDS)
+    suspend fun getSearchByKeywords(@Body request:JsonObject): Response<searchByKeywordsResponse>
 
     @POST(AppConstants.UrlPath.GET_FAMILY_MEMBER)
     suspend fun getFamilyMembers(@Body request: JsonObject): Response<FamilyDetailResponse>

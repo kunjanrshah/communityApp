@@ -13,6 +13,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +25,7 @@ import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
+import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.adapter.AtoZBottomAdapter
 import com.krs.community.databinding.FragmentFilterResultBinding
@@ -38,6 +40,7 @@ import com.krs.community.utils.FlipAnimator
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.BrowseCityViewModel
 import com.krs.community.viewmodel.BrowseCityViewModelFactory
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
 import org.kodein.di.KodeinAware
@@ -49,13 +52,13 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
 
     override fun getRecords() {
             members.clear()
-            stop=false
+            DashboardActivity.stop=false
             start=0
             setupList()
     }
 
     override fun loadApi() {
-        if (!stop) {
+        if (!DashboardActivity.stop) {
             start = (members.size+1)
             setupList()
         }
@@ -75,20 +78,20 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
                 adapter.notifyDataSetChanged()
                 binding.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
                 selectedPosition = members.size - 1
-                stop = false
+                DashboardActivity.stop = false
 
                 if(data.totalHead<=length){
-                    stop = true
+                    DashboardActivity.stop = true
                     Snackbar.make(binding.llParent, "End of $alpha Records", Snackbar.LENGTH_LONG).show()
                 }
 
             } else {
-                stop = true
+                DashboardActivity.stop = true
                 //rootView!!.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
                 Snackbar.make(binding.llParent, "End of $alpha Records", Snackbar.LENGTH_LONG).show()
             }
         } else {
-            stop = false
+            DashboardActivity.stop = false
         }
 
         binding.shimmerViewContainer.stopShimmerAnimation()
@@ -97,7 +100,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
 
     override suspend fun getFailure(message: String) {
       try{
-          stop = false
+          DashboardActivity.stop = false
           binding.shimmerViewContainer.stopShimmerAnimation()
           binding.shimmerViewContainer.visibility = View.GONE
           Snackbar.make(binding.llParent, "Something went wrong!", Snackbar.LENGTH_LONG).show()
@@ -108,7 +111,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
     }
 
     companion object {
-        var stop: Boolean = false
+       // var stop: Boolean = false
         var alpha:String=""
         var dialog:DialogPlus?=null
     }
@@ -183,8 +186,19 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
                 holder.tvUpdate.text="updated "+Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
 
                 holder.boomMenuButton.clearBuilders()
-                for (i in 0 until holder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
-                    holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder())
+                for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
+                    val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
+                    builder?.listener {
+                        if (it == 1) {
+                            val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
+                            startActivity(intent)
+                        } else if (it == 2) {
+                            Utility.sendWhatsappMessage(activity as FragmentActivity,member.mobile,"")
+                        }else{
+                            Toast.makeText(activity, "Clicked $it", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    viewHolder.boomMenuButton.addBuilder(builder)
                 }
                 holder.boomMenuButton.setOnClickListener({ v -> holder.boomMenuButton.boom() })
 
@@ -209,27 +223,27 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         val tvTitle = header.findViewById<TextView>(R.id.tvTitle)
         tvTitle.text = city_name
 
-        val edt_filter_name = header.findViewById<EditText>(R.id.edt_filter_name)
-        edt_filter_name.visibility = View.GONE
+        val edtFilterName = header.findViewById<EditText>(R.id.edt_filter_name)
+        edtFilterName.visibility = View.GONE
 
-        val iv_cancel = header.findViewById<ImageView>(R.id.iv_cancel)
-        iv_cancel.setOnClickListener { v -> Utility.movetoFragment(activity, BrowseByCityFragment()) }
+        val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
+        ivCancel.setOnClickListener { v -> Utility.movetoFragment(activity, BrowseByCityFragment()) }
 
-        val iv_export = header.findViewById<ImageView>(R.id.iv_export)
-        iv_export.setOnClickListener {
+        val ivExport = header.findViewById<ImageView>(R.id.iv_export)
+        ivExport.setOnClickListener {
 
         }
         tvCount= header.findViewById<TextView>(R.id.tvCount)
 
-        val iv_atoz = header.findViewById<ImageView>(R.id.iv_atoz)
-        iv_atoz.setOnClickListener { v ->
+        val ivAtoz = header.findViewById<ImageView>(R.id.iv_atoz)
+        ivAtoz.setOnClickListener { v ->
             val adapter = AtoZBottomAdapter(context)
             adapter.setmISortingRecords(this)
             dialog = DialogPlus.newDialog(context!!)
                     .setAdapter(adapter)
                     .setGravity(Gravity.BOTTOM)
                     .setCancelable(true)
-                    .setExpanded(false)
+                    .setExpanded(true,1200)
                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                     .create()
             dialog?.show()
@@ -239,15 +253,15 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         binding.lstFilter.layoutManager = LinearLayoutManager(activity)
         binding.lstFilter.adapter = adapter
         adapter.setContext(this)
-        stop=false
+        DashboardActivity.stop=false
         alpha=""
         setupList()
         return binding.root
     }
 
     private fun setupList() {
-        if (!stop) {
-            stop = true
+        if (!DashboardActivity.stop) {
+            DashboardActivity.stop = true
             val data = SearchByCityData()
             data.start = start.toString()
             data.length = length.toString()

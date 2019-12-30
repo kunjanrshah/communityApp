@@ -12,8 +12,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.github.squti.guru.Guru;
+import com.google.gson.Gson;
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
+import com.krs.community.model.Member;
 import com.krs.community.utils.Utility;
 
 public class ByQRCodeFragment extends Fragment {
@@ -26,6 +29,9 @@ public class ByQRCodeFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
         }
+
+        String loginMember=Guru.getString(getString(R.string.loginUser),"");
+        Member member= new Gson().fromJson(loginMember, Member.class);
 
         ImageView iv_cancel=root.findViewById(R.id.iv_cancel);
         iv_cancel.setOnClickListener(v -> {

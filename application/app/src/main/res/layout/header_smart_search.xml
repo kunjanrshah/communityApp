@@ -34,6 +34,7 @@
             android:layout_marginRight="20dp"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:visibility="gone"
             android:layout_margin="5dp"
             android:background="@drawable/atoz" />
 
@@ -55,6 +56,16 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
          />
+
+    <TextView
+        android:id="@+id/tvRecords"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:textColor="#272727"
+        android:layout_marginBottom="5dp"
+        android:textSize="18sp" />
 
 
 </LinearLayout>

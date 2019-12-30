@@ -305,6 +305,7 @@ public class AppConstants {
         String GET_COMMITTEE = "GetCommittee";
         String GET_DESIGNATION = "GetDesignation";
 
+        String SEARCH_BY_KEYWORDS = "SmartSearch";
         String ADD_MEMBER = "AddMember";
         String DELETE_MEMBER = "DeleteMember";
         String GET_STATISTICS = "GetStatistics";

@@ -14,7 +14,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,9 +24,7 @@ import com.krs.community.app.AppController
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.utils.Utility
-import com.krs.community.utils.copyViewImage
 import com.nightonke.boommenu.BoomMenuButton
-import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.header_calendar.*
 import ru.slybeaver.slycalendarview.SlyCalendarDialog
 import java.text.SimpleDateFormat
@@ -159,8 +156,6 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         }
 
         adapter.setOnClickEvent { v, position ->
-
-
             /*val fragmentTransaction = initFragmentTransaction(v)
             val copy = view!!.copyViewImage()
             copy.y += activity!!.myAppBar.height
@@ -173,26 +168,20 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         recyclerView.layoutManager = layoutManagerFixed
         val header = layoutInflater.inflate(com.krs.community.R.layout.header_calendar, recyclerView, false)
 
-        val fab: FloatingActionButton
-        val txtdate: TextView
-        val imgCalendar: ImageView
-        val lstCalFliter: RecyclerView
-        var iv_cancel:ImageView
-
-        iv_cancel=header.findViewById(R.id.iv_cancel)
-        iv_cancel.setOnClickListener {
+        val fab: FloatingActionButton=header.run { findViewById(com.krs.community.R.id.fab) }
+        val txtdate: TextView =  header.findViewById(com.krs.community.R.id.txtdate)
+        val imgCalendar: ImageView= header.findViewById(com.krs.community.R.id.imgCalendar)
+        val lstCalFliter: RecyclerView= header.findViewById(R.id.lstCalFliter)
+        lstCalFliter.setHasFixedSize(true)
+        val ivCancel:ImageView=header.findViewById(R.id.iv_cancel)
+        ivCancel.setOnClickListener {
             Utility.movetoFragment(activity,DashboardFragment())
         }
-        fab = header.run { findViewById(com.krs.community.R.id.fab) }
-        txtdate = header.findViewById(com.krs.community.R.id.txtdate)
-        imgCalendar = header.findViewById(com.krs.community.R.id.imgCalendar)
-        lstCalFliter = header.findViewById(R.id.lstCalFliter)
-        lstCalFliter.setHasFixedSize(true)
-        val MyLayoutManager = LinearLayoutManager(activity)
-        MyLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+
+        val linearLayoutManager = LinearLayoutManager(activity)
+        linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         if (lstCalFliter != null) {
-            var list: ArrayList<String>
-            list = ArrayList()
+            val list: ArrayList<String> = ArrayList()
             list.add("Tithi")
             list.add("Panchang")
             list.add("Birthday")
@@ -201,7 +190,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
 
             lstCalFliter.adapter = FilterAdapter(list)
         }
-        lstCalFliter.layoutManager = MyLayoutManager
+        lstCalFliter.layoutManager = linearLayoutManager
 
 
         imgCalendar.setOnClickListener {
@@ -260,11 +249,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
     }
 
     internal inner class FilterViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        var txt_name: TextView
+        var txtName: TextView = v.findViewById(R.id.txt_name)
 
-        init {
-            txt_name = v.findViewById(R.id.txt_name)
-        }
     }
 
     internal inner class FilterAdapter(arrayList: ArrayList<String>) : RecyclerView.Adapter<FilterViewHolder>() {
@@ -281,77 +267,77 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
 
         override fun onBindViewHolder(holder: FilterViewHolder, position: Int) {
 
-            holder.txt_name.text = list!![position]
-            if (holder.txt_name.text.equals("Tithi")) {
-                holder.txt_name.setBackgroundResource(R.drawable.filter_tithi)
-                holder.txt_name.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-            } else if (holder.txt_name.text.equals("Panchang")) {
-                holder.txt_name.setBackgroundResource(R.drawable.filter_panchag)
-                holder.txt_name.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-            } else if (holder.txt_name.text.equals("Birthday")) {
-                holder.txt_name.setBackgroundResource(R.drawable.filter_birthday)
-                holder.txt_name.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-            } else if (holder.txt_name.text.equals("Anniversary")) {
-                holder.txt_name.setBackgroundResource(R.drawable.filter_ann)
-                holder.txt_name.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-            } else if (holder.txt_name.text.equals("Reminder")) {
-                holder.txt_name.setBackgroundResource(R.drawable.filter_reminder)
-                holder.txt_name.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+            holder.txtName.text = list!![position]
+            if (holder.txtName.text.equals("Tithi")) {
+                holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
+                holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+            } else if (holder.txtName.text.equals("Panchang")) {
+                holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
+                holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+            } else if (holder.txtName.text.equals("Birthday")) {
+                holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
+                holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+            } else if (holder.txtName.text.equals("Anniversary")) {
+                holder.txtName.setBackgroundResource(R.drawable.filter_ann)
+                holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+            } else if (holder.txtName.text.equals("Reminder")) {
+                holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
+                holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
             }
 
-            holder.txt_name.setOnClickListener {
-                if (holder.txt_name.text.equals("Tithi")) {
+            holder.txtName.setOnClickListener {
+                if (holder.txtName.text.equals("Tithi")) {
                     if (tithi) {
                         tithi = false
-                        holder.txt_name.setBackgroundResource(R.drawable.filter_fill_tithi)
-                        holder.txt_name.setTextColor(resources.getColor(R.color.white))
+                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_tithi)
+                        holder.txtName.setTextColor(resources.getColor(R.color.white))
                     } else {
                         tithi = true
-                        holder.txt_name.setBackgroundResource(R.drawable.filter_tithi)
-                        holder.txt_name.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
                     }
-                } else if (holder.txt_name.text.equals("Panchang")) {
+                } else if (holder.txtName.text.equals("Panchang")) {
                     if (panchag) {
                         panchag = false
-                        holder.txt_name.setBackgroundResource(R.drawable.filter_fill_panchag)
-                        holder.txt_name.setTextColor(resources.getColor(R.color.white))
+                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_panchag)
+                        holder.txtName.setTextColor(resources.getColor(R.color.white))
                     } else {
                         panchag = true
-                        holder.txt_name.setBackgroundResource(R.drawable.filter_panchag)
-                        holder.txt_name.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
                     }
 
-                } else if (holder.txt_name.text.equals("Birthday")) {
+                } else if (holder.txtName.text.equals("Birthday")) {
                     if (birthday) {
                         birthday = false
-                        holder.txt_name.setBackgroundResource(R.drawable.filter_fill_birthday)
-                        holder.txt_name.setTextColor(resources.getColor(R.color.white))
+                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_birthday)
+                        holder.txtName.setTextColor(resources.getColor(R.color.white))
                     } else {
                         birthday = true
-                        holder.txt_name.setBackgroundResource(R.drawable.filter_birthday)
-                        holder.txt_name.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
                     }
 
-                } else if (holder.txt_name.text.equals("Anniversary")) {
+                } else if (holder.txtName.text.equals("Anniversary")) {
                     if (anniversay) {
                         anniversay = false
-                        holder.txt_name.setBackgroundResource(R.drawable.filter_fill_ann)
-                        holder.txt_name.setTextColor(resources.getColor(R.color.white))
+                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_ann)
+                        holder.txtName.setTextColor(resources.getColor(R.color.white))
                     } else {
                         anniversay = true
-                        holder.txt_name.setBackgroundResource(R.drawable.filter_ann)
-                        holder.txt_name.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setBackgroundResource(R.drawable.filter_ann)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
                     }
 
-                } else if (holder.txt_name.text.equals("Reminder")) {
+                } else if (holder.txtName.text.equals("Reminder")) {
                     if (reminder) {
                         reminder = false
-                        holder.txt_name.setBackgroundResource(R.drawable.filter_fill_reminder)
-                        holder.txt_name.setTextColor(resources.getColor(R.color.white))
+                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_reminder)
+                        holder.txtName.setTextColor(resources.getColor(R.color.white))
                     } else {
                         reminder = true
-                        holder.txt_name.setBackgroundResource(R.drawable.filter_reminder)
-                        holder.txt_name.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
                     }
                 }
             }

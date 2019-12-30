@@ -190,41 +190,4 @@ class ProfileDetailViewModel(
             }
         }
     }
-
-
-    /*fun getMemberByFilters(filter: SearchData) {
-        job_by_distance = Job()
-        job_by_distance.let { thejob ->
-
-            CoroutineScope(Dispatchers.IO + thejob!!).launch {
-                try {
-                    val response = mProfileDetailRepository.byFilter(filter)
-
-
-                    response.members?.let {
-                        withContext(Dispatchers.Main) {
-                            mEditMemberListener?.getMembers(response)
-                            thejob.complete()
-                        }
-                        return@launch
-                    }
-                    mEditMemberListener?.getFailure("No records found!")
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mEditMemberListener?.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mEditMemberListener?.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mEditMemberListener?.getFailure(it)
-                    }
-                }
-                thejob.complete()
-            }
-        }
-    }*/
-
 }

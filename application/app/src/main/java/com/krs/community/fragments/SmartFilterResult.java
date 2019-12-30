@@ -129,7 +129,7 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
                     .setAdapter(adapter)
                     .setGravity(Gravity.BOTTOM)
                     .setCancelable(true)
-                    .setExpanded(true)
+                    .setExpanded(true,1200)
                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                     .create();
             dialog.show();

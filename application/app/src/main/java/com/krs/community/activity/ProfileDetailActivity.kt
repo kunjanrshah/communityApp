@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -58,18 +59,17 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: ProfileDetailViewModelFactory by instance()
     private val listFragments = mutableListOf<Fragment>()
-    private lateinit var head_id: String
-    private lateinit var id: String
     private var isProfileImage = false
     private lateinit var member: Member
     override val kodein by kodein()
     private lateinit var logger: Logger
     private lateinit var professionalDetailsFragment: ProfessionalDetailsFragment
     private lateinit var easyWayLocation: EasyWayLocation
-    private lateinit var getLocationDetail: GetLocationDetail
+
 
     companion object {
         lateinit var binding: ActivityProfileDetailBinding
+        lateinit var getLocationDetail: GetLocationDetail
         val TAG = ProfileDetailActivity::class.java.simpleName
         var cur_lat = MutableLiveData<Double>()
         var cur_lng = MutableLiveData<Double>()
@@ -123,6 +123,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         }
     }
 
+    private lateinit var request: LocationRequest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,17 +137,18 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         }
 
         getLocationDetail = GetLocationDetail(this, this)
-        val request = LocationRequest()
+        request = LocationRequest()
         request.interval = Utility.INTERVAL
         request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-        easyWayLocation = EasyWayLocation(this, request, false, this)
-        cur_lat.observeForever {
-            setDistance()
-        }
+        easyWayLocation = EasyWayLocation(this, request, true, this)
 
-        cur_lng.observeForever {
+        cur_lat.observe(this, Observer {
             setDistance()
-        }
+        })
+
+        cur_lat.observe(this, Observer {
+            setDistance()
+        })
 
         val mainDetailsFragment = MainDetailsFragment()
         val personalDetailsFragment = PersonalDetailsFragment()
@@ -181,48 +183,18 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         binding.llViewFamily.setOnClickListener {
 
             val intent = Intent(this, FamilyDetailActivity::class.java)
-            if (head_id.equals("0")) {
-                intent.putExtra("id", id)
-            } else {
-                intent.putExtra("id", head_id)
-            }
+            intent.putExtra(getString(R.string.id), Guru.getString(getString(R.string.user_id),""))
             startActivity(intent)
             finish()
             Utility.fade(this)
         }
 
         binding.imgBack.setOnClickListener {
-
             finish()
             Utility.fade(this)
         }
 
-        binding.tvSave.setOnClickListener {
 
-            val jsonObject = JSONObject()
-            mainDetailsFragment.getSaveData(jsonObject)
-            personalDetailsFragment.getSaveData(jsonObject)
-            professionalDetailsFragment.getSaveData(jsonObject)
-            matrimonyDetailsFragment.getSaveData(jsonObject)
-            jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
-            jsonObject.put(getString(R.string.id), member.id)
-            if(member.isLocationEnable=="1"){
-                jsonObject.put(getString(R.string.is_location_enable), "1")
-            }else{
-                jsonObject.put(getString(R.string.is_location_enable), "0")
-            }
-            jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-            val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-            if (binding.tvSave.text.toString().toLowerCase().equals("save")) {
-                Utility.startSweetProgress(this, "Updating your profie", "Please wait...")
-                profileDetailViewModel.updateProfile(profile, true)
-            } else {
-                // jsonObject.put(getString(R.string.updated_dt),Utility.DatetoString(Date(),Utility.yyyy_MM_dd))
-                Utility.startSweetProgress(this, "Adding ${jsonObject.get(getString(R.string.first_name))}'s profie", "Please wait...")
-                profileDetailViewModel.updateProfile(profile, false)
-            }
-            Log.d(ProfileDetailActivity::class.java.simpleName, "jsonObject: " + jsonObject.toString())
-        }
 
         binding.imgProfile.setOnClickListener {
             isProfileImage = true
@@ -241,27 +213,46 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         if (member.isLocationEnable == "0") {
             binding.userLocation.isOn = false
             binding.tvDistance.text = "User"
+            if(member.id.isNullOrEmpty()){
+                user_location.isEnabled=false
+            }
         } else {
             binding.userLocation.performClick()
             binding.userLocation.isOn = true
         }
 
+        binding.tvDistance.setOnClickListener {
+            if (binding.userLocation.isOn) {
+                // val address= Utility.getAddress(this,member.userLat.toDouble(),member.userLng.toDouble())
+                Utility.showDirections(this, member.userLat.toDouble(), member.userLng.toDouble(), "${member.firstName}'s Location")
+            } else {
+                if(!member.id.isNullOrEmpty()){
+                    Toast.makeText(this, "${member.firstName}'s location is off", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
         binding.userLocation.setOnClickListener {
             if (!binding.userLocation.isOn) {
-                member.isLocationEnable="1"
-                if (Utility.finePermissionIsGranted(this)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        RestartServiceBroadcastReceiver.scheduleJob(applicationContext)
+                if (easyWayLocation.hasLocationEnabled()) {
+                    if (Utility.finePermissionIsGranted(this)) {
+                        member.isLocationEnable = "1"
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            RestartServiceBroadcastReceiver.scheduleJob(applicationContext)
+                        } else {
+                            val bck = ProcessMainClass()
+                            bck.launchService(applicationContext)
+                        }
+                        setDistance()
                     } else {
-                        val bck = ProcessMainClass()
-                        bck.launchService(applicationContext)
+
+                        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION_PERMISSION)
                     }
-                    setDistance()
                 } else {
-                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION_PERMISSION)
+                    easyWayLocation = EasyWayLocation(this, request, true, this)
                 }
             } else {
-                member.isLocationEnable="0"
+                member.isLocationEnable = "0"
                 binding.tvDistance.text = "User"
                 stopService(ProcessMainClass.serviceIntent)
                 val jsonObject = JSONObject()
@@ -273,6 +264,110 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
                 profileDetailViewModel.updateProfile(profile, true)
             }
         }
+
+        binding.tvSave.setOnClickListener {
+
+            val jsonObject = JSONObject()
+            mainDetailsFragment.getSaveData(jsonObject)
+            personalDetailsFragment.getSaveData(jsonObject)
+            professionalDetailsFragment.getSaveData(jsonObject)
+            matrimonyDetailsFragment.getSaveData(jsonObject)
+            jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+
+            if (member.isLocationEnable == "1") {
+                jsonObject.put(getString(R.string.is_location_enable), "1")
+            } else {
+                jsonObject.put(getString(R.string.is_location_enable), "0")
+            }
+            jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+
+            if (binding.tvSave.text.toString().toLowerCase().equals("save")) {
+                Utility.startSweetProgress(this, "Updating your profie", "Please wait...")
+                jsonObject.put(getString(R.string.id), member.id)
+                val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
+                profileDetailViewModel.updateProfile(profile, true)
+            } else {
+                if(jsonObject.getString(getString(R.string.first_name)).isNullOrEmpty()){
+                    mainDetailsFragment.binding.fname.error = "Enter your FirstName"
+                    return@setOnClickListener
+                }else if(jsonObject.getString(getString(R.string.sub_cast_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.sub_cast_id))=="0"){
+                   Utility.displaySnackBarWithBottomMargin(ll_parent,"Select your LastName")
+                    return@setOnClickListener
+                }else if(jsonObject.getString(getString(R.string.gender)).isNullOrEmpty()){
+                    Utility.displaySnackBarWithBottomMargin(ll_parent,"Select your Gender")
+                    return@setOnClickListener
+                }else if(jsonObject.getString(getString(R.string.relation_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.relation_id))=="0"){
+                    Utility.displaySnackBarWithBottomMargin(ll_parent,"Select your Relation")
+                    return@setOnClickListener
+                }
+
+                // jsonObject.put(getString(R.string.updated_dt),Utility.DatetoString(Date(),Utility.yyyy_MM_dd))
+                Utility.startSweetProgress(this, "Adding ${jsonObject.get(getString(R.string.first_name))}'s Profie", "Please wait...")
+                val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
+                profileDetailViewModel.updateProfile(profile, false)
+            }
+            Log.d(ProfileDetailActivity::class.java.simpleName, "jsonObject: " + jsonObject.toString())
+        }
+    }
+
+    private fun setMemberValues() {
+
+        binding.txtTitle.text = "${member.firstName}'s Profile"
+        val userId = Guru.getString(getString(R.string.user_id), "")
+        if (member.id == userId || member.headId == userId) {
+            binding.tvSave.visibility = View.VISIBLE
+            binding.tvSave.text = "Save"
+        } else if (member.id.isNullOrEmpty()) {
+            binding.tvSave.text = "Add"
+            binding.txtTitle.text = "New Profile"
+        } else {
+            binding.tvSave.visibility = View.GONE
+        }
+
+
+        binding.userLocation.isOn = !member.isLocationEnable.isNullOrEmpty() && member.isLocationEnable.equals("1")
+        if (!member.profilePic.isNullOrEmpty()) {
+            try {
+                Glide.with(AppController.mApplication).load(member.profilePic).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgProfile)
+            } catch (e: Exception) {
+                e.message
+            }
+        }
+
+        val bundle = Bundle()
+        bundle.putSerializable(getString(R.string.member), member)
+        listFragments.get(0).arguments = bundle
+        listFragments.get(1).arguments = bundle
+        listFragments.get(2).arguments = bundle
+        listFragments.get(3).arguments = bundle
+        binding.viewpager.offscreenPageLimit = 4
+        binding.viewpager.adapter = MyPagerAdapter(listFragments, supportFragmentManager)
+
+    }
+
+    override fun getMessage(response: UpdateProfileResponse) {
+        Utility.hideSweetProgress()
+        if (response.message.toString().toLowerCase().contains("added")) {
+            binding.llViewFamily.performClick()
+        } else if (response.message.toString().toLowerCase().contains("updated")){
+            val member = response.member
+            val percentage = Utility.calculatePercentage(member)
+            setPercentage(percentage)
+            Utility.displaySnackBarWithBottomMargin(binding.llParent, "Profile updated!")
+            if (member.headId == "0") {
+                Guru.putString(getString(R.string.loginUser), Gson().toJson(member))
+                Guru.putString(getString(R.string.user_mobile), member.mobile)
+            }
+        }else{
+            Toast.makeText(this,response.message,Toast.LENGTH_LONG).show()
+        }
+    }
+
+
+    override fun getFailure(message: String) {
+        Utility.hideSweetProgress()
+        binding.viewpager.snackbar("Something went wrong!", Snackbar.LENGTH_LONG)
+        Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
     }
 
     private fun setDistance() {
@@ -324,65 +419,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
     }
 
 
-    private fun setMemberValues() {
 
-        binding.txtTitle.text = "${member.firstName}'s Profile"
-        val userId = Guru.getString(getString(R.string.user_id), "")
-        if (member.id.equals(userId) || member.headId.equals(userId)) {
-            binding.tvSave.visibility = View.VISIBLE
-            binding.tvSave.text = "Save"
-        } else if (member.id.isNullOrEmpty()) {
-            binding.tvSave.text = "Add"
-            binding.txtTitle.text = "New Profile"
-        } else {
-            binding.tvSave.visibility = View.GONE
-        }
-
-
-        binding.userLocation.isOn = !member.isLocationEnable.isNullOrEmpty() && member.isLocationEnable.equals("1")
-        if (!member.profilePic.isNullOrEmpty()) {
-            try {
-                Glide.with(AppController.mApplication).load(member.profilePic).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgProfile)
-            } catch (e: Exception) {
-                e.message
-            }
-        }
-
-        head_id = member.headId
-        id = member.id
-        val bundle = Bundle()
-        bundle.putSerializable(getString(R.string.member), member)
-        listFragments.get(0).arguments = bundle
-        listFragments.get(1).arguments = bundle
-        listFragments.get(2).arguments = bundle
-        listFragments.get(3).arguments = bundle
-        binding.viewpager.offscreenPageLimit = 4
-        binding.viewpager.adapter = MyPagerAdapter(listFragments, supportFragmentManager)
-
-    }
-
-    override fun getMessage(response: UpdateProfileResponse) {
-        Utility.hideSweetProgress()
-        if (response.message.toString().toLowerCase().contains("added")) {
-            binding.llViewFamily.performClick()
-        } else {
-            val member = response.member
-            val percentage = Utility.calculatePercentage(member)
-            setPercentage(percentage)
-            Utility.displaySnackBarWithBottomMargin(binding.llParent, "Profile updated!")
-            if (member.headId == "0") {
-                Guru.putString(getString(R.string.loginUser), Gson().toJson(member))
-                Guru.putString(getString(R.string.user_mobile), member.mobile)
-            }
-        }
-    }
-
-
-    override fun getFailure(message: String) {
-        Utility.hideSweetProgress()
-        binding.viewpager.snackbar("Something went wrong!", Snackbar.LENGTH_LONG)
-        Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
-    }
 
     class MyPagerAdapter(val listFragments: List<Fragment>, fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
         override fun getItem(position: Int): Fragment {
@@ -437,7 +474,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         cur_lat.postValue(location.latitude)
         cur_lng.postValue(location.longitude)
 
-        getLocationDetail.getAddress(location.latitude, location.longitude, "xyz")
+        getLocationDetail.getAddress(location.latitude, location.longitude, getString(R.string.map_api_key))
     }
 
     override fun locationData(locationData: LocationData) {

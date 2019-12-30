@@ -44,6 +44,7 @@ import com.krs.community.viewmodel.ProfileDetailViewModelFactory
 import com.yalantis.ucrop.UCrop
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.dashboard_menu.*
+import kotlinx.android.synthetic.main.fragment_professional_details.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -102,22 +103,23 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener 
                     .setCancelText("View")
                     .setConfirmClickListener {
                         it.dismiss()
-                        val jsonObject = JSONObject()
-
-                        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
-                        jsonObject.put(getString(R.string.id), member.id)
-                        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token),""))
-                        jsonObject.put(getString(R.string.office_lat), ProfileDetailActivity.cur_lat.value)
-                        jsonObject.put(getString(R.string.office_lng), ProfileDetailActivity.cur_lng.value)
-
-                        val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-
-                        Utility.startSweetProgress(activity, "Updating your office location", "Please wait...")
-                        profileDetailViewModel.updateProfile(profile, true)
-
+                        if(member.headId=="0" && !member.id.isNullOrEmpty()){
+                            val jsonObject = JSONObject()
+                            jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
+                            jsonObject.put(getString(R.string.id), member.id)
+                            jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token),""))
+                            jsonObject.put(getString(R.string.office_lat), ProfileDetailActivity.cur_lat.value)
+                            jsonObject.put(getString(R.string.office_lng), ProfileDetailActivity.cur_lng.value)
+                            val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
+                            Utility.startSweetProgress(activity, "Updating your office location", "Please wait...")
+                            profileDetailViewModel.updateProfile(profile, true)
+                        }else{
+                            Utility.displaySnackBarWithBottomMargin(ll_main,"Only Family Head Set the Office Location")
+                        }
                     }
                     .setCancelClickListener {
                         it.dismiss()
+                        Utility.showDirections(activity,member.officeLat.toDouble(),member.officeLng.toDouble(),"${member.firstName}'s Work")
                     }
                     .show()
         }
@@ -289,6 +291,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener 
     }
 
     override fun getFailure(message: String) {
+        Utility.hideSweetProgress()
         Utility.displaySnackBarWithBottomMargin(binding.llMain, message)
     }
 }

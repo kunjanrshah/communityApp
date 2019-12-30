@@ -2,17 +2,21 @@ package com.krs.community.utils
 
 import android.Manifest
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.view.Window
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ViewUtils
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
@@ -21,13 +25,18 @@ import androidx.fragment.app.FragmentActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.activity.BaseActivity
 import com.krs.community.app.AppController
+import com.krs.community.fragments.MatrimonyListFragment
+import com.krs.community.jrspinner.JRSpinner
+import com.krs.community.viewmodel.MatrimonySearchViewModel
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.model.AspectRatio
 import de.hdodenhof.circleimageview.CircleImageView
+import org.json.JSONObject
 import java.io.File
 
 
@@ -49,23 +58,6 @@ fun View.snackbar(message: String,snack:Int ){
             snackbar.dismiss()
         }
     }.show()
-}
-
-fun View.snack(message:String, left:Int = 10, top:Int = 10, right:Int = 10, bottom:Int = 10, duration:Int = Snackbar.LENGTH_SHORT){
-    Snackbar.make(this, message, duration).apply {
-
-        val params = CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT )
-        params.setMargins(left, top, right, bottom)
-        params.gravity = Gravity.BOTTOM
-        params.anchorGravity = Gravity.BOTTOM
-
-        view.layoutParams = params
-        show()
-    }
-}
-
-fun View.longSnack(message:String){
-    snack(message, duration = Snackbar.LENGTH_LONG)
 }
 
 var logger: Logger=Logger(ViewUtils::class.java.simpleName)
@@ -201,4 +193,129 @@ fun promptReadPermission(context:Context) {
                 }
                 .show()
     }
+}
+
+
+fun openFilter(context: Context,matrimonySearchViewModel:MatrimonySearchViewModel) {
+    val dialog = Dialog(context)
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    dialog.setContentView(R.layout.filter_matrimony)
+    dialog.setCancelable(false)
+
+    val spMarital= dialog.findViewById<JRSpinner>(R.id.sp_marital)
+    val spCity= dialog.findViewById<JRSpinner>(R.id.sp_city)
+    val spLname= dialog.findViewById<JRSpinner>(R.id.sp_lname)
+    val btnMale= dialog.findViewById<Button>(R.id.btnmale)
+    val btnFemale= dialog.findViewById<Button>(R.id.btnfemale)
+    val ivClose= dialog.findViewById<ImageView>(R.id.iv_close)
+    val btnSearch= dialog.findViewById<Button>(R.id.btn_search)
+    val edtName= dialog.findViewById<EditText>(R.id.edt_name)
+    val edtHead= dialog.findViewById<EditText>(R.id.edt_head_name)
+    val edtMobile= dialog.findViewById<EditText>(R.id.edt_mobile)
+    val edtMail= dialog.findViewById<EditText>(R.id.edt_mail)
+    val tvMin= dialog.findViewById<TextView>(R.id.tv_min)
+    val tvMax= dialog.findViewById<TextView>(R.id.tv_max)
+    val rangeSeekbar= dialog.findViewById<CrystalRangeSeekbar>(R.id.rangeSeekbar)
+    rangeSeekbar.setOnRangeSeekbarChangeListener { minValue, maxValue ->
+        tvMin.text = "$minValue"
+        tvMax.text = "$maxValue"
+    }
+
+    var isMale:Boolean=true
+    val lstMarital =  context.resources.getStringArray(R.array.marital)
+    val list=ArrayList<String>()
+    list.addAll(lstMarital)
+    list.remove(context.getString(R.string.married))
+    spMarital.setItems(list.toTypedArray())
+    spMarital.setExpandTint(R.color.black)
+
+    matrimonySearchViewModel.getListCityName().observeForever {
+        if(it.isNotEmpty()){
+            val list=ArrayList<String>()
+            list.add(context.getString(R.string.Select))
+            list.addAll(it)
+            spCity.setItems(list.toTypedArray())
+            spCity.setExpandTint(R.color.black)
+        }
+    }
+
+    matrimonySearchViewModel.getLastName().observeForever {
+        if(it.isNotEmpty()){
+            val list=ArrayList<String>()
+            list.add(context.getString(R.string.Select))
+            list.addAll(it)
+            spLname.setItems(list.toTypedArray())
+            spLname.setExpandTint(R.color.black)
+        }
+    }
+
+    btnMale.setOnClickListener {
+        isMale=true
+        btnMale.background = context.resources.getDrawable(R.drawable.round_corner_primary)
+        btnMale.setTextColor(context.resources.getColor(R.color.white))
+        btnFemale.background = context.resources.getDrawable(R.drawable.round_corner_white)
+        btnFemale.setTextColor(context.resources.getColor(R.color.black))
+    }
+    btnFemale.setOnClickListener {
+        isMale=false
+        btnMale.background = context.resources.getDrawable(R.drawable.round_corner_white)
+        btnMale.setTextColor(context.resources.getColor(R.color.black))
+        btnFemale.background = context.resources.getDrawable(R.drawable.round_corner_primary)
+        btnFemale.setTextColor(context.resources.getColor(R.color.white))
+    }
+
+    ivClose.setOnClickListener { dialog.dismiss() }
+    btnSearch.setOnClickListener {
+        dialog.dismiss()
+        val jsonObject= JSONObject()
+        if(edtName.text.trim().isNotEmpty()){
+            jsonObject.put(context.getString(R.string.name),edtName.text.trim())
+        }
+        if(edtHead.text.trim().isNotEmpty()){
+            jsonObject.put(context.getString(R.string.head_name),edtHead.text.trim())
+        }
+        if(edtMobile.text.trim().isNotEmpty()){
+            jsonObject.put(context.getString(R.string.mobile),edtMobile.text.trim())
+        }
+        if(edtMail.text.trim().isNotEmpty()){
+            jsonObject.put(context.getString(R.string.email_address),edtMail.text.trim())
+        }
+
+        if(!spLname.text.isNullOrEmpty() && spLname.text.toString()!=context.getString(R.string.Select)){
+            Coroutines.io {
+                val subCastId= matrimonySearchViewModel.getIdByLastName(spLname.text.toString())
+                jsonObject.put(context.getString(R.string.sub_cast_id),subCastId)
+            }
+        }
+
+        if(!spCity.text.isNullOrEmpty() && spCity.text.toString()!=context.getString(R.string.Select)){
+            Coroutines.io {
+                val cityId=  matrimonySearchViewModel.getCityIdByName(spCity.text.toString())
+                jsonObject.put(context.getString(R.string.city_id),cityId)
+            }
+        }
+
+        if(isMale){
+            jsonObject.put(context.getString(R.string.gender),"Male")
+        }else{
+            jsonObject.put(context.getString(R.string.gender),"Female")
+        }
+        if(!spMarital.text.isNullOrEmpty()){
+            jsonObject.put(context.getString(R.string.marital_status),spMarital.text)
+        }
+        jsonObject.put(context.getString(R.string.matrimony),"Yes")
+        jsonObject.put(context.getString(R.string.min_age),rangeSeekbar.selectedMinValue)
+        jsonObject.put(context.getString(R.string.max_age),rangeSeekbar.selectedMaxValue)
+        moveToFragmentListScreen(context as FragmentActivity,jsonObject.toString())
+    }
+    dialog.show()
+}
+
+fun moveToFragmentListScreen(activity: FragmentActivity?,filter:String){
+    val fragment= MatrimonyListFragment()
+    val bundle= Bundle()
+    bundle.putString("filter",filter)
+    fragment.arguments=bundle
+    Utility.movetoFragment(activity, fragment)
 }

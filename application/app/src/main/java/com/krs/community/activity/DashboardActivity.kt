@@ -41,6 +41,7 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware {
     private val factory: DashboardViewModelFactory by instance()
 
     companion object {
+        var stop: Boolean = false
         lateinit var myAppBar: AppBarLayout
         //@JvmField
         lateinit var spaceNavigationView: SpaceNavigationView

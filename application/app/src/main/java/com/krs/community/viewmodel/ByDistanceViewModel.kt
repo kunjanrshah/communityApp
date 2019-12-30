@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.krs.community.interfaces.ByDistanceListener
 import com.krs.community.model.ByDistanceModel
-import com.krs.community.repositories.BrowseCityRepository
 import com.krs.community.repositories.ByDistanceRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
@@ -20,8 +19,12 @@ class ByDistanceViewModel(
     var mByDistanceListener: ByDistanceListener? = null
 
 
-    suspend fun getCityNamebyId(id:String):LiveData<String>{
+    fun getCityNamebyId(id:String):LiveData<String>{
        return mByDistanceRepository.getCityName(id)
+    }
+
+    fun getLastNamebyId(id:String):LiveData<String>{
+        return mByDistanceRepository.getLastName(id)
     }
 
     fun getUserByDistance(distance: ByDistanceModel) {
@@ -33,7 +36,7 @@ class ByDistanceViewModel(
                     val response = mByDistanceRepository.byDistance(distance)
                     response.member?.let {
                         withContext(Dispatchers.Main) {
-                            mByDistanceListener?.getUsers(response)
+                            mByDistanceListener?.getMembers(response)
                             thejob.complete()
                         }
                         return@launch

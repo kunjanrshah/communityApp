@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.krs.community.R;
+import com.krs.community.activity.DashboardActivity;
 import com.krs.community.fragments.SearchCityResult;
 import com.krs.community.model.User;
 
@@ -55,7 +56,6 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
     private OnLoadMore mOnLoadMore;
     private RecyclerView mRecyclerView;
     private boolean mShouldClipView = true;
-    private Context mContext;
 
     private void translateHeader(float of) {
         float ofCalculated = of * mScrollMultiplier;
@@ -225,7 +225,7 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
         if (position == 1){
             return VIEW_TYPES.FIRST_VIEW;
         }
-        else if(position==mData.size() && !SearchCityResult.Companion.getStop()){
+        else if(position == mData.size() && !DashboardActivity.Companion.getStop()){
             if(mOnLoadMore!=null){
                 mOnLoadMore.loadApi();
                 return VIEW_TYPES.VIEW_TYPE_LOADING;

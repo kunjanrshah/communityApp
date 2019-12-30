@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.ViewUtils
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -56,13 +55,15 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
         Utility.fade(this)
     }
 
-    lateinit var members:List<Member>
+    lateinit var members:ArrayList<Member>
 
     var headId:String?=null
     val TAG = FamilyDetailActivity::class.java.simpleName
     private var mShimmerViewContainer: ShimmerFrameLayout? = null
     private lateinit var rvDetail:RecyclerView
     private lateinit var llRoot:LinearLayout
+    private lateinit var adapter:ParallaxRecyclerAdapter<Member>
+    private var deletedId=""
     override val kodein by kodein()
     private lateinit var familyDetailViewModel:FamilyDetailViewModel
     private val factory: FamilyDetailViewModelFactory by instance()
@@ -85,97 +86,118 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
             Utility.changeStatusbarColor(this, R.color.colorPrimary, true)
         }
 
-        headId = intent.getStringExtra("id")
+        headId = intent.getStringExtra(getString(R.string.id))
         familyDetailViewModel = ViewModelProviders.of(this, factory).get(FamilyDetailViewModel::class.java)
         familyDetailViewModel.mIFamilyMembersListener = this
 
         mShimmerViewContainer = findViewById(R.id.shimmer_view_container1)
         rvDetail=findViewById(R.id.rv_detail)
         llRoot=findViewById(R.id.ll_root)
-        mShimmerViewContainer?.startShimmerAnimation()
-        mShimmerViewContainer?.visibility=View.VISIBLE
 
-        val jsonObject=JSONObject()
-        jsonObject.put("head_id",headId)
-        val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
         rvDetail.setHasFixedSize(true)
         val mLayoutManager = LinearLayoutManager(applicationContext)
         rvDetail.layoutManager = mLayoutManager
         rvDetail.itemAnimator = DefaultItemAnimator()
+
+        getFamilyDetails()
+    }
+
+    private fun getFamilyDetails(){
+        val jsonObject=JSONObject()
+        jsonObject.put("head_id",headId)
+        val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
+        mShimmerViewContainer?.startShimmerAnimation()
+        mShimmerViewContainer?.visibility=View.VISIBLE
         familyDetailViewModel.getFamilyDetails(records)
+        Handler().postDelayed({
+            mShimmerViewContainer?.stopShimmerAnimation()
+            mShimmerViewContainer?.visibility=View.GONE
+        },4000)
+    }
+
+    private fun deleteFamilyMember(id:String){
+        mShimmerViewContainer?.startShimmerAnimation()
+        mShimmerViewContainer?.visibility=View.VISIBLE
+        val mJSONObject= JSONObject()
+        mJSONObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
+        mJSONObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
+        mJSONObject.put("member_id", id)
+        deletedId= id
+        val records=  JsonParser().parse(mJSONObject.toString()) as JsonObject
+        familyDetailViewModel.deleteMember(records)
+
 
         Handler().postDelayed({
             mShimmerViewContainer?.stopShimmerAnimation()
             mShimmerViewContainer?.visibility=View.GONE
-        },3000)
+        },4000)
     }
-
 
     override fun getFamilyMembers(data: FamilyDetailResponse) {
         mShimmerViewContainer?.stopShimmerAnimation()
         mShimmerViewContainer?.visibility=View.GONE
 
        if(data.success){
-           members=data.member
+           members= data.member as ArrayList<Member>
            createCardAdapter()
        }
     }
 
     private fun createCardAdapter() {
-        val family=members.subList(1,members.size)
-        val adapter = object : ParallaxRecyclerAdapter<Member>(family) {
-            override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, i: Int) {
-                (viewHolder as HeaderViewHolder).tvName.text = family.get(i).firstName+" "+family.get(i).lastName
-                viewHolder.tvSubtext.text = family.get(i).relation
-                viewHolder.tvEmail.text = family.get(i).emailAddress
-                viewHolder.tvMobile.text = family.get(i).mobile
-                viewHolder.deleteLayout.setOnClickListener {
-
-                   SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Are you sure?")
-                    .setContentText("Won't be able to recover this Profile!")
-                    .setConfirmText("Yes,delete it!")
-                           .setCancelText("No")
-                           .setConfirmClickListener {
-                               it.dismiss()
-                               val mJSONObject= JSONObject()
-                               mJSONObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
-                               mJSONObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-                               mJSONObject.put("member_id",60) //family.get(i).id
-                               val records=  JsonParser().parse(mJSONObject.toString()) as JsonObject
-                               familyDetailViewModel.deleteMember(records)
-                           }
-                           .setCancelClickListener {
-                               it.dismiss()
-                           }
-                           .show()
-                }
-                viewHolder.bmB.clearBuilders()
-                for (i in 0 until viewHolder.bmB.piecePlaceEnum.pieceNumber()) {
-                    viewHolder.bmB.addBuilder(Utility.getTextInsideCircleButtonBuilder())
-                }
-
-                viewHolder.bmB.setOnClickListener {
-                    viewHolder.bmB.boom()
-                }
-            }
-
-            override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
-                return HeaderViewHolder(layoutInflater.inflate(R.layout.row_list_family_detail, viewGroup, false))
-            }
-
-            override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<Member>): Int {
-                return (family.size)
-            }
+        var family:MutableList<Member>?=null
+        if(members.size>0){
+           family=members.subList(1,members.size)
         }
+        if(family!=null){
+            adapter = object : ParallaxRecyclerAdapter<Member>(family) {
+                override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, i: Int) {
+                    (viewHolder as HeaderViewHolder).tvName.text = family!!.get(i).firstName+" "+family.get(i).lastName
+                    viewHolder.tvSubtext.text = family.get(i).relation
+                    viewHolder.tvEmail.text = family.get(i).emailAddress
+                    viewHolder.tvMobile.text = family.get(i).mobile
+                    viewHolder.deleteLayout.setOnClickListener {
 
-        adapter.setOnClickEvent { v, position ->
-            val intent = Intent(this, ProfileDetailActivity::class.java)
-            intent.putExtra(getString(R.string.member),family.get(position))
-            intent.putExtra("from", FamilyDetailActivity::class.java)
-            startActivity(intent)
-            finish()
-            Utility.fade(this)
+                        SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Are you sure?")
+                                .setContentText("Won't be able to recover this Profile!")
+                                .setConfirmText("Yes,delete it!")
+                                .setCancelText("No")
+                                .setConfirmClickListener {
+                                    it.dismiss()
+                                    deleteFamilyMember(family[i].id)
+                                }
+                                .setCancelClickListener {
+                                    it.dismiss()
+                                }
+                                .show()
+                    }
+                    viewHolder.bmB.clearBuilders()
+                    for (i in 0 until viewHolder.bmB.piecePlaceEnum.pieceNumber()) {
+                        viewHolder.bmB.addBuilder(Utility.getTextInsideCircleButtonBuilder())
+                    }
+
+                    viewHolder.bmB.setOnClickListener {
+                        viewHolder.bmB.boom()
+                    }
+                }
+
+                override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
+                    return HeaderViewHolder(layoutInflater.inflate(R.layout.row_list_family_detail, viewGroup, false))
+                }
+
+                override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<Member>): Int {
+                    return (family.size)
+                }
+            }
+
+            adapter.setOnClickEvent { v, position ->
+                val intent = Intent(this, ProfileDetailActivity::class.java)
+                intent.putExtra(getString(R.string.member),family.get(position))
+                intent.putExtra("from", FamilyDetailActivity::class.java)
+                startActivity(intent)
+                finish()
+                Utility.fade(this)
+            }
         }
 
         val layoutManagerFixed = HeaderLayoutManagerFixed(this)
@@ -188,34 +210,27 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
             finish()
             Utility.fade(this)
         }
-        val tv_name: TextView
-        tv_name = header.findViewById(R.id.tv_name1)
-        tv_name.text=members.get(0).firstName+" "+members.get(0).lastName
+        val tvName: TextView = header.findViewById(R.id.tv_name1)
+        tvName.text=members.get(0).firstName+" "+members.get(0).lastName
 
-        val tv_area: TextView
-        tv_area = header.findViewById(R.id.tv_area)
-        tv_area.text=members.get(0).area+" "+members.get(0).city
+        val tvArea: TextView = header.findViewById(R.id.tv_area)
+        tvArea.text=members.get(0).area+" "+members.get(0).city
 
-        val tv_mobile: TextView
-        tv_mobile = header.findViewById(R.id.tv_mobile)
-        tv_mobile.text=members.get(0).mobile
+        val tvMobile: TextView = header.findViewById(R.id.tv_mobile)
+        tvMobile.text=members.get(0).mobile
 
-        val tv_email: TextView
-        tv_email = header.findViewById(R.id.tv_email)
-        tv_email.text=members.get(0).emailAddress
+        val tvEmail: TextView = header.findViewById(R.id.tv_email)
+        tvEmail.text=members.get(0).emailAddress
 
-        val tv_addr: TextView
-        tv_addr = header.findViewById(R.id.tv_addr)
-        tv_addr.text=members.get(0).address
+        val tvAddr: TextView = header.findViewById(R.id.tv_addr)
+        tvAddr.text=members.get(0).address
 
-        val tv_label: TextView
-        tv_label = header.findViewById(R.id.tv_label)
-        tv_label.text="Family Member List (${members.size})"
+        val tvLabel: TextView = header.findViewById(R.id.tv_label)
+        tvLabel.text="Family Member List (${members.size})"
         //imgProfile.setImageURI(user.profilePic)
 
-        val ll_family_head: LinearLayout
-        ll_family_head = header.findViewById(R.id.ll_family_head)
-        ll_family_head.setOnClickListener {
+        val llFamilyHead: LinearLayout = header.findViewById(R.id.ll_family_head)
+        llFamilyHead.setOnClickListener {
             val intent = Intent(this, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), members.get(0))
             intent.putExtra("from", FamilyDetailActivity::class.java)
@@ -224,9 +239,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
             Utility.fade(this)
         }
 
-        val tv_add: TextView
-        tv_add = header.findViewById(R.id.tv_add)
-        tv_add.setOnClickListener {
+        val tvAdd: TextView = header.findViewById(R.id.tv_add)
+        tvAdd.setOnClickListener {
             val intent = Intent(this, ProfileDetailActivity::class.java)
             intent.putExtra("action", "add")
             intent.putExtra(getString(R.string.member), Member())
@@ -280,11 +294,29 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
     }
 
     override fun getMessage(response: DeleteProfileResponse) {
+        if(response.success){
+        var member1:Member?=null
+        for(member in members){
+              if(member.id == deletedId){
+                  member1=member
+                break
+              }
+         }
+
+        if(member1!=null){
+            members.remove(member1)
+            createCardAdapter()
+        }
+      }
+        mShimmerViewContainer?.stopShimmerAnimation()
+        mShimmerViewContainer?.visibility=View.GONE
         llRoot.snackbar(response.message,Snackbar.LENGTH_LONG)
     }
 
     override fun getFailure(message: String) {
-
+        mShimmerViewContainer?.stopShimmerAnimation()
+        mShimmerViewContainer?.visibility=View.GONE
+        llRoot.snackbar(message,Snackbar.LENGTH_LONG)
     }
 
     override fun onResume() {

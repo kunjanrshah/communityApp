@@ -38,15 +38,14 @@ import java.util.*
 
 class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDateSetListener {
 
-
     private lateinit var binding: FragmentPersonalDetailsBinding
     private lateinit var member: Member
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: ProfileDetailViewModelFactory by instance()
-    var datepicker = SpinnerDatePickerDialogBuilder()
+    private var datepicker = SpinnerDatePickerDialogBuilder()
     private var which:Int=0
     var numberOfLines = 5
-    var pattern="dd-MM-yyyy"
+    private var pattern="dd-MM-yyyy"
     override val kodein by kodein()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 

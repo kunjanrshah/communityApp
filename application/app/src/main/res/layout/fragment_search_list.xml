@@ -9,49 +9,9 @@
     android:layout_margin="5dp"
     android:orientation="vertical">
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmer_view_container"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        shimmer:duration="800">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-
-            <include layout="@layout/row_list_shimmer" />
-
-            <include layout="@layout/row_list_shimmer" />
-
-            <include layout="@layout/row_list_shimmer" />
-
-            <include layout="@layout/row_list_shimmer" />
-
-            <include layout="@layout/row_list_shimmer" />
-
-            <include layout="@layout/row_list_shimmer" />
-
-            <include layout="@layout/row_list_shimmer" />
-
-            <include layout="@layout/row_list_shimmer" />
-
-            <include layout="@layout/row_list_shimmer" />
-
-
-        </LinearLayout>
-
-    </com.facebook.shimmer.ShimmerFrameLayout>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_search"
@@ -64,6 +24,40 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/row_list_family_detail"/>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginTop="80dp"
+            shimmer:duration="800">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include layout="@layout/row_list_search_shimmer" />
+
+                <include layout="@layout/row_list_search_shimmer" />
+
+                <include layout="@layout/row_list_search_shimmer" />
+
+                <include layout="@layout/row_list_search_shimmer" />
+
+                <include layout="@layout/row_list_search_shimmer" />
+
+                <include layout="@layout/row_list_search_shimmer" />
+
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+    </FrameLayout>
+
+
+
 
 </LinearLayout>

@@ -73,6 +73,8 @@ class AppController : Application(), KodeinAware{
         bind() from singleton {  ProfileDetailRepository(instance(),instance()) }
         bind() from singleton {  DashboardRepository(instance(),instance()) }
         bind() from singleton {  StatisticsRepository(instance(),instance()) }
+        bind() from singleton {  SmartSearchRepository(instance(),instance()) }
+        bind() from singleton {  MatrimonySearchRepository(instance(),instance()) }
 
         bind() from provider { StatisticsViewModelFactory(instance()) }
         bind() from provider { FamilyDetailViewModelFactory(instance()) }
@@ -82,6 +84,8 @@ class AppController : Application(), KodeinAware{
         bind() from provider { ByDistanceViewModelFactory(instance()) }
         bind() from provider { ProfileDetailViewModelFactory(instance()) }
         bind() from provider { DashboardViewModelFactory(instance()) }
+        bind() from provider { SmartSearchViewModelFactory(instance()) }
+        bind() from provider { MatrimonySearchViewModelFactory(instance()) }
     }
 
     @SuppressLint("CommitPrefEdits")

@@ -33,6 +33,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.activity.BaseActivity
+import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.app.AppController
 import com.krs.community.interfaces.ByDistanceListener
@@ -52,8 +53,9 @@ import kotlinx.coroutines.CoroutineScope
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import kotlin.system.measureTimeMillis
 
-class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Listener, LocationData.AddressCallBack  {
+class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Listener, LocationData.AddressCallBack,ParallaxRecyclerAdapter.OnLoadMore  {
 
     lateinit var recyclerView: RecyclerView
     internal lateinit var mByDistanceViewModel: ByDistanceViewModel
@@ -76,25 +78,49 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     private var curr_lat = MutableLiveData<Double>()
     private var curr_lng = MutableLiveData<Double>()
     private var isCallAPI=false
-    override fun getUsers(response: ByDistanceResponse) {
+    private var selectedPosition = 0
+    private var start: Int = 0
+    private val length: Int = 30
+    private lateinit var distance:ByDistanceModel
 
+    override fun getMembers(response: ByDistanceResponse) {
+        DashboardActivity.stop=false
         if(response.success){
             lstMembers.clear()
-            tvRecords.visibility=View.VISIBLE
-            tvRecords.text="Records found: "+response.totalRecords
+            start=0
             for (item in response.member) {
-                lstMembers.add(item)
+                if(item.isLocationEnable!="0" && item.nearBy.toLowerCase() != "user"){
+                    lstMembers.add(item)
+                }
             }
             byDistanceAdapter?.notifyDataSetChanged()
-            imgMap.visibility=View.GONE
+            recyclerView.layoutManager?.scrollToPosition(selectedPosition)
+            selectedPosition = lstMembers.size - 1
+            DashboardActivity.stop = false
+
+            if(Integer.parseInt(response.totalRecords)<=length){
+                DashboardActivity.stop = true
+                Snackbar.make(llRoot, "End of the Records", Snackbar.LENGTH_LONG).show()
+            }
+
+            if(lstMembers.size>0){
+                tvRecords.text="Records found: "+response.totalRecords
+                imgMap.visibility=View.GONE
+                tvRecords.visibility=View.VISIBLE
+            }else{
+                tvRecords.visibility=View.GONE
+                imgMap.visibility=View.VISIBLE
+                DashboardActivity.stop = true
+            }
         }else{
+            tvRecords.visibility=View.GONE
             imgMap.visibility=View.VISIBLE
         }
         mShimmerViewContainer.stopShimmerAnimation()
         mShimmerViewContainer.visibility = View.GONE
         llRoot.snackbar(response.message,Snackbar.LENGTH_LONG)
         Utility.hideKeyboard(activity)
-    }
+}
 
     override fun getFailure(message: String) {
         Log.d(TAG, "getFailure: $message")
@@ -104,6 +130,8 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
             }
             mShimmerViewContainer.visibility = View.GONE
             imgMap.visibility=View.VISIBLE
+            tvRecords.visibility=View.GONE
+            DashboardActivity.stop = false
         }
 
         llRoot.snackbar(message,Snackbar.LENGTH_LONG)
@@ -146,7 +174,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
             ActivityCompat.requestPermissions(activity as AppCompatActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), BaseActivity.REQUEST_LOCATION_PERMISSION)
         }
 
-
+        DashboardActivity.stop=false
         callDistanceAPI()
         return root
     }
@@ -211,6 +239,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         edtKm.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 isCallAPI=true
+                DashboardActivity.stop=false
                 callDistanceAPI()
             }
             false;
@@ -219,17 +248,21 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         val btnSearch = header.findViewById<Button>(R.id.btnSearch)
         btnSearch.setOnClickListener { v ->
             isCallAPI=true
+            DashboardActivity.stop=false
             callDistanceAPI()
         }
 
         byDistanceAdapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, i: Int) {
-                (viewHolder as DistanceViewHolder).tvName.text = lstMembers.get(i).firstName+" "+lstMembers.get(i).lastName
 
-                Coroutines.main {
-                    mByDistanceViewModel.getCityNamebyId(lstMembers.get(i).cityId).observeForever {
-                        viewHolder.tvArea.text = lstMembers.get(i).area+" "+it
-                    }
+                (viewHolder as DistanceViewHolder).tvName.text = lstMembers.get(i).firstName
+
+                mByDistanceViewModel.getLastNamebyId(lstMembers.get(i).subCastId).observeForever {
+                    viewHolder.tvName.text = lstMembers.get(i).firstName+" "+it
+                }
+
+                mByDistanceViewModel.getCityNamebyId(lstMembers.get(i).cityId).observeForever {
+                    viewHolder.tvArea.text = lstMembers.get(i).area+" "+it
                 }
 
                 viewHolder.tvEmail.text = lstMembers.get(i).emailAddress
@@ -256,7 +289,12 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                     distance=lstMembers.get(i).distance
                 }
                 viewHolder.tvDistance.text="${distance} KM"
-                viewHolder.tvLabel.text=nearBy
+                if(nearBy.equals("All")){
+                    viewHolder.tvLabel.text= lstMembers.get(i).nearBy
+                }else{
+                    viewHolder.tvLabel.text=nearBy
+                }
+
                 viewHolder.tvUpdate.text=Utility.changeDateFormat(lstMembers.get(i).updatedDt,Utility.yyyy_MM_dd_TIME,Utility.dd_MM_yyyy_TIME)
             }
 
@@ -304,55 +342,68 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     }
 
     private fun callDistanceAPI(){
-        lstMembers.clear()
-        byDistanceAdapter?.notifyDataSetChanged()
-        nearBy="All"
-        if(rbtnHome.isChecked){
-            nearBy="Home"
-        }else if(rbtnOffice.isChecked){
-            nearBy="Office"
-        }else if(rbtnUser.isChecked){
-            nearBy="User"
+        if (!DashboardActivity.stop) {
+            DashboardActivity.stop = true
+            lstMembers.clear()
+            tvRecords.visibility=View.GONE
+            byDistanceAdapter?.notifyDataSetChanged()
+            nearBy="All"
+            if(rbtnHome.isChecked){
+                nearBy="Home"
+            }else if(rbtnOffice.isChecked){
+                nearBy="Office"
+            }else if(rbtnUser.isChecked){
+                nearBy="User"
+            }
+
+            distance = ByDistanceModel()
+            distance.start=start.toString()
+            distance.length=length.toString()
+            distance.km = edtKm.text.toString().trim()
+            distance.nearBy = nearBy
+            distance.userId = Guru.getString(getString(R.string.user_id),Guru.getString(getString(R.string.user_id),""))
+            distance.accessToken = Guru.getString(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
+            distance.lat=curr_lat.toString()
+            distance.lng=curr_lng.toString()
+
+            mShimmerViewContainer.startShimmerAnimation()
+            mShimmerViewContainer.visibility =View.VISIBLE
+            imgMap.visibility=View.GONE
+
+            Handler().postDelayed({
+                if(lstMembers.size==0){
+                    mShimmerViewContainer.stopShimmerAnimation()
+                    mShimmerViewContainer.visibility =View.GONE
+                    imgMap.visibility=View.VISIBLE
+                }
+            },5000)
+
+
+            curr_lat.observeForever {
+                if(curr_lat.value!=0.0 && curr_lng.value!=0.0 && isCallAPI){
+                    isCallAPI=false
+                    distance.lat=curr_lat.value.toString()
+                    distance.lng=curr_lng.value.toString()
+                    mByDistanceViewModel.getUserByDistance(distance)
+                }
+            }
+            curr_lng.observeForever {
+                if(curr_lat.value!=0.0 && curr_lng.value!=0.0 && isCallAPI){
+                    isCallAPI=false
+                    distance.lat=curr_lat.value.toString()
+                    distance.lng=curr_lng.value.toString()
+                    mByDistanceViewModel.getUserByDistance(distance)
+                }
+            }
         }
 
-        val distance = ByDistanceModel()
-        distance.start="0"
-        distance.length="30"
-        distance.km = edtKm.text.toString().trim()
-        distance.nearBy = nearBy
-        distance.userId = Guru.getString(getString(R.string.user_id),Guru.getString(getString(R.string.user_id),""))
-        distance.accessToken = Guru.getString(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-        distance.lat=curr_lat.toString()
-        distance.lng=curr_lng.toString()
-
-        mShimmerViewContainer.startShimmerAnimation()
-        mShimmerViewContainer.visibility =View.VISIBLE
-        imgMap.visibility=View.GONE
-
-        Handler().postDelayed({
-            if(lstMembers.size==0){
-                mShimmerViewContainer.stopShimmerAnimation()
-                mShimmerViewContainer.visibility =View.GONE
-                imgMap.visibility=View.VISIBLE
-            }
-        },5000)
-
-
-        curr_lat.observeForever {
-            if(curr_lat.value!=0.0 && curr_lng.value!=0.0 && isCallAPI){
-                isCallAPI=false
-                distance.lat=curr_lat.value.toString()
-                distance.lng=curr_lng.value.toString()
-                mByDistanceViewModel.getUserByDistance(distance)
-            }
-        }
-        curr_lng.observeForever {
-            if(curr_lat.value!=0.0 && curr_lng.value!=0.0 && isCallAPI){
-                isCallAPI=false
-                distance.lat=curr_lat.value.toString()
-                distance.lng=curr_lng.value.toString()
-                mByDistanceViewModel.getUserByDistance(distance)
-            }
+    }
+    override fun loadApi() {
+        if (!DashboardActivity.stop) {
+            DashboardActivity.stop = true
+            start = (lstMembers.size+1)
+            distance.start=start.toString()
+            mByDistanceViewModel.getUserByDistance(distance)
         }
     }
 
@@ -376,9 +427,11 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         isCallAPI=true
     }
 
-    override fun locationData(locationData: LocationData?) {
+    override fun locationData(locationData: LocationData) {
 
     }
+
+
 
     /*private fun initFragmentTransaction(view: View): FragmentTransaction? {
         val toY = view.resources.getDimensionPixelOffset(R.dimen.details_toolbar_container_height) - view.height / 2f

@@ -5,9 +5,14 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Member implements Serializable {
 
+
+    @SerializedName("nearBy")
+    @Expose
+    private String nearBy="";
     @SerializedName("access_token")
     @Expose
     private String accessToken="";
@@ -240,6 +245,9 @@ public class Member implements Serializable {
     @Expose
     private String updatedDt="0";
 
+    @SerializedName("matches")
+    @Expose
+    private List<String> matches = null;
 
     public String getProfileCompleted() {
         return profileCompleted;
@@ -847,5 +855,21 @@ public class Member implements Serializable {
 
     public void setUpdatedDt(String updatedDt) {
         this.updatedDt = updatedDt;
+    }
+
+    public String getNearBy() {
+        return nearBy;
+    }
+
+    public void setNearBy(String nearBy) {
+        this.nearBy = nearBy;
+    }
+
+    public List<String> getMatches() {
+        return matches;
+    }
+
+    public void setMatches(List<String> matches) {
+        this.matches = matches;
     }
 }
