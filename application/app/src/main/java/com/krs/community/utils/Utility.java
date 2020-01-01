@@ -1306,16 +1306,15 @@ public class Utility {
         return cal;
     }
 
-    public static int getAge(String dobString){
+    public static int getAge(String dobString,String pattern){
 
         Date date = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         try {
             date = sdf.parse(dobString);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
         if(date == null) return 0;
 
         Calendar dob = Calendar.getInstance();

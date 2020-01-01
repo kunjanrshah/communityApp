@@ -1,27 +1,20 @@
 package com.krs.community.fragments
 
 import android.annotation.SuppressLint
-import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.view.*
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener
-import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.databinding.FragmentMatrimonyBinding
-import com.krs.community.jrspinner.JRSpinner
-import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.utils.moveToFragmentListScreen
 import com.krs.community.utils.openFilter
@@ -62,10 +55,18 @@ class MatrimonyFragment : Fragment(), KodeinAware {
             false
         }
 
+        binding.edtName.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                binding.btnSearch.performClick()
+                true
+            }
+            false
+        }
+
         binding.btnSearch.setOnClickListener {
             if(binding.edtName.text.trim().isNotEmpty()){
                 val jsonObject=JSONObject()
-                jsonObject.put("name",binding.edtName.text.trim())
+                jsonObject.put(getString(R.string.first_name),binding.edtName.text.trim())
                 moveToFragmentListScreen(activity,jsonObject.toString())
             }else{
                 binding.edtName.error="Enter name please"

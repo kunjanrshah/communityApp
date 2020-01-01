@@ -11,13 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
 import com.github.squti.guru.Guru;
 import com.google.gson.Gson;
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
 import com.krs.community.model.Member;
 import com.krs.community.utils.Utility;
+
+import org.json.JSONObject;
 
 public class ByQRCodeFragment extends Fragment {
 
@@ -37,6 +38,8 @@ public class ByQRCodeFragment extends Fragment {
         iv_cancel.setOnClickListener(v -> {
             Utility.movetoFragment(getActivity(),new DashboardFragment());
         });
+
+
 
         return root;
     }

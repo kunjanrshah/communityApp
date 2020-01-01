@@ -12,20 +12,17 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ViewUtils
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.activity.BaseActivity
@@ -35,24 +32,23 @@ import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.viewmodel.MatrimonySearchViewModel
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.model.AspectRatio
-import de.hdodenhof.circleimageview.CircleImageView
 import org.json.JSONObject
 import java.io.File
 
 
-fun Context.toast(message: String){
-    Toast.makeText(this, message, Toast.LENGTH_LONG ).show()
+fun Context.toast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }
 
-fun ProgressBar.show(){
+fun ProgressBar.show() {
     visibility = View.VISIBLE
 }
 
-fun ProgressBar.hide(){
+fun ProgressBar.hide() {
     visibility = View.GONE
 }
 
-fun View.snackbar(message: String,snack:Int ){
+fun View.snackbar(message: String, snack: Int) {
     Snackbar.make(this, message, snack).also { snackbar ->
         snackbar.setAction("Ok") {
             snackbar.dismiss()
@@ -60,8 +56,8 @@ fun View.snackbar(message: String,snack:Int ){
     }.show()
 }
 
-var logger: Logger=Logger(ViewUtils::class.java.simpleName)
-fun handleCropResult(result: Intent,context:Context,image: ImageView) {
+var logger: Logger = Logger(ViewUtils::class.java.simpleName)
+fun handleCropResult(result: Intent, context: Context, image: ImageView) {
     val resultUri = UCrop.getOutput(result)
     if (resultUri != null) {
         try {
@@ -95,7 +91,7 @@ fun handleCropResult(result: Intent,context:Context,image: ImageView) {
     }
 }
 
-fun handleCropError(result: Intent,context:Context) {
+fun handleCropError(result: Intent, context: Context) {
     val cropError = UCrop.getError(result)
     if (cropError != null) {
         logger.error(cropError)
@@ -105,14 +101,14 @@ fun handleCropError(result: Intent,context:Context) {
     }
 }
 
-fun startCrop(uri: Uri,context:Context) {
+fun startCrop(uri: Uri, context: Context) {
     val destinationFileName = "${Utility.getRandomString(10)}.jpg"
     var uCrop = UCrop.of(uri, Uri.fromFile(File(context.cacheDir, destinationFileName)))
-    uCrop = advancedConfig(uCrop,context)
+    uCrop = advancedConfig(uCrop, context)
     uCrop.start(context as Activity)
 }
 
-fun advancedConfig(uCrop: UCrop,context:Context): UCrop {
+fun advancedConfig(uCrop: UCrop, context: Context): UCrop {
     val options = UCrop.Options()
     options.setCompressionFormat(Bitmap.CompressFormat.JPEG)
 
@@ -145,7 +141,7 @@ fun advancedConfig(uCrop: UCrop,context:Context): UCrop {
     return uCrop.withOptions(options)
 }
 
-fun displayNeverAskAgainDialog(context:Context) {
+fun displayNeverAskAgainDialog(context: Context) {
 
     SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
             .setTitleText("Storage read Permission")
@@ -178,7 +174,7 @@ fun pickFromGallery(context: FragmentActivity) {
     }
 }
 
-fun promptReadPermission(context:Context) {
+fun promptReadPermission(context: Context) {
     if (!Utility.hasPermission(context, "READ_EXTERNAL_STORAGE")) {
         SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                 .setTitleText("Storage read Permission")
@@ -195,44 +191,45 @@ fun promptReadPermission(context:Context) {
     }
 }
 
+fun openFilter(context: Context, matrimonySearchViewModel: MatrimonySearchViewModel) {
 
-fun openFilter(context: Context,matrimonySearchViewModel:MatrimonySearchViewModel) {
     val dialog = Dialog(context)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
     dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     dialog.setContentView(R.layout.filter_matrimony)
     dialog.setCancelable(false)
+    val spMarital = dialog.findViewById<JRSpinner>(R.id.sp_marital)
+    val spCity = dialog.findViewById<JRSpinner>(R.id.sp_city)
+    val spLname = dialog.findViewById<JRSpinner>(R.id.sp_lname)
+    val btnMale = dialog.findViewById<Button>(R.id.btnmale)
+    val btnFemale = dialog.findViewById<Button>(R.id.btnfemale)
+    val ivClose = dialog.findViewById<ImageView>(R.id.iv_close)
+    val btnSearch = dialog.findViewById<Button>(R.id.btn_search)
+    val btnClear = dialog.findViewById<Button>(R.id.btn_clear)
+    val edtName = dialog.findViewById<EditText>(R.id.edt_name)
+    val edtHead = dialog.findViewById<EditText>(R.id.edt_head_name)
+    val edtMobile = dialog.findViewById<EditText>(R.id.edt_mobile)
+    val edtMail = dialog.findViewById<EditText>(R.id.edt_mail)
+    val tvMin = dialog.findViewById<TextView>(R.id.tv_min)
+    val tvMax = dialog.findViewById<TextView>(R.id.tv_max)
+    val rangeSeekbar = dialog.findViewById<CrystalRangeSeekbar>(R.id.rangeSeekbar)
 
-    val spMarital= dialog.findViewById<JRSpinner>(R.id.sp_marital)
-    val spCity= dialog.findViewById<JRSpinner>(R.id.sp_city)
-    val spLname= dialog.findViewById<JRSpinner>(R.id.sp_lname)
-    val btnMale= dialog.findViewById<Button>(R.id.btnmale)
-    val btnFemale= dialog.findViewById<Button>(R.id.btnfemale)
-    val ivClose= dialog.findViewById<ImageView>(R.id.iv_close)
-    val btnSearch= dialog.findViewById<Button>(R.id.btn_search)
-    val edtName= dialog.findViewById<EditText>(R.id.edt_name)
-    val edtHead= dialog.findViewById<EditText>(R.id.edt_head_name)
-    val edtMobile= dialog.findViewById<EditText>(R.id.edt_mobile)
-    val edtMail= dialog.findViewById<EditText>(R.id.edt_mail)
-    val tvMin= dialog.findViewById<TextView>(R.id.tv_min)
-    val tvMax= dialog.findViewById<TextView>(R.id.tv_max)
-    val rangeSeekbar= dialog.findViewById<CrystalRangeSeekbar>(R.id.rangeSeekbar)
     rangeSeekbar.setOnRangeSeekbarChangeListener { minValue, maxValue ->
         tvMin.text = "$minValue"
         tvMax.text = "$maxValue"
     }
 
-    var isMale:Boolean=true
-    val lstMarital =  context.resources.getStringArray(R.array.marital)
-    val list=ArrayList<String>()
+    var isMale: Boolean = true
+    val lstMarital = context.resources.getStringArray(R.array.marital)
+    val list = ArrayList<String>()
     list.addAll(lstMarital)
     list.remove(context.getString(R.string.married))
     spMarital.setItems(list.toTypedArray())
     spMarital.setExpandTint(R.color.black)
 
     matrimonySearchViewModel.getListCityName().observeForever {
-        if(it.isNotEmpty()){
-            val list=ArrayList<String>()
+        if (it.isNotEmpty()) {
+            val list = ArrayList<String>()
             list.add(context.getString(R.string.Select))
             list.addAll(it)
             spCity.setItems(list.toTypedArray())
@@ -241,8 +238,8 @@ fun openFilter(context: Context,matrimonySearchViewModel:MatrimonySearchViewMode
     }
 
     matrimonySearchViewModel.getLastName().observeForever {
-        if(it.isNotEmpty()){
-            val list=ArrayList<String>()
+        if (it.isNotEmpty()) {
+            val list = ArrayList<String>()
             list.add(context.getString(R.string.Select))
             list.addAll(it)
             spLname.setItems(list.toTypedArray())
@@ -251,71 +248,163 @@ fun openFilter(context: Context,matrimonySearchViewModel:MatrimonySearchViewMode
     }
 
     btnMale.setOnClickListener {
-        isMale=true
+        isMale = true
         btnMale.background = context.resources.getDrawable(R.drawable.round_corner_primary)
         btnMale.setTextColor(context.resources.getColor(R.color.white))
         btnFemale.background = context.resources.getDrawable(R.drawable.round_corner_white)
         btnFemale.setTextColor(context.resources.getColor(R.color.black))
     }
     btnFemale.setOnClickListener {
-        isMale=false
+        isMale = false
         btnMale.background = context.resources.getDrawable(R.drawable.round_corner_white)
         btnMale.setTextColor(context.resources.getColor(R.color.black))
         btnFemale.background = context.resources.getDrawable(R.drawable.round_corner_primary)
         btnFemale.setTextColor(context.resources.getColor(R.color.white))
     }
 
+    btnClear.setOnClickListener {
+        Guru.putString("mdialog","")
+        edtName.setText("")
+        edtHead.setText("")
+        edtMobile.setText("")
+        edtMail.setText("")
+        spLname.setText("")
+        spCity.setText("")
+        spMarital.setText("")
+        rangeSeekbar.setMinStartValue(0f)
+        rangeSeekbar.setMaxStartValue(100f)
+        rangeSeekbar.apply()
+    }
+
+    val mdialog = Guru.getString("mdialog", "")
+    val mjsonObject: JSONObject
+    if (!mdialog.isNullOrEmpty()) {
+        mjsonObject = JSONObject(mdialog)
+        if (mjsonObject.has(context.getString(R.string.first_name))) {
+            val fname = mjsonObject.getString(context.getString(R.string.first_name))
+            if (!fname.isNullOrEmpty()) edtName.setText(fname)
+        }
+
+        if (mjsonObject.has(context.getString(R.string.head_name))) {
+            val head = mjsonObject.getString(context.getString(R.string.head_name))
+            if (!head.isNullOrEmpty()) edtHead.setText(head)
+        }
+
+        if (mjsonObject.has(context.getString(R.string.mobile))) {
+            val mobile = mjsonObject.getString(context.getString(R.string.mobile))
+            if (!mobile.isNullOrEmpty()) edtMobile.setText(mobile)
+        }
+
+        if (mjsonObject.has(context.getString(R.string.email_address))) {
+            val email = mjsonObject.getString(context.getString(R.string.email_address))
+            if (!email.isNullOrEmpty()) edtMail.setText(email)
+        }
+
+        if (mjsonObject.has(context.getString(R.string.gender))) {
+            val gender = mjsonObject.getString(context.getString(R.string.gender))
+            if (!gender.isNullOrEmpty()) {
+                if (gender == "Male") {
+                    btnMale.performClick()
+                } else {
+                    btnFemale.performClick()
+                }
+            }
+        }
+
+        Coroutines.io {
+            if (mjsonObject.has(context.getString(R.string.sub_cast_id))) {
+                val subcastId = mjsonObject.getString(context.getString(R.string.sub_cast_id))
+                if (!subcastId.isNullOrEmpty()) {
+                    spLname.setText(matrimonySearchViewModel.getLastNameById(subcastId.toInt()))
+                }
+            }
+
+            if (mjsonObject.has(context.getString(R.string.city_id))) {
+                val cityid = mjsonObject.getString(context.getString(R.string.city_id))
+                if (!cityid.isNullOrEmpty()) {
+                    spCity.setText(matrimonySearchViewModel.getCityNamebyId(cityid))
+                }
+            }
+        }
+
+        if (mjsonObject.has(context.getString(R.string.marital_status))) {
+            val status = mjsonObject.getString(context.getString(R.string.marital_status))
+            if (!status.isNullOrEmpty()) spMarital.setText(status)
+        }
+
+        if (mjsonObject.has(context.getString(R.string.min_age))) {
+            val minAge = mjsonObject.getString(context.getString(R.string.min_age))
+            if (!minAge.isNullOrEmpty()) {
+                rangeSeekbar.setMinStartValue(minAge.toFloat())
+                rangeSeekbar.apply()
+            }
+        }
+
+        if (mjsonObject.has(context.getString(R.string.max_age))) {
+            val maxAge = mjsonObject.getString(context.getString(R.string.max_age))
+            if (!maxAge.isNullOrEmpty()) {
+                rangeSeekbar.setMaxStartValue(maxAge.toFloat())
+                rangeSeekbar.apply()
+            }
+        }
+    }
+
+
     ivClose.setOnClickListener { dialog.dismiss() }
     btnSearch.setOnClickListener {
         dialog.dismiss()
-        val jsonObject= JSONObject()
-        if(edtName.text.trim().isNotEmpty()){
-            jsonObject.put(context.getString(R.string.name),edtName.text.trim())
-        }
-        if(edtHead.text.trim().isNotEmpty()){
-            jsonObject.put(context.getString(R.string.head_name),edtHead.text.trim())
-        }
-        if(edtMobile.text.trim().isNotEmpty()){
-            jsonObject.put(context.getString(R.string.mobile),edtMobile.text.trim())
-        }
-        if(edtMail.text.trim().isNotEmpty()){
-            jsonObject.put(context.getString(R.string.email_address),edtMail.text.trim())
-        }
 
-        if(!spLname.text.isNullOrEmpty() && spLname.text.toString()!=context.getString(R.string.Select)){
-            Coroutines.io {
-                val subCastId= matrimonySearchViewModel.getIdByLastName(spLname.text.toString())
-                jsonObject.put(context.getString(R.string.sub_cast_id),subCastId)
+        val jsonObject = JSONObject()
+
+        Coroutines.io{
+
+            if (edtName.text.trim().isNotEmpty()) {
+                jsonObject.put(context.getString(R.string.first_name), edtName.text.trim())
             }
-        }
-
-        if(!spCity.text.isNullOrEmpty() && spCity.text.toString()!=context.getString(R.string.Select)){
-            Coroutines.io {
-                val cityId=  matrimonySearchViewModel.getCityIdByName(spCity.text.toString())
-                jsonObject.put(context.getString(R.string.city_id),cityId)
+            if (edtHead.text.trim().isNotEmpty()) {
+                jsonObject.put(context.getString(R.string.head_name), edtHead.text.trim())
             }
+            if (edtMobile.text.trim().isNotEmpty()) {
+                jsonObject.put(context.getString(R.string.mobile), edtMobile.text.trim())
+            }
+            if (edtMail.text.trim().isNotEmpty()) {
+                jsonObject.put(context.getString(R.string.email_address), edtMail.text.trim())
+            }
+            if (!spLname.text.isNullOrEmpty() && spLname.text.toString() != context.getString(R.string.Select)) {
+                val subCastId = matrimonySearchViewModel.getIdByLastName(spLname.text.toString())
+                jsonObject.put(context.getString(R.string.sub_cast_id), subCastId)
+            }
+
+            if (!spCity.text.isNullOrEmpty() && spCity.text.toString() != context.getString(R.string.Select)) {
+                val cityId = matrimonySearchViewModel.getCityIdByName(spCity.text.toString())
+                jsonObject.put(context.getString(R.string.city_id), cityId)
+            }
+            if (isMale) {
+                jsonObject.put(context.getString(R.string.gender), "Male")
+            } else {
+                jsonObject.put(context.getString(R.string.gender), "Female")
+            }
+            if (!spMarital.text.isNullOrEmpty()) {
+                jsonObject.put(context.getString(R.string.marital_status), spMarital.text)
+            }
+            jsonObject.put(context.getString(R.string.min_age), rangeSeekbar.selectedMinValue)
+            jsonObject.put(context.getString(R.string.max_age), rangeSeekbar.selectedMaxValue)
+            Guru.putString("mdialog", jsonObject.toString())
         }
 
-        if(isMale){
-            jsonObject.put(context.getString(R.string.gender),"Male")
-        }else{
-            jsonObject.put(context.getString(R.string.gender),"Female")
+        Coroutines.main {
+            moveToFragmentListScreen(context as FragmentActivity, jsonObject.toString())
         }
-        if(!spMarital.text.isNullOrEmpty()){
-            jsonObject.put(context.getString(R.string.marital_status),spMarital.text)
-        }
-        jsonObject.put(context.getString(R.string.matrimony),"Yes")
-        jsonObject.put(context.getString(R.string.min_age),rangeSeekbar.selectedMinValue)
-        jsonObject.put(context.getString(R.string.max_age),rangeSeekbar.selectedMaxValue)
-        moveToFragmentListScreen(context as FragmentActivity,jsonObject.toString())
+
+
     }
     dialog.show()
 }
 
-fun moveToFragmentListScreen(activity: FragmentActivity?,filter:String){
-    val fragment= MatrimonyListFragment()
-    val bundle= Bundle()
-    bundle.putString("filter",filter)
-    fragment.arguments=bundle
+fun moveToFragmentListScreen(activity: FragmentActivity?, filter: String) {
+    val fragment = MatrimonyListFragment()
+    val bundle = Bundle()
+    bundle.putString("filter", filter)
+    fragment.arguments = bundle
     Utility.movetoFragment(activity, fragment)
 }

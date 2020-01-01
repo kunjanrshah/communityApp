@@ -11,7 +11,7 @@ import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.retrofit.ApiServices
 import org.json.JSONObject
 
-class MatrimonySearchRepository(private val api: ApiServices, private val db:AppDatabase): SafeApiRequest()  {
+class CalendarSearchRepository(private val api: ApiServices, private val db:AppDatabase): SafeApiRequest()  {
 
     suspend fun searchByName(jsonObject: JsonObject): SmartFilterResponse {
         return apiRequest{

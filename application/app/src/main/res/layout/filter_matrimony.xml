@@ -192,7 +192,6 @@
                 android:paddingLeft="5dp"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:digits="@string/restrict_space"
                 android:inputType="textEmailAddress"
                 android:nextFocusDown="@id/sp_city"
                 android:fontFamily="@font/montserrat_regular"
@@ -428,6 +427,8 @@
             android:layout_marginTop="5dp"
             app:data_type="_integer"
             app:gap="10"
+            app:min_start_value="0"
+            app:max_start_value="100"
             app:left_thumb_color="@color/colorPrimary"
             app:left_thumb_color_pressed="@color/colorPrimary"
             app:max_value="100"
@@ -436,14 +437,31 @@
             app:right_thumb_color_pressed="@color/colorPrimary" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_gravity="center|bottom"
         android:gravity="center"
         android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btn_clear"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_corner_primary"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="Clear"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+
         <Button
             android:id="@+id/btn_search"
-            android:layout_width="150dp"
+            android:layout_width="120dp"
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/round_corner_primary"
@@ -451,6 +469,7 @@
             android:text="Search"
             android:textColor="@color/white"
             android:textSize="14sp" />
-    </RelativeLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

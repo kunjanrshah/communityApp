@@ -26,13 +26,48 @@ import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.utils.Utility
 import com.nightonke.boommenu.BoomMenuButton
 import kotlinx.android.synthetic.main.header_calendar.*
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.kodein
 import ru.slybeaver.slycalendarview.SlyCalendarDialog
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
+class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware {
+
+    override val kodein by kodein()
+
+    lateinit var recyclerView: RecyclerView
+    private lateinit var llRoot: LinearLayout
+    var tithi: Boolean = true
+    var panchag: Boolean = true
+    var anniversay: Boolean = true
+    var birthday: Boolean = true
+    var reminder: Boolean = true
+
+    val TAG: String = "CalendarFragment"
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        val root = inflater.inflate(R.layout.fragment_calendar, container, false)
+
+        (activity as AppCompatActivity).supportActionBar!!.title = "Search by Calendar"
+
+        llRoot = root.findViewById(R.id.ll_root)
+        recyclerView = root.findViewById(R.id.recycler_view)
+        recyclerView.setHasFixedSize(true)
+        val mLayoutManager = LinearLayoutManager(FacebookSdk.getApplicationContext())
+        recyclerView.layoutManager = mLayoutManager
+        recyclerView.itemAnimator = DefaultItemAnimator()
+        createCardAdapter(recyclerView)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Utility.changeStatusbarColor(activity,R.color.colorPrimary,true)
+        }
+
+        return root
+    }
+
     override fun onDataSelected(firstDate: Calendar?, secondDate: Calendar?, hours: Int, minutes: Int) {
 
         if (firstDate != null) {
@@ -58,7 +93,6 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         //Nothing
     }
 
-
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar!!.hide()
@@ -69,34 +103,6 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         (activity as AppCompatActivity).supportActionBar!!.show()
     }
 
-    lateinit var recyclerView: RecyclerView
-    lateinit var ll_root: LinearLayout
-    var tithi: Boolean = true
-    var panchag: Boolean = true
-    var anniversay: Boolean = true
-    var birthday: Boolean = true
-    var reminder: Boolean = true
-
-    var TAG: String = "CalendarFragment"
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        val root = inflater.inflate(com.krs.community.R.layout.fragment_calendar, container, false)
-
-        (activity as AppCompatActivity).supportActionBar!!.title = "Search by Calendar"
-
-        ll_root = root.findViewById<LinearLayout>(com.krs.community.R.id.ll_root)
-        recyclerView = root.findViewById<RecyclerView>(com.krs.community.R.id.recycler_view)
-        recyclerView.setHasFixedSize(true)
-        val mLayoutManager = LinearLayoutManager(FacebookSdk.getApplicationContext())
-        recyclerView.layoutManager = mLayoutManager
-        recyclerView.itemAnimator = DefaultItemAnimator()
-        createCardAdapter(recyclerView)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(activity,R.color.colorPrimary,true)
-        }
-        return root
-    }
 
    /* private fun initFragmentTransaction(view: View): FragmentTransaction? {
         val toY = view.resources.getDimensionPixelOffset(com.krs.community.R.dimen.details_toolbar_container_height) - view.height / 2f
@@ -182,8 +188,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback {
         linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         if (lstCalFliter != null) {
             val list: ArrayList<String> = ArrayList()
-            list.add("Tithi")
-            list.add("Panchang")
+            //list.add("Tithi")
+            //list.add("Panchang")
             list.add("Birthday")
             list.add("Anniversary")
             list.add("Reminder")

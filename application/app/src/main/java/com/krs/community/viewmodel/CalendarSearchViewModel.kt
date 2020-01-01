@@ -5,40 +5,40 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.interfaces.ByFilterListener
-import com.krs.community.repositories.MatrimonySearchRepository
+import com.krs.community.repositories.CalendarSearchRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
 import kotlinx.coroutines.*
 
-class MatrimonySearchViewModel(
-        private val mMatrimonySearchRepository: MatrimonySearchRepository,
+class CalendarSearchViewModel(
+        private val mCalendarSearchRepository: CalendarSearchRepository,
         var app: Application) : AndroidViewModel(app) {
 
-    private var TAG: String = MatrimonySearchViewModel::class.java.simpleName
+    private var TAG: String = CalendarSearchViewModel::class.java.simpleName
     private lateinit var completableJob: CompletableJob
     lateinit var mByFilterListener: ByFilterListener
 
     fun getListCityName():LiveData<List<String>>{
-        return mMatrimonySearchRepository.getListCityName()
+        return mCalendarSearchRepository.getListCityName()
     }
 
      fun getCityIdByName(name:String):Int{
-        return mMatrimonySearchRepository.getCityIdByName(name)
+        return mCalendarSearchRepository.getCityIdByName(name)
     }
 
     fun getLastName():LiveData<List<String>>{
-        return mMatrimonySearchRepository.getLastName()
+        return mCalendarSearchRepository.getLastName()
     }
      fun getCityNamebyId(id:String):String{
-        return mMatrimonySearchRepository.getCityName(id)
+        return mCalendarSearchRepository.getCityName(id)
     }
 
      fun getLastNameById(id:Int):String{
-        return mMatrimonySearchRepository.getLastNameById(id)
+        return mCalendarSearchRepository.getLastNameById(id)
     }
 
      fun getIdByLastName(name:String):Int{
-        return mMatrimonySearchRepository.getIdByLastName(name)
+        return mCalendarSearchRepository.getIdByLastName(name)
     }
 
     fun getMatrimonySearch(jsonObject: JsonObject) {
@@ -47,7 +47,7 @@ class MatrimonySearchViewModel(
 
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
-                    val response = mMatrimonySearchRepository.searchByName(jsonObject)
+                    val response = mCalendarSearchRepository.searchByName(jsonObject)
                     response.let {
                         withContext(Dispatchers.Main) {
                             mByFilterListener.getMembers(response)

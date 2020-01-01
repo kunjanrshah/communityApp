@@ -18,8 +18,10 @@
 
         <LinearLayout
             android:id="@+id/img_back"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:layout_height="wrap_content">
 
             <ImageView
@@ -41,10 +43,8 @@
 
         <TextView
             android:id="@+id/tv_save"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:text="Save"
-            android:gravity="right"
-            android:layout_weight="1"
             android:textSize="18sp"
             android:padding="3dp"
             android:fontFamily="@font/montserrat_semibold"

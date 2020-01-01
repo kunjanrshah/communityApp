@@ -47,10 +47,14 @@
         android:layout_width="250dp"
         android:layout_height="45dp"
         android:layout_gravity="center"
+        android:singleLine="true"
         android:layout_marginTop="50dp"
+        android:digits="@string/restrict_space"
         android:background="@drawable/border_color_primary"
         android:drawableEnd="@drawable/controls"
         android:hint="Search Name"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
         android:paddingLeft="10dp"
         android:paddingRight="10dp" />
 

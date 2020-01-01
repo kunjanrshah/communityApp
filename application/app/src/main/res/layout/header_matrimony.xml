@@ -32,13 +32,30 @@
         android:id="@+id/edtSearch"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_margin="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:singleLine="true"
+        android:imeOptions="actionSearch"
+        android:digits="@string/restrict_space"
         android:background="@drawable/border"
         android:drawableEnd="@drawable/controls"
         android:fontFamily="@font/montserrat_regular"
         android:hint="Search Name"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:text="Kunjan Shah" />
+        android:paddingRight="10dp" />
+
+    <TextView
+        android:id="@+id/tvCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:layout_marginBottom="5dp"
+        android:text="Find Records"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
 
 </LinearLayout>

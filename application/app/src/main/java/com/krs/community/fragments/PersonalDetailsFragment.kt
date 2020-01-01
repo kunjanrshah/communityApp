@@ -204,7 +204,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
                     binding.txtBdate.text =date
                 }
             }else {
-                val age= Utility.getAge(date)
+                val age= Utility.getAge(date,Utility.dd_MM_yyyy)
                 binding.txtBdate.text =date+"($age)"
             }
         }
@@ -391,7 +391,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
                 val age=Utility.getDiffYears(date1,date2)
                 binding.txtBdate.text =date+"($age)"
             }else{
-                val age= Utility.getAge(date)
+                val age= Utility.getAge(date,Utility.dd_MM_yyyy)
                 binding.txtBdate.text = date+"($age)"
             }
 

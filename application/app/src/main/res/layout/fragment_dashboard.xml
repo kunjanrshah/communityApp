@@ -127,7 +127,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/lstFavProfile"
                     android:layout_width="match_parent"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="15dp"
                     android:layout_height="wrap_content" />
 
                 <!--<LinearLayout

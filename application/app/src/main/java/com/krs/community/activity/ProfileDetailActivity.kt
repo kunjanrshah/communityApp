@@ -38,7 +38,10 @@ import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
 import com.krs.community.databinding.ActivityProfileDetailBinding
 import com.krs.community.fragments.*
 import com.krs.community.interfaces.EditMemberListener
+import com.krs.community.model.FilterBy
 import com.krs.community.model.Member
+import com.krs.community.model.SearchData
+import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
@@ -60,12 +63,12 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
     private val factory: ProfileDetailViewModelFactory by instance()
     private val listFragments = mutableListOf<Fragment>()
     private var isProfileImage = false
-    private lateinit var member: Member
+    private var member: Member?=null
     override val kodein by kodein()
     private lateinit var logger: Logger
     private lateinit var professionalDetailsFragment: ProfessionalDetailsFragment
     private lateinit var easyWayLocation: EasyWayLocation
-
+    private lateinit var scanId:String
 
     companion object {
         lateinit var binding: ActivityProfileDetailBinding
@@ -131,7 +134,10 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         logger = Logger(TAG)
         profileDetailViewModel = ViewModelProviders.of(this, factory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener = this
+
         member = intent.getSerializableExtra(getString(R.string.member)) as Member
+        scanId=intent.getStringExtra("scanId")
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(this, R.color.mdtp_white, false)
         }
@@ -160,49 +166,18 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         listFragments.add(professionalDetailsFragment)
         listFragments.add(matrimonyDetailsFragment)
 
-
-        val percentage = Utility.calculatePercentage(member)
-        setPercentage(percentage)
-        setMemberValues()
-
-//        var id:String=intent.getStringExtra("id")
-        /*val filter = SearchData()
-        filter.start = "0"
-        filter.length = "1"
-        val filterBy = FilterBy()
-        filterBy.id = "39"  //id
-        filter.filterBy = filterBy
-        profileDetailViewModel.getMemberByFilters(filter)*/
-
         val imageSteps = findViewById<ImageSteps>(R.id.imageSteps)
         imageSteps.setSteps(R.drawable.one, R.drawable.two, R.drawable.three, R.drawable.four)
         imageSteps.scaleUp = 2.0f
         imageSteps.animationDuration = 500
         imageSteps.setupWithViewPager(binding.viewpager)
-
-        binding.llViewFamily.setOnClickListener {
-
-            val intent = Intent(this, FamilyDetailActivity::class.java)
-            intent.putExtra(getString(R.string.id), Guru.getString(getString(R.string.user_id),""))
-            startActivity(intent)
-            finish()
-            Utility.fade(this)
-        }
-
-        binding.imgBack.setOnClickListener {
-            finish()
-            Utility.fade(this)
-        }
-
-
-
-        binding.imgProfile.setOnClickListener {
-            isProfileImage = true
-            pickFromGallery(this)
+        if(member!=null){
+            val percentage = Utility.calculatePercentage(member)
+            setPercentage(percentage)
+            setMemberValues()
         }
 
         Utility.hideKeyboard(this)
-
 
         if (Utility.finePermissionIsGranted(this)) {
             easyWayLocation.startLocation() //calculateDistance()
@@ -210,10 +185,10 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION_PERMISSION)
         }
 
-        if (member.isLocationEnable == "0") {
+        if (member?.isLocationEnable == "0") {
             binding.userLocation.isOn = false
             binding.tvDistance.text = "User"
-            if(member.id.isNullOrEmpty()){
+            if(member?.id.isNullOrEmpty()){
                 user_location.isEnabled=false
             }
         } else {
@@ -224,10 +199,10 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         binding.tvDistance.setOnClickListener {
             if (binding.userLocation.isOn) {
                 // val address= Utility.getAddress(this,member.userLat.toDouble(),member.userLng.toDouble())
-                Utility.showDirections(this, member.userLat.toDouble(), member.userLng.toDouble(), "${member.firstName}'s Location")
+                Utility.showDirections(this, member!!.userLat.toDouble(), member!!.userLng.toDouble(), "${member?.firstName}'s Location")
             } else {
-                if(!member.id.isNullOrEmpty()){
-                    Toast.makeText(this, "${member.firstName}'s location is off", Toast.LENGTH_LONG).show()
+                if(!member?.id.isNullOrEmpty()){
+                    Toast.makeText(this, "${member?.firstName}'s location is off", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -236,7 +211,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             if (!binding.userLocation.isOn) {
                 if (easyWayLocation.hasLocationEnabled()) {
                     if (Utility.finePermissionIsGranted(this)) {
-                        member.isLocationEnable = "1"
+                        member?.isLocationEnable = "1"
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             RestartServiceBroadcastReceiver.scheduleJob(applicationContext)
                         } else {
@@ -252,17 +227,41 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
                     easyWayLocation = EasyWayLocation(this, request, true, this)
                 }
             } else {
-                member.isLocationEnable = "0"
+                member?.isLocationEnable = "0"
                 binding.tvDistance.text = "User"
                 stopService(ProcessMainClass.serviceIntent)
                 val jsonObject = JSONObject()
                 jsonObject.put(getString(R.string.is_location_enable), "0")
                 jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
-                jsonObject.put(getString(R.string.id), member.id)
+                jsonObject.put(getString(R.string.id), member?.id)
                 jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
                 val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
                 profileDetailViewModel.updateProfile(profile, true)
             }
+        }
+
+        binding.llViewFamily.setOnClickListener {
+
+            val intent = Intent(this, FamilyDetailActivity::class.java)
+            if(member?.headId=="0"){
+                intent.putExtra(getString(R.string.id), member?.id)
+            }else{
+                intent.putExtra(getString(R.string.id), member?.headId)
+            }
+
+            startActivity(intent)
+            finish()
+            Utility.fade(this)
+        }
+
+        binding.imgBack.setOnClickListener {
+            finish()
+            Utility.fade(this)
+        }
+
+        binding.imgProfile.setOnClickListener {
+            isProfileImage = true
+            pickFromGallery(this)
         }
 
         binding.tvSave.setOnClickListener {
@@ -274,7 +273,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             matrimonyDetailsFragment.getSaveData(jsonObject)
             jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
 
-            if (member.isLocationEnable == "1") {
+            if (member?.isLocationEnable == "1") {
                 jsonObject.put(getString(R.string.is_location_enable), "1")
             } else {
                 jsonObject.put(getString(R.string.is_location_enable), "0")
@@ -283,7 +282,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
 
             if (binding.tvSave.text.toString().toLowerCase().equals("save")) {
                 Utility.startSweetProgress(this, "Updating your profie", "Please wait...")
-                jsonObject.put(getString(R.string.id), member.id)
+                jsonObject.put(getString(R.string.id), member?.id)
                 val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
                 profileDetailViewModel.updateProfile(profile, true)
             } else {
@@ -301,23 +300,33 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
                     return@setOnClickListener
                 }
 
-                // jsonObject.put(getString(R.string.updated_dt),Utility.DatetoString(Date(),Utility.yyyy_MM_dd))
                 Utility.startSweetProgress(this, "Adding ${jsonObject.get(getString(R.string.first_name))}'s Profie", "Please wait...")
                 val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
                 profileDetailViewModel.updateProfile(profile, false)
             }
             Log.d(ProfileDetailActivity::class.java.simpleName, "jsonObject: " + jsonObject.toString())
         }
+
+        if(scanId.isNotEmpty()){
+            val jsonObject=JSONObject()
+            jsonObject.put("start","0")
+            jsonObject.put("length","30")
+            val jsonObj=JSONObject()
+            jsonObj.put("id",scanId)
+            jsonObject.put("filter_by",jsonObj)
+            val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+            profileDetailViewModel.getMemberByFilters(updated)
+        }
     }
 
     private fun setMemberValues() {
 
-        binding.txtTitle.text = "${member.firstName}'s Profile"
+        binding.txtTitle.text = "${member?.firstName}'s Profile"
         val userId = Guru.getString(getString(R.string.user_id), "")
-        if (member.id == userId || member.headId == userId) {
+        if (member?.id == userId || member?.headId == userId) {
             binding.tvSave.visibility = View.VISIBLE
             binding.tvSave.text = "Save"
-        } else if (member.id.isNullOrEmpty()) {
+        } else if (member?.id.isNullOrEmpty()) {
             binding.tvSave.text = "Add"
             binding.txtTitle.text = "New Profile"
         } else {
@@ -325,10 +334,10 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         }
 
 
-        binding.userLocation.isOn = !member.isLocationEnable.isNullOrEmpty() && member.isLocationEnable.equals("1")
-        if (!member.profilePic.isNullOrEmpty()) {
+        binding.userLocation.isOn = !member?.isLocationEnable.isNullOrEmpty() && member?.isLocationEnable.equals("1")
+        if (!member?.profilePic.isNullOrEmpty()) {
             try {
-                Glide.with(AppController.mApplication).load(member.profilePic).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgProfile)
+                Glide.with(AppController.mApplication).load(member?.profilePic).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgProfile)
             } catch (e: Exception) {
                 e.message
             }
@@ -343,6 +352,15 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         binding.viewpager.offscreenPageLimit = 4
         binding.viewpager.adapter = MyPagerAdapter(listFragments, supportFragmentManager)
 
+    }
+
+    override fun getMembers(response: SmartFilterResponse) {
+        if(response.success){
+          member = response.members[0]
+            val percentage = Utility.calculatePercentage(member)
+            setPercentage(percentage)
+            setMemberValues()
+        }
     }
 
     override fun getMessage(response: UpdateProfileResponse) {
@@ -371,9 +389,9 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
     }
 
     private fun setDistance() {
-        if (member.isLocationEnable == "1") {
-            if (cur_lat.value != null && cur_lng.value != null && !member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
-                val dist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member.userLat.toDouble(), member.userLng.toDouble()) / 1000
+        if (member?.isLocationEnable == "1") {
+            if (cur_lat.value != null && cur_lng.value != null && !member?.userLat.isNullOrEmpty() && !member?.userLng.isNullOrEmpty()) {
+                val dist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member!!.userLat.toDouble(), member!!.userLng.toDouble()) / 1000
                 binding.tvDistance.text = String.format("%.2f KM", dist)
             } else {
                 binding.tvDistance.text = "User"

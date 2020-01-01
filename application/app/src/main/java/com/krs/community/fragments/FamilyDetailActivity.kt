@@ -44,19 +44,9 @@ import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
 
-class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedListener, ItemClickListener, IFamilyMembersListener {
-
-    override fun itemClick(position: Int) {
-        val intent = Intent(this, ProfileDetailActivity::class.java)
-        intent.putExtra(getString(R.string.member), members.get(position))
-        intent.putExtra("from", FamilyDetailActivity::class.java)
-        startActivity(intent)
-        finish()
-        Utility.fade(this)
-    }
+class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedListener, IFamilyMembersListener {
 
     lateinit var members:ArrayList<Member>
-
     var headId:String?=null
     val TAG = FamilyDetailActivity::class.java.simpleName
     private var mShimmerViewContainer: ShimmerFrameLayout? = null
@@ -67,16 +57,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
     override val kodein by kodein()
     private lateinit var familyDetailViewModel:FamilyDetailViewModel
     private val factory: FamilyDetailViewModelFactory by instance()
-/*    companion object {
-        fun newInstance(adapterPosition: Int): FamilyDetailFragment {
-            val bundle = Bundle().apply {
-                putInt(EXTRA_POSITION, adapterPosition)
-            }
-            return FamilyDetailFragment().apply { arguments = bundle }
-        }
-    }*/
 
-    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -101,6 +82,15 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
 
         getFamilyDetails()
     }
+
+   /* override fun itemClick(id: Int) {
+        val intent = Intent(this, ProfileDetailActivity::class.java)
+        intent.putExtra(getString(R.string.member), members[id])
+        intent.putExtra("from", FamilyDetailActivity::class.java)
+        startActivity(intent)
+        finish()
+        Utility.fade(this)
+    }*/
 
     private fun getFamilyDetails(){
         val jsonObject=JSONObject()
@@ -151,10 +141,19 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
         if(family!=null){
             adapter = object : ParallaxRecyclerAdapter<Member>(family) {
                 override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, i: Int) {
-                    (viewHolder as HeaderViewHolder).tvName.text = family!!.get(i).firstName+" "+family.get(i).lastName
-                    viewHolder.tvSubtext.text = family.get(i).relation
-                    viewHolder.tvEmail.text = family.get(i).emailAddress
-                    viewHolder.tvMobile.text = family.get(i).mobile
+                    (viewHolder as HeaderViewHolder).tvName.text = "${family[i].firstName} ${family[i].lastName}"
+                    viewHolder.tvSubtext.text = family[i].relation
+                    viewHolder.tvEmail.text = family[i].emailAddress
+                    viewHolder.tvMobile.text = family[i].mobile
+
+                    viewHolder.frontLayout.setOnClickListener {
+                        val intent = Intent(this@FamilyDetailActivity, ProfileDetailActivity::class.java)
+                        intent.putExtra(getString(R.string.member), family[i])
+                        intent.putExtra("from", FamilyDetailActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                        Utility.fade(this@FamilyDetailActivity)
+                    }
                     viewHolder.deleteLayout.setOnClickListener {
 
                         SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
@@ -189,7 +188,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
                     return (family.size)
                 }
             }
-
+            /*
             adapter.setOnClickEvent { v, position ->
                 val intent = Intent(this, ProfileDetailActivity::class.java)
                 intent.putExtra(getString(R.string.member),family.get(position))
@@ -197,7 +196,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
                 startActivity(intent)
                 finish()
                 Utility.fade(this)
-            }
+            }*/
         }
 
         val layoutManagerFixed = HeaderLayoutManagerFixed(this)
@@ -281,6 +280,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
         var tvMobile: TextView
         var bmB: BoomMenuButton
         var deleteLayout: FrameLayout
+        var frontLayout: FrameLayout
 
         init {
             tvName = v.findViewById<View>(R.id.tv_name) as TextView
@@ -288,6 +288,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
             tvSubtext.typeface = AppController.mApplication.typeface_bold
             tvEmail = v.findViewById(R.id.tv_email)
             tvMobile = v.findViewById(R.id.tv_mobile)
+            frontLayout = v.findViewById(R.id.front_layout)
             deleteLayout = v.findViewById(R.id.delete_layout)
             bmB = v.findViewById(R.id.bmb1)
         }

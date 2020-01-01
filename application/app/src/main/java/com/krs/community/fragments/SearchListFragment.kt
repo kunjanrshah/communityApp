@@ -117,18 +117,17 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                         viewHolder.tvArea.text = member.area+" "+it
                     }
                 }
-
                 viewHolder.tvEmail.text = member.emailAddress
                 viewHolder.tvMobile.text = member.mobile
+
                 if(member.headId.equals("0")){
                     viewHolder.tvRole.text = "Family Head"
                 }else{
                     viewHolder.tvRole.text = "Member"
                 }
                 if(member.updatedDt.isNotEmpty()){
-
+                    viewHolder.tvUpdate.text="Updated "+Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                 }
-                viewHolder.tvUpdate.text="Updated "+Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                 viewHolder.boomMenuButton.clearBuilders()
 
                 for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {

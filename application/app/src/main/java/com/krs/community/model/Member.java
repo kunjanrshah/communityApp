@@ -22,6 +22,14 @@ public class Member implements Serializable {
     @SerializedName("distance")
     @Expose
     private String distance="";
+
+    @SerializedName("head_sub_cast_id")
+    @Expose
+    private String head_sub_cast_id="";
+    @SerializedName("head_name")
+    @Expose
+    private String head_name="";
+
     @SerializedName("id")
     @Expose
     private String id="";
@@ -871,5 +879,21 @@ public class Member implements Serializable {
 
     public void setMatches(List<String> matches) {
         this.matches = matches;
+    }
+
+    public String getHead_name() {
+        return head_name;
+    }
+
+    public void setHead_name(String head_name) {
+        this.head_name = head_name;
+    }
+
+    public String getHead_sub_cast_id() {
+        return head_sub_cast_id;
+    }
+
+    public void setHead_sub_cast_id(String head_sub_cast_id) {
+        this.head_sub_cast_id = head_sub_cast_id;
     }
 }

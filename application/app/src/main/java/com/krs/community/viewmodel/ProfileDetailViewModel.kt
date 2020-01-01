@@ -15,9 +15,11 @@ class ProfileDetailViewModel(
         private val mProfileDetailRepository: ProfileDetailRepository,
         var app: Application) : AndroidViewModel(app) {
 
-    var job_by_update: CompletableJob? = null
+    private lateinit var job_by_update: CompletableJob
+    private lateinit var completableJob: CompletableJob
+
     var TAG: String = ProfileDetailViewModel::class.java.simpleName
-    var mEditMemberListener: EditMemberListener? = null
+    lateinit var mEditMemberListener: EditMemberListener
 
     var selectedRelationId=0
     lateinit var lstRelationId:List<Int>
@@ -152,11 +154,43 @@ class ProfileDetailViewModel(
        return mProfileDetailRepository.getCityName(id)
     }
 
+    fun getMemberByFilters(jsonObject: JsonObject) {
+        completableJob = Job()
+        completableJob.let { thejob ->
+
+            CoroutineScope(Dispatchers.IO + thejob).launch {
+                try {
+                    val response = mProfileDetailRepository.searchFilter(jsonObject)
+                    response.let {
+                        withContext(Dispatchers.Main) {
+                            mEditMemberListener.getMembers(response)
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                } catch (e: ApiException) {
+                    e.message?.let {
+                        mEditMemberListener.getFailure(it)
+                    }
+                } catch (e: NoInternetException) {
+                    e.message?.let {
+                        mEditMemberListener.getFailure(it)
+                    }
+                } catch (e: Exception) {
+                    e.message?.let {
+                        mEditMemberListener.getFailure(it)
+                    }
+                }
+                thejob.complete()
+            }
+        }
+    }
+
     fun updateProfile(profile: JsonObject,isEdit:Boolean) {
         job_by_update = Job()
         job_by_update.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob!!).launch {
+            CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
                     val response: UpdateProfileResponse
                     if(isEdit){
@@ -167,23 +201,22 @@ class ProfileDetailViewModel(
 
                     response.let {
                         withContext(Dispatchers.Main) {
-                            mEditMemberListener?.getMessage(response)
+                            mEditMemberListener.getMessage(response)
                             thejob.complete()
                         }
                         return@launch
                     }
-                    //mEditMemberListener?.getFailure(response.message)
                 } catch (e: ApiException) {
                     e.message?.let {
-                        mEditMemberListener?.getFailure(it)
+                        mEditMemberListener.getFailure(it)
                     }
                 } catch (e: NoInternetException) {
                     e.message?.let {
-                        mEditMemberListener?.getFailure(it)
+                        mEditMemberListener.getFailure(it)
                     }
                 } catch (e: Exception) {
                     e.message?.let {
-                        mEditMemberListener?.getFailure(it)
+                        mEditMemberListener.getFailure(it)
                     }
                 }
                 thejob.complete()

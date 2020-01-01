@@ -195,7 +195,11 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-
+    suspend fun searchFilter(jsonObject: JsonObject): SmartFilterResponse {
+        return apiRequest{
+            api.getSearchByFilter(jsonObject)
+        }
+    }
 
     suspend fun getCityName(id:Int): List<String> {
         return withContext(Dispatchers.IO) {
