@@ -1426,7 +1426,7 @@ public class Common {
         static final String IMG_SFATHER_URL = "img_sfather_url";
         static final String IMG_SMOTHER_URL = "img_smother_url";
         static final String CHILD_IMAGE_URL = "child_image_url";
-        private static final String BASE_URL = "http://www.srbrothersinfotech.com/directory-dev";
+        private static final String BASE_URL = "https://www.superbinstruments.com/directory-dev";
         //  private static final String BASE_URL= "http://www.geniusaccountancy.in/directory-dev";
         public static final String LOGIN_URL = BASE_URL + "/API/login";
         public static final String SIGNUP_URL = BASE_URL + "/API/register";
