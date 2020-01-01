@@ -81,6 +81,9 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_SMART_FILTER)
     suspend fun getSearchByFilter(@Body request: JsonObject): Response<SmartFilterResponse>
 
+    @POST(AppConstants.UrlPath.GET_USERS_BYDATE)
+    suspend fun getSearchByDate(@Body request: JsonObject): Response<SmartFilterResponse>
+
     @POST(AppConstants.UrlPath.GET_SEARCH_NEAR_BY)
     suspend fun getSearchByDistance(@Body request: ByDistanceModel): Response<ByDistanceResponse>
 

@@ -33,6 +33,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.app.AppController
+import com.krs.community.app.AppController.Companion.mApplication
 import com.krs.community.bkservice.ProcessMainClass
 import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
 import com.krs.community.databinding.ActivityProfileDetailBinding
@@ -68,7 +69,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
     private lateinit var logger: Logger
     private lateinit var professionalDetailsFragment: ProfessionalDetailsFragment
     private lateinit var easyWayLocation: EasyWayLocation
-    private lateinit var scanId:String
+    private var scanId:String?=null
 
     companion object {
         lateinit var binding: ActivityProfileDetailBinding
@@ -307,7 +308,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             Log.d(ProfileDetailActivity::class.java.simpleName, "jsonObject: " + jsonObject.toString())
         }
 
-        if(scanId.isNotEmpty()){
+        if(!scanId.isNullOrEmpty()){
             val jsonObject=JSONObject()
             jsonObject.put("start","0")
             jsonObject.put("length","30")
@@ -337,7 +338,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         binding.userLocation.isOn = !member?.isLocationEnable.isNullOrEmpty() && member?.isLocationEnable.equals("1")
         if (!member?.profilePic.isNullOrEmpty()) {
             try {
-                Glide.with(AppController.mApplication).load(member?.profilePic).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgProfile)
+                Glide.with(mApplication).load(member?.profilePic).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgProfile)
             } catch (e: Exception) {
                 e.message
             }

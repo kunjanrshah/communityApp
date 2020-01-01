@@ -43,7 +43,6 @@ import com.krs.community.viewmodel.SmartSearchViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
-import org.json.JSONArray
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -120,6 +119,8 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                 viewHolder.tvEmail.text = member.emailAddress
                 viewHolder.tvMobile.text = member.mobile
 
+
+
                 if(member.headId.equals("0")){
                     viewHolder.tvRole.text = "Family Head"
                 }else{
@@ -138,7 +139,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                             startActivity(intent)
                         } else if (it == 2) {
                             Utility.sendWhatsappMessage(activity as FragmentActivity,member.mobile,"")
-                        }else{
+                        }
+                        else if (it == 3) {
+                            Utility.sendWhatsappMessage(activity as FragmentActivity,member.mobile,"")
+                        }
+                        else{
                             Toast.makeText(activity, "Clicked $it", Toast.LENGTH_SHORT).show()
                         }
                     }

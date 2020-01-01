@@ -13,9 +13,9 @@ import org.json.JSONObject
 
 class CalendarSearchRepository(private val api: ApiServices, private val db:AppDatabase): SafeApiRequest()  {
 
-    suspend fun searchByName(jsonObject: JsonObject): SmartFilterResponse {
+    suspend fun getSearchByDate(jsonObject: JsonObject): SmartFilterResponse {
         return apiRequest{
-            api.getSearchByFilter(jsonObject)
+            api.getSearchByDate(jsonObject)
         }
     }
 

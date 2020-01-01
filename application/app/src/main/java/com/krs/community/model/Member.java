@@ -10,6 +10,10 @@ import java.util.List;
 public class Member implements Serializable {
 
 
+    @SerializedName("matched")
+    @Expose
+    private String matched="";
+
     @SerializedName("nearBy")
     @Expose
     private String nearBy="";
@@ -895,5 +899,13 @@ public class Member implements Serializable {
 
     public void setHead_sub_cast_id(String head_sub_cast_id) {
         this.head_sub_cast_id = head_sub_cast_id;
+    }
+
+    public String getMatched() {
+        return matched;
+    }
+
+    public void setMatched(String matched) {
+        this.matched = matched;
     }
 }

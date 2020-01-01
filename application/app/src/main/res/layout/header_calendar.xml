@@ -115,9 +115,11 @@
         android:layout_marginBottom="15dp" />
 
     <TextView
+        android:id="@+id/tv_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
+        android:visibility="gone"
         android:fontFamily="@font/montserrat_semibold"
         android:text="Search Results 100 found"
         android:textSize="14sp" />

@@ -311,6 +311,7 @@ public class AppConstants {
         String GET_STATISTICS = "GetStatistics";
         String UPDATE_PROFILE = "EditProfile";
         String GET_SMART_FILTER = "SmartFilter";
+        String GET_USERS_BYDATE = "GetUsersByDate";
         String GET_SEARCH_NEAR_BY = "GetNearByUsers";
         String GET_SEARCH_BY_CITY = "SearchByCity";
         String GET_FAMILY_MEMBER = "GetFamilyMembers";

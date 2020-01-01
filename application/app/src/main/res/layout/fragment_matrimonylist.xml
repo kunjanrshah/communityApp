@@ -13,7 +13,6 @@
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp" />
 
-
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_view_container"
             android:layout_width="match_parent"
@@ -43,10 +42,7 @@
 
         </com.facebook.shimmer.ShimmerFrameLayout>
 
-
     </FrameLayout>
-
-
 </layout>
 
 

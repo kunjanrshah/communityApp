@@ -27,6 +27,7 @@ import com.krs.community.activity.ProfileDetailActivity.Companion.setPercentage
 import com.krs.community.databinding.FragmentMainDetailsBinding
 import com.krs.community.interfaces.EditMemberListener
 import com.krs.community.model.Member
+import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
@@ -333,6 +334,9 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
     }
 
+    override fun getMembers(response: SmartFilterResponse) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
 
     override fun getMessage(response: UpdateProfileResponse) {

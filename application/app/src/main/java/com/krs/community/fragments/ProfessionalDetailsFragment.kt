@@ -37,6 +37,7 @@ import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentProfessionalDetailsBinding
 import com.krs.community.interfaces.EditMemberListener
 import com.krs.community.model.Member
+import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
@@ -269,6 +270,10 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener 
             binding.spOccupation.setText(it)
         })
 
+    }
+
+    override fun getMembers(response: SmartFilterResponse) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getMessage(response: UpdateProfileResponse) {

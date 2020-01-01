@@ -26,10 +26,8 @@ class CalendarSearchViewModel(
         return mCalendarSearchRepository.getCityIdByName(name)
     }
 
-    fun getLastName():LiveData<List<String>>{
-        return mCalendarSearchRepository.getLastName()
-    }
-     fun getCityNamebyId(id:String):String{
+
+    fun getCityNamebyId(id:String):String{
         return mCalendarSearchRepository.getCityName(id)
     }
 
@@ -41,13 +39,13 @@ class CalendarSearchViewModel(
         return mCalendarSearchRepository.getIdByLastName(name)
     }
 
-    fun getMatrimonySearch(jsonObject: JsonObject) {
+    fun getCalendarSearch(jsonObject: JsonObject) {
         completableJob = Job()
         completableJob.let { thejob ->
 
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
-                    val response = mCalendarSearchRepository.searchByName(jsonObject)
+                    val response = mCalendarSearchRepository.getSearchByDate(jsonObject)
                     response.let {
                         withContext(Dispatchers.Main) {
                             mByFilterListener.getMembers(response)
