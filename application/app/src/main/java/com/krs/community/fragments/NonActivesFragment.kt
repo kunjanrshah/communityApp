@@ -1,0 +1,462 @@
+package com.krs.community.fragments
+
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.text.TextUtils
+import android.util.SparseBooleanArray
+import android.view.*
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
+import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.snackbar.Snackbar
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.krs.community.R
+import com.krs.community.activity.DashboardActivity
+import com.krs.community.interfaces.ByFilterListener
+import com.krs.community.model.Member
+import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
+import com.krs.community.responses.SmartFilterResponse
+import com.krs.community.utils.Coroutines
+import com.krs.community.utils.FlipAnimator
+import com.krs.community.utils.Utility
+import com.krs.community.viewmodel.NonActiveUsersViewModel
+import com.krs.community.viewmodel.NonActiveUsersViewModelFactory
+import com.nightonke.boommenu.BoomMenuButton
+import org.json.JSONObject
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.kodein
+import org.kodein.di.generic.instance
+import java.util.*
+
+class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore {
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: ParallaxRecyclerAdapter<Member>
+    private val lstMembers: MutableList<Member> = ArrayList()
+    private lateinit var actionModeCallback: ActionModeCallback
+    private lateinit var actionMode: ActionMode
+    private lateinit var selectedItems: SparseBooleanArray
+    private lateinit var animationItemsIndex: SparseBooleanArray
+    private var reverseAllAnimations = false
+    private var currentSelectedIndex = -1
+    override val kodein by kodein()
+    private lateinit var shimmerFrameLayout: ShimmerFrameLayout
+    private lateinit var nonActiveUsersViewModel: NonActiveUsersViewModel
+    private val factory: NonActiveUsersViewModelFactory by instance()
+    private lateinit var tvCount:TextView
+    private lateinit var llRoot:LinearLayout
+    private var selectedPosition = 0
+    private var start: Int = 0
+    private val length: Int = 30
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val root = inflater.inflate(R.layout.fragment_nonactives, container, false)
+        selectedItems = SparseBooleanArray()
+        animationItemsIndex = SparseBooleanArray()
+        recyclerView = root.findViewById(R.id.recycler_view)
+        shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)
+        llRoot= root.findViewById(R.id.ll_root)
+        (activity as AppCompatActivity).supportActionBar!!.title = ""
+        nonActiveUsersViewModel = ViewModelProviders.of(this,factory).get(NonActiveUsersViewModel::class.java)
+        nonActiveUsersViewModel.mByFilterListener =this
+
+
+        adapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
+            override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
+
+                val member = lstMembers[position]
+                val holder = viewHolder as MyViewHolder
+
+                if(lstMembers.size>0){
+                    tvCount.visibility=View.VISIBLE
+                    tvCount.text = "Member ${lstMembers.size} found"
+                }else{
+                    tvCount.visibility=View.GONE
+                }
+
+                holder.tvName.text = member.firstName
+                holder.tvArea.text = member.area
+                holder.tvAddr.text=member.address
+
+                Coroutines.io {
+                    if(!member.subCastId.isNullOrEmpty()){
+                        viewHolder.tvName.text=member.firstName+" "+nonActiveUsersViewModel.getLastNameById(member.subCastId.toInt())
+                    }
+
+                    if(!member.cityId.isNullOrEmpty()){
+                        holder.tvArea.text = member.area+" "+nonActiveUsersViewModel.getCityNamebyId(member.cityId)
+                    }
+                }
+
+                holder.tvEmail.text = member.emailAddress
+                holder.tvMobile.text = member.mobile
+
+
+                holder.boomMenuButton.clearBuilders()
+                for (i in 0 until holder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
+                    holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder())
+                }
+                holder.boomMenuButton.setOnClickListener { v: View? -> holder.boomMenuButton.boom() }
+                holder.iconText.text = viewHolder.tvName.text.substring(0, 1)
+                holder.itemView.isActivated = selectedItems[position, false]
+                applyIconAnimation(holder, position)
+                applyProfilePicture(holder, member)
+                applyClickEvents(holder, position)
+            }
+
+            override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
+                return MyViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.list_row_nonactives, viewGroup, false))
+            }
+
+            override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<Member>): Int {
+                return lstMembers.size
+            }
+        }
+
+        val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(activity!!.applicationContext)
+        recyclerView.setLayoutManager(mLayoutManager)
+        recyclerView.setItemAnimator(DefaultItemAnimator())
+
+        val header = LayoutInflater.from(activity).inflate(R.layout.header_nonactives, container, false)
+        tvCount = header.findViewById(R.id.tv_count)
+        val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
+        ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
+        adapter.setParallaxHeader(header, recyclerView)
+        recyclerView.adapter = adapter
+        actionModeCallback = ActionModeCallback()
+        DashboardActivity.stop=false
+        getNonActivesUsers()
+
+        return root
+    }
+
+    private fun getNonActivesUsers(){
+        if (!DashboardActivity.stop) {
+            DashboardActivity.stop = true
+            val jsonObject= JSONObject()
+            jsonObject.put("start",start)
+            jsonObject.put("length",length)
+            jsonObject.put("status",0)
+            val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+            nonActiveUsersViewModel.getNonActiveUsers(updated)
+            Handler().postDelayed({
+                shimmerFrameLayout.stopShimmerAnimation()
+                shimmerFrameLayout.visibility=View.GONE
+            },4000)
+            lstMembers.clear()
+            adapter.notifyDataSetChanged()
+
+            if(start==0){
+                shimmerFrameLayout.startShimmerAnimation()
+                shimmerFrameLayout.visibility = View.VISIBLE
+            }
+            Utility.hideKeyboard(activity)
+        }
+    }
+
+    override fun getMembers(response: SmartFilterResponse) {
+        shimmerFrameLayout.stopShimmerAnimation()
+        shimmerFrameLayout.visibility=View.GONE
+
+        if(response.success){
+            if (response.members.size > 0) {
+                lstMembers.clear()
+                lstMembers.addAll(response.members)
+                adapter.notifyDataSetChanged()
+
+                recyclerView.layoutManager?.scrollToPosition(selectedPosition)
+                selectedPosition = lstMembers.size - 1
+                DashboardActivity.stop = false
+
+                if(lstMembers.size<=length){
+                    DashboardActivity.stop = true
+                    Snackbar.make(llRoot, "End of Records", Snackbar.LENGTH_LONG).show()
+                }
+            }else{
+                DashboardActivity.stop = true
+                Snackbar.make(llRoot, "End of Records", Snackbar.LENGTH_LONG).show()
+            }
+        }else {
+            DashboardActivity.stop = false
+        }
+
+        Toast.makeText(activity,"Success",Toast.LENGTH_SHORT).show()
+    }
+
+    override fun getFailure(message: String) {
+        Coroutines.main {
+            DashboardActivity.stop = false
+            shimmerFrameLayout.stopShimmerAnimation()
+            shimmerFrameLayout.visibility = View.GONE
+            Toast.makeText(activity,message,Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun loadApi() {
+        if (!DashboardActivity.stop) {
+            start = (lstMembers.size+1)
+            getNonActivesUsers()
+        }
+    }
+
+    inner class MyViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view), View.OnLongClickListener {
+        var iconText: TextView = view.findViewById(R.id.icon_text)
+        var tvName: TextView = view.findViewById(R.id.tv_name)
+        var imgProfile: ImageView = view.findViewById(R.id.icon_profile)
+        var messageContainer: LinearLayout = view.findViewById(R.id.message_container)
+        var iconContainer: RelativeLayout = view.findViewById(R.id.icon_container)
+        var iconBack: RelativeLayout= view.findViewById(R.id.icon_back)
+        var iconFront: RelativeLayout = view.findViewById(R.id.icon_front)
+        var boomMenuButton: BoomMenuButton = view.findViewById(R.id.boomMenuButton)
+        var tvArea: TextView = view.findViewById(R.id.tv_area)
+        var tvMobile: TextView = view.findViewById(R.id.tv_mobile)
+        var tvEmail: TextView = view.findViewById(R.id.tv_email)
+        var tvAddr: TextView = view.findViewById(R.id.tv_addr)
+
+        init {
+            view.setOnLongClickListener(this)
+        }
+
+        override fun onLongClick(view: View): Boolean {
+            enableActionMode(adapterPosition)
+            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            return true
+        }
+    }
+
+    private fun applyClickEvents(holder: MyViewHolder, position: Int) {
+        holder.iconContainer.setOnClickListener { view: View? -> onIconClicked(position) }
+        holder.messageContainer.setOnClickListener { view: View? -> onMessageRowClicked(position) }
+        holder.messageContainer.setOnLongClickListener { view: View ->
+            onRowLongClicked(position)
+            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            true
+        }
+    }
+
+    private fun applyProfilePicture(holder: MyViewHolder, member: Member) {
+        if (!TextUtils.isEmpty(member.profilePic)) {
+            Glide.with(activity!!).load(member.profilePic)
+                    .thumbnail(0.5f)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .apply(RequestOptions.circleCropTransform())
+                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                    .into(holder.imgProfile)
+            holder.imgProfile.colorFilter = null
+            holder.iconText.visibility = View.GONE
+        } else {
+            holder.imgProfile.setImageResource(R.drawable.bg_circle)
+            holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(activity!!, "400"))
+            holder.iconText.visibility = View.VISIBLE
+        }
+    }
+
+    private fun applyIconAnimation(holder: MyViewHolder, position: Int) {
+        if (selectedItems[position, false]) {
+            holder.iconFront.visibility = View.GONE
+            resetIconYAxis(holder.iconBack)
+            holder.iconBack.visibility = View.VISIBLE
+            holder.iconBack.alpha = 1f
+            if (currentSelectedIndex == position) {
+                FlipAnimator.flipView(activity, holder.iconBack, holder.iconFront, true)
+                resetCurrentIndex()
+            }
+        } else {
+            holder.iconBack.visibility = View.GONE
+            resetIconYAxis(holder.iconFront)
+            holder.iconFront.visibility = View.VISIBLE
+            holder.iconFront.alpha = 1f
+            if (reverseAllAnimations && animationItemsIndex[position, false] || currentSelectedIndex == position) {
+                FlipAnimator.flipView(activity, holder.iconBack, holder.iconFront, false)
+                resetCurrentIndex()
+            }
+        }
+    }
+
+    private fun resetIconYAxis(view: View) {
+        if (view.rotationY != 0f) {
+            view.rotationY = 0f
+        }
+    }
+
+    private fun resetCurrentIndex() {
+        currentSelectedIndex = -1
+    }
+
+
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+    }
+
+    private fun resetAnimationIndex() {
+        reverseAllAnimations = false
+        animationItemsIndex.clear()
+    }
+
+    private fun deleteMessages() {
+        resetAnimationIndex()
+        val selectedItemPositions = getSelectedItems()
+        for (i in selectedItemPositions.indices.reversed()) {
+            removeData(selectedItemPositions[i])
+        }
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun removeData(position: Int) {
+        lstMembers.removeAt(position)
+        resetCurrentIndex()
+    }
+
+
+    private val inbox: Unit
+        private get() {
+            lstMembers.clear()
+            /*for (i in 0..19) {
+                val message = Message()
+                message.id = 1
+                message.isImportant = false
+                message.message = "Now android supports multiple voice recogonization"
+                message.picture = "https://api.androidhive.info/json/google.png"
+                message.isRead = false
+                message.timestamp = "10:30 AM"
+                message.from = "Google Alerts"
+                message.subject = "Google Alert - android"
+                message.color = Utility.getRandomMaterialColor(activity, "400")
+                lstMembers.add(message)
+            }*/
+            adapter.notifyDataSetChanged()
+        }
+
+    private fun onIconClicked(position: Int) {
+        if (actionMode == null) {
+            actionMode = activity!!.startActionMode(actionModeCallback)!!
+        }
+        toggleSelection(position)
+    }
+
+    private fun getSelectedItems(): List<Int> {
+        val items: MutableList<Int> = ArrayList(selectedItems.size())
+        for (i in 0 until selectedItems.size()) {
+            items.add(selectedItems.keyAt(i))
+        }
+        return items
+    }
+
+    private fun toggleSelected(pos: Int) {
+        currentSelectedIndex = pos
+        if (selectedItems[pos, false]) {
+            selectedItems.delete(pos)
+            animationItemsIndex.delete(pos)
+        } else {
+            selectedItems.put(pos, true)
+            animationItemsIndex.put(pos, true)
+        }
+        adapter.notifyItemChanged(pos)
+    }
+
+    private fun toggleSelection(position: Int) {
+        toggleSelected(position)
+        val count = selectedItemCount
+        if (count == 0) {
+            actionMode.finish()
+            // ll_title.setVisibility(View.VISIBLE);
+        } else { // ll_title.setVisibility(View.GONE);
+            actionMode.title = count.toString()
+            actionMode.invalidate()
+        }
+    }
+
+    private val selectedItemCount: Int
+        private get() = selectedItems.size()
+
+    private fun onMessageRowClicked(position: Int) { // verify whether action mode is enabled or not
+// if enabled, change the row state to activated
+        if (selectedItemCount > 0) {
+            enableActionMode(position)
+        } else { // read the message which removes bold from the row
+            val message = lstMembers[position]
+            //message.isRead = true
+            lstMembers[position] = message
+            adapter.notifyDataSetChanged()
+           // Toast.makeText(activity, "Read: " + message.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun onRowLongClicked(position: Int) {
+        enableActionMode(position)
+    }
+
+    private fun enableActionMode(position: Int) {
+        if (actionMode == null) {
+            actionMode = activity?.startActionMode(actionModeCallback)!!
+        }
+        toggleSelection(position)
+    }
+
+    private inner class ActionModeCallback : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+            mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
+            // disable swipe refresh if action mode is enabled
+
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean { /* ViewGroup   decorView = (ViewGroup) getActivity().getWindow().getDecorView().findViewById(R.id.action_mode_bar);
+            decorView.setBackgroundColor(getResources().getColor(R.color.colorBG));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Utility.changeStatusbarColor(getActivity(),R.color.colorBG,true);
+            }*/
+            return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+            return when (item.itemId) {
+                R.id.action_delete -> {
+                    // delete all the selected messages
+                    deleteMessages()
+                    mode.finish()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        fun clearSelections() {
+            reverseAllAnimations = true
+            selectedItems.clear()
+            adapter.notifyDataSetChanged()
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode) {
+            clearSelections()
+           // actionMode = null
+            // ll_title.setVisibility(View.VISIBLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Utility.changeStatusbarColor(activity, R.color.colorBG, false)
+            }
+            recyclerView.post {
+                resetAnimationIndex()
+                // mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+}

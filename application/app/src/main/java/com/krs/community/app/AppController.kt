@@ -76,7 +76,11 @@ class AppController : Application(), KodeinAware{
         bind() from singleton {  SmartSearchRepository(instance(),instance()) }
         bind() from singleton {  MatrimonySearchRepository(instance(),instance()) }
         bind() from provider { CalendarSearchRepository(instance(),instance()) }
+        bind() from provider { AdminSearchRepository(instance(),instance()) }
+        bind() from provider { NonActivesRepository(instance(),instance()) }
 
+        bind() from provider { AdminSearchViewModelFactory(instance()) }
+        bind() from provider { NonActiveUsersViewModelFactory(instance()) }
         bind() from provider { StatisticsViewModelFactory(instance()) }
         bind() from provider { FamilyDetailViewModelFactory(instance()) }
         bind() from provider { RegisterViewModelFactory(instance()) }

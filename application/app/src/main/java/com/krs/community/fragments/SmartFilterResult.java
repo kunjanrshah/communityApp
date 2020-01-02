@@ -48,11 +48,9 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
 
     private RecyclerView rv_filters;
     private ShimmerFrameLayout mShimmerViewContainer;
-    //private FilterResultAdapter mAdapter;
     private List<Message> messages = new ArrayList<>();
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private ParallaxRecyclerAdapter<Message> adapter;
     private SparseBooleanArray selectedItems;
     private SparseBooleanArray animationItemsIndex;
@@ -68,11 +66,7 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
 
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container);
         rv_filters =rootView.findViewById(R.id.lstFilter);
-        swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setOnRefreshListener(this);
         actionModeCallback = new ActionModeCallback();
-
-
 
         adapter=new ParallaxRecyclerAdapter<Message>(messages) {
             @Override
@@ -86,8 +80,7 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
                 holder.tv_name.setText(name);
                 holder.boomMenuButton.clearBuilders();
 
-                for(int i=0; i<holder.boomMenuButton.getPiecePlaceEnum().pieceNumber(); i++)
-                {
+                for(int i=0; i<holder.boomMenuButton.getPiecePlaceEnum().pieceNumber(); i++){
                     holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder());
                 }
                 holder.boomMenuButton.setOnClickListener(v -> {
@@ -144,7 +137,6 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
 
     private void setupList() {
         rv_filters.setLayoutManager(new LinearLayoutManager(getActivity()));
-        // mAdapter = new FilterResultAdapter(getActivity(), messages, this);
         rv_filters.setAdapter(adapter);
 
         new Handler().postDelayed(() -> {
@@ -154,7 +146,6 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
     }
 
     private void getInbox() {
-        swipeRefreshLayout.setRefreshing(true);
         messages.clear();
 
         for (int i = 0; i < 20; i++) {
@@ -172,7 +163,6 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
         }
 
         adapter.notifyDataSetChanged();
-        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void applyClickEvents(ViewHolder holder, final int position) {
@@ -368,7 +358,6 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.menu_action_mode, menu);
 
-            swipeRefreshLayout.setEnabled(false);
             return true;
         }
 
@@ -395,7 +384,6 @@ public class SmartFilterResult extends Fragment implements SwipeRefreshLayout.On
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             clearSelections();
-            swipeRefreshLayout.setEnabled(true);
             actionMode = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);

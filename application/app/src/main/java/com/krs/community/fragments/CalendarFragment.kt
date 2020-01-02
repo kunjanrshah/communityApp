@@ -6,6 +6,7 @@ import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,9 +24,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.FacebookSdk
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.app.AppController
 import com.krs.community.interfaces.ByFilterListener
@@ -50,7 +53,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, ByFilterListener {
+class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore {
 
     override val kodein by kodein()
     private var lstCalendar= ArrayList<Member>()
@@ -69,6 +72,18 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
     private var fromDate:String=""
     private var toDate:String=""
     private lateinit var tvCount:TextView
+
+    private var selectedPosition = 0
+    private var start: Int = 0
+    private val length: Int = 30
+
+    override fun loadApi() {
+        if (!DashboardActivity.stop) {
+            start = (lstCalendar.size+1)
+            searchCalendarList()
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val root = inflater.inflate(R.layout.fragment_calendar, container, false)
@@ -91,37 +106,61 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         val date1 = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         fromDate=date1
         toDate=date1
+        DashboardActivity.stop=false
         searchCalendarList()
         return root
     }
 
     private fun searchCalendarList() {
-        val jsonObject=JSONObject()
-        jsonObject.put("start","0")
-        jsonObject.put("length","30")
-        jsonObject.put("fromdate",fromDate)
-        jsonObject.put("todate",toDate)
-        val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
-        calendarSearchViewModel.getCalendarSearch(updated)
-        Handler().postDelayed({
-            shimmerFrameLayout.stopShimmerAnimation()
-            shimmerFrameLayout.visibility=View.GONE
-        },4000)
-        lstCalendar.clear()
-        adapter.notifyDataSetChanged()
-        shimmerFrameLayout.startShimmerAnimation()
-        shimmerFrameLayout.visibility = View.VISIBLE
-        Utility.hideKeyboard(activity)
+        if (!DashboardActivity.stop) {
+            DashboardActivity.stop = true
+            val jsonObject=JSONObject()
+            jsonObject.put("start",start)
+            jsonObject.put("length",length)
+            jsonObject.put("fromdate",fromDate)
+            jsonObject.put("todate",toDate)
+            jsonObject.put("filter","")
+            val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+            calendarSearchViewModel.getCalendarSearch(updated)
+            Handler().postDelayed({
+                shimmerFrameLayout.stopShimmerAnimation()
+                shimmerFrameLayout.visibility=View.GONE
+            },4000)
+            lstCalendar.clear()
+            adapter.notifyDataSetChanged()
 
+            if(start==0){
+                shimmerFrameLayout.startShimmerAnimation()
+                shimmerFrameLayout.visibility = View.VISIBLE
+            }
+
+            Utility.hideKeyboard(activity)
+        }
     }
 
     override fun getMembers(response: SmartFilterResponse) {
         shimmerFrameLayout.stopShimmerAnimation()
         shimmerFrameLayout.visibility=View.GONE
         if(response.success){
-            lstCalendar.clear()
-            lstCalendar.addAll(response.members)
-            adapter.notifyDataSetChanged()
+            if (response.members.size > 0) {
+                lstCalendar.clear()
+                lstCalendar.addAll(response.members)
+                adapter.notifyDataSetChanged()
+
+                recyclerView.layoutManager?.scrollToPosition(selectedPosition)
+                selectedPosition = lstCalendar.size - 1
+                DashboardActivity.stop = false
+
+                if(lstCalendar.size<=length){
+                    DashboardActivity.stop = true
+                    Snackbar.make(llRoot, "End of Records", Snackbar.LENGTH_LONG).show()
+                }
+            }else{
+                DashboardActivity.stop = true
+                Snackbar.make(llRoot, "End of Records", Snackbar.LENGTH_LONG).show()
+            }
+        }else {
+            DashboardActivity.stop = false
         }
 
         Toast.makeText(activity,"Success",Toast.LENGTH_SHORT).show()
@@ -130,6 +169,9 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
 
     override fun getFailure(message: String) {
         Coroutines.main {
+            DashboardActivity.stop = false
+            shimmerFrameLayout.stopShimmerAnimation()
+            shimmerFrameLayout.visibility = View.GONE
             Toast.makeText(activity,message,Toast.LENGTH_SHORT).show()
         }
 
@@ -237,49 +279,27 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 }
 
                 if(!lstCalendar[i].matched.isNullOrEmpty()){
-                    if(lstCalendar[i].matched.equals("birth_date")){
+                    if(lstCalendar[i].matched.contains("birth_date")){
                         val birth= Utility.changeDateFormat(lstCalendar[i].birthDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
-                        viewHolder.tvEvent2.text="BirthDay"
-                        viewHolder.tvEvent1.text="$birth"
-                    }else if(lstCalendar[i].matched.equals("marriage_date")){
+                        val str= Html.fromHtml("<font color=#843f52>BirthDay</font>")
+                        val age=Utility.getAge(birth,Utility.dd_MM_yyyy)
+                        viewHolder.tvEvent1.text="$str $birth ($age)"
+                        viewHolder.tvEvent1.visibility=View.VISIBLE
+                    }else if(lstCalendar[i].matched.contains("marriage_date")){
                         val mdate= Utility.changeDateFormat(lstCalendar[i].marriageDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
-                        viewHolder.tvEvent2.text="Anniversary"
-                        viewHolder.tvEvent1.text="$mdate"
+                        val str= Html.fromHtml("<font color=#843f52>Marriage Anniversary</font>")
+                        val age=Utility.getAge(mdate,Utility.dd_MM_yyyy)
+                        viewHolder.tvEvent2.text="$str $mdate ($age)"
+                        viewHolder.tvEvent2.visibility=View.VISIBLE
+                    }
+                    else if(lstCalendar[i].matched.contains("expire_date")){
+                        val edate= Utility.changeDateFormat(lstCalendar[i].expireDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+                        val str= Html.fromHtml("<font color=#843f52>Death Anniversary</font>")
+                        val age=Utility.getAge(edate,Utility.dd_MM_yyyy)
+                        viewHolder.tvEvent3.text="$str $edate ($age)"
+                        viewHolder.tvEvent3.visibility=View.VISIBLE
                     }
                 }
-
-               /* try {
-                    if(!lstCalendar[i].birthDate.isNullOrEmpty()){
-                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-                        val fDate = sdf.parse(fromDate)
-                        val tDate = sdf.parse(toDate)
-                        val bDate = sdf.parse(lstCalendar[i].birthDate)
-
-                        if((bDate.after(fDate) && bDate.before(tDate)) || bDate == fDate || bDate == tDate){
-                            val birth= Utility.changeDateFormat(lstCalendar[i].birthDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
-                            viewHolder.tvEvent.text="$birth BirthDay"
-                        }
-                    }
-                    if(!lstCalendar[i].marriageDate.isNullOrEmpty()){
-                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-                        val fDate = sdf.parse(fromDate)
-                        val tDate = sdf.parse(toDate)
-                        val mDate = sdf.parse(lstCalendar[i].marriageDate)
-
-                        var event=viewHolder.tvEvent.text
-                        if((mDate.after(fDate) && mDate.before(tDate)) || mDate == fDate || mDate == tDate){
-                            val mdate= Utility.changeDateFormat(lstCalendar[i].marriageDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
-                            if(event.isNullOrEmpty()){
-                                event= "$mdate Marriage Anniversary"
-                            }else{
-                                event= "$event\n$mdate Marriage Anniversary"
-                            }
-                        }
-                        viewHolder.tvEvent.text=event
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }*/
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
@@ -362,6 +382,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         var tvArea: TextView = v.findViewById(R.id.tv_area)
         var tvEvent1: TextView = v.findViewById(R.id.tv_event1)
         var tvEvent2: TextView = v.findViewById(R.id.tv_event2)
+        var tvEvent3: TextView = v.findViewById(R.id.tv_event3)
         var tvEmail: TextView = v.findViewById(R.id.tv_email)
         var tvMobile: TextView = v.findViewById(R.id.tv_mobile)
         var tvRole: TextView = v.findViewById(R.id.tv_role)

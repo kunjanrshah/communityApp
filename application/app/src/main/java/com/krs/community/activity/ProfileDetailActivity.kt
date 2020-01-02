@@ -311,7 +311,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         if(!scanId.isNullOrEmpty()){
             val jsonObject=JSONObject()
             jsonObject.put("start","0")
-            jsonObject.put("length","30")
+            jsonObject.put("length","1")
             val jsonObj=JSONObject()
             jsonObj.put("id",scanId)
             jsonObject.put("filter_by",jsonObj)

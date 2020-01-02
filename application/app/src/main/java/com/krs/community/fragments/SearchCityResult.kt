@@ -111,7 +111,6 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
     }
 
     companion object {
-       // var stop: Boolean = false
         var alpha:String=""
         var dialog:DialogPlus?=null
     }

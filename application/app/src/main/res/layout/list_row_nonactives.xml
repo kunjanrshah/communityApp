@@ -28,7 +28,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -79,25 +79,14 @@
 
                 </RelativeLayout>
 
-
-                <com.nightonke.boommenu.BoomMenuButton
-                    android:id="@+id/boomMenuButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:bmb_buttonEnum="textInsideCircle"
-                    android:layout_marginLeft="-8dp"
-                    app:bmb_piecePlaceEnum="piecePlace_dot_6_1"
-                    app:bmb_buttonPlaceEnum="buttonPlace_sc_6_1"
-                    app:bmb_inList="true"         />
-
-
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:gravity="center"
+                    android:gravity="center|bottom"
                     android:text="Address"
+                    android:layout_marginBottom="10dp"
                     android:textColor="@color/material_blue_500"
                     android:textSize="12sp" />
 
@@ -127,15 +116,16 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Kunjan Patel"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/tv_area"
+                            android:fontFamily="@font/montserrat_medium"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Maninagar, Ahmedabad"
-                            android:textSize="12sp" />
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
@@ -160,14 +150,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:background="@color/colorGray" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="25dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -178,6 +168,7 @@
                         <ImageView
                             android:layout_width="15dp"
                             android:layout_height="15dp"
+                            android:layout_gravity="center_vertical"
                             android:background="@drawable/phone" />
 
                         <TextView
@@ -187,8 +178,9 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
                             android:text="9825450261"
+                            android:fontFamily="@font/montserrat_medium"
                             android:textColor="@color/com_facebook_blue"
-                            android:textSize="12sp" />
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
@@ -201,6 +193,7 @@
                         <ImageView
                             android:layout_width="15dp"
                             android:layout_height="15dp"
+                            android:layout_gravity="center_vertical"
                             android:background="@drawable/ic_email" />
 
                         <TextView
@@ -209,8 +202,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
+                            android:fontFamily="@font/montserrat_medium"
                             android:text="kunjanshah@gmail.com"
-                            android:textSize="12sp" />
+                            android:textSize="14sp" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -220,7 +214,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:background="@color/colorGray" />
 
                 <TextView
@@ -229,8 +223,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
+                    android:fontFamily="@font/montserrat_medium"
                     android:text="8/B Jay Garvi Gujarat Soc., Gor no Kuwa, Jashoda cross road. Maninagar(E)"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
 
             </LinearLayout>
