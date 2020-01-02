@@ -18,8 +18,8 @@ import com.krs.community.databinding.FragmentMatrimonyBinding
 import com.krs.community.utils.Utility
 import com.krs.community.utils.moveToFragmentListScreen
 import com.krs.community.utils.openFilter
-import com.krs.community.viewmodel.MatrimonySearchViewModel
-import com.krs.community.viewmodel.MatrimonySearchViewModelFactory
+import com.krs.community.viewmodel.SmartFilterViewModel
+import com.krs.community.viewmodel.SmartFilterViewModelFactory
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -29,14 +29,14 @@ class MatrimonyFragment : Fragment(), KodeinAware {
 
     private lateinit var binding:FragmentMatrimonyBinding
     override val kodein by kodein()
-    private val factory: MatrimonySearchViewModelFactory by instance()
-    private lateinit var matrimonySearchViewModel: MatrimonySearchViewModel
+    private val factory: SmartFilterViewModelFactory by instance()
+    private lateinit var smartFilterViewModel: SmartFilterViewModel
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding= DataBindingUtil.inflate(inflater, R.layout.fragment_matrimony, container, false)
-        matrimonySearchViewModel = ViewModelProviders.of(this,factory).get(MatrimonySearchViewModel::class.java)
+        smartFilterViewModel = ViewModelProviders.of(this,factory).get(SmartFilterViewModel::class.java)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.white, false)
@@ -48,7 +48,7 @@ class MatrimonyFragment : Fragment(), KodeinAware {
             val RIGHT = 2
             if (event.action == MotionEvent.ACTION_UP) {
                 if ((event.rawX+35) >= binding.edtName.right - binding.edtName.compoundDrawables[RIGHT].bounds.width()) {
-                    activity?.let { openFilter(it,matrimonySearchViewModel) }
+                    activity?.let { openFilter(it,smartFilterViewModel) }
                     return@setOnTouchListener true
                 }
             }

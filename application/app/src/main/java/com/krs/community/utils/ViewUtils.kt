@@ -29,7 +29,7 @@ import com.krs.community.activity.BaseActivity
 import com.krs.community.app.AppController
 import com.krs.community.fragments.MatrimonyListFragment
 import com.krs.community.jrspinner.JRSpinner
-import com.krs.community.viewmodel.MatrimonySearchViewModel
+import com.krs.community.viewmodel.SmartFilterViewModel
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.model.AspectRatio
 import org.json.JSONObject
@@ -191,7 +191,7 @@ fun promptReadPermission(context: Context) {
     }
 }
 
-fun openFilter(context: Context, matrimonySearchViewModel: MatrimonySearchViewModel) {
+fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
 
     val dialog = Dialog(context)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -227,7 +227,7 @@ fun openFilter(context: Context, matrimonySearchViewModel: MatrimonySearchViewMo
     spMarital.setItems(list.toTypedArray())
     spMarital.setExpandTint(R.color.black)
 
-    matrimonySearchViewModel.getListCityName().observeForever {
+    smartFilterViewModel.getListCityName().observeForever {
         if (it.isNotEmpty()) {
             val list = ArrayList<String>()
             list.add(context.getString(R.string.Select))
@@ -237,7 +237,7 @@ fun openFilter(context: Context, matrimonySearchViewModel: MatrimonySearchViewMo
         }
     }
 
-    matrimonySearchViewModel.getLastName().observeForever {
+    smartFilterViewModel.getLastName().observeForever {
         if (it.isNotEmpty()) {
             val list = ArrayList<String>()
             list.add(context.getString(R.string.Select))
@@ -315,14 +315,14 @@ fun openFilter(context: Context, matrimonySearchViewModel: MatrimonySearchViewMo
             if (mjsonObject.has(context.getString(R.string.sub_cast_id))) {
                 val subcastId = mjsonObject.getString(context.getString(R.string.sub_cast_id))
                 if (!subcastId.isNullOrEmpty()) {
-                    spLname.setText(matrimonySearchViewModel.getLastNameById(subcastId.toInt()))
+                    spLname.setText(smartFilterViewModel.getLastNameById(subcastId.toInt()))
                 }
             }
 
             if (mjsonObject.has(context.getString(R.string.city_id))) {
                 val cityid = mjsonObject.getString(context.getString(R.string.city_id))
                 if (!cityid.isNullOrEmpty()) {
-                    spCity.setText(matrimonySearchViewModel.getCityNamebyId(cityid))
+                    spCity.setText(smartFilterViewModel.getCityNamebyId(cityid))
                 }
             }
         }
@@ -371,12 +371,12 @@ fun openFilter(context: Context, matrimonySearchViewModel: MatrimonySearchViewMo
                 jsonObject.put(context.getString(R.string.email_address), edtMail.text.trim())
             }
             if (!spLname.text.isNullOrEmpty() && spLname.text.toString() != context.getString(R.string.Select)) {
-                val subCastId = matrimonySearchViewModel.getIdByLastName(spLname.text.toString())
+                val subCastId = smartFilterViewModel.getIdByLastName(spLname.text.toString())
                 jsonObject.put(context.getString(R.string.sub_cast_id), subCastId)
             }
 
             if (!spCity.text.isNullOrEmpty() && spCity.text.toString() != context.getString(R.string.Select)) {
-                val cityId = matrimonySearchViewModel.getCityIdByName(spCity.text.toString())
+                val cityId = smartFilterViewModel.getCityIdByName(spCity.text.toString())
                 jsonObject.put(context.getString(R.string.city_id), cityId)
             }
             if (isMale) {

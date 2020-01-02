@@ -5,47 +5,49 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.interfaces.ByFilterListener
-import com.krs.community.repositories.NonActivesRepository
+import com.krs.community.repositories.SmartFilterRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
 import kotlinx.coroutines.*
 
-class NonActiveUsersViewModel(
-        private val mNonActivesRepository: NonActivesRepository,
+class SmartFilterViewModel(
+        private val mSmartFilterRepository: SmartFilterRepository,
         var app: Application) : AndroidViewModel(app) {
 
-    private var TAG: String = NonActiveUsersViewModel::class.java.simpleName
+    private var TAG: String = SmartFilterViewModel::class.java.simpleName
     private lateinit var completableJob: CompletableJob
     lateinit var mByFilterListener: ByFilterListener
 
     fun getListCityName():LiveData<List<String>>{
-        return mNonActivesRepository.getListCityName()
+        return mSmartFilterRepository.getListCityName()
     }
 
      fun getCityIdByName(name:String):Int{
-        return mNonActivesRepository.getCityIdByName(name)
+        return mSmartFilterRepository.getCityIdByName(name)
     }
 
-
-    fun getCityNamebyId(id:String):String{
-        return mNonActivesRepository.getCityName(id)
+    fun getLastName():LiveData<List<String>>{
+        return mSmartFilterRepository.getLastName()
+    }
+     fun getCityNamebyId(id:String):String{
+        return mSmartFilterRepository.getCityName(id)
     }
 
      fun getLastNameById(id:Int):String{
-        return mNonActivesRepository.getLastNameById(id)
+        return mSmartFilterRepository.getLastNameById(id)
     }
 
      fun getIdByLastName(name:String):Int{
-        return mNonActivesRepository.getIdByLastName(name)
+        return mSmartFilterRepository.getIdByLastName(name)
     }
 
-    fun getNonActiveUsers(jsonObject: JsonObject) {
+    fun smartFilterSearch(jsonObject: JsonObject) {
         completableJob = Job()
         completableJob.let { thejob ->
 
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
-                    val response = mNonActivesRepository.getNonActiveUsers(jsonObject)
+                    val response = mSmartFilterRepository.searchByName(jsonObject)
                     response.let {
                         withContext(Dispatchers.Main) {
                             mByFilterListener.getMembers(response)

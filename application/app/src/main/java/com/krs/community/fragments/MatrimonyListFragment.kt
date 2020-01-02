@@ -9,7 +9,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -29,8 +28,8 @@ import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.utils.openFilter
-import com.krs.community.viewmodel.MatrimonySearchViewModel
-import com.krs.community.viewmodel.MatrimonySearchViewModelFactory
+import com.krs.community.viewmodel.SmartFilterViewModel
+import com.krs.community.viewmodel.SmartFilterViewModelFactory
 import com.nightonke.boommenu.BoomMenuButton
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -42,8 +41,8 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener {
 
     private var lstMatrimony= ArrayList<Member>()
     override val kodein by kodein()
-    private val factory: MatrimonySearchViewModelFactory by instance()
-    private lateinit var matrimonySearchViewModel: MatrimonySearchViewModel
+    private val factory: SmartFilterViewModelFactory by instance()
+    private lateinit var smartFilterViewModel: SmartFilterViewModel
     private lateinit var binding:FragmentMatrimonylistBinding
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
 
@@ -52,8 +51,8 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener {
 
         binding=DataBindingUtil.inflate(inflater, R.layout.fragment_matrimonylist, container, false)
 
-        matrimonySearchViewModel = ViewModelProviders.of(this,factory).get(MatrimonySearchViewModel::class.java)
-        matrimonySearchViewModel.mByFilterListener =this
+        smartFilterViewModel = ViewModelProviders.of(this,factory).get(SmartFilterViewModel::class.java)
+        smartFilterViewModel.mByFilterListener =this
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_matrimony, container, false)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
@@ -63,7 +62,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener {
             val DRAWABLE_RIGHT = 2
             if (event.action == MotionEvent.ACTION_UP) {
                 if ((event.rawX+35) >= edtSearch.right - edtSearch.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
-                    activity?.let { openFilter(it,matrimonySearchViewModel) }
+                    activity?.let { openFilter(it,smartFilterViewModel) }
                     return@setOnTouchListener true
                 }
             }
@@ -87,11 +86,11 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener {
                 val member = lstMatrimony[position]
                 holder.tvName.text = member.firstName
                 Coroutines.io {
-                    holder.tvName.text=member.firstName+" "+matrimonySearchViewModel.getLastNameById(member.subCastId.toInt())
+                    holder.tvName.text=member.firstName+" "+smartFilterViewModel.getLastNameById(member.subCastId.toInt())
                 }
                 if(!member.cityId.isNullOrEmpty()){
                     Coroutines.io {
-                        holder.tvArea.text = member.area+" "+matrimonySearchViewModel.getCityNamebyId(member.cityId)
+                        holder.tvArea.text = member.area+" "+smartFilterViewModel.getCityNamebyId(member.cityId)
                     }
                 }
                 if(member.gender.equals("Male")){
@@ -102,7 +101,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener {
 
                 Coroutines.io {
                     if(!member.head_sub_cast_id.isNullOrEmpty() && !member.head_name.isNullOrEmpty()){
-                        holder.txtHead.text= member.head_name+" "+matrimonySearchViewModel.getLastNameById(member.head_sub_cast_id.toInt())
+                        holder.txtHead.text= member.head_name+" "+smartFilterViewModel.getLastNameById(member.head_sub_cast_id.toInt())
                     }
                 }
 
@@ -174,7 +173,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener {
         jsonObj.put(getString(R.string.matrimony),"Yes")
         jsonObject.put("filter_by",jsonObj)
         val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
-        matrimonySearchViewModel.getMatrimonySearch(updated)
+        smartFilterViewModel.smartFilterSearch(updated)
         Handler().postDelayed({
             binding.shimmerViewContainer.stopShimmerAnimation()
             binding.shimmerViewContainer.visibility=View.GONE

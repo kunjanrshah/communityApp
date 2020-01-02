@@ -26,8 +26,8 @@ import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
-import com.krs.community.viewmodel.AdminSearchViewModel
-import com.krs.community.viewmodel.AdminSearchViewModelFactory
+import com.krs.community.viewmodel.SmartFilterViewModel
+import com.krs.community.viewmodel.SmartFilterViewModelFactory
 import com.nightonke.boommenu.BoomMenuButton
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -39,8 +39,8 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
     override val kodein by kodein()
     var lstAdmins: ArrayList<Member> = ArrayList()
     private lateinit var tvCount:TextView
-    private lateinit var adminSearchViewModel: AdminSearchViewModel
-    private val factory: AdminSearchViewModelFactory by instance()
+    private lateinit var smartFilterViewModel: SmartFilterViewModel
+    private val factory: SmartFilterViewModelFactory by instance()
     private var loginUserSubCommunityId=""
     private var loginUserLocalCommunityId=""
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
@@ -52,8 +52,8 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
         shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)
         llRoot= root.findViewById(R.id.ll_root)
         (activity as AppCompatActivity).supportActionBar!!.title = ""
-        adminSearchViewModel = ViewModelProviders.of(this,factory).get(AdminSearchViewModel::class.java)
-        adminSearchViewModel.mByFilterListener =this
+        smartFilterViewModel = ViewModelProviders.of(this,factory).get(SmartFilterViewModel::class.java)
+        smartFilterViewModel.mByFilterListener =this
 
         adapter = object : ParallaxRecyclerAdapter<Member>(lstAdmins) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, i: Int) {
@@ -72,11 +72,11 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
 
                 Coroutines.io {
                     if(!lstAdmins[i].subCastId.isNullOrEmpty()){
-                        viewHolder.tvName.text=lstAdmins[i].firstName+" "+adminSearchViewModel.getLastNameById(lstAdmins[i].subCastId.toInt())
+                        viewHolder.tvName.text=lstAdmins[i].firstName+" "+smartFilterViewModel.getLastNameById(lstAdmins[i].subCastId.toInt())
                     }
 
                     if(!lstAdmins[i].cityId.isNullOrEmpty()){
-                        viewHolder.tvArea.text = lstAdmins[i].area+" "+adminSearchViewModel.getCityNamebyId(lstAdmins.get(i).cityId)
+                        viewHolder.tvArea.text = lstAdmins[i].area+" "+smartFilterViewModel.getCityNamebyId(lstAdmins.get(i).cityId)
                     }
                 }
 
@@ -139,7 +139,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
         jsonObj.put("sub_community_id",loginUserSubCommunityId)
         jsonObject.put("filter_by",jsonObj)
         val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
-        adminSearchViewModel.getAdminSearch(updated)
+        smartFilterViewModel.smartFilterSearch(updated)
         shimmerFrameLayout.startShimmerAnimation()
         shimmerFrameLayout.visibility = View.VISIBLE
         lstAdmins.clear()
@@ -156,7 +156,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
         jsonObj.put("local_community_id",loginUserLocalCommunityId)
         jsonObject.put("filter_by",jsonObj)
         val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
-        adminSearchViewModel.getAdminSearch(updated)
+        smartFilterViewModel.smartFilterSearch(updated)
 
         Handler().postDelayed({
             shimmerFrameLayout.stopShimmerAnimation()

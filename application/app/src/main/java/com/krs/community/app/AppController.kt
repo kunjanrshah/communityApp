@@ -6,7 +6,6 @@ import android.app.Application
 import android.content.Context
 import android.content.IntentFilter
 import android.graphics.Typeface
-import android.location.Location
 import android.os.StrictMode
 import android.text.TextUtils
 import androidx.core.content.res.ResourcesCompat
@@ -21,7 +20,6 @@ import com.github.squti.guru.GuruConfig
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.location.LocationRequest
 import com.krs.community.R
 import com.krs.community.repositories.*
 import com.krs.community.retrofit.ApiServices
@@ -74,13 +72,9 @@ class AppController : Application(), KodeinAware{
         bind() from singleton {  DashboardRepository(instance(),instance()) }
         bind() from singleton {  StatisticsRepository(instance(),instance()) }
         bind() from singleton {  SmartSearchRepository(instance(),instance()) }
-        bind() from singleton {  MatrimonySearchRepository(instance(),instance()) }
+        bind() from singleton {  SmartFilterRepository(instance(),instance()) }
         bind() from provider { CalendarSearchRepository(instance(),instance()) }
-        bind() from provider { AdminSearchRepository(instance(),instance()) }
-        bind() from provider { NonActivesRepository(instance(),instance()) }
 
-        bind() from provider { AdminSearchViewModelFactory(instance()) }
-        bind() from provider { NonActiveUsersViewModelFactory(instance()) }
         bind() from provider { StatisticsViewModelFactory(instance()) }
         bind() from provider { FamilyDetailViewModelFactory(instance()) }
         bind() from provider { RegisterViewModelFactory(instance()) }
@@ -90,7 +84,7 @@ class AppController : Application(), KodeinAware{
         bind() from provider { ProfileDetailViewModelFactory(instance()) }
         bind() from provider { DashboardViewModelFactory(instance()) }
         bind() from provider { SmartSearchViewModelFactory(instance()) }
-        bind() from provider { MatrimonySearchViewModelFactory(instance()) }
+        bind() from provider { SmartFilterViewModelFactory(instance()) }
         bind() from provider { CalendarSearchViewModelFactory(instance()) }
     }
 
