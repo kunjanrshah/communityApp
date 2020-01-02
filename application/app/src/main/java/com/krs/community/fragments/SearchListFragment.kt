@@ -2,9 +2,12 @@ package com.krs.community.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
+import android.print.PrintAttributes
 import android.text.TextUtils
 import android.util.Log
 import android.util.SparseBooleanArray
@@ -30,6 +33,7 @@ import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
+import com.krs.community.activity.ProfileDetailActivity.Companion.binding
 import com.krs.community.adapter.AtoZBottomAdapter
 import com.krs.community.interfaces.ByKeywordListener
 import com.krs.community.model.Member
@@ -38,41 +42,52 @@ import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.utils.FlipAnimator
 import com.krs.community.utils.Utility
 import com.krs.community.utils.snackbar
+import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.SmartSearchViewModel
 import com.krs.community.viewmodel.SmartSearchViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
-import org.json.JSONArray
+import com.uttampanchasara.pdfgenerator.CreatePdf
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
-class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRecyclerAdapter.OnLoadMore {
+class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore{
+
 
     private lateinit var rv_search: RecyclerView
-    private lateinit var llRoot:LinearLayout
+    private lateinit var llRoot: LinearLayout
     private lateinit var mShimmerViewContainer: ShimmerFrameLayout
     private lateinit var multiSearchView: MultiSearchView
     private lateinit var actionModeCallback: ActionModeCallback
-    private var actionMode: ActionMode?=null
+    private var actionMode: ActionMode? = null
     private lateinit var rvAdapter: ParallaxRecyclerAdapter<Member>
     private var selectedItems: SparseBooleanArray = SparseBooleanArray()
     private var animationItemsIndex: SparseBooleanArray = SparseBooleanArray()
     private var reverseAllAnimations = false
     private var currentSelectedIndex = -1
-    private var TAG:String?=SearchListFragment::class.qualifiedName
+    private var TAG: String? = SearchListFragment::class.qualifiedName
     private lateinit var smartSearchviewModel: SmartSearchViewModel
+    private lateinit var profileDetailViewModel: ProfileDetailViewModel
+
     private val factory: SmartSearchViewModelFactory by instance()
     override val kodein by kodein()
-    private val lstMembers=ArrayList<Member>()
-    private lateinit var tvRecords:TextView
-    private lateinit var searchWord:String
+    private val lstMembers = ArrayList<Member>()
+    private lateinit var tvRecords: TextView
+    private lateinit var searchWord: String
     private var selectedPosition = 0
     private var start: Int = 0
     private val length: Int = 30
-    private val lstKeyword=ArrayList<String>()
+    private lateinit var membera: Member
+    private var strRole:String  = ""
+
+    private val lstKeyword = ArrayList<String>()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_search_list, container, false)
@@ -81,15 +96,15 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
 
-        smartSearchviewModel = ViewModelProviders.of(this,factory).get(SmartSearchViewModel::class.java)
-        smartSearchviewModel.mByKeywordListener =this
-        llRoot= rootView.findViewById(R.id.ll_root)
+        smartSearchviewModel = ViewModelProviders.of(this, factory).get(SmartSearchViewModel::class.java)
+        smartSearchviewModel.mByKeywordListener = this
+        llRoot = rootView.findViewById(R.id.ll_root)
         rv_search = rootView.findViewById(R.id.rv_search)
         rv_search.layoutManager = LinearLayoutManager(activity)
         rv_search.setHasFixedSize(true)
         val header = LayoutInflater.from(activity).inflate(R.layout.header_smart_search, container, false)
         multiSearchView = header.findViewById(R.id.multiSearchView)
-        tvRecords= header.findViewById(R.id.tvRecords)
+        tvRecords = header.findViewById(R.id.tvRecords)
 
         //multiSearchView?.binding!!.searchViewContainer.get(0).editTextSearch.text.insert(0,"Kunjan")
 
@@ -105,41 +120,216 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder?, adapter: ParallaxRecyclerAdapter<Member>?, position: Int) {
                 val viewHolder: MyViewHolder = viewHolder as MyViewHolder
 
-                val member = lstMembers[position]
+                var member = lstMembers[position]
 
                 viewHolder.tvName.text = member.firstName
                 smartSearchviewModel.getLastName(member.subCastId.toInt()).observeForever {
-                    viewHolder.tvName.text=member.firstName+" "+it
+                    viewHolder.tvName.text = member.firstName + " " + it
                 }
 
-                if(!member.cityId.isNullOrEmpty()){
+                if (!member.cityId.isNullOrEmpty()) {
                     smartSearchviewModel.getCityNamebyId(member.cityId).observeForever {
-                        viewHolder.tvArea.text = member.area+" "+it
+                        viewHolder.tvArea.text = member.area + " " + it
                     }
                 }
 
                 viewHolder.tvEmail.text = member.emailAddress
                 viewHolder.tvMobile.text = member.mobile
-                if(member.headId.equals("0")){
+
+                if (member.headId.equals("0")) {
                     viewHolder.tvRole.text = "Family Head"
-                }else{
+                } else {
                     viewHolder.tvRole.text = "Member"
                 }
-                if(member.updatedDt.isNotEmpty()){
+
+                if (member.updatedDt.isNotEmpty()) {
 
                 }
-                viewHolder.tvUpdate.text="Updated "+Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+
+                viewHolder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                 viewHolder.boomMenuButton.clearBuilders()
+
+                var subCastId = member.subCastId
 
                 for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
                     val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
                     builder?.listener {
-                        if (it == 1) {
+                        if (it == 0) {
+
+                            ////////////// Main Detail/////
+
+                            val date= Utility.changeDateFormat(member.birthDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+                            val Exdate= Utility.changeDateFormat(member.expireDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+                            val marriageDate= Utility.changeDateFormat(member.marriageDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+
+                            val df = SimpleDateFormat("dd.MM.yyyy 'at' h:mm a")
+                            val currentdate = df.format(Calendar.getInstance().time)
+
+
+                            var Fname = viewHolder.tvName.text.toString()
+                            var FatherName = member.fatherName
+                            var MotherName = member.motherName
+                            var Mobile = member.mobile
+                            var Relation = member.relation
+                            var State = member.stateId
+                            var City = member.city
+                            var Area = member.area
+                            var Pincode = member.pincode
+                            var Address = member.address
+                            var Email = member.emailAddress
+                            var Gender = member.gender
+
+                           // var header  = "<center><u><b>  Community App&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></u></center>"+currentdate
+                            var header  = "<center>  Community App </center> <object align=right>"+currentdate+"</object>"
+                            var MainDetail = "<b>Main Detail  </b> "
+                            var Name = "Name : "
+                            var FName = "FatherName : "
+                            var MName = "MotherName : "
+                            var MNumber = "Mobile : "
+                            var email = "Email : "
+                            var gender = "Gender : "
+                            var Rla = "Relation : "
+                            var state = "State : "
+                            var city = "City : "
+                            var area = "Area : "
+                            var pincode = "Pincode : "
+                            var address = "Address : "
+
+                            var Test =header+"<br> <br>"+ MainDetail+"<br> <br>"+ Name + Fname +"<br>"+FName+FatherName +"<br>" +MName+ MotherName +"<br>" + MNumber +Mobile + "<br>" +email+Email + "<br>"+gender +Gender +"<br>"+ Rla +Relation + "<br>" + state +State +"<br>" +city +City + "<br>" +area+ Area +"<br>" +pincode+Pincode + "<br>"+address+Address
+
+                            /////////////////////Personal Detail
+
+                            if(member.role.equals("LOCAL_ADMIN")){
+                                strRole = "Local Admin"
+
+                            }else if(member.role.equals("SUB_ADMIN")) {
+                                strRole = "Sub Admin"
+
+                            }else{
+                                strRole = "User"
+                            }
+
+                            var Role = "Role : "
+                            var BirthDate = "BirthDate : "
+                            var Native = "Native : "
+                            var ExpireDate = "ExpireDate : "
+                            var BloodGroup = "Blood Group : "
+                            var Gotra = "Gotra : "
+                            var Eduction = "Eduction : "
+                            var CurrentActivity = "Current Activity : "
+                            var MaritalStatus = "Marital Status : "
+                            var MarriageDate = "MarriageDate : "
+                            var LocalAddress = "Local Address : "
+
+                            var Personal = "<b> Personal </b>"
+
+                            var nativeid = member.nativePlaceId
+                            var bloodGroup = member.bloodGroup
+                            var gotraId = member.gotraId
+                            var educationId = member.educationId
+                            var currentActivityId = member.currentActivityId
+                            var maritalStatus = member.maritalStatus
+                            var localAddress = member.localAddress
+
+
+                            var StrPersonal = "<br> <br>"+Personal+"<br> <br>"+ Role + strRole+"<br>"+BirthDate+date +"<br>"+Native+nativeid+"<br>"+ExpireDate+Exdate+"<br>"+BloodGroup+bloodGroup+"<br>"+Gotra+gotraId+"<br>"+Eduction+educationId+"<br>"+CurrentActivity+currentActivityId+"<br>"+MaritalStatus+maritalStatus+"<br>"+MarriageDate+marriageDate+"<br>"+LocalAddress+localAddress
+
+                            ///// Professional
+
+                            var Logo = "Logo : "
+                            var ComanyName = "Comany Name : "
+                            var WorkCategory = "Work Category : "
+                            var WorkSubCategory = "Work Sub Category : "
+                            var Occupation = "Occupation : "
+                            var WebSiteURl = "WebSite URL : "
+                            var WorkDetail = "Work Detail : "
+                            var WorkAddress = "Work Address : "
+
+                            var Professional = "<b> Professional </b>"
+
+                            var logo = member.businessLogo
+                            var companyName = member.companyName
+                            var workcategory = ""
+                            var worksubCategory = ""
+                            var occupationId = member.occupationId
+                            var website = member.website
+                            var workDetails = member.workDetails
+                            var businessAddress = member.businessAddress
+
+                            var StrProfessional = "<br> <br>"+Professional+"<br> <br>"+ Logo + logo+"<br>"+ComanyName+companyName +"<br>"+WorkCategory+workcategory+"<br>"+WorkSubCategory+worksubCategory+"<br>"+Occupation+occupationId+"<br>"+WebSiteURl+website+"<br>"+WorkDetail+workDetails+"<br>"+WorkAddress+businessAddress
+
+
+                            ///// Matrimony
+
+
+                            var AboutMe = "About Me : "
+                            var FacebookUrl = "Facebook Profile URL : "
+                            var BirthTime = "Birth Time : "
+                            var BirthPlace = "Birth Place : "
+                            var Hobby = "Hobby : "
+                            var Expection = "Expection : "
+                            var Weight = "Weight : "
+                            var Height = "Height : "
+
+                            var Matrimony = "<b> Matrimony </b> "
+
+                            var about = member.aboutMe
+                            var facebookProfile = member.facebookProfile
+                            var birthTime = member.birthTime
+                            var birthPlace = member.birthPlace
+                            var hobby = member.hobby
+                            var expectation = member.expectation
+                            var weight = member.weight
+                            var height = member.height
+
+                            var StrMatrimony ="<br> <br>"+ Matrimony+"<br> <br>"+ AboutMe + about+"<br>"+FacebookUrl+facebookProfile +"<br>"+BirthTime+birthTime+"<br>"+BirthPlace+birthPlace+"<br>"+Hobby+hobby+"<br>"+Expection+expectation+"<br>"+Weight+weight+"<br>"+Height+height
+
+
+                            var MailString = Test + StrPersonal + StrProfessional +StrMatrimony
+
+
+                                createPdf(activity,Fname,MailString);
+
+
+                        }else if(it == 1) {
+
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
+
                         } else if (it == 2) {
-                            Utility.sendWhatsappMessage(activity as FragmentActivity,member.mobile,"")
-                        }else{
+
+                            val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
+
+                            if (member.mobile != null && member.mobile.length != 0) {
+                                val toNumber = "+91" + member.mobile
+
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                intent.data = Uri.parse("http://api.whatsapp.com/send?phone=$toNumber&text=$text")
+                                startActivity(intent)
+                            }
+
+                        } else if (it == 3) {
+
+                            val fragment = ByQRCodeFragment()
+                            val mBundle = Bundle()
+                            mBundle.putString("Mobile", member.mobile)
+                            mBundle.putString("Id", member.id)
+                            mBundle.putString("Fname", member.firstName)
+                            mBundle.putString("Flag", "1")
+                            fragment.setArguments(mBundle)
+                            Utility.movetoFragment(activity, fragment)
+
+                        } else if (it == 4) {
+
+                            val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community \n \n" + "Name : "+ viewHolder.tvName.text.toString() + "\n" + "Mobile : " + member.mobile + "\n" + "Area : " + viewHolder.tvArea.text.toString() + "\n" + "Address : " + member.address
+
+                            val intent = Intent(Intent.ACTION_SEND)
+                            intent.type = "text/plain"
+                            intent.putExtra(Intent.EXTRA_TEXT, text)
+                            startActivity(Intent.createChooser(intent, "Choose one"))
+
+                        } else {
+
                             Toast.makeText(activity, "Clicked $it", Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -154,7 +344,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                 val linearLayoutManager = LinearLayoutManager(activity)
                 linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
 
-                viewHolder.lstFound.adapter = FoundListAdapter(activity as AppCompatActivity,member.matches)
+                viewHolder.lstFound.adapter = FoundListAdapter(activity as AppCompatActivity, member.matches)
                 viewHolder.lstFound.layoutManager = linearLayoutManager
 
                 applyIconAnimation(viewHolder, position)
@@ -176,50 +366,50 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                     .setAdapter(adapter)
                     .setGravity(Gravity.BOTTOM)
                     .setCancelable(true)
-                    .setExpanded(true,1200)
+                    .setExpanded(true, 1200)
                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                     .create()
             dialog.show()
         }
         multiSearchView.setSearchViewListener(object : MultiSearchView.MultiSearchViewListener {
             override fun onTextChanged(index: Int, s: CharSequence) {
-             //   Toast.makeText(getActivity(), "onTextChanged", Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(getActivity(), "onTextChanged", Toast.LENGTH_SHORT).show();
             }
 
             override fun onSearchComplete(index: Int, s: CharSequence) {
                 lstKeyword.add(s.toString())
-                searchWord=s.toString()
-                DashboardActivity.stop=false
+                searchWord = s.toString()
+                DashboardActivity.stop = false
                 getMembersByKeyword()
             }
 
             override fun onSearchItemRemoved(index: Int) {
 
-                searchWord=""
+                searchWord = ""
                 lstKeyword.removeAt(index)
 
-                if(lstKeyword.size>0){
-                    if(lstKeyword.size==1){
-                        searchWord= lstKeyword[0]
-                    }else if(lstKeyword.size==index){
-                        searchWord= lstKeyword[index-1]
-                    }else{
-                        searchWord= lstKeyword[index]
+                if (lstKeyword.size > 0) {
+                    if (lstKeyword.size == 1) {
+                        searchWord = lstKeyword[0]
+                    } else if (lstKeyword.size == index) {
+                        searchWord = lstKeyword[index - 1]
+                    } else {
+                        searchWord = lstKeyword[index]
                     }
                 }
-                if(searchWord.isNotEmpty()){
-                    DashboardActivity.stop=false
+                if (searchWord.isNotEmpty()) {
+                    DashboardActivity.stop = false
                     getMembersByKeyword()
-                }else{
+                } else {
                     lstMembers.clear()
-                    tvRecords.visibility=View.GONE
+                    tvRecords.visibility = View.GONE
                     rvAdapter.notifyDataSetChanged()
                 }
             }
 
             override fun onItemSelected(index: Int, s: CharSequence) {
-                searchWord=s.toString()
-                DashboardActivity.stop=false
+                searchWord = s.toString()
+                DashboardActivity.stop = false
                 getMembersByKeyword()
             }
         })
@@ -231,8 +421,38 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
 
         rvAdapter.setParallaxHeader(header, rv_search)
         rv_search.adapter = rvAdapter
-        DashboardActivity.stop=false
+        DashboardActivity.stop = false
         return rootView
+    }
+
+    private fun createPdf(mContext: FragmentActivity?, fname: String, test: String) {
+
+        var filename = fname
+        val pdfDirectory = File(Environment.getExternalStorageDirectory(),"/Community")
+        // have the object build the directory structure, if needed.
+        pdfDirectory.mkdirs()
+        // create a File object for the output file
+        val outputFile = File(pdfDirectory, filename)
+
+        if (mContext != null) {
+            CreatePdf(mContext)
+                    .setPdfName(fname)
+                    .openPrintDialog(true)
+                    .setContentBaseUrl(null)
+                    .setPageSize(PrintAttributes.MediaSize.ISO_A4)
+                    .setContent(test)
+                    .setFilePath(outputFile.absolutePath)
+                    .setCallbackListener(object : CreatePdf.PdfCallbackListener {
+                        override fun onFailure(errorMsg: String) {
+                            Toast.makeText(activity, errorMsg, Toast.LENGTH_SHORT).show()
+                        }
+
+                        override fun onSuccess(filePath: String) {
+                            Toast.makeText(activity, "Pdf Saved at: $filePath", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                    .create()
+        }
     }
 
     class FoundListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -247,9 +467,9 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         }
 
         override fun onBindViewHolder(holder: FoundListViewHolder, position: Int) {
-            holder.txtName.text=list.get(position).replace("_"," ")
+            holder.txtName.text = list.get(position).replace("_", " ")
             holder.txtName.setBackgroundResource(R.drawable.filter_found_search)
-            holder.txtName.setTextColor(getColor(context,R.color.black1))
+            holder.txtName.setTextColor(getColor(context, R.color.black1))
         }
 
         override fun getItemCount(): Int {
@@ -257,17 +477,17 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         }
     }
 
-    private fun getMembersByKeyword(){
+    private fun getMembersByKeyword() {
         if (!DashboardActivity.stop) {
             lstMembers.clear()
-            tvRecords.visibility=View.GONE
+            tvRecords.visibility = View.GONE
             rvAdapter.notifyDataSetChanged()
             DashboardActivity.stop = true
-            val mJSONObject=JSONObject()
-            mJSONObject.put("start",start)
-            mJSONObject.put("length",length)
-            mJSONObject.put("filter_by",searchWord)
-            val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
+            val mJSONObject = JSONObject()
+            mJSONObject.put("start", start)
+            mJSONObject.put("length", length)
+            mJSONObject.put("filter_by", searchWord)
+            val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
             mShimmerViewContainer.startShimmerAnimation()
             mShimmerViewContainer.visibility = View.VISIBLE
             smartSearchviewModel.getMemberByKeywords(updated)
@@ -275,61 +495,62 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
     }
 
     override fun loadApi() {
-            start = (lstMembers.size+1)
-            getMembersByKeyword()
+        start = (lstMembers.size + 1)
+        getMembersByKeyword()
     }
 
     override fun getMembers(response: searchByKeywordsResponse) {
 
-        DashboardActivity.stop=false
+        DashboardActivity.stop = false
         mShimmerViewContainer.stopShimmerAnimation()
         mShimmerViewContainer.visibility = View.GONE
 
         //llRoot.snackbar(response.message,Snackbar.LENGTH_LONG)
         Utility.hideKeyboard(activity)
 
-        if(response.success){
+        if (response.success) {
             lstMembers.clear()
-            rv_search.visibility=View.VISIBLE
-            start=0
+            rv_search.visibility = View.VISIBLE
+            start = 0
             for (item in response.member) {
-                    lstMembers.add(item)
+                lstMembers.add(item)
             }
             rvAdapter.notifyDataSetChanged()
             rv_search.layoutManager?.scrollToPosition(selectedPosition)
             selectedPosition = lstMembers.size - 1
-            if(Integer.parseInt(response.totalRecords)<=length){
+            if (Integer.parseInt(response.totalRecords) <= length) {
                 DashboardActivity.stop = true
                 Snackbar.make(llRoot, "End of the Records", Snackbar.LENGTH_LONG).show()
             }
-            if(lstMembers.size>0){
-                tvRecords.text="Records found: "+response.totalRecords
-                tvRecords.visibility=View.VISIBLE
-            }else{
-                tvRecords.visibility=View.GONE
+            if (lstMembers.size > 0) {
+                tvRecords.text = "Records found: " + response.totalRecords
+                tvRecords.visibility = View.VISIBLE
+            } else {
+                tvRecords.visibility = View.GONE
                 DashboardActivity.stop = true
             }
-        }else{
-            rv_search.visibility=View.GONE
-            tvRecords.visibility=View.GONE
+        } else {
+            rv_search.visibility = View.GONE
+            tvRecords.visibility = View.GONE
         }
     }
 
     override fun getFailure(message: String) {
         Log.d(TAG, "getFailure: $message")
         activity?.runOnUiThread {
-            if(mShimmerViewContainer.isAnimationStarted){
+            if (mShimmerViewContainer.isAnimationStarted) {
                 mShimmerViewContainer.stopShimmerAnimation()
             }
             mShimmerViewContainer.visibility = View.GONE
-            tvRecords.visibility=View.GONE
-            rv_search.visibility=View.GONE
+            tvRecords.visibility = View.GONE
+            rv_search.visibility = View.GONE
             DashboardActivity.stop = false
         }
 
-        llRoot.snackbar(message,Snackbar.LENGTH_LONG)
+        llRoot.snackbar(message, Snackbar.LENGTH_LONG)
         Utility.hideKeyboard(activity)
     }
+
     private fun getSelectedItemCount(): Int {
         return selectedItems.size()
     }
@@ -401,11 +622,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         if (getSelectedItemCount() > 0) {
             enableActionMode(position)
         } else {
-            val intent=Intent(activity,ProfileDetailActivity::class.java)
-            intent.putExtra(getString(R.string.member),lstMembers.get(position))
+            val intent = Intent(activity, ProfileDetailActivity::class.java)
+            intent.putExtra(getString(R.string.member), lstMembers.get(position))
             startActivity(intent)
             Utility.fade(activity)
-          //  Toast.makeText(activity,""+position,Toast.LENGTH_SHORT).show()
+            //  Toast.makeText(activity,""+position,Toast.LENGTH_SHORT).show()
             /*val fragmentTransaction = initFragmentTransaction(v)
             fragmentTransaction.commitAllowingStateLoss()*/
         }
@@ -508,40 +729,40 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         }
     }
 
-   /* private fun setupList() {
+    /* private fun setupList() {
 
-        rv_search.layoutManager = LinearLayoutManager(activity)
-        rv_search.adapter = rvAdapter
-        rv_search.setHasFixedSize(true)
+         rv_search.layoutManager = LinearLayoutManager(activity)
+         rv_search.adapter = rvAdapter
+         rv_search.setHasFixedSize(true)
 
-        Handler().postDelayed({
-            // stop animating Shimmer and hideOverlay the layout
-            mShimmerViewContainer.stopShimmerAnimation()
-            mShimmerViewContainer.visibility = View.GONE
-        }, 3000)
-    }*/
+         Handler().postDelayed({
+             // stop animating Shimmer and hideOverlay the layout
+             mShimmerViewContainer.stopShimmerAnimation()
+             mShimmerViewContainer.visibility = View.GONE
+         }, 3000)
+     }*/
 
-   /* private fun getInbox() {
-        swipeRefreshLayout.isRefreshing = true
-        messages.clear()
+    /* private fun getInbox() {
+         swipeRefreshLayout.isRefreshing = true
+         messages.clear()
 
-        for (i in 0..19) {
-            val message = Message()
-            message.id = 1
-            message.isImportant = false
-            message.message = "Now android supports multiple voice recogonization"
-            message.picture = "https://api.androidhive.info/json/google.png"
-            message.isRead = false
-            message.timestamp = "10:30 AM"
-            message.from = "Google Alerts"
-            message.subject = "Google Alert - android"
-            message.color = Utility.getRandomMaterialColor(activity!!, "400")
-            messages.add(message)
-        }
+         for (i in 0..19) {
+             val message = Message()
+             message.id = 1
+             message.isImportant = false
+             message.message = "Now android supports multiple voice recogonization"
+             message.picture = "https://api.androidhive.info/json/google.png"
+             message.isRead = false
+             message.timestamp = "10:30 AM"
+             message.from = "Google Alerts"
+             message.subject = "Google Alert - android"
+             message.color = Utility.getRandomMaterialColor(activity!!, "400")
+             messages.add(message)
+         }
 
-        rvAdapter.notifyDataSetChanged()
-        swipeRefreshLayout.isRefreshing = false
-    }*/
+         rvAdapter.notifyDataSetChanged()
+         swipeRefreshLayout.isRefreshing = false
+     }*/
 
     override fun onStart() {
         super.onStart()
@@ -570,17 +791,17 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         }, 500)
     }
 
-   /* private fun initFragmentTransaction(view: View): FragmentTransaction? {
+    /* private fun initFragmentTransaction(view: View): FragmentTransaction? {
 
-        val adapterPosition = rv_search!!.getChildAdapterPosition(view)
-        val detailsFragment = FamilyDetailActivity.newInstance(adapterPosition)
-         val transaction = fragmentManager?.beginTransaction()
-                ?.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                ?.replace(R.id.container_body, detailsFragment, FamilyDetailActivity.TAG)
-                ?.addToBackStack(null)
+         val adapterPosition = rv_search!!.getChildAdapterPosition(view)
+         val detailsFragment = FamilyDetailActivity.newInstance(adapterPosition)
+          val transaction = fragmentManager?.beginTransaction()
+                 ?.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                 ?.replace(R.id.container_body, detailsFragment, FamilyDetailActivity.TAG)
+                 ?.addToBackStack(null)
 
-        return transaction
-    }*/
+         return transaction
+     }*/
 
 
     private inner class ActionModeCallback : ActionMode.Callback {
@@ -588,7 +809,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
             mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
 
             // disable swipe refresh if action mode is enabled
-           // swipeRefreshLayout.isEnabled = false
+            // swipeRefreshLayout.isEnabled = false
             return true
         }
 
@@ -617,7 +838,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
 
         override fun onDestroyActionMode(mode: ActionMode) {
             clearSelections()
-          //  swipeRefreshLayout.isEnabled = true
+            //  swipeRefreshLayout.isEnabled = true
             //actionMode = null
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(activity, R.color.colorBG, false)
