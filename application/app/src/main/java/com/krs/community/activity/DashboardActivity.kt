@@ -67,11 +67,11 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware {
         setSupportActionBar(mToolbar)
         mToolbar.setTitleTextColor(resources.getColor(R.color.colorPrimary))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setTitle("Home")
+        supportActionBar?.title = "Home"
 
         myAppBar = findViewById(R.id.myAppBar)
-        myAppBar.setTranslationY(-toolbarHeight.toFloat())
-        myAppBar.animate()!!.translationY(0f).alpha(1f).setDuration(2000).start()
+        myAppBar.translationY = -toolbarHeight.toFloat()
+        myAppBar.animate().translationY(0f).alpha(1f).setDuration(2000).start()
         val drawerFragment = supportFragmentManager.findFragmentById(R.id.fragment_navigation_drawer) as FragmentDrawer?
         mDrawerLayout = findViewById(R.id.drawer_layout)
         drawerFragment!!.setUp(R.id.fragment_navigation_drawer, mDrawerLayout, mToolbar)

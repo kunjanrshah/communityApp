@@ -43,7 +43,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/montserrat_semibold"
-                android:gravity="center|bottom"
+                android:gravity="center|top"
+                android:layout_marginTop="12dp"
                 android:text="Events"
                 android:textColor="@color/material_blue_500"
                 android:textSize="14sp" />
@@ -71,12 +72,14 @@
                     <TextView
                         android:id="@+id/tv_name"
                         android:layout_width="match_parent"
+                        android:singleLine="true"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_medium"
                         android:text="Kunjan Patel"
                         android:textSize="16sp" />
 
                     <TextView
+                        android:singleLine="true"
                         android:id="@+id/tv_area"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -97,6 +100,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text="Member"
+                    android:singleLine="true"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
@@ -136,6 +140,7 @@
                         android:layout_marginLeft="5dp"
                         android:fontFamily="@font/montserrat_medium"
                         android:text="9825450261"
+                        android:singleLine="true"
                         android:textColor="@color/com_facebook_blue"
                         android:textSize="14sp" />
 
@@ -160,6 +165,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
+                        android:singleLine="true"
                         android:fontFamily="@font/montserrat_medium"
                         android:text="kunjanshah@gmail.com"
                         android:textSize="14sp" />
@@ -179,12 +185,12 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/tv_event1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
-                    android:visibility="gone"
                     android:fontFamily="@font/montserrat_medium"
                     android:textColor="@color/black1"
                     android:textSize="14sp" />

@@ -99,6 +99,9 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         Guru.putString(getString(R.string.hash_key),hashkey);
         Log.e(TAG,"hashcode: "+hashkey)
 
+        val FbKey= getHashKey(this)
+        Log.e(TAG,"FbKey: "+FbKey)
+
         val binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.activity_loginwith)
         binding.lifecycleOwner = this
         binding.loginViewModel = loginViewModel
