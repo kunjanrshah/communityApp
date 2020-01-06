@@ -147,6 +147,7 @@ fun displayNeverAskAgainDialog(context: Context) {
             .setTitleText("Storage read Permission")
             .setContentText("Permission is needed to pick image from gallery for your Profile. Please permit the permission through " + "Settings screen.\n\nSelect Permissions -> Enable permission")
             .setConfirmText("Permit Manually")
+            .setCustomImage(R.drawable.ic_app)
             .setCancelText("Cancel")
             .showCancelButton(true)
             .setConfirmClickListener { sDialog ->
@@ -181,6 +182,7 @@ fun promptReadPermission(context: Context) {
                 .setContentText("Permission is needed to pick image from gallery for your Profile")
                 .setConfirmText("Yes, please!")
                 .setCancelText("No!")
+                .setCustomImage(R.drawable.ic_app)
                 .showCancelButton(true)
                 .setConfirmClickListener { sDialog ->
                     sDialog.dismiss()

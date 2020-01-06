@@ -138,7 +138,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                     .setAdapter(adapter)
                     .setGravity(Gravity.BOTTOM)
                     .setCancelable(true)
-                    .setExpanded(true, 1200)
+                    .setExpanded(true, 900)
                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                     .create()
             dialog.show()

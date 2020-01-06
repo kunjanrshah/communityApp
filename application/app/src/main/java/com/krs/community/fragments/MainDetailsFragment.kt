@@ -106,6 +106,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                     .setContentText("With Google Map")
                     .setConfirmText("Set")
                     .setCancelText("View")
+                    .setCustomImage(R.drawable.ic_app)
                     .setConfirmClickListener {
                         it.dismiss()
                         if(member.headId=="0" && !member.id.isNullOrEmpty()){

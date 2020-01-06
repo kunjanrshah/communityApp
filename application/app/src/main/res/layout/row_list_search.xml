@@ -11,6 +11,7 @@
     android:background="@drawable/round_corner_itemlist"
     android:orientation="vertical"
     android:padding="16dp"
+
     app:cardCornerRadius="@dimen/card_corner_radius"
     app:cardElevation="@dimen/card_elevation"
     app:contentPadding="10dp">
@@ -22,7 +23,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -84,6 +85,14 @@
                     app:bmb_inList="true"
                     app:bmb_piecePlaceEnum="piecePlace_dot_6_1" />
 
+                <ImageView
+                    android:id="@+id/icon_star"
+                    android:layout_width="25dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="25dp"
+                    android:tint="@color/icon_tint_normal" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -125,11 +134,11 @@
 
                     </LinearLayout>
 
+
                     <TextView
                         android:id="@+id/tv_role"
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"
-                        android:layout_marginTop="5dp"
                         android:background="@drawable/round_corner_blue"
                         android:fontFamily="@font/montserrat_semibold"
                         android:gravity="center"
@@ -145,7 +154,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:background="@color/colorGray" />
 
                 <LinearLayout

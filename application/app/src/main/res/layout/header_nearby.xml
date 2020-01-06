@@ -77,6 +77,7 @@
                 android:layout_weight="1"
                 android:buttonTint="@color/white"
                 android:text="Office"
+                android:checked="false"
                 android:fontFamily="@font/montserrat_regular"
                 android:textColor="@color/white"
                 />
@@ -88,6 +89,7 @@
                 android:layout_weight="1"
                 android:buttonTint="@color/white"
                 android:text="User"
+                android:checked="false"
                 android:fontFamily="@font/montserrat_regular"
                 android:textColor="@color/white"
                 />
@@ -99,6 +101,7 @@
                 android:layout_weight="1"
                 android:buttonTint="@color/white"
                 android:text="All"
+                android:checked="false"
                 android:fontFamily="@font/montserrat_regular"
                 android:textColor="@color/white"
                 />

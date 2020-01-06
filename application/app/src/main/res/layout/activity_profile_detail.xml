@@ -114,18 +114,18 @@
                     app:progressTextEnabled="true"
                     app:progressTextSize="32sp"
                     app:progressTextType="progress"
-                    app:progressWidth="10dp"
+                    app:progressWidth="5dp"
                     app:startAngle="270"
                     app:totalValue="100"
                     app:totalColor="@color/colorPrimaryDark"
-                    app:totalWidth="20dp" />
+                    app:totalWidth="10dp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:alpha="0.0"
                     android:layout_gravity="center"
                     android:id="@+id/img_profile"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:background="@drawable/user_profile" />
 
             </FrameLayout>

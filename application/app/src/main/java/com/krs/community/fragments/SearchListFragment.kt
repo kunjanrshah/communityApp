@@ -11,12 +11,14 @@ import android.util.SparseBooleanArray
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
@@ -31,6 +33,7 @@ import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.adapter.AtoZBottomAdapter
+import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.interfaces.ByKeywordListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
@@ -43,12 +46,13 @@ import com.krs.community.viewmodel.SmartSearchViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
+import kotlinx.android.synthetic.main.row_list_search.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRecyclerAdapter.OnLoadMore {
+class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRecyclerAdapter.OnLoadMore,MyRoleAdapter.iChangeRoleListner {
 
     private lateinit var rv_search: RecyclerView
     private lateinit var llRoot:LinearLayout
@@ -67,11 +71,15 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
     override val kodein by kodein()
     private val lstMembers=ArrayList<Member>()
     private lateinit var tvRecords:TextView
+    private lateinit var llLabel:LinearLayout
     private lateinit var searchWord:String
     private var selectedPosition = 0
     private var start: Int = 0
     private val length: Int = 30
     private val lstKeyword=ArrayList<String>()
+    private var changeRoleDialog:DialogPlus?=null
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_search_list, container, false)
@@ -86,11 +94,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         rv_search = rootView.findViewById(R.id.rv_search)
         rv_search.layoutManager = LinearLayoutManager(activity)
         rv_search.setHasFixedSize(true)
+
         val header = LayoutInflater.from(activity).inflate(R.layout.header_smart_search, container, false)
         multiSearchView = header.findViewById(R.id.multiSearchView)
-        tvRecords= header.findViewById(R.id.tvRecords)
-
-        //multiSearchView?.binding!!.searchViewContainer.get(0).editTextSearch.text.insert(0,"Kunjan")
+        tvRecords= header.findViewById(R.id.tv_record)
+        llLabel= header.findViewById(R.id.ll_label)
 
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
         actionModeCallback = ActionModeCallback()
@@ -105,6 +113,23 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                 val viewHolder: MyViewHolder = viewHolder as MyViewHolder
 
                 val member = lstMembers[position]
+                if(member.profilePic.isNotEmpty()){
+                    try {
+                        val path=getString(R.string.base_url_original)+""+member.profilePic
+                        Log.d(TAG,"path: "+path)
+
+                        Glide.with(activity!!).load(path)
+                                .thumbnail(0.5f)
+                                .transition(withCrossFade())
+                                .apply(RequestOptions.circleCropTransform())
+                                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                                .into(viewHolder.imgProfile)
+
+                    } catch (e: Exception) {
+                        e.message
+                    }
+                }
+
 
                 viewHolder.tvName.text = member.firstName
                 smartSearchviewModel.getLastName(member.subCastId.toInt()).observeForever {
@@ -118,7 +143,6 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                 }
                 viewHolder.tvEmail.text = member.emailAddress
                 viewHolder.tvMobile.text = member.mobile
-
 
 
                 if(member.headId.equals("0")){
@@ -161,10 +185,10 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                 viewHolder.lstFound.adapter = FoundListAdapter(activity as AppCompatActivity,member.matches)
                 viewHolder.lstFound.layoutManager = linearLayoutManager
 
+                applyImportant(viewHolder, member)
                 applyIconAnimation(viewHolder, position)
                 applyProfilePicture(viewHolder, member)
                 applyClickEvents(viewHolder, position)
-
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>?, i: Int): RecyclerView.ViewHolder {
@@ -180,7 +204,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                     .setAdapter(adapter)
                     .setGravity(Gravity.BOTTOM)
                     .setCancelable(true)
-                    .setExpanded(true,1200)
+                    .setExpanded(true,900)
                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                     .create()
             dialog.show()
@@ -216,6 +240,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                     getMembersByKeyword()
                 }else{
                     lstMembers.clear()
+                    llLabel.visibility=View.VISIBLE
                     tvRecords.visibility=View.GONE
                     rvAdapter.notifyDataSetChanged()
                 }
@@ -265,6 +290,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         if (!DashboardActivity.stop) {
             lstMembers.clear()
             tvRecords.visibility=View.GONE
+            llLabel.visibility=View.GONE
             rvAdapter.notifyDataSetChanged()
             DashboardActivity.stop = true
             val mJSONObject=JSONObject()
@@ -300,7 +326,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                     lstMembers.add(item)
             }
             rvAdapter.notifyDataSetChanged()
-            rv_search.layoutManager?.scrollToPosition(selectedPosition)
+           // rv_search.layoutManager?.scrollToPosition(selectedPosition)
             selectedPosition = lstMembers.size - 1
             if(Integer.parseInt(response.totalRecords)<=length){
                 DashboardActivity.stop = true
@@ -309,13 +335,16 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
             if(lstMembers.size>0){
                 tvRecords.text="Records found: "+response.totalRecords
                 tvRecords.visibility=View.VISIBLE
+                llLabel.visibility=View.GONE
             }else{
+                llLabel.visibility=View.VISIBLE
                 tvRecords.visibility=View.GONE
                 DashboardActivity.stop = true
             }
         }else{
             rv_search.visibility=View.GONE
             tvRecords.visibility=View.GONE
+            llLabel.visibility=View.VISIBLE
         }
     }
 
@@ -327,6 +356,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
             }
             mShimmerViewContainer.visibility = View.GONE
             tvRecords.visibility=View.GONE
+            llLabel.visibility=View.VISIBLE
             rv_search.visibility=View.GONE
             DashboardActivity.stop = false
         }
@@ -392,14 +422,6 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         rvAdapter.notifyDataSetChanged()
     }
 
-
-    private fun onIconClicked(position: Int) {
-        if (actionMode == null) {
-            actionMode = activity?.startActionMode(actionModeCallback)!!
-        }
-        toggleSelection(position)
-    }
-
     private fun onMessageRowClicked(position: Int, v: View) {
 
         if (getSelectedItemCount() > 0) {
@@ -409,23 +431,37 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
             intent.putExtra(getString(R.string.member),lstMembers.get(position))
             startActivity(intent)
             Utility.fade(activity)
-          //  Toast.makeText(activity,""+position,Toast.LENGTH_SHORT).show()
-            /*val fragmentTransaction = initFragmentTransaction(v)
-            fragmentTransaction.commitAllowingStateLoss()*/
+        }
+    }
+
+    private fun applyImportant(holder: MyViewHolder, member: Member) {
+        if (member.isImportant()) {
+            holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_black_24dp))
+            holder.iconImp.setColorFilter(getColor(activity as AppCompatActivity, R.color.icon_tint_selected))
+        } else {
+            holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_border_black_24dp))
+            holder.iconImp.setColorFilter(getColor(activity as AppCompatActivity, R.color.icon_tint_normal))
         }
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int) {
-        holder.iconContainer.setOnClickListener { view -> onIconClicked(position) }
+
+        holder.iconImp.setOnClickListener {
+            // Star icon is clicked,mark the message as important
+            val member: Member = lstMembers.get(position)
+            member.setImportant(!member.isImportant())
+            lstMembers.set(position, member)
+            rvAdapter.notifyDataSetChanged()
+        }
+
+        holder.iconContainer.setOnClickListener { view -> enableActionMode(position) }
 
         holder.messageContainer.setOnClickListener { view -> onMessageRowClicked(position, holder.itemView) }
 
-        /*holder.messageContainer.setOnLongClickListener { view ->
-
+        holder.messageContainer.setOnLongClickListener { view ->
             enableActionMode(position)
-
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-        }*/
+        }
     }
 
     private fun applyProfilePicture(holder: MyViewHolder, member: Member) {
@@ -491,6 +527,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         var tvEmail: TextView = view.findViewById(R.id.tv_email)
         var tvMobile: TextView = view.findViewById(R.id.tv_mobile)
         var tvRole: TextView = view.findViewById(R.id.tv_role)
+        var iconImp: ImageView = view.findViewById(R.id.icon_star)
         var tvUpdate: TextView = view.findViewById(R.id.tv_update)
         var imgProfile: ImageView = view.findViewById(R.id.icon_profile1)
         var messageContainer: LinearLayout = view.findViewById(R.id.message_container1)
@@ -610,19 +647,55 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean =
                 when (item.itemId) {
                     R.id.action_delete -> {
+                        val selectedItemPositions = getSelectedItems()
+                        SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Are you sure?")
+                                .setContentText("Want to Disable ${selectedItemPositions.size} Profiles!")
+                                .setConfirmText("Yes,disable it!")
+                                .setCancelText("No")
+                                .setConfirmClickListener {
+                                    it.dismiss()
+                                    //selectedItemPositions
+                                    //smartSearchviewModel.disableMembers()
+                                }
+                                .setCancelClickListener {
+                                    it.dismiss()
+                                }
+                                .show()
+
                         // delete all the selected messages
-                        deleteMessages()
-                        mode.finish()
+                        /*deleteMessages()
+                        mode.finish()*/
                         true
                     }
+                    R.id.action_my_role -> {
 
+                        val adapter: MyRoleAdapter = MyRoleAdapter(context)
+                        adapter.setChangeRoleListner(this@SearchListFragment)
+                        changeRoleDialog = DialogPlus.newDialog(context)
+                                .setAdapter(adapter)
+                                .setGravity(Gravity.BOTTOM)
+                                .setCancelable(true)
+                                .setExpanded(true,900)
+                                .setContentBackgroundResource(R.drawable.popup_top_corner)
+                                .create()
+                        changeRoleDialog?.show()
+
+                        true
+                    }
+                    R.id.action_select_all -> {
+                        clearSelections()
+                        for(i in lstMembers.indices){
+                              enableActionMode(i)
+                        }
+                        true
+                    }
                     else -> false
                 }
 
         override fun onDestroyActionMode(mode: ActionMode) {
             clearSelections()
-          //  swipeRefreshLayout.isEnabled = true
-            //actionMode = null
+            actionMode = null
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(activity, R.color.colorBG, false)
             }
@@ -633,13 +706,19 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         }
     }
 
+    override fun changeRole(role: String) {
+
+    }
+
+    override fun cancelDialog() {
+        changeRoleDialog?.dismiss()
+    }
+
     private fun enableActionMode(position: Int) {
 
         if (actionMode == null) {
-            actionMode = activity!!.startActionMode(actionModeCallback)!!
+            actionMode = activity?.startActionMode(actionModeCallback)
         }
         toggleSelection(position)
     }
-
-
 }

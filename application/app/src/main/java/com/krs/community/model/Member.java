@@ -14,6 +14,10 @@ public class Member implements Serializable {
     @Expose
     private String matched="";
 
+    @SerializedName("isImportant")
+    @Expose
+    private boolean isImportant;
+
     @SerializedName("nearBy")
     @Expose
     private String nearBy="";
@@ -260,6 +264,14 @@ public class Member implements Serializable {
     @SerializedName("matches")
     @Expose
     private List<String> matches = null;
+
+    public boolean isImportant() {
+        return isImportant;
+    }
+
+    public void setImportant(boolean important) {
+        isImportant = important;
+    }
 
     public String getProfileCompleted() {
         return profileCompleted;

@@ -382,4 +382,7 @@
     <string name="max_age" translatable="false">max_age</string>
     <string name="Select" translatable="false">Select</string>
 
+    <string name="base_url_thumb" translatable="false">https://muslimghanchisamaj.in/uploads/users/thumb/</string>
+    <string name="base_url_original" translatable="false">https://muslimghanchisamaj.in/uploads/users/original/</string>
+
 </resources>

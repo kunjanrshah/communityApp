@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -378,26 +379,27 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                 }
             },5000)
 
+            curr_lat.observe(activity as AppCompatActivity, Observer {
+                if(curr_lat.value!=0.0 && curr_lng.value!=0.0 && isCallAPI){
+                    isCallAPI=false
+                    distance.lat=curr_lat.value.toString()
+                    distance.lng=curr_lng.value.toString()
+                    mByDistanceViewModel.getUserByDistance(distance)
+                }
+            })
 
-            curr_lat.observeForever {
-                if(curr_lat.value!=0.0 && curr_lng.value!=0.0 && isCallAPI){
+            curr_lng.observe(activity as AppCompatActivity, Observer {
+                distance.lat=curr_lat.value.toString()
+                distance.lng=curr_lng.value.toString()
+                /*if(curr_lat.value!=0.0 && curr_lng.value!=0.0 && isCallAPI){
                     isCallAPI=false
-                    distance.lat=curr_lat.value.toString()
-                    distance.lng=curr_lng.value.toString()
+
                     mByDistanceViewModel.getUserByDistance(distance)
-                }
-            }
-            curr_lng.observeForever {
-                if(curr_lat.value!=0.0 && curr_lng.value!=0.0 && isCallAPI){
-                    isCallAPI=false
-                    distance.lat=curr_lat.value.toString()
-                    distance.lng=curr_lng.value.toString()
-                    mByDistanceViewModel.getUserByDistance(distance)
-                }
-            }
+                }*/
+            })
         }
-
     }
+
     override fun loadApi() {
         if (!DashboardActivity.stop) {
             DashboardActivity.stop = true

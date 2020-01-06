@@ -23,20 +23,19 @@
             android:layout_weight="1" />
 
         <ImageView
+            android:id="@+id/iv_atoz"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/atoz" />
+
+
+        <ImageView
             android:id="@+id/iv_export"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_margin="10dp"
             android:background="@drawable/export" />
-
-        <ImageView
-            android:id="@+id/iv_atoz"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_margin="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/atoz" />
 
     </LinearLayout>
 
@@ -84,6 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
         android:fontFamily="@font/montserrat_medium"
         android:layout_marginBottom="5dp"
         android:text="Find Records"

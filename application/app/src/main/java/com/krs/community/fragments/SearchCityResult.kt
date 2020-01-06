@@ -123,7 +123,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
 
     private val members = ArrayList<Member>()
     private var actionModeCallback: ActionModeCallback? = null
-    private lateinit var actionMode: ActionMode
+    private var actionMode: ActionMode?=null
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private lateinit var selectedItems: SparseBooleanArray
     private lateinit var animationItemsIndex: SparseBooleanArray
@@ -232,7 +232,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         ivExport.setOnClickListener {
 
         }
-        tvCount= header.findViewById<TextView>(R.id.tvCount)
+        tvCount= header.findViewById(R.id.tv_count)
 
         val ivAtoz = header.findViewById<ImageView>(R.id.iv_atoz)
         ivAtoz.setOnClickListener { v ->
@@ -242,7 +242,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
                     .setAdapter(adapter)
                     .setGravity(Gravity.BOTTOM)
                     .setCancelable(true)
-                    .setExpanded(true,1200)
+                    .setExpanded(true,900)
                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                     .create()
             dialog?.show()
@@ -458,8 +458,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
 
         override fun onDestroyActionMode(mode: ActionMode) {
             clearSelections()
-            //  rootView?.swipe_refresh_layout!!.isEnabled = true
-            //actionMode = null
+            actionMode = null
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(activity, R.color.colorBG, false)
             }
@@ -473,10 +472,10 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         val count = selectedItemCount
 
         if (count == 0) {
-            actionMode.finish()
+            actionMode?.finish()
         } else {
-            actionMode.title = count.toString()
-            actionMode.invalidate()
+            actionMode?.title = count.toString()
+            actionMode?.invalidate()
         }
     }
 
