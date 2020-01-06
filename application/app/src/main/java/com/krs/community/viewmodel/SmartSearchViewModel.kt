@@ -29,6 +29,12 @@ class SmartSearchViewModel(
         return mSmartSearchRepository.getCityName(id)
     }
 
+    fun getRelationName(id:String):String{
+        return mSmartSearchRepository.getRelationName(id)
+    }
+
+
+
     fun getMemberByKeywords(jsonObject: JsonObject) {
         job_by_search = Job()
         job_by_search.let { thejob ->

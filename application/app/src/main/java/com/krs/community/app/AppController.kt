@@ -13,6 +13,7 @@ import androidx.multidex.MultiDex
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.ImageLoader
+import com.android.volley.toolbox.Volley
 import com.crashlytics.android.Crashlytics
 import com.facebook.FacebookSdk
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -47,9 +48,9 @@ class AppController : Application(), KodeinAware{
     lateinit var typeface: Typeface
     lateinit var typeface_bold: Typeface
     lateinit var retrofitBase: RetrofitBase
-    lateinit var mRequestQueue: RequestQueue
+    /*lateinit var mRequestQueue: RequestQueue
     lateinit var mLruBitmapCache: LruBitmapCache
-    lateinit var mImageLoader: ImageLoader
+    lateinit var mImageLoader: ImageLoader*/
 
     companion object {
         val TAG = AppController::class.java.simpleName
@@ -74,6 +75,7 @@ class AppController : Application(), KodeinAware{
         bind() from singleton {  SmartSearchRepository(instance(),instance()) }
         bind() from singleton {  SmartFilterRepository(instance(),instance()) }
         bind() from provider { CalendarSearchRepository(instance(),instance()) }
+        bind() from provider { NewsRepository(instance(),instance()) }
 
         bind() from provider { StatisticsViewModelFactory(instance()) }
         bind() from provider { FamilyDetailViewModelFactory(instance()) }
@@ -86,6 +88,7 @@ class AppController : Application(), KodeinAware{
         bind() from provider { SmartSearchViewModelFactory(instance()) }
         bind() from provider { SmartFilterViewModelFactory(instance()) }
         bind() from provider { CalendarSearchViewModelFactory(instance()) }
+        bind() from provider { NewsModelFactory(instance()) }
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -126,7 +129,10 @@ class AppController : Application(), KodeinAware{
 
     }
 
-    fun getRequestQueue(): RequestQueue {
+   /* fun getRequestQueue(): RequestQueue {
+        if (mRequestQueue == null) {
+            mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+        }
         return mRequestQueue
     }
 
@@ -144,12 +150,18 @@ class AppController : Application(), KodeinAware{
 
     fun getImageLoader(): ImageLoader {
         getRequestQueue()
+        if (mImageLoader == null) {
+            getLruBitmapCache();
+            mImageLoader = ImageLoader(this.mRequestQueue, mLruBitmapCache);
+        }
         return this.mImageLoader
     }
 
     fun getLruBitmapCache():LruBitmapCache{
-        return mLruBitmapCache
-    }
+        if (mLruBitmapCache == null)
+            mLruBitmapCache = LruBitmapCache();
+        return this.mLruBitmapCache;
+    }*/
 
     override fun onTerminate() {
         super.onTerminate()
@@ -166,6 +178,5 @@ class AppController : Application(), KodeinAware{
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(LocaleHelper.onAttach(base, "en"))
     }
-
 
 }

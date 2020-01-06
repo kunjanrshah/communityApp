@@ -39,7 +39,6 @@ import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.CalendarSearchViewModel
 import com.krs.community.viewmodel.CalendarSearchViewModelFactory
 import com.nightonke.boommenu.BoomMenuButton
-import kotlinx.android.synthetic.main.header_calendar.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -59,22 +58,24 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
     private lateinit var recyclerView: RecyclerView
     private lateinit var llRoot: LinearLayout
     private lateinit var shimmerFrameLayout:ShimmerFrameLayout
-    var tithi: Boolean = true
+    var all: Boolean = true
     var death: Boolean = true
     var anniversay: Boolean = true
     var birthday: Boolean = true
-    var reminder: Boolean = true
+    val lblAll="All"
+    val lblBirthday="BirthDay"
+    val lblMarriage="Marriage Anniversary"
+    val lblDeath="Death Anniversary"
     private var filter:String=""
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     val TAG: String = "CalendarFragment"
     private var fromDate:String=""
     private var toDate:String=""
     private lateinit var tvCount:TextView
-
-    private var selectedPosition = 0
+    private lateinit var txtDate:TextView
     private var start: Int = 0
-    private val length: Int = 30
-
+    private val length: Int = 5
+    private var filterAdapter: FilterAdapter? = null
     override fun loadApi() {
         if (!DashboardActivity.stop) {
             start = (lstCalendar.size+1)
@@ -104,6 +105,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         val date1 = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         fromDate=date1
         toDate=date1
+        txtDate.text=SimpleDateFormat(getString(R.string.dateFormat)).format(Date())
         DashboardActivity.stop=false
         searchCalendarList(filter)
         return root
@@ -115,12 +117,17 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             val jsonObject=JSONObject()
             jsonObject.put("start",start)
             jsonObject.put("length",length)
-            jsonObject.put("fromdate","2020-01-01") //fromDate
-            jsonObject.put("todate","2020-12-01") //toDate
-            jsonObject.put("filter","0")
+
+            if(fromDate.isNotEmpty()){
+                jsonObject.put("fromdate",fromDate)
+            }
+            if(toDate.isNotEmpty()){
+                jsonObject.put("todate",toDate)
+            }
             if(filter.isNotEmpty()){
                 jsonObject.put("filter",filter)
             }
+
             val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
             calendarSearchViewModel.getCalendarSearch(updated)
             Handler().postDelayed({
@@ -146,10 +153,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             if (response.members.size > 0) {
                 lstCalendar.clear()
                 lstCalendar.addAll(response.members)
-                //adapter.notifyDataSetChanged()
-                createCardAdapter(recyclerView)
-                recyclerView.layoutManager?.scrollToPosition(selectedPosition)
-                selectedPosition = lstCalendar.size - 1
+                adapter.data = lstCalendar
+                recyclerView.adapter = adapter
                 DashboardActivity.stop = false
 
                 if(lstCalendar.size<=length){
@@ -180,13 +185,18 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
     }
 
     override fun onDataSelected(firstDate: Calendar?, secondDate: Calendar?, hours: Int, minutes: Int) {
-
+        fromDate=""
+        toDate=""
         if (firstDate != null) {
-            var str: String
+            val str: String
             if (secondDate == null) {
                 str = SimpleDateFormat(getString(R.string.dateFormat)).format(firstDate.time)
+                fromDate=SimpleDateFormat(Utility.yyyy_MM_dd).format(firstDate.time)
+                toDate=SimpleDateFormat(Utility.yyyy_MM_dd).format(firstDate.time)
                 Log.d(TAG, str)
             } else {
+                fromDate=SimpleDateFormat(Utility.yyyy_MM_dd).format(firstDate.time)
+                toDate=SimpleDateFormat(Utility.yyyy_MM_dd).format(secondDate.time)
                 str = getString(
                         R.string.period,
                         SimpleDateFormat(getString(R.string.dateFormat)).format(firstDate.time),
@@ -194,7 +204,9 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 )
                 Log.d(TAG, str)
             }
-            txtdate.text = str
+            txtDate.text = str
+            DashboardActivity.stop=false
+            searchCalendarList(filter)
         }
     }
 
@@ -237,8 +249,6 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         fragmentTransaction?.commitAllowingStateLoss()
     }*/
 
-
-
     private fun createCardAdapter(recyclerView: RecyclerView) {
         adapter = object : ParallaxRecyclerAdapter<Member>(lstCalendar) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, i: Int) {
@@ -249,21 +259,22 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 }else{
                     tvCount.visibility=View.GONE
                 }
-
-                (viewHolder as CalendarViewHolder).tvName.text = lstCalendar[i].firstName
-                viewHolder.tvArea.text = lstCalendar[i].area
+                    val member=lstCalendar[i]
+                (viewHolder as CalendarViewHolder).tvName.text = member.firstName
+                viewHolder.tvArea.text = member.area
                 Coroutines.io {
-                    if(!lstCalendar[i].subCastId.isNullOrEmpty()){
-                        viewHolder.tvName.text=lstCalendar[i].firstName+" "+calendarSearchViewModel.getLastNameById(lstCalendar[i].subCastId.toInt())
+                    if(!member.subCastId.isNullOrEmpty()){
+                        viewHolder.tvName.text=member.firstName+" "+calendarSearchViewModel.getLastNameById(member.subCastId.toInt())
                     }
-
-                    if(!lstCalendar[i].cityId.isNullOrEmpty()){
-                        viewHolder.tvArea.text = lstCalendar[i].area+" "+calendarSearchViewModel.getCityNamebyId(lstCalendar.get(i).cityId)
+                    if(!member.cityId.isNullOrEmpty()){
+                        viewHolder.tvArea.text = member.area+" "+calendarSearchViewModel.getCityNamebyId(member.cityId)
                     }
                 }
+                if(!member.emailAddress.isNullOrEmpty()){
+                    viewHolder.tvEmail.text = member.emailAddress.toLowerCase()
+                }
 
-                viewHolder.tvEmail.text = lstCalendar[i].emailAddress.toLowerCase()
-                viewHolder.tvMobile.text = lstCalendar[i].mobile
+                viewHolder.tvMobile.text = member.mobile
                 if(lstCalendar[i].headId == "0"){
                     viewHolder.tvRole.text = "Family Head"
                 }else{
@@ -279,9 +290,9 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                     viewHolder.boomMenuButton.boom()
                 }
 
-                if(!lstCalendar[i].matched.isNullOrEmpty()){
-                    if(lstCalendar[i].matched.contains("birth_date")){
-                        val birth= Utility.changeDateFormat(lstCalendar[i].birthDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+                if(!member.matched.isNullOrEmpty()){
+                    if(member.matched.contains("birth_date")){
+                        val birth= Utility.changeDateFormat(member.birthDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                         val age=Utility.getAge(birth,Utility.dd_MM_yyyy)
 
                         val first = "$birth ($age) ";
@@ -289,8 +300,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         viewHolder.tvEvent1.text=(Html.fromHtml(first + next));
                         viewHolder.tvEvent1.visibility=View.VISIBLE
 
-                    }else if(lstCalendar[i].matched.contains("marriage_date")){
-                        val mdate= Utility.changeDateFormat(lstCalendar[i].marriageDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+                    }else if(member.matched.contains("marriage_date")){
+                        val mdate= Utility.changeDateFormat(member.marriageDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                         val age=Utility.getAge(mdate,Utility.dd_MM_yyyy)
 
                         val first = "$mdate ($age) ";
@@ -299,7 +310,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         viewHolder.tvEvent2.visibility=View.VISIBLE
                     }
                     else if(lstCalendar[i].matched.contains("expire_date")){
-                        val edate= Utility.changeDateFormat(lstCalendar[i].expireDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+                        val edate= Utility.changeDateFormat(member.expireDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                         val age=Utility.getAge(edate,Utility.dd_MM_yyyy)
 
                         val first = "$edate ($age) ";
@@ -338,7 +349,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         tvCount=header.findViewById(R.id.tv_count)
 
         val fab: FloatingActionButton=header.run { findViewById(com.krs.community.R.id.fab) }
-        val txtdate: TextView =  header.findViewById(com.krs.community.R.id.txtdate)
+        txtDate=  header.findViewById(com.krs.community.R.id.txtdate)
         val imgCalendar: ImageView= header.findViewById(com.krs.community.R.id.imgCalendar)
         val lstCalFliter: RecyclerView= header.findViewById(R.id.lstCalFliter)
         lstCalFliter.setHasFixedSize(true)
@@ -351,13 +362,13 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         if (lstCalFliter != null) {
             val list: ArrayList<String> = ArrayList()
-            //list.add("Tithi")
-            list.add("Death")
-            list.add("Birthday")
-            list.add("Marriage")
+            list.add(lblAll)
+            list.add(lblBirthday)
+            list.add(lblMarriage)
+            list.add(lblDeath)
             //list.add("Reminder")
-
-            lstCalFliter.adapter = FilterAdapter(list)
+            filterAdapter=FilterAdapter(list)
+            lstCalFliter.adapter =filterAdapter
         }
         lstCalFliter.layoutManager = linearLayoutManager
 
@@ -371,12 +382,10 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                     .setSelectedColor(Color.parseColor("#c48395"))
                     .show(activity!!.supportFragmentManager, "TAG_SLYCALENDAR")
         }
-        fab.setOnClickListener {
-            Toast.makeText(activity, "search", Toast.LENGTH_LONG).show()
-        }
 
-        val str = SimpleDateFormat(getString(R.string.dateFormat)).format(Date())
-        txtdate.text = str
+        fab.setOnClickListener {
+            searchCalendarList(filter)
+        }
 
         layoutManagerFixed.setHeaderIncrementFixer(header)
         adapter.isShouldClipView = false
@@ -416,117 +425,143 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         override fun onBindViewHolder(holder: FilterViewHolder, position: Int) {
 
             holder.txtName.text = list!![position]
-            if (holder.txtName.text.equals("Tithi")) {
-                holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
-                holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-            } else if (holder.txtName.text.equals("Death")) {
-                holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
-                holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-            } else if (holder.txtName.text.equals("Birthday")) {
-                holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
-                holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-            } else if (holder.txtName.text.equals("Marriage")) {
-                holder.txtName.setBackgroundResource(R.drawable.filter_ann)
-                holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-            } else if (holder.txtName.text.equals("Reminder")) {
-                holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
-                holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-            }
 
-            holder.txtName.setOnClickListener {
-                if (holder.txtName.text.equals("Tithi")) {
-                    if (tithi) {
-                        tithi = false
+            if(all){
+                when (holder.txtName.text) {
+                    lblAll -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_fill_tithi)
                         holder.txtName.setTextColor(resources.getColor(R.color.white))
-                    } else {
-                        tithi = true
-                        holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
                     }
-                } else if (holder.txtName.text.equals("Death")) {
-                    if (death) {
-                        death = false
-                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_panchag)
-                        holder.txtName.setTextColor(resources.getColor(R.color.white))
-
-                        birthday = true
-                        holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-
-                        anniversay = true
-                        holder.txtName.setBackgroundResource(R.drawable.filter_ann)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-
-                        filter="2"
-                        DashboardActivity.stop=false
-                        start=0
-                        searchCalendarList("2")
-                    } else {
-                        death = true
+                    lblDeath -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
                         holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
                     }
-
-                } else if (holder.txtName.text.equals("Birthday")) {
-                    if (birthday) {
-                        birthday = false
-                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_birthday)
-                        holder.txtName.setTextColor(resources.getColor(R.color.white))
-
-                        anniversay = true
-                        holder.txtName.setBackgroundResource(R.drawable.filter_ann)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-
-                        death = true
-                        holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-
-                        filter="0"
-                        start=0
-                        DashboardActivity.stop=false
-                        searchCalendarList("0")
-
-                    } else {
-                        birthday = true
+                    lblBirthday -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
                         holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
                     }
-
-                } else if (holder.txtName.text.equals("Marriage")) {
-                    if (anniversay) {
-                        anniversay = false
-                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_ann)
-                        holder.txtName.setTextColor(resources.getColor(R.color.white))
-
-                        death = true
-                        holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-
-                        birthday = true
-                        holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
-
-                        start=0
-                        filter="1"
-                        DashboardActivity.stop=false
-                        searchCalendarList("1")
-                    } else {
-                        anniversay = true
+                    lblMarriage -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_ann)
                         holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
                     }
-
-                } else if (holder.txtName.text.equals("Reminder")) {
-                    if (reminder) {
-                        reminder = false
-                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_reminder)
-                        holder.txtName.setTextColor(resources.getColor(R.color.white))
-                    } else {
-                        reminder = true
+                    "Reminder" -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
                         holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
                     }
+                }
+            }else if(death){
+                when (holder.txtName.text) {
+                    lblAll -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
+                        holder.txtName.setTextColor(resources.getColor(R.color.white))
+                    }
+                    lblBirthday -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                    }
+                    lblMarriage -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_ann)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                    }
+                    lblDeath -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
+                        holder.txtName.setTextColor(resources.getColor(R.color.white))
+                    }
+                    "Reminder" -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                    }
+                }
+            }else if(birthday){
+                when (holder.txtName.text) {
+                    lblAll -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                    }
+                    lblBirthday -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_birthday)
+                        holder.txtName.setTextColor(resources.getColor(R.color.white))
+                    }
+                    lblMarriage -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_ann)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                    }
+                    lblDeath -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                    }
+                    "Reminder" -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                    }
+                }
+            }else if(anniversay){
+
+                when (holder.txtName.text) {
+                    lblAll -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                    }
+                    lblBirthday -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                    }
+                    lblMarriage -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_ann)
+                        holder.txtName.setTextColor(resources.getColor(R.color.white))
+                    }
+                    lblDeath -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                    }
+                    "Reminder" -> {
+                        holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
+                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                    }
+                }
+            }
+
+            holder.txtName.setOnClickListener {
+                if (holder.txtName.text == lblAll) {
+                    all=true
+                    death=false
+                    birthday=false
+                    anniversay=false
+                    start=0
+                    filter=""
+                    filterAdapter?.notifyDataSetChanged()
+                    DashboardActivity.stop=false
+                    searchCalendarList(filter)
+                } else if (holder.txtName.text == lblDeath) {
+                    all=false
+                    death=true
+                    birthday=false
+                    anniversay=false
+                    start=0
+                    filter="2"
+                    filterAdapter?.notifyDataSetChanged()
+                    DashboardActivity.stop=false
+                    searchCalendarList(filter)
+                } else if (holder.txtName.text == lblBirthday) {
+                    all=false
+                    death=false
+                    birthday=true
+                    anniversay=false
+                    start=0
+                    filter="0"
+                    filterAdapter?.notifyDataSetChanged()
+                    DashboardActivity.stop=false
+                    searchCalendarList(filter)
+                } else if (holder.txtName.text == lblMarriage) {
+                    all=false
+                    death=false
+                    birthday=false
+                    anniversay=true
+                    start=0
+                    filter="1"
+                    filterAdapter?.notifyDataSetChanged()
+                    DashboardActivity.stop=false
+                    searchCalendarList(filter)
                 }
             }
         }

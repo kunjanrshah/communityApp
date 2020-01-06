@@ -1,3 +1,4 @@
+/*
 package com.krs.community.fragments;
 
 import android.os.Build;
@@ -50,18 +51,15 @@ public class NewsFragment extends Fragment {
 
     private static final String TAG = NewsFragment.class.getSimpleName();
     private RecyclerView listView;
-    //private FeedListAdapter listAdapter;
     private List<FeedItem> feedItems;
     private String URL_FEED = "https://api.androidhive.info/feed/feed.json";
     private ShimmerFrameLayout mShimmerViewContainer;
-    ImageLoader imageLoader = AppController.mApplication.getImageLoader();
     ParallaxRecyclerAdapter<FeedItem> adapter = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_news, container, false);
-
 
         listView = rootView.findViewById(R.id.list);
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container);
@@ -226,9 +224,11 @@ public class NewsFragment extends Fragment {
     }
 
 
-    /**
+    */
+/**
      * Parsing json reponse and passing the data to feed view list adapter
-     */
+     *//*
+
     private void parseJsonFeed(JSONObject response) {
         try {
             JSONArray feedArray = response.getJSONArray("feed");
@@ -268,3 +268,4 @@ public class NewsFragment extends Fragment {
     }
 
 }
+*/

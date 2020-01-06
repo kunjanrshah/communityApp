@@ -125,8 +125,8 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
         loginUserSubCommunityId=member.subCommunityId
         loginUserLocalCommunityId=member.localCommunityId
 
-        getSubAdmin()
-
+      //  getSubAdmin()
+        getLocalAdmin()
         return root
     }
 

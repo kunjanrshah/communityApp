@@ -97,7 +97,7 @@ public class DashboardFragment extends Fragment {
 
         TextView tv_all_news=rootView.findViewById(R.id.tv_all_news);
         tv_all_news.setOnClickListener(v -> {
-            Utility.movetoFragment(getActivity(),new NewsFragment());
+            Utility.movetoFragment(getActivity(),new NewsListFragment());
         });
 
         Utility.changeStatusbarColor(getActivity(),R.color.white,false);
@@ -136,14 +136,15 @@ public class DashboardFragment extends Fragment {
             final int finalI = i;
 
             sliderView.setOnSliderClickListener(sliderView1 -> {
-                Fragment fragment = new NewsFragment();
+                Toast.makeText(getActivity(), "This is slider " + (finalI + 1), Toast.LENGTH_SHORT).show();
+                Utility.movetoFragment(getActivity(),new NewsListFragment());
+
+                /*Fragment fragment = new NewsFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.container_body, fragment);
                 fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                Toast.makeText(getActivity(), "This is slider " + (finalI + 1), Toast.LENGTH_SHORT).show();
-
+                fragmentTransaction.commit();*/
             });
 
             //at last add this view in your layout :

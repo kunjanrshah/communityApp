@@ -23,12 +23,12 @@
             android:paddingLeft="@dimen/feed_item_padding_left_right"
             android:paddingRight="@dimen/feed_item_padding_left_right" >
 
-            <com.android.volley.toolbox.NetworkImageView
+            <ImageView
                 android:id="@+id/profilePic"
                 android:layout_width="@dimen/feed_item_profile_pic"
                 android:layout_height="@dimen/feed_item_profile_pic"
                 android:scaleType="fitCenter" >
-            </com.android.volley.toolbox.NetworkImageView>
+            </ImageView>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -52,6 +52,8 @@
             </LinearLayout>
         </LinearLayout>
 
+
+
         <TextView
             android:id="@+id/txtStatusMsg"
             android:layout_width="fill_parent"
@@ -71,13 +73,26 @@
             android:paddingRight="@dimen/feed_item_status_pad_left_right"
             android:textColorLink="@color/link" />
 
-        <com.krs.community.utils.FeedImageView
+        <ImageView
             android:id="@+id/feedImage1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="250dp"
             android:background="@color/white"
             android:scaleType="fitXY"
             android:visibility="visible" />
+
+        <TextView
+            android:layout_gravity="right"
+            android:id="@+id/txt_expire"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:textSize="14sp"
+            android:fontFamily="@font/montserrat_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColorLink="@color/link" />
+
+
     </LinearLayout>
 
 </LinearLayout>

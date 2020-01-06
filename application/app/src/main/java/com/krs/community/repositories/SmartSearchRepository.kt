@@ -22,4 +22,8 @@ class SmartSearchRepository(private val api: ApiServices, private val db:AppData
     fun getCityName(id:String): LiveData<String> {
         return db.getCityDao().getcityNameById(Integer.parseInt(id))
     }
+
+    fun getRelationName(id:String): String {
+        return db.getRelationsDao().getRelationNameById(Integer.parseInt(id))
+    }
 }

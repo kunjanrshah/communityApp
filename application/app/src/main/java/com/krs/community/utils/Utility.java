@@ -119,6 +119,7 @@ public class Utility {
     static final int REQ_CODE_SPEECH_INPUT = 100;
     public static String Title = "";
     public static String yyyy_MM_dd = "yyyy-MM-dd";
+    public static String ddMMyyyy = "dd.MM.yyyy";
     public static String dd_MM_yyyy = "dd-MM-yyyy";
     public static String yyyy_MM_dd_TIME = "yyyy-MM-dd HH:mm:ss";
     public static String dd_MM_yyyy_TIME = "dd-MM-yyyy h:mm a";
