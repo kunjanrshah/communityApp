@@ -66,7 +66,7 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".activity.ScanQRCodeActivity"></activity>
         <activity
             android:name="com.zfdang.multiple_images_selector.ImagesSelectorActivity"
             android:configChanges="orientation|screenSize" />
@@ -147,9 +147,6 @@
             android:windowSoftInputMode="adjustPan"
             />
 
-        <service android:name="com.krs.community.service.MyLocationService" />
-        <service android:name="com.krs.community.service.LocationAlertService" />
-
         <service android:name="com.krs.community.bkservice.restarter.JobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
@@ -183,6 +180,17 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <provider
+            android:authorities="com.mydomain.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:name="androidx.core.content.FileProvider"
+            >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+        </provider>
     </application>
 
 </manifest>

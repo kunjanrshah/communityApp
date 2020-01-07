@@ -44,21 +44,27 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/llQrCode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:background="@color/white">
 
                 <TextView
+                    android:id="@+id/Tvname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="PRATIK SONI"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="22sp" />
+                    android:textSize="22sp"
+                    />
 
                 <TextView
+                    android:id="@+id/memberId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -68,10 +74,18 @@
                     android:textSize="18sp" />
 
                 <ImageView
+                    android:id="@+id/imgCode"
                     android:layout_width="200dp"
                     android:layout_height="200dp"
-                    android:layout_margin="10dp"
                     android:background="@drawable/qr_code" />
+
+                <TextView
+                    android:id="@+id/TvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:textColor="@color/black1"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -88,6 +102,7 @@
                 android:padding="10dp">
 
                 <LinearLayout
+                    android:id="@+id/llShareQRCode"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_margin="5dp"
@@ -113,6 +128,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/llScanQrCode"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_margin="5dp"
@@ -139,6 +155,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/llCodeGallery"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_margin="5dp"

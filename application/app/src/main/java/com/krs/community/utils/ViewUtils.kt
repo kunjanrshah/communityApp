@@ -32,11 +32,15 @@ import com.krs.community.entities.RoomMember
 import com.krs.community.fragments.MatrimonyListFragment
 import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.model.Member
+import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.model.AspectRatio
 import org.json.JSONObject
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 fun Context.toast(message: String) {
@@ -426,4 +430,30 @@ fun getRoomMember(member:Member):RoomMember{
             member.workDetails,member.companyName,member.businessAddress,member.businessLogo,member.website,member.educationId,member.occupationId,member.userLat,member.userLng,
             member.homeLat,member.homeLng,member.officeLat,member.officeLng,member.isLocationEnable,member.updatedDt)
     return roomMember
+}
+
+fun openMemberPDF(member: Member,profileDetailViewModel: ProfileDetailViewModel){
+
+    //------- Main Detail---------
+    val date= Utility.changeDateFormat(member.birthDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+    val Exdate= Utility.changeDateFormat(member.expireDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+    val marriageDate= Utility.changeDateFormat(member.marriageDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+
+    val df = SimpleDateFormat("dd.MM.yyyy 'at' h:mm a")
+    val currentdate = df.format(Calendar.getInstance().time)
+
+    val firstName = member.firstName
+    val FatherName = member.fatherName
+    val MotherName = member.motherName
+    val Mobile = member.mobile
+    val Relation = member.relation
+    val State = member.stateId
+    val City = member.city
+    val Area = member.area
+    val Pincode = member.pincode
+    val Address = member.address
+    val Email = member.emailAddress
+    val Gender = member.gender
+
+
 }

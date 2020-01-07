@@ -96,7 +96,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         val appSignatureHashHelper = AppSignatureHashHelper(this)
         var hashkey:String=appSignatureHashHelper.appSignatures.get(0);
         hashkey= hashkey.replace("+","%2B")
-        Guru.putString(getString(R.string.hash_key),hashkey);
+        Guru.putString(getString(R.string.hash_key),hashkey)
         Log.e(TAG,"hashcode: "+hashkey)
 
         val FbKey= getHashKey(this)
@@ -147,6 +147,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         img_cancel.setOnClickListener {
             card_view_otp.visibility=View.GONE
             card_view_mobile.visibility=View.VISIBLE
+            loginViewModel?.cancelTimer()
         }
 
         btn_login_fb.setOnClickListener { v ->
@@ -264,6 +265,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 tv_resend.isClickable=false
                 tv_resend.isEnabled=false
                 tv_resend.setTextColor(resources.getColor(R.color.light_gray))
+                loginViewModel?.cancelTimer()
                 loginViewModel?.startTimer()
                 //toast("API successfully started")
                 Log.d(TAG,"API successfully started")
@@ -404,6 +406,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         if (smsReceiver != null) {
             unregisterReceiver(smsReceiver)
         }
+        loginViewModel?.cancelTimer()
         loginViewModel?.cancelAllJobs()
     }
 
