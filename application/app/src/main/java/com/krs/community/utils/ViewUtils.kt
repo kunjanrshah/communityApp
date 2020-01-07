@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.MemoryFile
 import android.view.View
 import android.view.Window
 import android.widget.*
@@ -27,8 +28,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.activity.BaseActivity
 import com.krs.community.app.AppController
+import com.krs.community.entities.RoomMember
 import com.krs.community.fragments.MatrimonyListFragment
 import com.krs.community.jrspinner.JRSpinner
+import com.krs.community.model.Member
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.model.AspectRatio
@@ -409,4 +412,18 @@ fun moveToFragmentListScreen(activity: FragmentActivity?, filter: String) {
     bundle.putString("filter", filter)
     fragment.arguments = bundle
     Utility.movetoFragment(activity, fragment)
+}
+
+fun getRoomMember(member:Member):RoomMember{
+
+    val roomMember = RoomMember(Integer.parseInt(member.id),true,member.role,member.memberCode,member.emailAddress,
+            member.mobile,member.relationId,member.subCommunityId,member.localCommunityId,member.committeeId,member.designationId,
+            member.firstName,member.fatherName,member.motherName,member.subCastId,member.gender,member.address,member.localAddress,
+            member.cityId,member.stateId,member.area,member.pincode,member.phone,member.matrimony,member.birthDate,member.birthTime,
+            member.birthPlace,member.nativePlaceId,member.bloodGroup,member.aboutMe,member.weight,member.height,member.isSpect,member.isMangal,
+            member.isShani,member.hobby,member.facebookProfile,member.expectation,member.currentActivityId,member.maritalStatus,member.marriageDate,
+            member.gotraId,member.profilePic,member.isRented,member.isExpired,member.expireDate,member.isDonor,member.businessCategoryId,member.businessSubCategoryId,
+            member.workDetails,member.companyName,member.businessAddress,member.businessLogo,member.website,member.educationId,member.occupationId,member.userLat,member.userLng,
+            member.homeLat,member.homeLng,member.officeLat,member.officeLng,member.isLocationEnable,member.updatedDt)
+    return roomMember
 }

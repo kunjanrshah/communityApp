@@ -4,9 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
-import com.krs.community.interfaces.ByDistanceListener
+import com.krs.community.entities.RoomMember
 import com.krs.community.interfaces.ByKeywordListener
-import com.krs.community.model.ByDistanceModel
 import com.krs.community.repositories.SmartSearchRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
@@ -16,10 +15,16 @@ class SmartSearchViewModel(
         private val mSmartSearchRepository: SmartSearchRepository,
         var app: Application) : AndroidViewModel(app) {
 
-    private lateinit var job_by_search: CompletableJob
+    private lateinit var jobBySearch: CompletableJob
+    private lateinit var jobByDelete: CompletableJob
+    private lateinit var jobByInsert: CompletableJob
     private var TAG: String = SmartSearchViewModel::class.java.simpleName
     lateinit var mByKeywordListener: ByKeywordListener
 
+
+    fun getRoomMember(id:Int):LiveData<RoomMember>{
+        return mSmartSearchRepository.getRoomMember(id)
+    }
 
    fun getLastName(id:Int):LiveData<String>{
        return mSmartSearchRepository.getLastName(id)
@@ -33,9 +38,51 @@ class SmartSearchViewModel(
         return mSmartSearchRepository.getRelationName(id)
     }
 
+    /*fun insertRoomMember(roomMember: RoomMember){
+        return mSmartSearchRepository.insertRoomMember(roomMember)
+    }*/
+
+    fun deleteRoomMember(id:Int){
+        jobByDelete=Job()
+        jobByDelete.let {thejob ->
+            CoroutineScope(Dispatchers.IO + thejob).launch {
+                try {
+                    mSmartSearchRepository.deleteRoomMember(id)
+                    withContext(Dispatchers.Main) {
+                        mByKeywordListener.refreshList()
+                        thejob.complete()
+                    }
+                    return@launch
+                }catch (e:Exception){
+                    mByKeywordListener.getFailure(e.message.toString())
+                }
+                thejob.complete()
+            }
+        }
+    }
+
+    fun insertRoomMember(roomMember: RoomMember){
+       jobByInsert=Job()
+       jobByInsert.let {thejob ->
+            CoroutineScope(Dispatchers.IO + thejob).launch {
+                try {
+                    mSmartSearchRepository.insertRoomMember(roomMember)
+                    withContext(Dispatchers.Main) {
+                        mByKeywordListener.refreshList()
+                        thejob.complete()
+                    }
+                    return@launch
+                }catch (e:Exception){
+                    mByKeywordListener.getFailure(e.message.toString())
+                }
+                thejob.complete()
+            }
+        }
+    }
+
     fun disableMembers(jsonObject: JsonObject) {
-        job_by_search = Job()
-        job_by_search.let { thejob ->
+        jobBySearch = Job()
+        jobBySearch.let { thejob ->
 
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
@@ -67,8 +114,8 @@ class SmartSearchViewModel(
     }
 
     fun getMemberByKeywords(jsonObject: JsonObject) {
-        job_by_search = Job()
-        job_by_search.let { thejob ->
+        jobBySearch = Job()
+        jobBySearch.let { thejob ->
 
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {

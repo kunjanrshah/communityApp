@@ -186,6 +186,8 @@ public class Utility {
         snackbar.show();
     }
 
+
+
     public static int calculatePercentage(Member member){
         int percentage=0;
         int empty=0;

@@ -1,0 +1,77 @@
+package com.krs.community.entities
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
+
+@Entity
+data class RoomMember(
+    @PrimaryKey(autoGenerate = false)
+     val id: Int,
+     val isImportant:Boolean,
+     val role : String?=null,
+     val memberCode : String?=null,
+     val emailAddress : String?=null,
+     val mobile : String?=null,
+     val relationId : String?=null,
+     val subCommunityId : String?=null,
+     val localCommunityId : String?=null,
+     val committeeId : String?=null,
+     val designationId : String?=null,
+     val firstName : String?=null,
+     val fatherName : String?=null,
+     val motherName : String?=null,
+     val subCastId : String?=null,
+     val gender : String?=null,
+     val address : String?=null,
+     val localAddress : String?=null,
+     val cityId : String?=null,
+     val stateId : String?=null,
+     val area : String?=null,
+     val pincode : String?=null,
+     val phone : String?=null,
+     val matrimony : String ?=null,
+     val birthDate : String?=null,
+     val birthTime : String?=null,
+     val birthPlace : String?=null,
+     val nativePlaceId : String?=null,
+     val bloodGroup : String?=null,
+     val aboutMe : String?=null,
+     val weight : String?=null,
+     val height : String?=null,
+     val isSpect: String?=null,
+     val isMangal: String?=null,
+     val isShani: String?=null,
+     val hobby : String?=null,
+     val facebookProfile : String?=null,
+     val expectation : String?=null,
+     val currentActivityId : String?=null,
+     val maritalStatus : String?=null,
+     val marriageDate : String?=null,
+     val gotraId : String?=null,
+     val profilePic : String?=null,
+     val isRented: String?=null,
+     val isExpired : String?=null,
+     val expireDate : String?=null,
+     val isDonor: String?=null,
+     val businessCategoryId : String?=null,
+     val businessSubCategoryId : String?=null,
+     val workDetails : String?=null,
+     val companyName : String?=null,
+     val businessAddress : String?=null,
+     val businessLogo : String?=null,
+     val website : String?=null,
+     val educationId : String?=null,
+     val occupationId : String?=null,
+     val userLat : String?=null,
+     val userLng : String?=null,
+     val homeLat : String?=null,
+     val homeLng : String?=null,
+     val officeLat : String?=null,
+     val officeLng : String?=null,
+     val isLocationEnable: String?=null,
+     val updatedDt: String?=null
+){
+    constructor() : this(0,false,"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","")
+}

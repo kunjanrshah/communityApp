@@ -7,8 +7,9 @@ import androidx.room.RoomDatabase
 import com.krs.community.dao.*
 import com.krs.community.entities.*
 import com.krs.community.model.Datum
+import com.krs.community.model.Member
 
-@Database(entities = [Designation::class,Committee::class,States::class,Relations::class,Occupations::class,
+@Database(entities = [RoomMember::class,Designation::class,Committee::class,States::class,Relations::class,Occupations::class,
                     Native::class,LastName::class,Gotra::class,Educations::class,CurrentActivity::class,City::class,
                     BusinessSubCategory::class,BusinessCategory::class,SubCommunity::class,LocalCommunity::class,LastUpdated::class],
                     version = 1)
@@ -30,6 +31,8 @@ abstract class AppDatabase :RoomDatabase() {
     abstract fun getCommitteeDao(): CommitteeDao
     abstract fun getDesignationDao(): DesignationDao
     abstract fun getLastUpdatedDao(): LastUpdatedDao
+    abstract fun getRoomMemberDao(): RoomMemberDao
+
     companion object {
 
         @Volatile

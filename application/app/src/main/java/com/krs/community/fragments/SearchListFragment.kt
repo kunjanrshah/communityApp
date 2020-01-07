@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -18,6 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,13 +46,12 @@ import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.adapter.AtoZBottomAdapter
 import com.krs.community.adapter.MyRoleAdapter
+import com.krs.community.entities.RoomMember
 import com.krs.community.interfaces.ByKeywordListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.searchByKeywordsResponse
-import com.krs.community.utils.FlipAnimator
-import com.krs.community.utils.Utility
-import com.krs.community.utils.snackbar
+import com.krs.community.utils.*
 import com.krs.community.viewmodel.SmartSearchViewModel
 import com.krs.community.viewmodel.SmartSearchViewModelFactory
 import com.mostafaaryan.transitionalimageview.TransitionalImageView
@@ -59,6 +60,9 @@ import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
 import kotlinx.android.synthetic.main.row_list_search.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -90,7 +94,6 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private val length: Int = 30
     private val lstKeyword = ArrayList<String>()
     private var changeRoleDialog: DialogPlus? = null
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -303,13 +306,16 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         getMembersByKeyword()
     }
 
+    override fun refreshList() {
+        rvAdapter.notifyDataSetChanged()
+    }
+
     override fun getMembers(response: searchByKeywordsResponse) {
 
         DashboardActivity.stop = false
         mShimmerViewContainer.stopShimmerAnimation()
         mShimmerViewContainer.visibility = View.GONE
 
-        //llRoot.snackbar(response.message,Snackbar.LENGTH_LONG)
         Utility.hideKeyboard(activity)
 
         if (response.success) {
@@ -320,7 +326,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 lstMembers.add(item)
             }
             rvAdapter.notifyDataSetChanged()
-            // rv_search.layoutManager?.scrollToPosition(selectedPosition)
+            rv_search.layoutManager?.scrollToPosition(selectedPosition)
             selectedPosition = lstMembers.size - 1
             if (Integer.parseInt(response.totalRecords) <= length) {
                 DashboardActivity.stop = true
@@ -430,23 +436,41 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     }
 
     private fun applyImportant(holder: MyViewHolder, member: Member) {
-        if (member.isImportant) {
-            holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_black_24dp))
-            holder.iconImp.setColorFilter(getColor(activity as AppCompatActivity, R.color.icon_tint_selected))
-        } else {
-            holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_border_black_24dp))
-            holder.iconImp.setColorFilter(getColor(activity as AppCompatActivity, R.color.icon_tint_normal))
-        }
+
+            smartSearchviewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
+                if (it!=null) {
+                    holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_black_24dp))
+                    holder.iconImp.setColorFilter(getColor(activity as AppCompatActivity, R.color.icon_tint_selected))
+                } else {
+                    holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_border_black_24dp))
+                    holder.iconImp.setColorFilter(getColor(activity as AppCompatActivity, R.color.icon_tint_normal))
+                }
+            })
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int) {
 
         holder.iconImp.setOnClickListener {
-            // Star icon is clicked,mark the message as important
+
             val member: Member = lstMembers.get(position)
-            member.isImportant = !member.isImportant
-            lstMembers.set(position, member)
-            rvAdapter.notifyDataSetChanged()
+            var flag=true
+            smartSearchviewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
+                if(flag){
+                    flag=false
+                    if(it!=null){
+                        smartSearchviewModel.deleteRoomMember(Integer.parseInt(member.id))
+                    }else{
+                        smartSearchviewModel.insertRoomMember(getRoomMember(member))
+                    }
+                }
+            })
+        }
+
+        holder.llMobile.setOnClickListener {
+            val intent = Intent(Intent.ACTION_DIAL)
+            val str = "tel:" + holder.tvMobile.text
+            intent.data = Uri.parse(str)
+            startActivity(intent)
         }
 
        // holder.iconContainer.setOnClickListener { view -> enableActionMode(position) }
@@ -563,7 +587,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         var iconFront: RelativeLayout = view.findViewById(R.id.icon_front1)
         var boomMenuButton: BoomMenuButton = view.findViewById(R.id.boomMenuButton1)
         var lstFound: RecyclerView = view.findViewById(R.id.lst_found)
-
+        var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
 
         init {
             view.setOnLongClickListener(this)
@@ -576,56 +600,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         }
     }
 
-    /* private fun setupList() {
-
-         rv_search.layoutManager = LinearLayoutManager(activity)
-         rv_search.adapter = rvAdapter
-         rv_search.setHasFixedSize(true)
-
-         Handler().postDelayed({
-             // stop animating Shimmer and hideOverlay the layout
-             mShimmerViewContainer.stopShimmerAnimation()
-             mShimmerViewContainer.visibility = View.GONE
-         }, 3000)
-     }*/
-
-    /* private fun getInbox() {
-         swipeRefreshLayout.isRefreshing = true
-         messages.clear()
-
-         for (i in 0..19) {
-             val message = Message()
-             message.id = 1
-             message.isImportant = false
-             message.message = "Now android supports multiple voice recogonization"
-             message.picture = "https://api.androidhive.info/json/google.png"
-             message.isRead = false
-             message.timestamp = "10:30 AM"
-             message.from = "Google Alerts"
-             message.subject = "Google Alert - android"
-             message.color = Utility.getRandomMaterialColor(activity!!, "400")
-             messages.add(message)
-         }
-
-         rvAdapter.notifyDataSetChanged()
-         swipeRefreshLayout.isRefreshing = false
-     }*/
-
     override fun onStart() {
         super.onStart()
         mShimmerViewContainer.startShimmerAnimation()
-        /*Handler().postDelayed({
-            multiSearchView!!.binding.imageViewSearch.performClick()
-        }, 100)*/
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        /*Handler().postDelayed({
-            Utility.hideKeyboard(activity)
-        }, 1000)*/
-    }
 
     override fun onPause() {
         super.onPause()
@@ -635,19 +614,6 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             Utility.hideKeyboard(activity)
         }, 500)
     }
-
-    /* private fun initFragmentTransaction(view: View): FragmentTransaction? {
-
-         val adapterPosition = rv_search!!.getChildAdapterPosition(view)
-         val detailsFragment = FamilyDetailActivity.newInstance(adapterPosition)
-          val transaction = fragmentManager?.beginTransaction()
-                 ?.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                 ?.replace(R.id.container_body, detailsFragment, FamilyDetailActivity.TAG)
-                 ?.addToBackStack(null)
-
-         return transaction
-     }*/
-
 
     private inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
