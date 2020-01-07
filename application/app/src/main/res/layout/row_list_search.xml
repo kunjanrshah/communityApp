@@ -11,7 +11,6 @@
     android:background="@drawable/round_corner_itemlist"
     android:orientation="vertical"
     android:padding="16dp"
-
     app:cardCornerRadius="@dimen/card_corner_radius"
     app:cardElevation="@dimen/card_elevation"
     app:contentPadding="10dp">
@@ -28,20 +27,20 @@
 
                 <RelativeLayout
                     android:id="@+id/icon_container1"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:orientation="vertical">
 
                     <RelativeLayout
                         android:id="@+id/icon_back1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:fillAfter="false"
                         android:fillEnabled="false">
 
                         <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:src="@drawable/bg_circle" />
 
                         <ImageView
@@ -53,15 +52,22 @@
 
                     <RelativeLayout
                         android:id="@+id/icon_front1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:fillAfter="false"
                         android:fillEnabled="false">
 
-                        <ImageView
+                        <!--<ImageView
                             android:id="@+id/icon_profile1"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp" />
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />-->
+
+                        <com.mostafaaryan.transitionalimageview.TransitionalImageView
+                            android:id="@+id/icon_profile1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"/>
 
                         <TextView
                             android:id="@+id/icon_text1"
@@ -78,8 +84,8 @@
                     android:id="@+id/boomMenuButton1"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:layout_marginLeft="-8dp"
-                    android:layout_marginTop="-5dp"
+                    android:layout_marginLeft="-5dp"
+                    android:layout_marginTop="-10dp"
                     app:bmb_buttonEnum="textInsideCircle"
                     app:bmb_buttonPlaceEnum="buttonPlace_sc_6_1"
                     app:bmb_inList="true"

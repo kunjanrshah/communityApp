@@ -1,7 +1,10 @@
 package com.krs.community.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -20,9 +23,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.request.transition.Transition
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonObject
@@ -43,6 +53,8 @@ import com.krs.community.utils.Utility
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.SmartSearchViewModel
 import com.krs.community.viewmodel.SmartSearchViewModelFactory
+import com.mostafaaryan.transitionalimageview.TransitionalImageView
+import com.mostafaaryan.transitionalimageview.model.TransitionalImage
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
@@ -52,32 +64,32 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRecyclerAdapter.OnLoadMore,MyRoleAdapter.iChangeRoleListner {
+class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner {
 
     private lateinit var rv_search: RecyclerView
-    private lateinit var llRoot:LinearLayout
+    private lateinit var llRoot: LinearLayout
     private lateinit var mShimmerViewContainer: ShimmerFrameLayout
     private lateinit var multiSearchView: MultiSearchView
     private lateinit var actionModeCallback: ActionModeCallback
-    private var actionMode: ActionMode?=null
+    private var actionMode: ActionMode? = null
     private lateinit var rvAdapter: ParallaxRecyclerAdapter<Member>
     private var selectedItems: SparseBooleanArray = SparseBooleanArray()
     private var animationItemsIndex: SparseBooleanArray = SparseBooleanArray()
     private var reverseAllAnimations = false
     private var currentSelectedIndex = -1
-    private var TAG:String?=SearchListFragment::class.qualifiedName
+    private var TAG: String? = SearchListFragment::class.qualifiedName
     private lateinit var smartSearchviewModel: SmartSearchViewModel
     private val factory: SmartSearchViewModelFactory by instance()
     override val kodein by kodein()
-    private val lstMembers=ArrayList<Member>()
-    private lateinit var tvRecords:TextView
-    private lateinit var llLabel:LinearLayout
-    private lateinit var searchWord:String
+    private val lstMembers = ArrayList<Member>()
+    private lateinit var tvRecords: TextView
+    private lateinit var llLabel: LinearLayout
+    private lateinit var searchWord: String
     private var selectedPosition = 0
     private var start: Int = 0
     private val length: Int = 30
-    private val lstKeyword=ArrayList<String>()
-    private var changeRoleDialog:DialogPlus?=null
+    private val lstKeyword = ArrayList<String>()
+    private var changeRoleDialog: DialogPlus? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -88,21 +100,22 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
 
-        smartSearchviewModel = ViewModelProviders.of(this,factory).get(SmartSearchViewModel::class.java)
-        smartSearchviewModel.mByKeywordListener =this
-        llRoot= rootView.findViewById(R.id.ll_root)
+        smartSearchviewModel = ViewModelProviders.of(this, factory).get(SmartSearchViewModel::class.java)
+        smartSearchviewModel.mByKeywordListener = this
+        llRoot = rootView.findViewById(R.id.ll_root)
         rv_search = rootView.findViewById(R.id.rv_search)
         rv_search.layoutManager = LinearLayoutManager(activity)
         rv_search.setHasFixedSize(true)
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_smart_search, container, false)
         multiSearchView = header.findViewById(R.id.multiSearchView)
-        tvRecords= header.findViewById(R.id.tv_record)
-        llLabel= header.findViewById(R.id.ll_label)
+        tvRecords = header.findViewById(R.id.tv_record)
+        llLabel = header.findViewById(R.id.ll_label)
 
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
         actionModeCallback = ActionModeCallback()
-        (activity as AppCompatActivity).supportActionBar!!.title = "Smart Search"
+
+        (activity as AppCompatActivity).supportActionBar!!.hide()
 
         rvAdapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
             override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<Member>?): Int {
@@ -113,45 +126,28 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                 val viewHolder: MyViewHolder = viewHolder as MyViewHolder
 
                 val member = lstMembers[position]
-                if(member.profilePic.isNotEmpty()){
-                    try {
-                        val path=getString(R.string.base_url_original)+""+member.profilePic
-                        Log.d(TAG,"path: "+path)
-
-                        Glide.with(activity!!).load(path)
-                                .thumbnail(0.5f)
-                                .transition(withCrossFade())
-                                .apply(RequestOptions.circleCropTransform())
-                                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-                                .into(viewHolder.imgProfile)
-
-                    } catch (e: Exception) {
-                        e.message
-                    }
-                }
-
 
                 viewHolder.tvName.text = member.firstName
                 smartSearchviewModel.getLastName(member.subCastId.toInt()).observeForever {
-                    viewHolder.tvName.text=member.firstName+" "+it
+                    viewHolder.tvName.text = member.firstName + " " + it
                 }
 
-                if(!member.cityId.isNullOrEmpty()){
+                if (!member.cityId.isNullOrEmpty()) {
                     smartSearchviewModel.getCityNamebyId(member.cityId).observeForever {
-                        viewHolder.tvArea.text = member.area+" "+it
+                        viewHolder.tvArea.text = member.area + " " + it
                     }
                 }
                 viewHolder.tvEmail.text = member.emailAddress
                 viewHolder.tvMobile.text = member.mobile
 
 
-                if(member.headId.equals("0")){
+                if (member.headId.equals("0")) {
                     viewHolder.tvRole.text = "Family Head"
-                }else{
+                } else {
                     viewHolder.tvRole.text = "Member"
                 }
-                if(member.updatedDt.isNotEmpty()){
-                    viewHolder.tvUpdate.text="Updated "+Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+                if (member.updatedDt.isNotEmpty()) {
+                    viewHolder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                 }
                 viewHolder.boomMenuButton.clearBuilders()
 
@@ -162,12 +158,10 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
                         } else if (it == 2) {
-                            Utility.sendWhatsappMessage(activity as FragmentActivity,member.mobile,"")
-                        }
-                        else if (it == 3) {
-                            Utility.sendWhatsappMessage(activity as FragmentActivity,member.mobile,"")
-                        }
-                        else{
+                            Utility.sendWhatsappMessage(activity as FragmentActivity, member.mobile, "")
+                        } else if (it == 3) {
+                            Utility.sendWhatsappMessage(activity as FragmentActivity, member.mobile, "")
+                        } else {
                             Toast.makeText(activity, "Clicked $it", Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -182,7 +176,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                 val linearLayoutManager = LinearLayoutManager(activity)
                 linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
 
-                viewHolder.lstFound.adapter = FoundListAdapter(activity as AppCompatActivity,member.matches)
+                viewHolder.lstFound.adapter = FoundListAdapter(activity as AppCompatActivity, member.matches)
                 viewHolder.lstFound.layoutManager = linearLayoutManager
 
                 applyImportant(viewHolder, member)
@@ -204,51 +198,51 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                     .setAdapter(adapter)
                     .setGravity(Gravity.BOTTOM)
                     .setCancelable(true)
-                    .setExpanded(true,900)
+                    .setExpanded(true, 900)
                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                     .create()
             dialog.show()
         }
         multiSearchView.setSearchViewListener(object : MultiSearchView.MultiSearchViewListener {
             override fun onTextChanged(index: Int, s: CharSequence) {
-             //   Toast.makeText(getActivity(), "onTextChanged", Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(getActivity(), "onTextChanged", Toast.LENGTH_SHORT).show();
             }
 
             override fun onSearchComplete(index: Int, s: CharSequence) {
                 lstKeyword.add(s.toString())
-                searchWord=s.toString()
-                DashboardActivity.stop=false
+                searchWord = s.toString()
+                DashboardActivity.stop = false
                 getMembersByKeyword()
             }
 
             override fun onSearchItemRemoved(index: Int) {
 
-                searchWord=""
+                searchWord = ""
                 lstKeyword.removeAt(index)
 
-                if(lstKeyword.size>0){
-                    if(lstKeyword.size==1){
-                        searchWord= lstKeyword[0]
-                    }else if(lstKeyword.size==index){
-                        searchWord= lstKeyword[index-1]
-                    }else{
-                        searchWord= lstKeyword[index]
+                if (lstKeyword.size > 0) {
+                    if (lstKeyword.size == 1) {
+                        searchWord = lstKeyword[0]
+                    } else if (lstKeyword.size == index) {
+                        searchWord = lstKeyword[index - 1]
+                    } else {
+                        searchWord = lstKeyword[index]
                     }
                 }
-                if(searchWord.isNotEmpty()){
-                    DashboardActivity.stop=false
+                if (searchWord.isNotEmpty()) {
+                    DashboardActivity.stop = false
                     getMembersByKeyword()
-                }else{
+                } else {
                     lstMembers.clear()
-                    llLabel.visibility=View.VISIBLE
-                    tvRecords.visibility=View.GONE
+                    llLabel.visibility = View.VISIBLE
+                    tvRecords.visibility = View.GONE
                     rvAdapter.notifyDataSetChanged()
                 }
             }
 
             override fun onItemSelected(index: Int, s: CharSequence) {
-                searchWord=s.toString()
-                DashboardActivity.stop=false
+                searchWord = s.toString()
+                DashboardActivity.stop = false
                 getMembersByKeyword()
             }
         })
@@ -260,7 +254,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
 
         rvAdapter.setParallaxHeader(header, rv_search)
         rv_search.adapter = rvAdapter
-        DashboardActivity.stop=false
+        DashboardActivity.stop = false
         return rootView
     }
 
@@ -276,9 +270,9 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         }
 
         override fun onBindViewHolder(holder: FoundListViewHolder, position: Int) {
-            holder.txtName.text=list.get(position).replace("_"," ")
+            holder.txtName.text = list.get(position).replace("_", " ")
             holder.txtName.setBackgroundResource(R.drawable.filter_found_search)
-            holder.txtName.setTextColor(getColor(context,R.color.black1))
+            holder.txtName.setTextColor(getColor(context, R.color.black1))
         }
 
         override fun getItemCount(): Int {
@@ -286,18 +280,18 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         }
     }
 
-    private fun getMembersByKeyword(){
+    private fun getMembersByKeyword() {
         if (!DashboardActivity.stop) {
             lstMembers.clear()
-            tvRecords.visibility=View.GONE
-            llLabel.visibility=View.GONE
+            tvRecords.visibility = View.GONE
+            llLabel.visibility = View.GONE
             rvAdapter.notifyDataSetChanged()
             DashboardActivity.stop = true
-            val mJSONObject=JSONObject()
-            mJSONObject.put("start",start)
-            mJSONObject.put("length",length)
-            mJSONObject.put("filter_by",searchWord)
-            val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
+            val mJSONObject = JSONObject()
+            mJSONObject.put("start", start)
+            mJSONObject.put("length", length)
+            mJSONObject.put("filter_by", searchWord)
+            val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
             mShimmerViewContainer.startShimmerAnimation()
             mShimmerViewContainer.visibility = View.VISIBLE
             smartSearchviewModel.getMemberByKeywords(updated)
@@ -305,65 +299,66 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
     }
 
     override fun loadApi() {
-            start = (lstMembers.size+1)
-            getMembersByKeyword()
+        start = (lstMembers.size + 1)
+        getMembersByKeyword()
     }
 
     override fun getMembers(response: searchByKeywordsResponse) {
 
-        DashboardActivity.stop=false
+        DashboardActivity.stop = false
         mShimmerViewContainer.stopShimmerAnimation()
         mShimmerViewContainer.visibility = View.GONE
 
         //llRoot.snackbar(response.message,Snackbar.LENGTH_LONG)
         Utility.hideKeyboard(activity)
 
-        if(response.success){
+        if (response.success) {
             lstMembers.clear()
-            rv_search.visibility=View.VISIBLE
-            start=0
+            rv_search.visibility = View.VISIBLE
+            start = 0
             for (item in response.member) {
-                    lstMembers.add(item)
+                lstMembers.add(item)
             }
             rvAdapter.notifyDataSetChanged()
-           // rv_search.layoutManager?.scrollToPosition(selectedPosition)
+            // rv_search.layoutManager?.scrollToPosition(selectedPosition)
             selectedPosition = lstMembers.size - 1
-            if(Integer.parseInt(response.totalRecords)<=length){
+            if (Integer.parseInt(response.totalRecords) <= length) {
                 DashboardActivity.stop = true
                 Snackbar.make(llRoot, "End of the Records", Snackbar.LENGTH_LONG).show()
             }
-            if(lstMembers.size>0){
-                tvRecords.text="Records found: "+response.totalRecords
-                tvRecords.visibility=View.VISIBLE
-                llLabel.visibility=View.GONE
-            }else{
-                llLabel.visibility=View.VISIBLE
-                tvRecords.visibility=View.GONE
+            if (lstMembers.size > 0) {
+                tvRecords.text = "Records found: " + response.totalRecords
+                tvRecords.visibility = View.VISIBLE
+                llLabel.visibility = View.GONE
+            } else {
+                llLabel.visibility = View.VISIBLE
+                tvRecords.visibility = View.GONE
                 DashboardActivity.stop = true
             }
-        }else{
-            rv_search.visibility=View.GONE
-            tvRecords.visibility=View.GONE
-            llLabel.visibility=View.VISIBLE
+        } else {
+            rv_search.visibility = View.GONE
+            tvRecords.visibility = View.GONE
+            llLabel.visibility = View.VISIBLE
         }
     }
 
     override fun getFailure(message: String) {
         Log.d(TAG, "getFailure: $message")
         activity?.runOnUiThread {
-            if(mShimmerViewContainer.isAnimationStarted){
+            if (mShimmerViewContainer.isAnimationStarted) {
                 mShimmerViewContainer.stopShimmerAnimation()
             }
             mShimmerViewContainer.visibility = View.GONE
-            tvRecords.visibility=View.GONE
-            llLabel.visibility=View.VISIBLE
-            rv_search.visibility=View.GONE
+            tvRecords.visibility = View.GONE
+            llLabel.visibility = View.VISIBLE
+            rv_search.visibility = View.GONE
             DashboardActivity.stop = false
         }
 
-        llRoot.snackbar(message,Snackbar.LENGTH_LONG)
+        llRoot.snackbar(message, Snackbar.LENGTH_LONG)
         Utility.hideKeyboard(activity)
     }
+
     private fun getSelectedItemCount(): Int {
         return selectedItems.size()
     }
@@ -427,15 +422,15 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         if (getSelectedItemCount() > 0) {
             enableActionMode(position)
         } else {
-            val intent=Intent(activity,ProfileDetailActivity::class.java)
-            intent.putExtra(getString(R.string.member),lstMembers.get(position))
+            val intent = Intent(activity, ProfileDetailActivity::class.java)
+            intent.putExtra(getString(R.string.member), lstMembers.get(position))
             startActivity(intent)
             Utility.fade(activity)
         }
     }
 
     private fun applyImportant(holder: MyViewHolder, member: Member) {
-        if (member.isImportant()) {
+        if (member.isImportant) {
             holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_black_24dp))
             holder.iconImp.setColorFilter(getColor(activity as AppCompatActivity, R.color.icon_tint_selected))
         } else {
@@ -449,12 +444,12 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         holder.iconImp.setOnClickListener {
             // Star icon is clicked,mark the message as important
             val member: Member = lstMembers.get(position)
-            member.setImportant(!member.isImportant())
+            member.isImportant = !member.isImportant
             lstMembers.set(position, member)
             rvAdapter.notifyDataSetChanged()
         }
 
-        holder.iconContainer.setOnClickListener { view -> enableActionMode(position) }
+       // holder.iconContainer.setOnClickListener { view -> enableActionMode(position) }
 
         holder.messageContainer.setOnClickListener { view -> onMessageRowClicked(position, holder.itemView) }
 
@@ -464,14 +459,43 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         }
     }
 
+    @SuppressLint("CheckResult")
     private fun applyProfilePicture(holder: MyViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
-            Glide.with(activity!!).load(member.profilePic)
-                    .thumbnail(0.5f)
-                    .transition(withCrossFade())
-                    .apply(RequestOptions.circleCropTransform())
-                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-                    .into(holder.imgProfile)
+            if (member.profilePic.isNotEmpty()) {
+
+                try {
+                    val path = getString(R.string.base_url_original) + "" + member.profilePic
+                    Log.d(TAG, "path: $path")
+
+                    Glide.with(this)
+                            .asBitmap()
+                            .apply(RequestOptions.circleCropTransform()).thumbnail(0.5f)
+                            .load(path)
+                            .into(object : CustomTarget<Bitmap>() {
+                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+
+                                    val transitionalImage: TransitionalImage = TransitionalImage.Builder()
+                                            .duration(250)
+                                            .backgroundColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
+                                            .image(resource)
+                                            .create()
+                                    holder.imgProfile.setTransitionalImage(transitionalImage);
+                                }
+
+                                override fun onLoadCleared(placeholder: Drawable?) {
+                                    // this is called when imageView is cleared on lifecycle call or for
+                                    // some other reason.
+                                    // if you are referencing the bitmap somewhere else too other than this imageView
+                                    // clear it here as you can no longer have the bitmap
+                                }
+                            })
+
+
+                } catch (e: Exception) {
+                    e.message
+                }
+            }
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE
         } else {
@@ -479,7 +503,10 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
             holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(activity!!, "400"))
             holder.iconText.visibility = View.VISIBLE
         }
+
+
     }
+
 
     private fun applyIconAnimation(holder: MyViewHolder, position: Int) {
         if (selectedItems.get(position, false)) {
@@ -529,7 +556,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         var tvRole: TextView = view.findViewById(R.id.tv_role)
         var iconImp: ImageView = view.findViewById(R.id.icon_star)
         var tvUpdate: TextView = view.findViewById(R.id.tv_update)
-        var imgProfile: ImageView = view.findViewById(R.id.icon_profile1)
+        var imgProfile: TransitionalImageView = view.findViewById(R.id.icon_profile1)
         var messageContainer: LinearLayout = view.findViewById(R.id.message_container1)
         var iconContainer: RelativeLayout = view.findViewById(R.id.icon_container1)
         var iconBack: RelativeLayout = view.findViewById(R.id.icon_back1)
@@ -549,40 +576,40 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         }
     }
 
-   /* private fun setupList() {
+    /* private fun setupList() {
 
-        rv_search.layoutManager = LinearLayoutManager(activity)
-        rv_search.adapter = rvAdapter
-        rv_search.setHasFixedSize(true)
+         rv_search.layoutManager = LinearLayoutManager(activity)
+         rv_search.adapter = rvAdapter
+         rv_search.setHasFixedSize(true)
 
-        Handler().postDelayed({
-            // stop animating Shimmer and hideOverlay the layout
-            mShimmerViewContainer.stopShimmerAnimation()
-            mShimmerViewContainer.visibility = View.GONE
-        }, 3000)
-    }*/
+         Handler().postDelayed({
+             // stop animating Shimmer and hideOverlay the layout
+             mShimmerViewContainer.stopShimmerAnimation()
+             mShimmerViewContainer.visibility = View.GONE
+         }, 3000)
+     }*/
 
-   /* private fun getInbox() {
-        swipeRefreshLayout.isRefreshing = true
-        messages.clear()
+    /* private fun getInbox() {
+         swipeRefreshLayout.isRefreshing = true
+         messages.clear()
 
-        for (i in 0..19) {
-            val message = Message()
-            message.id = 1
-            message.isImportant = false
-            message.message = "Now android supports multiple voice recogonization"
-            message.picture = "https://api.androidhive.info/json/google.png"
-            message.isRead = false
-            message.timestamp = "10:30 AM"
-            message.from = "Google Alerts"
-            message.subject = "Google Alert - android"
-            message.color = Utility.getRandomMaterialColor(activity!!, "400")
-            messages.add(message)
-        }
+         for (i in 0..19) {
+             val message = Message()
+             message.id = 1
+             message.isImportant = false
+             message.message = "Now android supports multiple voice recogonization"
+             message.picture = "https://api.androidhive.info/json/google.png"
+             message.isRead = false
+             message.timestamp = "10:30 AM"
+             message.from = "Google Alerts"
+             message.subject = "Google Alert - android"
+             message.color = Utility.getRandomMaterialColor(activity!!, "400")
+             messages.add(message)
+         }
 
-        rvAdapter.notifyDataSetChanged()
-        swipeRefreshLayout.isRefreshing = false
-    }*/
+         rvAdapter.notifyDataSetChanged()
+         swipeRefreshLayout.isRefreshing = false
+     }*/
 
     override fun onStart() {
         super.onStart()
@@ -595,7 +622,6 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
     override fun onResume() {
         super.onResume()
 
-        (activity as AppCompatActivity).supportActionBar!!.hide()
         /*Handler().postDelayed({
             Utility.hideKeyboard(activity)
         }, 1000)*/
@@ -603,7 +629,6 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
 
     override fun onPause() {
         super.onPause()
-        (activity as AppCompatActivity).supportActionBar!!.show()
         mShimmerViewContainer.stopShimmerAnimation()
         super.onStop()
         Handler().postDelayed({
@@ -611,17 +636,17 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
         }, 500)
     }
 
-   /* private fun initFragmentTransaction(view: View): FragmentTransaction? {
+    /* private fun initFragmentTransaction(view: View): FragmentTransaction? {
 
-        val adapterPosition = rv_search!!.getChildAdapterPosition(view)
-        val detailsFragment = FamilyDetailActivity.newInstance(adapterPosition)
-         val transaction = fragmentManager?.beginTransaction()
-                ?.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                ?.replace(R.id.container_body, detailsFragment, FamilyDetailActivity.TAG)
-                ?.addToBackStack(null)
+         val adapterPosition = rv_search!!.getChildAdapterPosition(view)
+         val detailsFragment = FamilyDetailActivity.newInstance(adapterPosition)
+          val transaction = fragmentManager?.beginTransaction()
+                 ?.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                 ?.replace(R.id.container_body, detailsFragment, FamilyDetailActivity.TAG)
+                 ?.addToBackStack(null)
 
-        return transaction
-    }*/
+         return transaction
+     }*/
 
 
     private inner class ActionModeCallback : ActionMode.Callback {
@@ -629,7 +654,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
             mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
 
             // disable swipe refresh if action mode is enabled
-           // swipeRefreshLayout.isEnabled = false
+            // swipeRefreshLayout.isEnabled = false
             return true
         }
 
@@ -676,7 +701,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                                 .setAdapter(adapter)
                                 .setGravity(Gravity.BOTTOM)
                                 .setCancelable(true)
-                                .setExpanded(true,900)
+                                .setExpanded(true, 900)
                                 .setContentBackgroundResource(R.drawable.popup_top_corner)
                                 .create()
                         changeRoleDialog?.show()
@@ -685,8 +710,8 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener,ParallaxRe
                     }
                     R.id.action_select_all -> {
                         clearSelections()
-                        for(i in lstMembers.indices){
-                              enableActionMode(i)
+                        for (i in lstMembers.indices) {
+                            enableActionMode(i)
                         }
                         true
                     }

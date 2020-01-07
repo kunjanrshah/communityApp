@@ -26,14 +26,12 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:id="@+id/icon_container1"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="@color/placeholder_bg"
                     android:orientation="vertical">
 
                     <RelativeLayout
-                        android:id="@+id/icon_back1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fillAfter="false"
@@ -52,19 +50,16 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:id="@+id/icon_front1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fillAfter="false"
                         android:fillEnabled="false">
 
                         <ImageView
-                            android:id="@+id/icon_profile1"
                             android:layout_width="40dp"
                             android:layout_height="40dp" />
 
                         <TextView
-                            android:id="@+id/icon_text1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
@@ -79,7 +74,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/message_container1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -99,7 +93,6 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/tv_name1"
                             android:background="@color/placeholder_bg"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -109,7 +102,6 @@
                         <TextView
                             android:layout_marginTop="5dp"
                             android:background="@color/placeholder_bg"
-                            android:id="@+id/tv_area"
                             android:singleLine="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -119,7 +111,6 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/tv_role"
                         android:layout_width="80dp"
                         android:layout_marginLeft="5dp"
                         android:layout_height="25dp"
@@ -129,7 +120,6 @@
                         android:paddingLeft="10dp"
                         android:background="@color/placeholder_bg"
                         android:paddingRight="10dp"
-
                         android:textColor="@color/white"
                         android:textSize="10sp" />
 
@@ -165,7 +155,6 @@
                             android:background="@drawable/ic_email" />
 
                         <TextView
-                            android:id="@+id/tv_email"
                             android:background="@color/placeholder_bg"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -197,7 +186,6 @@
                                 android:background="@drawable/phone" />
 
                             <TextView
-                                android:id="@+id/tv_mobile"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
@@ -210,7 +198,6 @@
                         </LinearLayout>
 
                         <TextView
-                            android:id="@+id/tv_update"
                             android:gravity="right"
                             android:fontFamily="@font/montserrat_light"
                             android:textSize="12sp"
@@ -220,15 +207,7 @@
                             android:layout_height="wrap_content"/>
 
                     </LinearLayout>
-
-
-
                 </LinearLayout>
-
-
-
             </LinearLayout>
-
         </LinearLayout>
-
 </LinearLayout>
