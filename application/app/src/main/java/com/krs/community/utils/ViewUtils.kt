@@ -12,10 +12,14 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.MemoryFile
+import android.os.Environment
+import android.os.Handler
+import android.print.PrintAttributes
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ViewUtils
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -34,6 +38,7 @@ import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.model.Member
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
+import com.uttampanchasara.pdfgenerator.CreatePdf
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.model.AspectRatio
 import org.json.JSONObject
@@ -404,8 +409,6 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
         Coroutines.main {
             moveToFragmentListScreen(context as FragmentActivity, jsonObject.toString())
         }
-
-
     }
     dialog.show()
 }
@@ -432,28 +435,367 @@ fun getRoomMember(member:Member):RoomMember{
     return roomMember
 }
 
-fun openMemberPDF(member: Member,profileDetailViewModel: ProfileDetailViewModel){
+fun createMemberListPDF(mContext:Context, lstMember: ArrayList<Member>, profileDetailViewModel: ProfileDetailViewModel)= Coroutines.main{
+
+    var Bdate=""
+    val df = SimpleDateFormat("dd.MM.yyyy h:mm a") //'at'
+    val currentdate = df.format(Calendar.getInstance().time)
+    val header  = "<center>  <h1><b>Community App</b></h1> </center> <object align=right>$currentdate</object><br><br>"
+    var rows=header
+    for(member in lstMember){
+
+        var name = member.firstName
+        var state = member.stateId
+        var city = member.cityId
+        if(!member.birthDate.isNullOrEmpty()){
+            Bdate= Utility.changeDateFormat(member.birthDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+        }
+        if(!member.subCastId.isNullOrEmpty()){
+            profileDetailViewModel.selectedLastNameId = Integer.parseInt(member.subCastId)
+            profileDetailViewModel.lastName.await().observeForever {
+                name= member.firstName+" "+it
+            }
+        }
+
+        if(!member.stateId.isNullOrEmpty()){
+            profileDetailViewModel.selectedStateId = Integer.parseInt(member.stateId)
+            profileDetailViewModel.stateName.await().observeForever {
+                state= it
+            }
+        }
+
+        if(!member.cityId.isNullOrEmpty()){
+            profileDetailViewModel.selectedCityId = Integer.parseInt(member.cityId)
+            profileDetailViewModel.cityName.await().observeForever {
+                city= it
+            }
+        }
+
+        val path=mContext.getString(R.string.base_url_thumb)+member.profilePic
+        val headerImage  = "<img src=$path alt=$name>"
+        val lblName = "Name: $name"
+        val lblGender = "Gender: ${member.gender}"
+        val lblBdate = "BirthDate: $Bdate"
+        val lblFather = "FatherName: ${member.fatherName}"
+        val lblMother = "MotherName: ${member.motherName}"
+        val lblEmail = "Email: ${member.emailAddress}"
+        val lblMobile = "Mobile: ${member.mobile}"
+        val lblState = "State: $state"
+        val lblCity = "City: $city"
+        val lblArea = "Area: ${member.area}"
+        val lblAddress = "Address: ${member.address}"
+        val lblPinCode = "Pincode: ${member.pincode}"
+        val lblBg = "BloodGroup: ${member.bloodGroup}"
+        val lblMarital = "Marital: ${member.maritalStatus}"
+        rows=rows+"<table><tr><td><b> $lblName </b></tr>" +
+                "<tr><td> $headerImage </td><td> $lblGender<br> $lblMobile <br> $lblEmail<br> $lblMarital </td></tr>" +
+                "<tr><td> $lblFather</td><td> $lblMother</td></tr   >"+
+                "<tr><td> $lblBdate</td><td> $lblBg</td></tr>"+
+                "<tr><td> $lblState</td><td> $lblCity</td></tr>"+
+                "<tr><td> $lblArea</td><td> $lblPinCode</td></tr>"+
+                "<tr><td colspan='2'> $lblAddress</td></tr></table><br><br>"
+    }
+
+    createPdf(mContext,"community_${currentdate}",rows)
+}
+
+
+fun createMemberPDF(mContext:Context, member: Member, profileDetailViewModel: ProfileDetailViewModel) = Coroutines.main{
 
     //------- Main Detail---------
-    val date= Utility.changeDateFormat(member.birthDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
-    val Exdate= Utility.changeDateFormat(member.expireDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
-    val marriageDate= Utility.changeDateFormat(member.marriageDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+    var Bdate=""
+    var Exdate=""
+    var Mdate=""
+    if(!member.birthDate.isNullOrEmpty()){
+        Bdate= Utility.changeDateFormat(member.birthDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+    }
+    if(!member.expireDate.isNullOrEmpty()){
+        Exdate= Utility.changeDateFormat(member.expireDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+    }
+    if(!member.marriageDate.isNullOrEmpty()){
+        Mdate= Utility.changeDateFormat(member.marriageDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+    }
 
-    val df = SimpleDateFormat("dd.MM.yyyy 'at' h:mm a")
+    val df = SimpleDateFormat("dd.MM.yyyy h:mm a") //'at'
     val currentdate = df.format(Calendar.getInstance().time)
 
-    val firstName = member.firstName
+    var name = member.firstName
+    val Gender = member.gender
     val FatherName = member.fatherName
     val MotherName = member.motherName
-    val Mobile = member.mobile
-    val Relation = member.relation
-    val State = member.stateId
-    val City = member.city
-    val Area = member.area
-    val Pincode = member.pincode
-    val Address = member.address
     val Email = member.emailAddress
-    val Gender = member.gender
+    val Mobile = member.mobile
+    var State = member.stateId
+    var City = member.cityId
+    val Area = member.area
+    val Address = member.address
+    val Pincode = member.pincode
 
+    if(!member.subCastId.isNullOrEmpty()){
+        profileDetailViewModel.selectedLastNameId = Integer.parseInt(member.subCastId)
+        profileDetailViewModel.lastName.await().observeForever {
+            name= member.firstName+" "+it
+        }
+    }
+
+    if(!member.stateId.isNullOrEmpty()){
+        profileDetailViewModel.selectedStateId = Integer.parseInt(member.stateId)
+        profileDetailViewModel.stateName.await().observeForever {
+            State= it
+        }
+    }
+
+    if(!member.cityId.isNullOrEmpty()){
+        profileDetailViewModel.selectedCityId = Integer.parseInt(member.cityId)
+        profileDetailViewModel.cityName.await().observeForever {
+            City= it
+        }
+    }
+
+    val header  = "<center>  <h1><b>Community App</b></h1> </center> <object align=right>$currentdate</object>"
+    val path=mContext.getString(R.string.base_url_thumb)+member.profilePic
+    val headerImage  = "<img src=$path alt=$name>"
+    val labelMain = "<b>Main Detail  </b> "
+    val lblName = "Name: "
+    val lblGender = "Gender: "
+    val lblFather = "FatherName: "
+    val lblMother = "MotherName: "
+    val lblEmail = "Email: "
+    val lblMobile = "Mobile: "
+    val lblState = "State: "
+    val lblCity = "City: "
+    val lblArea = "Area: "
+    val lblAddress = "Address: "
+    val lblPinCode = "Pincode: "
+
+    //------- Personal Detail---------
+    var strRole=""
+    if(member.role.equals("LOCAL_ADMIN")){
+        strRole = "Local Admin"
+
+    }else if(member.role.equals("SUB_ADMIN")) {
+        strRole = "Sub Admin"
+
+    }else{
+        strRole = "User"
+    }
+
+    val lblPersonal = "<b> Personal </b>"
+    val lblRole = "Role: "
+    val lblBdate = "BirthDate: "
+    val lblNative = "Native: "
+    val lblEdate = "ExpireDate: "
+    val lblBG = "Blood Group: "
+    val lblEducation = "Eduction: "
+    val lblActivity = "Current Activity: "
+    val lblMarital = "Marital Status: "
+    val lblMdate = "MarriageDate: "
+    val lblLaddress = "Local Address: "
+
+    val bloodGroup = member.bloodGroup
+    val maritalStatus = member.maritalStatus
+    val localAddress = member.localAddress
+    var native = member.nativePlaceId
+    var education = member.educationId
+    var currentActivity = member.currentActivityId
+
+    if(!member.nativePlaceId.isNullOrEmpty()){
+        profileDetailViewModel.selectedNativeId = Integer.parseInt(member.nativePlaceId)
+        profileDetailViewModel.nativeName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+            native= it
+        })
+    }
+    if(!member.educationId.isNullOrEmpty()){
+        profileDetailViewModel.selectedEducationId = Integer.parseInt(member.educationId)
+        profileDetailViewModel.educationName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+            education= it
+        })
+    }
+
+    if(!member.currentActivityId.isNullOrEmpty()){
+        profileDetailViewModel.selectedActivityId = Integer.parseInt(member.currentActivityId)
+        profileDetailViewModel.activityName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+            currentActivity= it
+        })
+    }
+
+    //------- Professional Detail---------
+    val lblProfessional = "<b> Professional </b>"
+    val lblLogo = "Logo: "
+    val lblCompany = "Company Name: "
+    val lblWorkCat = "Work Category: "
+    val lblWorkSubCat = "Work Sub Category: "
+    val lblOcc = "Occupation: "
+    val lblWorkDetail = "Work Detail: "
+    val lblWebsite = "WebSite URL: "
+    val lblWorkAddr = "Work Address: "
+
+    val companyName = member.companyName
+    val bpath=mContext.getString(R.string.base_url_thumb)+member.businessLogo
+    val logo  = "<img src=$bpath alt=$companyName>"
+    val website = member.website
+    val workDetails = member.workDetails
+    val businessAddress = member.businessAddress
+    var workcategory = member.businessCategoryId
+    var worksubCategory = member.businessSubCategoryId
+    var occupation = member.occupationId
+
+    if(!member.businessCategoryId.isNullOrEmpty()){
+        profileDetailViewModel.selectedBusinessCategoryId = Integer.parseInt(member.businessCategoryId)
+        profileDetailViewModel.businessCategoryName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+            workcategory= it
+        })
+    }
+
+    if(!member.businessSubCategoryId.isNullOrEmpty()){
+        profileDetailViewModel.selectedBusinessCategoryId = Integer.parseInt(member.businessSubCategoryId)
+        profileDetailViewModel.businessSubCategoryName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+            workcategory= it
+        })
+    }
+
+    if(!member.businessCategoryId.isNullOrEmpty()){
+        profileDetailViewModel.selectedBusinessCategoryId = Integer.parseInt(member.businessCategoryId)
+        profileDetailViewModel.businessCategoryName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+            worksubCategory= it
+        })
+    }
+
+    if(!member.occupationId.isNullOrEmpty()){
+        profileDetailViewModel.selectedOccupationId = Integer.parseInt(member.occupationId)
+        profileDetailViewModel.occupationName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+            occupation= it
+        })
+    }
+
+    //------- Matrimony Detail---------
+    val lblAbout = "About Me: "
+    val lblFBurl = "Facebook Profile URL: "
+    val lblBtime = "Birth Time: "
+    val lblBPlace = "Birth Place: "
+    val lblHobby = "Hobby: "
+    val lblExpectation = "Expectation: "
+    val lblWeight = "Weight: "
+    val lblHeight = "Height: "
+    val lblGotra = "Gotra: "
+    val lblMatrimony = "<b> Matrimony </b> "
+
+    val about = member.aboutMe
+    val facebookProfile = member.facebookProfile
+    val birthTime = member.birthTime
+    val birthPlace = member.birthPlace
+    val hobby = member.hobby
+    val expectation = member.expectation
+    val weight = member.weight
+    val height = member.height
+    var gotra = member.gotraId
+
+    if(!member.gotraId.isNullOrEmpty()){
+        profileDetailViewModel.selectedGotraId = Integer.parseInt(member.gotraId)
+        profileDetailViewModel.gotraName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+            gotra= it
+        })
+    }
+
+    Handler().postDelayed({
+        val MainDetail =header+"<br><h3><b>"+
+                lblName + name +"</b></h3><br>"+
+                headerImage+"<br><br>"+
+                labelMain+"<br>"+
+                lblGender +Gender +"<br>"+
+                lblFather+FatherName +"<br>" +
+                lblMother+ MotherName +"<br>" +
+                lblEmail+Email + "<br>"+
+                lblMobile +Mobile + "<br>" +
+                lblState +State +"<br>" +
+                lblCity +City + "<br>" +
+                lblArea+ Area +"<br>" +
+                lblAddress+Address+"<br>" +
+                lblPinCode+Pincode
+
+        val PersonalDetail = "<br> <br>"+lblPersonal+"<br>"+
+                lblRole + strRole+"<br>"+
+                lblBdate+Bdate +"<br>"+
+                lblBG+bloodGroup+"<br>"+
+                lblNative+native+"<br>"+
+                lblEducation+education+"<br>"+
+                lblActivity+currentActivity+"<br>"+
+                lblEdate+Exdate+"<br>"+
+                lblMarital+maritalStatus+"<br>"+
+                lblMdate+Mdate+"<br>"+
+                lblLaddress+localAddress
+
+        val ProfessionalDetail = "<br> <br>"+lblProfessional+"<br>"+
+                lblLogo+logo+"<br><br>"+
+                lblCompany+companyName +"<br>"+
+                lblOcc+occupation+"<br>"+
+                lblWorkCat+workcategory+"<br>"+
+                lblWorkSubCat+worksubCategory+"<br>"+
+                lblWebsite+website+"<br>"+
+                lblWorkDetail+workDetails+"<br>"+
+                lblWorkAddr+businessAddress
+
+        val MatrimonyDetail ="<br><br>"+lblMatrimony+"<br>"+
+                lblGotra+gotra+"<br>"+
+                lblAbout + about+"<br>"+
+                lblBtime+birthTime+"<br>"+
+                lblBPlace+birthPlace+"<br>"+
+                lblHobby+hobby+"<br>"+
+                lblExpectation+expectation+"<br>"+
+                lblFBurl+facebookProfile +"<br>"+
+                lblWeight+weight+"<br>"+
+                lblHeight+height
+
+
+        val MailString = MainDetail + PersonalDetail + ProfessionalDetail + MatrimonyDetail
+        Log.v("ViewUtils","MailString: $MailString")
+         createPdf(mContext,name,MailString);
+    },1500)
+
+
+
+
+}
+
+private fun createPdf(mContext: Context, fname: String, test: String) {
+
+    val pdfDirectory = File(Environment.getExternalStorageDirectory(),"/Community")
+    pdfDirectory.mkdirs()
+    val outputFile = File(pdfDirectory, fname)
+
+    if (mContext != null) {
+        CreatePdf(mContext)
+                .setPdfName(fname)
+                .openPrintDialog(true)
+                .setContentBaseUrl(null)
+                .setPageSize(PrintAttributes.MediaSize.ISO_A4)
+                .setContent(test)
+                .setFilePath(outputFile.absolutePath)
+                .setCallbackListener(object : CreatePdf.PdfCallbackListener {
+                    override fun onFailure(errorMsg: String) {
+                        Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onSuccess(filePath: String) {
+                        Toast.makeText(mContext, "Pdf Saved at: $filePath", Toast.LENGTH_SHORT).show()
+                    }
+                })
+                .create()
+    }
+}
+
+fun shareDetails(activity: FragmentActivity?,name:String,mobile:String,email:String,area:String,address:String){
+
+    val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community \n \n" +
+            "Name : "+ name +"\n" +
+            "Mobile : " + mobile + "\n" +
+            "Email : " + email + "\n" +
+            "Area : " + area +"\n" +
+            "Address : " + address
+
+    val intent = Intent(Intent.ACTION_SEND)
+    intent.type = "text/plain"
+    intent.putExtra(Intent.EXTRA_TEXT, text)
+    activity?.startActivity(Intent.createChooser(intent, "Choose one"))
 
 }

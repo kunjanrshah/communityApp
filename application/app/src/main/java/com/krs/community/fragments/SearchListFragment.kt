@@ -64,8 +64,6 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner {
@@ -83,8 +81,10 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private var currentSelectedIndex = -1
     private var TAG: String? = SearchListFragment::class.qualifiedName
     private lateinit var smartSearchviewModel: SmartSearchViewModel
-
+    private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: SmartSearchViewModelFactory by instance()
+    private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
+
     override val kodein by kodein()
     private val lstMembers = ArrayList<Member>()
     private lateinit var tvRecords: TextView
@@ -104,6 +104,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
 
+        profileDetailViewModel= ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         smartSearchviewModel = ViewModelProviders.of(this, factory).get(SmartSearchViewModel::class.java)
         smartSearchviewModel.mByKeywordListener = this
         llRoot = rootView.findViewById(R.id.ll_root)
@@ -115,11 +116,17 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         multiSearchView = header.findViewById(R.id.multiSearchView)
         tvRecords = header.findViewById(R.id.tv_record)
         llLabel = header.findViewById(R.id.ll_label)
-
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
         actionModeCallback = ActionModeCallback()
 
-        (activity as AppCompatActivity).supportActionBar!!.hide()
+        (activity as AppCompatActivity).supportActionBar?.hide()
+
+        val ivExport:ImageView= header.findViewById(R.id.iv_export)
+        ivExport.setOnClickListener {
+            if(lstMembers.size>0){
+                createMemberListPDF(activity as AppCompatActivity,lstMembers,profileDetailViewModel)
+            }
+        }
 
         rvAdapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
             override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<Member>?): Int {
@@ -159,183 +166,26 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
                     builder?.listener {
                         if (it == 0) {
-
-                            val profileDetailFactory: ProfileDetailViewModelFactory by instance()
-                            val profileDetailViewModel= ViewModelProviders.of(this@SearchListFragment, profileDetailFactory).get(ProfileDetailViewModel::class.java)
-                            openMemberPDF(member,profileDetailViewModel)
-                            //------- Main Detail---------
-                            val date= Utility.changeDateFormat(member.birthDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
-                            val Exdate= Utility.changeDateFormat(member.expireDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
-                            val marriageDate= Utility.changeDateFormat(member.marriageDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
-
-                            val df = SimpleDateFormat("dd.MM.yyyy 'at' h:mm a")
-                            val currentdate = df.format(Calendar.getInstance().time)
-
-                            val Fname = viewHolder.tvName.text.toString()
-                            val FatherName = member.fatherName
-                            val MotherName = member.motherName
-                            val Mobile = member.mobile
-                            val Relation = member.relation
-                            val State = member.stateId
-                            val City = member.city
-                            val Area = member.area
-                            val Pincode = member.pincode
-                            val Address = member.address
-                            val Email = member.emailAddress
-                            val Gender = member.gender
-
-                            // var header  = "<center><u><b>  Community App&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></u></center>"+currentdate
-                            val header  = "<center>  Community App </center> <object align=right>$currentdate</object>"
-                            val MainDetail = "<b>Main Detail  </b> "
-                            val Name = "Name : "
-                            val FName = "FatherName : "
-                            val MName = "MotherName : "
-                            val MNumber = "Mobile : "
-                            val email = "Email : "
-                            val gender = "Gender : "
-                            val Rla = "Relation : "
-                            val state = "State : "
-                            val city = "City : "
-                            val area = "Area : "
-                            val pincode = "Pincode : "
-                            val address = "Address : "
-
-                            val Test =header+"<br> <br>"+ MainDetail+"<br> <br>"+ Name + Fname +"<br>"+FName+FatherName +"<br>" +MName+ MotherName +"<br>" + MNumber +Mobile + "<br>" +email+Email + "<br>"+gender +Gender +"<br>"+ Rla +Relation + "<br>" + state +State +"<br>" +city +City + "<br>" +area+ Area +"<br>" +pincode+Pincode + "<br>"+address+Address
-
-                            /////////////////////Personal Detail
-                            var strRole=""
-                            if(member.role.equals("LOCAL_ADMIN")){
-                                strRole = "Local Admin"
-
-                            }else if(member.role.equals("SUB_ADMIN")) {
-                                strRole = "Sub Admin"
-
-                            }else{
-                                strRole = "User"
-                            }
-
-                            val Role = "Role : "
-                            val BirthDate = "BirthDate : "
-                            val Native = "Native : "
-                            val ExpireDate = "ExpireDate : "
-                            val BloodGroup = "Blood Group : "
-                            val Gotra = "Gotra : "
-                            val Eduction = "Eduction : "
-                            val CurrentActivity = "Current Activity : "
-                            val MaritalStatus = "Marital Status : "
-                            val MarriageDate = "MarriageDate : "
-                            val LocalAddress = "Local Address : "
-
-                            val Personal = "<b> Personal </b>"
-
-                            val nativeid = member.nativePlaceId
-                            val bloodGroup = member.bloodGroup
-                            val gotraId = member.gotraId
-                            val educationId = member.educationId
-                            val currentActivityId = member.currentActivityId
-                            val maritalStatus = member.maritalStatus
-                            val localAddress = member.localAddress
-
-
-                            val StrPersonal = "<br> <br>"+Personal+"<br> <br>"+ Role + strRole+"<br>"+BirthDate+date +"<br>"+Native+nativeid+"<br>"+ExpireDate+Exdate+"<br>"+BloodGroup+bloodGroup+"<br>"+Gotra+gotraId+"<br>"+Eduction+educationId+"<br>"+CurrentActivity+currentActivityId+"<br>"+MaritalStatus+maritalStatus+"<br>"+MarriageDate+marriageDate+"<br>"+LocalAddress+localAddress
-
-                            ///// Professional
-
-                            val Logo = "Logo : "
-                            val ComanyName = "Comany Name : "
-                            val WorkCategory = "Work Category : "
-                            val WorkSubCategory = "Work Sub Category : "
-                            val Occupation = "Occupation : "
-                            val WebSiteURl = "WebSite URL : "
-                            val WorkDetail = "Work Detail : "
-                            val WorkAddress = "Work Address : "
-
-                            val Professional = "<b> Professional </b>"
-
-                            val logo = member.businessLogo
-                            val companyName = member.companyName
-                            val workcategory = ""
-                            val worksubCategory = ""
-                            val occupationId = member.occupationId
-                            val website = member.website
-                            val workDetails = member.workDetails
-                            val businessAddress = member.businessAddress
-
-                            val StrProfessional = "<br> <br>"+Professional+"<br> <br>"+ Logo + logo+"<br>"+ComanyName+companyName +"<br>"+WorkCategory+workcategory+"<br>"+WorkSubCategory+worksubCategory+"<br>"+Occupation+occupationId+"<br>"+WebSiteURl+website+"<br>"+WorkDetail+workDetails+"<br>"+WorkAddress+businessAddress
-
-
-                            ///// Matrimony
-
-
-                            val AboutMe = "About Me : "
-                            val FacebookUrl = "Facebook Profile URL : "
-                            val BirthTime = "Birth Time : "
-                            val BirthPlace = "Birth Place : "
-                            val Hobby = "Hobby : "
-                            val Expection = "Expection : "
-                            val Weight = "Weight : "
-                            val Height = "Height : "
-
-                            val Matrimony = "<b> Matrimony </b> "
-
-                            val about = member.aboutMe
-                            val facebookProfile = member.facebookProfile
-                            val birthTime = member.birthTime
-                            val birthPlace = member.birthPlace
-                            val hobby = member.hobby
-                            val expectation = member.expectation
-                            val weight = member.weight
-                            val height = member.height
-
-                            val StrMatrimony ="<br> <br>"+ Matrimony+"<br> <br>"+ AboutMe + about+"<br>"+FacebookUrl+facebookProfile +"<br>"+BirthTime+birthTime+"<br>"+BirthPlace+birthPlace+"<br>"+Hobby+hobby+"<br>"+Expection+expectation+"<br>"+Weight+weight+"<br>"+Height+height
-
-
-                            val MailString = Test + StrPersonal + StrProfessional +StrMatrimony
-
-
-                            createPdf(activity,Fname,MailString);
-
-
+                            createMemberPDF(activity as AppCompatActivity,member,profileDetailViewModel)
                         }else if(it == 1) {
-
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
-
                         } else if (it == 2) {
-
-                            val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
-
-                            if (member.mobile != null && member.mobile.length != 0) {
+                            if(!member.mobile.isNullOrEmpty()){
                                 val toNumber = "+91" + member.mobile
-
-                                val intent = Intent(Intent.ACTION_VIEW)
-                                intent.data = Uri.parse("http://api.whatsapp.com/send?phone=$toNumber&text=$text")
-                                startActivity(intent)
+                                val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
+                                Utility.sendWhatsappMessage(activity as AppCompatActivity,toNumber,text)
                             }
-
                         } else if (it == 3) {
-
                             val fragment = ByQRCodeFragment()
                             val mBundle = Bundle()
-                            mBundle.putString("Mobile", member.mobile)
-                            mBundle.putString("Id", member.id)
-                            mBundle.putString("Fname", member.firstName)
-                            mBundle.putString("Flag", "1")
-                            fragment.setArguments(mBundle)
+                            mBundle.putSerializable(getString(R.string.member), member)
+                            fragment.arguments = mBundle
                             Utility.movetoFragment(activity, fragment)
-
                         } else if (it == 4) {
-
-                            val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community \n \n" + "Name : "+ viewHolder.tvName.text.toString() + "\n" + "Mobile : " + member.mobile + "\n" + "Area : " + viewHolder.tvArea.text.toString() + "\n" + "Address : " + member.address
-
-                            val intent = Intent(Intent.ACTION_SEND)
-                            intent.type = "text/plain"
-                            intent.putExtra(Intent.EXTRA_TEXT, text)
-                            startActivity(Intent.createChooser(intent, "Choose one"))
-
-                        } else {
-
-                            Toast.makeText(activity, "Clicked $it", Toast.LENGTH_SHORT).show()
+                            shareDetails(activity,viewHolder.tvName.text.toString(),member.mobile,member.emailAddress,viewHolder.tvArea.text.toString(),member.address)
+                        } else if (it == 5) {
+                            Toast.makeText(activity, "Location", Toast.LENGTH_SHORT).show()
                         }
                     }
                     viewHolder.boomMenuButton.addBuilder(builder)
@@ -810,6 +660,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         Handler().postDelayed({
             Utility.hideKeyboard(activity)
         }, 500)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (activity as AppCompatActivity).supportActionBar?.show()
     }
 
     private inner class ActionModeCallback : ActionMode.Callback {

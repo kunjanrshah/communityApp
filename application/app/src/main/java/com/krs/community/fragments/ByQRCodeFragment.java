@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import com.github.squti.guru.Guru;
 import com.google.gson.Gson;
@@ -42,7 +43,9 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
+import com.krs.community.activity.ProfileDetailActivity;
 import com.krs.community.activity.ScanQRCodeActivity;
+import com.krs.community.databinding.FragmentByQrcodeBinding;
 import com.krs.community.model.Member;
 import com.krs.community.utils.AESUtils;
 import com.krs.community.utils.Utility;
@@ -72,81 +75,39 @@ public class ByQRCodeFragment extends Fragment {
     private Uri imageUri;
     private Intent intent;
     Bitmap b;
-    TextView TvDate;
     Handler handler;
     private static final int SELECT_PHOTO = 100;
     public String barcode;
-    String Flag = "0",Id, Mobile, Fname;
+    private Member member;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
-        if (getArguments() != null){
-            Mobile = getArguments().getString("Mobile");
-            Id = getArguments().getString("Id");
-            Fname = getArguments().getString("Fname");
-            Flag = getArguments().getString("Flag");
-        }
-
-        View root=inflater.inflate(R.layout.fragment_by_qrcode,container,false);
-
+        FragmentByQrcodeBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_by_qrcode, container, false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
         }
-
-        String loginMember=Guru.getString(getString(R.string.loginUser),"");
-        Member member= new Gson().fromJson(loginMember, Member.class);
-
-        ImageView iv_cancel=root.findViewById(R.id.iv_cancel);
-        ImageView imgCode=root.findViewById(R.id.imgCode);
-        TextView memberId=root.findViewById(R.id.memberId);
-        TextView Tvname=root.findViewById(R.id.Tvname);
-        TvDate=root.findViewById(R.id.TvDate);
-        LinearLayout llScanQrCode=root.findViewById(R.id.llScanQrCode);
-        LinearLayout llShareQRCode=root.findViewById(R.id.llShareQRCode);
-        LinearLayout llQrCode=root.findViewById(R.id.llQrCode);
-        LinearLayout llCodeGallery=root.findViewById(R.id.llCodeGallery);
-
-
-        llCodeGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent photoPic = new Intent(Intent.ACTION_PICK);
-                photoPic.setType("image/*");
-                startActivityForResult(photoPic, SELECT_PHOTO);
-            }
-        });
-        llScanQrCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent i = new Intent(getActivity(), ScanQRCodeActivity.class);
-                startActivity(i);
-
-            }
-        });
-
-        Log.e("Mobile-----",""+Mobile);
-
-        String MId ;
-        if (Flag.equalsIgnoreCase("1")){
-            MId = Id;
-            Tvname.setText(Fname);
-            memberId.setText(Mobile);
-
-        }else {
-
-            MId= member.getId();
-            Tvname.setText(member.getFirstName());
-            memberId.setText(member.getMobile());
+        if (getArguments() != null){
+            member = (Member) getArguments().getSerializable("member");
         }
 
+        binding.tvName.setText(member.getFirstName());
+        binding.tvMobile.setText(member.getMobile());
+        binding.llGallery.setOnClickListener(v -> {
+            Intent photoPic = new Intent(Intent.ACTION_PICK);
+            photoPic.setType("image/*");
+            startActivityForResult(photoPic, SELECT_PHOTO);
+        });
+
+        binding.llscan.setOnClickListener(v -> {
+            Intent i = new Intent(getActivity(), ScanQRCodeActivity.class);
+            startActivity(i);
+        });
 
         String encrypted = "";
-        Log.e("loginMember---", ":" + loginMember);
         try {
-            encrypted = AESUtils.encrypt(MId);
+            encrypted = AESUtils.encrypt(member.getId());
             Log.e("TEST", "encrypted:" + encrypted);
 
         } catch (Exception e) {
@@ -169,45 +130,33 @@ public class ByQRCodeFragment extends Fragment {
             e.printStackTrace();
         }
 
-        imgCode.setImageBitmap(qrCode);
+        binding.ivCode.setImageBitmap(qrCode);
 
-        llShareQRCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        binding.llShare.setOnClickListener(v -> {
 
-                DateFormat df = new SimpleDateFormat("dd.MM.yyyy 'at' h:mm a");
-                String date = df.format(Calendar.getInstance().getTime());
+            DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+            String date = df.format(Calendar.getInstance().getTime());
 
-                TvDate.setText(date);
-                memberId.setText("MemberId -"+MId);
+            handler = new Handler();
+            handler.postDelayed(() -> {
 
-                handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+                binding.ivCode.setDrawingCacheEnabled(true);
+                binding.ivCode.buildDrawingCache(true);
 
-                        llQrCode.setDrawingCacheEnabled(true);
-                        llQrCode.buildDrawingCache(true);
+                b = Bitmap.createBitmap(binding.ivCode.getDrawingCache());
+                String str=member.getId()+"   "+member.getFirstName()+"   "+date;
+                Bitmap bmp= Utility.drawTextToBitmap(b,str);
+                saveImage(bmp);
 
-                        b = Bitmap.createBitmap(llQrCode.getDrawingCache());
+            }, 1000);
 
-                        saveImage(b);
-
-                        Log.e("b---",""+b);
-                    }
-                }, 1000);
-
-            }
         });
 
-        iv_cancel.setOnClickListener(v -> {
-            Utility.movetoFragment(getActivity(),new DashboardFragment());
+        binding.ivCancel.setOnClickListener(v -> {
+           // Utility.movetoFragment(getActivity(),new DashboardFragment());
         });
 
-
-
-
-        return root;
+        return binding.getRoot();
     }
 
     private void shareImageUri(Uri uri){
@@ -218,7 +167,6 @@ public class ByQRCodeFragment extends Fragment {
         startActivity(intent);
     }
     private Uri saveImage(Bitmap image) {
-        //TODO - Should be processed in another thread
         File imagesFolder = new File(getCacheDir(), "images");
         Uri uri = null;
         try {
@@ -237,7 +185,6 @@ public class ByQRCodeFragment extends Fragment {
             Log.d(TAG, "IOException while trying to write file for sharing: " + e.getMessage());
         }
 
-        TvDate.setText("");
         shareImageUri(uri);
         return uri;
     }
@@ -267,32 +214,25 @@ public class ByQRCodeFragment extends Fragment {
 
                     try {
                         Result result = reader.decode(bitmap);
-                      String  id = result.getText();
-                        Log.d("QRCODE Result:","id: "+id);
-                        if (id != null) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("Scan Result");
-                            builder.setIcon(R.mipmap.ic_launcher);
-                            builder.setMessage("" + id);
-                            AlertDialog alert1 = builder.create();
-                            alert1.setButton(DialogInterface.BUTTON_POSITIVE, "Done", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                      String  output = result.getText();
+                        Log.d("QRCODE Result:","output: "+output);
+                        if (output != null) {
+                            String decrypted = "";
+                            try {
+                                decrypted = AESUtils.decrypt(output);
+                                Log.e(TAG, "decrypted:" + decrypted);
 
-                                }
-                            });
+                                Intent mIntent=new Intent(getActivity(),ProfileDetailActivity.class);
+                                mIntent.putExtra(getActivity().getString(R.string.scanId),decrypted);
+                                startActivity(mIntent);
 
-                            alert1.setCanceledOnTouchOutside(false);
-
-                            alert1.show();
-
-                          /*  Intent mIntent = new Intent(MainActivity.this, MyProfileActivity.class);
-                            startActivity(mIntent);*/
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                        //byte[] rawBytes = result.getRawBytes();
-                        //BarcodeFormat format = result.getBarcodeFormat();
-                        //ResultPoint[] points = result.getResultPoints();
-                    } catch (@NonNull NotFoundException | ChecksumException | FormatException e) {
+
+
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 

@@ -142,7 +142,7 @@
 
 
                 <com.github.angads25.toggle.widget.LabeledSwitch
-                    android:id="@+id/user_location"
+                    android:id="@+id/switch_location"
                     android:layout_width="60dp"
                     android:layout_height="30dp"
                     android:textSize="12sp"

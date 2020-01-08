@@ -12,6 +12,7 @@ import com.example.easywaylocation.LocationData
 import com.example.easywaylocation.LocationData.AddressCallBack
 import com.github.squti.guru.Guru
 import com.google.android.gms.location.LocationRequest
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
@@ -154,6 +155,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
                     val response: UpdateProfileResponse = mProfileDetailRepository.updateProfile(profile)
                     response.let {
                         withContext(Dispatchers.Main) {
+                            Guru.putString(getString(R.string.loginUser), Gson().toJson(response.member))
                             Log.d("Location Service: ",response.message)
                             thejob.complete()
                         }

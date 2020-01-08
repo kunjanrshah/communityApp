@@ -384,5 +384,6 @@
 
     <string name="base_url_thumb" translatable="false">https://muslimghanchisamaj.in/uploads/users/thumb/</string>
     <string name="base_url_original" translatable="false">https://muslimghanchisamaj.in/uploads/users/original/</string>
+    <string name="scanId">scanId</string>
 
 </resources>

@@ -1514,7 +1514,7 @@ public class Utility {
         // text color - #3D3D3D
         paint.setColor(Color.rgb(61, 61, 61));
         // text size in pixels
-        paint.setTextSize((24));
+        paint.setTextSize((30));
 
         // text shadow
         paint.setShadowLayer(1f, 0f, 1f, Color.WHITE);
@@ -1523,10 +1523,10 @@ public class Utility {
         Rect bounds = new Rect();
         paint.getTextBounds(gText, 0, gText.length(), bounds);
         int x = (bitmap.getWidth() - bounds.width()) / 2;
-        int y = (bitmap.getHeight() + bounds.height()) / 2;
+        int y = (bitmap.getHeight() + bounds.height()) - 40;
 
-        canvas.drawText(gText, 10, 20, paint);
-
+        canvas.drawText(gText, x, y, paint);
+        canvas.drawText("Community App", x+50, 25, paint);
         return bitmap;
     }
 

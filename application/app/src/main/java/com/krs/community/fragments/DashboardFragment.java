@@ -27,10 +27,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.squti.guru.Guru;
+import com.google.gson.Gson;
 import com.krishna.debug_tools.activity.ActivityDebugTools;
 import com.krs.community.R;
 import com.krs.community.activity.RegisterActivty;
 import com.krs.community.model.FavProfiles;
+import com.krs.community.model.Member;
 import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.ExpandableHeightGridView;
 import com.krs.community.utils.Utility;
@@ -220,7 +223,13 @@ public class DashboardFragment extends Fragment {
                         Utility.movetoFragment(getActivity(),new BrowseByCityFragment());
                        break;
                     case 1:
-                        Utility.movetoFragment(getActivity(),new ByQRCodeFragment());
+                        ByQRCodeFragment fragment=new ByQRCodeFragment();
+                        Bundle mBundle=new Bundle();
+                        String loginMember= Guru.getString(getString(R.string.loginUser),"");
+                        Member member=new Gson().fromJson(loginMember, Member.class);
+                        mBundle.putSerializable(getString(R.string.member),member);
+                        fragment.setArguments(mBundle);
+                        Utility.movetoFragment(getActivity(),fragment);
                         break;
                     case 2:
                         Utility.movetoFragment(getActivity(),new SearchByDistanceFragment());
