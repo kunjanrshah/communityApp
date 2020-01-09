@@ -377,7 +377,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         super.onResume()
         mShimmerViewContainer.startShimmerAnimation()
         (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-        DashboardActivity.spaceNavigationView.visibility = View.VISIBLE
+        DashboardActivity.binding.space.visibility = View.VISIBLE
     }
 
     override fun onStop() {

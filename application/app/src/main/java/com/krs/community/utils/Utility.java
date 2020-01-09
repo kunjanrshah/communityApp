@@ -74,6 +74,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.krs.community.R;
 import com.krs.community.activity.BaseActivity;
+import com.krs.community.fragments.DashboardFragment;
 import com.krs.community.model.ErrorObject;
 import com.krs.community.model.Member;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
@@ -676,8 +677,14 @@ public class Utility {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
     }
 
-
-
+    public static void backNavigation(Activity activity){
+        FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else {
+            movetoFragment(activity, new DashboardFragment());
+        }
+    }
 
     public static void movetoFragment(Activity activity, Fragment fragment) {
         FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();

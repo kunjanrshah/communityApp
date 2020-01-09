@@ -129,14 +129,14 @@ public class ShareEventFragment extends Fragment {
     public void onResume() {
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-        DashboardActivity.spaceNavigationView.setVisibility(View.GONE);
+        DashboardActivity.binding.space.setVisibility(View.GONE);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-        DashboardActivity.spaceNavigationView.setVisibility(View.VISIBLE);
+        DashboardActivity.binding.space.setVisibility(View.VISIBLE);
     }
 
     @Override

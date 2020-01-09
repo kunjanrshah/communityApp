@@ -134,7 +134,6 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:layout_weight="1"
@@ -146,7 +145,7 @@
                     android:layout_width="60dp"
                     android:layout_height="30dp"
                     android:textSize="12sp"
-                    app:on="false"
+                    android:layout_marginLeft="5dp"
                     app:textOn="ON"
                     app:textOff="OFF"
                     app:colorOn="@color/colorPrimary"
@@ -173,8 +172,8 @@
                         android:layout_marginLeft="5dp"
                         android:fontFamily="@font/montserrat_semibold"
                         android:singleLine="true"
-                        android:text="User"
-                        android:textSize="14sp" />
+                        android:text="Distance"
+                        android:textSize="12sp" />
 
                 </LinearLayout>
                 <!--<TextView

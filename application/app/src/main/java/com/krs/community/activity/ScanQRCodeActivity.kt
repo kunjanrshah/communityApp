@@ -2,25 +2,19 @@ package com.krs.community.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
-import com.krs.community.R
-import com.krs.community.utils.AESUtils
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import com.google.gson.Gson
+import com.krs.community.R
 import com.krs.community.model.Member
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import org.json.JSONObject
+import com.krs.community.utils.AESUtils
 
 
 @SuppressLint("ByteOrderMark")
@@ -50,21 +44,11 @@ class ScanQRCodeActivity : AppCompatActivity() {
         // Callbacks
         codeScanner.decodeCallback = DecodeCallback {
             runOnUiThread {
-                Toast.makeText(this, "Scan result: ${it.text}", Toast.LENGTH_LONG).show()
-
-
-                val encrypted =  it.text
-                var decrypted = ""
                 try {
-                    decrypted = AESUtils.decrypt(encrypted)
-                    Log.e("TEST", "decrypted:${decrypted}")
-                    Log.e("TEST --encrypted", "encrypted:${encrypted}")
-
-                    val member = Gson().fromJson<Member>(decrypted, Member::class.java)
-
-
-                    Log.e("name---",""+member.firstName)
-
+                    val decrypted = AESUtils.decrypt(it.text)
+                    val mIntent = Intent(this, ProfileDetailActivity::class.java)
+                    mIntent.putExtra(getString(R.string.scanId), decrypted)
+                    startActivity(mIntent)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

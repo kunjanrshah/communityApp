@@ -48,8 +48,9 @@
                 <LinearLayout
                     android:id="@+id/ll_code"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
+                    android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:layout_gravity="center"
@@ -84,11 +85,12 @@
                 </LinearLayout>
 
                 <LinearLayout
+
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="40dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/border"
@@ -112,6 +114,7 @@
                             android:background="@drawable/share" />
 
                         <TextView
+                            android:id="@+id/tv_share"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
@@ -137,6 +140,7 @@
                             android:background="@drawable/scan_qr_code" />
 
                         <TextView
+                            android:id="@+id/tv_scan"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
@@ -164,6 +168,7 @@
                             android:background="@drawable/gallery" />
 
                         <TextView
+                            android:id="@+id/tv_gallery"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"

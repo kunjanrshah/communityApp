@@ -48,9 +48,6 @@ class AppController : Application(), KodeinAware{
     lateinit var typeface: Typeface
     lateinit var typeface_bold: Typeface
     lateinit var retrofitBase: RetrofitBase
-    /*lateinit var mRequestQueue: RequestQueue
-    lateinit var mLruBitmapCache: LruBitmapCache
-    lateinit var mImageLoader: ImageLoader*/
 
     companion object {
         val TAG = AppController::class.java.simpleName
@@ -128,40 +125,6 @@ class AppController : Application(), KodeinAware{
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
     }
-
-   /* fun getRequestQueue(): RequestQueue {
-        if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-        }
-        return mRequestQueue
-    }
-
-    fun <T> addToRequestQueue(req: Request<T>,tag:String){
-        // set the default tag if tag is empty
-        req.tag = TextUtils.isEmpty(tag)
-        getRequestQueue().add(req)
-    }
-
-    fun <T> addToRequestQueue(req: Request<T>){
-        // set the default tag if tag is empty
-        req.tag = TAG
-        getRequestQueue().add(req)
-    }
-
-    fun getImageLoader(): ImageLoader {
-        getRequestQueue()
-        if (mImageLoader == null) {
-            getLruBitmapCache();
-            mImageLoader = ImageLoader(this.mRequestQueue, mLruBitmapCache);
-        }
-        return this.mImageLoader
-    }
-
-    fun getLruBitmapCache():LruBitmapCache{
-        if (mLruBitmapCache == null)
-            mLruBitmapCache = LruBitmapCache();
-        return this.mLruBitmapCache;
-    }*/
 
     override fun onTerminate() {
         super.onTerminate()

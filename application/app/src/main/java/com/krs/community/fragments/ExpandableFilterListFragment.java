@@ -68,13 +68,13 @@ public class ExpandableFilterListFragment extends Fragment {
             @Override
             public void onScrollUp() {
                 Log.d(TAG, "onScrollUp");
-                DashboardActivity.spaceNavigationView.setVisibility(View.VISIBLE);
+                DashboardActivity.binding.space.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onScrollDown() {
                 Log.d(TAG, "onScrollDown");
-                DashboardActivity.spaceNavigationView.setVisibility(View.GONE);
+                DashboardActivity.binding.space.setVisibility(View.GONE);
             }
         });
 

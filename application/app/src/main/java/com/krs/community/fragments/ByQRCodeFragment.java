@@ -1,9 +1,7 @@
 package com.krs.community.fragments;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -14,27 +12,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import com.github.squti.guru.Guru;
-import com.google.gson.Gson;
+
 import com.google.zxing.BinaryBitmap;
-import com.google.zxing.ChecksumException;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.FormatException;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.MultiFormatReader;
-import com.google.zxing.NotFoundException;
 import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Reader;
 import com.google.zxing.Result;
@@ -50,25 +38,17 @@ import com.krs.community.model.Member;
 import com.krs.community.utils.AESUtils;
 import com.krs.community.utils.Utility;
 
-import org.json.JSONObject;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Hashtable;
 
-import androidmads.library.qrgenearator.QRGContents;
-import androidmads.library.qrgenearator.QRGEncoder;
 import me.ydcool.lib.qrmodule.encoding.QrGenerator;
 
 import static android.app.Activity.RESULT_OK;
 import static com.facebook.AccessTokenManager.TAG;
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.facebook.FacebookSdk.getCacheDir;
 
 public class ByQRCodeFragment extends Fragment {
@@ -91,19 +71,6 @@ public class ByQRCodeFragment extends Fragment {
         if (getArguments() != null){
             member = (Member) getArguments().getSerializable("member");
         }
-
-        binding.tvName.setText(member.getFirstName());
-        binding.tvMobile.setText(member.getMobile());
-        binding.llGallery.setOnClickListener(v -> {
-            Intent photoPic = new Intent(Intent.ACTION_PICK);
-            photoPic.setType("image/*");
-            startActivityForResult(photoPic, SELECT_PHOTO);
-        });
-
-        binding.llscan.setOnClickListener(v -> {
-            Intent i = new Intent(getActivity(), ScanQRCodeActivity.class);
-            startActivity(i);
-        });
 
         String encrypted = "";
         try {
@@ -131,8 +98,51 @@ public class ByQRCodeFragment extends Fragment {
         }
 
         binding.ivCode.setImageBitmap(qrCode);
+        binding.tvName.setText(member.getFirstName());
+        binding.tvMobile.setText(member.getMobile());
+
+        binding.llGallery.setOnClickListener(v -> {
+
+            binding.llGallery.setBackground(getResources().getDrawable(R.drawable.border_bg_color_primary));
+            binding.tvGallery.setTextColor(getResources().getColor(R.color.white));
+
+            binding.llscan.setBackground(getResources().getDrawable(R.drawable.border_color_gray3));
+            binding.tvScan.setTextColor(getResources().getColor(R.color.black1));
+
+            binding.llShare.setBackground(getResources().getDrawable(R.drawable.border_color_gray3));
+            binding.tvShare.setTextColor(getResources().getColor(R.color.black1));
+
+           Intent photoPic = new Intent(Intent.ACTION_PICK);
+           photoPic.setType("image/*");
+           startActivityForResult(photoPic, SELECT_PHOTO);
+
+        });
+
+        binding.llscan.setOnClickListener(v -> {
+
+            binding.llscan.setBackground(getResources().getDrawable(R.drawable.border_bg_color_primary));
+            binding.tvScan.setTextColor(getResources().getColor(R.color.white));
+
+            binding.llGallery.setBackground(getResources().getDrawable(R.drawable.border_color_gray3));
+            binding.tvGallery.setTextColor(getResources().getColor(R.color.black1));
+
+            binding.llShare.setBackground(getResources().getDrawable(R.drawable.border_color_gray3));
+            binding.tvShare.setTextColor(getResources().getColor(R.color.black1));
+
+            Intent i = new Intent(getActivity(), ScanQRCodeActivity.class);
+            startActivity(i);
+        });
 
         binding.llShare.setOnClickListener(v -> {
+
+            binding.llShare.setBackground(getResources().getDrawable(R.drawable.border_bg_color_primary));
+            binding.tvShare.setTextColor(getResources().getColor(R.color.white));
+
+            binding.llscan.setBackground(getResources().getDrawable(R.drawable.border_color_gray3));
+            binding.tvScan.setTextColor(getResources().getColor(R.color.black1));
+
+            binding.llGallery.setBackground(getResources().getDrawable(R.drawable.border_color_gray3));
+            binding.tvGallery.setTextColor(getResources().getColor(R.color.black1));
 
             DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
             String date = df.format(Calendar.getInstance().getTime());
@@ -153,7 +163,7 @@ public class ByQRCodeFragment extends Fragment {
         });
 
         binding.ivCancel.setOnClickListener(v -> {
-           // Utility.movetoFragment(getActivity(),new DashboardFragment());
+            Utility.backNavigation(getActivity());
         });
 
         return binding.getRoot();
@@ -230,12 +240,9 @@ public class ByQRCodeFragment extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 }
         }
     }
@@ -244,14 +251,14 @@ public class ByQRCodeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-        DashboardActivity.spaceNavigationView.setVisibility(View.GONE);
+        DashboardActivity.binding.space.setVisibility(View.GONE);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-        DashboardActivity.spaceNavigationView.setVisibility(View.VISIBLE);
+        DashboardActivity.binding.space.setVisibility(View.VISIBLE);
     }
 
 

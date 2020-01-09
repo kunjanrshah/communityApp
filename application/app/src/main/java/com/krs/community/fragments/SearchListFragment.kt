@@ -8,9 +8,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
-import android.print.PrintAttributes
 import android.text.TextUtils
 import android.util.Log
 import android.util.SparseBooleanArray
@@ -20,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,7 +36,7 @@ import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
-import com.krs.community.adapter.AtoZBottomAdapter
+import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.interfaces.ByKeywordListener
 import com.krs.community.model.Member
@@ -58,15 +55,13 @@ import com.mostafaaryan.transitionalimageview.model.TransitionalImage
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
-import com.uttampanchasara.pdfgenerator.CreatePdf
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.io.File
 import kotlin.collections.ArrayList
 
-class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner {
+class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner {
 
     private lateinit var rv_search: RecyclerView
     private lateinit var llRoot: LinearLayout
@@ -95,6 +90,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private val length: Int = 30
     private val lstKeyword = ArrayList<String>()
     private var changeRoleDialog: DialogPlus? = null
+    private var setLocationDialog: DialogPlus? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -107,19 +103,25 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         profileDetailViewModel= ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         smartSearchviewModel = ViewModelProviders.of(this, factory).get(SmartSearchViewModel::class.java)
         smartSearchviewModel.mByKeywordListener = this
+
         llRoot = rootView.findViewById(R.id.ll_root)
         rv_search = rootView.findViewById(R.id.rv_search)
         rv_search.layoutManager = LinearLayoutManager(activity)
         rv_search.setHasFixedSize(true)
+        mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
+        actionModeCallback = ActionModeCallback()
+        (activity as AppCompatActivity).supportActionBar?.hide()
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_smart_search, container, false)
         multiSearchView = header.findViewById(R.id.multiSearchView)
         tvRecords = header.findViewById(R.id.tv_record)
         llLabel = header.findViewById(R.id.ll_label)
-        mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
-        actionModeCallback = ActionModeCallback()
 
-        (activity as AppCompatActivity).supportActionBar?.hide()
+        val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
+        ivCancel.setOnClickListener {
+            Utility.backNavigation(activity)
+            //Utility.movetoFragment(activity, DashboardFragment())
+        }
 
         val ivExport:ImageView= header.findViewById(R.id.iv_export)
         ivExport.setOnClickListener {
@@ -185,7 +187,16 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                         } else if (it == 4) {
                             shareDetails(activity,viewHolder.tvName.text.toString(),member.mobile,member.emailAddress,viewHolder.tvArea.text.toString(),member.address)
                         } else if (it == 5) {
-                            Toast.makeText(activity, "Location", Toast.LENGTH_SHORT).show()
+                            val adapter: LocationAdapter = LocationAdapter(context as AppCompatActivity,member)
+                            adapter.setLocationListner(this@SearchListFragment)
+                            setLocationDialog = DialogPlus.newDialog(context)
+                                    .setAdapter(adapter)
+                                    .setGravity(Gravity.BOTTOM)
+                                    .setCancelable(true)
+                                    .setExpanded(true, 600)
+                                    .setContentBackgroundResource(R.drawable.popup_top_corner)
+                                    .create()
+                            setLocationDialog?.show()
                         }
                     }
                     viewHolder.boomMenuButton.addBuilder(builder)
@@ -212,20 +223,9 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 return MyViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.row_list_search, viewGroup, false))
             }
         }
+        rvAdapter.setParallaxHeader(header, rv_search)
+        rv_search.adapter = rvAdapter
 
-        val ivAtoz = header.findViewById(R.id.iv_atoz) as ImageView
-        ivAtoz.setOnClickListener {
-
-            val adapter: AtoZBottomAdapter = AtoZBottomAdapter(context)
-            val dialog = DialogPlus.newDialog(context)
-                    .setAdapter(adapter)
-                    .setGravity(Gravity.BOTTOM)
-                    .setCancelable(true)
-                    .setExpanded(true, 900)
-                    .setContentBackgroundResource(R.drawable.popup_top_corner)
-                    .create()
-            dialog.show()
-        }
         multiSearchView.setSearchViewListener(object : MultiSearchView.MultiSearchViewListener {
             override fun onTextChanged(index: Int, s: CharSequence) {
                 //   Toast.makeText(getActivity(), "onTextChanged", Toast.LENGTH_SHORT).show();
@@ -270,42 +270,8 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             }
         })
 
-        val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
-        ivCancel.setOnClickListener {
-            Utility.movetoFragment(activity, DashboardFragment())
-        }
-
-        rvAdapter.setParallaxHeader(header, rv_search)
-        rv_search.adapter = rvAdapter
         DashboardActivity.stop = false
         return rootView
-    }
-
-    private fun createPdf(mContext: FragmentActivity?, fname: String, test: String) {
-
-        val pdfDirectory = File(Environment.getExternalStorageDirectory(),"/Community")
-        pdfDirectory.mkdirs()
-        val outputFile = File(pdfDirectory, fname)
-
-        if (mContext != null) {
-            CreatePdf(mContext)
-                    .setPdfName(fname)
-                    .openPrintDialog(true)
-                    .setContentBaseUrl(null)
-                    .setPageSize(PrintAttributes.MediaSize.ISO_A4)
-                    .setContent(test)
-                    .setFilePath(outputFile.absolutePath)
-                    .setCallbackListener(object : CreatePdf.PdfCallbackListener {
-                        override fun onFailure(errorMsg: String) {
-                            Toast.makeText(activity, errorMsg, Toast.LENGTH_SHORT).show()
-                        }
-
-                        override fun onSuccess(filePath: String) {
-                            Toast.makeText(activity, "Pdf Saved at: $filePath", Toast.LENGTH_SHORT).show()
-                        }
-                    })
-                    .create()
-        }
     }
 
     class FoundListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -719,7 +685,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                                 .setAdapter(adapter)
                                 .setGravity(Gravity.BOTTOM)
                                 .setCancelable(true)
-                                .setExpanded(true, 900)
+                                .setExpanded(true, 700)
                                 .setContentBackgroundResource(R.drawable.popup_top_corner)
                                 .create()
                         changeRoleDialog?.show()
@@ -752,6 +718,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     override fun changeRole(role: String) {
 
     }
+
 
     override fun cancelDialog() {
         changeRoleDialog?.dismiss()

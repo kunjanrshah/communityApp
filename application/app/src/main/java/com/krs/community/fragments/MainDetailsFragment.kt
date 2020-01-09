@@ -133,6 +133,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                     }
                     .show()
         }
+
         binding.edtAddr.addTextChangedListener(object:TextWatcher{
             private var text: String? = null
             override fun afterTextChanged(s: Editable?) {

@@ -59,7 +59,6 @@ import org.kodein.di.generic.instance
 
 class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, UCropFragmentCallback, Listener, LocationData.AddressCallBack {
 
-
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: ProfileDetailViewModelFactory by instance()
     private val listFragments = mutableListOf<Fragment>()
@@ -69,8 +68,11 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
     private lateinit var logger: Logger
     private lateinit var professionalDetailsFragment: ProfessionalDetailsFragment
     private lateinit var easyWayLocation: EasyWayLocation
+    private lateinit var request: LocationRequest
     private var scanId:String?=null
     private var userId:String?=null
+    private var isStopService=false
+
     companion object {
         lateinit var binding: ActivityProfileDetailBinding
         lateinit var getLocationDetail: GetLocationDetail
@@ -127,7 +129,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         }
     }
 
-    private lateinit var request: LocationRequest
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -143,20 +145,6 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(this, R.color.mdtp_white, false)
         }
-
-        getLocationDetail = GetLocationDetail(this, this)
-        request = LocationRequest()
-        request.interval = Utility.INTERVAL
-        request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-        easyWayLocation = EasyWayLocation(this, request, true, this)
-
-        cur_lat.observe(this, Observer {
-            setDistance()
-        })
-
-        cur_lat.observe(this, Observer {
-            setDistance()
-        })
 
         val mainDetailsFragment = MainDetailsFragment()
         val personalDetailsFragment = PersonalDetailsFragment()
@@ -177,26 +165,6 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             val percentage = Utility.calculatePercentage(member)
             setPercentage(percentage)
             setMemberValues()
-        }
-
-        Utility.hideKeyboard(this)
-
-        if (Utility.finePermissionIsGranted(this)) {
-            easyWayLocation.startLocation() //calculateDistance()
-        } else {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION_PERMISSION)
-        }
-
-        if (member?.isLocationEnable == "1") {
-            binding.switchLocation.isOn = true
-            binding.switchLocation.isEnabled=true
-            binding.switchLocation.performClick()
-        } else {
-            if(!userId.equals(member?.id)){
-                binding.switchLocation.isEnabled=false
-            }
-            binding.switchLocation.isOn = false
-            binding.tvDistance.text = "Distance"
         }
 
         if(!scanId.isNullOrEmpty()){
@@ -221,35 +189,47 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             }
         }
 
+        if (member?.isLocationEnable == "1") {
+            binding.switchLocation.isActivated=true
+            binding.switchLocation.isOn = true
+            binding.switchLocation.labelOn="ON"
+            binding.tvDistance.text = "Finding"
+            startLocationService()
+        } else {
+            if(!userId.equals(member?.id)){
+                binding.switchLocation.isActivated=false
+            }
+            binding.switchLocation.isOn = false
+            binding.switchLocation.labelOff="OFF"
+            binding.tvDistance.text = "User"
+        }
+
+        getLocationDetail = GetLocationDetail(this, this)
+        request = LocationRequest()
+        request.interval = Utility.INTERVAL
+        request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        easyWayLocation = EasyWayLocation(this, request, true, this)
+
+        if (Utility.finePermissionIsGranted(this)) {
+            easyWayLocation.startLocation() //calculateDistance()
+        } else {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION_PERMISSION)
+        }
+
+        cur_lat.observe(this, Observer {
+            setDistance()
+        })
+
+        cur_lng.observe(this, Observer {
+            setDistance()
+        })
+
         binding.switchLocation.setOnClickListener {
             if (!binding.switchLocation.isOn) {
-                if (easyWayLocation.hasLocationEnabled()) {
-                    if (Utility.finePermissionIsGranted(this)) {
-                        member?.isLocationEnable = "1"
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            RestartServiceBroadcastReceiver.scheduleJob(applicationContext)
-                        } else {
-                            val bck = ProcessMainClass()
-                            bck.launchService(applicationContext)
-                        }
-                        setDistance()
-                    } else {
-                        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION_PERMISSION)
-                    }
-                } else {
-                    easyWayLocation = EasyWayLocation(this, request, true, this)
-                }
+                member?.isLocationEnable="1"
+                startLocationService()
             } else {
-                member?.isLocationEnable = "0"
-                binding.tvDistance.text = "Distance"
-                stopService(ProcessMainClass.serviceIntent)
-                val jsonObject = JSONObject()
-                jsonObject.put(getString(R.string.is_location_enable), "0")
-                jsonObject.put(getString(R.string.user_id), userId)
-                jsonObject.put(getString(R.string.id), member?.id)
-                jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-                val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-                profileDetailViewModel.updateProfile(profile, true)
+                stopLocationServiceAndUpdateProfile()
             }
         }
 
@@ -321,6 +301,39 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         }
     }
 
+    private fun startLocationService(){
+        member?.isLocationEnable="1"
+        if (easyWayLocation.hasLocationEnabled()) {
+            if (Utility.finePermissionIsGranted(this)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    RestartServiceBroadcastReceiver.scheduleJob(applicationContext)
+                } else {
+                    val bck = ProcessMainClass()
+                    bck.launchService(applicationContext)
+                }
+                setDistance()
+            } else {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION_PERMISSION)
+            }
+        } else {
+            easyWayLocation = EasyWayLocation(this, request, true, this)
+        }
+    }
+
+    private fun stopLocationServiceAndUpdateProfile(){
+        isStopService=true
+        member?.isLocationEnable = "0"
+        binding.tvDistance.text = "Distance"
+        stopService(ProcessMainClass.serviceIntent)
+        val jsonObject = JSONObject()
+        jsonObject.put(getString(R.string.is_location_enable), "0")
+        jsonObject.put(getString(R.string.user_id), userId)
+        jsonObject.put(getString(R.string.id), member?.id)
+        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+        val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
+        profileDetailViewModel.updateProfile(profile, true)
+    }
+
     private fun setMemberValues() {
 
         binding.txtTitle.text = "${member?.firstName}'s Profile"
@@ -348,7 +361,8 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
 
         if (!member?.profilePic.isNullOrEmpty()) {
             try {
-                Glide.with(mApplication).load(member?.profilePic).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgProfile)
+                val str=resources.getString(R.string.base_url_thumb)+member?.profilePic
+                Glide.with(mApplication).load(str).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgProfile)
             } catch (e: Exception) {
                 e.message
             }
@@ -362,7 +376,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         listFragments.get(3).arguments = bundle
         binding.viewpager.offscreenPageLimit = 4
         binding.viewpager.adapter = MyPagerAdapter(listFragments, supportFragmentManager)
-
+        Utility.hideKeyboard(this)
     }
 
     override fun getMembers(response: SmartFilterResponse) {
@@ -380,15 +394,26 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             binding.llViewFamily.performClick()
         } else if (response.message.toString().toLowerCase().contains("updated")){
             val member = response.member
-            val percentage = Utility.calculatePercentage(member)
-            setPercentage(percentage)
-            Utility.displaySnackBarWithBottomMargin(binding.llParent, "Profile updated!")
+            if(!isStopService){
+                val percentage = Utility.calculatePercentage(member)
+                setPercentage(percentage)
+            }
+
             if (member.headId == "0") {
                 Guru.putString(getString(R.string.loginUser), Gson().toJson(member))
                 Guru.putString(getString(R.string.user_mobile), member.mobile)
             }
+            Utility.displaySnackBarWithBottomMargin(binding.llParent, "Profile updated!")
+            isStopService=false
         }else{
-            Toast.makeText(this,response.message,Toast.LENGTH_LONG).show()
+            val member = response.member
+            if(!member.mobile.isNullOrEmpty()){
+                Toast.makeText(this,response.member.mobile,Toast.LENGTH_LONG).show()
+            }else if(!member.emailAddress.isNullOrEmpty()){
+                Toast.makeText(this,response.member.emailAddress,Toast.LENGTH_LONG).show()
+            }else{
+                Toast.makeText(this,response.message,Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -401,7 +426,6 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
 
     private fun setDistance() {
         if (member?.isLocationEnable == "1") {
-            //binding.switchLocation.isOn=true
             if (cur_lat.value != null && cur_lng.value != null && !member?.userLat.isNullOrEmpty() && !member?.userLng.isNullOrEmpty()) {
                 val dist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member!!.userLat.toDouble(), member!!.userLng.toDouble()) / 1000
                 binding.tvDistance.text = String.format("%.2f KM", dist)
@@ -493,6 +517,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
 
 
     override fun locationCancelled() {
+        ll_parent.snackbar("Location Off", Snackbar.LENGTH_SHORT)
     }
 
     override fun locationOn() {
@@ -500,10 +525,9 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
     }
 
     override fun currentLocation(location: Location) {
-
+        setDistance()
         cur_lat.postValue(location.latitude)
         cur_lng.postValue(location.longitude)
-        //setDistance()
         getLocationDetail.getAddress(location.latitude, location.longitude, getString(R.string.map_api_key))
     }
 

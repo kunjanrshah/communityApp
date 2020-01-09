@@ -94,13 +94,13 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar?.hide()
-        DashboardActivity.spaceNavigationView.visibility = View.GONE
+        DashboardActivity.binding.space.visibility = View.GONE
     }
 
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity).supportActionBar?.show()
-        DashboardActivity.spaceNavigationView.visibility = View.VISIBLE
+        DashboardActivity.binding.space.visibility = View.VISIBLE
     }
 
     override fun onStartLoadingGroup(groupOrdinal: Int) {

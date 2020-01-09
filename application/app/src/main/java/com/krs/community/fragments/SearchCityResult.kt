@@ -410,7 +410,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar!!.hide()
-        DashboardActivity.spaceNavigationView.visibility = View.VISIBLE
+        DashboardActivity.binding.space.visibility = View.VISIBLE
     }
 
     override fun onStop() {
