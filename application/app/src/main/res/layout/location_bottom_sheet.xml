@@ -83,9 +83,9 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="0.00 KM"
+                android:text="finding"
                 android:textColor="@color/black1"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -140,9 +140,9 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="0.00 KM"
+                android:text="finding"
                 android:textColor="@color/black1"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -197,9 +197,9 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="0.00 KM"
+                android:text="finding"
                 android:textColor="@color/black1"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="wrap_content"

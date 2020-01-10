@@ -384,6 +384,13 @@
 
     <string name="base_url_thumb" translatable="false">https://muslimghanchisamaj.in/uploads/users/thumb/</string>
     <string name="base_url_original" translatable="false">https://muslimghanchisamaj.in/uploads/users/original/</string>
-    <string name="scanId">scanId</string>
+    <string name="scanId" translatable="false">scanId</string>
+
+
+    <string name="liveo_search_view_search">Search</string>
+    <string name="liveo_search_view_arrow">Exit Search</string>
+    <string name="liveo_search_view_voice">Voice search</string>
+    <string name="liveo_search_view_close">Delete query text</string>
+    <string name="liveo_not_supported">Not Supported</string>
 
 </resources>

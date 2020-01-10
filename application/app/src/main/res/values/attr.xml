@@ -25,5 +25,20 @@
     <attr name="jrs_multiple" format="boolean"/>
   </declare-styleable>
 
+  <declare-styleable name="SearchLiveo">
+    <attr name="searchLiveoTextColor" format="color" />
+    <attr name="searchLiveoHintColor" format="color" />
+
+    <attr name="searchLiveoHint" format="string" />
+
+    <attr name="searchLiveoColorIcon" format="color" />
+    <attr name="searchLiveoColorArrow" format="color" />
+    <attr name="searchLiveoColorVoice" format="color" />
+    <attr name="searchLiveoColorClose" format="color" />
+
+    <attr name="searchLiveoBackground" format="color" />
+    <attr name="searchLiveoStatusBarShowColor" format="color" />
+    <attr name="searchLiveoStatusBarHideColor" format="color" />
+  </declare-styleable>
 
 </resources>

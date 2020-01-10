@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -63,7 +64,7 @@ import kotlin.collections.ArrayList
 
 class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner {
 
-    private lateinit var rv_search: RecyclerView
+    private lateinit var rvSearch: RecyclerView
     private lateinit var llRoot: LinearLayout
     private lateinit var mShimmerViewContainer: ShimmerFrameLayout
     private lateinit var multiSearchView: MultiSearchView
@@ -105,9 +106,9 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         smartSearchviewModel.mByKeywordListener = this
 
         llRoot = rootView.findViewById(R.id.ll_root)
-        rv_search = rootView.findViewById(R.id.rv_search)
-        rv_search.layoutManager = LinearLayoutManager(activity)
-        rv_search.setHasFixedSize(true)
+        rvSearch = rootView.findViewById(R.id.rv_search)
+        rvSearch.layoutManager = LinearLayoutManager(activity)
+        rvSearch.setHasFixedSize(true)
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
         actionModeCallback = ActionModeCallback()
         (activity as AppCompatActivity).supportActionBar?.hide()
@@ -223,8 +224,8 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 return MyViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.row_list_search, viewGroup, false))
             }
         }
-        rvAdapter.setParallaxHeader(header, rv_search)
-        rv_search.adapter = rvAdapter
+        rvAdapter.setParallaxHeader(header, rvSearch)
+        rvSearch.adapter = rvAdapter
 
         multiSearchView.setSearchViewListener(object : MultiSearchView.MultiSearchViewListener {
             override fun onTextChanged(index: Int, s: CharSequence) {
@@ -333,13 +334,13 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
         if (response.success) {
             lstMembers.clear()
-            rv_search.visibility = View.VISIBLE
+            rvSearch.visibility = View.VISIBLE
             start = 0
             for (item in response.member) {
                 lstMembers.add(item)
             }
             rvAdapter.notifyDataSetChanged()
-            rv_search.layoutManager?.scrollToPosition(selectedPosition)
+            rvSearch.layoutManager?.scrollToPosition(selectedPosition)
             selectedPosition = lstMembers.size - 1
             if (Integer.parseInt(response.totalRecords) <= length) {
                 DashboardActivity.stop = true
@@ -355,7 +356,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 DashboardActivity.stop = true
             }
         } else {
-            rv_search.visibility = View.GONE
+            rvSearch.visibility = View.GONE
             tvRecords.visibility = View.GONE
             llLabel.visibility = View.VISIBLE
         }
@@ -370,7 +371,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             mShimmerViewContainer.visibility = View.GONE
             tvRecords.visibility = View.GONE
             llLabel.visibility = View.VISIBLE
-            rv_search.visibility = View.GONE
+            rvSearch.visibility = View.GONE
             DashboardActivity.stop = false
         }
 
@@ -508,6 +509,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     Glide.with(this)
                             .asBitmap()
                             .apply(RequestOptions.circleCropTransform()).thumbnail(0.5f)
+                            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
                             .load(path)
                             .into(object : CustomTarget<Bitmap>() {
                                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
@@ -517,7 +519,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                                             .backgroundColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
                                             .image(resource)
                                             .create()
-                                    holder.imgProfile.setTransitionalImage(transitionalImage);
+                                    holder.imgProfile.setTransitionalImage(transitionalImage)
                                 }
 
                                 override fun onLoadCleared(placeholder: Drawable?) {
@@ -708,7 +710,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(activity, R.color.colorBG, false)
             }
-            rv_search.post {
+            rvSearch.post {
                 resetAnimationIndex()
                 // mAdapter.notifyDataSetChanged();
             }

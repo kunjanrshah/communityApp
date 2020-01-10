@@ -36,7 +36,7 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
         return 0
     }
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var convertView = convertView
         val viewHolder: ViewHolder
         if (convertView == null) {
@@ -78,29 +78,22 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
             setDistance(viewHolder.tvHomeDist,viewHolder.tvOfficeDist,viewHolder.tvUserDist)
         }
 
-        return convertView
+        return convertView!!
     }
 
     private fun setDistance(tvHome:TextView,tvOffice:TextView,tvUser:TextView){
         if (cur_lat.value != null && cur_lng.value != null && !member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
             val userDist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member.userLat.toDouble(), member.userLng.toDouble()) / 1000
             tvUser.text= String.format("%.2f KM", userDist)
-        } else {
-            tvUser.text = "Finding"
         }
 
         if (cur_lat.value != null && cur_lng.value != null && !member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
             val homeDist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member.homeLat.toDouble(), member.homeLng.toDouble()) / 1000
             tvHome.text= String.format("%.2f KM", homeDist)
-        } else {
-            tvHome.text = "Finding"
         }
-
         if (cur_lat.value != null && cur_lng.value != null && !member.officeLat.isNullOrEmpty() && !member.officeLng.isNullOrEmpty()) {
             val officeDist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member.officeLat.toDouble(), member.officeLng.toDouble()) / 1000
             tvOffice.text= String.format("%.2f KM", officeDist)
-        } else {
-            tvOffice.text = "Finding"
         }
     }
 
