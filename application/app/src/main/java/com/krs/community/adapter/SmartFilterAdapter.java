@@ -212,7 +212,7 @@ public class SmartFilterAdapter extends BaseExpandableListAdapter implements Sma
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        // Getting header title
+        // Getting header name
         String headerTitle = (String) getGroup(groupPosition);
 
         // Inflating header layout and setting text

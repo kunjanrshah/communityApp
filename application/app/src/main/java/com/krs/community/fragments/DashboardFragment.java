@@ -31,6 +31,7 @@ import com.github.squti.guru.Guru;
 import com.google.gson.Gson;
 import com.krishna.debug_tools.activity.ActivityDebugTools;
 import com.krs.community.R;
+import com.krs.community.activity.FavoriteProfileActivity;
 import com.krs.community.activity.RegisterActivty;
 import com.krs.community.model.FavProfiles;
 import com.krs.community.model.Member;
@@ -95,7 +96,9 @@ public class DashboardFragment extends Fragment {
 
         TextView tv_all_favorites=rootView.findViewById(R.id.tv_all_favorites);
         tv_all_favorites.setOnClickListener(v -> {
-            Utility.movetoFragment(getActivity(),new FavoriteFragment());
+            Intent mIntent=new Intent(getActivity(), FavoriteProfileActivity.class);
+            startActivity(mIntent);
+            Utility.fade(getActivity());
         });
 
         TextView tv_all_news=rootView.findViewById(R.id.tv_all_news);

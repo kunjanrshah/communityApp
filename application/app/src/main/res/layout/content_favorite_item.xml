@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data>
-        <variable
-            name="member"
-            type="com.krs.community.model.Member" />
-    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/swipe_container"
@@ -14,7 +9,7 @@
         android:layout_margin="10dp">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_company"
+            android:id="@+id/img_profile"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="6dp"
@@ -27,9 +22,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/img_company"
+            app:layout_constraintBottom_toBottomOf="@+id/img_profile"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/img_company"
-            app:layout_constraintTop_toTopOf="@+id/img_company" />
+            app:layout_constraintStart_toEndOf="@+id/img_profile"
+            app:layout_constraintTop_toTopOf="@+id/img_profile" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

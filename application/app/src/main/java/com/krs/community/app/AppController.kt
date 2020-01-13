@@ -71,8 +71,8 @@ class AppController : Application(), KodeinAware{
         bind() from singleton {  StatisticsRepository(instance(),instance()) }
         bind() from singleton {  SmartSearchRepository(instance(),instance()) }
         bind() from singleton {  SmartFilterRepository(instance(),instance()) }
-        bind() from provider { CalendarSearchRepository(instance(),instance()) }
-        bind() from provider { NewsRepository(instance(),instance()) }
+        bind() from provider  {  CalendarSearchRepository(instance(),instance()) }
+        bind() from provider  {  NewsRepository(instance(),instance()) }
 
         bind() from provider { StatisticsViewModelFactory(instance()) }
         bind() from provider { FamilyDetailViewModelFactory(instance()) }

@@ -2,13 +2,16 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <LinearLayout
+        android:background="@android:color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="20dp"
             android:theme="@style/AppTheme.AppBarOverlay">
 
             <FrameLayout
@@ -30,9 +33,17 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <include
-            android:id="@+id/include_favorite"
-            layout="@layout/content_favorite" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="20dp"
+            android:background="@android:color/white"
+            android:scrollbars="none" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </LinearLayout>
 </layout>

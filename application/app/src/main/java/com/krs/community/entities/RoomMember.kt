@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName
 data class RoomMember(
     @PrimaryKey(autoGenerate = false)
      val id: Int,
+     val headId: String?=null,
      val isImportant:Boolean,
      val role : String?=null,
      val memberCode : String?=null,
@@ -73,5 +74,5 @@ data class RoomMember(
      val isLocationEnable: String?=null,
      val updatedDt: String?=null
 ){
-    constructor() : this(0,false,"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","")
+    constructor() : this(0,"",false,"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","")
 }

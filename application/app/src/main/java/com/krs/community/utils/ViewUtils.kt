@@ -421,18 +421,88 @@ fun moveToFragmentListScreen(activity: FragmentActivity?, filter: String) {
     Utility.movetoFragment(activity, fragment)
 }
 
-fun getRoomMember(member:Member):RoomMember{
+fun getRoomMemberFromMember(member:Member):RoomMember{
 
-    val roomMember = RoomMember(Integer.parseInt(member.id),true,member.role,member.memberCode,member.emailAddress,
+    val roomMember = RoomMember(Integer.parseInt(member.id),member.headId,true,member.role,member.memberCode,member.emailAddress,
             member.mobile,member.relationId,member.subCommunityId,member.localCommunityId,member.committeeId,member.designationId,
             member.firstName,member.fatherName,member.motherName,member.subCastId,member.gender,member.address,member.localAddress,
             member.cityId,member.stateId,member.area,member.pincode,member.phone,member.matrimony,member.birthDate,member.birthTime,
             member.birthPlace,member.nativePlaceId,member.bloodGroup,member.aboutMe,member.weight,member.height,member.isSpect,member.isMangal,
             member.isShani,member.hobby,member.facebookProfile,member.expectation,member.currentActivityId,member.maritalStatus,member.marriageDate,
             member.gotraId,member.profilePic,member.isRented,member.isExpired,member.expireDate,member.isDonor,member.businessCategoryId,member.businessSubCategoryId,
-            member.workDetails,member.companyName,member.businessAddress,member.businessLogo,member.website,member.educationId,member.occupationId,member.userLat,member.userLng,
-            member.homeLat,member.homeLng,member.officeLat,member.officeLng,member.isLocationEnable,member.updatedDt)
+            member.workDetails,member.companyName,member.businessAddress,member.businessLogo,member.website,member.educationId,member.occupationId,member?.userLat,member?.userLng,
+            member?.homeLat,member?.homeLng,member?.officeLat,member?.officeLng,member.isLocationEnable,member.updatedDt)
     return roomMember
+}
+
+fun getMemberFromRoomMember(roomMember:RoomMember):Member{
+    val member=Member()
+    member.id= roomMember.id.toString()
+    member.headId=roomMember.headId
+    member.isImportant=roomMember.isImportant
+    member.role=roomMember.role
+    member.emailAddress=roomMember.emailAddress
+    member.memberCode=roomMember.memberCode
+    member.firstName=roomMember.firstName
+    member.fatherName=roomMember.fatherName
+    member.motherName=roomMember.motherName
+    member.subCastId=roomMember.subCastId
+    member.gender=roomMember.gender
+    member.address=roomMember.address
+    member.localAddress=roomMember.localAddress
+    member.designationId=roomMember.designationId
+    member.committeeId=roomMember.committeeId
+    member.localCommunityId=roomMember.localCommunityId
+    member.subCommunityId=roomMember.subCommunityId
+    member.relationId=roomMember.relationId
+    member.mobile=roomMember.mobile
+    member.cityId=roomMember.cityId
+    member.stateId=roomMember.stateId
+    member.area=roomMember.area
+    member.pincode=roomMember.pincode
+    member.phone=roomMember.phone
+    member.matrimony=roomMember.matrimony
+    member.birthDate=roomMember.birthDate
+    member.birthTime=roomMember.birthTime
+    member.birthPlace=roomMember.birthPlace
+    member.nativePlaceId=roomMember.nativePlaceId
+    member.bloodGroup=roomMember.bloodGroup
+    member.aboutMe=roomMember.aboutMe
+    member.weight=roomMember.weight
+    member.height=roomMember.height
+    member.isSpect=roomMember.isSpect
+    member.isMangal=roomMember.isMangal
+    member.isShani=roomMember.isShani
+    member.hobby=roomMember.hobby
+    member.facebookProfile=roomMember.facebookProfile
+    member.expectation=roomMember.expectation
+    member.currentActivityId=roomMember.currentActivityId
+    member.maritalStatus=roomMember.maritalStatus
+    member.marriageDate=roomMember.marriageDate
+    member.gotraId=roomMember.gotraId
+    member.profilePic=roomMember.profilePic
+    member.isRented=roomMember.isRented
+    member.isExpired=roomMember.isExpired
+    member.expireDate=roomMember.expireDate
+    member.isDonor=roomMember.isDonor
+    member.businessCategoryId=roomMember.businessCategoryId
+    member.businessSubCategoryId=roomMember.businessSubCategoryId
+    member.workDetails=roomMember.workDetails
+    member.companyName=roomMember.companyName
+    member.businessAddress=roomMember.businessAddress
+    member.businessLogo=roomMember.businessLogo
+    member.website=roomMember.website
+    member.educationId=roomMember.educationId
+    member.occupationId=roomMember.occupationId
+    member.userLat=roomMember.userLat
+    member.userLng=roomMember.userLng
+    member.homeLat=roomMember.homeLat
+    member.homeLng=roomMember.homeLng
+    member.officeLat=roomMember.officeLat
+    member.officeLng=roomMember.officeLng
+    member.isLocationEnable=roomMember.isLocationEnable
+    member.updatedDt=roomMember.updatedDt
+    return member
 }
 
 fun createMemberListPDF(mContext:Context, lstMember: ArrayList<Member>, profileDetailViewModel: ProfileDetailViewModel)= Coroutines.main{

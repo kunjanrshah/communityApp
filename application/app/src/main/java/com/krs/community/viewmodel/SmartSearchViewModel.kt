@@ -18,9 +18,9 @@ class SmartSearchViewModel(
     private lateinit var jobBySearch: CompletableJob
     private lateinit var jobByDelete: CompletableJob
     private lateinit var jobByInsert: CompletableJob
-    private var TAG: String = SmartSearchViewModel::class.java.simpleName
+    private lateinit var jobGetMembers: CompletableJob
     lateinit var mByKeywordListener: ByKeywordListener
-
+    private var TAG: String = SmartSearchViewModel::class.java.simpleName
 
     fun getRoomMember(id:Int):LiveData<RoomMember>{
         return mSmartSearchRepository.getRoomMember(id)
@@ -37,10 +37,6 @@ class SmartSearchViewModel(
     fun getRelationName(id:String):String{
         return mSmartSearchRepository.getRelationName(id)
     }
-
-    /*fun insertRoomMember(roomMember: RoomMember){
-        return mSmartSearchRepository.insertRoomMember(roomMember)
-    }*/
 
     fun deleteRoomMember(id:Int){
         jobByDelete=Job()
@@ -107,6 +103,28 @@ class SmartSearchViewModel(
                     e.message?.let {
                         mByKeywordListener.getFailure(it)
                     }
+                }
+                thejob.complete()
+            }
+        }
+    }
+
+
+    fun getMembers(){
+        jobGetMembers= Job()
+        jobGetMembers.let {thejob ->
+            CoroutineScope(Dispatchers.IO + thejob).launch {
+                try {
+                    val response=mSmartSearchRepository.getRoomMembers()
+                    response.let {
+                        withContext(Dispatchers.Main) {
+                            mByKeywordListener.getRoomMembers(response)
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                }catch (e:Exception){
+                    mByKeywordListener.getRoomFailure(e.message.toString())
                 }
                 thejob.complete()
             }

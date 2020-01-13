@@ -1,6 +1,7 @@
 package com.krs.community.repositories
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
@@ -16,6 +17,9 @@ class SmartSearchRepository(private val api: ApiServices, private val db:AppData
         }
     }
 
+    suspend fun getRoomMembers(): List<RoomMember> {
+        return db.getRoomMemberDao().getRoomMembers()
+    }
 
     suspend fun insertRoomMember(member: RoomMember){
        return db.getRoomMemberDao().saveRoomMember(member)

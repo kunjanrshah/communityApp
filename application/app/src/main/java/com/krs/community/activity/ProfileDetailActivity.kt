@@ -133,6 +133,13 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        getLocationDetail = GetLocationDetail(this, this)
+        request = LocationRequest()
+        request.interval = Utility.INTERVAL
+        request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        easyWayLocation = EasyWayLocation(this, request, true, this)
+
         binding = DataBindingUtil.setContentView(this@ProfileDetailActivity, R.layout.activity_profile_detail)
         logger = Logger(TAG)
         profileDetailViewModel = ViewModelProviders.of(this, factory).get(ProfileDetailViewModel::class.java)
@@ -204,11 +211,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             binding.tvDistance.text = "User"
         }
 
-        getLocationDetail = GetLocationDetail(this, this)
-        request = LocationRequest()
-        request.interval = Utility.INTERVAL
-        request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-        easyWayLocation = EasyWayLocation(this, request, true, this)
+
 
         if (Utility.finePermissionIsGranted(this)) {
             easyWayLocation.startLocation() //calculateDistance()
@@ -303,20 +306,24 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
 
     private fun startLocationService(){
         member?.isLocationEnable="1"
-        if (easyWayLocation.hasLocationEnabled()) {
-            if (Utility.finePermissionIsGranted(this)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    RestartServiceBroadcastReceiver.scheduleJob(applicationContext)
+        try{
+            if (easyWayLocation.hasLocationEnabled()) {
+                if (Utility.finePermissionIsGranted(this)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        RestartServiceBroadcastReceiver.scheduleJob(applicationContext)
+                    } else {
+                        val bck = ProcessMainClass()
+                        bck.launchService(applicationContext)
+                    }
+                    setDistance()
                 } else {
-                    val bck = ProcessMainClass()
-                    bck.launchService(applicationContext)
+                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION_PERMISSION)
                 }
-                setDistance()
             } else {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION_PERMISSION)
+                easyWayLocation = EasyWayLocation(this, request, true, this)
             }
-        } else {
-            easyWayLocation = EasyWayLocation(this, request, true, this)
+        }catch (e:java.lang.Exception){
+            e.printStackTrace()
         }
     }
 

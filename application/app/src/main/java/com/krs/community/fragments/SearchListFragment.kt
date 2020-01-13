@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,6 +40,7 @@ import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
+import com.krs.community.entities.RoomMember
 import com.krs.community.interfaces.ByKeywordListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
@@ -101,7 +103,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
 
-        profileDetailViewModel= ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
+        profileDetailViewModel = ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         smartSearchviewModel = ViewModelProviders.of(this, factory).get(SmartSearchViewModel::class.java)
         smartSearchviewModel.mByKeywordListener = this
 
@@ -124,10 +126,10 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             //Utility.movetoFragment(activity, DashboardFragment())
         }
 
-        val ivExport:ImageView= header.findViewById(R.id.iv_export)
+        val ivExport: ImageView = header.findViewById(R.id.iv_export)
         ivExport.setOnClickListener {
-            if(lstMembers.size>0){
-                createMemberListPDF(activity as AppCompatActivity,lstMembers,profileDetailViewModel)
+            if (lstMembers.size > 0) {
+                createMemberListPDF(activity as AppCompatActivity, lstMembers, profileDetailViewModel)
             }
         }
 
@@ -169,15 +171,15 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
                     builder?.listener {
                         if (it == 0) {
-                            createMemberPDF(activity as AppCompatActivity,member,profileDetailViewModel)
-                        }else if(it == 1) {
+                            createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
+                        } else if (it == 1) {
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
                         } else if (it == 2) {
-                            if(!member.mobile.isNullOrEmpty()){
+                            if (!member.mobile.isNullOrEmpty()) {
                                 val toNumber = "+91" + member.mobile
                                 val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
-                                Utility.sendWhatsappMessage(activity as AppCompatActivity,toNumber,text)
+                                Utility.sendWhatsappMessage(activity as AppCompatActivity, toNumber, text)
                             }
                         } else if (it == 3) {
                             val fragment = ByQRCodeFragment()
@@ -186,9 +188,9 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                             fragment.arguments = mBundle
                             Utility.movetoFragment(activity, fragment)
                         } else if (it == 4) {
-                            shareDetails(activity,viewHolder.tvName.text.toString(),member.mobile,member.emailAddress,viewHolder.tvArea.text.toString(),member.address)
+                            shareDetails(activity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, viewHolder.tvArea.text.toString(), member.address)
                         } else if (it == 5) {
-                            val adapter: LocationAdapter = LocationAdapter(context as AppCompatActivity,member)
+                            val adapter: LocationAdapter = LocationAdapter(context as AppCompatActivity, member)
                             adapter.setLocationListner(this@SearchListFragment)
                             setLocationDialog = DialogPlus.newDialog(context)
                                     .setAdapter(adapter)
@@ -324,6 +326,14 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         rvAdapter.notifyDataSetChanged()
     }
 
+    override fun getRoomMembers(response: List<RoomMember>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getRoomFailure(message: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getMembers(response: searchByKeywordsResponse) {
 
         DashboardActivity.stop = false
@@ -451,15 +461,20 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
     private fun applyImportant(holder: MyViewHolder, member: Member) {
 
-            smartSearchviewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
-                if (it!=null) {
+        smartSearchviewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
+            try {
+                if (it != null) {
                     holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_black_24dp))
                     holder.iconImp.setColorFilter(getColor(activity as AppCompatActivity, R.color.icon_tint_selected))
                 } else {
                     holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_border_black_24dp))
                     holder.iconImp.setColorFilter(getColor(activity as AppCompatActivity, R.color.icon_tint_normal))
                 }
-            })
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+
+        })
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int) {
@@ -467,14 +482,14 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         holder.iconImp.setOnClickListener {
 
             val member: Member = lstMembers.get(position)
-            var flag=true
+            var flag = true
             smartSearchviewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
-                if(flag){
-                    flag=false
-                    if(it!=null){
+                if (flag) {
+                    flag = false
+                    if (it != null) {
                         smartSearchviewModel.deleteRoomMember(Integer.parseInt(member.id))
-                    }else{
-                        smartSearchviewModel.insertRoomMember(getRoomMember(member))
+                    } else {
+                        smartSearchviewModel.insertRoomMember(getRoomMemberFromMember(member))
                     }
                 }
             })
@@ -487,7 +502,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             startActivity(intent)
         }
 
-       // holder.iconContainer.setOnClickListener { view -> enableActionMode(position) }
+        // holder.iconContainer.setOnClickListener { view -> enableActionMode(position) }
 
         holder.messageContainer.setOnClickListener { view -> onMessageRowClicked(position, holder.itemView) }
 

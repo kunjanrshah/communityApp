@@ -82,9 +82,13 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
     }
 
     private fun setDistance(tvHome:TextView,tvOffice:TextView,tvUser:TextView){
-        if (cur_lat.value != null && cur_lng.value != null && !member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
-            val userDist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member.userLat.toDouble(), member.userLng.toDouble()) / 1000
-            tvUser.text= String.format("%.2f KM", userDist)
+        if(!member.isLocationEnable.isNullOrEmpty() && member.isLocationEnable.equals("1")){
+            if (cur_lat.value != null && cur_lng.value != null && !member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
+                val userDist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member.userLat.toDouble(), member.userLng.toDouble()) / 1000
+                tvUser.text= String.format("%.2f KM", userDist)
+            }
+        }else{
+            tvUser.text= "Private"
         }
 
         if (cur_lat.value != null && cur_lng.value != null && !member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
