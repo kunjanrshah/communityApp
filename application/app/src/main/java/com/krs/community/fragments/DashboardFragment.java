@@ -18,12 +18,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,16 +32,12 @@ import com.krs.community.activity.FavoriteProfileActivity;
 import com.krs.community.activity.RegisterActivty;
 import com.krs.community.model.FavProfiles;
 import com.krs.community.model.Member;
-import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.ExpandableHeightGridView;
 import com.krs.community.utils.Utility;
-import com.nightonke.boommenu.Util;
 import com.smarteist.autoimageslider.DefaultSliderView;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderLayout;
-
-import org.w3c.dom.DocumentFragment;
 
 import java.util.ArrayList;
 

@@ -24,6 +24,7 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
+import com.krs.community.activity.BaseActivity;
 
 /**
  * Sample listener that shows how to handle permission request callbacks on a background thread
@@ -32,7 +33,7 @@ public class SampleBackgroundThreadPermissionListener extends SamplePermissionLi
 
   private Handler handler = new Handler(Looper.getMainLooper());
 
-  public SampleBackgroundThreadPermissionListener(AppCompatActivity activity) {
+  public SampleBackgroundThreadPermissionListener(BaseActivity activity) {
     super(activity);
   }
 

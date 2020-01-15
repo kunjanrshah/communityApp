@@ -216,7 +216,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         if (Utility.finePermissionIsGranted(this)) {
             easyWayLocation.startLocation() //calculateDistance()
         } else {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION_PERMISSION)
+            Utility.requestLocationPermission(this)
         }
 
         cur_lat.observe(this, Observer {
@@ -317,7 +317,12 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
                     }
                     setDistance()
                 } else {
-                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION_PERMISSION)
+
+                    if (Utility.finePermissionIsGranted(this)) {
+                        easyWayLocation.startLocation() //calculateDistance()
+                    } else {
+                        Utility.requestLocationPermission(this)
+                    }
                 }
             } else {
                 easyWayLocation = EasyWayLocation(this, request, true, this)
@@ -492,24 +497,25 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_STORAGE_READ_ACCESS_PERMISSION ->
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    pickFromGallery(this)
-                } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
-                    displayNeverAskAgainDialog(this)
-                } else {
-                    promptReadPermission(this)
-                }
 
-            /*REQUEST_LOCATION_PERMISSION ->
-                easyWayLocation.startLocation()*/
-            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    override fun showPermissionGranted(permission: String) {
+        super.showPermissionGranted(permission)
+        if(permission.contains("EXTERNAL_STORAGE")){
+            pickFromGallery(this)
         }
     }
 
+    override fun showPermissionDenied(permission: String, isPermanentlyDenied: Boolean) {
+        super.showPermissionDenied(permission, isPermanentlyDenied)
+
+        if(permission.contains("EXTERNAL_STORAGE")){
+            promptReadPermission(this)
+        }
+
+        if(isPermanentlyDenied){
+            displayNeverAskAgainDialog(this)
+        }
+    }
 
     override fun onCropFinish(result: UCropFragment.UCropResult) {
         when (result.mResultCode) {

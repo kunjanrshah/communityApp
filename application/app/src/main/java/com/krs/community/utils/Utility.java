@@ -72,8 +72,19 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.SnackbarOnAnyDeniedMultiplePermissionsListener;
+import com.karumi.dexter.listener.single.CompositePermissionListener;
+import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.krs.community.R;
 import com.krs.community.activity.BaseActivity;
+import com.krs.community.dexter.SampleErrorListener;
+import com.krs.community.dexter.SampleMultiplePermissionListener;
+import com.krs.community.dexter.SamplePermissionListener;
 import com.krs.community.fragments.DashboardFragment;
 import com.krs.community.model.ErrorObject;
 import com.krs.community.model.Member;
@@ -130,16 +141,109 @@ public class Utility {
     private static ProgressDialog pDialog;
     private static final String ALLOWED_CHARACTERS ="0123456789qwertyuiopasdfghjklzxcvbnm";
     public static long INTERVAL=5*60*1000;
-    public static String getRandomString(final int sizeOfRandomString)
-    {
+    private static MultiplePermissionsListener allPermissionsListener;
+    private static CompositePermissionListener cameraPermissionListener;
+    private static CompositeMultiplePermissionsListener storagePermissionListener;
+    private static CompositePermissionListener callPhonePermissionListener;
+    private static CompositePermissionListener locationPermissionListener;
+    private static PermissionRequestErrorListener errorListener;
+    private static Logger logger = new Logger(Utility.class.getSimpleName());
+
+    public static void createPermissionListeners(BaseActivity activity, View contentView) {
+        PermissionListener dialogOnDeniedLocationListener =
+                DialogOnDeniedPermissionListener.Builder.withContext(activity)
+                        .withTitle(R.string.camera_permission_denied_dialog_title)
+                        .withMessage(R.string.camera_permission_denied_dialog_feedback)
+                        .withButtonText(android.R.string.ok)
+                        .withIcon(R.drawable.ic_app)
+                        .build();
+
+        PermissionListener dialogOnDeniedCallPhoneListener =
+                DialogOnDeniedPermissionListener.Builder.withContext(activity)
+                        .withTitle(R.string.camera_permission_denied_dialog_title)
+                        .withMessage(R.string.camera_permission_denied_dialog_feedback)
+                        .withButtonText(android.R.string.ok)
+                        .withIcon(R.drawable.ic_app)
+                        .build();
+
+        PermissionListener dialogOnDeniedCameraListener =
+                DialogOnDeniedPermissionListener.Builder.withContext(activity)
+                        .withTitle(R.string.camera_permission_denied_dialog_title)
+                        .withMessage(R.string.camera_permission_denied_dialog_feedback)
+                        .withButtonText(android.R.string.ok)
+                        .withIcon(R.drawable.ic_app)
+                        .build();
+
+        PermissionListener feedbackViewPermissionListener = new SamplePermissionListener(activity);
+        MultiplePermissionsListener feedbackViewMultiplePermissionListener = new SampleMultiplePermissionListener(activity);
+        allPermissionsListener =   new CompositeMultiplePermissionsListener(feedbackViewMultiplePermissionListener,
+                SnackbarOnAnyDeniedMultiplePermissionsListener.Builder.with(contentView, R.string.all_permissions_denied_feedback)
+                        .withOpenSettingsButton(R.string.permission_rationale_settings_button_text)
+                        .build());
+
+        callPhonePermissionListener = new CompositePermissionListener(feedbackViewPermissionListener,dialogOnDeniedCallPhoneListener);
+        cameraPermissionListener = new CompositePermissionListener(feedbackViewPermissionListener,dialogOnDeniedCameraListener);
+        locationPermissionListener = new CompositePermissionListener(feedbackViewPermissionListener,dialogOnDeniedLocationListener);
+        storagePermissionListener = new CompositeMultiplePermissionsListener(feedbackViewMultiplePermissionListener,
+                SnackbarOnAnyDeniedMultiplePermissionsListener.Builder.with(contentView, R.string.location_permissions_denied_feedback)
+                        .withOpenSettingsButton(R.string.permission_rationale_settings_button_text)
+                        .build());
+
+        errorListener = new SampleErrorListener();
+    }
+
+    public static void requestCameraPermission(Activity activity){
+        Dexter.withActivity(activity)
+                .withPermission(Manifest.permission.CAMERA)
+                .withListener(cameraPermissionListener)
+                .withErrorListener(errorListener)
+                .check();
+    }
+
+    public static void requestLocationPermission(Activity activity){
+        Dexter.withActivity(activity)
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(locationPermissionListener)
+                .withErrorListener(errorListener)
+                .check();
+    }
+
+    public static void requestStoragePermission(Activity activity){
+        Dexter.withActivity(activity)
+                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(storagePermissionListener)
+                .withErrorListener(errorListener)
+                .check();
+    }
+
+    public static void requestCallPhonePermission(AppCompatActivity activity){
+        Dexter.withActivity(activity)
+                .withPermission(Manifest.permission.CALL_PHONE)
+                .withListener(callPhonePermissionListener)
+                .withErrorListener(errorListener)
+                .check();
+    }
+
+    public static void requestAllPermission(Activity activity){
+        Dexter.withActivity(activity)
+                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.CALL_PHONE,
+                        Manifest.permission.CAMERA)
+                .withListener(allPermissionsListener)
+                .withErrorListener(errorListener)
+                .check();
+    }
+
+
+    public static String getRandomString(final int sizeOfRandomString){
         final Random random=new Random();
         final StringBuilder sb=new StringBuilder(sizeOfRandomString);
         for(int i=0;i<sizeOfRandomString;++i)
             sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
         return sb.toString();
     }
-
-    private static Logger logger = new Logger(Utility.class.getSimpleName());
 
     /* public static Bitmap scaleDown(Bitmap realImage, float maxImageSize, boolean filter) {
          float ratio = Math.min(maxImageSize / realImage.getWidth(), maxImageSize / realImage.getHeight());
@@ -653,27 +757,35 @@ public class Utility {
         return true;
     }
 
-    public static boolean hasCAMARA(@NonNull Context mContext) {
+    public static boolean hasCamera(@NonNull Context mContext) {
         return (hasPermission(mContext, Manifest.permission.CAMERA));
     }
 
-    public static boolean canCallPhone(@NonNull Context mContext) {
+    public static boolean hasCallPhone(@NonNull Context mContext) {
         return (!hasPermission(mContext, Manifest.permission.CALL_PHONE));
     }
 
-    public static boolean canAccessLocation(@NonNull Context mContext) {
+    public static boolean hasAccessLocation(@NonNull Context mContext) {
         return (hasPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION));
     }
 
-    public static boolean haveSMS(@NonNull Context mContext) {
+    public static boolean hasSMS(@NonNull Context mContext) {
         return (hasPermission(mContext, Manifest.permission.SEND_SMS));
     }
 
-    public static boolean canReadContacts(@NonNull Context mContext) {
+    public static boolean hasReadContacts(@NonNull Context mContext) {
         return (Utility.hasPermission(mContext, Manifest.permission.READ_CONTACTS));
     }
 
-    public static boolean hasPermission(@NonNull Context mContext, @NonNull String perm) {
+    public static boolean hasReadStoragePermission(@NonNull Context mContext) {
+        return (hasPermission(mContext,Manifest.permission.READ_EXTERNAL_STORAGE ));
+    }
+
+    public static boolean hasWriteStoragePermission(@NonNull Context mContext) {
+        return (hasPermission(mContext,Manifest.permission.WRITE_EXTERNAL_STORAGE ));
+    }
+
+    private static boolean hasPermission(@NonNull Context mContext, @NonNull String perm) {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
     }
 

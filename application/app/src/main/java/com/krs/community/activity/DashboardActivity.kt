@@ -10,16 +10,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.easywaylocation.EasyWayLocation
 import com.example.easywaylocation.GetLocationDetail
@@ -27,12 +23,8 @@ import com.example.easywaylocation.Listener
 import com.example.easywaylocation.LocationData
 import com.github.squti.guru.Guru
 import com.google.android.gms.location.LocationRequest
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.listener.PermissionRequest
 import com.krs.community.R
 import com.krs.community.databinding.ActivityDashboardBinding
 import com.krs.community.fragments.*
@@ -45,13 +37,11 @@ import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.DashboardViewModel
 import com.krs.community.viewmodel.DashboardViewModelFactory
 import com.luseen.spacenavigation.SpaceItem
-import com.luseen.spacenavigation.SpaceNavigationView
 import com.luseen.spacenavigation.SpaceOnClickListener
 import com.luseen.spacenavigation.SpaceOnLongClickListener
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener as MultiplePermissionsListener
 
 class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, Listener, LocationData.AddressCallBack {
 
@@ -176,33 +166,31 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
         if (Utility.finePermissionIsGranted(this)) {
             easyWayLocation.startLocation() //calculateDistance()
         } else {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION_PERMISSION)
+            Utility.requestLocationPermission(this)
         }
 
         getMasterList()
         Utility.movetoFragment(this@DashboardActivity, DashboardFragment())
-
-        Dexter.withActivity(this)
-                .withPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).withListener( MultiplePermissionsListener {
-
-                }).check();
-
         //spaceNavigationView.showIconOnly();
     }
 
+
     override fun onResume() {
         super.onResume()
-        easyWayLocation.startLocation()
+        if (Utility.finePermissionIsGranted(this)) {
+            easyWayLocation.startLocation() //calculateDistance()
+        } else {
+            Utility.requestLocationPermission(this)
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        easyWayLocation.endUpdates()
+        if (Utility.finePermissionIsGranted(this)) {
+            easyWayLocation.endUpdates()
+        } else {
+            Utility.requestLocationPermission(this)
+        }
     }
 
     override fun onBackPressed() {
@@ -216,6 +204,21 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
             easyWayLocation.onActivityResult(resultCode)
         }
 
+    }
+
+    override fun showPermissionGranted(permission: String?) {
+        super.showPermissionGranted(permission)
+        if (permission != null) {
+            if(permission.contains("LOCATION")){
+                easyWayLocation.startLocation()
+            }
+        }
+             Log.d(TAG, "PermissionGranted: $permission")
+    }
+
+    override fun showPermissionDenied(permission: String?, isPermanentlyDenied: Boolean) {
+        super.showPermissionDenied(permission, isPermanentlyDenied)
+        Log.d(TAG, "PermissionDenied: $permission")
     }
 
 

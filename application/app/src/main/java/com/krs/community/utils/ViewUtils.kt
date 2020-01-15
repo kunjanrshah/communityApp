@@ -188,7 +188,7 @@ fun pickFromGallery(context: FragmentActivity) {
 }
 
 fun promptReadPermission(context: Context) {
-    if (!Utility.hasPermission(context, "READ_EXTERNAL_STORAGE")) {
+    if (!Utility.hasReadStoragePermission(context)) {
         SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                 .setTitleText("Storage read Permission")
                 .setContentText("Permission is needed to pick image from gallery for your Profile")
@@ -198,8 +198,7 @@ fun promptReadPermission(context: Context) {
                 .showCancelButton(true)
                 .setConfirmClickListener { sDialog ->
                     sDialog.dismiss()
-                    ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), BaseActivity.REQUEST_STORAGE_READ_ACCESS_PERMISSION)
-                    //requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, "Storage read permission is needed to pick files.", REQUEST_STORAGE_READ_ACCESS_PERMISSION);
+                Utility.requestStoragePermission(context as Activity)
                 }
                 .show()
     }
@@ -569,7 +568,6 @@ fun createMemberListPDF(mContext:Context, lstMember: ArrayList<Member>, profileD
     createPdf(mContext,"community_${currentdate}",rows)
 }
 
-
 fun createMemberPDF(mContext:Context, member: Member, profileDetailViewModel: ProfileDetailViewModel) = Coroutines.main{
 
     //------- Main Detail---------
@@ -590,16 +588,16 @@ fun createMemberPDF(mContext:Context, member: Member, profileDetailViewModel: Pr
     val currentdate = df.format(Calendar.getInstance().time)
 
     var name = member.firstName
-    val Gender = member.gender
-    val FatherName = member.fatherName
-    val MotherName = member.motherName
-    val Email = member.emailAddress
-    val Mobile = member.mobile
-    var State = member.stateId
-    var City = member.cityId
-    val Area = member.area
-    val Address = member.address
-    val Pincode = member.pincode
+    val gender = member.gender
+    val father = member.fatherName
+    val mother = member.motherName
+    val email = member.emailAddress
+    val mobile = member.mobile
+    var state = member.stateId
+    var city = member.cityId
+    val area = member.area
+    val address = member.address
+    val pincode = member.pincode
 
     if(!member.subCastId.isNullOrEmpty()){
         profileDetailViewModel.selectedLastNameId = Integer.parseInt(member.subCastId)
@@ -611,14 +609,14 @@ fun createMemberPDF(mContext:Context, member: Member, profileDetailViewModel: Pr
     if(!member.stateId.isNullOrEmpty()){
         profileDetailViewModel.selectedStateId = Integer.parseInt(member.stateId)
         profileDetailViewModel.stateName.await().observeForever {
-            State= it
+            state= it
         }
     }
 
     if(!member.cityId.isNullOrEmpty()){
         profileDetailViewModel.selectedCityId = Integer.parseInt(member.cityId)
         profileDetailViewModel.cityName.await().observeForever {
-            City= it
+            city= it
         }
     }
 
@@ -772,16 +770,16 @@ fun createMemberPDF(mContext:Context, member: Member, profileDetailViewModel: Pr
                 lblName + name +"</b></h3><br>"+
                 headerImage+"<br><br>"+
                 labelMain+"<br>"+
-                lblGender +Gender +"<br>"+
-                lblFather+FatherName +"<br>" +
-                lblMother+ MotherName +"<br>" +
-                lblEmail+Email + "<br>"+
-                lblMobile +Mobile + "<br>" +
-                lblState +State +"<br>" +
-                lblCity +City + "<br>" +
-                lblArea+ Area +"<br>" +
-                lblAddress+Address+"<br>" +
-                lblPinCode+Pincode
+                lblGender +gender +"<br>"+
+                lblFather+father +"<br>" +
+                lblMother+ mother +"<br>" +
+                lblEmail+email + "<br>"+
+                lblMobile +mobile + "<br>" +
+                lblState +state +"<br>" +
+                lblCity +city + "<br>" +
+                lblArea+ area +"<br>" +
+                lblAddress+address+"<br>" +
+                lblPinCode+pincode
 
         val PersonalDetail = "<br> <br>"+lblPersonal+"<br>"+
                 lblRole + strRole+"<br>"+
@@ -833,25 +831,54 @@ private fun createPdf(mContext: Context, fname: String, test: String) {
     pdfDirectory.mkdirs()
     val outputFile = File(pdfDirectory, fname)
 
-    if (mContext != null) {
-        CreatePdf(mContext)
-                .setPdfName(fname)
-                .openPrintDialog(true)
-                .setContentBaseUrl(null)
-                .setPageSize(PrintAttributes.MediaSize.ISO_A4)
-                .setContent(test)
-                .setFilePath(outputFile.absolutePath)
-                .setCallbackListener(object : CreatePdf.PdfCallbackListener {
-                    override fun onFailure(errorMsg: String) {
-                        Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show()
-                    }
+    CreatePdf(mContext)
+            .setPdfName(fname)
+            .openPrintDialog(false)
+            .setContentBaseUrl(null)
+            .setPageSize(PrintAttributes.MediaSize.ISO_A4)
+            .setContent(test)
+            .setFilePath(outputFile.absolutePath)
+            .setCallbackListener(object : CreatePdf.PdfCallbackListener {
+                override fun onFailure(errorMsg: String) {
+                    Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show()
+                }
 
-                    override fun onSuccess(filePath: String) {
-                        Toast.makeText(mContext, "Pdf Saved at: $filePath", Toast.LENGTH_SHORT).show()
-                    }
-                })
-                .create()
-    }
+                override fun onSuccess(filePath: String) {
+                    displayPDFDialog(mContext,fname,outputFile.absolutePath,test)
+                    Toast.makeText(mContext, "Pdf Saved : $filePath", Toast.LENGTH_LONG).show()
+                }
+            })
+            .create()
+}
+
+fun displayPDFDialog(context: Context,name:String,path:String,content:String) {
+
+    SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+            .setTitleText("$name's Profile")
+            .setContentText("You can View, Share and Print the PDF Profile")
+            .setCustomImage(R.drawable.ic_app)
+            .showCancelButton(true)
+            .setNeutralText("Print")
+            .setNeutralClickListener {sDialog ->
+                sDialog.dismiss()
+                CreatePdf(context)
+                        .setPdfName(name)
+                        .openPrintDialog(true)
+                        .setContentBaseUrl(null)
+                        .setPageSize(PrintAttributes.MediaSize.ISO_A4)
+                        .setContent(content)
+                        .setFilePath(path).create()
+            }
+            .setConfirmText("Share")
+            .setConfirmClickListener { sDialog ->
+                sDialog.dismiss()
+
+            }
+            .setCancelText("View")
+            .setCancelClickListener {
+
+            }
+            .show()
 }
 
 fun shareDetails(activity: FragmentActivity?,name:String,mobile:String,email:String,area:String,address:String){

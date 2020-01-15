@@ -35,6 +35,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.iammert.library.ui.multisearchviewlib.MultiSearchView
 import com.krs.community.R
+import com.krs.community.activity.BaseActivity
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
@@ -126,7 +127,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         ivExport = header.findViewById(R.id.iv_export)
         ivExport.setOnClickListener {
             if (lstMembers.size > 0) {
-                createMemberListPDF(activity as AppCompatActivity, lstMembers, profileDetailViewModel)
+                if(Utility.hasReadStoragePermission(activity as AppCompatActivity) && Utility.hasWriteStoragePermission(activity as AppCompatActivity) ){
+                    createMemberListPDF(activity as AppCompatActivity, lstMembers, profileDetailViewModel)
+                }else{
+                    Utility.requestStoragePermission(activity)
+                }
             }
         }
 
@@ -163,16 +168,18 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     viewHolder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                 }
 
-
                 viewHolder.boomMenuButton.clearBuilders()
                 for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
                     val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
                     builder?.listener {
                         if (it == 0) {
-
-
-
-
+                            if(Utility.hasReadStoragePermission(activity as AppCompatActivity) && Utility.hasWriteStoragePermission(activity as AppCompatActivity)){
+                                val profileDetailFactory: ProfileDetailViewModelFactory by instance()
+                                val profileDetailViewModel= ViewModelProviders.of(activity as AppCompatActivity, profileDetailFactory).get(ProfileDetailViewModel::class.java)
+                                createMemberPDF(activity as AppCompatActivity, member,profileDetailViewModel)
+                            }else{
+                                Utility.requestLocationPermission(activity as AppCompatActivity)
+                            }
                         } else if (it == 1) {
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)

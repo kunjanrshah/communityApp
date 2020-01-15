@@ -16,6 +16,8 @@
 
 package com.krs.community.dexter;
 
+import android.app.Activity;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.karumi.dexter.MultiplePermissionsReport;

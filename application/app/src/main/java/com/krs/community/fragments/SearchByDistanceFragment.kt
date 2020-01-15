@@ -169,11 +169,8 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         request.interval = Utility.INTERVAL
         request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         easyWayLocation = EasyWayLocation(activity, request, false, this)
-        if (Utility.finePermissionIsGranted(activity)) {
-            easyWayLocation.startLocation() //calculateDistance()
-        } else {
-            ActivityCompat.requestPermissions(activity as AppCompatActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), BaseActivity.REQUEST_LOCATION_PERMISSION)
-        }
+
+
 
         DashboardActivity.stop=false
         callDistanceAPI()
@@ -183,13 +180,21 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar!!.hide()
-        easyWayLocation.startLocation()
+        if (Utility.finePermissionIsGranted(activity)) {
+            easyWayLocation.startLocation() //calculateDistance()
+        } else {
+            Utility.requestLocationPermission(activity)
+        }
     }
 
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity).supportActionBar!!.show()
-        easyWayLocation.endUpdates()
+        if (Utility.finePermissionIsGranted(activity)) {
+            easyWayLocation.endUpdates()
+        } else {
+            Utility.requestLocationPermission(activity)
+        }
     }
 
     private fun createCardAdapter(recyclerView: RecyclerView) {

@@ -393,4 +393,12 @@
     <string name="liveo_search_view_close">Delete query text</string>
     <string name="liveo_not_supported">Not Supported</string>
 
+    <string name="location_permissions_denied_feedback">location permission is needed for calculate distance</string>
+    <string name="all_permissions_denied_feedback">All those permissions are needed for doing some magic</string>
+    <string name="permission_rationale_settings_button_text">SETTINGS</string>
+    <string name="permission_rationale_title">We need this permission</string>
+    <string name="permission_rationale_message">This permission is needed for doing some fancy stuff so please, allow it!</string>
+    <string name="camera_permission_denied_dialog_title">Camera permission request</string>
+    <string name="camera_permission_denied_dialog_feedback">QRCode sharing and profile image will not be available until you accept the permission request</string>
+
 </resources>

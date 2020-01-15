@@ -391,19 +391,22 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_STORAGE_READ_ACCESS_PERMISSION ->
+    override fun showPermissionGranted(permission: String) {
+        super.showPermissionGranted(permission)
+        if(permission.contains("EXTERNAL_STORAGE")){
+            pickFromGallery(this)
+        }
+    }
 
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    pickFromGallery(this)
-                } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
-                    displayNeverAskAgainDialog(this)
-                } else {
-                    promptReadPermission(this)
-                }
-            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    override fun showPermissionDenied(permission: String, isPermanentlyDenied: Boolean) {
+        super.showPermissionDenied(permission, isPermanentlyDenied)
+
+        if(permission.contains("EXTERNAL_STORAGE")){
+            promptReadPermission(this)
+        }
+
+        if(isPermanentlyDenied){
+            displayNeverAskAgainDialog(this)
         }
     }
 
