@@ -10,6 +10,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -47,7 +48,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     private lateinit var mShimmerViewContainer: ShimmerFrameLayout
     private val lstMembers: MutableList<Member> = ArrayList()
     private lateinit var actionModeCallback: ActionModeCallback
-    private lateinit var actionMode: ActionMode
+    private var actionMode: ActionMode?=null
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private lateinit var selectedItems: SparseBooleanArray
     private lateinit var animationItemsIndex: SparseBooleanArray
@@ -61,6 +62,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     private val length: Int = 30
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private lateinit var llRoot:LinearLayout
+    private var argus:String?=null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_filter_result, container, false)
@@ -138,15 +140,20 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                     .setAdapter(adapter)
                     .setGravity(Gravity.BOTTOM)
                     .setCancelable(true)
-                    .setExpanded(true, 900)
+                    .setExpanded(true, 1200)
                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                     .create()
             dialog.show()
         }
         adapter.setParallaxHeader(header, rvFilters)
+        rvFilters.layoutManager = LinearLayoutManager(activity)
+        rvFilters.adapter = adapter
+
+        argus= arguments?.getString("filter_values")
 
         DashboardActivity.stop=false
         getFilterMembers()
+
         //setupList()
        // inbox
         return rootView
@@ -163,7 +170,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         if (!DashboardActivity.stop) {
             DashboardActivity.stop = true
             val jsonObject= JSONObject()
-            val jsonObj=JSONObject()
+            val jsonObj=JSONObject(argus)
             jsonObject.put("start",start)
             jsonObject.put("length",length)
             jsonObject.put("filter_by",jsonObj)
@@ -262,7 +269,8 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
     private fun applyProfilePicture(holder: ViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
-            Glide.with(activity!!).load(member.profilePic)
+            val imgURL=context?.getString(R.string.base_url_thumb)+member.profilePic
+            Glide.with(activity!!).load(imgURL)
                     .thumbnail(0.5f)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .apply(RequestOptions.circleCropTransform())
@@ -418,7 +426,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
         override fun onDestroyActionMode(mode: ActionMode) {
             clearSelections()
-           // actionMode = null
+            actionMode = null
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(activity, R.color.colorBG, false)
             }
@@ -430,10 +438,10 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         toggleSelected(position)
         val count = selectedItemCount
         if (count == 0) {
-            actionMode.finish()
+            actionMode?.finish()
         } else {
-            actionMode.title = count.toString()
-            actionMode.invalidate()
+            actionMode?.title = count.toString()
+            actionMode?.invalidate()
         }
     }
 

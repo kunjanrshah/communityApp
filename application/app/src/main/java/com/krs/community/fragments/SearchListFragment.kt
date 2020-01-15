@@ -1,5 +1,6 @@
 package com.krs.community.fragments
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -18,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,9 +46,6 @@ import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.utils.*
-import com.krs.community.utils.FlipAnimator
-import com.krs.community.utils.Utility
-import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModelFactory
 import com.krs.community.viewmodel.SmartSearchViewModel
@@ -62,7 +59,6 @@ import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import kotlin.collections.ArrayList
 
 class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner {
 
@@ -87,6 +83,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private val lstMembers = ArrayList<Member>()
     private lateinit var tvRecords: TextView
     private lateinit var llLabel: LinearLayout
+    private lateinit var ivExport: ImageView
     private lateinit var searchWord: String
     private var selectedPosition = 0
     private var start: Int = 0
@@ -126,7 +123,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             //Utility.movetoFragment(activity, DashboardFragment())
         }
 
-        val ivExport: ImageView = header.findViewById(R.id.iv_export)
+        ivExport = header.findViewById(R.id.iv_export)
         ivExport.setOnClickListener {
             if (lstMembers.size > 0) {
                 createMemberListPDF(activity as AppCompatActivity, lstMembers, profileDetailViewModel)
@@ -157,7 +154,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 viewHolder.tvMobile.text = member.mobile
 
 
-                if (member.headId.equals("0")) {
+                if (member.headId == "0") {
                     viewHolder.tvRole.text = "Family Head"
                 } else {
                     viewHolder.tvRole.text = "Member"
@@ -166,12 +163,16 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     viewHolder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                 }
 
+
                 viewHolder.boomMenuButton.clearBuilders()
                 for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
                     val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
                     builder?.listener {
                         if (it == 0) {
-                            createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
+
+
+
+
                         } else if (it == 1) {
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
@@ -261,6 +262,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 } else {
                     lstMembers.clear()
                     llLabel.visibility = View.VISIBLE
+                    ivExport.visibility=View.GONE
                     tvRecords.visibility = View.GONE
                     rvAdapter.notifyDataSetChanged()
                 }
@@ -304,6 +306,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             lstMembers.clear()
             tvRecords.visibility = View.GONE
             llLabel.visibility = View.GONE
+            ivExport.visibility=View.VISIBLE
             rvAdapter.notifyDataSetChanged()
             DashboardActivity.stop = true
             val mJSONObject = JSONObject()
@@ -350,8 +353,8 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 lstMembers.add(item)
             }
             rvAdapter.notifyDataSetChanged()
-            rvSearch.layoutManager?.scrollToPosition(selectedPosition)
-            selectedPosition = lstMembers.size - 1
+          //  rvSearch.layoutManager?.scrollToPosition(selectedPosition)
+          //  selectedPosition = lstMembers.size - 1
             if (Integer.parseInt(response.totalRecords) <= length) {
                 DashboardActivity.stop = true
                 Snackbar.make(llRoot, "End of the Records", Snackbar.LENGTH_LONG).show()
@@ -360,14 +363,17 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 tvRecords.text = "Records found: " + response.totalRecords
                 tvRecords.visibility = View.VISIBLE
                 llLabel.visibility = View.GONE
+                ivExport.visibility=View.VISIBLE
             } else {
                 llLabel.visibility = View.VISIBLE
                 tvRecords.visibility = View.GONE
+                ivExport.visibility=View.GONE
                 DashboardActivity.stop = true
             }
         } else {
             rvSearch.visibility = View.GONE
             tvRecords.visibility = View.GONE
+            ivExport.visibility=View.GONE
             llLabel.visibility = View.VISIBLE
         }
     }
@@ -381,6 +387,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             mShimmerViewContainer.visibility = View.GONE
             tvRecords.visibility = View.GONE
             llLabel.visibility = View.VISIBLE
+            ivExport.visibility=View.GONE
             rvSearch.visibility = View.GONE
             DashboardActivity.stop = false
         }
@@ -516,7 +523,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private fun applyProfilePicture(holder: MyViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
             if (member.profilePic.isNotEmpty()) {
-
+                holder.imgProfile.isClickable=true
                 try {
                     val path = getString(R.string.base_url_original) + "" + member.profilePic
                     Log.d(TAG, "path: $path")
@@ -553,6 +560,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE
         } else {
+            holder.imgProfile.isClickable=false
             holder.imgProfile.setImageResource(R.drawable.bg_circle)
             holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(activity!!, "400"))
             holder.iconText.visibility = View.VISIBLE

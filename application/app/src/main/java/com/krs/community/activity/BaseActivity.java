@@ -1,14 +1,30 @@
 package com.krs.community.activity;
 
 import android.content.DialogInterface;
+import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.SnackbarOnAnyDeniedMultiplePermissionsListener;
+import com.karumi.dexter.listener.single.CompositePermissionListener;
+import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
+import com.karumi.dexter.listener.single.PermissionListener;
+import com.karumi.dexter.listener.single.SnackbarOnDeniedPermissionListener;
 import com.krs.community.R;
+import com.krs.community.dexter.SampleBackgroundThreadPermissionListener;
+import com.krs.community.dexter.SampleErrorListener;
+import com.krs.community.dexter.SampleMultiplePermissionListener;
+import com.krs.community.dexter.SamplePermissionListener;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -19,60 +35,70 @@ public class BaseActivity extends AppCompatActivity {
     public static final int PICK_GALLERY_REQUEST = 1;
     private AlertDialog mAlertDialog;
 
-    /**
-     * Hide alert dialog if any.
-     */
+    private MultiplePermissionsListener allPermissionsListener;
+    private PermissionListener cameraPermissionListener;
+    private PermissionListener contactsPermissionListener;
+    private PermissionListener audioPermissionListener;
+    private PermissionRequestErrorListener errorListener;
+
     @Override
-    protected void onStop() {
-        super.onStop();
-        if (mAlertDialog != null && mAlertDialog.isShowing()) {
-            mAlertDialog.dismiss();
-        }
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        createPermissionListeners();
     }
 
+    private void createPermissionListeners() {
+        PermissionListener feedbackViewPermissionListener = new SamplePermissionListener(this);
+        MultiplePermissionsListener feedbackViewMultiplePermissionListener =
+                new SampleMultiplePermissionListener(this);
 
-    /**
-     * Requests given permission.
-     * If the permission has been denied previously, a Dialog will prompt the user to grant the
-     * permission, otherwise it is requested directly.
-     */
-    protected void requestPermission(final String permission, String rationale, final int requestCode) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-            ActivityCompat.requestPermissions(BaseActivity.this,new String[]{permission}, requestCode);
-            /*showAlertDialog("Permission needed", rationale,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+        allPermissionsListener =
+                new CompositeMultiplePermissionsListener(feedbackViewMultiplePermissionListener,
+                        SnackbarOnAnyDeniedMultiplePermissionsListener.Builder.with(contentView,
+                                R.string.all_permissions_denied_feedback)
+                                .withOpenSettingsButton(R.string.permission_rationale_settings_button_text)
+                                .build());
+        contactsPermissionListener = new CompositePermissionListener(feedbackViewPermissionListener,
+                SnackbarOnDeniedPermissionListener.Builder.with(contentView,
+                        R.string.contacts_permission_denied_feedback)
+                        .withOpenSettingsButton(R.string.permission_rationale_settings_button_text)
+                        .withCallback(new Snackbar.Callback() {
+                            @Override public void onShown(Snackbar snackbar) {
+                                super.onShown(snackbar);
+                            }
 
-                        }
-                    }, "OK", null, "Cancel");*/
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
-        }
+                            @Override public void onDismissed(Snackbar snackbar, int event) {
+                                super.onDismissed(snackbar, event);
+                            }
+                        })
+                        .build());
+
+        PermissionListener dialogOnDeniedPermissionListener =
+                DialogOnDeniedPermissionListener.Builder.withContext(this)
+                        .withTitle(R.string.audio_permission_denied_dialog_title)
+                        .withMessage(R.string.audio_permission_denied_dialog_feedback)
+                        .withButtonText(android.R.string.ok)
+                        .withIcon(R.mipmap.ic_logo_karumi)
+                        .build();
+        audioPermissionListener = new CompositePermissionListener(feedbackViewPermissionListener,
+                dialogOnDeniedPermissionListener);
+        cameraPermissionListener = new SampleBackgroundThreadPermissionListener(this);
+
+        errorListener = new SampleErrorListener();
     }
 
-    /**
-     * This method shows dialog with given title & message.
-     * Also there is an option to pass onClickListener for positive & negative button.
-     *
-     * @param title                         - dialog title
-     * @param message                       - dialog message
-     * @param onPositiveButtonClickListener - listener for positive button
-     * @param positiveText                  - positive button text
-     * @param onNegativeButtonClickListener - listener for negative button
-     * @param negativeText                  - negative button text
-     */
-    protected void showAlertDialog(@Nullable String title, @Nullable String message,
-                                   @Nullable DialogInterface.OnClickListener onPositiveButtonClickListener,
-                                   @NonNull String positiveText,
-                                   @Nullable DialogInterface.OnClickListener onNegativeButtonClickListener,
-                                   @NonNull String negativeText) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.setPositiveButton(positiveText, onPositiveButtonClickListener);
-        builder.setNegativeButton(negativeText, onNegativeButtonClickListener);
-        mAlertDialog = builder.show();
+    public void showPermissionGranted(String permission) {
+        TextView feedbackView = getFeedbackViewForPermission(permission);
+        feedbackView.setText(R.string.permission_granted_feedback);
+        feedbackView.setTextColor(ContextCompat.getColor(this, R.color.permission_granted));
+    }
+
+    public void showPermissionDenied(String permission, boolean isPermanentlyDenied) {
+        TextView feedbackView = getFeedbackViewForPermission(permission);
+        feedbackView.setText(isPermanentlyDenied ? R.string.permission_permanently_denied_feedback
+                : R.string.permission_denied_feedback);
+        feedbackView.setTextColor(ContextCompat.getColor(this, R.color.permission_denied));
     }
 
 }

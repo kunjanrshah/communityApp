@@ -30,6 +30,9 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.listener.PermissionRequest
 import com.krs.community.R
 import com.krs.community.databinding.ActivityDashboardBinding
 import com.krs.community.fragments.*
@@ -48,6 +51,7 @@ import com.luseen.spacenavigation.SpaceOnLongClickListener
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener as MultiplePermissionsListener
 
 class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, Listener, LocationData.AddressCallBack {
 
@@ -175,10 +179,19 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION_PERMISSION)
         }
 
-
-
         getMasterList()
         Utility.movetoFragment(this@DashboardActivity, DashboardFragment())
+
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ).withListener( MultiplePermissionsListener {
+
+                }).check();
+
         //spaceNavigationView.showIconOnly();
     }
 
