@@ -19,6 +19,12 @@ class SmartFilterRepository(private val api: ApiServices, private val db:AppData
         }
     }
 
+    suspend fun getInActiveRecords(jsonObject: JsonObject): SmartFilterResponse {
+        return apiRequest{
+            api.getInActiveUsers(jsonObject)
+        }
+    }
+
     fun getListCityName(): LiveData<List<String>> {
         return db.getCityDao().getcityNames()
     }

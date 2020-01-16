@@ -93,6 +93,12 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.SEARCH_BY_KEYWORDS)
     suspend fun getSearchByKeywords(@Body request:JsonObject): Response<searchByKeywordsResponse>
 
+    @POST(AppConstants.UrlPath.CHANGE_STATUS)
+    suspend fun changeStatus(@Body request:JsonObject): Response<searchByKeywordsResponse>
+
+    @POST(AppConstants.UrlPath.GET_INACTIVE_USERS)
+    suspend fun getInActiveUsers(@Body request:JsonObject): Response<SmartFilterResponse>
+
     @POST(AppConstants.UrlPath.GET_FAMILY_MEMBER)
     suspend fun getFamilyMembers(@Body request: JsonObject): Response<FamilyDetailResponse>
 

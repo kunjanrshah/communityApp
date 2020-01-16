@@ -25,10 +25,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="15dp"
-        android:fontFamily="@font/montserrat_semibold"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:layout_marginBottom="5dp"
+        android:text="Find Records"
         android:visibility="gone"
-        android:layout_marginBottom="10dp"
-        android:textSize="14sp" />
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
 
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.krs.community.fragments;
+package com.krs.community.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -29,6 +29,7 @@ import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.krs.community.BuildConfig;
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
 import com.krs.community.activity.ProfileDetailActivity;
@@ -51,25 +52,26 @@ import static android.app.Activity.RESULT_OK;
 import static com.facebook.AccessTokenManager.TAG;
 import static com.facebook.FacebookSdk.getCacheDir;
 
-public class ByQRCodeFragment extends Fragment {
-    private Uri imageUri;
-    private Intent intent;
+public class QRCodeActivity extends AppCompatActivity {
+
     Bitmap b;
     Handler handler;
     private static final int SELECT_PHOTO = 100;
-    public String barcode;
     private Member member;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        FragmentByQrcodeBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_by_qrcode, container, false);
+        FragmentByQrcodeBinding binding = DataBindingUtil.setContentView(this,R.layout.fragment_by_qrcode);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
+            Utility.changeStatusbarColor(this,R.color.colorBG,false);
         }
-        if (getArguments() != null){
-            member = (Member) getArguments().getSerializable("member");
+
+        Bundle mBundle=getIntent().getExtras();
+        if (mBundle != null){
+            member = (Member) mBundle.getSerializable("member");
         }
 
         String encrypted = "";
@@ -112,9 +114,9 @@ public class ByQRCodeFragment extends Fragment {
             binding.llShare.setBackground(getResources().getDrawable(R.drawable.border_color_gray3));
             binding.tvShare.setTextColor(getResources().getColor(R.color.black1));
 
-           Intent photoPic = new Intent(Intent.ACTION_PICK);
-           photoPic.setType("image/*");
-           startActivityForResult(photoPic, SELECT_PHOTO);
+            Intent photoPic = new Intent(Intent.ACTION_PICK);
+            photoPic.setType("image/*");
+            startActivityForResult(photoPic, SELECT_PHOTO);
 
         });
 
@@ -129,7 +131,7 @@ public class ByQRCodeFragment extends Fragment {
             binding.llShare.setBackground(getResources().getDrawable(R.drawable.border_color_gray3));
             binding.tvShare.setTextColor(getResources().getColor(R.color.black1));
 
-            Intent i = new Intent(getActivity(), ScanQRCodeActivity.class);
+            Intent i = new Intent(this, ScanQRCodeActivity.class);
             startActivity(i);
         });
 
@@ -163,11 +165,11 @@ public class ByQRCodeFragment extends Fragment {
         });
 
         binding.ivCancel.setOnClickListener(v -> {
-            Utility.backNavigation(getActivity());
+            finish();
+            Utility.fade(this);
         });
-
-        return binding.getRoot();
     }
+
 
     private void shareImageUri(Uri uri){
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -187,7 +189,7 @@ public class ByQRCodeFragment extends Fragment {
             image.compress(Bitmap.CompressFormat.PNG, 100, stream);
             stream.flush();
             stream.close();
-            uri = FileProvider.getUriForFile(getContext(), "com.mydomain.fileprovider", file);
+            uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", file);
 
 
             Log.e("uri--",""+uri);
@@ -209,7 +211,7 @@ public class ByQRCodeFragment extends Fragment {
 
                     Bitmap bMap = null;
                     try {
-                        bMap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
+                        bMap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -232,8 +234,8 @@ public class ByQRCodeFragment extends Fragment {
                                 decrypted = AESUtils.decrypt(output);
                                 Log.e(TAG, "decrypted:" + decrypted);
 
-                                Intent mIntent=new Intent(getActivity(),ProfileDetailActivity.class);
-                                mIntent.putExtra(getActivity().getString(R.string.scanId),decrypted);
+                                Intent mIntent=new Intent(this,ProfileDetailActivity.class);
+                                mIntent.putExtra(getString(R.string.scanId),decrypted);
                                 startActivity(mIntent);
 
                             } catch (Exception e) {
@@ -246,20 +248,5 @@ public class ByQRCodeFragment extends Fragment {
                 }
         }
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-        DashboardActivity.binding.space.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-        DashboardActivity.binding.space.setVisibility(View.VISIBLE);
-    }
-
 
 }

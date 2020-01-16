@@ -73,4 +73,36 @@ class SmartFilterViewModel(
         }
     }
 
+    fun getInActiveRecords(jsonObject: JsonObject) {
+        completableJob = Job()
+        completableJob.let { thejob ->
+
+            CoroutineScope(Dispatchers.IO + thejob).launch {
+                try {
+                    val response = mSmartFilterRepository.getInActiveRecords(jsonObject)
+                    response.let {
+                        withContext(Dispatchers.Main) {
+                            mByFilterListener.getMembers(response)
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                } catch (e: ApiException) {
+                    e.message?.let {
+                        mByFilterListener.getFailure(it)
+                    }
+                } catch (e: NoInternetException) {
+                    e.message?.let {
+                        mByFilterListener.getFailure(it)
+                    }
+                } catch (e: Exception) {
+                    e.message?.let {
+                        mByFilterListener.getFailure(it)
+                    }
+                }
+                thejob.complete()
+            }
+        }
+    }
+
 }

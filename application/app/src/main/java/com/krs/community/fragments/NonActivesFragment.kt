@@ -1,13 +1,18 @@
 package com.krs.community.fragments
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
+import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -17,7 +22,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -32,6 +40,8 @@ import com.krs.community.utils.FlipAnimator
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodel.SmartFilterViewModelFactory
+import com.mostafaaryan.transitionalimageview.TransitionalImageView
+import com.mostafaaryan.transitionalimageview.model.TransitionalImage
 import com.nightonke.boommenu.BoomMenuButton
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -45,7 +55,7 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private val lstMembers: MutableList<Member> = ArrayList()
     private lateinit var actionModeCallback: ActionModeCallback
-    private lateinit var actionMode: ActionMode
+    private var actionMode: ActionMode? = null
     private lateinit var selectedItems: SparseBooleanArray
     private lateinit var animationItemsIndex: SparseBooleanArray
     private var reverseAllAnimations = false
@@ -54,8 +64,8 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private lateinit var smartFilterViewModel: SmartFilterViewModel
     private val factory: SmartFilterViewModelFactory by instance()
-    private lateinit var tvCount:TextView
-    private lateinit var llRoot:LinearLayout
+    private lateinit var tvCount: TextView
+    private lateinit var llRoot: LinearLayout
     private var selectedPosition = 0
     private var start: Int = 0
     private val length: Int = 30
@@ -66,11 +76,11 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
         animationItemsIndex = SparseBooleanArray()
         recyclerView = root.findViewById(R.id.recycler_view)
         shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)
-        llRoot= root.findViewById(R.id.ll_root)
+        llRoot = root.findViewById(R.id.ll_root)
         (activity as AppCompatActivity).supportActionBar!!.title = ""
 
-        smartFilterViewModel = ViewModelProviders.of(this,factory).get(SmartFilterViewModel::class.java)
-        smartFilterViewModel.mByFilterListener =this
+        smartFilterViewModel = ViewModelProviders.of(this, factory).get(SmartFilterViewModel::class.java)
+        smartFilterViewModel.mByFilterListener = this
 
 
         adapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
@@ -79,41 +89,38 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
                 val member = lstMembers[position]
                 val holder = viewHolder as MyViewHolder
 
-                if(lstMembers.size>0){
-                    tvCount.visibility=View.VISIBLE
+                if (lstMembers.size > 0) {
+                    tvCount.visibility = View.VISIBLE
                     tvCount.text = "Member ${lstMembers.size} found"
-                }else{
-                    tvCount.visibility=View.GONE
+                } else {
+                    tvCount.visibility = View.GONE
                 }
 
                 holder.tvName.text = member.firstName
                 holder.tvArea.text = member.area
-                holder.tvAddr.text=member.address
+                holder.tvAddr.text = member.address
 
                 Coroutines.io {
-                    if(!member.subCastId.isNullOrEmpty()){
-                        viewHolder.tvName.text=member.firstName+" "+smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                    if (!member.subCastId.isNullOrEmpty()) {
+                        viewHolder.tvName.text = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
                     }
 
-                    if(!member.cityId.isNullOrEmpty()){
-                        holder.tvArea.text = member.area+" "+smartFilterViewModel.getCityNamebyId(member.cityId)
+                    if (!member.cityId.isNullOrEmpty()) {
+                        holder.tvArea.text = member.area + " " + smartFilterViewModel.getCityNamebyId(member.cityId)
                     }
                 }
 
                 holder.tvEmail.text = member.emailAddress
                 holder.tvMobile.text = member.mobile
 
-
-                holder.boomMenuButton.clearBuilders()
-                for (i in 0 until holder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
-                    holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder())
-                }
-                holder.boomMenuButton.setOnClickListener { v: View? -> holder.boomMenuButton.boom() }
                 holder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                 holder.itemView.isActivated = selectedItems[position, false]
                 applyIconAnimation(holder, position)
-                applyProfilePicture(holder, member)
                 applyClickEvents(holder, position)
+
+                someTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+                applyProfilePicture(holder, member)
+
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
@@ -126,8 +133,8 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
         }
 
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(activity!!.applicationContext)
-        recyclerView.setLayoutManager(mLayoutManager)
-        recyclerView.setItemAnimator(DefaultItemAnimator())
+        recyclerView.layoutManager = mLayoutManager
+        recyclerView.itemAnimator = DefaultItemAnimator()
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_nonactives, container, false)
         tvCount = header.findViewById(R.id.tv_count)
@@ -137,31 +144,28 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
         recyclerView.adapter = adapter
         actionModeCallback = ActionModeCallback()
 
-        DashboardActivity.stop=false
+        DashboardActivity.stop = false
         getNonActivesUsers()
 
         return root
     }
 
-    private fun getNonActivesUsers(){
+    private fun getNonActivesUsers() {
         if (!DashboardActivity.stop) {
             DashboardActivity.stop = true
-            val jsonObject= JSONObject()
-            val jsonObj=JSONObject()
-            jsonObject.put("start",start)
-            jsonObject.put("length",length)
-            jsonObj.put("status","0")
-            jsonObject.put("filter_by",jsonObj)
-            val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
-            smartFilterViewModel.smartFilterSearch(updated)
+            val jsonObject = JSONObject()
+            jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+            jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+            val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+            smartFilterViewModel.getInActiveRecords(updated)
             Handler().postDelayed({
                 shimmerFrameLayout.stopShimmerAnimation()
-                shimmerFrameLayout.visibility=View.GONE
-            },4000)
+                shimmerFrameLayout.visibility = View.GONE
+            }, 4000)
             lstMembers.clear()
             adapter.notifyDataSetChanged()
 
-            if(start==0){
+            if (start == 0) {
                 shimmerFrameLayout.startShimmerAnimation()
                 shimmerFrameLayout.visibility = View.VISIBLE
             }
@@ -171,11 +175,12 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
 
     override fun getMembers(response: SmartFilterResponse) {
         shimmerFrameLayout.stopShimmerAnimation()
-        shimmerFrameLayout.visibility=View.GONE
+        shimmerFrameLayout.visibility = View.GONE
 
-        if(response.success){
+        if (response.success) {
             if (response.members.size > 0) {
                 lstMembers.clear()
+                tvCount.visibility = View.VISIBLE
                 lstMembers.addAll(response.members)
                 adapter.notifyDataSetChanged()
 
@@ -183,19 +188,20 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
                 selectedPosition = lstMembers.size - 1
                 DashboardActivity.stop = false
 
-                if(lstMembers.size<=length){
+                if (lstMembers.size <= length) {
                     DashboardActivity.stop = true
                     Snackbar.make(llRoot, "End of Records", Snackbar.LENGTH_LONG).show()
                 }
-            }else{
+            } else {
+                tvCount.visibility = View.GONE
                 DashboardActivity.stop = true
-                Snackbar.make(llRoot, "End of Records", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(llRoot, "No records found!", Snackbar.LENGTH_LONG).show()
             }
-        }else {
+        } else {
             DashboardActivity.stop = false
         }
 
-        Toast.makeText(activity,"Success",Toast.LENGTH_SHORT).show()
+        Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show()
     }
 
     override fun getFailure(message: String) {
@@ -203,26 +209,25 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
             DashboardActivity.stop = false
             shimmerFrameLayout.stopShimmerAnimation()
             shimmerFrameLayout.visibility = View.GONE
-            Toast.makeText(activity,message,Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun loadApi() {
-        if (!DashboardActivity.stop) {
-            start = (lstMembers.size+1)
-            getNonActivesUsers()
-        }
+        /* if (!DashboardActivity.stop) {
+             start = (lstMembers.size+1)
+             getNonActivesUsers()
+         }*/
     }
 
     inner class MyViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view), View.OnLongClickListener {
         var iconText: TextView = view.findViewById(R.id.icon_text)
         var tvName: TextView = view.findViewById(R.id.tv_name)
-        var imgProfile: ImageView = view.findViewById(R.id.icon_profile)
+        var imgProfile: TransitionalImageView = view.findViewById(R.id.icon_profile)
         var messageContainer: LinearLayout = view.findViewById(R.id.message_container)
         var iconContainer: RelativeLayout = view.findViewById(R.id.icon_container)
-        var iconBack: RelativeLayout= view.findViewById(R.id.icon_back)
+        var iconBack: RelativeLayout = view.findViewById(R.id.icon_back)
         var iconFront: RelativeLayout = view.findViewById(R.id.icon_front)
-        var boomMenuButton: BoomMenuButton = view.findViewById(R.id.boomMenuButton)
         var tvArea: TextView = view.findViewById(R.id.tv_area)
         var tvMobile: TextView = view.findViewById(R.id.tv_mobile)
         var tvEmail: TextView = view.findViewById(R.id.tv_email)
@@ -249,14 +254,61 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
         }
     }
 
+
+    class someTask() : AsyncTask<Void, Void, String>() {
+        override fun doInBackground(vararg params: Void?): String? {
+            // ...
+            return null
+        }
+
+        override fun onPreExecute() {
+            super.onPreExecute()
+            // ...
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            // ...
+        }
+    }
+
     private fun applyProfilePicture(holder: MyViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
-            Glide.with(activity!!).load(member.profilePic)
-                    .thumbnail(0.5f)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .apply(RequestOptions.circleCropTransform())
-                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-                    .into(holder.imgProfile)
+            if (member.profilePic.isNotEmpty()) {
+                holder.imgProfile.isClickable = true
+                try {
+                    val path = getString(R.string.base_url_original) + "" + member.profilePic
+                    Log.d("NonActives", "path: $path")
+
+                    Glide.with(this)
+                            .asBitmap()
+                            .apply(RequestOptions.circleCropTransform()).thumbnail(0.5f)
+                            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                            .load(path)
+                            .into(object : CustomTarget<Bitmap>() {
+                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+
+                                    val transitionalImage: TransitionalImage = TransitionalImage.Builder()
+                                            .duration(250)
+                                            .backgroundColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
+                                            .image(resource)
+                                            .create()
+                                    holder.imgProfile.setTransitionalImage(transitionalImage)
+                                }
+
+                                override fun onLoadCleared(placeholder: Drawable?) {
+                                    // this is called when imageView is cleared on lifecycle call or for
+                                    // some other reason.
+                                    // if you are referencing the bitmap somewhere else too other than this imageView
+                                    // clear it here as you can no longer have the bitmap
+                                }
+                            })
+
+
+                } catch (e: Exception) {
+                    e.message
+                }
+            }
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE
         } else {
@@ -299,7 +351,6 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
     }
 
 
-
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
@@ -329,25 +380,6 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
         resetCurrentIndex()
     }
 
-
-    private val inbox: Unit
-        private get() {
-            lstMembers.clear()
-            /*for (i in 0..19) {
-                val message = Message()
-                message.id = 1
-                message.isImportant = false
-                message.message = "Now android supports multiple voice recogonization"
-                message.picture = "https://api.androidhive.info/json/google.png"
-                message.isRead = false
-                message.timestamp = "10:30 AM"
-                message.from = "Google Alerts"
-                message.subject = "Google Alert - android"
-                message.color = Utility.getRandomMaterialColor(activity, "400")
-                lstMembers.add(message)
-            }*/
-            adapter.notifyDataSetChanged()
-        }
 
     private fun onIconClicked(position: Int) {
         if (actionMode == null) {
@@ -380,11 +412,11 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
         toggleSelected(position)
         val count = selectedItemCount
         if (count == 0) {
-            actionMode.finish()
+            actionMode?.finish()
             // ll_title.setVisibility(View.VISIBLE);
         } else { // ll_title.setVisibility(View.GONE);
-            actionMode.title = count.toString()
-            actionMode.invalidate()
+            actionMode?.title = count.toString()
+            actionMode?.invalidate()
         }
     }
 
@@ -400,7 +432,7 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
             //message.isRead = true
             lstMembers[position] = message
             adapter.notifyDataSetChanged()
-           // Toast.makeText(activity, "Read: " + message.message, Toast.LENGTH_SHORT).show()
+            // Toast.makeText(activity, "Read: " + message.message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -452,7 +484,7 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
 
         override fun onDestroyActionMode(mode: ActionMode) {
             clearSelections()
-           // actionMode = null
+            actionMode = null
             // ll_title.setVisibility(View.VISIBLE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(activity, R.color.colorBG, false)

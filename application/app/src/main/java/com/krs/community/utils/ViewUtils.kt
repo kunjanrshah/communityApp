@@ -3,6 +3,7 @@ package com.krs.community.utils
 import android.Manifest
 import android.app.Activity
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -814,22 +815,14 @@ fun createMemberPDF(mContext:Context, member: Member, profileDetailViewModel: Pr
                 lblWeight+weight+"<br>"+
                 lblHeight+height
 
-
         val MailString = MainDetail + PersonalDetail + ProfessionalDetail + MatrimonyDetail
         Log.v("ViewUtils","MailString: $MailString")
-         createPdf(mContext,name,MailString);
+         createPdf(mContext,name,MailString)
     },1500)
-
-
-
 
 }
 
 private fun createPdf(mContext: Context, fname: String, test: String) {
-
-    val pdfDirectory = File(Environment.getExternalStorageDirectory(),"/Community")
-    pdfDirectory.mkdirs()
-    val outputFile = File(pdfDirectory, fname)
 
     CreatePdf(mContext)
             .setPdfName(fname)
@@ -837,21 +830,22 @@ private fun createPdf(mContext: Context, fname: String, test: String) {
             .setContentBaseUrl(null)
             .setPageSize(PrintAttributes.MediaSize.ISO_A4)
             .setContent(test)
-            .setFilePath(outputFile.absolutePath)
+            .setFilePath(Environment.getExternalStorageDirectory().absolutePath + "/Community")
             .setCallbackListener(object : CreatePdf.PdfCallbackListener {
                 override fun onFailure(errorMsg: String) {
                     Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onSuccess(filePath: String) {
-                    displayPDFDialog(mContext,fname,outputFile.absolutePath,test)
+                    Log.d("Pdf Saved : ",filePath)
                     Toast.makeText(mContext, "Pdf Saved : $filePath", Toast.LENGTH_LONG).show()
+                    displayPDFDialog(mContext,fname,filePath,test)
                 }
             })
             .create()
 }
 
-fun displayPDFDialog(context: Context,name:String,path:String,content:String) {
+fun displayPDFDialog(context: Context,name:String,filePath:String,content:String) {
 
     SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
             .setTitleText("$name's Profile")
@@ -860,25 +854,56 @@ fun displayPDFDialog(context: Context,name:String,path:String,content:String) {
             .showCancelButton(true)
             .setNeutralText("Print")
             .setNeutralClickListener {sDialog ->
-                sDialog.dismiss()
                 CreatePdf(context)
                         .setPdfName(name)
                         .openPrintDialog(true)
                         .setContentBaseUrl(null)
                         .setPageSize(PrintAttributes.MediaSize.ISO_A4)
                         .setContent(content)
-                        .setFilePath(path).create()
+                        .setFilePath(Environment.getExternalStorageDirectory().absolutePath + "/Community").create()
             }
             .setConfirmText("Share")
             .setConfirmClickListener { sDialog ->
-                sDialog.dismiss()
-
+                shareFile(context,filePath)
             }
             .setCancelText("View")
             .setCancelClickListener {
-
+               openPdf(context,filePath)
             }
             .show()
+}
+
+
+fun openPdf(context: Context,filePath: String) {
+
+    val file = File(filePath)
+    val path = Uri.fromFile(file)
+
+    val pdfOpenintent = Intent(Intent.ACTION_VIEW);
+    pdfOpenintent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
+    pdfOpenintent.setDataAndType(path, "application/pdf");
+    try {
+    context.startActivity(pdfOpenintent);
+    }
+    catch ( e: ActivityNotFoundException) {
+
+    }
+
+}
+
+
+fun shareFile(context: Context,filePath: String){
+    val file = File(filePath)
+    val intent = Intent(Intent.ACTION_SEND)
+    if(file.exists()) {
+        val path = Uri.fromFile(file)
+        intent.setType("application/pdf");
+        intent.putExtra(Intent.EXTRA_STREAM, path);
+        intent.putExtra(Intent.EXTRA_SUBJECT,"Sharing File from Community App");
+        intent.putExtra(Intent.EXTRA_TEXT, "Sharing File from Community App");
+
+        context.startActivity(Intent.createChooser(intent, "Share File Details"));
+    }
 }
 
 fun shareDetails(activity: FragmentActivity?,name:String,mobile:String,email:String,area:String,address:String){
@@ -896,3 +921,4 @@ fun shareDetails(activity: FragmentActivity?,name:String,mobile:String,email:Str
     activity?.startActivity(Intent.createChooser(intent, "Choose one"))
 
 }
+

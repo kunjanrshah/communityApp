@@ -82,10 +82,10 @@ class SmartSearchViewModel(
 
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
-                    val response = mSmartSearchRepository.searchByKeyword(jsonObject)
-                    response.member?.let {
+                    val response = mSmartSearchRepository.changeStatus(jsonObject)
+                    response.let {
                         withContext(Dispatchers.Main) {
-                            mByKeywordListener.getMembers(response)
+                            mByKeywordListener.getFailure(response.message)
                             thejob.complete()
                         }
                         return@launch

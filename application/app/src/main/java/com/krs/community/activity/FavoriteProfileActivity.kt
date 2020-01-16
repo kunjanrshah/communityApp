@@ -1,7 +1,6 @@
 package com.krs.community.activity
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -18,7 +17,6 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +30,6 @@ import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.SearchLiveo
 import com.krs.community.databinding.ActivityFavoriteBinding
 import com.krs.community.entities.RoomMember
-import com.krs.community.fragments.ByQRCodeFragment
 import com.krs.community.interfaces.ByKeywordListener
 import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.utils.*
@@ -292,12 +289,13 @@ class FavoriteProfileActivity : BaseActivity() , SearchLiveo.OnSearchListener, K
                         }
 
                     } else if (it == 3) {
-                        val fragment = ByQRCodeFragment()
+
                         val mBundle = Bundle()
                         mBundle.putSerializable(getString(R.string.member), getMemberFromRoomMember(member))
-                        fragment.arguments = mBundle
-                        Utility.movetoFragment(this@FavoriteProfileActivity, fragment)
-
+                        val intent: Intent = Intent(this@FavoriteProfileActivity, QRCodeActivity::class.java)
+                        intent.putExtras(mBundle)
+                        startActivity(intent)
+                        Utility.fade(this@FavoriteProfileActivity)
                     } else if (it == 4) {
                         shareDetails(this@FavoriteProfileActivity,viewHolder.tvName.text.toString(), member.mobile.toString(),member.emailAddress.toString(),viewHolder.tvArea.text.toString(), member.address.toString())
                     } else if (it == 5) {

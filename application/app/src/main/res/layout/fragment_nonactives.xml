@@ -37,7 +37,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:orientation="vertical"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="60dp"
             android:visibility="gone"
             shimmer:duration="800">
 
@@ -46,15 +46,15 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <include layout="@layout/row_list_calendar_shimmer" />
+                <include layout="@layout/list_row_nonactives_shimmer" />
 
-                <include layout="@layout/row_list_calendar_shimmer" />
+                <include layout="@layout/list_row_nonactives_shimmer" />
 
-                <include layout="@layout/row_list_calendar_shimmer" />
+                <include layout="@layout/list_row_nonactives_shimmer" />
 
-                <include layout="@layout/row_list_calendar_shimmer" />
+                <include layout="@layout/list_row_nonactives_shimmer" />
 
-                <include layout="@layout/row_list_calendar_shimmer" />
+                <include layout="@layout/list_row_nonactives_shimmer" />
 
             </LinearLayout>
 

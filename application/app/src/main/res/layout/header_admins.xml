@@ -27,7 +27,7 @@
         android:visibility="gone"
         android:layout_marginLeft="15dp"
         android:fontFamily="@font/montserrat_medium"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:layout_marginBottom="5dp"
         android:textColor="@color/black1"
         android:layout_height="wrap_content" />

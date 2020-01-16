@@ -117,7 +117,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
 
     private var selectedPosition = 0
     private var start: Int = 0
-    private val length: Int = 30
+    private val length: Int = 5
     private lateinit var city_id:String
     private lateinit var city_name:String
 

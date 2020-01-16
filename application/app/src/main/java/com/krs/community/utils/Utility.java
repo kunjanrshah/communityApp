@@ -795,6 +795,7 @@ public class Utility {
         FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
+            fade(activity);
         } else {
             movetoFragment(activity, new DashboardFragment());
         }
@@ -1515,6 +1516,7 @@ public class Utility {
         }
         dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE).setContentText(message);
         dialog.setTitleText(title);
+        dialog.setCancelable(false);
         dialog.show();
     }
 
@@ -1668,8 +1670,8 @@ public class Utility {
     }
 
     public static void sendWhatsappMessage(@NonNull Context mActivity, String mob_num, String message) {
-        String digits = "\\d+";
-        if (mob_num.matches(digits)) {
+       // String digits = "\\d+";
+        //if (mob_num.matches(digits)) {
             try {
                 //linking for whatsapp
                 Uri uri = Uri.parse("whatsapp://send?phone=+91" + mob_num + "&text=" + URLEncoder.encode(message, "UTF-8"));
@@ -1679,7 +1681,7 @@ public class Utility {
                 e.printStackTrace();
                 Toast.makeText(mActivity, "WhatsApp not installed.", Toast.LENGTH_SHORT).show();
             }
-        }
+        //}
     }
 
     public static String getCapsSentences(String tagName) {

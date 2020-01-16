@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import com.krishna.debug_tools.activity.ActivityDebugTools;
 import com.krs.community.R;
 import com.krs.community.activity.FavoriteProfileActivity;
+import com.krs.community.activity.QRCodeActivity;
 import com.krs.community.activity.RegisterActivty;
 import com.krs.community.model.FavProfiles;
 import com.krs.community.model.Member;
@@ -219,13 +220,15 @@ public class DashboardFragment extends Fragment {
                         Utility.movetoFragment(getActivity(),new BrowseByCityFragment());
                        break;
                     case 1:
-                        ByQRCodeFragment fragment=new ByQRCodeFragment();
+
                         Bundle mBundle=new Bundle();
                         String loginMember= Guru.getString(getString(R.string.loginUser),"");
                         Member member=new Gson().fromJson(loginMember, Member.class);
                         mBundle.putSerializable(getString(R.string.member),member);
-                        fragment.setArguments(mBundle);
-                        Utility.movetoFragment(getActivity(),fragment);
+                        Intent intent1  = new Intent(getActivity(), QRCodeActivity.class);
+                        intent1.putExtras(mBundle);
+                        startActivity(intent1);
+                        Utility.fade(getActivity());
                         break;
                     case 2:
                         Utility.movetoFragment(getActivity(),new SearchByDistanceFragment());
@@ -252,6 +255,8 @@ public class DashboardFragment extends Fragment {
                     case 9:
                         Intent intent=new Intent(getActivity(),RegisterActivty.class);
                         startActivity(intent);
+                        Utility.fade(getActivity());
+
                         break;
                     case 10:
                         Utility.movetoFragment(getActivity(),new ShareEventFragment());

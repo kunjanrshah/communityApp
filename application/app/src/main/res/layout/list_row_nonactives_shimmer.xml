@@ -23,8 +23,9 @@
 
                 <RelativeLayout
                     android:id="@+id/icon_container"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="40dp"
+                    android:background="@color/placeholder_bg"
+                    android:layout_height="40dp"
                     android:orientation="vertical">
 
                     <RelativeLayout
@@ -35,15 +36,14 @@
                         android:fillEnabled="false">
 
                         <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/bg_circle" />
+                            android:layout_width="40dp"
+                            android:layout_height="40dp" />
 
                         <ImageView
                             android:layout_width="25dp"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:src="@drawable/ic_done_white_24dp" />
+                             />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -51,12 +51,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fillAfter="false"
+                        android:background="@color/placeholder_bg"
                         android:fillEnabled="false">
 
-                        <com.mostafaaryan.transitionalimageview.TransitionalImageView
+                        <ImageView
                             android:id="@+id/icon_profile"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                            android:layout_width="40dp"
+                            android:background="@color/placeholder_bg"
+                            android:layout_height="40dp" />
 
                         <TextView
                             android:id="@+id/icon_text"
@@ -72,7 +74,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="15dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:gravity="center|bottom"
                     android:text="Address"
@@ -103,19 +105,23 @@
 
                         <TextView
                             android:id="@+id/tv_name"
-                            android:layout_width="match_parent"
+                            android:background="@color/placeholder_bg"
+                            android:layout_width="200dp"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tv_area"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/placeholder_bg"
                             android:fontFamily="@font/montserrat_medium"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="14sp" />
 
                     </LinearLayout>
+
 
                 </LinearLayout>
 
@@ -146,7 +152,8 @@
 
                         <TextView
                             android:id="@+id/tv_mobile"
-                            android:layout_width="wrap_content"
+                            android:background="@color/placeholder_bg"
+                            android:layout_width="200dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
@@ -171,7 +178,8 @@
 
                         <TextView
                             android:id="@+id/tv_email"
-                            android:layout_width="wrap_content"
+                            android:background="@color/placeholder_bg"
+                            android:layout_width="200dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
@@ -192,9 +200,10 @@
                 <TextView
                     android:id="@+id/tv_addr"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/placeholder_bg"
                     android:fontFamily="@font/montserrat_medium"
                     android:textSize="14sp" />
 

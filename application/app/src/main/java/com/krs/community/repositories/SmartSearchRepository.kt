@@ -17,6 +17,12 @@ class SmartSearchRepository(private val api: ApiServices, private val db:AppData
         }
     }
 
+    suspend fun changeStatus(jsonObject: JsonObject): searchByKeywordsResponse {
+        return apiRequest{
+            api.changeStatus(jsonObject)
+        }
+    }
+
     suspend fun getRoomMembers(): List<RoomMember> {
         return db.getRoomMemberDao().getRoomMembers()
     }

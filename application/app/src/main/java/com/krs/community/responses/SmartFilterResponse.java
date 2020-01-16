@@ -11,10 +11,13 @@ public class SmartFilterResponse {
     @SerializedName("success")
     @Expose
     private Boolean success;
+    @SerializedName("message")
+    @Expose
+    private Boolean message;
     @SerializedName("total_records")
     @Expose
     private Integer totalRecords;
-    @SerializedName("members")
+    @SerializedName("users")
     @Expose
     private List<Member> members = null;
 
@@ -42,4 +45,11 @@ public class SmartFilterResponse {
         this.members = members;
     }
 
+    public Boolean getMessage() {
+        return message;
+    }
+
+    public void setMessage(Boolean message) {
+        this.message = message;
+    }
 }

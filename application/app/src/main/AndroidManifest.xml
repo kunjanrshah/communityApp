@@ -152,6 +152,14 @@
             android:windowSoftInputMode="adjustPan"
             />
 
+
+        <activity android:name=".activity.QRCodeActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"
+            />
+
+
         <service android:name="com.krs.community.bkservice.restarter.JobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
@@ -187,15 +195,19 @@
         </service>
 
         <provider
-            android:authorities="com.mydomain.fileprovider"
+            android:authorities="com.krs.community.provider"
             android:exported="false"
             android:grantUriPermissions="true"
-            android:name="androidx.core.content.FileProvider"
-            >
+            android:name="androidx.core.content.FileProvider">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_path" />
         </provider>
+
+
+
+
+
     </application>
 
 </manifest>
