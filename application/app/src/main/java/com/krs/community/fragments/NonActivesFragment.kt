@@ -1,8 +1,5 @@
 package com.krs.community.fragments
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -12,18 +9,13 @@ import android.util.SparseBooleanArray
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
@@ -31,6 +23,8 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
+import com.krs.community.adapter.ImageAdapter
+import com.krs.community.app.AppController
 import com.krs.community.interfaces.ByFilterListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
@@ -40,9 +34,7 @@ import com.krs.community.utils.FlipAnimator
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodel.SmartFilterViewModelFactory
-import com.mostafaaryan.transitionalimageview.TransitionalImageView
-import com.mostafaaryan.transitionalimageview.model.TransitionalImage
-import com.nightonke.boommenu.BoomMenuButton
+import com.orhanobut.dialogplus.DialogPlus
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -116,11 +108,8 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
                 holder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                 holder.itemView.isActivated = selectedItems[position, false]
                 applyIconAnimation(holder, position)
-                applyClickEvents(holder, position)
-
-                someTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+                applyClickEvents(holder, position,member)
                 applyProfilePicture(holder, member)
-
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
@@ -214,16 +203,16 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
     }
 
     override fun loadApi() {
-        /* if (!DashboardActivity.stop) {
+         if (!DashboardActivity.stop) {
              start = (lstMembers.size+1)
              getNonActivesUsers()
-         }*/
+         }
     }
 
     inner class MyViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view), View.OnLongClickListener {
         var iconText: TextView = view.findViewById(R.id.icon_text)
         var tvName: TextView = view.findViewById(R.id.tv_name)
-        var imgProfile: TransitionalImageView = view.findViewById(R.id.icon_profile)
+        var imgProfile: ImageView = view.findViewById(R.id.icon_profile)
         var messageContainer: LinearLayout = view.findViewById(R.id.message_container)
         var iconContainer: RelativeLayout = view.findViewById(R.id.icon_container)
         var iconBack: RelativeLayout = view.findViewById(R.id.icon_back)
@@ -244,7 +233,7 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
         }
     }
 
-    private fun applyClickEvents(holder: MyViewHolder, position: Int) {
+    private fun applyClickEvents(holder: MyViewHolder, position: Int,member: Member) {
         holder.iconContainer.setOnClickListener { view: View? -> onIconClicked(position) }
         holder.messageContainer.setOnClickListener { view: View? -> onMessageRowClicked(position) }
         holder.messageContainer.setOnLongClickListener { view: View ->
@@ -252,59 +241,36 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             true
         }
+
+        holder.imgProfile.setOnClickListener {
+            if (member.profilePic.isNotEmpty()) {
+                val path = getString(R.string.base_url_thumb) + "" + member.profilePic
+                Log.d("NonActives", "path: $path")
+
+                val adapter = ImageAdapter(context,path)
+                val dialog: DialogPlus = DialogPlus
+                        .newDialog(activity)
+                        .setAdapter(adapter)
+                        //.setContentBackgroundResource(R.drawable.round_corner_white)
+                        .setOnItemClickListener { dialog12: DialogPlus?, item: Any?, view: View?, position: Int -> Toast.makeText(activity, "Clicked $position", Toast.LENGTH_SHORT).show() }
+                        .setCancelable(true)
+                        .setGravity(Gravity.CENTER)
+                        .setExpanded(true,900)
+                        .create()
+
+                dialog.show()
+            }
+        }
     }
 
-
-    class someTask() : AsyncTask<Void, Void, String>() {
-        override fun doInBackground(vararg params: Void?): String? {
-            // ...
-            return null
-        }
-
-        override fun onPreExecute() {
-            super.onPreExecute()
-            // ...
-        }
-
-        override fun onPostExecute(result: String?) {
-            super.onPostExecute(result)
-            // ...
-        }
-    }
-
-    private fun applyProfilePicture(holder: MyViewHolder, member: Member) {
+    fun applyProfilePicture(holder: MyViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
             if (member.profilePic.isNotEmpty()) {
                 holder.imgProfile.isClickable = true
+                val path = getString(R.string.base_url_thumb) + "" + member.profilePic
+                Log.d("NonActives", "path: $path")
                 try {
-                    val path = getString(R.string.base_url_original) + "" + member.profilePic
-                    Log.d("NonActives", "path: $path")
-
-                    Glide.with(this)
-                            .asBitmap()
-                            .apply(RequestOptions.circleCropTransform()).thumbnail(0.5f)
-                            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-                            .load(path)
-                            .into(object : CustomTarget<Bitmap>() {
-                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-
-                                    val transitionalImage: TransitionalImage = TransitionalImage.Builder()
-                                            .duration(250)
-                                            .backgroundColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
-                                            .image(resource)
-                                            .create()
-                                    holder.imgProfile.setTransitionalImage(transitionalImage)
-                                }
-
-                                override fun onLoadCleared(placeholder: Drawable?) {
-                                    // this is called when imageView is cleared on lifecycle call or for
-                                    // some other reason.
-                                    // if you are referencing the bitmap somewhere else too other than this imageView
-                                    // clear it here as you can no longer have the bitmap
-                                }
-                            })
-
-
+                    Glide.with(AppController.mApplication).load(path).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(holder.imgProfile)
                 } catch (e: Exception) {
                     e.message
                 }

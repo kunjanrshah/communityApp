@@ -238,7 +238,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         ivAtoz.setOnClickListener { v ->
             val adapter = AtoZBottomAdapter(context)
             adapter.setmISortingRecords(this)
-            dialog = DialogPlus.newDialog(context!!)
+            dialog = DialogPlus.newDialog(context)
                     .setAdapter(adapter)
                     .setGravity(Gravity.BOTTOM)
                     .setCancelable(true)

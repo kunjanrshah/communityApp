@@ -1,5 +1,8 @@
 <resources>
 
+
+
+
     <style name="ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@color/white</item>
         <item name="height">40dp</item>

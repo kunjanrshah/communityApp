@@ -48,15 +48,15 @@
 
                     <RelativeLayout
                         android:id="@+id/icon_front"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:fillAfter="false"
                         android:fillEnabled="false">
 
-                        <com.mostafaaryan.transitionalimageview.TransitionalImageView
+                        <ImageView
                             android:id="@+id/icon_profile"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"/>
 
                         <TextView
                             android:id="@+id/icon_text"
