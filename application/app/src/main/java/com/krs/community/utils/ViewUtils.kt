@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
@@ -174,6 +175,16 @@ fun displayNeverAskAgainDialog(context: Context) {
             .show()
 }
 
+fun openImageDialog(activity: AppCompatActivity,url: String) {
+    val dialog = Dialog(activity)
+    dialog.setCancelable(true)
+    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    dialog.setContentView(R.layout.image_dialog)
+    dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation;
+    val image: ImageView = dialog.findViewById(R.id.img_dialog)
+    Glide.with(activity).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(image)
+    dialog.show()
+}
 
 fun pickFromGallery(context: FragmentActivity) {
     if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {

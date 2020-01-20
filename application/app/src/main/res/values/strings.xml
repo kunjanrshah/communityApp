@@ -400,5 +400,12 @@
     <string name="permission_rationale_message">This permission is needed for doing some fancy stuff so please, allow it!</string>
     <string name="camera_permission_denied_dialog_title">Camera permission request</string>
     <string name="camera_permission_denied_dialog_feedback">QRCode sharing and profile image will not be available until you accept the permission request</string>
+    <string name="Local_Admin" translatable="false">Local Admin</string>
+    <string name="LOCAL_ADMIN" translatable="false">LOCAL_ADMIN</string>
+    <string name="Sub_Admin" translatable="false">Sub Admin</string>
+    <string name="SUB_ADMIN" translatable="false">SUB_ADMIN</string>
+    <string name="User" translatable="false">User</string>
+    <string name="Family_Head" translatable="false">Family Head</string>
+    <string name="Member" translatable="false">Member</string>
 
 </resources>

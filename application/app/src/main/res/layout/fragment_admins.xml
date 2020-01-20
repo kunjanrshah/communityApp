@@ -17,6 +17,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:overScrollMode="never"
+        android:layout_marginBottom="50dp"
+        android:layoutAnimation="@anim/layout_animation_fall_down"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/row_list_calendar" />
 
@@ -36,15 +38,15 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include layout="@layout/row_list_calendar_shimmer" />
+            <include layout="@layout/admin_list_item_shimmer" />
 
-            <include layout="@layout/row_list_calendar_shimmer" />
+            <include layout="@layout/admin_list_item_shimmer" />
 
-            <include layout="@layout/row_list_calendar_shimmer" />
+            <include layout="@layout/admin_list_item_shimmer" />
 
-            <include layout="@layout/row_list_calendar_shimmer" />
+            <include layout="@layout/admin_list_item_shimmer" />
 
-            <include layout="@layout/row_list_calendar_shimmer" />
+            <include layout="@layout/admin_list_item_shimmer" />
 
         </LinearLayout>
 

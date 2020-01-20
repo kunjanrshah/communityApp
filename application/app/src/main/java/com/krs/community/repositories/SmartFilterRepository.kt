@@ -40,6 +40,14 @@ class SmartFilterRepository(private val api: ApiServices, private val db:AppData
         return db.getCityDao().getcityName(Integer.parseInt(id))
     }
 
+    fun getSubCommunity(id:String): String {
+        return db.getSubCommunityDao().getSubCommunityName(id)
+    }
+
+    fun getLocalCommunity(id:String): String {
+        return db.getLocalCommunityDao().getLocalCommunity(id)
+    }
+
      fun getLastNameById(id:Int): String {
         return db.getLastNameDao().getLastName(id)
     }

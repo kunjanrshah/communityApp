@@ -17,7 +17,7 @@ public class SmartFilterResponse {
     @SerializedName("total_records")
     @Expose
     private Integer totalRecords;
-    @SerializedName("users")
+    @SerializedName("members")
     @Expose
     private List<Member> members = null;
 

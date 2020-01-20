@@ -109,6 +109,41 @@ class SmartSearchViewModel(
         }
     }
 
+    fun changeRole(jsonObject: JsonObject) {
+        jobBySearch = Job()
+        jobBySearch.let { thejob ->
+
+            CoroutineScope(Dispatchers.IO + thejob).launch {
+                try {
+                    val response = mSmartSearchRepository.changeRole(jsonObject)
+                    response.let {
+                        withContext(Dispatchers.Main) {
+                            mByKeywordListener.getFailure(response.message)
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                    mByKeywordListener.getFailure(response.message as String)
+                } catch (e: ApiException) {
+                    e.message?.let {
+                        mByKeywordListener.getFailure(it)
+                    }
+                } catch (e: NoInternetException) {
+                    e.message?.let {
+                        mByKeywordListener.getFailure(it)
+                    }
+                } catch (e: Exception) {
+                    e.message?.let {
+                        mByKeywordListener.getFailure(it)
+                    }
+                }
+                thejob.complete()
+            }
+        }
+    }
+
+
+
 
     fun getMembers(){
         jobGetMembers= Job()

@@ -1,43 +1,54 @@
 package com.krs.community.fragments
 
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
+import android.text.TextUtils
+import android.util.Log
+import android.util.SparseBooleanArray
+import android.view.*
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cn.pedant.SweetAlert.SweetAlertDialog
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.activity.ProfileDetailActivity
+import com.krs.community.adapter.LocationAdapter
+import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.interfaces.ByFilterListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
-import com.krs.community.utils.Coroutines
-import com.krs.community.utils.Utility
+import com.krs.community.utils.*
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodel.SmartFilterViewModelFactory
 import com.nightonke.boommenu.BoomMenuButton
+import com.orhanobut.dialogplus.DialogPlus
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
+class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner  {
 
     override val kodein by kodein()
-    var lstAdmins: ArrayList<Member> = ArrayList()
+    private var lstAdmins: ArrayList<Member> = ArrayList()
     private lateinit var tvCount:TextView
     private lateinit var smartFilterViewModel: SmartFilterViewModel
     private val factory: SmartFilterViewModelFactory by instance()
@@ -46,6 +57,18 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private lateinit var llRoot: FrameLayout
+    private lateinit var rvAdmins: RecyclerView
+    private var count=0
+    private var changeRoleDialog: DialogPlus? = null
+    private var setLocationDialog: DialogPlus? = null
+    private var reverseAllAnimations = false
+    private var TAG: String? = AdminsFragment::class.qualifiedName
+    private var selectedItems: SparseBooleanArray = SparseBooleanArray()
+    private var animationItemsIndex: SparseBooleanArray = SparseBooleanArray()
+    private var currentSelectedIndex = -1
+    private var actionMode: ActionMode? = null
+    private lateinit var actionModeCallback: ActionModeCallback
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val root = inflater.inflate(R.layout.fragment_admins, container, false)
@@ -54,48 +77,73 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
         (activity as AppCompatActivity).supportActionBar!!.title = ""
         smartFilterViewModel = ViewModelProviders.of(this,factory).get(SmartFilterViewModel::class.java)
         smartFilterViewModel.mByFilterListener =this
-
+        actionModeCallback = ActionModeCallback()
+        (activity as AppCompatActivity).supportActionBar?.hide()
         adapter = object : ParallaxRecyclerAdapter<Member>(lstAdmins) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, i: Int) {
                 val holder = viewHolder as ListViewHolder
 
                 if(lstAdmins.size>0){
                     tvCount.visibility=View.VISIBLE
-                    tvCount.text = "Admin ${lstAdmins.size} found"
+                    tvCount.text = "${lstAdmins.size} Admins found"
                 }else{
                     tvCount.visibility=View.GONE
                 }
-
-                holder.tvAddr.text=lstAdmins[i].address
-                holder.tvName.text = lstAdmins[i].firstName
-                viewHolder.tvArea.text = lstAdmins[i].area
+                val member = lstAdmins[i]
+                holder.tvName.text = member.firstName
+                viewHolder.tvArea.text = member.area
+                val strRole=member.role
+                when {
+                    strRole == resources.getString(R.string.LOCAL_ADMIN) -> {
+                        holder.tvRole.text = resources.getString(R.string.Local_Admin)
+                        Coroutines.io {
+                           val name= smartFilterViewModel.getLocalCommunity(member.localCommunityId)
+                            holder.tvRegion.text=name
+                        }
+                    }
+                    strRole == resources.getString(R.string.SUB_ADMIN) -> {
+                        holder.tvRole.text = resources.getString(R.string.Sub_Admin)
+                        Coroutines.io {
+                            val name= smartFilterViewModel.getSubCommunity(member.subCommunityId)
+                            holder.tvRegion.text=name
+                        }
+                    }
+                    else -> {
+                        holder.tvRole.text = resources.getString(R.string.User)
+                        holder.tvRegion.text=""
+                    }
+                }
 
                 Coroutines.io {
-                    if(!lstAdmins[i].subCastId.isNullOrEmpty()){
-                        viewHolder.tvName.text=lstAdmins[i].firstName+" "+smartFilterViewModel.getLastNameById(lstAdmins[i].subCastId.toInt())
+                    if(!member.subCastId.isNullOrEmpty()){
+                        viewHolder.tvName.text=member.firstName+" "+smartFilterViewModel.getLastNameById(member.subCastId.toInt())
                     }
 
-                    if(!lstAdmins[i].cityId.isNullOrEmpty()){
-                        viewHolder.tvArea.text = lstAdmins[i].area+" "+smartFilterViewModel.getCityNamebyId(lstAdmins.get(i).cityId)
+                    if(!member.cityId.isNullOrEmpty()){
+                        viewHolder.tvArea.text = member.area+" "+smartFilterViewModel.getCityNamebyId(member.cityId)
                     }
                 }
 
-                viewHolder.tvEmail.text = lstAdmins[i].emailAddress
-                viewHolder.tvMobile.text = lstAdmins[i].mobile
-                if(lstAdmins[i].headId == "0"){
-                    holder.tvRole.text = "Family Head"
+                viewHolder.tvEmail.text = member.emailAddress
+                viewHolder.tvMobile.text = member.mobile
+                if(member.headId == "0"){
+                    holder.tvType.text = resources.getString(R.string.Family_Head)
                 }else{
-                    holder.tvRole.text = "Member"
+                    holder.tvType.text = resources.getString(R.string.Member)
                 }
 
+                viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
+                viewHolder.itemView.isActivated = selectedItems.get(i, false)
+
+                applyProfilePicture(holder,member)
+                applyClickEvents(holder, i,member)
+                applyImportant(viewHolder, member)
+                applyIconAnimation(viewHolder, i)
                 holder.boomMenuButton.clearBuilders()
                 for (i in 0 until holder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
                     holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder())
                 }
                 holder.boomMenuButton.setOnClickListener { v: View? -> holder.boomMenuButton.boom() }
-
-
-
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
@@ -113,7 +161,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
         val MyLayoutManager = LinearLayoutManager(activity)
-        val rvAdmins: RecyclerView = root.findViewById(R.id.rv_Admins)
+        rvAdmins = root.findViewById(R.id.rv_Admins)
         rvAdmins.layoutManager = MyLayoutManager
         rvAdmins.itemAnimator = DefaultItemAnimator()
         adapter.setParallaxHeader(header, rvAdmins)
@@ -125,12 +173,12 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
         loginUserSubCommunityId=member.subCommunityId
         loginUserLocalCommunityId=member.localCommunityId
 
-      //  getSubAdmin()
-        getLocalAdmin()
+        getSubAdmin()
         return root
     }
 
     private fun getSubAdmin(){
+        count=1
         val jsonObject=JSONObject()
         jsonObject.put("start",0)
         jsonObject.put("length",30)
@@ -148,6 +196,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
     }
 
     private fun getLocalAdmin(){
+        count=2
         val jsonObject=JSONObject()
         jsonObject.put("start",0)
         jsonObject.put("length",30)
@@ -166,15 +215,22 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
 
     override fun getMembers(response: SmartFilterResponse) {
         if(response.success){
-            if (response.members.size > 0) {
-                if(response.members.get(0).role.equals("SUB_ADMIN")){
-                    lstAdmins.clear()
+            if (count == 1) {
+                lstAdmins.clear()
+                if(response.members!=null && response.members.size>0){
                     lstAdmins.addAll(response.members)
-                    getLocalAdmin()
-                }else if(response.members.get(0).role.equals("LOCAL_ADMIN")){
-                    lstAdmins.addAll(response.members)
-                    adapter.notifyDataSetChanged()
                 }
+                getLocalAdmin()
+            }else if (count == 2) {
+                if(response.members!=null && response.members.size>0){
+                    lstAdmins.addAll(response.members)
+                }
+                adapter.notifyDataSetChanged()
+                shimmerFrameLayout.stopShimmerAnimation()
+                shimmerFrameLayout.visibility=View.GONE
+                actionMode?.finish()
+                selectedItems.clear()
+                cancelDialog()
             }
         }
     }
@@ -189,9 +245,173 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
         var tvArea: TextView = v.findViewById(R.id.tv_area)
         var tvEmail: TextView = v.findViewById(R.id.tv_email)
         var tvMobile: TextView = v.findViewById(R.id.tv_mobile)
+        var tvType: TextView = v.findViewById(R.id.tv_type)
         var tvRole: TextView = v.findViewById(R.id.tv_role)
-        var tvAddr: TextView = v.findViewById(R.id.tv_addr)
+        var tvRegion: TextView = v.findViewById(R.id.tv_region)
+        var iconProfile:ImageView= v.findViewById(R.id.icon_profile1)
+        var iconText:TextView= v.findViewById(R.id.icon_text1)
+        var llMobile:TextView= v.findViewById(R.id.llMobile)
+        var iconImp: ImageView = v.findViewById(R.id.icon_star)
+        var messageContainer: LinearLayout = v.findViewById(R.id.message_container1)
+        var iconBack: RelativeLayout = v.findViewById(R.id.icon_back1)
+        var iconFront: RelativeLayout = v.findViewById(R.id.icon_front1)
+    }
 
+    private fun resetIconYAxis(view: View) {
+        if (view.rotationY != 0f) {
+            view.rotationY = 0f
+        }
+    }
+
+    private fun applyIconAnimation(holder: ListViewHolder, position: Int) {
+        if (selectedItems.get(position, false)) {
+            holder.iconFront.visibility = View.GONE
+            resetIconYAxis(holder.iconBack)
+            holder.iconBack.visibility = View.VISIBLE
+            holder.iconBack.alpha = 1f
+            if (currentSelectedIndex == position) {
+                FlipAnimator.flipView(activity, holder.iconBack, holder.iconFront, true)
+                resetCurrentIndex()
+            }
+        } else {
+            holder.iconBack.visibility = View.GONE
+            resetIconYAxis(holder.iconFront)
+            holder.iconFront.visibility = View.VISIBLE
+            holder.iconFront.alpha = 1f
+            if (reverseAllAnimations && animationItemsIndex.get(position, false) || currentSelectedIndex == position) {
+                FlipAnimator.flipView(activity, holder.iconBack, holder.iconFront, false)
+                resetCurrentIndex()
+            }
+        }
+    }
+
+    private fun applyImportant(holder: ListViewHolder, member: Member) {
+
+        smartSearchviewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
+            try {
+                if (it != null) {
+                    holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_black_24dp))
+                    holder.iconImp.setColorFilter(ContextCompat.getColor(activity as AppCompatActivity, R.color.icon_tint_selected))
+                } else {
+                    holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_border_black_24dp))
+                    holder.iconImp.setColorFilter(ContextCompat.getColor(activity as AppCompatActivity, R.color.icon_tint_normal))
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+
+        })
+    }
+
+    private fun applyClickEvents(holder: ListViewHolder, position: Int, member: Member) {
+
+        holder.iconProfile.setOnClickListener {
+            try {
+                val path = getString(R.string.base_url_original) + "" + member.profilePic
+                Log.d(TAG, "path: $path")
+                openImageDialog(activity as AppCompatActivity,path)
+            } catch (e: Exception) {
+                e.message
+            }
+        }
+
+        holder.iconImp.setOnClickListener {
+
+            val member: Member = lstAdmins.get(position)
+            var flag = true
+            smartSearchviewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
+                if (flag) {
+                    flag = false
+                    if (it != null) {
+                        smartSearchviewModel.deleteRoomMember(Integer.parseInt(member.id))
+                    } else {
+                        smartSearchviewModel.insertRoomMember(getRoomMemberFromMember(member))
+                    }
+                }
+            })
+        }
+
+        holder.llMobile.setOnClickListener {
+            val intent = Intent(Intent.ACTION_DIAL)
+            val str = "tel:" + holder.tvMobile.text
+            intent.data = Uri.parse(str)
+            startActivity(intent)
+        }
+
+        holder.messageContainer.setOnClickListener { view -> onMessageRowClicked(position, holder.itemView) }
+
+        holder.messageContainer.setOnLongClickListener { view ->
+            enableActionMode(position)
+            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+        }
+    }
+
+    private fun onMessageRowClicked(position: Int, v: View) {
+
+        if (getSelectedItemCount() > 0) {
+            enableActionMode(position)
+        } else {
+            val intent = Intent(activity, ProfileDetailActivity::class.java)
+            intent.putExtra(getString(R.string.member), lstAdmins.get(position))
+            startActivity(intent)
+            Utility.fade(activity)
+        }
+    }
+
+    private fun getSelectedItemCount(): Int {
+        return selectedItems.size()
+    }
+
+    private fun toggleSelection(position: Int) {
+        toggleSelected(position)
+        val count = getSelectedItemCount()
+
+        if (count <= 0) {
+            actionMode?.finish()
+        } else {
+            actionMode?.title = count.toString()
+            actionMode?.invalidate()
+        }
+    }
+
+    private fun toggleSelected(pos: Int) {
+        currentSelectedIndex = pos
+        if (selectedItems.get(pos, false)) {
+            selectedItems.delete(pos)
+            animationItemsIndex.delete(pos)
+        } else {
+            selectedItems.put(pos, true)
+            animationItemsIndex.put(pos, true)
+        }
+
+        adapter.notifyItemChanged(pos + 1)
+    }
+
+    private fun enableActionMode(position: Int) {
+        if (actionMode == null) {
+            actionMode = activity?.startActionMode(actionModeCallback)
+        }
+        toggleSelection(position)
+    }
+
+    @SuppressLint("CheckResult")
+    private fun applyProfilePicture(holder: ListViewHolder, member: Member) {
+        if (!TextUtils.isEmpty(member.profilePic)) {
+            if (member.profilePic.isNotEmpty()) {
+                holder.iconProfile.isClickable = true
+                val url=resources.getString(R.string.base_url_thumb)+member.profilePic
+                Glide.with(activity!!).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.iconProfile)
+            }else{
+                holder.iconProfile.isClickable = false
+            }
+            holder.iconProfile.colorFilter = null
+            holder.iconText.visibility = View.GONE
+        } else {
+            holder.iconProfile.isClickable = false
+            holder.iconProfile.setImageResource(R.drawable.bg_circle)
+            holder.iconProfile.setColorFilter(Utility.getRandomMaterialColor(activity!!, "400"))
+            holder.iconText.visibility = View.VISIBLE
+        }
     }
 
     override fun onResume() {
@@ -204,5 +424,137 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener {
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 
+    override fun loadApi() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun changeRole(role: String?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+
+
+    override fun cancelDialog() {
+        actionMode?.finish()
+        changeRoleDialog?.dismiss()
+    }
+
+    private inner class ActionModeCallback : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+            mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+            return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean =
+                when (item.itemId) {
+                    R.id.action_delete -> {
+                        val selectedItemPositions = getSelectedItems()
+                        SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Are you sure?")
+                                .setContentText("want to disable ${selectedItemPositions.size} Profiles!")
+                                .setConfirmText("Yes,Disable it!")
+                                .setCancelText("No")
+                                .setConfirmClickListener {
+                                    it.dismiss()
+
+                                    val jsonObject = JSONObject()
+                                    jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                                    jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+                                    jsonObject.put("status", "0")
+
+                                    var Ids = ""
+                                    for (index in selectedItemPositions) {
+                                        Ids += lstAdmins[index].id + ","
+                                    }
+
+                                    Ids = Ids.substring(0, Ids.length - 1)
+                                    jsonObject.put("idList", Ids)
+                                    val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                                    lstAdmins.clear()
+                                    tvCount.visibility=View.GONE
+                                    adapter.notifyDataSetChanged()
+                                    shimmerFrameLayout.startShimmerAnimation()
+                                    shimmerFrameLayout.visibility = View.VISIBLE
+                                    smartSearchviewModel.disableMembers(updated)
+
+                                }
+                                .setCancelClickListener {
+                                    it.dismiss()
+                                }
+                                .show()
+
+                        true
+                    }
+                    R.id.action_my_role -> {
+
+                        val adapter: MyRoleAdapter = MyRoleAdapter(context)
+                        adapter.setChangeRoleListner(this@AdminsFragment)
+                        changeRoleDialog = DialogPlus.newDialog(context)
+                                .setAdapter(adapter)
+                                .setGravity(Gravity.BOTTOM)
+                                .setCancelable(true)
+                                .setOnCancelListener {
+                                    actionMode?.finish()
+                                }
+                                .setExpanded(true, 700)
+                                .setContentBackgroundResource(R.drawable.popup_top_corner)
+                                .create()
+                        changeRoleDialog?.show()
+
+
+
+                        true
+                    }
+                    R.id.action_select_all -> {
+                        clearSelections()
+                        for (i in lstAdmins.indices) {
+                            enableActionMode(i)
+                        }
+                        true
+                    }
+                    else -> false
+                }
+
+        override fun onDestroyActionMode(mode: ActionMode) {
+            clearSelections()
+            actionMode = null
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Utility.changeStatusbarColor(activity, R.color.colorBG, false)
+            }
+            rvAdmins.post {
+                resetAnimationIndex()
+            }
+        }
+    }
+
+    private fun getSelectedItems(): List<Int> {
+        val items = ArrayList<Int>(selectedItems.size())
+        for (i in 0 until selectedItems.size()) {
+            items.add(selectedItems.keyAt(i))
+        }
+        return items
+    }
+
+    fun clearSelections() {
+        reverseAllAnimations = true
+        selectedItems.clear()
+        adapter.notifyDataSetChanged()
+    }
+
+
+    fun resetAnimationIndex() {
+        reverseAllAnimations = false
+        if (animationItemsIndex != null) {
+            animationItemsIndex.clear()
+        }
+    }
+
+    private fun resetCurrentIndex() {
+        currentSelectedIndex = -1
+    }
 
 }

@@ -23,7 +23,6 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
-import com.krs.community.adapter.ImageAdapter
 import com.krs.community.app.AppController
 import com.krs.community.interfaces.ByFilterListener
 import com.krs.community.model.Member
@@ -32,9 +31,9 @@ import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.FlipAnimator
 import com.krs.community.utils.Utility
+import com.krs.community.utils.openImageDialog
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodel.SmartFilterViewModelFactory
-import com.orhanobut.dialogplus.DialogPlus
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -244,21 +243,16 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
 
         holder.imgProfile.setOnClickListener {
             if (member.profilePic.isNotEmpty()) {
-                val path = getString(R.string.base_url_thumb) + "" + member.profilePic
-                Log.d("NonActives", "path: $path")
-
-                val adapter = ImageAdapter(context,path)
-                val dialog: DialogPlus = DialogPlus
-                        .newDialog(activity)
-                        .setAdapter(adapter)
-                        //.setContentBackgroundResource(R.drawable.round_corner_white)
-                        .setOnItemClickListener { dialog12: DialogPlus?, item: Any?, view: View?, position: Int -> Toast.makeText(activity, "Clicked $position", Toast.LENGTH_SHORT).show() }
-                        .setCancelable(true)
-                        .setGravity(Gravity.CENTER)
-                        .setExpanded(true,900)
-                        .create()
-
-                dialog.show()
+                holder.imgProfile.isClickable = true
+                try {
+                    val path = getString(R.string.base_url_original) + "" + member.profilePic
+                    Log.d("NonActiveFragment", "path: $path")
+                    openImageDialog(activity as AppCompatActivity,path)
+                } catch (e: Exception) {
+                    e.message
+                }
+            }else{
+                holder.imgProfile.isClickable = false
             }
         }
     }

@@ -21,6 +21,7 @@
             android:layoutAnimation="@anim/layout_animation_fall_down"
             android:overScrollMode="never"
             tools:itemCount="4"
+            android:layout_marginBottom="50dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/row_list_family_detail"/>
 

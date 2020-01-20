@@ -1,9 +1,12 @@
 package com.krs.community.fragments
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
@@ -56,11 +59,12 @@ import com.mostafaaryan.transitionalimageview.model.TransitionalImage
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
-import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import java.util.*
+import kotlin.collections.ArrayList
 
 class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner {
 
@@ -68,19 +72,12 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private lateinit var frameRoot: FrameLayout
     private lateinit var mShimmerViewContainer: ShimmerFrameLayout
     private lateinit var multiSearchView: MultiSearchView
-    private lateinit var actionModeCallback: ActionModeCallback
-    private var actionMode: ActionMode? = null
     private lateinit var rvAdapter: ParallaxRecyclerAdapter<Member>
-    private var selectedItems: SparseBooleanArray = SparseBooleanArray()
-    private var animationItemsIndex: SparseBooleanArray = SparseBooleanArray()
-    private var reverseAllAnimations = false
-    private var currentSelectedIndex = -1
     private var TAG: String? = SearchListFragment::class.qualifiedName
     private lateinit var smartSearchviewModel: SmartSearchViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: SmartSearchViewModelFactory by instance()
     private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
-
     override val kodein by kodein()
     private val lstMembers = ArrayList<Member>()
     private lateinit var tvRecords: TextView
@@ -93,6 +90,13 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private val lstKeyword = ArrayList<String>()
     private var changeRoleDialog: DialogPlus? = null
     private var setLocationDialog: DialogPlus? = null
+
+    private var reverseAllAnimations = false
+    private var selectedItems: SparseBooleanArray = SparseBooleanArray()
+    private var animationItemsIndex: SparseBooleanArray = SparseBooleanArray()
+    private var currentSelectedIndex = -1
+    private var actionMode: ActionMode? = null
+    private lateinit var actionModeCallback: ActionModeCallback
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -244,13 +248,8 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
                 applyImportant(viewHolder, member)
                 applyIconAnimation(viewHolder, position)
-                applyClickEvents(viewHolder, position)
-
-                Coroutines.io {
-                    applyProfilePicture(viewHolder, member)
-                }
-
-
+                applyClickEvents(viewHolder, position,member)
+                applyProfilePicture(viewHolder, member)
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>?, i: Int): RecyclerView.ViewHolder {
@@ -381,7 +380,9 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         DashboardActivity.stop = false
         mShimmerViewContainer.stopShimmerAnimation()
         mShimmerViewContainer.visibility = View.GONE
-
+        actionMode?.finish()
+        selectedItems.clear()
+        cancelDialog()
         Utility.hideKeyboard(activity)
 
         if (response.success) {
@@ -474,7 +475,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         toggleSelected(position)
         val count = getSelectedItemCount()
 
-        if (count == 0) {
+        if (count <= 0) {
             actionMode?.finish()
         } else {
             actionMode?.title = count.toString()
@@ -541,7 +542,17 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         })
     }
 
-    private fun applyClickEvents(holder: MyViewHolder, position: Int) {
+    private fun applyClickEvents(holder: MyViewHolder, position: Int,member: Member) {
+
+        holder.imgProfile.setOnClickListener {
+            try {
+                val path = getString(R.string.base_url_original) + "" + member.profilePic
+                Log.d(TAG, "path: $path")
+                openImageDialog(activity as AppCompatActivity,path)
+            } catch (e: Exception) {
+                e.message
+            }
+        }
 
         holder.iconImp.setOnClickListener {
 
@@ -581,38 +592,10 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         if (!TextUtils.isEmpty(member.profilePic)) {
             if (member.profilePic.isNotEmpty()) {
                 holder.imgProfile.isClickable = true
-                try {
-                    val path = getString(R.string.base_url_original) + "" + member.profilePic
-                    Log.d(TAG, "path: $path")
-
-                    Glide.with(this)
-                            .asBitmap()
-                            .apply(RequestOptions.circleCropTransform()).thumbnail(0.5f)
-                            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-                            .load(path)
-                            .into(object : CustomTarget<Bitmap>() {
-                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-
-                                    val transitionalImage: TransitionalImage = TransitionalImage.Builder()
-                                            .duration(250)
-                                            .backgroundColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
-                                            .image(resource)
-                                            .create()
-                                    holder.imgProfile.setTransitionalImage(transitionalImage)
-                                }
-
-                                override fun onLoadCleared(placeholder: Drawable?) {
-                                    // this is called when imageView is cleared on lifecycle call or for
-                                    // some other reason.
-                                    // if you are referencing the bitmap somewhere else too other than this imageView
-                                    // clear it here as you can no longer have the bitmap
-                                }
-                            })
-
-
-                } catch (e: Exception) {
-                    e.message
-                }
+                val url=resources.getString(R.string.base_url_thumb)+member.profilePic
+                Glide.with(activity!!).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
+            }else{
+                holder.imgProfile.isClickable = false
             }
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE
@@ -758,6 +741,9 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                                     Ids = Ids.substring(0, Ids.length - 1)
                                     jsonObject.put("idList", Ids)
                                     val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                                    lstMembers.clear()
+                                    tvRecords.visibility=View.GONE
+                                    rvAdapter.notifyDataSetChanged()
                                     mShimmerViewContainer.startShimmerAnimation()
                                     mShimmerViewContainer.visibility = View.VISIBLE
                                     smartSearchviewModel.disableMembers(updated)
@@ -768,9 +754,6 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                                 }
                                 .show()
 
-                        // delete all the selected messages
-                        /*deleteMessages()
-                        mode.finish()*/
                         true
                     }
                     R.id.action_my_role -> {
@@ -781,10 +764,15 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                                 .setAdapter(adapter)
                                 .setGravity(Gravity.BOTTOM)
                                 .setCancelable(true)
+                                .setOnCancelListener {
+                                    actionMode?.finish()
+                                }
                                 .setExpanded(true, 700)
                                 .setContentBackgroundResource(R.drawable.popup_top_corner)
                                 .create()
                         changeRoleDialog?.show()
+
+
 
                         true
                     }
@@ -813,15 +801,60 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
     override fun changeRole(role: String) {
 
+        val selectedItemPositions = getSelectedItems()
+        SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Are you sure?")
+                .setContentText("${selectedItemPositions.size} Profiles Role will be changed to '$role'!")
+                .setConfirmText("Yes,Please!")
+                .setCancelText("No")
+                .setConfirmClickListener {
+                    it.dismiss()
+
+                    val jsonObject = JSONObject()
+                    jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                    jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+
+                    var changed=""
+                    if(role == "Local Admin"){
+                        changed = "LOCAL_ADMIN"
+                    }else if(role == "Sub Admin") {
+                        changed = "SUB_ADMIN"
+                    }else{
+                        changed = "User"
+                    }
+
+                    jsonObject.put("role", changed)
+
+                    var Ids = ""
+                    for (index in selectedItemPositions) {
+                        Ids += lstMembers[index].id + ","
+                    }
+
+                    Ids = Ids.substring(0, Ids.length - 1)
+                    jsonObject.put("idList", Ids)
+                    val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                    lstMembers.clear()
+                    tvRecords.visibility=View.GONE
+                    rvAdapter.notifyDataSetChanged()
+                    mShimmerViewContainer.startShimmerAnimation()
+                    mShimmerViewContainer.visibility = View.VISIBLE
+                    smartSearchviewModel.changeRole(updated)
+
+                }
+                .setCancelClickListener {
+                    it.dismiss()
+                }
+                .show()
+
     }
 
 
     override fun cancelDialog() {
+        actionMode?.finish()
         changeRoleDialog?.dismiss()
     }
 
     private fun enableActionMode(position: Int) {
-
         if (actionMode == null) {
             actionMode = activity?.startActionMode(actionModeCallback)
         }

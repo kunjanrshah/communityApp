@@ -18,6 +18,13 @@ class SmartFilterViewModel(
     private lateinit var completableJob: CompletableJob
     lateinit var mByFilterListener: ByFilterListener
 
+    fun getSubCommunity(id: String):String{
+        return mSmartFilterRepository.getSubCommunity(id)
+    }
+    fun getLocalCommunity(id: String):String{
+        return mSmartFilterRepository.getLocalCommunity(id)
+    }
+
     fun getListCityName():LiveData<List<String>>{
         return mSmartFilterRepository.getListCityName()
     }

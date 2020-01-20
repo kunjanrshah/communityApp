@@ -14,6 +14,9 @@ interface LocalCommunityDao {
     @Query("SELECT * FROM LocalCommunity")
     fun getLocalCommunity() : LiveData<List<LocalCommunity>>
 
+    @Query("SELECT name FROM LocalCommunity WHERE id=:id")
+    fun getLocalCommunity(id:String) : String
+
     @Query("SELECT id FROM LocalCommunity WHERE id NOT IN (:Ids)")
     fun getRemovedLocalCommunityIds(Ids: List<String>) : List<Int>
 

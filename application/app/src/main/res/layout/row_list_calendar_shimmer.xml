@@ -58,6 +58,7 @@
 
                         <TextView
                             android:id="@+id/tv_name"
+                            android:singleLine="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/placeholder_bg"
@@ -67,6 +68,7 @@
 
                         <TextView
                             android:id="@+id/tv_area"
+                            android:singleLine="true"
                             android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -118,6 +120,7 @@
 
                         <TextView
                             android:id="@+id/tv_mobile"
+                            android:singleLine="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -143,6 +146,7 @@
 
                         <TextView
                             android:id="@+id/tv_email"
+                            android:singleLine="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"

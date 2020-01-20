@@ -23,6 +23,12 @@ class SmartSearchRepository(private val api: ApiServices, private val db:AppData
         }
     }
 
+    suspend fun changeRole(jsonObject: JsonObject): searchByKeywordsResponse {
+        return apiRequest{
+            api.changeRole(jsonObject)
+        }
+    }
+
     suspend fun getRoomMembers(): List<RoomMember> {
         return db.getRoomMemberDao().getRoomMembers()
     }
