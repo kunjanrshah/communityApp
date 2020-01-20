@@ -17,7 +17,7 @@ import com.krs.community.databinding.FragmentMatrimonyDetailsBinding
 import com.krs.community.model.Member
 import com.krs.community.utils.NumberPadTimePickerDialogFragment
 import com.krs.community.viewmodel.ProfileDetailViewModel
-import com.krs.community.viewmodel.ProfileDetailViewModelFactory
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein

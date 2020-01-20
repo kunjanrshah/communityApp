@@ -798,8 +798,6 @@ public class Utility {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
     }
 
-
-
     public static void backNavigation(Activity activity){
         FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
         if (fragmentManager.getBackStackEntryCount() > 0) {

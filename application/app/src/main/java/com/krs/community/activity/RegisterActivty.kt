@@ -1,7 +1,6 @@
 package com.krs.community.activity
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
@@ -15,7 +14,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
@@ -29,7 +27,7 @@ import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.model.*
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.RegisterViewModel
-import com.krs.community.viewmodel.RegisterViewModelFactory
+import com.krs.community.viewmodelfactory.RegisterViewModelFactory
 import com.wooplr.spotlight.SpotlightView
 import com.wooplr.spotlight.prefs.PreferencesManager
 import com.wooplr.spotlight.utils.SpotlightSequence
@@ -66,7 +64,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
     }
 
     override val kodein by kodein()
-    private val factory:RegisterViewModelFactory by instance()
+    private val factory: RegisterViewModelFactory by instance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

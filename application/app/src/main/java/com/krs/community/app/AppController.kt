@@ -7,13 +7,8 @@ import android.content.Context
 import android.content.IntentFilter
 import android.graphics.Typeface
 import android.os.StrictMode
-import android.text.TextUtils
 import androidx.core.content.res.ResourcesCompat
 import androidx.multidex.MultiDex
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.ImageLoader
-import com.android.volley.toolbox.Volley
 import com.crashlytics.android.Crashlytics
 import com.facebook.FacebookSdk
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -28,8 +23,7 @@ import com.krs.community.retrofit.RetrofitBase
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.ConnectivityReceiver
 import com.krs.community.utils.LocaleHelper
-import com.krs.community.viewmodel.*
-import com.krs.community.volley.LruBitmapCache
+import com.krs.community.viewmodelfactory.*
 import io.fabric.sdk.android.Fabric
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -48,6 +42,8 @@ class AppController : Application(), KodeinAware{
     lateinit var typeface: Typeface
     lateinit var typeface_bold: Typeface
     lateinit var retrofitBase: RetrofitBase
+    var start: Int = 0
+    val length: Int = 5
 
     companion object {
         val TAG = AppController::class.java.simpleName
@@ -73,6 +69,7 @@ class AppController : Application(), KodeinAware{
         bind() from singleton {  SmartFilterRepository(instance(),instance()) }
         bind() from provider  {  CalendarSearchRepository(instance(),instance()) }
         bind() from provider  {  NewsRepository(instance(),instance()) }
+        bind() from provider  {  RoomMemberRepository(instance(),instance()) }
 
         bind() from provider { StatisticsViewModelFactory(instance()) }
         bind() from provider { FamilyDetailViewModelFactory(instance()) }
@@ -86,6 +83,8 @@ class AppController : Application(), KodeinAware{
         bind() from provider { SmartFilterViewModelFactory(instance()) }
         bind() from provider { CalendarSearchViewModelFactory(instance()) }
         bind() from provider { NewsModelFactory(instance()) }
+        bind() from provider { RoomMemberViewModelFactory(instance()) }
+
     }
 
     @SuppressLint("CommitPrefEdits")

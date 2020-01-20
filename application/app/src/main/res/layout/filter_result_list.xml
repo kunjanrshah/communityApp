@@ -84,10 +84,20 @@
                     android:layout_height="wrap_content"
                     app:bmb_buttonEnum="textInsideCircle"
                     android:layout_marginLeft="-8dp"
+                    android:layout_marginTop="-10dp"
                     app:bmb_piecePlaceEnum="piecePlace_dot_6_1"
                     app:bmb_buttonPlaceEnum="buttonPlace_sc_6_1"
                     app:bmb_inList="true"         />
 
+
+                <ImageView
+                    android:id="@+id/icon_star"
+                    android:layout_width="25dp"
+                    android:layout_marginTop="-5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="25dp"
+                    android:tint="@color/icon_tint_normal" />
 
             </LinearLayout>
 
@@ -117,7 +127,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Kunjan Patel"
-                            android:textSize="16sp"  />
+                            android:textSize="18sp"  />
 
                         <TextView
                             android:id="@+id/tv_area"
@@ -126,7 +136,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Maninagar, Ahmedabad"
-                            android:textSize="14sp" />
+                            android:textSize="16sp" />
 
                     </LinearLayout>
 
@@ -185,7 +195,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
                             android:text="kunjanshah@gmail.com"
-                            android:textSize="14sp" />
+                            android:textSize="16sp" />
 
                     </LinearLayout>
                     <LinearLayout
@@ -218,7 +228,7 @@
                                 android:text="9825450261"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:textColor="@color/com_facebook_blue"
-                                android:textSize="14sp" />
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 

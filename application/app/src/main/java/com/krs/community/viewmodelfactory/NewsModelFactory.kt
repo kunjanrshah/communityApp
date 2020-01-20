@@ -1,11 +1,10 @@
-package com.krs.community.viewmodel
+package com.krs.community.viewmodelfactory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.krs.community.app.AppController
-import com.krs.community.repositories.LoginRepository
 import com.krs.community.repositories.NewsRepository
-import com.krs.community.repositories.RegisterRepository
+import com.krs.community.viewmodel.NewsViewModel
 
 class NewsModelFactory(
         private val repository: NewsRepository

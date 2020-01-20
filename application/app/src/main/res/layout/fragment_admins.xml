@@ -20,7 +20,7 @@
         android:layout_marginBottom="50dp"
         android:layoutAnimation="@anim/layout_animation_fall_down"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/row_list_calendar" />
+        tools:listitem="@layout/admin_list_item" />
 
 
     <com.facebook.shimmer.ShimmerFrameLayout
@@ -29,7 +29,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:visibility="gone"
         shimmer:duration="800">
 

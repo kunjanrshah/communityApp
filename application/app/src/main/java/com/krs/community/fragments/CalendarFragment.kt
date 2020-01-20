@@ -37,7 +37,7 @@ import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.CalendarSearchViewModel
-import com.krs.community.viewmodel.CalendarSearchViewModelFactory
+import com.krs.community.viewmodelfactory.CalendarSearchViewModelFactory
 import com.nightonke.boommenu.BoomMenuButton
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -173,7 +173,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         //Utility.displaySnackBarWithBottomMargin(recyclerView,"${response.members.size} Records found")
     }
 
-    override fun getFailure(message: String) {
+    override suspend fun getFailure(message: String) {
         Coroutines.main {
             DashboardActivity.stop = false
             shimmerFrameLayout.stopShimmerAnimation()
@@ -276,9 +276,9 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
 
                 viewHolder.tvMobile.text = member.mobile
                 if(lstCalendar[i].headId == "0"){
-                    viewHolder.tvRole.text = "Family Head"
+                    viewHolder.tvRole.text = resources.getString(R.string.Family_Head)
                 }else{
-                    viewHolder.tvRole.text = "Member"
+                    viewHolder.tvRole.text = resources.getString(R.string.Member)
                 }
 
                 viewHolder.boomMenuButton.clearBuilders()

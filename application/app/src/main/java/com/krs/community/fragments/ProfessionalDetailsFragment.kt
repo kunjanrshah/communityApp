@@ -1,12 +1,6 @@
 package com.krs.community.fragments
 
-import android.Manifest
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,11 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import cn.pedant.SweetAlert.SweetAlertDialog
@@ -31,7 +22,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.activity.BaseActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentProfessionalDetailsBinding
@@ -41,16 +31,12 @@ import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
-import com.krs.community.viewmodel.ProfileDetailViewModelFactory
-import com.yalantis.ucrop.UCrop
-import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.dashboard_menu.*
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import kotlinx.android.synthetic.main.fragment_professional_details.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.io.File
 
 class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 

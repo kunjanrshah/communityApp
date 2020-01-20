@@ -1,6 +1,5 @@
 package com.krs.community.activity
 
-import android.Manifest
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
@@ -11,7 +10,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
@@ -35,7 +33,7 @@ import com.krs.community.utils.Utility
 import com.krs.community.utils.Utility.backNavigation
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.DashboardViewModel
-import com.krs.community.viewmodel.DashboardViewModelFactory
+import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.luseen.spacenavigation.SpaceItem
 import com.luseen.spacenavigation.SpaceOnClickListener
 import com.luseen.spacenavigation.SpaceOnLongClickListener

@@ -1,13 +1,8 @@
 package com.krs.community.fragments
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -27,13 +22,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.iammert.library.ui.multisearchviewlib.MultiSearchView
@@ -44,18 +37,21 @@ import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
+import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
 import com.krs.community.interfaces.ByKeywordListener
+import com.krs.community.interfaces.RoomMemberListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
-import com.krs.community.viewmodel.ProfileDetailViewModelFactory
+import com.krs.community.viewmodel.RoomMemberViewModel
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodel.SmartSearchViewModel
-import com.krs.community.viewmodel.SmartSearchViewModelFactory
+import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
+import com.krs.community.viewmodelfactory.SmartSearchViewModelFactory
 import com.mostafaaryan.transitionalimageview.TransitionalImageView
-import com.mostafaaryan.transitionalimageview.model.TransitionalImage
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
@@ -63,10 +59,9 @@ import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.util.*
 import kotlin.collections.ArrayList
 
-class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner {
+class SearchListFragment : Fragment(), KodeinAware,RoomMemberListener, ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner {
 
     private lateinit var rvSearch: RecyclerView
     private lateinit var frameRoot: FrameLayout
@@ -74,10 +69,15 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private lateinit var multiSearchView: MultiSearchView
     private lateinit var rvAdapter: ParallaxRecyclerAdapter<Member>
     private var TAG: String? = SearchListFragment::class.qualifiedName
-    private lateinit var smartSearchviewModel: SmartSearchViewModel
+
+    private lateinit var smartSearchViewModel: SmartSearchViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-    private val factory: SmartSearchViewModelFactory by instance()
+    private lateinit var roomMemberViewModel: RoomMemberViewModel
+
+    private val smartSearchViewModelFactory: SmartSearchViewModelFactory by instance()
     private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
+    private val roomMemberFactory: RoomMemberViewModelFactory by instance()
+
     override val kodein by kodein()
     private val lstMembers = ArrayList<Member>()
     private lateinit var tvRecords: TextView
@@ -85,8 +85,6 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private lateinit var ivExport: ImageView
     private lateinit var searchWord: String
     private var selectedPosition = 0
-    private var start: Int = 0
-    private val length: Int = 5
     private val lstKeyword = ArrayList<String>()
     private var changeRoleDialog: DialogPlus? = null
     private var setLocationDialog: DialogPlus? = null
@@ -107,8 +105,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         }
 
         profileDetailViewModel = ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
-        smartSearchviewModel = ViewModelProviders.of(this, factory).get(SmartSearchViewModel::class.java)
-        smartSearchviewModel.mByKeywordListener = this
+        smartSearchViewModel = ViewModelProviders.of(this, smartSearchViewModelFactory).get(SmartSearchViewModel::class.java)
+        roomMemberViewModel = ViewModelProviders.of(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
+
+        smartSearchViewModel.mByKeywordListener = this
+        roomMemberViewModel.mRoomMemberListener= this
 
         frameRoot = rootView.findViewById(R.id.frameRoot)
         rvSearch = rootView.findViewById(R.id.rv_search)
@@ -134,7 +135,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 if (Utility.hasReadStoragePermission(activity as AppCompatActivity) && Utility.hasWriteStoragePermission(activity as AppCompatActivity)) {
 
                     Handler().post {
-                        Utility.startSweetProgress(activity, "Exporting Search List", "Please Wait...")
+                        Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
                     }
                     createMemberListPDF(activity as AppCompatActivity, lstMembers, profileDetailViewModel)
                     Handler().postDelayed({
@@ -158,12 +159,12 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 val member = lstMembers[position]
 
                 viewHolder.tvName.text = member.firstName
-                smartSearchviewModel.getLastName(member.subCastId.toInt()).observeForever {
+                smartSearchViewModel.getLastName(member.subCastId.toInt()).observeForever {
                     viewHolder.tvName.text = member.firstName + " " + it
                 }
 
                 if (!member.cityId.isNullOrEmpty()) {
-                    smartSearchviewModel.getCityNamebyId(member.cityId).observeForever {
+                    smartSearchViewModel.getCityNamebyId(member.cityId).observeForever {
                         viewHolder.tvArea.text = member.area + " " + it
                     }
                 }
@@ -172,9 +173,9 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
 
                 if (member.headId == "0") {
-                    viewHolder.tvRole.text = "Family Head"
+                    viewHolder.tvRole.text = resources.getString(R.string.Family_Head)
                 } else {
-                    viewHolder.tvRole.text = "Member"
+                    viewHolder.tvRole.text = resources.getString(R.string.Member)
                 }
                 if (member.updatedDt.isNotEmpty()) {
                     viewHolder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
@@ -186,13 +187,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     builder?.listener {
                         if (it == 0) {
                             if (Utility.hasReadStoragePermission(activity as AppCompatActivity) && Utility.hasWriteStoragePermission(activity as AppCompatActivity)) {
-                                Handler().post(Runnable {
-                                    Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", "Please Wait...")
-                                })
-                                val profileDetailFactory: ProfileDetailViewModelFactory by instance()
-                                val profileDetailViewModel = ViewModelProviders.of(activity as AppCompatActivity, profileDetailFactory).get(ProfileDetailViewModel::class.java)
                                 createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
 
+                                Handler().post(Runnable {
+                                    Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                                })
                                 Handler().postDelayed({
                                     Utility.hideSweetProgress()
                                 }, 5000)
@@ -205,10 +204,9 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                             startActivity(intent)
                         } else if (it == 2) {
                             if (!member.mobile.isNullOrEmpty()) {
-                                val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
-                                Utility.sendWhatsappMessage(activity as AppCompatActivity, member.mobile, text)
+                                Utility.sendWhatsappMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
                             } else {
-                                Toast.makeText(activity, "Mobile not found!", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(activity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
                             }
                         } else if (it == 3) {
                             val mBundle = Bundle()
@@ -234,6 +232,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     }
                     viewHolder.boomMenuButton.addBuilder(builder)
                 }
+
                 viewHolder.boomMenuButton.setOnClickListener { v -> viewHolder.boomMenuButton.boom() }
 
                 viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
@@ -348,18 +347,18 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             rvAdapter.notifyDataSetChanged()
             DashboardActivity.stop = true
             val mJSONObject = JSONObject()
-            mJSONObject.put("start", start)
-            mJSONObject.put("length", length)
-            mJSONObject.put("filter_by", searchWord)
+            mJSONObject.put(getString(R.string.start), AppController.mApplication.start)
+            mJSONObject.put(getString(R.string.length), AppController.mApplication.length)
+            mJSONObject.put(getString(R.string.filter_by), searchWord)
             val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
             mShimmerViewContainer.startShimmerAnimation()
             mShimmerViewContainer.visibility = View.VISIBLE
-            smartSearchviewModel.getMemberByKeywords(updated)
+            smartSearchViewModel.getMemberByKeywords(updated)
         }
     }
 
     override fun loadApi() {
-        start = (lstMembers.size + 1)
+        AppController.mApplication.start = (lstMembers.size + 1)
         getMembersByKeyword()
     }
 
@@ -368,11 +367,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     }
 
     override fun getRoomMembers(response: List<RoomMember>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
-    override fun getRoomFailure(message: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getMembers(response: searchByKeywordsResponse) {
@@ -388,14 +383,14 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         if (response.success) {
             lstMembers.clear()
             rvSearch.visibility = View.VISIBLE
-            start = 0
+            AppController.mApplication.start = 0
             for (item in response.member) {
                 lstMembers.add(item)
             }
             rvAdapter.notifyDataSetChanged()
             //  rvSearch.layoutManager?.scrollToPosition(selectedPosition)
             //  selectedPosition = lstMembers.size - 1
-            if (Integer.parseInt(response.totalRecords) <= length) {
+            if (Integer.parseInt(response.totalRecords) <= AppController.mApplication.length) {
                 DashboardActivity.stop = true
                 if (Integer.parseInt(response.totalRecords) == 0) {
                     Snackbar.make(frameRoot, "No Records Found!", Snackbar.LENGTH_LONG).show()
@@ -427,7 +422,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         }
     }
 
-    override fun getFailure(message: String) {
+    override suspend fun getFailure(message: String) {
         Log.d(TAG, "getFailure: $message")
 
         if (message.toLowerCase().contains("successfully")) {
@@ -526,7 +521,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
     private fun applyImportant(holder: MyViewHolder, member: Member) {
 
-        smartSearchviewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
+        roomMemberViewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
             try {
                 if (it != null) {
                     holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_black_24dp))
@@ -544,27 +539,17 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int,member: Member) {
 
-        holder.imgProfile.setOnClickListener {
-            try {
-                val path = getString(R.string.base_url_original) + "" + member.profilePic
-                Log.d(TAG, "path: $path")
-                openImageDialog(activity as AppCompatActivity,path)
-            } catch (e: Exception) {
-                e.message
-            }
-        }
-
         holder.iconImp.setOnClickListener {
 
             val member: Member = lstMembers.get(position)
             var flag = true
-            smartSearchviewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
+            roomMemberViewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
                 if (flag) {
                     flag = false
                     if (it != null) {
-                        smartSearchviewModel.deleteRoomMember(Integer.parseInt(member.id))
+                        roomMemberViewModel.deleteRoomMember(Integer.parseInt(member.id))
                     } else {
-                        smartSearchviewModel.insertRoomMember(getRoomMemberFromMember(member))
+                        roomMemberViewModel.insertRoomMember(getRoomMemberFromMember(member))
                     }
                 }
             })
@@ -577,7 +562,15 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             startActivity(intent)
         }
 
-        // holder.iconContainer.setOnClickListener { view -> enableActionMode(position) }
+        holder.imgProfile.setOnClickListener { view ->
+            try {
+                val path = getString(R.string.base_url_original) + "" + member.profilePic
+                Log.d(TAG, "path: $path")
+                openImageDialog(activity as AppCompatActivity,path)
+            } catch (e: Exception) {
+                e.message
+            }
+        }
 
         holder.messageContainer.setOnClickListener { view -> onMessageRowClicked(position, holder.itemView) }
 
@@ -590,15 +583,12 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     @SuppressLint("CheckResult")
     private fun applyProfilePicture(holder: MyViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
-            if (member.profilePic.isNotEmpty()) {
                 holder.imgProfile.isClickable = true
                 val url=resources.getString(R.string.base_url_thumb)+member.profilePic
                 Glide.with(activity!!).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
-            }else{
-                holder.imgProfile.isClickable = false
-            }
-            holder.imgProfile.colorFilter = null
-            holder.iconText.visibility = View.GONE
+                holder.imgProfile.colorFilter = null
+                holder.iconText.visibility = View.GONE
+
         } else {
             holder.imgProfile.isClickable = false
             holder.imgProfile.setImageResource(R.drawable.bg_circle)
@@ -656,7 +646,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         var tvRole: TextView = view.findViewById(R.id.tv_role)
         var iconImp: ImageView = view.findViewById(R.id.icon_star)
         var tvUpdate: TextView = view.findViewById(R.id.tv_update)
-        var imgProfile: TransitionalImageView = view.findViewById(R.id.icon_profile1)
+        var imgProfile: ImageView = view.findViewById(R.id.icon_profile1)
         var messageContainer: LinearLayout = view.findViewById(R.id.message_container1)
         var iconContainer: RelativeLayout = view.findViewById(R.id.icon_container1)
         var iconBack: RelativeLayout = view.findViewById(R.id.icon_back1)
@@ -721,7 +711,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     R.id.action_delete -> {
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("Are you sure?")
+                                .setTitleText(getString(R.string.you_sure))
                                 .setContentText("want to disable ${selectedItemPositions.size} Profiles!")
                                 .setConfirmText("Yes,Disable it!")
                                 .setCancelText("No")
@@ -739,14 +729,14 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                                     }
 
                                     Ids = Ids.substring(0, Ids.length - 1)
-                                    jsonObject.put("idList", Ids)
+                                    jsonObject.put(getString(R.string.idList), Ids)
                                     val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                                     lstMembers.clear()
                                     tvRecords.visibility=View.GONE
                                     rvAdapter.notifyDataSetChanged()
                                     mShimmerViewContainer.startShimmerAnimation()
                                     mShimmerViewContainer.visibility = View.VISIBLE
-                                    smartSearchviewModel.disableMembers(updated)
+                                    roomMemberViewModel.disableMembers(updated)
 
                                 }
                                 .setCancelClickListener {
@@ -803,7 +793,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
         val selectedItemPositions = getSelectedItems()
         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Are you sure?")
+                .setTitleText(getString(R.string.you_sure))
                 .setContentText("${selectedItemPositions.size} Profiles Role will be changed to '$role'!")
                 .setConfirmText("Yes,Please!")
                 .setCancelText("No")
@@ -815,15 +805,19 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
 
                     var changed=""
-                    if(role == "Local Admin"){
-                        changed = "LOCAL_ADMIN"
-                    }else if(role == "Sub Admin") {
-                        changed = "SUB_ADMIN"
+                    if(role == getString(R.string.Local_Admin)){
+                        changed = getString(R.string.LOCAL_ADMIN)
+                    }else if(role == getString(R.string.Sub_Admin)) {
+                        changed = getString(R.string.SUB_ADMIN)
                     }else{
-                        changed = "User"
+                        changed = getString(R.string.User)
                     }
 
-                    jsonObject.put("role", changed)
+                    jsonObject.put(getString(R.string.role), changed)
+                    val loginuser= Guru.getString(getString(R.string.loginUser),"")
+                    val member: Member = Gson().fromJson<Member>(loginuser, Member::class.java)
+                    jsonObject.put(getString(R.string.local_community_id), member.localCommunityId)
+                    jsonObject.put(getString(R.string.sub_community_id), member.subCommunityId)
 
                     var Ids = ""
                     for (index in selectedItemPositions) {
@@ -831,14 +825,14 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     }
 
                     Ids = Ids.substring(0, Ids.length - 1)
-                    jsonObject.put("idList", Ids)
+                    jsonObject.put(getString(R.string.idList), Ids)
                     val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                     lstMembers.clear()
                     tvRecords.visibility=View.GONE
                     rvAdapter.notifyDataSetChanged()
                     mShimmerViewContainer.startShimmerAnimation()
                     mShimmerViewContainer.visibility = View.VISIBLE
-                    smartSearchviewModel.changeRole(updated)
+                    roomMemberViewModel.changeRole(updated)
 
                 }
                 .setCancelClickListener {

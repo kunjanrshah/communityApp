@@ -30,13 +30,12 @@ import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.SearchLiveo
 import com.krs.community.databinding.ActivityFavoriteBinding
 import com.krs.community.entities.RoomMember
-import com.krs.community.interfaces.ByKeywordListener
-import com.krs.community.responses.searchByKeywordsResponse
+import com.krs.community.interfaces.RoomMemberListener
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
-import com.krs.community.viewmodel.ProfileDetailViewModelFactory
-import com.krs.community.viewmodel.SmartSearchViewModel
-import com.krs.community.viewmodel.SmartSearchViewModelFactory
+import com.krs.community.viewmodel.RoomMemberViewModel
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
+import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
 import com.mostafaaryan.transitionalimageview.TransitionalImageView
 import com.mostafaaryan.transitionalimageview.model.TransitionalImage
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
@@ -49,11 +48,11 @@ import java.text.Normalizer
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FavoriteProfileActivity : BaseActivity() , SearchLiveo.OnSearchListener, KodeinAware, ByKeywordListener {
+class FavoriteProfileActivity : BaseActivity() , SearchLiveo.OnSearchListener, KodeinAware, RoomMemberListener {
 
-    private lateinit var smartSearchviewModel: SmartSearchViewModel
+    private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var mBinding:ActivityFavoriteBinding
-    private val factory: SmartSearchViewModelFactory by instance()
+    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
     private var mAdapter: FavoriteAdapter? = null
     private var lstMember = ArrayList<RoomMember>()
     override val kodein by kodein()
@@ -69,14 +68,14 @@ class FavoriteProfileActivity : BaseActivity() , SearchLiveo.OnSearchListener, K
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-        smartSearchviewModel = ViewModelProviders.of(this, factory).get(SmartSearchViewModel::class.java)
-        smartSearchviewModel.mByKeywordListener = this
+        roomMemberViewModel = ViewModelProviders.of(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
+        roomMemberViewModel.mRoomMemberListener = this
         onInitView()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        smartSearchviewModel.getMembers()
+        roomMemberViewModel.getRoomMembers()
     }
 
     override fun changedSearch(text: CharSequence?) {
@@ -151,15 +150,10 @@ class FavoriteProfileActivity : BaseActivity() , SearchLiveo.OnSearchListener, K
         mBinding.recyclerView.adapter = mAdapter
     }
 
-    override fun getRoomFailure(message: String) {
+    override suspend fun getFailure(message: String) {
         Utility.displaySnackBarWithBottomMargin(mBinding.recyclerView,message)
     }
 
-    override fun getMembers(response: searchByKeywordsResponse) {
-    }
-
-    override fun getFailure(message: String) {
-    }
 
     @SuppressLint("CheckResult")
     private fun applyProfilePicture(holder: FavoriteAdapter.ViewHolder, imgURL: String?) {
@@ -246,13 +240,13 @@ class FavoriteProfileActivity : BaseActivity() , SearchLiveo.OnSearchListener, K
 
             viewHolder.tvName.text = member.firstName
             if(!member.subCastId.isNullOrEmpty()){
-                smartSearchviewModel.getLastName(member.subCastId.toInt()).observeForever {
+                roomMemberViewModel.getLastName(member.subCastId.toInt()).observeForever {
                     viewHolder.tvName.text = member.firstName + " " + it
                 }
             }
 
             if (!member.cityId.isNullOrEmpty()) {
-                smartSearchviewModel.getCityNamebyId(member.cityId).observeForever {
+                roomMemberViewModel.getCityNamebyId(member.cityId).observeForever {
                     viewHolder.tvArea.text = member.area + " " + it
                 }
             }
@@ -260,9 +254,9 @@ class FavoriteProfileActivity : BaseActivity() , SearchLiveo.OnSearchListener, K
             viewHolder.tvMobile.text = member.mobile
 
             if (member.headId.equals("0")) {
-                viewHolder.tvRole.text = "Family Head"
+                viewHolder.tvRole.text = resources.getString(R.string.Family_Head)
             } else {
-                viewHolder.tvRole.text = "Member"
+                viewHolder.tvRole.text = resources.getString(R.string.Member)
             }
             if (!member.updatedDt.isNullOrEmpty()) {
                 viewHolder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
@@ -335,10 +329,10 @@ class FavoriteProfileActivity : BaseActivity() , SearchLiveo.OnSearchListener, K
             }
 
             viewHolder.iconImp.setOnClickListener {
-                smartSearchviewModel.getRoomMember(member.id).observeForever {
+                roomMemberViewModel.getRoomMember(member.id).observeForever {
                         if(it!=null){
                             lstMember.removeAt(position)
-                            smartSearchviewModel.deleteRoomMember(member.id)
+                            roomMemberViewModel.deleteRoomMember(member.id)
                         }
                 }
             }

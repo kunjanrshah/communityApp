@@ -27,29 +27,85 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/round_corner_profile"
-                    android:src="@drawable/user" />
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/icon_container1"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/icon_back1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fillAfter="false"
+                        android:fillEnabled="false">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/bg_circle" />
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_done_white_24dp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/icon_front1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fillAfter="false"
+                        android:fillEnabled="false">
+
+                        <ImageView
+                            android:id="@+id/icon_profile1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"/>
+
+                        <TextView
+                            android:id="@+id/icon_text1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textColor="@android:color/white"
+                            android:textSize="22sp" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
 
                 <com.nightonke.boommenu.BoomMenuButton
                     android:id="@+id/bmb1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:bmb_buttonEnum="textInsideCircle"
+                    android:layout_marginTop="-10dp"
                     android:layout_marginLeft="-8dp"
                     app:bmb_piecePlaceEnum="piecePlace_dot_6_1"
                     app:bmb_buttonPlaceEnum="buttonPlace_sc_6_1"
-                    app:bmb_inList="true"         />
+                    app:bmb_inList="true"/>
+
+                <ImageView
+                    android:id="@+id/icon_star"
+                    android:layout_width="25dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginTop="-10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="25dp"
+                    android:tint="@color/icon_tint_normal" />
 
                 <TextView
                     android:id="@+id/tv_label"
+                    android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="Home"
-                    android:layout_marginTop="-7dp"
+
                     android:textColor="@color/colorPrimary" />
 
             </LinearLayout>
@@ -78,7 +134,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semibold"
                             android:text="Kunjan Patel"
-                            android:textSize="16sp" />
+                            android:textSize="18sp" />
 
                         <TextView
                             android:fontFamily="@font/montserrat_medium"
@@ -87,9 +143,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Maninagar, Ahmedabad"
-                            android:textSize="12sp" />
+                            android:textSize="16sp" />
 
                         <LinearLayout
+                            android:id="@+id/ll_mobile"
                             android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
                             android:gravity="center_vertical"
@@ -111,7 +168,7 @@
                                 android:text="9825450261"
                                 android:fontFamily="@font/montserrat_semibold"
                                 android:textColor="@color/com_facebook_blue"
-                                android:textSize="12sp" />
+                                android:textSize="14sp" />
 
                         </LinearLayout>
 
@@ -165,7 +222,7 @@
                         android:layout_marginLeft="5dp"
                         android:fontFamily="@font/montserrat_medium"
                         android:text="kunjanshah@gmail.com"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -173,6 +230,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="5dp"
                     android:alpha="1"
                     android:background="@color/colorGray" />

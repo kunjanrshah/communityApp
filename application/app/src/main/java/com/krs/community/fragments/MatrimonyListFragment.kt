@@ -29,7 +29,7 @@ import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.utils.openFilter
 import com.krs.community.viewmodel.SmartFilterViewModel
-import com.krs.community.viewmodel.SmartFilterViewModelFactory
+import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
 import com.nightonke.boommenu.BoomMenuButton
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -211,7 +211,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener {
         }
     }
 
-    override fun getFailure(message: String) {
+    override suspend fun getFailure(message: String) {
         Coroutines.main {
             Utility.displaySnackBarWithBottomMargin(binding.listMatrimony,message)
             binding.shimmerViewContainer.stopShimmerAnimation()

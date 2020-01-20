@@ -17,35 +17,7 @@ class SmartSearchRepository(private val api: ApiServices, private val db:AppData
         }
     }
 
-    suspend fun changeStatus(jsonObject: JsonObject): searchByKeywordsResponse {
-        return apiRequest{
-            api.changeStatus(jsonObject)
-        }
-    }
-
-    suspend fun changeRole(jsonObject: JsonObject): searchByKeywordsResponse {
-        return apiRequest{
-            api.changeRole(jsonObject)
-        }
-    }
-
-    suspend fun getRoomMembers(): List<RoomMember> {
-        return db.getRoomMemberDao().getRoomMembers()
-    }
-
-    suspend fun insertRoomMember(member: RoomMember){
-       return db.getRoomMemberDao().saveRoomMember(member)
-   }
-
-    suspend fun deleteRoomMember(id: Int){
-        return db.getRoomMemberDao().deleteRoomMember(id)
-   }
-
-  fun getRoomMember(id: Int):LiveData<RoomMember>{
-        return db.getRoomMemberDao().getRoomMember(id)
-    }
-
-   fun getLastName(id:Int):LiveData<String>{
+    fun getLastName(id:Int):LiveData<String>{
       return  db.getLastNameDao().getLastNameById(id)
     }
     fun getCityName(id:String): LiveData<String> {

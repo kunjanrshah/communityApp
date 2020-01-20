@@ -95,7 +95,7 @@
                 <ImageView
                     android:id="@+id/icon_star"
                     android:layout_width="25dp"
-                    android:layout_marginRight="3dp"
+                    android:layout_marginRight="5dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_height="25dp"
                     android:tint="@color/icon_tint_normal" />

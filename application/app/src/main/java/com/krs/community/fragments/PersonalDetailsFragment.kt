@@ -1,6 +1,5 @@
 package com.krs.community.fragments
 
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
@@ -15,18 +14,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.google.gson.JsonObject
 import com.krs.community.R
 import com.krs.community.databinding.FragmentPersonalDetailsBinding
 import com.krs.community.model.Member
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.ProfileDetailViewModel
-import com.krs.community.viewmodel.ProfileDetailViewModelFactory
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.tsongkha.spinnerdatepicker.DatePicker
 import com.tsongkha.spinnerdatepicker.DatePickerDialog
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
-import okhttp3.internal.Util
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein

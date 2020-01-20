@@ -21,7 +21,7 @@ import com.krs.community.responses.StatisticResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.StatisticsViewModel
-import com.krs.community.viewmodel.StatisticsViewModelFactory
+import com.krs.community.viewmodelfactory.StatisticsViewModelFactory
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein

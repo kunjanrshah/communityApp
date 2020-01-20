@@ -5,110 +5,63 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getColor
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
+import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.AtoZBottomAdapter
+import com.krs.community.adapter.LocationAdapter
+import com.krs.community.adapter.MyRoleAdapter
+import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentFilterResultBinding
+import com.krs.community.entities.RoomMember
 import com.krs.community.interfaces.IbrowseCityRecordsListener
+import com.krs.community.interfaces.RoomMemberListener
 import com.krs.community.model.FilterBy
 import com.krs.community.model.Member
 import com.krs.community.model.SearchByCityData
 import com.krs.community.model.SearchByCityModel
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
-import com.krs.community.utils.Coroutines
-import com.krs.community.utils.FlipAnimator
-import com.krs.community.utils.Utility
+import com.krs.community.utils.*
 import com.krs.community.viewmodel.BrowseCityViewModel
-import com.krs.community.viewmodel.BrowseCityViewModelFactory
+import com.krs.community.viewmodel.ProfileDetailViewModel
+import com.krs.community.viewmodel.RoomMemberViewModel
+import com.krs.community.viewmodelfactory.BrowseCityViewModelFactory
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
+import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
+import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.util.*
 
-class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, ParallaxRecyclerAdapter.OnLoadMore,AtoZBottomAdapter.ISortingRecords {
-
-    override fun getRecords() {
-            members.clear()
-            DashboardActivity.stop=false
-            start=0
-            setupList()
-    }
-
-    override fun loadApi() {
-        if (!DashboardActivity.stop) {
-            start = (members.size+1)
-            setupList()
-        }
-    }
-
-    @SuppressLint("SetTextI18n")
-    override fun getSearchRecords(data: SearchByCityModel) {
-
-        if (data.success) {
-            if (data.members.size > 0) {
-                val count= data.totalHead+ data.totalMem
-                tvCount.text="Families: ${data.totalHead}. Members: $count"
-                for (user in data.members) {
-                    members.add(user)
-                }
-
-                adapter.notifyDataSetChanged()
-                binding.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
-                selectedPosition = members.size - 1
-                DashboardActivity.stop = false
-
-                if(data.totalHead<=length){
-                    DashboardActivity.stop = true
-                    Snackbar.make(binding.llParent, "End of $alpha Records", Snackbar.LENGTH_LONG).show()
-                }
-
-            } else {
-                DashboardActivity.stop = true
-                //rootView!!.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
-                Snackbar.make(binding.llParent, "End of $alpha Records", Snackbar.LENGTH_LONG).show()
-            }
-        } else {
-            DashboardActivity.stop = false
-        }
-
-        binding.shimmerViewContainer.stopShimmerAnimation()
-        binding.shimmerViewContainer.visibility = View.GONE
-    }
-
-    override suspend fun getFailure(message: String) {
-      try{
-          DashboardActivity.stop = false
-          binding.shimmerViewContainer.stopShimmerAnimation()
-          binding.shimmerViewContainer.visibility = View.GONE
-          Snackbar.make(binding.llParent, "Something went wrong!", Snackbar.LENGTH_LONG).show()
-      }catch (e:Exception){
-          e.printStackTrace()
-      }
-
-    }
+class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCityRecordsListener, ParallaxRecyclerAdapter.OnLoadMore,AtoZBottomAdapter.ISortingRecords, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner {
 
     companion object {
         var alpha:String=""
@@ -116,11 +69,9 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
     }
 
     private var selectedPosition = 0
-    private var start: Int = 0
-    private val length: Int = 5
-    private lateinit var city_id:String
-    private lateinit var city_name:String
 
+    private lateinit var cityId:String
+    private lateinit var cityName:String
     private val members = ArrayList<Member>()
     private var actionModeCallback: ActionModeCallback? = null
     private var actionMode: ActionMode?=null
@@ -131,11 +82,22 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
     private var currentSelectedIndex = -1
     private val selectedItemCount: Int get() = selectedItems.size()
     private var TAG: String = SearchCityResult::class.java.simpleName
-    private val factory: BrowseCityViewModelFactory by instance()
+
     internal lateinit var browseCityViewModel: BrowseCityViewModel
+    private lateinit var roomMemberViewModel: RoomMemberViewModel
+    private lateinit var profileDetailViewModel: ProfileDetailViewModel
+
+    private val browseCityViewModelFactory: BrowseCityViewModelFactory by instance()
+    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
+
+
     override val kodein by kodein()
     private lateinit var tvCount:TextView
     lateinit var binding: FragmentFilterResultBinding
+
+    private var changeRoleDialog: DialogPlus? = null
+    private var setLocationDialog: DialogPlus? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -149,15 +111,21 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         selectedItems = SparseBooleanArray()
         animationItemsIndex = SparseBooleanArray()
 
-        actionModeCallback = ActionModeCallback()
-        browseCityViewModel = ViewModelProviders.of(this, factory).get(BrowseCityViewModel::class.java)
+        browseCityViewModel = ViewModelProviders.of(this, browseCityViewModelFactory).get(BrowseCityViewModel::class.java)
+        roomMemberViewModel = ViewModelProviders.of(this,roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
+        profileDetailViewModel = ViewModelProviders.of(this,profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
+
         browseCityViewModel.ibrowseCityRecordsListener = this
+        roomMemberViewModel.mRoomMemberListener=this
+
+
+        actionModeCallback = ActionModeCallback()
 
         if (this.arguments != null){
-            city_name = this.arguments!!.getString("city_name").toString()
-            city_id =  this.arguments!!.getString("city_id").toString()
-            Guru.putString("user_city",city_name)
-            Guru.putString("user_city_id",city_id)
+            cityName = this.arguments!!.getString("city_name").toString()
+            cityId =  this.arguments!!.getString("city_id").toString()
+            Guru.putString("user_city",cityName)
+            Guru.putString("user_city_id",cityId)
         }
 
         members.clear()
@@ -177,28 +145,67 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
                 holder.tvEmail.text = member.emailAddress
                 holder.tvMobile.text = member.mobile
                 if (member.headId.equals("0")) {
-                    holder.tvRole.text = "Family Head"
+                    holder.tvRole.text = resources.getString(R.string.Family_Head)
                 } else {
-                    holder.tvRole.text = "Member"
+                    holder.tvRole.text = resources.getString(R.string.Member)
                 }
 
                 holder.tvUpdate.text="updated "+Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
 
                 holder.boomMenuButton.clearBuilders()
+
                 for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
                     val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
                     builder?.listener {
-                        if (it == 1) {
+                        if (it == 0) {
+                            if (Utility.hasReadStoragePermission(activity as AppCompatActivity) && Utility.hasWriteStoragePermission(activity as AppCompatActivity)) {
+                                createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
+
+                                Handler().post(Runnable {
+                                    Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                                })
+                                Handler().postDelayed({
+                                    Utility.hideSweetProgress()
+                                }, 5000)
+
+                            } else {
+                                Utility.requestStoragePermission(activity as AppCompatActivity)
+                            }
+                        } else if (it == 1) {
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
                         } else if (it == 2) {
-                            Utility.sendWhatsappMessage(activity as FragmentActivity,member.mobile,"")
-                        }else{
-                            Toast.makeText(activity, "Clicked $it", Toast.LENGTH_SHORT).show()
+                            if (!member.mobile.isNullOrEmpty()) {
+                                Utility.sendWhatsappMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
+                            } else {
+                                Toast.makeText(activity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
+                            }
+                        } else if (it == 3) {
+                            val mBundle = Bundle()
+                            mBundle.putSerializable(getString(R.string.member), member)
+                            val intent: Intent = Intent(activity, QRCodeActivity::class.java)
+                            intent.putExtras(mBundle)
+                            startActivity(intent)
+                            Utility.fade(activity)
+                        } else if (it == 4) {
+                            shareDetails(activity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, viewHolder.tvArea.text.toString(), member.address)
+                        } else if (it == 5) {
+                            val adapter: LocationAdapter = LocationAdapter(context as AppCompatActivity, member)
+                            adapter.setLocationListner(this@SearchCityResult)
+                            setLocationDialog = DialogPlus.newDialog(context)
+                                    .setAdapter(adapter)
+                                    .setGravity(Gravity.BOTTOM)
+                                    .setCancelable(true)
+                                    .setExpanded(true, 600)
+                                    .setContentBackgroundResource(R.drawable.popup_top_corner)
+                                    .create()
+                            setLocationDialog?.show()
                         }
                     }
                     viewHolder.boomMenuButton.addBuilder(builder)
                 }
+
+
                 holder.boomMenuButton.setOnClickListener({ v -> holder.boomMenuButton.boom() })
 
                 holder.iconText.text = name.substring(0, 1)
@@ -206,6 +213,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
                 applyIconAnimation(holder, position)
                 applyProfilePicture(holder, member)
                 applyClickEvents(holder, position)
+                applyImportant(viewHolder, member)
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
@@ -218,9 +226,9 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         }
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_smart_filter, container, false)
-        Log.d(TAG, "City Name: " + city_name)
+        Log.d(TAG, "City Name: " + cityName)
         val tvTitle = header.findViewById<TextView>(R.id.tvTitle)
-        tvTitle.text = city_name
+        tvTitle.text = cityName
 
         val edtFilterName = header.findViewById<EditText>(R.id.edt_filter_name)
         edtFilterName.visibility = View.GONE
@@ -230,7 +238,21 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
 
         val ivExport = header.findViewById<ImageView>(R.id.iv_export)
         ivExport.setOnClickListener {
+            if (members.size > 0) {
+                if (Utility.hasReadStoragePermission(activity as AppCompatActivity) && Utility.hasWriteStoragePermission(activity as AppCompatActivity)) {
 
+                    Handler().post {
+                        Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
+                    }
+                    createMemberListPDF(activity as AppCompatActivity, members, profileDetailViewModel)
+                    Handler().postDelayed({
+                        Utility.hideSweetProgress()
+                    }, 7000)
+
+                } else {
+                    Utility.requestStoragePermission(activity)
+                }
+            }
         }
         tvCount= header.findViewById(R.id.tv_count)
 
@@ -262,13 +284,13 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         if (!DashboardActivity.stop) {
             DashboardActivity.stop = true
             val data = SearchByCityData()
-            data.start = start.toString()
-            data.length = length.toString()
+            data.start = AppController.mApplication.start.toString()
+            data.length = AppController.mApplication.length.toString()
             data.alpha= alpha
             val filterBy = FilterBy()
-            filterBy.cityId = city_id
+            filterBy.cityId = cityId
             data.filterBy = filterBy
-            if(start==0){
+            if(AppController.mApplication.start==0){
                 binding.shimmerViewContainer.startShimmerAnimation()
                 binding.shimmerViewContainer.visibility = View.VISIBLE
             }
@@ -276,8 +298,125 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         }
     }
 
+    override fun getRecords() {
+        members.clear()
+        DashboardActivity.stop=false
+        AppController.mApplication.start=0
+        setupList()
+    }
+
+    override fun loadApi() {
+        if (!DashboardActivity.stop) {
+            AppController.mApplication.start = (members.size+1)
+            setupList()
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun getSearchRecords(data: SearchByCityModel) {
+
+        DashboardActivity.stop = false
+        binding.shimmerViewContainer.stopShimmerAnimation()
+        binding.shimmerViewContainer.visibility = View.GONE
+        actionMode?.finish()
+        selectedItems.clear()
+        cancelDialog()
+        Utility.hideKeyboard(activity)
+
+        if (data.success) {
+            if (data.members.size > 0) {
+                val count= data.totalHead+ data.totalMem
+                tvCount.text="Families: ${data.totalHead}. Members: $count"
+                for (user in data.members) {
+                    members.add(user)
+                }
+
+                adapter.notifyDataSetChanged()
+                binding.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
+                selectedPosition = members.size - 1
+                DashboardActivity.stop = false
+
+                if(data.totalHead<=AppController.mApplication.length){
+                    DashboardActivity.stop = true
+                    Snackbar.make(binding.llParent, "End of $alpha Records", Snackbar.LENGTH_LONG).show()
+                }
+
+            } else {
+                DashboardActivity.stop = true
+                //rootView!!.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
+                Snackbar.make(binding.llParent, "End of $alpha Records", Snackbar.LENGTH_LONG).show()
+            }
+        } else {
+            DashboardActivity.stop = false
+        }
+
+        binding.shimmerViewContainer.stopShimmerAnimation()
+        binding.shimmerViewContainer.visibility = View.GONE
+    }
+
+    override suspend fun getFailure(message: String) {
+        try{
+            DashboardActivity.stop = false
+            binding.shimmerViewContainer.stopShimmerAnimation()
+            binding.shimmerViewContainer.visibility = View.GONE
+
+            if(message.toLowerCase().contains("success")){
+                setupList()
+            }else{
+                Snackbar.make(binding.llParent, "Something went wrong!", Snackbar.LENGTH_LONG).show()
+            }
+
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
+    }
+
+
+    private fun applyImportant(holder: ViewHolder, member: Member) {
+
+        roomMemberViewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, androidx.lifecycle.Observer {
+            try {
+                if (it != null) {
+                    holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_black_24dp))
+                    holder.iconImp.setColorFilter(getColor(activity as AppCompatActivity, R.color.icon_tint_selected))
+                } else {
+                    holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_border_black_24dp))
+                    holder.iconImp.setColorFilter(getColor(activity as AppCompatActivity, R.color.icon_tint_normal))
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+
+        })
+    }
+
     private fun applyClickEvents(holder: ViewHolder, position: Int) {
-        holder.iconContainer.setOnClickListener { onIconClicked(position) }
+        holder.iconContainer.setOnClickListener {
+            try {
+                val path = getString(R.string.base_url_original) + "" +members.get(position).profilePic
+                Log.d(TAG, "path: $path")
+                openImageDialog(activity as AppCompatActivity,path)
+            } catch (e: Exception) {
+                e.message
+            }
+        }
+
+        holder.iconImp.setOnClickListener {
+
+            val member: Member = members.get(position)
+            var flag = true
+            roomMemberViewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, androidx.lifecycle.Observer {
+                if (flag) {
+                    flag = false
+                    if (it != null) {
+                        roomMemberViewModel.deleteRoomMember(Integer.parseInt(member.id))
+                    } else {
+                        roomMemberViewModel.insertRoomMember(getRoomMemberFromMember(member))
+                    }
+                }
+            })
+        }
 
         holder.llMobile.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
@@ -294,17 +433,17 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         }
     }
 
+
     private fun applyProfilePicture(holder: ViewHolder, member: Member) {
-        if (!TextUtils.isEmpty(member.profilePic) && member.profilePic.contains("http://")) {
-            Glide.with(activity!!).load(member.profilePic)
-                    .thumbnail(0.5f)
-                    .transition(withCrossFade())
-                    .apply(RequestOptions.circleCropTransform())
-                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-                    .into(holder.imgProfile)
+        if (!TextUtils.isEmpty(member.profilePic)) {
+            val url=resources.getString(R.string.base_url_thumb)+member.profilePic
+            Log.d(TAG,"url: "+url)
+            Glide.with(activity!!).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE
+            holder.imgProfile.isClickable = true
         } else {
+            holder.imgProfile.isClickable = false
             holder.imgProfile.setImageResource(R.drawable.bg_circle)
             holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(activity!!, "400"))
             holder.iconText.visibility = View.VISIBLE
@@ -341,7 +480,9 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
 
     private fun resetAnimationIndex() {
         reverseAllAnimations = false
-        animationItemsIndex.clear()
+        if (animationItemsIndex != null) {
+            animationItemsIndex.clear()
+        }
     }
 
     private fun toggleSelected(pos: Int) {
@@ -370,11 +511,6 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         return items
     }
 
-    private fun removeData(position: Int) {
-        members.removeAt(position)
-        resetCurrentIndex()
-    }
-
     private fun resetCurrentIndex() {
         currentSelectedIndex = -1
     }
@@ -389,6 +525,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         val tvMobile: TextView = itemView.findViewById(R.id.tv_mobile)
         val tvEmail: TextView = itemView.findViewById(R.id.tv_email)
         var iconContainer: RelativeLayout = itemView.findViewById(R.id.icon_container)
+        var iconImp: ImageView = itemView.findViewById(R.id.icon_star)
         var iconBack: RelativeLayout = itemView.findViewById(R.id.icon_back)
         var iconFront: RelativeLayout = itemView.findViewById(R.id.icon_front)
         var iconText: TextView = itemView.findViewById(R.id.icon_text)
@@ -420,21 +557,11 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         binding.shimmerViewContainer.visibility = View.GONE
     }
 
-    private fun deleteMessages() {
-        resetAnimationIndex()
-        val selectedItemPositions = getSelectedItems()
-        for (i in selectedItemPositions.indices.reversed()) {
-            removeData(selectedItemPositions[i])
-        }
-        adapter.notifyDataSetChanged()
-    }
-
 
     private inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
             mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
 
-            // rootView!!.swipe_refresh_layout.isEnabled = false
             return true
         }
 
@@ -444,17 +571,75 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
             return true
         }
 
-        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem):Boolean =
             when (item.itemId) {
                 R.id.action_delete -> {
-                    deleteMessages()
-                    mode.finish()
-                    return true
-                }
+                    val selectedItemPositions = getSelectedItems()
+                    SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText(getString(R.string.you_sure))
+                            .setContentText("want to disable ${selectedItemPositions.size} Profiles!")
+                            .setConfirmText("Yes,Disable it!")
+                            .setCancelText("No")
+                            .setConfirmClickListener {
+                                it.dismiss()
 
-                else -> return false
+                                val jsonObject = JSONObject()
+                                jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                                jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+                                jsonObject.put("status", "0")
+
+                                var Ids = ""
+                                for (index in selectedItemPositions) {
+                                    Ids += members[index].id + ","
+                                }
+
+                                Ids = Ids.substring(0, Ids.length - 1)
+                                jsonObject.put(getString(R.string.idList), Ids)
+                                val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                                members.clear()
+                                tvCount.visibility=View.GONE
+                                adapter.notifyDataSetChanged()
+                                binding.shimmerViewContainer.startShimmerAnimation()
+                                binding.shimmerViewContainer.visibility = View.VISIBLE
+                                roomMemberViewModel.disableMembers(updated)
+
+                            }
+                            .setCancelClickListener {
+                                it.dismiss()
+                            }
+                            .show()
+
+                    true
+                }
+                R.id.action_my_role -> {
+
+                    val adapter: MyRoleAdapter = MyRoleAdapter(context)
+                    adapter.setChangeRoleListner(this@SearchCityResult)
+                    changeRoleDialog = DialogPlus.newDialog(context)
+                            .setAdapter(adapter)
+                            .setGravity(Gravity.BOTTOM)
+                            .setCancelable(true)
+                            .setOnCancelListener {
+                                actionMode?.finish()
+                            }
+                            .setExpanded(true, 700)
+                            .setContentBackgroundResource(R.drawable.popup_top_corner)
+                            .create()
+                    changeRoleDialog?.show()
+
+
+
+                    true
+                }
+                R.id.action_select_all -> {
+                    clearSelections()
+                    for (i in members.indices) {
+                        enableActionMode(i)
+                    }
+                    true
+                }
+                else -> false
             }
-        }
 
         override fun onDestroyActionMode(mode: ActionMode) {
             clearSelections()
@@ -462,7 +647,6 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(activity, R.color.colorBG, false)
             }
-
             binding.lstFilter.post { resetAnimationIndex() }
         }
     }
@@ -471,7 +655,7 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
         toggleSelected(position)
         val count = selectedItemCount
 
-        if (count == 0) {
+        if (count <= 0) {
             actionMode?.finish()
         } else {
             actionMode?.title = count.toString()
@@ -480,45 +664,91 @@ class SearchCityResult : Fragment(), KodeinAware, IbrowseCityRecordsListener, Pa
     }
 
     private fun enableActionMode(position: Int) {
+        if (actionMode == null) {
+            actionMode = activity?.startActionMode(actionModeCallback)
+        }
         toggleSelection(position)
     }
-
-
-    private fun onIconClicked(position: Int) {
-        toggleSelection(position)
-    }
-
-    /*private fun onIconImportantClicked(position: Int) {
-        val user = users[position]
-        message.isImportant = !message.isImportant
-        users[position] = message
-        adapter!!.notifyDataSetChanged()
-    }*/
 
     private fun onMessageRowClicked(position: Int) {
         if (selectedItemCount > 0) {
             enableActionMode(position)
         } else {
-            /*val user = users[position]
-            user.isRead = true
-            users[position] = user
-            adapter!!.notifyDataSetChanged()*/
             val intent=Intent(activity,ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member),members.get(position))
-            //intent.putExtra("id",members.get(position)?.id)
             startActivity(intent)
             Utility.fade(activity)
-            /*val fragmemnt= FamilyDetailFragment()
-            val bundle=Bundle()
-            bundle.putString("screen_name",SearchCityResult::class.java.simpleName)
-            bundle.putSerializable("user",members.get(position))
-            fragmemnt.arguments=bundle
-            Utility.movetoFragment(activity,fragmemnt)*/
-            //Toast.makeText(activity, "Read: " + position, Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun onRowLongClicked(position: Int) {
         enableActionMode(position)
     }
+
+    override fun refreshList() {
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun getRoomMembers(response: List<RoomMember>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun changeRole(role: String?) {
+        val selectedItemPositions = getSelectedItems()
+        SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(getString(R.string.you_sure))
+                .setContentText("${selectedItemPositions.size} Profiles Role will be changed to '$role'!")
+                .setConfirmText("Yes,Please!")
+                .setCancelText("No")
+                .setConfirmClickListener {
+                    it.dismiss()
+
+                    val jsonObject = JSONObject()
+                    jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                    jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+
+                    var changed=""
+                    if(role == getString(R.string.Local_Admin)){
+                        changed = getString(R.string.LOCAL_ADMIN)
+                    }else if(role == getString(R.string.Sub_Admin)) {
+                        changed = getString(R.string.SUB_ADMIN)
+                    }else{
+                        changed = getString(R.string.User)
+                    }
+
+                    jsonObject.put(getString(R.string.role), changed)
+                    val loginuser= Guru.getString(getString(R.string.loginUser),"")
+                    val member: Member = Gson().fromJson<Member>(loginuser, Member::class.java)
+                    jsonObject.put(getString(R.string.local_community_id),member.localCommunityId)
+                    jsonObject.put(getString(R.string.sub_community_id), member.subCommunityId)
+
+                    var Ids = ""
+                    for (index in selectedItemPositions) {
+                        Ids += members[index].id + ","
+                    }
+
+                    Ids = Ids.substring(0, Ids.length - 1)
+                    jsonObject.put(getString(R.string.idList), Ids)
+                    val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                    members.clear()
+                    tvCount.visibility=View.GONE
+                    adapter.notifyDataSetChanged()
+                    binding.shimmerViewContainer.startShimmerAnimation()
+                    binding.shimmerViewContainer.visibility = View.VISIBLE
+                    roomMemberViewModel.changeRole(updated)
+
+                }
+                .setCancelClickListener {
+                    it.dismiss()
+                }
+                .show()
+    }
+
+    override fun cancelDialog() {
+        actionMode?.finish()
+        changeRoleDialog?.dismiss()
+    }
+
+
+
 }

@@ -29,7 +29,7 @@ import com.krs.community.entities.City
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.BrowseCityViewModel
-import com.krs.community.viewmodel.BrowseCityViewModelFactory
+import com.krs.community.viewmodelfactory.BrowseCityViewModelFactory
 import kotlinx.android.synthetic.main.fragment_browse_city.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein

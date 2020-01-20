@@ -19,7 +19,7 @@ import com.krs.community.utils.Utility
 import com.krs.community.utils.moveToFragmentListScreen
 import com.krs.community.utils.openFilter
 import com.krs.community.viewmodel.SmartFilterViewModel
-import com.krs.community.viewmodel.SmartFilterViewModelFactory
+import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein

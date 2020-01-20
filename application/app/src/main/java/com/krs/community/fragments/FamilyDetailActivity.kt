@@ -23,7 +23,6 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.ProfileDetailActivity
-import com.krs.community.adapter.RecyclerAdapter.ItemClickListener
 import com.krs.community.app.AppController
 import com.krs.community.interfaces.IFamilyMembersListener
 import com.krs.community.interfaces.OnBackPressedListener
@@ -35,7 +34,7 @@ import com.krs.community.responses.FamilyDetailResponse
 import com.krs.community.utils.Utility
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.FamilyDetailViewModel
-import com.krs.community.viewmodel.FamilyDetailViewModelFactory
+import com.krs.community.viewmodelfactory.FamilyDetailViewModelFactory
 import com.nightonke.boommenu.BoomMenuButton
 import kotlinx.android.synthetic.main.header_detail.view.*
 import org.json.JSONObject
@@ -157,7 +156,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
                     viewHolder.deleteLayout.setOnClickListener {
 
                         SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("Are you sure?")
+                                .setTitleText(getString(R.string.you_sure))
                                 .setContentText("Won't be able to recover this Profile!")
                                 .setConfirmText("Yes,delete it!")
                                 .setCancelText("No")

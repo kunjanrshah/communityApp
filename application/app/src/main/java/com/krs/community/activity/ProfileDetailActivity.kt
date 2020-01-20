@@ -1,8 +1,6 @@
 package com.krs.community.activity
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -10,8 +8,6 @@ import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -32,21 +28,18 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.app.AppController
 import com.krs.community.app.AppController.Companion.mApplication
 import com.krs.community.bkservice.ProcessMainClass
 import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
 import com.krs.community.databinding.ActivityProfileDetailBinding
 import com.krs.community.fragments.*
 import com.krs.community.interfaces.EditMemberListener
-import com.krs.community.model.FilterBy
 import com.krs.community.model.Member
-import com.krs.community.model.SearchData
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
-import com.krs.community.viewmodel.ProfileDetailViewModelFactory
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback

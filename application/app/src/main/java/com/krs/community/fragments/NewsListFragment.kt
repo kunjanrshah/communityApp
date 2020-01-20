@@ -33,7 +33,7 @@ import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.News
 import com.krs.community.responses.NewsResponse
 import com.krs.community.utils.Utility
-import com.krs.community.viewmodel.NewsModelFactory
+import com.krs.community.viewmodelfactory.NewsModelFactory
 import com.krs.community.viewmodel.NewsViewModel
 import org.json.JSONObject
 import org.kodein.di.KodeinAware

@@ -4,5 +4,5 @@ import com.krs.community.responses.SmartFilterResponse
 
 interface ByFilterListener {
     fun getMembers(response: SmartFilterResponse)
-    fun getFailure(message:String)
+    suspend fun getFailure(message:String)
 }

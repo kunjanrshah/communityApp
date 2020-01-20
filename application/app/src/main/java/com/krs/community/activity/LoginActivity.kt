@@ -41,7 +41,7 @@ import com.krs.community.utils.NotificationUtils
 import com.krs.community.utils.Utility.*
 import com.krs.community.utils.toast
 import com.krs.community.viewmodel.LoginViewModel
-import com.krs.community.viewmodel.LoginViewModelFactory
+import com.krs.community.viewmodelfactory.LoginViewModelFactory
 import kotlinx.android.synthetic.main.activity_loginwith.*
 import org.json.JSONException
 import org.kodein.di.KodeinAware

@@ -31,7 +31,7 @@ import com.krs.community.utils.Coroutines
 import com.krs.community.utils.FlipAnimator
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.SmartFilterViewModel
-import com.krs.community.viewmodel.SmartFilterViewModelFactory
+import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
 import org.json.JSONObject
@@ -220,7 +220,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         Toast.makeText(activity,"Success", Toast.LENGTH_SHORT).show()
     }
 
-    override fun getFailure(message: String) {
+    override suspend fun getFailure(message: String) {
         Coroutines.main {
             DashboardActivity.stop = false
             shimmerFrameLayout.stopShimmerAnimation()

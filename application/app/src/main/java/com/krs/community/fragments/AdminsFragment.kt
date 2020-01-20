@@ -28,16 +28,26 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
+import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
+import com.krs.community.app.AppController
+import com.krs.community.entities.RoomMember
 import com.krs.community.interfaces.ByFilterListener
+import com.krs.community.interfaces.RoomMemberListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.*
+import com.krs.community.viewmodel.ProfileDetailViewModel
+import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
-import com.krs.community.viewmodel.SmartFilterViewModelFactory
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
+import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
+import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
 import org.json.JSONObject
@@ -45,13 +55,20 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner  {
+class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListener, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner  {
 
     override val kodein by kodein()
     private var lstAdmins: ArrayList<Member> = ArrayList()
-    private lateinit var tvCount:TextView
+
     private lateinit var smartFilterViewModel: SmartFilterViewModel
-    private val factory: SmartFilterViewModelFactory by instance()
+    private lateinit var roomMemberViewModel: RoomMemberViewModel
+    private lateinit var profileDetailViewModel: ProfileDetailViewModel
+
+    private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance()
+    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
+
+    private lateinit var tvCount:TextView
     private var loginUserSubCommunityId=""
     private var loginUserLocalCommunityId=""
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
@@ -75,8 +92,14 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecycl
         shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)
         llRoot= root.findViewById(R.id.ll_root)
         (activity as AppCompatActivity).supportActionBar!!.title = ""
-        smartFilterViewModel = ViewModelProviders.of(this,factory).get(SmartFilterViewModel::class.java)
+
+        smartFilterViewModel = ViewModelProviders.of(this,smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
+        roomMemberViewModel = ViewModelProviders.of(this,roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
+        profileDetailViewModel = ViewModelProviders.of(this,profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
+
         smartFilterViewModel.mByFilterListener =this
+        roomMemberViewModel.mRoomMemberListener=this
+
         actionModeCallback = ActionModeCallback()
         (activity as AppCompatActivity).supportActionBar?.hide()
         adapter = object : ParallaxRecyclerAdapter<Member>(lstAdmins) {
@@ -140,9 +163,59 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecycl
                 applyImportant(viewHolder, member)
                 applyIconAnimation(viewHolder, i)
                 holder.boomMenuButton.clearBuilders()
-                for (i in 0 until holder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
-                    holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder())
+
+                for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
+                    val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
+                    builder?.listener {
+                        if (it == 0) {
+                            if (Utility.hasReadStoragePermission(activity as AppCompatActivity) && Utility.hasWriteStoragePermission(activity as AppCompatActivity)) {
+                                createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
+
+                                Handler().post(Runnable {
+                                    Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                                })
+                                Handler().postDelayed({
+                                    Utility.hideSweetProgress()
+                                }, 5000)
+
+                            } else {
+                                Utility.requestStoragePermission(activity as AppCompatActivity)
+                            }
+                        } else if (it == 1) {
+                            val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
+                            startActivity(intent)
+                        } else if (it == 2) {
+                            if (!member.mobile.isNullOrEmpty()) {
+                                Utility.sendWhatsappMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
+                            } else {
+                                Toast.makeText(activity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
+                            }
+                        } else if (it == 3) {
+                            val mBundle = Bundle()
+                            mBundle.putSerializable(getString(R.string.member), member)
+                            val intent: Intent = Intent(activity, QRCodeActivity::class.java)
+                            intent.putExtras(mBundle)
+                            startActivity(intent)
+                            Utility.fade(activity)
+                        } else if (it == 4) {
+                            shareDetails(activity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, viewHolder.tvArea.text.toString(), member.address)
+                        } else if (it == 5) {
+                            val adapter: LocationAdapter = LocationAdapter(context as AppCompatActivity, member)
+                            adapter.setLocationListner(this@AdminsFragment)
+                            setLocationDialog = DialogPlus.newDialog(context)
+                                    .setAdapter(adapter)
+                                    .setGravity(Gravity.BOTTOM)
+                                    .setCancelable(true)
+                                    .setExpanded(true, 600)
+                                    .setContentBackgroundResource(R.drawable.popup_top_corner)
+                                    .create()
+                            setLocationDialog?.show()
+                        }
+                    }
+                    viewHolder.boomMenuButton.addBuilder(builder)
                 }
+
+
                 holder.boomMenuButton.setOnClickListener { v: View? -> holder.boomMenuButton.boom() }
             }
 
@@ -180,12 +253,12 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecycl
     private fun getSubAdmin(){
         count=1
         val jsonObject=JSONObject()
-        jsonObject.put("start",0)
-        jsonObject.put("length",30)
+        jsonObject.put(getString(R.string.start), AppController.mApplication.start)
+        jsonObject.put(getString(R.string.length), AppController.mApplication.length)
         val jsonObj=JSONObject()
-        jsonObj.put("role","SUB_ADMIN")
-        jsonObj.put("sub_community_id",loginUserSubCommunityId)
-        jsonObject.put("filter_by",jsonObj)
+        jsonObj.put(getString(R.string.role),resources.getString(R.string.SUB_ADMIN))
+        jsonObj.put(getString(R.string.sub_community_id),loginUserSubCommunityId)
+        jsonObject.put(getString(R.string.filter_by),jsonObj)
         val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
         smartFilterViewModel.smartFilterSearch(updated)
         shimmerFrameLayout.startShimmerAnimation()
@@ -198,12 +271,12 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecycl
     private fun getLocalAdmin(){
         count=2
         val jsonObject=JSONObject()
-        jsonObject.put("start",0)
-        jsonObject.put("length",30)
+        jsonObject.put(getString(R.string.start), AppController.mApplication.start)
+        jsonObject.put(getString(R.string.length), AppController.mApplication.length)
         val jsonObj=JSONObject()
-        jsonObj.put("role","LOCAL_ADMIN")
-        jsonObj.put("local_community_id",loginUserLocalCommunityId)
-        jsonObject.put("filter_by",jsonObj)
+        jsonObj.put(getString(R.string.role),resources.getString(R.string.LOCAL_ADMIN))
+        jsonObj.put(getString(R.string.local_community_id),loginUserLocalCommunityId)
+        jsonObject.put(getString(R.string.filter_by),jsonObj)
         val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
         smartFilterViewModel.smartFilterSearch(updated)
 
@@ -235,8 +308,20 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecycl
         }
     }
 
-    override fun getFailure(message: String) {
-        Utility.displaySnackBarWithBottomMargin(llRoot,"Something went wrong")
+    override fun refreshList() {
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun getRoomMembers(response: List<RoomMember>) {
+
+    }
+
+    override suspend fun getFailure(message: String) {
+        if(message.toLowerCase().contains("success")){
+            getSubAdmin()
+        }else{
+            Toast.makeText(activity,message,Toast.LENGTH_SHORT).show()
+        }
     }
 
     internal inner class ListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -250,7 +335,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecycl
         var tvRegion: TextView = v.findViewById(R.id.tv_region)
         var iconProfile:ImageView= v.findViewById(R.id.icon_profile1)
         var iconText:TextView= v.findViewById(R.id.icon_text1)
-        var llMobile:TextView= v.findViewById(R.id.llMobile)
+        var llMobile:LinearLayout= v.findViewById(R.id.llMobile)
         var iconImp: ImageView = v.findViewById(R.id.icon_star)
         var messageContainer: LinearLayout = v.findViewById(R.id.message_container1)
         var iconBack: RelativeLayout = v.findViewById(R.id.icon_back1)
@@ -287,7 +372,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecycl
 
     private fun applyImportant(holder: ListViewHolder, member: Member) {
 
-        smartSearchviewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
+        roomMemberViewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
             try {
                 if (it != null) {
                     holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_black_24dp))
@@ -319,13 +404,13 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecycl
 
             val member: Member = lstAdmins.get(position)
             var flag = true
-            smartSearchviewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
+            roomMemberViewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
                 if (flag) {
                     flag = false
                     if (it != null) {
-                        smartSearchviewModel.deleteRoomMember(Integer.parseInt(member.id))
+                        roomMemberViewModel.deleteRoomMember(Integer.parseInt(member.id))
                     } else {
-                        smartSearchviewModel.insertRoomMember(getRoomMemberFromMember(member))
+                        roomMemberViewModel.insertRoomMember(getRoomMemberFromMember(member))
                     }
                 }
             })
@@ -424,14 +509,55 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecycl
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 
-    override fun loadApi() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override fun changeRole(role: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        val selectedItemPositions = getSelectedItems()
+        SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(getString(R.string.you_sure))
+                .setContentText("${selectedItemPositions.size} Profiles Role will be changed to '$role'!")
+                .setConfirmText("Yes,Please!")
+                .setCancelText("No")
+                .setConfirmClickListener {
+                    it.dismiss()
 
+                    val jsonObject = JSONObject()
+                    jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                    jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+
+                    var changed=""
+                    if(role == getString(R.string.Local_Admin)){
+                        changed = getString(R.string.LOCAL_ADMIN)
+                    }else if(role == getString(R.string.Sub_Admin)) {
+                        changed = getString(R.string.SUB_ADMIN)
+                    }else{
+                        changed = getString(R.string.User)
+                    }
+
+                    jsonObject.put(getString(R.string.role), changed)
+                    jsonObject.put(getString(R.string.local_community_id),loginUserLocalCommunityId)
+                    jsonObject.put(getString(R.string.sub_community_id), loginUserSubCommunityId)
+
+                    var Ids = ""
+                    for (index in selectedItemPositions) {
+                        Ids += lstAdmins[index].id + ","
+                    }
+
+                    Ids = Ids.substring(0, Ids.length - 1)
+                    jsonObject.put(getString(R.string.idList), Ids)
+                    val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                    lstAdmins.clear()
+                    tvCount.visibility=View.GONE
+                    adapter.notifyDataSetChanged()
+                    shimmerFrameLayout.startShimmerAnimation()
+                    shimmerFrameLayout.visibility = View.VISIBLE
+                    roomMemberViewModel.changeRole(updated)
+
+                }
+                .setCancelClickListener {
+                    it.dismiss()
+                }
+                .show()
+    }
 
 
     override fun cancelDialog() {
@@ -454,7 +580,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecycl
                     R.id.action_delete -> {
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("Are you sure?")
+                                .setTitleText(getString(R.string.you_sure))
                                 .setContentText("want to disable ${selectedItemPositions.size} Profiles!")
                                 .setConfirmText("Yes,Disable it!")
                                 .setCancelText("No")
@@ -472,14 +598,14 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecycl
                                     }
 
                                     Ids = Ids.substring(0, Ids.length - 1)
-                                    jsonObject.put("idList", Ids)
+                                    jsonObject.put(getString(R.string.idList), Ids)
                                     val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                                     lstAdmins.clear()
                                     tvCount.visibility=View.GONE
                                     adapter.notifyDataSetChanged()
                                     shimmerFrameLayout.startShimmerAnimation()
                                     shimmerFrameLayout.visibility = View.VISIBLE
-                                    smartSearchviewModel.disableMembers(updated)
+                                    roomMemberViewModel.disableMembers(updated)
 
                                 }
                                 .setCancelClickListener {

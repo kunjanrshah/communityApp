@@ -16,9 +16,6 @@ import com.krs.community.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Bowyer on 15/08/06.
- */
 public class MyRoleAdapter extends BaseAdapter {
 
     Context mContext;

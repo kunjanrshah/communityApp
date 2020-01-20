@@ -11,8 +11,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import cn.pedant.SweetAlert.SweetAlertDialog
@@ -32,7 +30,7 @@ import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.ProfileDetailViewModel
-import com.krs.community.viewmodel.ProfileDetailViewModelFactory
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import kotlinx.android.synthetic.main.fragment_main_details.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -255,7 +253,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                     binding.spRelation.setText(it)
                 }
             }else{
-                binding.spRelation.setText("Family Head")
+                binding.spRelation.setText(resources.getString(R.string.Family_Head))
             }
         }
     }
