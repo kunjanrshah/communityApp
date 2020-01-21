@@ -10,8 +10,8 @@
 
         <ImageView
             android:id="@+id/iv_cancel"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_margin="5dp"
             android:background="@drawable/left_arrow" />
 
@@ -20,20 +20,23 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
+
         <TextView
             android:id="@+id/tv_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black1"
-            android:layout_marginRight="20dp"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginRight="25dp"
+            android:layout_gravity="center_vertical"
             android:fontFamily="@font/montserrat_semibold"
-            android:text="Done"
+            android:text="Filter me!"
             android:textSize="18sp" />
+
 
         <ImageView
             android:id="@+id/iv_filter"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_gravity="center_vertical"
             android:layout_margin="5dp"
             android:background="@drawable/view_all_48" />

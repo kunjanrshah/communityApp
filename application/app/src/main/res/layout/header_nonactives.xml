@@ -6,9 +6,9 @@
 
     <ImageView
         android:id="@+id/iv_cancel"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_margin="10dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_margin="5dp"
         android:background="@drawable/left_arrow" />
 
     <TextView

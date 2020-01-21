@@ -392,7 +392,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     }
 
     private fun applyClickEvents(holder: ViewHolder, position: Int) {
-        holder.iconContainer.setOnClickListener {
+        holder.imgProfile.setOnClickListener {
             try {
                 val path = getString(R.string.base_url_original) + "" +members.get(position).profilePic
                 Log.d(TAG, "path: $path")

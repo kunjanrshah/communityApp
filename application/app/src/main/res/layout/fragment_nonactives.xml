@@ -13,22 +13,18 @@
         android:layout_height="match_parent"
         tools:ignore="UselessParent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:layoutAnimation="@anim/layout_animation_fall_down"
+            android:overScrollMode="never"
+            tools:itemCount="4"
+            android:layout_marginBottom="50dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            />
 
-         <androidx.recyclerview.widget.RecyclerView
-             android:id="@+id/recycler_view"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:clipToPadding="false"
-             android:overScrollMode="never"
-             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-             tools:listitem="@layout/list_row_nonactives"
-             android:scrollbars="vertical" />
-
-     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <com.facebook.shimmer.ShimmerFrameLayout

@@ -101,9 +101,6 @@
 
     </LinearLayout>
 
-
-
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -226,10 +223,10 @@
             android:layout_width="80dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/round_corner_primary"
+            android:background="@drawable/round_corner_white"
             android:gravity="center"
             android:fontFamily="@font/montserrat_semibold"
-            android:textColor="@color/white"
+            android:textColor="@color/black1"
             android:text="Male" />
 
         <Button
@@ -238,7 +235,8 @@
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
             android:fontFamily="@font/montserrat_semibold"
-            android:background="@drawable/round_corner_white"
+            android:background="@drawable/round_corner_primary"
+            android:textColor="@color/white"
             android:gravity="center"
             android:text="Female" />
 

@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -24,7 +25,9 @@ import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.app.AppController
+import com.krs.community.entities.RoomMember
 import com.krs.community.interfaces.ByFilterListener
+import com.krs.community.interfaces.RoomMemberListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
@@ -32,7 +35,9 @@ import com.krs.community.utils.Coroutines
 import com.krs.community.utils.FlipAnimator
 import com.krs.community.utils.Utility
 import com.krs.community.utils.openImageDialog
+import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
+import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
 import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -40,9 +45,9 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.util.*
 
-class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore {
+class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore {
 
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var rvSearch: RecyclerView
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private val lstMembers: MutableList<Member> = ArrayList()
     private lateinit var actionModeCallback: ActionModeCallback
@@ -53,27 +58,32 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
     private var currentSelectedIndex = -1
     override val kodein by kodein()
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
-    private lateinit var smartFilterViewModel: SmartFilterViewModel
-    private val factory: SmartFilterViewModelFactory by instance()
+
     private lateinit var tvCount: TextView
     private lateinit var llRoot: LinearLayout
     private var selectedPosition = 0
-    private var start: Int = 0
-    private val length: Int = 30
+
+    private lateinit var roomMemberViewModel: RoomMemberViewModel
+    private lateinit var smartFilterViewModel: SmartFilterViewModel
+
+    private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance()
+    private val roomMemberFactory: RoomMemberViewModelFactory by instance()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_nonactives, container, false)
         selectedItems = SparseBooleanArray()
         animationItemsIndex = SparseBooleanArray()
-        recyclerView = root.findViewById(R.id.recycler_view)
+        rvSearch = root.findViewById(R.id.rv_search)
         shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)
         llRoot = root.findViewById(R.id.ll_root)
         (activity as AppCompatActivity).supportActionBar!!.title = ""
 
-        smartFilterViewModel = ViewModelProviders.of(this, factory).get(SmartFilterViewModel::class.java)
+        smartFilterViewModel = ViewModelProviders.of(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
+        roomMemberViewModel = ViewModelProviders.of(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
+        roomMemberViewModel.mRoomMemberListener= this
         smartFilterViewModel.mByFilterListener = this
 
-
+        actionModeCallback = ActionModeCallback()
         adapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
 
@@ -91,7 +101,7 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
                 holder.tvArea.text = member.area
                 holder.tvAddr.text = member.address
 
-                Coroutines.io {
+                /*Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
                         viewHolder.tvName.text = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
                     }
@@ -99,13 +109,14 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
                     if (!member.cityId.isNullOrEmpty()) {
                         holder.tvArea.text = member.area + " " + smartFilterViewModel.getCityNamebyId(member.cityId)
                     }
-                }
+                }*/
 
                 holder.tvEmail.text = member.emailAddress
                 holder.tvMobile.text = member.mobile
 
                 holder.iconText.text = viewHolder.tvName.text.substring(0, 1)
-                holder.itemView.isActivated = selectedItems[position, false]
+                viewHolder.itemView.isActivated = selectedItems.get(position, false)
+
                 applyIconAnimation(holder, position)
                 applyClickEvents(holder, position,member)
                 applyProfilePicture(holder, member)
@@ -121,16 +132,15 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
         }
 
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(activity!!.applicationContext)
-        recyclerView.layoutManager = mLayoutManager
-        recyclerView.itemAnimator = DefaultItemAnimator()
+        rvSearch.layoutManager = mLayoutManager
+        rvSearch.itemAnimator = DefaultItemAnimator()
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_nonactives, container, false)
         tvCount = header.findViewById(R.id.tv_count)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
-        adapter.setParallaxHeader(header, recyclerView)
-        recyclerView.adapter = adapter
-        actionModeCallback = ActionModeCallback()
+        adapter.setParallaxHeader(header, rvSearch)
+        rvSearch.adapter = adapter
 
         DashboardActivity.stop = false
         getNonActivesUsers()
@@ -142,6 +152,8 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
         if (!DashboardActivity.stop) {
             DashboardActivity.stop = true
             val jsonObject = JSONObject()
+            jsonObject.put(getString(R.string.start), AppController.mApplication.start)
+            jsonObject.put(getString(R.string.length), AppController.mApplication.length)
             jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
             jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
@@ -153,7 +165,7 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
             lstMembers.clear()
             adapter.notifyDataSetChanged()
 
-            if (start == 0) {
+            if (AppController.mApplication.start == 0) {
                 shimmerFrameLayout.startShimmerAnimation()
                 shimmerFrameLayout.visibility = View.VISIBLE
             }
@@ -164,7 +176,8 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
     override fun getMembers(response: SmartFilterResponse) {
         shimmerFrameLayout.stopShimmerAnimation()
         shimmerFrameLayout.visibility = View.GONE
-
+        actionMode?.finish()
+        selectedItems.clear()
         if (response.success) {
             if (response.members.size > 0) {
                 lstMembers.clear()
@@ -172,11 +185,11 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
                 lstMembers.addAll(response.members)
                 adapter.notifyDataSetChanged()
 
-                recyclerView.layoutManager?.scrollToPosition(selectedPosition)
+                rvSearch.layoutManager?.scrollToPosition(selectedPosition)
                 selectedPosition = lstMembers.size - 1
                 DashboardActivity.stop = false
 
-                if (lstMembers.size <= length) {
+                if (lstMembers.size <= AppController.mApplication.length) {
                     DashboardActivity.stop = true
                     Snackbar.make(llRoot, "End of Records", Snackbar.LENGTH_LONG).show()
                 }
@@ -188,8 +201,13 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
         } else {
             DashboardActivity.stop = false
         }
+    }
 
-        Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show()
+    override fun refreshList() {
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun getRoomMembers(response: List<RoomMember>) {
     }
 
     override suspend fun getFailure(message: String) {
@@ -203,7 +221,7 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
 
     override fun loadApi() {
          if (!DashboardActivity.stop) {
-             start = (lstMembers.size+1)
+             AppController.mApplication.start = (lstMembers.size+1)
              getNonActivesUsers()
          }
     }
@@ -233,12 +251,11 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int,member: Member) {
-        holder.iconContainer.setOnClickListener { view: View? -> onIconClicked(position) }
+
         holder.messageContainer.setOnClickListener { view: View? -> onMessageRowClicked(position) }
         holder.messageContainer.setOnLongClickListener { view: View ->
             onRowLongClicked(position)
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-            true
         }
 
         holder.imgProfile.setOnClickListener {
@@ -255,7 +272,8 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
                 holder.imgProfile.isClickable = false
             }
         }
-    }
+
+       }
 
     fun applyProfilePicture(holder: MyViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
@@ -323,30 +341,13 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
 
     private fun resetAnimationIndex() {
         reverseAllAnimations = false
-        animationItemsIndex.clear()
-    }
-
-    private fun deleteMessages() {
-        resetAnimationIndex()
-        val selectedItemPositions = getSelectedItems()
-        for (i in selectedItemPositions.indices.reversed()) {
-            removeData(selectedItemPositions[i])
+        if (animationItemsIndex != null) {
+            animationItemsIndex.clear()
         }
-        adapter.notifyDataSetChanged()
-    }
-
-    private fun removeData(position: Int) {
-        lstMembers.removeAt(position)
-        resetCurrentIndex()
     }
 
 
-    private fun onIconClicked(position: Int) {
-        if (actionMode == null) {
-            actionMode = activity!!.startActionMode(actionModeCallback)!!
-        }
-        toggleSelection(position)
-    }
+
 
     private fun getSelectedItems(): List<Int> {
         val items: MutableList<Int> = ArrayList(selectedItems.size())
@@ -355,6 +356,8 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
         }
         return items
     }
+
+
 
     private fun toggleSelected(pos: Int) {
         currentSelectedIndex = pos
@@ -370,29 +373,22 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
 
     private fun toggleSelection(position: Int) {
         toggleSelected(position)
-        val count = selectedItemCount
-        if (count == 0) {
+        val count = getSelectedItemCount()
+        if (count <= 0) {
             actionMode?.finish()
-            // ll_title.setVisibility(View.VISIBLE);
-        } else { // ll_title.setVisibility(View.GONE);
+        } else {
             actionMode?.title = count.toString()
             actionMode?.invalidate()
         }
     }
 
-    private val selectedItemCount: Int
-        private get() = selectedItems.size()
+    private fun getSelectedItemCount(): Int {
+        return selectedItems.size()
+    }
 
-    private fun onMessageRowClicked(position: Int) { // verify whether action mode is enabled or not
-// if enabled, change the row state to activated
-        if (selectedItemCount > 0) {
+    private fun onMessageRowClicked(position: Int) {
+        if (getSelectedItemCount() > 0) {
             enableActionMode(position)
-        } else { // read the message which removes bold from the row
-            val message = lstMembers[position]
-            //message.isRead = true
-            lstMembers[position] = message
-            adapter.notifyDataSetChanged()
-            // Toast.makeText(activity, "Read: " + message.message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -410,29 +406,71 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
     private inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
             mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
-            // disable swipe refresh if action mode is enabled
 
             return true
         }
 
-        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean { /* ViewGroup   decorView = (ViewGroup) getActivity().getWindow().getDecorView().findViewById(R.id.action_mode_bar);
-            decorView.setBackgroundColor(getResources().getColor(R.color.colorBG));
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Utility.changeStatusbarColor(getActivity(),R.color.colorBG,true);
-            }*/
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
             return false
         }
 
-        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-            return when (item.itemId) {
-                R.id.action_delete -> {
-                    // delete all the selected messages
-                    deleteMessages()
-                    mode.finish()
-                    true
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean =
+                when (item.itemId) {
+                    R.id.action_delete -> {
+                        val selectedItemPositions = getSelectedItems()
+                        SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText(getString(R.string.you_sure))
+                                .setContentText("want to disable ${selectedItemPositions.size} Profiles!")
+                                .setConfirmText("Yes,Disable it!")
+                                .setCancelText("No")
+                                .setConfirmClickListener {
+                                    it.dismiss()
+
+                                    val jsonObject = JSONObject()
+                                    jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                                    jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+                                    jsonObject.put("status", "0")
+
+                                    var Ids = ""
+                                    for (index in selectedItemPositions) {
+                                        Ids += lstMembers[index].id + ","
+                                    }
+
+                                    Ids = Ids.substring(0, Ids.length - 1)
+                                    jsonObject.put(getString(R.string.idList), Ids)
+                                    val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                                    lstMembers.clear()
+                                    tvCount.visibility=View.GONE
+                                    adapter.notifyDataSetChanged()
+                                    shimmerFrameLayout.startShimmerAnimation()
+                                    shimmerFrameLayout.visibility = View.VISIBLE
+                                    roomMemberViewModel.disableMembers(updated)
+                                }
+                                .setCancelClickListener {
+                                    it.dismiss()
+                                }
+                                .show()
+
+                        true
+                    }
+                    R.id.action_select_all -> {
+                        clearSelections()
+                        for (i in lstMembers.indices) {
+                            enableActionMode(i)
+                        }
+                        true
+                    }
+                    else -> false
                 }
-                else -> false
+
+        override fun onDestroyActionMode(mode: ActionMode) {
+            clearSelections()
+            actionMode = null
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Utility.changeStatusbarColor(activity, R.color.colorBG, false)
+            }
+            rvSearch.post {
+                resetAnimationIndex()
             }
         }
 
@@ -440,19 +478,6 @@ class NonActivesFragment : Fragment(), KodeinAware, ByFilterListener, ParallaxRe
             reverseAllAnimations = true
             selectedItems.clear()
             adapter.notifyDataSetChanged()
-        }
-
-        override fun onDestroyActionMode(mode: ActionMode) {
-            clearSelections()
-            actionMode = null
-            // ll_title.setVisibility(View.VISIBLE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Utility.changeStatusbarColor(activity, R.color.colorBG, false)
-            }
-            recyclerView.post {
-                resetAnimationIndex()
-                // mAdapter.notifyDataSetChanged();
-            }
         }
     }
 }

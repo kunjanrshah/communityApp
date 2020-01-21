@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -30,14 +31,14 @@ import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.SearchLiveo
 import com.krs.community.databinding.ActivityFavoriteBinding
 import com.krs.community.entities.RoomMember
+import com.krs.community.fragments.SearchByDistanceFragment
 import com.krs.community.interfaces.RoomMemberListener
+import com.krs.community.model.Member
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
-import com.mostafaaryan.transitionalimageview.TransitionalImageView
-import com.mostafaaryan.transitionalimageview.model.TransitionalImage
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
@@ -154,49 +155,18 @@ class FavoriteProfileActivity : BaseActivity() , SearchLiveo.OnSearchListener, K
         Utility.displaySnackBarWithBottomMargin(mBinding.recyclerView,message)
     }
 
-
-    @SuppressLint("CheckResult")
-    private fun applyProfilePicture(holder: FavoriteAdapter.ViewHolder, imgURL: String?) {
-        if (!TextUtils.isEmpty(imgURL)) {
-            if (!imgURL.isNullOrEmpty()) {
-                try {
-                    val path = getString(R.string.base_url_original) + "" + imgURL
-                    Log.d("FavoriteProfileActivity", "path: $path")
-
-                    Glide.with(this)
-                            .asBitmap()
-                            .apply(RequestOptions.circleCropTransform()).thumbnail(0.5f)
-                            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-                            .load(path)
-                            .into(object : CustomTarget<Bitmap>() {
-                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-
-                                    val transitionalImage: TransitionalImage = TransitionalImage.Builder()
-                                            .duration(250)
-                                            .backgroundColor(ContextCompat.getColor(this@FavoriteProfileActivity, R.color.white))
-                                            .image(resource)
-                                            .create()
-                                    holder.imgProfile.setTransitionalImage(transitionalImage)
-                                }
-
-                                override fun onLoadCleared(placeholder: Drawable?) {
-                                    // this is called when imageView is cleared on lifecycle call or for
-                                    // some other reason.
-                                    // if you are referencing the bitmap somewhere else too other than this imageView
-                                    // clear it here as you can no longer have the bitmap
-                                }
-                            })
-
-
-                } catch (e: Exception) {
-                    e.message
-                }
-            }
+    private fun applyProfilePicture(holder: FavoriteAdapter.ViewHolder, path: String) {
+        if (!TextUtils.isEmpty(path)) {
+            holder.imgProfile.isClickable = true
+            val url=resources.getString(R.string.base_url_thumb)+path
+            Glide.with(this).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE
+
         } else {
+            holder.imgProfile.isClickable = false
             holder.imgProfile.setImageResource(R.drawable.bg_circle)
-            holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(this@FavoriteProfileActivity, "400"))
+            holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(this, "400"))
             holder.iconText.visibility = View.VISIBLE
         }
     }
@@ -217,9 +187,8 @@ class FavoriteProfileActivity : BaseActivity() , SearchLiveo.OnSearchListener, K
             var tvRole: TextView = view.findViewById(R.id.tv_role)
             var iconImp: ImageView = view.findViewById(R.id.icon_star)
             var tvUpdate: TextView = view.findViewById(R.id.tv_update)
-            var imgProfile: TransitionalImageView = view.findViewById(R.id.icon_profile1)
+            var imgProfile: ImageView = view.findViewById(R.id.icon_profile1)
             var messageContainer: LinearLayout = view.findViewById(R.id.message_container1)
-            var iconContainer: RelativeLayout = view.findViewById(R.id.icon_container1)
             var iconBack: RelativeLayout = view.findViewById(R.id.icon_back1)
             var iconFront: RelativeLayout = view.findViewById(R.id.icon_front1)
             var boomMenuButton: BoomMenuButton = view.findViewById(R.id.boomMenuButton1)
@@ -312,8 +281,8 @@ class FavoriteProfileActivity : BaseActivity() , SearchLiveo.OnSearchListener, K
             viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
             viewHolder.iconImp.setImageDrawable(ContextCompat.getDrawable(this@FavoriteProfileActivity, R.drawable.ic_star_black_24dp))
             viewHolder.iconImp.setColorFilter(ContextCompat.getColor(this@FavoriteProfileActivity, R.color.icon_tint_selected))
-            applyProfilePicture(viewHolder,member.profilePic)
 
+            applyProfilePicture(viewHolder, member.profilePic!!)
             viewHolder.messageContainer.setOnClickListener { view ->
                 val intent = Intent(this@FavoriteProfileActivity, ProfileDetailActivity::class.java)
                 intent.putExtra(getString(R.string.member), getMemberFromRoomMember(member))
@@ -334,6 +303,16 @@ class FavoriteProfileActivity : BaseActivity() , SearchLiveo.OnSearchListener, K
                             lstMember.removeAt(position)
                             roomMemberViewModel.deleteRoomMember(member.id)
                         }
+                }
+            }
+
+            viewHolder.imgProfile.setOnClickListener { view ->
+                try {
+                    val path = getString(R.string.base_url_original) + "" + member.profilePic
+                    Log.d("FavoriteProfileActivity", "path: $path")
+                    openImageDialog(this@FavoriteProfileActivity,path)
+                } catch (e: Exception) {
+                    e.message
                 }
             }
         }

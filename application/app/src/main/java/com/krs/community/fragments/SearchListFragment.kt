@@ -61,7 +61,7 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import kotlin.collections.ArrayList
 
-class SearchListFragment : Fragment(), KodeinAware,RoomMemberListener, ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner {
+class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener,MyRoleAdapter.iChangeRoleListner,RoomMemberListener, ParallaxRecyclerAdapter.OnLoadMore,  LocationAdapter.SetLocationListner {
 
     private lateinit var rvSearch: RecyclerView
     private lateinit var frameRoot: FrameLayout
@@ -104,9 +104,10 @@ class SearchListFragment : Fragment(), KodeinAware,RoomMemberListener, ByKeyword
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
 
-        profileDetailViewModel = ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
+
         smartSearchViewModel = ViewModelProviders.of(this, smartSearchViewModelFactory).get(SmartSearchViewModel::class.java)
         roomMemberViewModel = ViewModelProviders.of(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
+        profileDetailViewModel = ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
 
         smartSearchViewModel.mByKeywordListener = this
         roomMemberViewModel.mRoomMemberListener= this
@@ -245,8 +246,8 @@ class SearchListFragment : Fragment(), KodeinAware,RoomMemberListener, ByKeyword
                 viewHolder.lstFound.adapter = FoundListAdapter(activity as AppCompatActivity, member.matches)
                 viewHolder.lstFound.layoutManager = linearLayoutManager
 
-                applyImportant(viewHolder, member)
                 applyIconAnimation(viewHolder, position)
+                applyImportant(viewHolder, member)
                 applyClickEvents(viewHolder, position,member)
                 applyProfilePicture(viewHolder, member)
             }
@@ -388,8 +389,8 @@ class SearchListFragment : Fragment(), KodeinAware,RoomMemberListener, ByKeyword
                 lstMembers.add(item)
             }
             rvAdapter.notifyDataSetChanged()
-            //  rvSearch.layoutManager?.scrollToPosition(selectedPosition)
-            //  selectedPosition = lstMembers.size - 1
+              rvSearch.layoutManager?.scrollToPosition(selectedPosition)
+              selectedPosition = lstMembers.size - 1
             if (Integer.parseInt(response.totalRecords) <= AppController.mApplication.length) {
                 DashboardActivity.stop = true
                 if (Integer.parseInt(response.totalRecords) == 0) {
@@ -491,20 +492,6 @@ class SearchListFragment : Fragment(), KodeinAware,RoomMemberListener, ByKeyword
             items.add(selectedItems.keyAt(i))
         }
         return items
-    }
-
-    private fun removeData(position: Int) {
-        lstMembers.removeAt(position)
-        resetCurrentIndex()
-    }
-
-    private fun deleteMessages() {
-        resetAnimationIndex()
-        val selectedItemPositions = getSelectedItems()
-        for (i in selectedItemPositions.indices.reversed()) {
-            removeData(selectedItemPositions.get(i))
-        }
-        rvAdapter.notifyDataSetChanged()
     }
 
     private fun onMessageRowClicked(position: Int, v: View) {
@@ -648,7 +635,6 @@ class SearchListFragment : Fragment(), KodeinAware,RoomMemberListener, ByKeyword
         var tvUpdate: TextView = view.findViewById(R.id.tv_update)
         var imgProfile: ImageView = view.findViewById(R.id.icon_profile1)
         var messageContainer: LinearLayout = view.findViewById(R.id.message_container1)
-        var iconContainer: RelativeLayout = view.findViewById(R.id.icon_container1)
         var iconBack: RelativeLayout = view.findViewById(R.id.icon_back1)
         var iconFront: RelativeLayout = view.findViewById(R.id.icon_front1)
         var boomMenuButton: BoomMenuButton = view.findViewById(R.id.boomMenuButton1)
@@ -689,21 +675,11 @@ class SearchListFragment : Fragment(), KodeinAware,RoomMemberListener, ByKeyword
     private inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
             mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
-
-            // disable swipe refresh if action mode is enabled
-            // swipeRefreshLayout.isEnabled = false
             return true
         }
 
         override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-            /* ViewGroup   decorView = (ViewGroup) getActivity().getWindow().getDecorView().findViewById(R.id.action_mode_bar);
-            decorView.setBackgroundColor(getResources().getColor(R.color.colorBG));
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Utility.changeStatusbarColor(getActivity(),R.color.colorBG,true);
-            }*/
-
-            return false
+             return false
         }
 
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean =

@@ -37,7 +37,7 @@
                 android:singleLine="true"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
-                android:hint="Family head Name"
+                android:hint="Family Head Name"
                 android:paddingLeft="10dp" />
 
             <EditText

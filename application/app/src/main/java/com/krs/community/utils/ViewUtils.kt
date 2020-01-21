@@ -244,7 +244,7 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
         tvMax.text = "$maxValue"
     }
 
-    var isMale: Boolean = true
+    var isMale: Boolean = false
     val lstMarital = context.resources.getStringArray(R.array.marital)
     val list = ArrayList<String>()
     list.addAll(lstMarital)
@@ -296,9 +296,11 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
         spLname.setText("")
         spCity.setText("")
         spMarital.setText("")
+        btnFemale.performClick()
         rangeSeekbar.setMinStartValue(0f)
         rangeSeekbar.setMaxStartValue(100f)
         rangeSeekbar.apply()
+        Toast.makeText(context,"Filter Cleared",Toast.LENGTH_SHORT).show()
     }
 
     val mdialog = Guru.getString("mdialog", "")
@@ -415,11 +417,14 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
             jsonObject.put(context.getString(R.string.min_age), rangeSeekbar.selectedMinValue)
             jsonObject.put(context.getString(R.string.max_age), rangeSeekbar.selectedMaxValue)
             Guru.putString("mdialog", jsonObject.toString())
+
+            Coroutines.main {
+                moveToFragmentListScreen(context as FragmentActivity, jsonObject.toString())
+            }
+
         }
 
-        Coroutines.main {
-            moveToFragmentListScreen(context as FragmentActivity, jsonObject.toString())
-        }
+
     }
     dialog.show()
 }
@@ -442,7 +447,7 @@ fun getRoomMemberFromMember(member:Member):RoomMember{
             member.isShani,member.hobby,member.facebookProfile,member.expectation,member.currentActivityId,member.maritalStatus,member.marriageDate,
             member.gotraId,member.profilePic,member.isRented,member.isExpired,member.expireDate,member.isDonor,member.businessCategoryId,member.businessSubCategoryId,
             member.workDetails,member.companyName,member.businessAddress,member.businessLogo,member.website,member.educationId,member.occupationId,member?.userLat,member?.userLng,
-            member?.homeLat,member?.homeLng,member?.officeLat,member?.officeLng,member.isLocationEnable,member.updatedDt)
+            member.homeLat, member.homeLng, member.officeLat, member.officeLng,member.isLocationEnable,member.updatedDt)
     return roomMember
 }
 

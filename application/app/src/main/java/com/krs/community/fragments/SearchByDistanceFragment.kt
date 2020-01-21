@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
-import android.view.HapticFeedbackConstants
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,27 +37,28 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
+import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
+import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.entities.RoomMember
 import com.krs.community.interfaces.ByDistanceListener
 import com.krs.community.interfaces.RoomMemberListener
 import com.krs.community.model.ByDistanceModel
 import com.krs.community.model.Member
-import com.krs.community.responses.ByDistanceResponse
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
-import com.krs.community.utils.Utility
-import com.krs.community.utils.getRoomMemberFromMember
-import com.krs.community.utils.openImageDialog
-import com.krs.community.utils.snackbar
+import com.krs.community.responses.ByDistanceResponse
+import com.krs.community.utils.*
 import com.krs.community.viewmodel.ByDistanceViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodelfactory.ByDistanceViewModelFactory
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
+import com.orhanobut.dialogplus.DialogPlus
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -244,28 +245,100 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
 
                 viewHolder.boomMenuButton.clearBuilders()
                 for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
-                    viewHolder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder())
+                    val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
+                    builder?.listener {
+                        if (it == 0) {
+                            val profileDetailFactory: ProfileDetailViewModelFactory by instance()
+                            val profileDetailViewModel= ViewModelProviders.of(activity as AppCompatActivity, profileDetailFactory).get(ProfileDetailViewModel::class.java)
+                            createMemberPDF(activity as AppCompatActivity, member,profileDetailViewModel)
+
+                        }else if(it == 1) {
+                            val intent: Intent = Intent(activity as AppCompatActivity, FamilyTreeListActivity::class.java)
+                            startActivity(intent)
+
+                        } else if (it == 2) {
+                            if(!member.mobile.isNullOrEmpty()){
+                                val toNumber = "+91" + member.mobile
+                                val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
+                                Utility.sendWhatsappMessage(activity as AppCompatActivity,toNumber,text)
+                            }
+
+                        } else if (it == 3) {
+
+                            val mBundle = Bundle()
+                            mBundle.putSerializable(getString(R.string.member), member)
+                            val intent: Intent = Intent(activity as AppCompatActivity, QRCodeActivity::class.java)
+                            intent.putExtras(mBundle)
+                            startActivity(intent)
+                            Utility.fade(activity as AppCompatActivity)
+                        } else if (it == 4) {
+                            shareDetails(activity as AppCompatActivity,viewHolder.tvName.text.toString(), member.mobile.toString(),member.emailAddress.toString(),viewHolder.tvArea.text.toString(), member.address.toString())
+                        } else if (it == 5) {
+                            val adapter: LocationAdapter = LocationAdapter(activity as AppCompatActivity, member)
+                            val setLocationDialog = DialogPlus.newDialog(activity as AppCompatActivity)
+                                    .setAdapter(adapter)
+                                    .setGravity(Gravity.BOTTOM)
+                                    .setCancelable(true)
+                                    .setExpanded(true, 600)
+                                    .setContentBackgroundResource(R.drawable.popup_top_corner)
+                                    .create()
+                            setLocationDialog.show()
+
+                        }
+                    }
+                    viewHolder.boomMenuButton.addBuilder(builder)
                 }
 
                 viewHolder.boomMenuButton.setOnClickListener {
                     viewHolder.boomMenuButton.boom()
                 }
-                var distance=""
-                val index= member.distance.indexOf(".")
-                if(member.distance.length>(index+3)){
-                    distance=member.distance.substring(0,(index+3))
-                }else{
-                    distance=member.distance
-                }
-                viewHolder.tvDistance.text="${distance} KM"
-                if(nearBy.equals("All")){
-                    viewHolder.tvLabel.text= member.nearBy
-                }else{
-                    viewHolder.tvLabel.text=nearBy
+
+                viewHolder.tvHome.visibility=View.GONE
+                viewHolder.llHome.visibility=View.GONE
+                viewHolder.tvOffice.visibility=View.GONE
+                viewHolder.llOffice.visibility=View.GONE
+                viewHolder.tvUser.visibility=View.GONE
+                viewHolder.llUser.visibility=View.GONE
+
+                if(nearBy.equals("Home")){
+                    viewHolder.llHome.visibility=View.VISIBLE
+                    viewHolder.tvHome.visibility=View.VISIBLE
+                    viewHolder.tvHome.text="Home"
+                    viewHolder.tvHomeDist.text=getDistance(member.distance)
+                }else if(nearBy.equals("Office")){
+                    viewHolder.llOffice.visibility=View.VISIBLE
+                    viewHolder.tvOffice.visibility=View.VISIBLE
+                    viewHolder.tvOffice.text="Office"
+                    viewHolder.tvOfficeDist.text=getDistance(member.distance)
+                }else if(nearBy.equals("User")){
+                    viewHolder.llUser.visibility=View.VISIBLE
+                    viewHolder.tvUser.visibility=View.VISIBLE
+                    viewHolder.tvUser.text="User"
+                    viewHolder.tvUserDist.text=getDistance(member.distance)
+                }else if(nearBy.equals("All")){
+
+                    val elements: List<String> = member.distance.split(",")
+                    if(member.nearBy.contains("home")){
+                        viewHolder.llHome.visibility=View.VISIBLE
+                        viewHolder.tvHome.visibility=View.VISIBLE
+                        viewHolder.tvHome.text="Home"
+                        viewHolder.tvHomeDist.text=getDistance(elements[0])
+                    }
+                    if(member.nearBy.contains("office")){
+                        viewHolder.llOffice.visibility=View.VISIBLE
+                        viewHolder.tvOffice.visibility=View.VISIBLE
+                        viewHolder.tvOffice.text="Office"
+                        viewHolder.tvOfficeDist.text=getDistance(elements[1])
+                    }
+                    if(member.nearBy.contains("user")){
+                        viewHolder.llUser.visibility=View.VISIBLE
+                        viewHolder.tvUser.visibility=View.VISIBLE
+                        viewHolder.tvUser.text="User"
+                        viewHolder.tvUserDist.text=getDistance(elements[2])
+                    }
                 }
 
                 viewHolder.tvUpdate.text=Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd_TIME,Utility.dd_MM_yyyy_TIME)
-
                 applyImportant(viewHolder, member)
                 applyProfilePicture(viewHolder, member)
                 applyClickEvents(viewHolder, i,member)
@@ -296,14 +369,36 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
 
     }
 
+    fun getDistance(dist:String):String{
+        var distance=""
+        val index= dist.indexOf(".")
+        distance = if(dist.length>(index+3)){
+            dist.substring(0,(index+3))
+        }else{
+            dist
+        }
+        return "$distance KM"
+    }
+
     internal class DistanceViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var tvName: TextView = v.findViewById(R.id.tv_name)
         var tvArea: TextView = v.findViewById(R.id.tv_area)
         var tvEmail: TextView = v.findViewById(R.id.tv_email)
         var tvMobile: TextView = v.findViewById(R.id.tv_mobile)
         var tvRole: TextView = v.findViewById(R.id.tv_role)
-        var tvDistance: TextView = v.findViewById(R.id.tv_distance)
-        var tvLabel: TextView = v.findViewById(R.id.tv_label)
+
+        var tvHome: TextView = v.findViewById(R.id.tv_home)
+        var tvOffice: TextView = v.findViewById(R.id.tv_office)
+        var tvUser: TextView = v.findViewById(R.id.tv_user)
+
+        var tvHomeDist: TextView = v.findViewById(R.id.tv_home_dist)
+        var tvOfficeDist: TextView = v.findViewById(R.id.tv_office_dist)
+        var tvUserDist: TextView = v.findViewById(R.id.tv_user_dist)
+
+        var llHome: LinearLayout = v.findViewById(R.id.ll_home)
+        var llOffice: LinearLayout = v.findViewById(R.id.ll_office)
+        var llUser: LinearLayout = v.findViewById(R.id.ll_user)
+
         var tvUpdate: TextView = v.findViewById(R.id.tv_update)
         var boomMenuButton: BoomMenuButton = v.findViewById(R.id.bmb1)
         var iconImp: ImageView = v.findViewById(R.id.icon_star)
@@ -476,8 +571,10 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
             tvRecords.visibility=View.GONE
             imgMap.visibility=View.VISIBLE
         }
+
         mShimmerViewContainer.stopShimmerAnimation()
-        mShimmerViewContainer.visibility = View.GONE
+        mShimmerViewContainer.visibility =View.GONE
+
         Utility.hideKeyboard(activity)
     }
 

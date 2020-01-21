@@ -99,13 +99,33 @@
                     android:tint="@color/icon_tint_normal" />
 
                 <TextView
-                    android:id="@+id/tv_label"
+                    android:id="@+id/tv_home"
+                    android:visibility="gone"
                     android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="Home"
+                    android:textColor="@color/colorPrimary" />
 
+                <TextView
+                    android:id="@+id/tv_office"
+                    android:visibility="gone"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="Office"
+                    android:textColor="@color/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/tv_user"
+                    android:visibility="gone"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="User"
                     android:textColor="@color/colorPrimary" />
 
             </LinearLayout>
@@ -231,7 +251,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="5dp"
                     android:alpha="1"
                     android:background="@color/colorGray" />
@@ -239,37 +258,101 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:orientation="horizontal"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
                     android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/location"
-                        android:layout_height="15dp" />
-                    <TextView
-                        android:id="@+id/tv_distance"
-                        android:layout_width="wrap_content"
-                        android:text="12.3KM"
-                        android:textSize="14sp"
-                        android:layout_marginLeft="3dp"
-                        android:fontFamily="@font/montserrat_semibold"
-                        android:layout_height="wrap_content" />
+                        <LinearLayout
+                            android:visibility="gone"
+                            android:id="@+id/ll_home"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/location"
+                                android:layout_height="15dp" />
+
+                            <TextView
+                                android:id="@+id/tv_home_dist"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:text="12.3KM"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:visibility="gone"
+                            android:id="@+id/ll_office"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center_vertical"
+                            android:layout_marginLeft="10dp"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/location"
+                                android:layout_height="15dp" />
+                            <TextView
+                                android:id="@+id/tv_office_dist"
+                                android:layout_width="wrap_content"
+                                android:text="12.3KM"
+                                android:textSize="14sp"
+                                android:layout_marginLeft="3dp"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:layout_height="wrap_content" />
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/ll_user"
+                            android:visibility="gone"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center_vertical"
+                            android:layout_marginLeft="10dp"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/location"
+                                android:layout_height="15dp" />
+                            <TextView
+                                android:id="@+id/tv_user_dist"
+                                android:layout_width="wrap_content"
+                                android:text="12.3KM"
+                                android:textSize="14sp"
+                                android:layout_marginLeft="5dp"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:layout_height="wrap_content" />
+
+                        </LinearLayout>
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tv_update"
                         android:gravity="right"
                         android:fontFamily="@font/montserrat_light"
                         android:textSize="12sp"
-                        android:layout_width="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
                         android:text="12-12-2019"
                         android:layout_height="wrap_content"/>
 
                 </LinearLayout>
-
-
 
             </LinearLayout>
         </LinearLayout>
