@@ -117,7 +117,7 @@ public class ShareEventFragment extends Fragment {
 
         btnShare.setOnClickListener(v -> {
             ShareEventAdapter adapter = new ShareEventAdapter();
-            DialogPlus dialog = DialogPlus.newDialog(getContext()).setAdapter(adapter).setGravity(Gravity.BOTTOM).setCancelable(true).setExpanded(true,1500).setContentBackgroundResource(R.drawable.popup_top_corner).create();
+            DialogPlus dialog = DialogPlus.newDialog(getContext()).setAdapter(adapter).setGravity(Gravity.BOTTOM).setCancelable(true).setExpanded(true,900).setContentBackgroundResource(R.drawable.popup_top_corner).create();
             dialog.show();
         });
 

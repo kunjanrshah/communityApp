@@ -45,6 +45,10 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getLastNameIds()
     }
 
+    val getLocalCommName by lazyDeferred {
+        mProfileDetailRepository.getLocalCommName()
+    }
+
     var selectedStateId=0
     lateinit var lstStateId:List<Int>
     val stateName by lazyDeferred {
@@ -65,6 +69,13 @@ class ProfileDetailViewModel(
     val cityId by lazyDeferred {
         mProfileDetailRepository.getCityId(selectedCityName)
     }
+
+
+    val lstCityName by lazyDeferred {
+        mProfileDetailRepository.getListCityName()
+    }
+
+
 
     var selectedNativeId=0
     lateinit var lstNativeId:List<Int>

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
+import com.krs.community.entities.LocalCommunity
 import com.krs.community.model.SearchData
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
@@ -189,11 +190,25 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
+    suspend fun getLocalCommName(): LiveData<List<String>> {
+        return withContext(Dispatchers.IO) {
+            db.getLocalCommunityDao().getLocalCommName()
+        }
+    }
+
     suspend fun getcityNameById(id: Int): LiveData<String> {
         return withContext(Dispatchers.IO) {
             db.getCityDao().getcityNameById(id)
         }
     }
+
+    suspend fun getListCityName(): LiveData<List<String>> {
+        return withContext(Dispatchers.IO) {
+            db.getCityDao().getcityNames()
+        }
+    }
+
+
 
     suspend fun searchFilter(jsonObject: JsonObject): SmartFilterResponse {
         return apiRequest{

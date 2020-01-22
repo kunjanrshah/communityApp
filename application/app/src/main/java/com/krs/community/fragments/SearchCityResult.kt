@@ -110,6 +110,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
         selectedItems = SparseBooleanArray()
         animationItemsIndex = SparseBooleanArray()
+        actionModeCallback = ActionModeCallback()
 
         browseCityViewModel = ViewModelProviders.of(this, browseCityViewModelFactory).get(BrowseCityViewModel::class.java)
         roomMemberViewModel = ViewModelProviders.of(this,roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
@@ -117,9 +118,6 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
         browseCityViewModel.ibrowseCityRecordsListener = this
         roomMemberViewModel.mRoomMemberListener=this
-
-
-        actionModeCallback = ActionModeCallback()
 
         if (this.arguments != null){
             cityName = this.arguments!!.getString("city_name").toString()
@@ -256,7 +254,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         }
         tvCount= header.findViewById(R.id.tv_count)
 
-        val ivAtoz = header.findViewById<ImageView>(R.id.iv_atoz)
+        /*val ivAtoz = header.findViewById<ImageView>(R.id.iv_atoz)
         ivAtoz.setOnClickListener { v ->
             val adapter = AtoZBottomAdapter(context)
             adapter.setmISortingRecords(this)
@@ -268,7 +266,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                     .create()
             dialog?.show()
-        }
+        }*/
 
         adapter.setParallaxHeader(header, binding.lstFilter)
         binding.lstFilter.layoutManager = LinearLayoutManager(activity)
@@ -524,14 +522,12 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         val tvRole: TextView = itemView.findViewById(R.id.tv_role)
         val tvMobile: TextView = itemView.findViewById(R.id.tv_mobile)
         val tvEmail: TextView = itemView.findViewById(R.id.tv_email)
-        var iconContainer: RelativeLayout = itemView.findViewById(R.id.icon_container)
         var iconImp: ImageView = itemView.findViewById(R.id.icon_star)
         var iconBack: RelativeLayout = itemView.findViewById(R.id.icon_back)
         var iconFront: RelativeLayout = itemView.findViewById(R.id.icon_front)
         var iconText: TextView = itemView.findViewById(R.id.icon_text)
         var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
         var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
-        //var llEmail: LinearLayout = itemView.findViewById(R.id.ll_email)
         var tvUpdate:TextView=  itemView.findViewById(R.id.tv_update)
         init {
             itemView.setOnLongClickListener(this)
@@ -601,7 +597,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                                 adapter.notifyDataSetChanged()
                                 binding.shimmerViewContainer.startShimmerAnimation()
                                 binding.shimmerViewContainer.visibility = View.VISIBLE
-                                roomMemberViewModel.disableMembers(updated)
+                                roomMemberViewModel.changeStatus(updated)
 
                             }
                             .setCancelClickListener {

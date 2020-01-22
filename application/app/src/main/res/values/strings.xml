@@ -3,7 +3,7 @@
 
 
     <string name="action_delete">Delete</string>
-
+    <string name="action_active">Active</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
@@ -196,69 +196,69 @@
     <string name="professonal">Professional details</string>
     <string name="_matrimony">Matrimony details</string>
     <string name="some_more">Some more</string>
-    <string name="ss_head_name">head_name</string>
-    <string name="ss_family_code">family_code</string>
-    <string name="ss_mem_name">mem_name</string>
-    <string name="ss_sp_surname">sp_surname</string>
-    <string name="ss_sp_samaj">sp_samaj</string>
-    <string name="ss_sp_marital">sp_marital</string>
-    <string name="ss_sp_city">sp_city</string>
-    <string name="ss_sp_gender">sp_gender</string>
-    <string name="ss_sp_native">sp_native</string>
-    <string name="ss_minage">minAge</string>
-    <string name="ss_maxage">maxAge</string>
-    <string name="ss_edt_email">edt_email</string>
-    <string name="ss_edt_mobile">edt_mobile</string>
-    <string name="ss_edt_local_add">edt_local_add</string>
-    <string name="ss_edt_permanent_add">edt_permanent_add</string>
-    <string name="ss_edt_pin_code">edt_pin_code</string>
-    <string name="ss_sp_area">sp_area</string>
-    <string name="ss_sp_state">sp_state</string>
-    <string name="ss_edt_bdate">edt_bdate</string>
-    <string name="ss_edt_mdate">edt_mdate</string>
-    <string name="ss_sp_mosad">sp_mosad</string>
-    <string name="ss_sp_education">sp_education</string>
-    <string name="ss_sp_gotra">sp_gotra</string>
-    <string name="ss_sp_bg">sp_bg</string>
-    <string name="ss_chk_is_donor">chk_is_donor</string>
-    <string name="ss_chk_is_rented">chk_is_rented</string>
-    <string name="ss_chk_is_expired">chk_is_expired</string>
-    <string name="ss_edt_office">edt_office</string>
-    <string name="ss_sp_main_cat">sp_main_cat</string>
-    <string name="ss_sp_sub_cat">sp_sub_cat</string>
-    <string name="ss_sp_occupation">sp_occupation</string>
-    <string name="ss_sp_activity">sp_activity</string>
-    <string name="ss_edt_birth_time">edt_birth_time</string>
-    <string name="ss_edt_height_meter">edt_height_meter</string>
-    <string name="ss_edt_weight_kg">edt_weight_kg</string>
-    <string name="ss_sp_bplace">sp_bplace</string>
-    <string name="ss_chk_is_spect">chk_is_spect</string>
-    <string name="ss_chk_is_shani">chk_is_shani</string>
-    <string name="ss_chk_is_mangal">chk_is_mangal</string>
-    <string name="ss_edt_created">edt_created</string>
-    <string name="ss_edt_updated">edt_updated</string>
-    <string name="ss_minUpdate">minUpdate</string>
-    <string name="ss_maxUpdate">maxUpdate</string>
-    <string name="ss_maxAge">maxAge</string>
-    <string name="ss_minAge">minAge</string>
-    <string name="ss_true">true</string>
-    <string name="ss_gender">Gender</string>
-    <string name="ss_native">Native</string>
-    <string name="ss_surname">Surname</string>
-    <string name="ss_samaj">Samaj</string>
-    <string name="ss_city">City</string>
-    <string name="ss_marital">Marital</string>
-    <string name="ss_area">Area</string>
-    <string name="ss_state">State</string>
-    <string name="ss_mosad">Mosad</string>
-    <string name="ss_education">Education</string>
-    <string name="ss_gotra">Gotra</string>
-    <string name="ss_bg">BG</string>
-    <string name="ss_catogory">Category</string>
-    <string name="ss_sub_cat">Sub_Cat</string>
-    <string name="ss_Occupation">Occupation</string>
-    <string name="ss_activity">Activity</string>
-    <string name="ss_bplace">BPlace</string>
+    <string name="ss_head_name" translatable="false">head_name</string>
+    <string name="ss_family_code" translatable="false">member_code</string>
+    <string name="ss_mem_name" translatable="false">first_name</string>
+    <string name="ss_sp_surname" translatable="false">sp_surname</string>
+    <string name="ss_sp_samaj" translatable="false">sp_samaj</string>
+    <string name="ss_sp_marital" translatable="false">sp_marital</string>
+    <string name="ss_sp_city" translatable="false">sp_city</string>
+    <string name="ss_sp_gender" translatable="false">sp_gender</string>
+    <string name="ss_sp_native" translatable="false">sp_native</string>
+    <string name="ss_minage" translatable="false">minAge</string>
+    <string name="ss_maxage" translatable="false">maxAge</string>
+    <string name="ss_edt_email" translatable="false">edt_email</string>
+    <string name="ss_edt_mobile" translatable="false">edt_mobile</string>
+    <string name="ss_edt_local_add" translatable="false">edt_local_add</string>
+    <string name="ss_edt_permanent_add" translatable="false">edt_permanent_add</string>
+    <string name="ss_edt_pin_code" translatable="false">edt_pin_code</string>
+    <string name="ss_edt_area" translatable="false">sp_area</string>
+    <string name="ss_sp_state" translatable="false">sp_state</string>
+    <string name="ss_edt_bdate" translatable="false">edt_bdate</string>
+    <string name="ss_edt_mdate" translatable="false">edt_mdate</string>
+    <string name="ss_edt_mosad" translatable="false">sp_mosad</string>
+    <string name="ss_sp_education" translatable="false">sp_education</string>
+    <string name="ss_sp_gotra" translatable="false">sp_gotra</string>
+    <string name="ss_sp_bg" translatable="false">sp_bg</string>
+    <string name="ss_chk_is_donor" translatable="false">chk_is_donor</string>
+    <string name="ss_chk_is_rented" translatable="false">chk_is_rented</string>
+    <string name="ss_chk_is_expired" translatable="false">chk_is_expired</string>
+    <string name="ss_edt_office" translatable="false">edt_office</string>
+    <string name="ss_sp_main_cat" translatable="false">sp_main_cat</string>
+    <string name="ss_sp_sub_cat" translatable="false">sp_sub_cat</string>
+    <string name="ss_sp_occupation" translatable="false">sp_occupation</string>
+    <string name="ss_sp_activity" translatable="false">sp_activity</string>
+    <string name="ss_edt_birth_time" translatable="false">edt_birth_time</string>
+    <string name="ss_edt_height_meter" translatable="false">edt_height_meter</string>
+    <string name="ss_edt_weight_kg" translatable="false">edt_weight_kg</string>
+    <string name="ss_sp_bplace" translatable="false">sp_bplace</string>
+    <string name="ss_chk_is_spect" translatable="false">chk_is_spect</string>
+    <string name="ss_chk_is_shani" translatable="false">chk_is_shani</string>
+    <string name="ss_chk_is_mangal" translatable="false">chk_is_mangal</string>
+    <string name="ss_edt_created" translatable="false">edt_created</string>
+    <string name="ss_edt_updated" translatable="false">edt_updated</string>
+    <string name="ss_minUpdate" translatable="false">minUpdate</string>
+    <string name="ss_maxUpdate" translatable="false">maxUpdate</string>
+    <string name="ss_maxAge" translatable="false">maxAge</string>
+    <string name="ss_minAge" translatable="false">minAge</string>
+    <string name="ss_true" translatable="false">true</string>
+    <string name="ss_gender" translatable="false">Gender</string>
+    <string name="ss_native" translatable="false">Native</string>
+    <string name="ss_surname" translatable="false">Surname</string>
+    <string name="ss_samaj" translatable="false">Samaj</string>
+    <string name="ss_city" translatable="false">City</string>
+    <string name="ss_marital" translatable="false">Marital</string>
+    <string name="ss_area" translatable="false">Area</string>
+    <string name="ss_state" translatable="false">State</string>
+    <string name="ss_mosad" translatable="false">Mosad</string>
+    <string name="ss_education" translatable="false">Education</string>
+    <string name="ss_gotra" translatable="false">Gotra</string>
+    <string name="ss_bg" translatable="false">BG</string>
+    <string name="ss_catogory" translatable="false">Category</string>
+    <string name="ss_sub_cat" translatable="false">Sub_Cat</string>
+    <string name="ss_Occupation" translatable="false">Occupation</string>
+    <string name="ss_activity" translatable="false">Activity</string>
+    <string name="ss_bplace" translatable="false">BPlace</string>
 
     <string name="dateFormat" translatable="false">EE, dd MMM</string>
     <string name="period" translatable="false">%1$s – %2$s</string>
@@ -418,5 +418,6 @@
     <string name="exporting_search_list">Exporting Search List</string>
     <string name="install_app">"Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"</string>
     <string name="mobile_not_found">Mobile not found!</string>
+    <string name="filter_values">filter_values</string>
 
 </resources>

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -25,6 +26,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:singleLine="true"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/border"
                 android:hint="Email Address"
                 android:paddingLeft="10dp" />
@@ -35,6 +38,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/border"
                 android:hint="Mobile Number"
                 android:paddingLeft="10dp" />
@@ -46,6 +51,8 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:hint="Local Address"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:paddingLeft="10dp" />
 
@@ -56,6 +63,8 @@
                 android:layout_height="45dp"
                 android:singleLine="true"
                 android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/border"
                 android:hint="Permanent Address"
                 android:paddingLeft="10dp" />
@@ -67,24 +76,52 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:hint="PinCode"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:paddingLeft="10dp" />
 
-
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_area"
+            <EditText
+                android:id="@+id/edt_area"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
                 android:layout_marginTop="10dp"
-                android:text="Area" />
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
+                android:background="@drawable/border"
+                android:hint="Area"
+                android:singleLine="true"
+                android:paddingLeft="10dp" />
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_state"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
+                android:layout_gravity="center|bottom"
+                android:layout_weight="1"
                 android:layout_marginTop="10dp"
-                android:text="State" />
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
 
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_state"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="Select State"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Select State"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/sp_city"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1" />
+            </RelativeLayout>
 
         </LinearLayout>
     </LinearLayout>

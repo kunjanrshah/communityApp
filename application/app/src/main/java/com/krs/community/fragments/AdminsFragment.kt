@@ -605,7 +605,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
                                     adapter.notifyDataSetChanged()
                                     shimmerFrameLayout.startShimmerAnimation()
                                     shimmerFrameLayout.visibility = View.VISIBLE
-                                    roomMemberViewModel.disableMembers(updated)
+                                    roomMemberViewModel.changeStatus(updated)
 
                                 }
                                 .setCancelClickListener {

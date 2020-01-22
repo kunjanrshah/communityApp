@@ -26,18 +26,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:singleLine="true"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/border"
-                android:hint="Family Code"
+                android:hint="Member Code"
+                android:digits="@string/restrict_space"
                 android:paddingLeft="10dp" />
 
             <EditText
                 android:id="@+id/edt_head_name"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
+                android:digits="@string/restrict_space"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
-                android:hint="Family Head Name"
+                android:hint="Head Name"
                 android:paddingLeft="10dp" />
 
             <EditText
@@ -45,54 +51,193 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:singleLine="true"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
+                android:digits="@string/restrict_space"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
-                android:hint="Family Member Name"
+                android:hint="Member Name"
                 android:paddingLeft="10dp" />
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_surname"
-                android:layout_marginTop="10dp"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/round_top_corner"
-                android:text="Surname" />
+                android:layout_height="45dp"
+                android:layout_gravity="center|bottom"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_samaj"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/round_top_corner"
-                android:text="Regin/Samaj" />
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_surname"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="LastName"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="LastName"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/rangeSeekbar"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1" />
+            </RelativeLayout>
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_gender"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
+                android:layout_gravity="center|bottom"
+                android:layout_weight="1"
                 android:layout_marginTop="10dp"
-                android:text="Gender" />
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_marital"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Marital Status" />
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_samaj"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="Local Community"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Local Community"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/rangeSeekbar"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1" />
+            </RelativeLayout>
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_native"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
+                android:layout_gravity="center|bottom"
+                android:layout_weight="1"
                 android:layout_marginTop="10dp"
-                android:text="Native" />
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_city"
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_gender"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="Gender"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Gender"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/rangeSeekbar"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
+                android:layout_gravity="center|bottom"
+                android:layout_weight="1"
                 android:layout_marginTop="10dp"
-                android:text="City" />
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
+
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_marital"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="Marital Status"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Marital Status"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/rangeSeekbar"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center|bottom"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
+
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_native"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="Select Native"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Select Native"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/sp_city"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center|bottom"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
+
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_city"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="Select City"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Select City"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/rangeSeekbar"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1" />
+            </RelativeLayout>
 
             <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
                 android:id="@+id/rangeSeekbar"

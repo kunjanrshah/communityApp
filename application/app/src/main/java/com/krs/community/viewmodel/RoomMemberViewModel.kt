@@ -4,10 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
-import com.krs.community.app.lazyDeferred
 import com.krs.community.entities.RoomMember
 import com.krs.community.interfaces.RoomMemberListener
-import com.krs.community.interfaces.StatisticsListener
 import com.krs.community.repositories.RoomMemberRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
@@ -20,7 +18,7 @@ class RoomMemberViewModel(
     var jobByDelete: CompletableJob? = null
     var jobByInsert: CompletableJob? = null
     var jobBySearch: CompletableJob? = null
-    var jobByDisable: CompletableJob? = null
+    var jobChangeStatus: CompletableJob? = null
     private lateinit var jobGetMembers: CompletableJob
     var TAG: String = RoomMemberViewModel::class.java.simpleName
     var mRoomMemberListener: RoomMemberListener? = null
@@ -98,9 +96,9 @@ class RoomMemberViewModel(
         }
     }
 
-    fun disableMembers(jsonObject: JsonObject) {
-        jobByDisable = Job()
-        jobByDisable.let { thejob ->
+    fun changeStatus(jsonObject: JsonObject) {
+        jobChangeStatus = Job()
+        jobChangeStatus.let { thejob ->
 
             CoroutineScope(Dispatchers.IO + thejob!!).launch {
                 try {

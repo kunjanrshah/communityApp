@@ -43,7 +43,7 @@ class AppController : Application(), KodeinAware{
     lateinit var typeface_bold: Typeface
     lateinit var retrofitBase: RetrofitBase
     var start: Int = 0
-    val length: Int = 5
+    val length: Int = 30
 
     companion object {
         val TAG = AppController::class.java.simpleName

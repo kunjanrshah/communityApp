@@ -14,6 +14,9 @@ interface LocalCommunityDao {
     @Query("SELECT * FROM LocalCommunity")
     fun getLocalCommunity() : LiveData<List<LocalCommunity>>
 
+    @Query("SELECT name FROM LocalCommunity ORDER BY name ASC")
+    fun getLocalCommName() : LiveData<List<String>>
+
     @Query("SELECT name FROM LocalCommunity WHERE id=:id")
     fun getLocalCommunity(id:String) : String
 

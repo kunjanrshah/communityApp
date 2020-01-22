@@ -11,7 +11,7 @@ import com.krs.community.entities.SubCommunity
 @Dao
 interface NativeDao {
 
-    @Query("SELECT name FROM Native")
+    @Query("SELECT name FROM Native ORDER BY name ASC")
     fun getNative() : LiveData<List<String>>
 
     @Query("SELECT id FROM Native")

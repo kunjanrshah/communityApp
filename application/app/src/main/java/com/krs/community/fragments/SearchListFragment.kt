@@ -51,7 +51,6 @@ import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodel.SmartSearchViewModel
 import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
 import com.krs.community.viewmodelfactory.SmartSearchViewModelFactory
-import com.mostafaaryan.transitionalimageview.TransitionalImageView
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
@@ -61,7 +60,7 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import kotlin.collections.ArrayList
 
-class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener,MyRoleAdapter.iChangeRoleListner,RoomMemberListener, ParallaxRecyclerAdapter.OnLoadMore,  LocationAdapter.SetLocationListner {
+class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore,MyRoleAdapter.iChangeRoleListner,RoomMemberListener,  LocationAdapter.SetLocationListner {
 
     private lateinit var rvSearch: RecyclerView
     private lateinit var frameRoot: FrameLayout
@@ -639,7 +638,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener,MyRoleAdapt
         var iconFront: RelativeLayout = view.findViewById(R.id.icon_front1)
         var boomMenuButton: BoomMenuButton = view.findViewById(R.id.boomMenuButton1)
         var lstFound: RecyclerView = view.findViewById(R.id.lst_found)
-        var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
+        var llMobile: LinearLayout = view.findViewById(R.id.ll_mobile)
 
         init {
             view.setOnLongClickListener(this)
@@ -712,7 +711,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener,MyRoleAdapt
                                     rvAdapter.notifyDataSetChanged()
                                     mShimmerViewContainer.startShimmerAnimation()
                                     mShimmerViewContainer.visibility = View.VISIBLE
-                                    roomMemberViewModel.disableMembers(updated)
+                                    roomMemberViewModel.changeStatus(updated)
 
                                 }
                                 .setCancelClickListener {

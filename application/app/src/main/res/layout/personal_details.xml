@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -27,6 +28,8 @@
                 android:layout_height="45dp"
                 android:background="@drawable/border"
                 android:hint="Birth Date"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:paddingLeft="10dp" />
 
@@ -35,57 +38,137 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:singleLine="true"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:hint="Marriage Date"
                 android:paddingLeft="10dp" />
 
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_mosad"
+            <EditText
+                android:id="@+id/edt_mosaad"
                 android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:singleLine="true"
                 android:layout_marginTop="10dp"
-                android:layout_height="wrap_content"
-                android:text="Mosaad" />
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
+                android:background="@drawable/border"
+                android:hint="Mosaad"
+                android:paddingLeft="10dp" />
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_education"
+            <RelativeLayout
                 android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center|bottom"
+                android:layout_weight="1"
                 android:layout_marginTop="10dp"
-                android:layout_height="wrap_content"
-                android:text="Education" />
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_gotra"
-                android:layout_width="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_height="wrap_content"
-                android:text="Gotra" />
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_education"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="Select Education"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_bg"
+                    android:hint="Education"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/sp_city"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
+                android:layout_gravity="center|bottom"
+                android:layout_weight="1"
                 android:layout_marginTop="10dp"
-                android:text="Blood Group" />
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
+
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_gotra"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="Select Gotra"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Gotra"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/sp_city"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center|bottom"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
+
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_bg"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="Select BloodGroup"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Blood Group"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/sp_city"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1" />
+            </RelativeLayout>
 
             <CheckBox
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:id="@+id/chk_is_donor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_regular"
                 android:layout_marginTop="10dp"
                 android:text="is Doner?" />
             <CheckBox
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:id="@+id/chk_is_rented"
                 android:layout_width="match_parent"
+                android:fontFamily="@font/montserrat_regular"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="is Rented?" />
 
             <CheckBox
-                android:textSize="18sp"
+                android:textSize="16sp"
+                android:fontFamily="@font/montserrat_regular"
                 android:id="@+id/chk_is_expired"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

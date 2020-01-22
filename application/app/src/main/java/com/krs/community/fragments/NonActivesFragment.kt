@@ -70,20 +70,23 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
     private val roomMemberFactory: RoomMemberViewModelFactory by instance()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         val root = inflater.inflate(R.layout.fragment_nonactives, container, false)
-        selectedItems = SparseBooleanArray()
-        animationItemsIndex = SparseBooleanArray()
-        rvSearch = root.findViewById(R.id.rv_search)
-        shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)
-        llRoot = root.findViewById(R.id.ll_root)
-        (activity as AppCompatActivity).supportActionBar!!.title = ""
 
         smartFilterViewModel = ViewModelProviders.of(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
         roomMemberViewModel = ViewModelProviders.of(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
         roomMemberViewModel.mRoomMemberListener= this
         smartFilterViewModel.mByFilterListener = this
 
+        selectedItems = SparseBooleanArray()
+        animationItemsIndex = SparseBooleanArray()
         actionModeCallback = ActionModeCallback()
+
+        rvSearch = root.findViewById(R.id.rv_search)
+        shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)
+        llRoot = root.findViewById(R.id.ll_root)
+        (activity as AppCompatActivity).supportActionBar!!.title = ""
+
         adapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
 
@@ -101,7 +104,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 holder.tvArea.text = member.area
                 holder.tvAddr.text = member.address
 
-                /*Coroutines.io {
+                Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
                         viewHolder.tvName.text = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
                     }
@@ -109,7 +112,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                     if (!member.cityId.isNullOrEmpty()) {
                         holder.tvArea.text = member.area + " " + smartFilterViewModel.getCityNamebyId(member.cityId)
                     }
-                }*/
+                }
 
                 holder.tvEmail.text = member.emailAddress
                 holder.tvMobile.text = member.mobile
@@ -118,8 +121,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 viewHolder.itemView.isActivated = selectedItems.get(position, false)
 
                 applyIconAnimation(holder, position)
-                applyClickEvents(holder, position,member)
                 applyProfilePicture(holder, member)
+                applyClickEvents(holder, position,member)
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
@@ -185,8 +188,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 lstMembers.addAll(response.members)
                 adapter.notifyDataSetChanged()
 
-                rvSearch.layoutManager?.scrollToPosition(selectedPosition)
-                selectedPosition = lstMembers.size - 1
+               // rvSearch.layoutManager?.scrollToPosition(selectedPosition)
+                //selectedPosition = lstMembers.size - 1
                 DashboardActivity.stop = false
 
                 if (lstMembers.size <= AppController.mApplication.length) {
@@ -213,9 +216,14 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
     override suspend fun getFailure(message: String) {
         Coroutines.main {
             DashboardActivity.stop = false
-            shimmerFrameLayout.stopShimmerAnimation()
-            shimmerFrameLayout.visibility = View.GONE
-            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+            if(message.contains("success")){
+                Utility.startSweetDialog(activity,SweetAlertDialog.SUCCESS_TYPE,"Approved","${selectedItems.size()} Profiles are ready to login")
+                getNonActivesUsers()
+            }else{
+                shimmerFrameLayout.stopShimmerAnimation()
+                shimmerFrameLayout.visibility = View.GONE
+                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -231,7 +239,6 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         var tvName: TextView = view.findViewById(R.id.tv_name)
         var imgProfile: ImageView = view.findViewById(R.id.icon_profile)
         var messageContainer: LinearLayout = view.findViewById(R.id.message_container)
-        var iconContainer: RelativeLayout = view.findViewById(R.id.icon_container)
         var iconBack: RelativeLayout = view.findViewById(R.id.icon_back)
         var iconFront: RelativeLayout = view.findViewById(R.id.icon_front)
         var tvArea: TextView = view.findViewById(R.id.tv_area)
@@ -256,6 +263,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         holder.messageContainer.setOnLongClickListener { view: View ->
             onRowLongClicked(position)
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            true
         }
 
         holder.imgProfile.setOnClickListener {
@@ -346,9 +354,6 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         }
     }
 
-
-
-
     private fun getSelectedItems(): List<Int> {
         val items: MutableList<Int> = ArrayList(selectedItems.size())
         for (i in 0 until selectedItems.size()) {
@@ -356,8 +361,6 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         }
         return items
     }
-
-
 
     private fun toggleSelected(pos: Int) {
         currentSelectedIndex = pos
@@ -368,7 +371,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
             selectedItems.put(pos, true)
             animationItemsIndex.put(pos, true)
         }
-        adapter.notifyItemChanged(pos)
+        adapter.notifyItemChanged(pos+ 1)
     }
 
     private fun toggleSelection(position: Int) {
@@ -405,7 +408,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
     private inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-            mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
+            mode.menuInflater.inflate(R.menu.menu_non_actives, menu)
 
             return true
         }
@@ -416,12 +419,12 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean =
                 when (item.itemId) {
-                    R.id.action_delete -> {
+                    R.id.action_activate -> {
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
-                                .setContentText("want to disable ${selectedItemPositions.size} Profiles!")
-                                .setConfirmText("Yes,Disable it!")
+                                .setContentText("want to Active ${selectedItemPositions.size} Profiles!")
+                                .setConfirmText("Yes,Active it!")
                                 .setCancelText("No")
                                 .setConfirmClickListener {
                                     it.dismiss()
@@ -429,7 +432,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                                     val jsonObject = JSONObject()
                                     jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
                                     jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
-                                    jsonObject.put("status", "0")
+                                    jsonObject.put("status", "1")
 
                                     var Ids = ""
                                     for (index in selectedItemPositions) {
@@ -444,7 +447,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                                     adapter.notifyDataSetChanged()
                                     shimmerFrameLayout.startShimmerAnimation()
                                     shimmerFrameLayout.visibility = View.VISIBLE
-                                    roomMemberViewModel.disableMembers(updated)
+                                    roomMemberViewModel.changeStatus(updated)
                                 }
                                 .setCancelClickListener {
                                     it.dismiss()

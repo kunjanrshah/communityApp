@@ -1544,6 +1544,17 @@ public class Utility {
         dialog.show();
     }
 
+    public static void startSweetDialog(Context context,int type, String title, String message) {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+            dialog=null;
+        }
+        dialog = new SweetAlertDialog(context, type).setContentText(message);
+        dialog.setTitleText(title);
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
     public static void hideSweetProgress() {
         try {
             if (dialog != null && dialog.isShowing()) dialog.cancel();

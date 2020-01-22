@@ -1,25 +1,29 @@
 package com.krs.community.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.Html
+import android.text.TextUtils
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.facebook.FacebookSdk
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -28,17 +32,28 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
+import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
+import com.krs.community.activity.QRCodeActivity
+import com.krs.community.adapter.LocationAdapter
+import com.krs.community.app.AppController
+import com.krs.community.entities.RoomMember
 import com.krs.community.interfaces.ByFilterListener
+import com.krs.community.interfaces.RoomMemberListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
-import com.krs.community.utils.Coroutines
-import com.krs.community.utils.Utility
+import com.krs.community.utils.*
 import com.krs.community.viewmodel.CalendarSearchViewModel
+import com.krs.community.viewmodel.ProfileDetailViewModel
+import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodelfactory.CalendarSearchViewModelFactory
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
+import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
+import com.orhanobut.dialogplus.DialogPlus
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -49,12 +64,20 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore {
+class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, RoomMemberListener,  LocationAdapter.SetLocationListner {
 
     override val kodein by kodein()
     private var lstCalendar= ArrayList<Member>()
+
     private lateinit var calendarSearchViewModel: CalendarSearchViewModel
-    private val factory: CalendarSearchViewModelFactory by instance()
+    private lateinit var profileDetailViewModel: ProfileDetailViewModel
+    private lateinit var roomMemberViewModel: RoomMemberViewModel
+
+    private val calendarSearchViewModelFactory: CalendarSearchViewModelFactory by instance()
+    private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
+    private val roomMemberFactory: RoomMemberViewModelFactory by instance()
+
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var llRoot: LinearLayout
     private lateinit var shimmerFrameLayout:ShimmerFrameLayout
@@ -73,12 +96,12 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
     private var toDate:String=""
     private lateinit var tvCount:TextView
     private lateinit var txtDate:TextView
-    private var start: Int = 0
-    private val length: Int = 5
+    private var setLocationDialog: DialogPlus? = null
     private var filterAdapter: FilterAdapter? = null
+
     override fun loadApi() {
         if (!DashboardActivity.stop) {
-            start = (lstCalendar.size+1)
+           AppController.mApplication.start = (lstCalendar.size+1)
             searchCalendarList(filter)
         }
     }
@@ -91,8 +114,12 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         }
 
         (activity as AppCompatActivity).supportActionBar!!.title = "Search by Calendar"
-        calendarSearchViewModel = ViewModelProviders.of(this,factory).get(CalendarSearchViewModel::class.java)
+
+        calendarSearchViewModel = ViewModelProviders.of(this,calendarSearchViewModelFactory).get(CalendarSearchViewModel::class.java)
+        roomMemberViewModel = ViewModelProviders.of(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
+        profileDetailViewModel = ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         calendarSearchViewModel.mByFilterListener =this
+        roomMemberViewModel.mRoomMemberListener= this
 
         llRoot = root.findViewById(R.id.ll_root)
         shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)
@@ -115,8 +142,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         if (!DashboardActivity.stop) {
             DashboardActivity.stop = true
             val jsonObject=JSONObject()
-            jsonObject.put("start",start)
-            jsonObject.put("length",length)
+            jsonObject.put("start",AppController.mApplication.start)
+            jsonObject.put("length",AppController.mApplication.length)
 
             if(fromDate.isNotEmpty()){
                 jsonObject.put("fromdate",fromDate)
@@ -137,7 +164,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             lstCalendar.clear()
             adapter.notifyDataSetChanged()
 
-            if(start==0){
+            if(AppController.mApplication.start==0){
                 shimmerFrameLayout.startShimmerAnimation()
                 shimmerFrameLayout.visibility = View.VISIBLE
             }
@@ -157,7 +184,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 recyclerView.adapter = adapter
                 DashboardActivity.stop = false
 
-                if(lstCalendar.size<=length){
+                if(lstCalendar.size<=AppController.mApplication.length){
                     DashboardActivity.stop = true
                     Snackbar.make(llRoot, "End of Records", Snackbar.LENGTH_LONG).show()
                 }
@@ -168,9 +195,10 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         }else {
             DashboardActivity.stop = false
         }
+    }
 
-        Toast.makeText(activity,"Success",Toast.LENGTH_SHORT).show()
-        //Utility.displaySnackBarWithBottomMargin(recyclerView,"${response.members.size} Records found")
+    override fun refreshList() {
+        adapter.notifyDataSetChanged()
     }
 
     override suspend fun getFailure(message: String) {
@@ -180,8 +208,6 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             shimmerFrameLayout.visibility = View.GONE
             Toast.makeText(activity,message,Toast.LENGTH_SHORT).show()
         }
-
-       // Utility.displaySnackBarWithBottomMargin(recyclerView,"Something went wrong")
     }
 
     override fun onDataSelected(firstDate: Calendar?, secondDate: Calendar?, hours: Int, minutes: Int) {
@@ -224,31 +250,6 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         (activity as AppCompatActivity).supportActionBar!!.show()
     }
 
-
-   /* private fun initFragmentTransaction(view: View): FragmentTransaction? {
-        val toY = view.resources.getDimensionPixelOffset(com.krs.community.R.dimen.details_toolbar_container_height) - view.height / 2f
-
-        val positions = FloatArray(3)
-        positions[0] = view.x
-        positions[1] = view.y + activity!!.myAppBar.height
-        positions[2] = toY
-
-        val adapterPosition = recyclerView.getChildAdapterPosition(view)
-        val detailsFragment = FamilyDetailActivity.newInstance(adapterPosition)
-
-        //Utility.movetoFragment(activity,FamilyDetailFragment())
-
-        val transaction = fragmentManager?.beginTransaction()
-                ?.replace(com.krs.community.R.id.container_body, detailsFragment, FamilyDetailActivity.TAG)
-                ?.addToBackStack(null)
-
-         return transaction
-    }
-
-    private fun startAnimation(view: View, fragmentTransaction: FragmentTransaction?) {
-        fragmentTransaction?.commitAllowingStateLoss()
-    }*/
-
     private fun createCardAdapter(recyclerView: RecyclerView) {
         adapter = object : ParallaxRecyclerAdapter<Member>(lstCalendar) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, i: Int) {
@@ -280,10 +281,57 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 }else{
                     viewHolder.tvRole.text = resources.getString(R.string.Member)
                 }
-
+                viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                 viewHolder.boomMenuButton.clearBuilders()
                 for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
-                    viewHolder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder())
+                    val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
+                    builder?.listener {
+                        if (it == 0) {
+                            if (Utility.hasReadStoragePermission(activity as AppCompatActivity) && Utility.hasWriteStoragePermission(activity as AppCompatActivity)) {
+                                createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
+
+                                Handler().post(Runnable {
+                                    Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                                })
+                                Handler().postDelayed({
+                                    Utility.hideSweetProgress()
+                                }, 5000)
+
+                            } else {
+                                Utility.requestStoragePermission(activity as AppCompatActivity)
+                            }
+                        } else if (it == 1) {
+                            val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
+                            startActivity(intent)
+                        } else if (it == 2) {
+                            if (!member.mobile.isNullOrEmpty()) {
+                                Utility.sendWhatsappMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
+                            } else {
+                                Toast.makeText(activity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
+                            }
+                        } else if (it == 3) {
+                            val mBundle = Bundle()
+                            mBundle.putSerializable(getString(R.string.member), member)
+                            val intent: Intent = Intent(activity, QRCodeActivity::class.java)
+                            intent.putExtras(mBundle)
+                            startActivity(intent)
+                            Utility.fade(activity)
+                        } else if (it == 4) {
+                            shareDetails(activity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, viewHolder.tvArea.text.toString(), member.address)
+                        } else if (it == 5) {
+                            val adapter: LocationAdapter = LocationAdapter(context as AppCompatActivity, member)
+                            adapter.setLocationListner(this@CalendarFragment)
+                            setLocationDialog = DialogPlus.newDialog(context)
+                                    .setAdapter(adapter)
+                                    .setGravity(Gravity.BOTTOM)
+                                    .setCancelable(true)
+                                    .setExpanded(true, 600)
+                                    .setContentBackgroundResource(R.drawable.popup_top_corner)
+                                    .create()
+                            setLocationDialog?.show()
+                        }
+                    }
+                    viewHolder.boomMenuButton.addBuilder(builder)
                 }
 
                 viewHolder.boomMenuButton.setOnClickListener {
@@ -295,32 +343,35 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         val birth= Utility.changeDateFormat(member.birthDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                         val age=Utility.getAge(birth,Utility.dd_MM_yyyy)
 
-                        val first = "$birth ($age) ";
-                        val next = "<font color='#EE0000'>BirthDay</font>";
-                        viewHolder.tvEvent1.text=(Html.fromHtml(first + next));
+                        val first = "$birth ($age) "
+                        val next = "<font color='#C54464'>BirthDay</font>"
+                        viewHolder.tvEvent1.text=(Html.fromHtml(first + next))
                         viewHolder.tvEvent1.visibility=View.VISIBLE
 
                     }else if(member.matched.contains("marriage_date")){
                         val mdate= Utility.changeDateFormat(member.marriageDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                         val age=Utility.getAge(mdate,Utility.dd_MM_yyyy)
 
-                        val first = "$mdate ($age) ";
-                        val next = "<font color='#00EE00'>Marriage Anniversary</font>";
-                        viewHolder.tvEvent2.text=(Html.fromHtml(first + next));
+                        val first = "$mdate ($age) "
+                        val next = "<font color='#C54464'>Marriage Anniversary</font>"
+                        viewHolder.tvEvent2.text=(Html.fromHtml(first + next))
                         viewHolder.tvEvent2.visibility=View.VISIBLE
                     }
                     else if(lstCalendar[i].matched.contains("expire_date")){
                         val edate= Utility.changeDateFormat(member.expireDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                         val age=Utility.getAge(edate,Utility.dd_MM_yyyy)
 
-                        val first = "$edate ($age) ";
-                        val next = "<font color='#0000EE'>Death Anniversary</font>";
-                        viewHolder.tvEvent3.text=(Html.fromHtml(first + next));
+                        val first = "$edate ($age) "
+                        val next = "<font color='#C54464'>Death Anniversary</font>"
+                        viewHolder.tvEvent3.text=(Html.fromHtml(first + next))
                         viewHolder.tvEvent3.visibility=View.VISIBLE
                     }
                 }
-            }
 
+                applyImportant(viewHolder, member)
+                applyClickEvents(viewHolder, i,member)
+                applyProfilePicture(viewHolder, member)
+            }
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
                 return CalendarViewHolder(layoutInflater.inflate(R.layout.row_list_calendar, viewGroup, false))
             }
@@ -330,17 +381,14 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             }
         }
 
+
+
+
         adapter.setOnClickEvent { v, position ->
             val intent= Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstCalendar[position])
             startActivity(intent)
             Utility.fade(activity)
-            /*val fragmentTransaction = initFragmentTransaction(v)
-            val copy = view!!.copyViewImage()
-            copy.y += activity!!.myAppBar.height
-            ll_root.addView(copy)
-            view!!.visibility = View.INVISIBLE
-            startAnimation(copy, fragmentTransaction)*/
         }
 
         val layoutManagerFixed = HeaderLayoutManagerFixed(activity)
@@ -394,6 +442,78 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         recyclerView.adapter = adapter
     }
 
+
+    private fun applyImportant(holder: CalendarViewHolder, member: Member) {
+
+        roomMemberViewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, androidx.lifecycle.Observer {
+            try {
+                if (it != null) {
+                    holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_black_24dp))
+                    holder.iconImp.setColorFilter(ContextCompat.getColor(activity as AppCompatActivity, R.color.icon_tint_selected))
+                } else {
+                    holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_border_black_24dp))
+                    holder.iconImp.setColorFilter(ContextCompat.getColor(activity as AppCompatActivity, R.color.icon_tint_normal))
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+
+        })
+    }
+
+    private fun applyClickEvents(holder: CalendarViewHolder, position: Int, member: Member) {
+
+        holder.iconImp.setOnClickListener {
+
+            val member: Member = lstCalendar.get(position)
+            var flag = true
+            roomMemberViewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, androidx.lifecycle.Observer {
+                if (flag) {
+                    flag = false
+                    if (it != null) {
+                        roomMemberViewModel.deleteRoomMember(Integer.parseInt(member.id))
+                    } else {
+                        roomMemberViewModel.insertRoomMember(getRoomMemberFromMember(member))
+                    }
+                }
+            })
+        }
+
+        holder.llMobile.setOnClickListener {
+            val intent = Intent(Intent.ACTION_DIAL)
+            val str = "tel:" + holder.tvMobile.text
+            intent.data = Uri.parse(str)
+            startActivity(intent)
+        }
+
+        holder.imgProfile.setOnClickListener { view ->
+            try {
+                val path = getString(R.string.base_url_original) + "" + member.profilePic
+                Log.d(TAG, "path: $path")
+                openImageDialog(activity as AppCompatActivity,path)
+            } catch (e: Exception) {
+                e.message
+            }
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    private fun applyProfilePicture(holder: CalendarViewHolder, member: Member) {
+        if (!TextUtils.isEmpty(member.profilePic)) {
+            holder.imgProfile.isClickable = true
+            val url=resources.getString(R.string.base_url_thumb)+member.profilePic
+            Glide.with(activity!!).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
+            holder.imgProfile.colorFilter = null
+            holder.iconText.visibility = View.GONE
+
+        } else {
+            holder.imgProfile.isClickable = false
+            holder.imgProfile.setImageResource(R.drawable.bg_circle)
+            holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(activity!!, "400"))
+            holder.iconText.visibility = View.VISIBLE
+        }
+    }
+
     internal class CalendarViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var tvName: TextView = v.findViewById<View>(R.id.tv_name) as TextView
         var tvArea: TextView = v.findViewById(R.id.tv_area)
@@ -404,6 +524,10 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         var tvMobile: TextView = v.findViewById(R.id.tv_mobile)
         var tvRole: TextView = v.findViewById(R.id.tv_role)
         var boomMenuButton: BoomMenuButton = v.findViewById(R.id.bmb1)
+        var iconImp: ImageView = v.findViewById(R.id.icon_star)
+        var iconText: TextView = v.findViewById(R.id.icon_text1)
+        var imgProfile: ImageView = v.findViewById(R.id.icon_profile1)
+        var llMobile: LinearLayout = v.findViewById(R.id.ll_mobile)
     }
 
     internal inner class FilterViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -464,7 +588,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
                     }
                     lblDeath -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
+                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_panchag)
                         holder.txtName.setTextColor(resources.getColor(R.color.white))
                     }
                     "Reminder" -> {
@@ -527,7 +651,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                     death=false
                     birthday=false
                     anniversay=false
-                    start=0
+                    AppController.mApplication.start=0
                     filter=""
                     filterAdapter?.notifyDataSetChanged()
                     DashboardActivity.stop=false
@@ -537,7 +661,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                     death=true
                     birthday=false
                     anniversay=false
-                    start=0
+                    AppController.mApplication.start=0
                     filter="2"
                     filterAdapter?.notifyDataSetChanged()
                     DashboardActivity.stop=false
@@ -547,7 +671,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                     death=false
                     birthday=true
                     anniversay=false
-                    start=0
+                    AppController.mApplication.start=0
                     filter="0"
                     filterAdapter?.notifyDataSetChanged()
                     DashboardActivity.stop=false
@@ -557,7 +681,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                     death=false
                     birthday=false
                     anniversay=true
-                    start=0
+                    AppController.mApplication.start=0
                     filter="1"
                     filterAdapter?.notifyDataSetChanged()
                     DashboardActivity.stop=false
@@ -569,5 +693,11 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         override fun getItemCount(): Int {
             return list!!.size
         }
+    }
+
+    override fun getRoomMembers(response: List<RoomMember>) {
+    }
+
+    override fun cancelDialog() {
     }
 }
