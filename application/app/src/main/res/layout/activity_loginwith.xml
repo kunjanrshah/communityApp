@@ -207,7 +207,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:clickable="false"
-                        android:enabled="false"
+                        android:enabled="true"
                         android:text="Resend OTP?"
                         android:textColor="@color/light_gray" />
 

@@ -16,6 +16,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.facebook.*
@@ -99,8 +100,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         Guru.putString(getString(R.string.hash_key),hashkey)
         Log.e(TAG,"hashcode: "+hashkey)
 
-        val FbKey= getHashKey(this)
-        Log.e(TAG,"FbKey: "+FbKey)
+       getHashKey(this)
+
 
         val binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.activity_loginwith)
         binding.lifecycleOwner = this
@@ -198,25 +199,34 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         }
 
         tv_resend.setOnClickListener {
+            ReceviedOTP=""
             btnContinue.performClick()
         }
 
         btnContinue.setOnClickListener { v ->
-            val mobilenumber = loginViewModel?.mobile
-            if (mobilenumber!!.isEmpty()) {
-                edt_mobile.error = "Phone number is required"
-                edt_mobile.requestFocus()
+
+            if(!ReceviedOTP.isNullOrEmpty() && ReceviedOTP==squareField.text.toString()){
+                goToDashboardScreen()
                 return@setOnClickListener
             }
 
-            if (mobilenumber.length < 10 || !isValidMobile(mobilenumber)) {
-                edt_mobile.error = "Please enter a valid phone"
-                edt_mobile.requestFocus()
-                return@setOnClickListener
-            }
-            if (isOnline(this)) {
-                startSweetProgress(this, getString(R.string.otp_send), getString(R.string.loading))
-                loginViewModel?.loginWithMobile()
+            if(tv_resend.isEnabled){
+                val mobilenumber = loginViewModel?.mobile
+                if (mobilenumber!!.isEmpty()) {
+                    edt_mobile.error = "Phone number is required"
+                    edt_mobile.requestFocus()
+                    return@setOnClickListener
+                }
+
+                if (mobilenumber.length < 10 || !isValidMobile(mobilenumber)) {
+                    edt_mobile.error = "Please enter a valid phone"
+                    edt_mobile.requestFocus()
+                    return@setOnClickListener
+                }
+                if (isOnline(this)) {
+                    startSweetProgress(this, getString(R.string.otp_send), getString(R.string.loading))
+                    loginViewModel?.loginWithMobile()
+                }
             }
         }
 
