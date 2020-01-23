@@ -172,7 +172,8 @@ class ProfileDetailViewModel(
     }
 
     suspend fun getCityNamebyState(id: Int): List<String> {
-        return mProfileDetailRepository.getCityName(id)
+        return mProfileDetailRepository.getCityName(id)}
+
     suspend fun getActivityIdByName(name:String):Int{
         return mProfileDetailRepository.getActivityIdByName(name)
     }
@@ -217,9 +218,6 @@ class ProfileDetailViewModel(
         return mProfileDetailRepository.getIdByLastName(name)
     }
 
-    suspend fun getCityNamebyState(id:Int):List<String>{
-       return mProfileDetailRepository.getCityName(id)
-    }
 
     fun getMemberByFilters(jsonObject: JsonObject) {
         completableJob = Job()
