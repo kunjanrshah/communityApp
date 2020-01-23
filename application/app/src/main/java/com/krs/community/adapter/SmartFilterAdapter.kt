@@ -21,7 +21,8 @@ import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.orhanobut.dialogplus.DialogPlus
 import java.util.*
 
-class SmartFilterAdapter(private val _context: Context,var profileDetailViewModel: ProfileDetailViewModel) : BaseExpandableListAdapter(), ICloseDialog {
+class SmartFilterAdapter(private val _context: Context,
+                         var profileDetailViewModel: ProfileDetailViewModel) : BaseExpandableListAdapter(), ICloseDialog {
     var previousGroup = -1
     private val header: MutableList<String>
     private val mapChildValues: HashMap<String, String> = HashMap()
@@ -43,6 +44,7 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
     private var edtUpdated: EditText?=null
     private var edtArea: EditText?=null
     private var edtMosaad: EditText?=null
+    private var edtBirthPlace: EditText?=null
 
     private lateinit var spSurname: JRSpinner
     private lateinit var spLocalComm: JRSpinner
@@ -59,7 +61,7 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
     private lateinit var spSubCat: JRSpinner
     private lateinit var spOccupation: JRSpinner
     private lateinit var spActivity: JRSpinner
-    private lateinit var spBplace: JRSpinner
+
 
     private var rangeAgeBar: CrystalRangeSeekbar?=null
     private var rangeUpdationBar: CrystalRangeSeekbar?=null
@@ -70,17 +72,7 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
     private var chkIsShani: CheckBox?=null
     private var chkIsMangal: CheckBox?=null
 
-    /*private lateinit var mosadAdapter: ArrayAdapter<String>
-    private lateinit var educationAdapter: ArrayAdapter<String>
-    private lateinit var gotraAdapter: ArrayAdapter<String>
-    private lateinit var bgAdapter: ArrayAdapter<String>
-    private lateinit var areaAdapter: ArrayAdapter<String>
-    private lateinit var stateAdapter: ArrayAdapter<String>
-    private lateinit var categoryAdapter: ArrayAdapter<String>
-    private lateinit var subcatAdapter: ArrayAdapter<String>
-    private lateinit var occupationAdapter: ArrayAdapter<String>
-    private lateinit var curActivityAdapter: ArrayAdapter<String>
-    private lateinit var birthPlaceAdapter: ArrayAdapter<String>*/
+
     private lateinit var dialog: DialogPlus
     override fun getGroupCount(): Int {
         return 8
@@ -302,7 +294,7 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
             if (!weight.isEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_edt_weight_kg)] = weight
             }
-            val bplace = spBplace.text.toString().trim { it <= ' ' }
+            val bplace = edtBirthPlace?.text.toString().trim { it <= ' ' }
             if (!bplace.isEmpty() && !bplace.equals("bplace", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_bplace)] = bplace
             }
@@ -415,6 +407,7 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
                     spState.setText(state)
                 }
             }
+
             if (edtBdate != null) {
                 val bdate = mapChildValues[_context.getString(R.string.ss_edt_bdate)]
                 if (bdate != null && !bdate.isEmpty()) {
@@ -440,24 +433,12 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
                 if (gotra != null && !gotra.isEmpty()) {
                     spBg.setText(bg)
                 }
-                val is_doner = mapChildValues[_context.getString(R.string.ss_chk_is_donor)]
-                if (is_doner != null && is_doner.equals(_context.getString(R.string.ss_true), ignoreCase = true)) {
-                    chkIsDonor?.isChecked = true
-                } else {
-                    chkIsDonor?.isChecked = false
-                }
-                val is_rented = mapChildValues[_context.getString(R.string.ss_chk_is_rented)]
-                if (is_rented != null && is_rented.equals(_context.getString(R.string.ss_true), ignoreCase = true)) {
-                    chkIsRented?.isChecked = true
-                } else {
-                    chkIsRented?.isChecked = false
-                }
-                val is_expired = mapChildValues[_context.getString(R.string.ss_chk_is_expired)]
-                if (is_expired != null && is_expired.equals(_context.getString(R.string.ss_true), ignoreCase = true)) {
-                    chkIsExpired?.isChecked = true
-                } else {
-                    chkIsExpired?.isChecked = false
-                }
+                val isDoner = mapChildValues[_context.getString(R.string.ss_chk_is_donor)]
+                chkIsDonor?.isChecked = isDoner != null && isDoner.equals(_context.getString(R.string.ss_true), ignoreCase = true)
+                val isRented = mapChildValues[_context.getString(R.string.ss_chk_is_rented)]
+                chkIsRented?.isChecked = isRented != null && isRented.equals(_context.getString(R.string.ss_true), ignoreCase = true)
+                val isExpired = mapChildValues[_context.getString(R.string.ss_chk_is_expired)]
+                chkIsExpired?.isChecked = isExpired != null && isExpired.equals(_context.getString(R.string.ss_true), ignoreCase = true)
             }
             if (edtOffice != null) {
                 val office = mapChildValues[_context.getString(R.string.ss_edt_office)]
@@ -496,26 +477,14 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
                 }
                 val bplace = mapChildValues[_context.getString(R.string.ss_sp_bplace)]
                 if (bplace != null && !bplace.isEmpty()) {
-                    spBplace.setText(bplace)
+                    edtBirthPlace?.setText(bplace)
                 }
-                val is_spect = mapChildValues[_context.getString(R.string.ss_chk_is_spect)]
-                if (is_spect != null && is_spect.equals(_context.getString(R.string.ss_true), ignoreCase = true)) {
-                    chkIsSpect?.isChecked = true
-                } else {
-                    chkIsSpect?.isChecked = false
-                }
+                val isSpect = mapChildValues[_context.getString(R.string.ss_chk_is_spect)]
+                chkIsSpect?.isChecked = isSpect != null && isSpect.equals(_context.getString(R.string.ss_true), ignoreCase = true)
                 val is_shani = mapChildValues[_context.getString(R.string.ss_chk_is_shani)]
-                if (is_shani != null && is_shani.equals(_context.getString(R.string.ss_true), ignoreCase = true)) {
-                    chkIsShani?.isChecked = true
-                } else {
-                    chkIsShani?.isChecked = false
-                }
-                val is_mangal = mapChildValues[_context.getString(R.string.ss_chk_is_mangal)]
-                if (is_mangal != null && is_mangal.equals(_context.getString(R.string.ss_true), ignoreCase = true)) {
-                    chkIsMangal?.isChecked = true
-                } else {
-                    chkIsMangal?.isChecked = false
-                }
+                chkIsShani?.isChecked = is_shani != null && is_shani.equals(_context.getString(R.string.ss_true), ignoreCase = true)
+                val isMangal = mapChildValues[_context.getString(R.string.ss_chk_is_mangal)]
+                chkIsMangal?.isChecked = isMangal != null && isMangal.equals(_context.getString(R.string.ss_true), ignoreCase = true)
             }
             if (edtCreated != null) {
                 val created = mapChildValues[_context.getString(R.string.ss_edt_created)]
@@ -562,6 +531,38 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
                 val tvMin = convertView.findViewById<TextView>(R.id.textMin1)
                 val tvMax = convertView.findViewById<TextView>(R.id.textMax1)
 
+                spSurname.setOnItemClickListener {
+                    if(it==0){
+                        spSurname.setText("")
+                    }
+                }
+                spLocalComm.setOnItemClickListener {
+                    if(it==0){
+                        spLocalComm.setText("")
+                    }
+                }
+                spCity.setOnItemClickListener {
+                    if(it==0){
+                        spCity.setText("")
+                    }
+                }
+                spGender.setOnItemClickListener {
+                    if(it==0){
+                        spGender.setText("")
+                    }
+                }
+                spMarital.setOnItemClickListener {
+                    if(it==0){
+                        spMarital.setText("")
+                    }
+                }
+                spNative.setOnItemClickListener {
+                    if(it==0){
+                        spMarital.setText("")
+                    }
+                }
+
+
                 Coroutines.main {
                     profileDetailViewModel.lstNativeName.await().observeForever {
                         spNative.setItems(it.toTypedArray())
@@ -569,6 +570,7 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
                     }
 
                     profileDetailViewModel.lstLastName.await().observeForever {
+                        spSurname.setItems(arrayOf("None"))
                         spSurname.setItems(it.toTypedArray())
                         spSurname.setExpandTint(R.color.black)
                     }
@@ -615,6 +617,13 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
                 spState = convertView.findViewById(R.id.sp_state)
                 edtArea = convertView.findViewById(R.id.edt_area)
 
+                spState.setOnItemClickListener {
+                    if(it==0){
+                        spState.setText("")
+                    }
+                }
+
+
                 Coroutines.main {
                    profileDetailViewModel.lstStateName.await().observeForever {
                        spState.setItems(it.toTypedArray())
@@ -638,6 +647,24 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
                 chkIsRented = convertView.findViewById(R.id.chk_is_rented)
                 chkIsExpired = convertView.findViewById(R.id.chk_is_expired)
 
+                spEducation.setOnItemClickListener {
+                    if(it==0){
+                        spEducation.setText("")
+                    }
+                }
+
+                spGotra.setOnItemClickListener {
+                    if(it==0){
+                        spGotra.setText("")
+                    }
+                }
+
+                spBg.setOnItemClickListener {
+                    if(it==0){
+                        spBg.setText("")
+                    }
+                }
+
                 Coroutines.main {
 
                     val lstBlood =  _context.resources.getStringArray(R.array.bloodGroup)
@@ -653,11 +680,6 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
                         spEducation.setItems(it.toTypedArray())
                         spEducation.setExpandTint(R.color.black)
                     }
-
-
-
-
-
                     retrieveFieldsValues()
                 }
 
@@ -673,7 +695,54 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
                 spOccupation = convertView.findViewById(R.id.sp_occupation)
                 spActivity = convertView.findViewById(R.id.sp_current_activity)
 
-                retrieveFieldsValues()
+
+                spMainCat.setOnItemClickListener {
+                    if(it==0){
+                        spMainCat.setText("")
+                    }
+                }
+                spSubCat.setOnItemClickListener {
+                    if(it==0){
+                        spSubCat.setText("")
+                    }
+                }
+                spOccupation.setOnItemClickListener {
+                    if(it==0){
+                        spOccupation.setText("")
+                    }
+                }
+                spActivity.setOnItemClickListener {
+                    if(it==0){
+                        spActivity.setText("")
+                    }
+                }
+
+
+                Coroutines.main {
+
+                    profileDetailViewModel.lstBusinessCategoryName.await().observeForever {
+                        spMainCat.setItems(it.toTypedArray())
+                        spMainCat.setExpandTint(R.color.black)
+                    }
+
+                    profileDetailViewModel.lstBusinessSubCategoryName.await().observeForever {
+                        spSubCat.setItems(it.toTypedArray())
+                        spSubCat.setExpandTint(R.color.black)
+                    }
+
+                    profileDetailViewModel.lstOccupationName.await().observeForever {
+                        spOccupation.setItems(it.toTypedArray())
+                        spOccupation.setExpandTint(R.color.black)
+                    }
+
+                    profileDetailViewModel.lstActivityName.await().observeForever {
+                        spActivity.setItems(it.toTypedArray())
+                        spActivity.setExpandTint(R.color.black)
+                    }
+
+                    retrieveFieldsValues()
+                }
+
             }
             5 -> {
                 if (inflater != null) {
@@ -683,11 +752,10 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
                 edtBirthTime = convertView!!.findViewById(R.id.edt_birth_time)
                 edtHeightMeter = convertView.findViewById(R.id.edt_height_meter)
                 edtWeightKg = convertView.findViewById(R.id.edt_weight_kg)
-                spBplace = convertView.findViewById(R.id.sp_birth_place)
+                edtBirthPlace = convertView.findViewById(R.id.edt_birth_place)
                 chkIsSpect = convertView.findViewById(R.id.chk_is_spect)
                 chkIsShani = convertView.findViewById(R.id.chk_is_shani)
                 chkIsMangal = convertView.findViewById(R.id.chk_is_mangal)
-
                 retrieveFieldsValues()
             }
             6 -> {
@@ -698,12 +766,12 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
                 rangeUpdationBar = convertView.findViewById(R.id.rangeUpdationBar)
                 val tvMin1 = convertView.findViewById<TextView>(R.id.textMin1)
                 val tvMax1 = convertView.findViewById<TextView>(R.id.textMax1)
-                // set listener
+
                 rangeUpdationBar?.setOnRangeSeekbarChangeListener(OnRangeSeekbarChangeListener { minValue: Number, maxValue: Number ->
                     tvMin1.setText(minValue.toString() + "%")
                     tvMax1.setText(maxValue.toString() + "%")
                 })
-                // set final value listener
+
                 rangeUpdationBar?.setOnRangeSeekbarFinalValueListener(OnRangeSeekbarFinalValueListener { minValue, maxValue -> Log.d("CRS=>", "$minValue : $maxValue") })
                 retrieveFieldsValues()
             }
@@ -726,7 +794,7 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
     fun openBottomSheetDailog() {
         storeFieldsValues()
         if (mapChildValues.size > 0) {
-            val popUpAdapter = SmartPopUpAdapter(_context, this, mapChildValues)
+            val popUpAdapter = SmartPopUpAdapter(_context, this, mapChildValues,profileDetailViewModel)
             dialog = DialogPlus
                     .newDialog(_context)
                     .setAdapter(popUpAdapter)
@@ -753,105 +821,5 @@ class SmartFilterAdapter(private val _context: Context,var profileDetailViewMode
         header.add(_context.getString(R.string._matrimony))
         header.add(_context.getString(R.string.some_more))
         header.add("")
-
-        /*val lstGender: MutableList<String> = ArrayList()
-        lstGender.add(_context.getString(R.string.ss_gender))
-        lstGender.add("Male")
-        lstGender.add("Female")
-
-        val lstSurname: MutableList<String> = ArrayList()
-        lstSurname.add(_context.getString(R.string.ss_surname))
-        lstSurname.add("surname1")
-        lstSurname.add("surname2")
-        val lstSamaj: MutableList<String> = ArrayList()
-        lstSamaj.add(_context.getString(R.string.ss_samaj))
-        lstSamaj.add("samaj1")
-        lstSamaj.add("samaj2")
-        val lstCity: MutableList<String> = ArrayList()
-        lstCity.add(_context.getString(R.string.ss_city))
-        lstCity.add("city1")
-        lstCity.add("city2")
-        val lstMarital: MutableList<String> = ArrayList()
-        lstMarital.add(_context.getString(R.string.ss_marital))
-        lstMarital.add("marital1")
-        lstMarital.add("marital2")
-        val lstArea: MutableList<String> = ArrayList()
-        lstArea.add(_context.getString(R.string.ss_area))
-        lstArea.add("area1")
-        lstArea.add("area2")
-        val lstState: MutableList<String> = ArrayList()
-        lstState.add(_context.getString(R.string.ss_state))
-        lstState.add("state1")
-        lstState.add("state2")
-        val lstMosad: MutableList<String> = ArrayList()
-        lstMosad.add(_context.getString(R.string.ss_mosad))
-        lstMosad.add("mosad1")
-        lstMosad.add("mosad2")
-        val lstEducation: MutableList<String> = ArrayList()
-        lstEducation.add(_context.getString(R.string.ss_education))
-        lstEducation.add("education1")
-        lstEducation.add("education2")
-        val lstGotra: MutableList<String> = ArrayList()
-        lstGotra.add(_context.getString(R.string.ss_gotra))
-        lstGotra.add("gotra1")
-        lstGotra.add("gotra2")
-        val lstBg: MutableList<String> = ArrayList()
-        lstBg.add(_context.getString(R.string.ss_bg))
-        lstBg.add("bg1")
-        lstBg.add("bg2")
-        val lstCategory: MutableList<String> = ArrayList()
-        lstCategory.add(_context.getString(R.string.ss_catogory))
-        lstCategory.add("category1")
-        lstCategory.add("category2")
-        val lstSubCat: MutableList<String> = ArrayList()
-        lstSubCat.add(_context.getString(R.string.ss_sub_cat))
-        lstSubCat.add("sub_cat1")
-        lstSubCat.add("sub_cat2")
-        val lstOccupation: MutableList<String> = ArrayList()
-        lstOccupation.add(_context.getString(R.string.ss_Occupation))
-        lstOccupation.add("occupation1")
-        lstOccupation.add("occupation2")
-        val lstActivity: MutableList<String> = ArrayList()
-        lstActivity.add(_context.getString(R.string.ss_activity))
-        lstActivity.add("activity1")
-        lstActivity.add("activity2")
-        val lstBplace: MutableList<String> = ArrayList()
-        lstBplace.add(_context.resources.getString(R.string.ss_bplace))
-        lstBplace.add("bplace1")
-        lstBplace.add("bplace2")*/
-
-        /*birthPlaceAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstBplace)
-        birthPlaceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        categoryAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstCategory)
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        subcatAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstSubCat)
-        subcatAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        occupationAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstOccupation)
-        occupationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        curActivityAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstActivity)
-        curActivityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)*/
-        /*surnameAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstSurname)
-        surnameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        samajAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstSamaj)
-        samajAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        maritalAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstMarital)
-        maritalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        cityAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstCity)
-        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        genderAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstGender)
-        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)*/
-
-        /*mosadAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstMosad)
-        mosadAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        educationAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstEducation)
-        educationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        gotraAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstGotra)
-        gotraAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        bgAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstBg)
-        bgAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        areaAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstArea)
-        areaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        stateAdapter = ArrayAdapter(_context, android.R.layout.simple_spinner_item, lstState)
-        stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)*/
     }
 }

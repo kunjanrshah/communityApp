@@ -126,6 +126,9 @@ class DashboardRepository(
 
     private fun saveState(states: List<States>) {
         Coroutines.io {
+            /*val lstState=ArrayList<States>()
+            lstState.add("")
+            lstState.addAll(states)*/
             db.getStatesDao().saveAllStates(states)
         }
     }

@@ -2,6 +2,7 @@ package com.krs.community.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.lazyDeferred
 import com.krs.community.interfaces.EditMemberListener
@@ -35,9 +36,11 @@ class ProfileDetailViewModel(
 
     var selectedLastNameId=0
     lateinit var lstLastNameId:List<Int>
+
     val lastName by lazyDeferred {
         mProfileDetailRepository.getLastNameById(selectedLastNameId)
     }
+
     val lstLastName by lazyDeferred {
         mProfileDetailRepository.getLastName()
     }
@@ -159,6 +162,50 @@ class ProfileDetailViewModel(
     }
     val occupationIds by lazyDeferred {
         mProfileDetailRepository.getOccupationId()
+    }
+
+    suspend fun getActivityIdByName(name:String):Int{
+        return mProfileDetailRepository.getActivityIdByName(name)
+    }
+
+    suspend fun getOccupationIdByName(name:String):Int{
+        return mProfileDetailRepository.getOccupationIdByName(name)
+    }
+
+    suspend fun getSubCategoryIdByName(name:String):Int{
+        return mProfileDetailRepository.getSubCategoryIdByName(name)
+    }
+
+    suspend fun getCategoryIdByName(name:String):Int{
+        return mProfileDetailRepository.getCategoryIdByName(name)
+    }
+
+    suspend fun getGotraIdByName(name:String):Int{
+        return mProfileDetailRepository.getGotraIdByName(name)
+    }
+
+    suspend fun getEducationIdByName(name:String):Int{
+        return mProfileDetailRepository.getEducationIdByName(name)
+    }
+
+    suspend fun getstateIdByName(name:String):Int{
+        return mProfileDetailRepository.getstateIdByName(name)
+    }
+
+    suspend fun getCityIdByName(name:String):Int{
+        return mProfileDetailRepository.getCityIdByName(name)
+    }
+
+    suspend fun getNativeIdByName(name:String):Int{
+        return mProfileDetailRepository.getNativeIdByName(name)
+    }
+
+    suspend fun getLocalCommunityId(name:String):Int{
+        return mProfileDetailRepository.getLocalCommunityId(name)
+    }
+
+    suspend fun getIdByLastName(name:String):Int{
+        return mProfileDetailRepository.getIdByLastName(name)
     }
 
     suspend fun getCityNamebyState(id:Int):List<String>{

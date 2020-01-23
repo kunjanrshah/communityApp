@@ -36,6 +36,14 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
+
+    suspend fun getOccupationIdByName(name: String): Int {
+        return withContext(Dispatchers.IO) {
+            db.getOccupationDao().getOccupationIdByName(name)
+        }
+    }
+
+
     suspend fun getOccupationById(id: Int): LiveData<String> {
         return withContext(Dispatchers.IO) {
             db.getOccupationDao().getOccupationById(id)
@@ -60,6 +68,14 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
+    suspend fun getSubCategoryIdByName(name: String): Int {
+        return withContext(Dispatchers.IO) {
+            db.getBusinessSubCategoryDao().getSubCategoryIdByName(name)
+        }
+    }
+
+
+
     suspend fun getBusinessSubCategoryIds(): LiveData<List<Int>> {
         return withContext(Dispatchers.IO) {
             db.getBusinessSubCategoryDao().getBusinessSubCategoryIds()
@@ -69,6 +85,12 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
     suspend fun getBusinessCategoryNames(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getBusinessCategoryDao().getBusinessCategorys()
+        }
+    }
+
+    suspend fun getCategoryIdByName(name: String): Int {
+        return withContext(Dispatchers.IO) {
+            db.getBusinessCategoryDao().getCategoryIdByName(name)
         }
     }
 
@@ -90,6 +112,13 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
+
+    suspend fun getGotraIdByName(name: String): Int {
+        return withContext(Dispatchers.IO) {
+            db.getGotraDao().getGotraIdByName(name)
+        }
+    }
+
     suspend fun getGotraById(id: Int): LiveData<String> {
         return withContext(Dispatchers.IO) {
             db.getGotraDao().getGotraById(id)
@@ -108,6 +137,13 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
+
+    suspend fun getActivityIdByName(name: String): Int {
+        return withContext(Dispatchers.IO) {
+            db.getCurrentActivityDao().getActivityIdByName(name)
+        }
+    }
+
     suspend fun getActivityById(id: Int): LiveData<String> {
         return withContext(Dispatchers.IO) {
             db.getCurrentActivityDao().getCurrentActivityById(id)
@@ -123,6 +159,13 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
     suspend fun getEducationNames(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getEducationDao().getEducations()
+        }
+    }
+
+
+    suspend fun getEducationIdByName(name: String): Int {
+        return withContext(Dispatchers.IO) {
+            db.getEducationDao().getEducationIdByName(name)
         }
     }
 
@@ -150,6 +193,14 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
+    suspend fun getNativeIdByName(name: String): Int {
+        return withContext(Dispatchers.IO) {
+            db.getNativeDao().getNativeIdByName(name)
+        }
+    }
+
+
+
     suspend fun getNativeIds(): LiveData<List<Int>> {
         return withContext(Dispatchers.IO) {
             db.getNativeDao().getNativeIds()
@@ -173,6 +224,15 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
             db.getRelationsDao().getRelationIds()
         }
     }
+
+
+
+    suspend fun getIdByLastName(name: String): Int {
+        return withContext(Dispatchers.IO) {
+            db.getLastNameDao().getIdByLastName(name)
+        }
+    }
+
     suspend fun getLastNameById(id: Int): LiveData<String> {
         return withContext(Dispatchers.IO) {
             db.getLastNameDao().getLastNameById(id)
@@ -196,11 +256,25 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
+    suspend fun getLocalCommunityId(name:String): Int {
+        return withContext(Dispatchers.IO) {
+            db.getLocalCommunityDao().getLocalCommunityId(name)
+        }
+    }
+
     suspend fun getcityNameById(id: Int): LiveData<String> {
         return withContext(Dispatchers.IO) {
             db.getCityDao().getcityNameById(id)
         }
     }
+
+    suspend fun getCityIdByName(name: String): Int {
+        return withContext(Dispatchers.IO) {
+            db.getCityDao().getcityIdByName(name)
+        }
+    }
+
+
 
     suspend fun getListCityName(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
@@ -226,6 +300,13 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
     suspend fun getCityId(name:String): LiveData<Int> {
         return withContext(Dispatchers.IO) {
             db.getCityDao().getCityIdByName(name)
+        }
+    }
+
+
+    suspend fun getstateIdByName(name: String): Int {
+        return withContext(Dispatchers.IO) {
+            db.getStatesDao().getstateIdByName(name)
         }
     }
 

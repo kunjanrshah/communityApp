@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.krs.community.entities.LocalCommunity
-import com.krs.community.entities.SubCommunity
+
 
 @Dao
 interface LocalCommunityDao {
@@ -19,6 +19,9 @@ interface LocalCommunityDao {
 
     @Query("SELECT name FROM LocalCommunity WHERE id=:id")
     fun getLocalCommunity(id:String) : String
+
+    @Query("SELECT id FROM LocalCommunity WHERE name=:name")
+    fun getLocalCommunityId(name:String) : Int
 
     @Query("SELECT id FROM LocalCommunity WHERE id NOT IN (:Ids)")
     fun getRemovedLocalCommunityIds(Ids: List<String>) : List<Int>

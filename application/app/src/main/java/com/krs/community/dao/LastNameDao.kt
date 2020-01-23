@@ -18,7 +18,7 @@ interface LastNameDao {
     fun getLastNameIds() : LiveData<List<Int>>
 
     @Query("SELECT id FROM LastName WHERE name == :name")
-    fun getIdByLastName(name:String) : LiveData<Int>
+    fun getIdByLastName(name:String) : Int
 
     @Query("SELECT id FROM LastName WHERE name == :name")
     fun getIdOfLastName(name:String) : Int
