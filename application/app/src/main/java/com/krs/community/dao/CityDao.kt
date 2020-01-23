@@ -20,6 +20,8 @@ interface CityDao {
     @Query("SELECT name FROM City WHERE id == :id")
     fun getcityNameById(id:Int) : LiveData<String>
 
+    @Query("SELECT id FROM City WHERE name == :name")
+    fun getcityIdByName(name:String) : Int
 
     @Query("SELECT name FROM City WHERE id == :id")
     fun getcityName(id:Int) : String

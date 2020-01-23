@@ -28,4 +28,9 @@ interface BusinessCategoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllBusinessCategory(businessCategory : List<BusinessCategory>)
+
+
+    @Query("SELECT id FROM BusinessCategory WHERE name == :name")
+    fun getCategoryIdByName(name:String) : Int
+
 }

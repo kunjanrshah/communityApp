@@ -26,6 +26,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:singleLine="true"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/border"
                 android:hint="Profile Created"
                 android:paddingLeft="10dp" />
@@ -35,6 +37,8 @@
                 android:id="@+id/edt_updated"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:hint="Profile Udpated"
@@ -44,6 +48,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
                 android:text="Profile updatation Percentage"
                 android:layout_height="wrap_content" />
             <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
@@ -71,6 +77,8 @@
                     android:layout_width="match_parent"
                     android:layout_weight="1"
                     android:text="0%"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/montserrat_semibold"
                     android:layout_height="wrap_content" />
 
                 <TextView
@@ -78,10 +86,11 @@
                     android:layout_width="100dp"
                     android:text="100%"
                     android:gravity="right"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/montserrat_semibold"
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
-
 
         </LinearLayout>
     </LinearLayout>

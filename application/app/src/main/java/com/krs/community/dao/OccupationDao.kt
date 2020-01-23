@@ -20,6 +20,9 @@ interface OccupationDao {
     @Query("SELECT name FROM Occupations WHERE id == :id")
     fun getOccupationById(id:Int) : LiveData<String>
 
+    @Query("SELECT id FROM Occupations WHERE name == :name")
+    fun getOccupationIdByName(name:String) : Int
+
     @Query("SELECT id FROM Occupations WHERE id NOT IN (:Ids)")
     fun getRemovedOccupationIds(Ids: List<String>) : List<Int>
 

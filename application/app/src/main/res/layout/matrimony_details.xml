@@ -27,24 +27,34 @@
                 android:singleLine="true"
                 android:background="@drawable/border"
                 android:hint="Birth Time"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="14sp"
                 android:paddingLeft="10dp" />
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/sp_birth_place"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <EditText
                 android:layout_marginTop="10dp"
-                android:text="BirthPlace" />
+                android:id="@+id/edt_birth_place"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:singleLine="true"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="14sp"
+                android:background="@drawable/border"
+                android:hint="BirthPlace"
+                android:paddingLeft="10dp" />
+
 
             <CheckBox
-                android:textSize="18sp"
                 android:id="@+id/chk_is_spect"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="16sp"
                 android:text="is Spectacles?" />
             <CheckBox
-                android:textSize="18sp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="16sp"
                 android:id="@+id/chk_is_shani"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,7 +62,8 @@
                 android:text="is Shani?" />
 
             <CheckBox
-                android:textSize="18sp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="16sp"
                 android:id="@+id/chk_is_mangal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -78,6 +89,8 @@
                         android:singleLine="true"
                         android:background="@drawable/border"
                         android:hint="Height"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:textSize="14sp"
                         android:paddingLeft="10dp" />
 
                     <TextView
@@ -85,6 +98,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:text="Meter"
+                        android:fontFamily="@font/montserrat_regular"
                         android:textSize="16sp" />
                 </LinearLayout>
 
@@ -100,6 +114,8 @@
                         android:singleLine="true"
                         android:background="@drawable/border"
                         android:hint="Weight"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:textSize="14sp"
                         android:paddingLeft="10dp" />
 
                     <TextView
@@ -107,6 +123,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:text="Kg"
+                        android:fontFamily="@font/montserrat_regular"
                         android:textSize="16sp" />
                </LinearLayout>
             </LinearLayout>

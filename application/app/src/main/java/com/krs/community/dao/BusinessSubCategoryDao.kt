@@ -20,6 +20,9 @@ interface BusinessSubCategoryDao {
     @Query("SELECT name FROM BusinessSubCategory WHERE id == :id")
     fun getBusinessSubCategoryById(id:Int) : LiveData<String>
 
+    @Query("SELECT id FROM BusinessSubCategory WHERE name == :name")
+    fun getSubCategoryIdByName(name:String) : Int
+
     @Query("SELECT id FROM BusinessSubCategory WHERE id NOT IN (:Ids)")
     fun getRemovedSubCategoryIds(Ids: List<String>) : List<Int>
 

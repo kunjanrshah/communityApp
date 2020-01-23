@@ -20,6 +20,9 @@ interface NativeDao {
     @Query("SELECT name FROM Native WHERE id == :id")
     fun getNativeById(id:Int) : LiveData<String>
 
+    @Query("SELECT id FROM Native WHERE name == :name")
+    fun getNativeIdByName(name:String) : Int
+
     @Query("SELECT id FROM Native WHERE id NOT IN (:Ids)")
     fun getRemovedNativeIds(Ids: List<String>) : List<Int>
 

@@ -28,4 +28,8 @@ interface GotraDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllGotra(gotra : List<Gotra>)
+
+    @Query("SELECT id FROM Gotra WHERE name == :name")
+    fun getGotraIdByName(name:String) : Int
+
 }

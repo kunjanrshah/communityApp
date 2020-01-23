@@ -28,4 +28,8 @@ interface EducationDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllEducation(educations : List<Educations>)
+
+
+    @Query("SELECT id FROM Educations WHERE name == :name")
+    fun getEducationIdByName(name:String) : Int
 }
