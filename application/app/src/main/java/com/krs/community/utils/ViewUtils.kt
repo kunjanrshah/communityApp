@@ -83,7 +83,9 @@ fun handleCropResult(result: Intent, context: Context, image: ImageView) {
 
         try {
 
-            val f = File(resultUri.path.toString())
+            val uploadImage = File(resultUri.path.toString())
+
+
 
             /*runOnUiThread {
                 var bmp1: Bitmap? = null

@@ -1,15 +1,22 @@
 package com.krs.community.viewmodel
 
 import android.app.Application
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
 import com.krs.community.app.lazyDeferred
 import com.krs.community.interfaces.EditMemberListener
+import com.krs.community.interfaces.ImageUploadListener
 import com.krs.community.repositories.ProfileDetailRepository
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
 import kotlinx.coroutines.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
 
 class ProfileDetailViewModel(
         private val mProfileDetailRepository: ProfileDetailRepository,
@@ -20,9 +27,10 @@ class ProfileDetailViewModel(
 
     var TAG: String = ProfileDetailViewModel::class.java.simpleName
     lateinit var mEditMemberListener: EditMemberListener
+    lateinit var mImageUploadListener: ImageUploadListener
 
-    var selectedRelationId=0
-    lateinit var lstRelationId:List<Int>
+    var selectedRelationId = 0
+    lateinit var lstRelationId: List<Int>
     val relationName by lazyDeferred {
         mProfileDetailRepository.getRelationById(selectedRelationId)
     }
@@ -33,8 +41,8 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getRelationIds()
     }
 
-    var selectedLastNameId=0
-    lateinit var lstLastNameId:List<Int>
+    var selectedLastNameId = 0
+    lateinit var lstLastNameId: List<Int>
     val lastName by lazyDeferred {
         mProfileDetailRepository.getLastNameById(selectedLastNameId)
     }
@@ -49,8 +57,8 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getLocalCommName()
     }
 
-    var selectedStateId=0
-    lateinit var lstStateId:List<Int>
+    var selectedStateId = 0
+    lateinit var lstStateId: List<Int>
     val stateName by lazyDeferred {
         mProfileDetailRepository.getstateNameById(selectedStateId)
     }
@@ -61,8 +69,8 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getStateIds()
     }
 
-    var selectedCityId:Int=0
-    lateinit var selectedCityName:String
+    var selectedCityId: Int = 0
+    lateinit var selectedCityName: String
     val cityName by lazyDeferred {
         mProfileDetailRepository.getcityNameById(selectedCityId)
     }
@@ -76,9 +84,8 @@ class ProfileDetailViewModel(
     }
 
 
-
-    var selectedNativeId=0
-    lateinit var lstNativeId:List<Int>
+    var selectedNativeId = 0
+    lateinit var lstNativeId: List<Int>
     val nativeName by lazyDeferred {
         mProfileDetailRepository.getNativeNameById(selectedNativeId)
     }
@@ -89,8 +96,8 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getNativeIds()
     }
 
-    var selectedEducationId=0
-    lateinit var lstEducationId:List<Int>
+    var selectedEducationId = 0
+    lateinit var lstEducationId: List<Int>
     val educationName by lazyDeferred {
         mProfileDetailRepository.getEducationById(selectedEducationId)
     }
@@ -101,8 +108,8 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getEducationIds()
     }
 
-    var selectedActivityId=0
-    lateinit var lstActivityId:List<Int>
+    var selectedActivityId = 0
+    lateinit var lstActivityId: List<Int>
     val activityName by lazyDeferred {
         mProfileDetailRepository.getActivityById(selectedActivityId)
     }
@@ -113,8 +120,8 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getActivityIds()
     }
 
-    var selectedGotraId=0
-    lateinit var lstGotraId:List<Int>
+    var selectedGotraId = 0
+    lateinit var lstGotraId: List<Int>
     val gotraName by lazyDeferred {
         mProfileDetailRepository.getGotraById(selectedGotraId)
     }
@@ -125,8 +132,8 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getGotraIds()
     }
 
-    var selectedBusinessCategoryId=0
-    lateinit var lstBusinessCategoryId:List<Int>
+    var selectedBusinessCategoryId = 0
+    lateinit var lstBusinessCategoryId: List<Int>
     val businessCategoryName by lazyDeferred {
         mProfileDetailRepository.getBusinessCategoryById(selectedBusinessCategoryId)
     }
@@ -137,8 +144,8 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getBusinessCategoryIds()
     }
 
-    var selectedBusinessSubCategoryId=0
-    lateinit var lstBusinessSubCategoryId:List<Int>
+    var selectedBusinessSubCategoryId = 0
+    lateinit var lstBusinessSubCategoryId: List<Int>
     val businessSubCategoryName by lazyDeferred {
         mProfileDetailRepository.getBusinessSubCategoryById(selectedBusinessCategoryId)
     }
@@ -149,8 +156,8 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getBusinessSubCategoryIds()
     }
 
-    var selectedOccupationId=0
-    lateinit var lstOccupationId:List<Int>
+    var selectedOccupationId = 0
+    lateinit var lstOccupationId: List<Int>
     val occupationName by lazyDeferred {
         mProfileDetailRepository.getOccupationById(selectedOccupationId)
     }
@@ -161,8 +168,8 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getOccupationId()
     }
 
-    suspend fun getCityNamebyState(id:Int):List<String>{
-       return mProfileDetailRepository.getCityName(id)
+    suspend fun getCityNamebyState(id: Int): List<String> {
+        return mProfileDetailRepository.getCityName(id)
     }
 
     fun getMemberByFilters(jsonObject: JsonObject) {
@@ -197,16 +204,77 @@ class ProfileDetailViewModel(
         }
     }
 
-    fun updateProfile(profile: JsonObject,isEdit:Boolean) {
+    fun uploadImage(file: File, id: String, user_id: String, access_token: String) {
+
+        job_by_update = Job()
+        job_by_update.let { thejob ->
+
+            CoroutineScope(Dispatchers.IO + thejob).launch {
+                try {
+                    val requestFile = RequestBody.create(
+                            MediaType.parse("image/*"),
+                            file
+                    )
+                    val body = MultipartBody.Part.createFormData("uploaded_file", file.name, requestFile)
+                    val id = RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            id)
+
+
+                    val user_id = RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            user_id)
+
+                    val access_token = RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            access_token)
+
+                    val response: JsonObject = mProfileDetailRepository.uploadProfileImage(body, id, user_id, access_token)
+
+
+                    response.let {
+                        withContext(Dispatchers.Main) {
+                            Log.d("Response", response.toString());
+//                            {"data":{"user_id":"39","profile":"487728a63f914e63b5198c67004d91e9.jpg"},"success":"success","message":"File uploaded successfully!!!"}
+                            if (response.get("success").asString.equals("success")) {
+                                mImageUploadListener.getResult(response.getAsJsonObject("data").get("profile").asString)
+                            } else {
+                                mImageUploadListener.onFailure(response.get("message").asString)
+                            }
+                            response.get("data")
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                } catch (e: ApiException) {
+                    e.message?.let {
+                        mImageUploadListener.onFailure(it)
+                    }
+                } catch (e: NoInternetException) {
+                    e.message?.let {
+                        mImageUploadListener.onFailure(it)
+                    }
+                } catch (e: Exception) {
+                    e.message?.let {
+                        mImageUploadListener.onFailure(it)
+                    }
+                }
+                thejob.complete()
+            }
+        }
+
+    }
+
+    fun updateProfile(profile: JsonObject, isEdit: Boolean) {
         job_by_update = Job()
         job_by_update.let { thejob ->
 
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
                     val response: UpdateProfileResponse
-                    if(isEdit){
+                    if (isEdit) {
                         response = mProfileDetailRepository.updateProfile(profile)
-                    }else{
+                    } else {
                         response = mProfileDetailRepository.addProfile(profile)
                     }
 

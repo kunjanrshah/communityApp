@@ -28,12 +28,14 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.app.AppController
 import com.krs.community.app.AppController.Companion.mApplication
 import com.krs.community.bkservice.ProcessMainClass
 import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
 import com.krs.community.databinding.ActivityProfileDetailBinding
 import com.krs.community.fragments.*
 import com.krs.community.interfaces.EditMemberListener
+import com.krs.community.interfaces.ImageUploadListener
 import com.krs.community.model.Member
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
@@ -48,9 +50,10 @@ import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
+import java.io.File
 
 
-class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, UCropFragmentCallback, Listener, LocationData.AddressCallBack {
+class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, UCropFragmentCallback, Listener, LocationData.AddressCallBack , ImageUploadListener {
 
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: ProfileDetailViewModelFactory by instance()
@@ -137,10 +140,11 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         logger = Logger(TAG)
         profileDetailViewModel = ViewModelProviders.of(this, factory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener = this
-
+        profileDetailViewModel.mImageUploadListener = this
         member = intent.getSerializableExtra(getString(R.string.member)) as Member?
         scanId=intent.getStringExtra(getString(R.string.scanId))
         userId=Guru.getString(getString(R.string.user_id), "")
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(this, R.color.mdtp_white, false)
@@ -270,7 +274,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
 
             if (binding.tvSave.text.toString().toLowerCase().equals("save")) {
-                Utility.startSweetProgress(this, "Updating your profie", "Please wait...")
+                Utility.startSweetProgress(this, "Updating your profile", "Please wait...")
                 jsonObject.put(getString(R.string.id), member?.id)
                 val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
                 profileDetailViewModel.updateProfile(profile, true)
@@ -422,12 +426,25 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         }
     }
 
-
-    override fun getFailure(message: String) {
+    override suspend fun getFailure(message: String) {
         Utility.hideSweetProgress()
         binding.viewpager.snackbar("Something went wrong!", Snackbar.LENGTH_LONG)
         Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
     }
+
+    override fun getResult(profile: String) {
+        Utility.hideSweetProgress()
+        member?.profilePic= profile
+        Guru.putString(getString(R.string.loginUser),Gson().toJson(member))
+        Utility.displaySnackBarWithBottomMargin(binding.llParent, "Profile updated!")
+    }
+
+    override suspend fun onFailure(message: String) {
+        Utility.hideSweetProgress()
+        binding.viewpager.snackbar("Something went wrong!", Snackbar.LENGTH_LONG)
+        Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
+    }
+
 
     private fun setDistance() {
         if (member?.isLocationEnable == "1") {
@@ -464,10 +481,28 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             } else if (requestCode == UCrop.REQUEST_CROP) {
                 if (isProfileImage) {
                     isProfileImage = false
-                    data?.let { handleCropResult(it, this, binding.imgProfile) }
-                } else {
-                    professionalDetailsFragment.onActivityResult(requestCode, resultCode, data)
-                }
+                    data?.let {
+                        val resultUri = UCrop.getOutput(it)
+                        if (resultUri != null) {
+                            try {
+                                Glide.with(AppController.mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
+                            } catch (e: Exception) {
+                                e.message
+                            }
+                            com.krs.community.utils.logger.debug("resultUri: $resultUri")
+
+                            try {
+
+                                val uploadImage = File(resultUri.path.toString())
+                                Utility.startSweetProgress(this, "Updating your profile", "Please wait...")
+                                profileDetailViewModel.uploadImage(uploadImage,userId!!, member?.id.toString(), Guru.getString(getString(R.string.access_token), "").toString())
+                            }catch (e:Exception){
+                            e.printStackTrace();}
+
+                        } else {
+                            professionalDetailsFragment.onActivityResult(requestCode, resultCode, data)
+                        }}
+                    }
             } else if (requestCode == EasyWayLocation.LOCATION_SETTING_REQUEST_CODE) {
                 easyWayLocation.onActivityResult(resultCode)
             }

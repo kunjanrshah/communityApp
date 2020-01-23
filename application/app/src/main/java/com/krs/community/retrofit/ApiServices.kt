@@ -6,9 +6,13 @@ import com.krs.community.app.AppController
 import com.krs.community.model.*
 import com.krs.community.responses.*
 import com.krs.community.utils.AppConstants
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 
 interface ApiServices {
 
@@ -115,6 +119,9 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_LOGIN)
     suspend fun getUserLogin(@Body request: AppConstants.LoginRequest): Response<LoginResponse>
 
+    @Multipart
+    @POST(AppConstants.UrlPath.UPLOAD_PROFILE_IMAGE)
+    suspend fun uploadProfileImage(@Part file: MultipartBody.Part, @Part("id")id: RequestBody, @Part("user_id") user_id: RequestBody,@Part("access_token") access_token: RequestBody): Response<JsonObject>
 
     companion object{
         operator fun invoke():ApiServices{

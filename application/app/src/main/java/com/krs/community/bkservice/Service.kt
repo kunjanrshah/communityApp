@@ -132,6 +132,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
 
 
     override fun locationOn() {}
+
     override fun currentLocation(location: Location) {
         Log.e("Location Service: ", "latitude: " + location.latitude + " longitude: " + location.longitude)
         getLocationDetail.getAddress(location.latitude, location.longitude, getString(R.string.map_api_key))

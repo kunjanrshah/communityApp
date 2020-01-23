@@ -282,7 +282,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener 
         Utility.displaySnackBarWithBottomMargin(binding.llMain, "Office location updated!")
     }
 
-    override fun getFailure(message: String) {
+    override suspend fun getFailure(message: String) {
         Utility.hideSweetProgress()
         Utility.displaySnackBarWithBottomMargin(binding.llMain, message)
     }

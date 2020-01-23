@@ -5,6 +5,6 @@
 5    android:versionName="0.0.9" >
 6
 7    <uses-sdk android:minSdkVersion="16" />
-7-->/home/kunjan/StudioProjects/DemoApp/application/slycalendarview/src/main/AndroidManifest.xml
+7-->/Users/apple/Desktop/Tanvi/Upwork/community_management_and_administration-/application/slycalendarview/src/main/AndroidManifest.xml
 8
 9</manifest>

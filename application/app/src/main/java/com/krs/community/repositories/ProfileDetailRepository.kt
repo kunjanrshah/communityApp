@@ -11,6 +11,8 @@ import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.retrofit.ApiServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class ProfileDetailRepository (private val api: ApiServices,private val db:AppDatabase
 ): SafeApiRequest()  {
@@ -23,6 +25,11 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
+    suspend fun uploadProfileImage(profile: MultipartBody.Part,id : RequestBody,user_id : RequestBody,access_token:RequestBody): JsonObject {
+        return apiRequest{
+            api.uploadProfileImage(profile,id,user_id,access_token);
+        }
+    }
     suspend fun addProfile(profile: JsonObject): UpdateProfileResponse {
         return apiRequest{
             api.addMember(profile)

@@ -321,6 +321,7 @@ public class AppConstants {
         String GET_FAMILY_MEMBER = "GetFamilyMembers";
         String GET_REGISTER = "Registration";
         String GET_LOGIN = "Login";
+        String UPLOAD_PROFILE_IMAGE = "Upload";
         String GET_FORGOT_PASS = "ForgotPassword";
         String GET_CHANGE_PASS = "ChangePassword";
     }

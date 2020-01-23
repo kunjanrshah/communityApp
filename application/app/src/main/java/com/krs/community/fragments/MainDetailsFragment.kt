@@ -358,7 +358,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         Utility.displaySnackBarWithBottomMargin(binding.llMain, "Home location updated!")
     }
 
-    override fun getFailure(message: String) {
+    override suspend fun getFailure(message: String) {
         Utility.displaySnackBarWithBottomMargin(binding.llMain, message)
     }
 }
