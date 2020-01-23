@@ -1,6 +1,7 @@
 package com.krs.community.activity
 
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,11 @@ import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.easywaylocation.EasyWayLocation
 import com.example.easywaylocation.GetLocationDetail
 import com.example.easywaylocation.Listener
@@ -48,7 +54,7 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
     private val factory: DashboardViewModelFactory by instance()
     private lateinit var easyWayLocation: EasyWayLocation
     private lateinit var request: LocationRequest
-
+    private lateinit var  menu: Menu
     companion object {
         var stop: Boolean = false
         lateinit var binding:ActivityDashboardBinding
@@ -180,6 +186,10 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
         } else {
             Utility.requestLocationPermission(this)
         }
+
+
+            loadProfile();
+
     }
 
     override fun onPause() {
@@ -269,8 +279,29 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu_dashboard, menu)
+        this.menu = menu;
+        loadProfile();
         return true
     }
+    fun loadProfile(){
+        val memberString = Guru.getString(getString(R.string.loginUser), "")
+        val member = Gson().fromJson(memberString, Member::class.java)
+        val str=resources.getString(R.string.base_url_thumb)+member?.profilePic
+
+        Glide.with(this)
+                .load(str)
+                .apply(RequestOptions.circleCropTransform()).thumbnail(0.5f)
+                .into(object : CustomTarget<Drawable>() {
+                    override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                        menu.findItem(R.id.action_profile).setIcon(resource)
+                    }
+                    override fun onLoadCleared(placeholder: Drawable?) {
+
+                    }
+
+                })
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
