@@ -54,7 +54,7 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
     private val factory: DashboardViewModelFactory by instance()
     private lateinit var easyWayLocation: EasyWayLocation
     private lateinit var request: LocationRequest
-    private lateinit var  menu: Menu
+    private var  menu: Menu?=null
     companion object {
         var stop: Boolean = false
         lateinit var binding:ActivityDashboardBinding
@@ -71,16 +71,12 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
         binding = DataBindingUtil.setContentView(this@DashboardActivity, R.layout.activity_dashboard)
         dashboardViewModel = ViewModelProviders.of(this, factory).get(DashboardViewModel::class.java)
 
-        //  val from= intent.getStringExtra("from")
-        //  val id= intent.getStringExtra("id")
-
         if (Guru.getString(getString(R.string.user_id), "")!!.isEmpty()) {
             val mIntent = Intent(this@DashboardActivity, SplashActivity::class.java)
             startActivity(mIntent)
             finish()
             Utility.fade(this)
         }
-
 
         setSupportActionBar(binding.toolbar as Toolbar)
         (binding.toolbar as Toolbar).setTitleTextColor(resources.getColor(R.color.colorPrimary))
@@ -173,7 +169,7 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
             Utility.requestLocationPermission(this)
         }
 
-        //getMasterList()
+        getMasterList()
         Utility.movetoFragment(this@DashboardActivity, DashboardFragment())
         //spaceNavigationView.showIconOnly();
     }
@@ -186,10 +182,7 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
         } else {
             Utility.requestLocationPermission(this)
         }
-
-
-            loadProfile();
-
+        loadProfile()
     }
 
     override fun onPause() {
@@ -279,11 +272,12 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu_dashboard, menu)
-        this.menu = menu;
-        loadProfile();
+        this.menu = menu
+        loadProfile()
         return true
     }
-    fun loadProfile(){
+
+    private fun loadProfile(){
         val memberString = Guru.getString(getString(R.string.loginUser), "")
         val member = Gson().fromJson(memberString, Member::class.java)
         val str=resources.getString(R.string.base_url_thumb)+member?.profilePic
@@ -293,7 +287,7 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
                 .apply(RequestOptions.circleCropTransform()).thumbnail(0.5f)
                 .into(object : CustomTarget<Drawable>() {
                     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                        menu.findItem(R.id.action_profile).setIcon(resource)
+                        menu?.findItem(R.id.action_profile)?.setIcon(resource)
                     }
                     override fun onLoadCleared(placeholder: Drawable?) {
 

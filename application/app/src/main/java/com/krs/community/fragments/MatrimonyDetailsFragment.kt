@@ -42,7 +42,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
 
         binding.edtAbout.setText(member.aboutMe)
         binding.edtFbUrl.setText(member.facebookProfile)
-        binding.txtBtime.setText(member.birthTime)
+        binding.txtBtime.text = member.birthTime
         binding.edtBplace.setText(member.birthPlace)
         binding.edtHobby.setText(member.hobby)
         binding.edtExpectation.setText(member.expectation)

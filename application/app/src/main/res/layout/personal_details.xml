@@ -21,44 +21,7 @@
             android:layout_marginBottom="10dp"
             android:orientation="vertical">
 
-
-            <EditText
-                android:id="@+id/edt_bdate"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:background="@drawable/border"
-                android:hint="Birth Date"
-                android:textSize="14sp"
-                android:fontFamily="@font/montserrat_regular"
-                android:singleLine="true"
-                android:paddingLeft="10dp" />
-
-            <EditText
-                android:id="@+id/edt_mdate"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:singleLine="true"
-                android:textSize="14sp"
-                android:fontFamily="@font/montserrat_regular"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/border"
-                android:hint="Marriage Date"
-                android:paddingLeft="10dp" />
-
-
-            <EditText
-                android:id="@+id/edt_mosaad"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:singleLine="true"
-                android:layout_marginTop="10dp"
-                android:textSize="14sp"
-                android:fontFamily="@font/montserrat_regular"
-                android:background="@drawable/border"
-                android:hint="Mosaad"
-                android:paddingLeft="10dp" />
-
-            <RelativeLayout
+             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_gravity="center|bottom"
@@ -147,6 +110,77 @@
                     android:singleLine="true"
                     android:textColor="@color/black1" />
             </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/tv_bdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:hint="Birth Date"
+                    android:gravity="center_vertical"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:singleLine="true"
+                    android:paddingLeft="10dp" />
+
+                <ImageView
+                    android:id="@+id/img_bdate_close"
+                    android:layout_marginRight="15dp"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/cancel_popup_gray"  />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/tv_mdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:hint="Marriage Date"
+                    android:gravity="center_vertical"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:singleLine="true"
+                    android:paddingLeft="10dp" />
+
+                <ImageView
+                    android:id="@+id/img_mdate_close"
+                    android:layout_marginRight="15dp"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/cancel_popup_gray"
+                    />
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/edt_mosaad"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:singleLine="true"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
+                android:background="@drawable/border"
+                android:hint="Wife's Native"
+                android:paddingLeft="10dp" />
 
             <CheckBox
                 android:textSize="16sp"

@@ -232,7 +232,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         edtFilterName.visibility = View.GONE
 
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
-        ivCancel.setOnClickListener { v -> Utility.movetoFragment(activity, BrowseByCityFragment()) }
+        ivCancel.setOnClickListener { v -> Utility.backNavigation(activity) }
 
         val ivExport = header.findViewById<ImageView>(R.id.iv_export)
         ivExport.setOnClickListener {

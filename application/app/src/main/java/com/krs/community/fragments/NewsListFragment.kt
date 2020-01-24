@@ -70,7 +70,7 @@ class NewsListFragment : Fragment() , KodeinAware,NewsListener {
         val header = LayoutInflater.from(activity).inflate(R.layout.header_news, container, false)
 
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
-        ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
+        ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
 
         adapter = object : ParallaxRecyclerAdapter<News>(lstNews) {
 

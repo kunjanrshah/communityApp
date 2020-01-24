@@ -492,7 +492,6 @@ public class Utility {
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
-
    /* public static String distance(float lat1, float lng1, float lat2, float lng2) {
         double earthRadius = 6371000; //meters
         double dLat = Math.toRadians(lat2 - lat1);
@@ -800,11 +799,11 @@ public class Utility {
 
     public static void backNavigation(Activity activity){
         FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
-        if (fragmentManager.getBackStackEntryCount() > 0) {
+        if (fragmentManager.getBackStackEntryCount() > 1) {
             fragmentManager.popBackStack();
             fade(activity);
         } else {
-            movetoFragment(activity, new DashboardFragment());
+            activity.finish();
         }
     }
 

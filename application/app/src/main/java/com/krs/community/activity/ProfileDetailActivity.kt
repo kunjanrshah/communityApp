@@ -575,4 +575,6 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
     override fun locationData(locationData: LocationData) {
         cur_addr.postValue(locationData.full_address)
     }
+
+
 }

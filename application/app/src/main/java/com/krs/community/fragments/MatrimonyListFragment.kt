@@ -85,7 +85,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         val ivExport= header.findViewById<ImageView>(R.id.iv_export)
         tvRecords= header.findViewById<TextView>(R.id.tvCount)
-        ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
+        ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         val edtSearch = header.findViewById<EditText>(R.id.edtSearch)
         edtSearch.setOnTouchListener { v: View?, event: MotionEvent ->
             val DRAWABLE_RIGHT = 2

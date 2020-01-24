@@ -17,7 +17,6 @@ import com.krs.community.adapter.SmartFilterAdapter
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
-import okhttp3.internal.Internal.instance
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -52,10 +51,17 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
         iv_cancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
         val iv_filter = rootView.findViewById<ImageView>(R.id.iv_filter)
         iv_filter.setOnClickListener { v: View? -> Utility.movetoFragment(activity, FiltersFragment()) }
-        val tv_done = rootView.findViewById<TextView>(R.id.tv_done)
-        tv_done.setOnClickListener { v: View? ->
+
+        val tvClear= rootView.findViewById<TextView>(R.id.tv_clear)
+        tvClear.setOnClickListener {
             Utility.hideKeyboard(activity)
-            Handler().postDelayed({ adapter!!.openBottomSheetDailog() }, 250)
+            adapter?.clearAll()
+        }
+
+        val tvDone = rootView.findViewById<TextView>(R.id.tv_done)
+        tvDone.setOnClickListener { v: View? ->
+            Utility.hideKeyboard(activity)
+            Handler().postDelayed({ adapter?.openBottomSheetDailog() }, 250)
         }
         expandableListView.setOnScrollListener(object : OnScrollObserver() {
             override fun onScrollUp() {
@@ -83,7 +89,7 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
     }
 
     // Setting different listeners to expandablelistview
-    fun setListener() { // This listener will show toast on group click
+    private fun setListener() { // This listener will show toast on group click
         expandableListView.setOnGroupClickListener { listview: ExpandableListView?, view: View?, group_pos: Int, id: Long ->
             if (group_pos == 0 || group_pos == 7) {
                 return@setOnGroupClickListener true
@@ -105,7 +111,7 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
         }
     }
 
-    inner abstract class OnScrollObserver : AbsListView.OnScrollListener {
+    abstract inner class OnScrollObserver : AbsListView.OnScrollListener {
         var last = 0
         var control = true
         abstract fun onScrollUp()

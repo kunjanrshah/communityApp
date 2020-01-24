@@ -232,7 +232,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
         tvCount = header.findViewById<TextView>(R.id.tv_count)
 
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
-        ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
+        ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         val MyLayoutManager = LinearLayoutManager(activity)
         rvAdmins = root.findViewById(R.id.rv_Admins)
         rvAdmins.layoutManager = MyLayoutManager
