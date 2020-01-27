@@ -259,11 +259,11 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener 
 
     }
 
-    override fun getMembers(response: SmartFilterResponse) {
+    override fun getScanResult(response: SmartFilterResponse) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getMessage(response: UpdateProfileResponse) {
+    override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
         Utility.hideSweetProgress()
         val updatedMem = response.member
         member.officeLat=ProfileDetailActivity.cur_lat.value.toString()

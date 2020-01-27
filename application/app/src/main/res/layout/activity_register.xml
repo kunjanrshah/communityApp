@@ -70,39 +70,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <FrameLayout
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/img_profile"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_marginStart="20dp"
-                        android:src="@drawable/man_reg" />
-
-                    <ImageView
-                        android:id="@+id/img_cancel"
-                        android:layout_width="25dip"
-                        android:layout_height="25dip"
-                        android:layout_marginStart="80dp"
-                        android:padding="5dp"
-                        android:src="@drawable/cancel"
-                        tools:ignore="ContentDescription" />
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:fontFamily="@font/montserrat_semibold"
-                        android:gravity="end"
-                        android:layout_marginEnd="10dp"
-                        android:text="@string/register_now"
-                        android:textSize="20sp" />
-
-                </FrameLayout>
-
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:gravity="end"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/register_now"
+                    android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/edt_head_name"
@@ -113,8 +89,9 @@
                     android:layout_marginTop="10dp"
                     android:digits= "@string/only_chars"
                     android:background="@drawable/border"
-                    android:drawableStart="@drawable/man_user"
+                    android:drawableStart="@drawable/user_name"
                     android:drawablePadding="10dp"
+                    android:textSize="16sp"
                     android:text="@={registerviewmodel.fname}"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_name"
@@ -136,13 +113,14 @@
                         android:id="@+id/spinnerLname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:hint="Select Last Name"
+                        android:layout_marginLeft="30dp"
                         android:background="@null"
-                        android:nextFocusDown="@+id/edt_email_id"
+                        android:hint="Last Name"
+                        android:textSize="16sp"
                         android:imeOptions="actionNext"
-                        android:layout_marginLeft="25dp"
+                        android:nextFocusDown="@+id/edt_email_id"
                         android:paddingRight="15dp"
+                        android:singleLine="true"
                         android:textColor="@color/black1"
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
@@ -151,15 +129,42 @@
 
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/register_field_height"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:background="@drawable/gender_gradient_spinner">
 
+                    <com.krs.community.jrspinner.JRSpinner
+                        android:id="@+id/spinnerGender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:hint="Gender"
+                        android:layout_marginLeft="30dp"
+                        android:textSize="16sp"
+                        android:imeOptions="actionNext"
+                        android:nextFocusDown="@+id/edt_email_id"
+                        android:paddingRight="15dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black1"
+                        app:backgroundTint="@color/colorPrimary"
+                        app:jrs_icon_tint="@color/colorPrimary"
+                        app:jrs_multiple="false"
+                        app:jrs_title="Select Last Name" />
+
+                </RelativeLayout>
                 <EditText
                     android:id="@+id/edt_email_id"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/register_field_height"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border"
-                    android:drawableStart="@drawable/close_envelope"
-                    android:drawablePadding="10dp"
+                    android:drawableStart="@drawable/mail"
+                    android:drawablePadding="15dp"
+                    android:textSize="16sp"
                     android:text="@={registerviewmodel.email}"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_email"
@@ -201,15 +206,15 @@
                         android:id="@+id/edt_mobile"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
-                        android:layout_marginStart="5dp"
                         android:background="@drawable/border"
-                        android:drawableStart="@drawable/icon"
-                        android:drawablePadding="10dp"
+                        android:drawableStart="@drawable/ic_phone"
+                        android:drawablePadding="15dp"
                         android:fontFamily="@font/montserrat_regular"
                         android:hint="@string/hint_mobile"
                         android:text="@={registerviewmodel.mobile}"
                         android:inputType="number"
                         android:maxLength="10"
+                        android:textSize="16sp"
                         android:paddingEnd="0dp"
                         android:paddingStart="10dp"
                         android:singleLine="true"
@@ -225,17 +230,18 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/lock"
-                    android:drawableEnd="@drawable/pwd_hide"
-                    android:drawablePadding="10dp"
-                    android:text="@={registerviewmodel.pass}"
+                    android:drawableEnd="@drawable/hide_pass"
+                    android:drawablePadding="15dp"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_password"
+                    android:imeOptions="actionNext"
                     android:inputType="textPassword"
+                    android:nextFocusDown="@+id/edt_cpassword"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:nextFocusDown="@+id/edt_cpassword"
-                    android:imeOptions="actionNext"
+                    android:text="@={registerviewmodel.pass}"
+                    android:textSize="16sp"
                     tools:ignore="Autofill" />
 
                 <EditText
@@ -246,8 +252,9 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/lock"
-                    android:drawableEnd="@drawable/pwd_hide"
-                    android:drawablePadding="10dp"
+                    android:drawableEnd="@drawable/hide_pass"
+                    android:drawablePadding="15dp"
+                    android:textSize="16sp"
                     android:text="@={registerviewmodel.cpass}"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_conform_password"
@@ -272,8 +279,10 @@
                         android:singleLine="true"
                         android:hint="Select State"
                         android:background="@null"
-                        android:paddingLeft="30dp"
+                        android:layout_marginStart="30dp"
                         android:paddingRight="15dp"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/montserrat_regular"
                         android:textColor="@color/black1"
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
@@ -297,9 +306,11 @@
                         android:layout_height="@dimen/register_field_height"
                         android:singleLine="true"
                         android:hint="Select City"
+                        android:layout_marginStart="30dp"
+                        android:fontFamily="@font/montserrat_regular"
                         android:background="@null"
-                        android:paddingLeft="30dp"
                         android:paddingRight="15dp"
+                        android:textSize="16sp"
                         android:textColor="@color/black1"
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
@@ -321,12 +332,12 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/home_address"
-                    android:drawablePadding="10dp"
+                    android:drawablePadding="15dp"
+                    android:textSize="16sp"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_address"
                     android:text="@={registerviewmodel.address}"
                     android:inputType="textCapSentences"
-                    android:paddingEnd="0dp"
                     android:paddingStart="10dp"
                     android:nextFocusDown="@+id/spinnerSub"
                     android:imeOptions="actionNext"
@@ -344,15 +355,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
                         android:singleLine="true"
-                        android:layout_marginLeft="25dp"
                         android:hint="Select Sub Community"
                         android:background="@null"
+                        android:textSize="16sp"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
                         android:textColor="@color/black1"
+                        android:fontFamily="@font/montserrat_regular"
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
+                        android:layout_marginStart="15dp"
                         android:nextFocusDown="@+id/spinnerLocal"
                         android:imeOptions="actionNext"
                         app:jrs_title="Sub Community" />
@@ -372,12 +385,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
                         android:singleLine="true"
-                        android:layout_marginLeft="25dp"
                         android:hint="Select Local Community"
                         android:background="@null"
                         android:paddingLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:paddingRight="15dp"
-
+                        android:fontFamily="@font/montserrat_regular"
+                        android:textSize="16sp"
                         android:textColor="@color/black1"
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
@@ -394,6 +408,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:gravity="center_horizontal"
+                    android:fontFamily="@font/montserrat_regular"
                     android:text="@string/how_to_register"
                     android:textSize="16sp" />
 
@@ -403,6 +418,7 @@
                     android:layout_height="45dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="5dp"
+                    android:textSize="16sp"
                     android:background="@drawable/btn_registration"
                     android:fontFamily="@font/montserrat_semibold"
                     android:gravity="center"

@@ -57,12 +57,7 @@
                         android:fillAfter="false"
                         android:fillEnabled="false">
 
-                        <!--<ImageView
-                            android:id="@+id/icon_profile1"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />-->
-
-                        <com.mostafaaryan.transitionalimageview.TransitionalImageView
+                        <ImageView
                             android:id="@+id/icon_profile1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"

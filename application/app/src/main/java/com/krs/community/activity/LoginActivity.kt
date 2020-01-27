@@ -341,7 +341,12 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             startSMSListener()
             ReceviedOTP=response.otp
         }else{
-            goToDashboardScreen()
+            if(response.success){
+                goToDashboardScreen()
+            }else{
+                Snackbar.make(findViewById(R.id.ll_login), response.message, Snackbar.LENGTH_LONG).show()
+            }
+
         }
     }
 

@@ -145,7 +145,6 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         scanId=intent.getStringExtra(getString(R.string.scanId))
         userId=Guru.getString(getString(R.string.user_id), "")
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(this, R.color.mdtp_white, false)
         }
@@ -173,11 +172,11 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
 
         if(!scanId.isNullOrEmpty()){
             val jsonObject=JSONObject()
-            jsonObject.put("start","0")
-            jsonObject.put("length","1")
+            jsonObject.put(""+mApplication.start,"0")
+            jsonObject.put(""+mApplication.length,"1")
             val jsonObj=JSONObject()
-            jsonObj.put("id",scanId)
-            jsonObject.put("filter_by",jsonObj)
+            jsonObj.put(getString(R.string.id),scanId)
+            jsonObject.put(getString(R.string.filter_by),jsonObj)
             val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
             profileDetailViewModel.getMemberByFilters(updated)
         }
@@ -208,8 +207,6 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             binding.tvDistance.text = "User"
         }
 
-
-
         if (Utility.finePermissionIsGranted(this)) {
             easyWayLocation.startLocation() //calculateDistance()
         } else {
@@ -234,17 +231,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         }
 
         binding.llViewFamily.setOnClickListener {
-
-            val intent = Intent(this, FamilyDetailActivity::class.java)
-            if(member?.headId=="0"){
-                intent.putExtra(getString(R.string.id), member?.id)
-            }else{
-                intent.putExtra(getString(R.string.id), member?.headId)
-            }
-
-            startActivity(intent)
-            finish()
-            Utility.fade(this)
+            goToFamilyDetailActivity()
         }
 
         binding.imgBack.setOnClickListener {
@@ -301,6 +288,21 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         }
     }
 
+    private fun goToFamilyDetailActivity(){
+        val intent = Intent(this, FamilyDetailActivity::class.java)
+        if(member?.headId=="0"){
+            intent.putExtra(getString(R.string.id), member?.id)
+        }else{
+            intent.putExtra(getString(R.string.id), member?.headId)
+        }
+        if(!member?.id.isNullOrEmpty()){
+            startActivity(intent)
+            Utility.fade(this)
+        }else{
+            Utility.displaySnackBarWithBottomMargin(binding.llParent, "Add profile to view family")
+        }
+    }
+
     private fun startLocationService(){
         member?.isLocationEnable="1"
         try{
@@ -346,6 +348,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
     private fun setMemberValues() {
 
         binding.txtTitle.text = "${member?.firstName}'s Profile"
+
         val userId = Guru.getString(getString(R.string.user_id), "")
         if (member?.id == userId || member?.headId == userId) {
             binding.tvSave.visibility = View.VISIBLE
@@ -388,7 +391,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         Utility.hideKeyboard(this)
     }
 
-    override fun getMembers(response: SmartFilterResponse) {
+    override fun getScanResult(response: SmartFilterResponse) {
         if(response.success){
           member = response.members[0]
             val percentage = Utility.calculatePercentage(member)
@@ -397,10 +400,11 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         }
     }
 
-    override fun getMessage(response: UpdateProfileResponse) {
+    override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
         Utility.hideSweetProgress()
         if (response.message.toString().toLowerCase().contains("added")) {
-            binding.llViewFamily.performClick()
+            member?.headId= response.member.headId
+            goToFamilyDetailActivity()
         } else if (response.message.toString().toLowerCase().contains("updated")){
             val member = response.member
             if(!isStopService){
@@ -408,7 +412,10 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
                 setPercentage(percentage)
             }
 
-            if (member.headId == "0") {
+            val memberString = Guru.getString(getString(R.string.loginUser), "")
+            val loginMember = Gson().fromJson(memberString, Member::class.java)
+
+            if (loginMember.id==member.id) {
                 Guru.putString(getString(R.string.loginUser), Gson().toJson(member))
                 Guru.putString(getString(R.string.user_mobile), member.mobile)
             }
@@ -420,7 +427,11 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
                 Toast.makeText(this,response.member.mobile,Toast.LENGTH_LONG).show()
             }else if(!member.emailAddress.isNullOrEmpty()){
                 Toast.makeText(this,response.member.emailAddress,Toast.LENGTH_LONG).show()
-            }else{
+            }
+            else if(!member.memberCode.isNullOrEmpty()){
+                Toast.makeText(this,response.member.memberCode,Toast.LENGTH_LONG).show()
+            }
+            else{
                 Toast.makeText(this,response.message,Toast.LENGTH_LONG).show()
             }
         }

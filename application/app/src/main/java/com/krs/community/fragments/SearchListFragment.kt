@@ -820,6 +820,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
 
     override fun cancelDialog() {
         actionMode?.finish()
+        setLocationDialog?.dismiss()
         changeRoleDialog?.dismiss()
     }
 

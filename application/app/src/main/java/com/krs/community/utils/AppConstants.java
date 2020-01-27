@@ -353,6 +353,7 @@ public class AppConstants {
         String address;
         String sub_community_id;
         String local_community_id;
+        String gender;
 
         public String getLocal_community_id() {
             return local_community_id;
@@ -408,6 +409,14 @@ public class AppConstants {
 
         public void setPlain_password(String plain_password) {
             this.plain_password = plain_password;
+        }
+
+        public String getGender() {
+            return gender;
+        }
+
+        public void setGender(String gender) {
+            this.gender = gender;
         }
 
         public String getState_id() {

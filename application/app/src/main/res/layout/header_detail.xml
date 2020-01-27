@@ -56,12 +56,55 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/imgProfile"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/round_corner_profile"
-                    android:src="@drawable/user" />
+                <RelativeLayout
+                    android:id="@+id/icon_container1"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/icon_back1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fillAfter="false"
+                        android:fillEnabled="false">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/bg_circle" />
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_done_white_24dp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/icon_front1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fillAfter="false"
+                        android:fillEnabled="false">
+
+                        <ImageView
+                            android:id="@+id/icon_profile1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"/>
+
+                        <TextView
+                            android:id="@+id/icon_text1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textColor="@android:color/white"
+                            android:textSize="22sp" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
 
                 <com.nightonke.boommenu.BoomMenuButton
                     android:id="@+id/bmb"
@@ -110,7 +153,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="Kunjan Patel"
                             android:textSize="16sp" />
 
                         <TextView
@@ -119,7 +161,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
-                            android:text="Maninagar, Ahmedabad"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -136,6 +177,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/llMobile"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_marginLeft="5dp"
@@ -155,7 +197,6 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="9825450261"
                         android:textColor="@color/com_facebook_blue"
                         android:textSize="12sp" />
 
@@ -188,7 +229,6 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="kunjanshah@gmail.com"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -207,7 +247,6 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/montserrat_medium"
-                    android:text="8/B Jay Garvi Gujarat Soc., Gor no Kuwa, Jashoda cross road. Maninagar(E)"
                     android:textSize="12sp" />
 
 
@@ -229,7 +268,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Family Member List (6)"
+                android:text="Family Member List (0)"
                 android:textSize="16sp" />
 
             <TextView

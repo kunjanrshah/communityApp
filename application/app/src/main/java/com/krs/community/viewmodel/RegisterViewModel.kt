@@ -21,33 +21,34 @@ class RegisterViewModel(
     var email: String? = null
     var pass: String? = null
     var cpass: String? = null
+    var gender:String?=null
     var address: String? = null
     var mobile: String? = null
-    var lastname_id:Int?=null
-    var state_id:Int?=null
-    var country_code:String?=null
-    var city_id:Int?=null
-    var local_comm_id:Int?=null
-    var sub_comm_id:Int?=null
+    var lastnameId:Int?=null
+    var stateId:Int?=null
+    var countryCode:String?=null
+    var cityId:Int?=null
+    var localCommId:Int?=null
+    var subCommId:Int?=null
 
     var iRegisterListener: IRegisterListener? = null
     var TAG: String = RegisterViewModel::class.java.simpleName
 
-    var job_states: CompletableJob? = null
-    var job_cities: CompletableJob? = null
-    var job_lastname: CompletableJob? = null
-    var job_subcommunity: CompletableJob? = null
-    var job_localcommunity: CompletableJob? = null
-    var job_registration: CompletableJob? = null
+    private var jobStates: CompletableJob? = null
+    private var jobCities: CompletableJob? = null
+    private var jobLastname: CompletableJob? = null
+    private var jobSubcommunity: CompletableJob? = null
+    private var jobLocalcommunity: CompletableJob? = null
+    private var jobRegistration: CompletableJob? = null
 
 
     fun cancelAllJobs() {
-        job_states?.cancel()
-        job_cities?.cancel()
-        job_lastname?.cancel()
-        job_subcommunity?.cancel()
-        job_localcommunity?.cancel()
-        job_registration?.cancel()
+        jobStates?.cancel()
+        jobCities?.cancel()
+        jobLastname?.cancel()
+        jobSubcommunity?.cancel()
+        jobLocalcommunity?.cancel()
+        jobRegistration?.cancel()
     }
 
     fun getUserRegistration() {
@@ -57,7 +58,7 @@ class RegisterViewModel(
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.enter_firstname),1)
                 return
             }
-            if(lastname_id == null){
+            if(lastnameId == null){
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.enter_lastname),2)
                 return
             }
@@ -66,6 +67,12 @@ class RegisterViewModel(
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.enter_email),3)
                 return
             }
+
+            if(gender.isNullOrBlank()){
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.enter_gender),4)
+                return
+            }
+
 
             /*if(country_code.isNullOrBlank()){
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.select_country_code),4)
@@ -104,40 +111,40 @@ class RegisterViewModel(
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.enter_home_address),8)
                 return
             }
-            if(state_id==null){
+            if(stateId==null){
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.select_city),9)
                 return
             }
 
-            if(city_id==null){
+            if(cityId==null){
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.select_state),10)
                 return
             }
 
-            if(sub_comm_id==null){
+            if(subCommId==null){
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.select_sub_comm),11)
                 return
             }
 
-            if(local_comm_id==null){
+            if(localCommId==null){
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.select_local),12)
                 return
             }
 
         register.first_name=fname
-        register.sub_cast_id=lastname_id.toString()
+        register.sub_cast_id=lastnameId.toString()
         register.email_address=email
         register.mobile=mobile
+        register.gender=gender
         register.plain_password=pass
         register.address=address
-        register.state_id=state_id.toString()
-        register.city_id=city_id.toString()
-        register.sub_community_id =sub_comm_id.toString()
-        register.local_community_id =local_comm_id.toString()
+        register.state_id=stateId.toString()
+        register.city_id=cityId.toString()
+        register.sub_community_id =subCommId.toString()
+        register.local_community_id =localCommId.toString()
 
-
-        job_registration = Job()
-        job_registration.let {thejob ->
+        jobRegistration = Job()
+        jobRegistration.let { thejob ->
             CoroutineScope(IO + thejob!!).launch {
                 try {
                     val response = registerRepository.getUserRegister(register)
@@ -166,8 +173,8 @@ class RegisterViewModel(
     }
 
     fun getUserStates() {
-        job_states = Job()
-        job_states.let { thejob ->
+        jobStates = Job()
+        jobStates.let { thejob ->
 
             CoroutineScope(IO + thejob!!).launch {
                 try {
@@ -199,9 +206,9 @@ class RegisterViewModel(
     }
 
     fun fetchCitiesForStateId(id: Int) {
-        job_cities = Job()
+        jobCities = Job()
 
-        job_cities.let {thejob ->
+        jobCities.let { thejob ->
             CoroutineScope(IO + thejob!!).launch {
                 try {
                     val response = registerRepository.userCity(id)
@@ -226,8 +233,8 @@ class RegisterViewModel(
     }
 
     fun getUserLastName() {
-        job_lastname=Job()
-        job_lastname.let {thejob ->
+        jobLastname=Job()
+        jobLastname.let { thejob ->
             CoroutineScope(IO+thejob!!).launch {
                 try {
                     val response = registerRepository.userLastName()
@@ -252,8 +259,8 @@ class RegisterViewModel(
     }
 
     fun getLstSubCommunity() {
-        job_subcommunity=Job()
-        job_subcommunity.let {thejob ->
+        jobSubcommunity=Job()
+        jobSubcommunity.let { thejob ->
             CoroutineScope(IO + thejob!!).launch {
                 try {
                     val response = registerRepository.userSubCommunity()
@@ -276,8 +283,8 @@ class RegisterViewModel(
     }
 
     fun getLstLocalCommunity(id: Int) {
-        job_localcommunity=Job()
-        job_localcommunity.let {thejob ->
+        jobLocalcommunity=Job()
+        jobLocalcommunity.let { thejob ->
             CoroutineScope(IO +thejob!!).launch {
                 try {
                     val response = registerRepository.getLocalCommunity(id)

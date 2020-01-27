@@ -1,10 +1,8 @@
 package com.krs.community.viewmodel
 
 import android.app.Application
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.lazyDeferred
 import com.krs.community.interfaces.EditMemberListener
@@ -228,7 +226,7 @@ class ProfileDetailViewModel(
                     val response = mProfileDetailRepository.searchFilter(jsonObject)
                     response.let {
                         withContext(Dispatchers.Main) {
-                            mEditMemberListener.getMembers(response)
+                            mEditMemberListener.getScanResult(response)
                             thejob.complete()
                         }
                         return@launch
@@ -327,7 +325,7 @@ class ProfileDetailViewModel(
 
                     response.let {
                         withContext(Dispatchers.Main) {
-                            mEditMemberListener.getMessage(response)
+                            mEditMemberListener.getUpdateOrAddResult(response)
                             thejob.complete()
                         }
                         return@launch
