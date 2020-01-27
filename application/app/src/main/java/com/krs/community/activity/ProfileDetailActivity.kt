@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.easywaylocation.EasyWayLocation
@@ -68,64 +69,6 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
     private var scanId:String?=null
     private var userId:String?=null
     private var isStopService=false
-
-    companion object {
-        lateinit var binding: ActivityProfileDetailBinding
-        lateinit var getLocationDetail: GetLocationDetail
-        val TAG = ProfileDetailActivity::class.java.simpleName
-        var cur_lat = MutableLiveData<Double>()
-        var cur_lng = MutableLiveData<Double>()
-        var cur_addr = MutableLiveData<String>()
-
-        fun setPercentage(percentage: Int) {
-            binding.progressView.setAnimate(true)
-            binding.progressView.setAnimateDuration(5000)
-            binding.progressView.setProgress(percentage, true)
-
-            Handler().postDelayed({
-                binding.imgProfile.alpha = 0.10f
-            }, 500)
-
-            Handler().postDelayed({
-                binding.imgProfile.alpha = 0.20f
-            }, 1000)
-
-            Handler().postDelayed({
-                binding.imgProfile.alpha = 0.30f
-            }, 1500)
-
-            Handler().postDelayed({
-                binding.imgProfile.alpha = 0.40f
-            }, 2000)
-
-            Handler().postDelayed({
-                binding.imgProfile.alpha = 0.50f
-            }, 2500)
-
-            Handler().postDelayed({
-                binding.imgProfile.alpha = 0.60f
-            }, 3000)
-
-            Handler().postDelayed({
-                binding.imgProfile.alpha = 0.70f
-            }, 3500)
-
-            Handler().postDelayed({
-                binding.imgProfile.alpha = 0.80f
-            }, 4000)
-
-            Handler().postDelayed({
-                binding.imgProfile.alpha = 0.90f
-            }, 4500)
-
-            Handler().postDelayed({
-                binding.imgProfile.alpha = 1.00f
-                binding.tvPercent.text = "${percentage}%"
-            }, 5000)
-        }
-    }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -181,17 +124,6 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             profileDetailViewModel.getMemberByFilters(updated)
         }
 
-        binding.tvDistance.setOnClickListener {
-            if (binding.switchLocation.isOn) {
-                // val address= Utility.getAddress(this,member.userLat.toDouble(),member.userLng.toDouble())
-                Utility.showDirections(this, member!!.userLat.toDouble(), member!!.userLng.toDouble(), "${member?.firstName}'s Location")
-            } else {
-                if(!member?.id.isNullOrEmpty()){
-                    Toast.makeText(this, "${member?.firstName}'s location is off", Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-
         if (member?.isLocationEnable == "1") {
             binding.switchLocation.isActivated=true
             binding.switchLocation.isOn = true
@@ -199,12 +131,12 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             binding.tvDistance.text = "Finding"
             startLocationService()
         } else {
-            if(!userId.equals(member?.id)){
-                binding.switchLocation.isActivated=false
-            }
             binding.switchLocation.isOn = false
             binding.switchLocation.labelOff="OFF"
             binding.tvDistance.text = "User"
+            if(!userId.equals(member?.id)){
+                binding.switchLocation.isActivated=false
+            }
         }
 
         if (Utility.finePermissionIsGranted(this)) {
@@ -230,12 +162,24 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             }
         }
 
+        binding.tvDistance.setOnClickListener {
+            if (binding.switchLocation.isOn) {
+                // val address= Utility.getAddress(this,member.userLat.toDouble(),member.userLng.toDouble())
+                Utility.showDirections(this, member!!.userLat.toDouble(), member!!.userLng.toDouble(), "${member?.firstName}'s Location")
+            } else {
+                if(!member?.id.isNullOrEmpty()){
+                    Toast.makeText(this, "${member?.firstName}'s location is off", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
         binding.llViewFamily.setOnClickListener {
             goToFamilyDetailActivity()
         }
 
         binding.imgBack.setOnClickListener {
             finish()
+            Utility.hideKeyboard(this)
             Utility.fade(this)
         }
 
@@ -261,10 +205,24 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
 
             if (binding.tvSave.text.toString().toLowerCase().equals("save")) {
-                Utility.startSweetProgress(this, "Updating your profile", "Please wait...")
-                jsonObject.put(getString(R.string.id), member?.id)
-                val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-                profileDetailViewModel.updateProfile(profile, true)
+
+                SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Update Profile")
+                        .setConfirmText("Update")
+                        .setCancelText("No")
+                        .setCancelClickListener {
+                            it.dismissWithAnimation()
+                        }
+                        .setContentText(getString(R.string.you_sure))
+                        .setConfirmClickListener {
+                            it.dismissWithAnimation()
+                            Utility.startSweetProgress(this, "Updating your profile", "Please wait...")
+                            jsonObject.put(getString(R.string.id), member?.id)
+                            val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
+                            profileDetailViewModel.updateProfile(profile, true)
+                        }
+                        .show()
+
             } else {
                 if(jsonObject.getString(getString(R.string.first_name)).isNullOrEmpty()){
                     mainDetailsFragment.binding.fname.error = "Enter your FirstName"
@@ -286,6 +244,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             }
             Log.d(ProfileDetailActivity::class.java.simpleName, "jsonObject: " + jsonObject.toString())
         }
+        Utility.hideSweetProgress()
     }
 
     private fun goToFamilyDetailActivity(){
@@ -353,10 +312,13 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         if (member?.id == userId || member?.headId == userId) {
             binding.tvSave.visibility = View.VISIBLE
             binding.tvSave.text = "Save"
+            binding.imgProfile.isEnabled=true
         } else if (member?.id.isNullOrEmpty()) {
             binding.tvSave.text = "Add"
+            binding.imgProfile.isEnabled=true
             binding.txtTitle.text = "New Profile"
         } else {
+            binding.imgProfile.isEnabled=false
             binding.tvSave.visibility = View.GONE
         }
 
@@ -407,10 +369,6 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             goToFamilyDetailActivity()
         } else if (response.message.toString().toLowerCase().contains("updated")){
             val member = response.member
-            if(!isStopService){
-                val percentage = Utility.calculatePercentage(member)
-                setPercentage(percentage)
-            }
 
             val memberString = Guru.getString(getString(R.string.loginUser), "")
             val loginMember = Gson().fromJson(memberString, Member::class.java)
@@ -418,8 +376,20 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             if (loginMember.id==member.id) {
                 Guru.putString(getString(R.string.loginUser), Gson().toJson(member))
                 Guru.putString(getString(R.string.user_mobile), member.mobile)
+                Guru.putString(getString(R.string.user_email), member.emailAddress)
             }
-            Utility.displaySnackBarWithBottomMargin(binding.llParent, "Profile updated!")
+
+            var str=""
+            if(!isStopService){
+                val percentage = Utility.calculatePercentage(member)
+                setPercentage(percentage)
+                str="Profile updated!"
+            }else{
+                str="Location updated"
+            }
+
+            Utility.startSweetDialog(this,SweetAlertDialog.SUCCESS_TYPE,"Success",str)
+
             isStopService=false
         }else{
             val member = response.member
@@ -585,6 +555,62 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
 
     override fun locationData(locationData: LocationData) {
         cur_addr.postValue(locationData.full_address)
+    }
+
+    companion object {
+        lateinit var binding: ActivityProfileDetailBinding
+        lateinit var getLocationDetail: GetLocationDetail
+        val TAG = ProfileDetailActivity::class.java.simpleName
+        var cur_lat = MutableLiveData<Double>()
+        var cur_lng = MutableLiveData<Double>()
+        var cur_addr = MutableLiveData<String>()
+
+        fun setPercentage(percentage: Int) {
+            binding.progressView.setAnimate(true)
+            binding.progressView.setAnimateDuration(5000)
+            binding.progressView.setProgress(percentage, true)
+
+            Handler().postDelayed({
+                binding.imgProfile.alpha = 0.10f
+            }, 500)
+
+            Handler().postDelayed({
+                binding.imgProfile.alpha = 0.20f
+            }, 1000)
+
+            Handler().postDelayed({
+                binding.imgProfile.alpha = 0.30f
+            }, 1500)
+
+            Handler().postDelayed({
+                binding.imgProfile.alpha = 0.40f
+            }, 2000)
+
+            Handler().postDelayed({
+                binding.imgProfile.alpha = 0.50f
+            }, 2500)
+
+            Handler().postDelayed({
+                binding.imgProfile.alpha = 0.60f
+            }, 3000)
+
+            Handler().postDelayed({
+                binding.imgProfile.alpha = 0.70f
+            }, 3500)
+
+            Handler().postDelayed({
+                binding.imgProfile.alpha = 0.80f
+            }, 4000)
+
+            Handler().postDelayed({
+                binding.imgProfile.alpha = 0.90f
+            }, 4500)
+
+            Handler().postDelayed({
+                binding.imgProfile.alpha = 1.00f
+                binding.tvPercent.text = "${percentage}%"
+            }, 5000)
+        }
     }
 
 

@@ -59,6 +59,7 @@ class AppController : Application(), KodeinAware{
 
         bind() from singleton {  RegisterRepository(instance(),instance()) }
         bind() from singleton {  LoginRepository(instance()) }
+        bind() from singleton {  PasswordRepository(instance()) }
         bind() from singleton {  BrowseCityRepository(instance(),instance()) }
         bind() from singleton {  ByDistanceRepository(instance(),instance()) }
         bind() from singleton {  FamilyDetailRepository(instance()) }
@@ -75,6 +76,7 @@ class AppController : Application(), KodeinAware{
         bind() from provider { FamilyDetailViewModelFactory(instance()) }
         bind() from provider { RegisterViewModelFactory(instance()) }
         bind() from provider { LoginViewModelFactory(instance()) }
+        bind() from provider { PasswordViewModelFactory(instance()) }
         bind() from provider { BrowseCityViewModelFactory(instance()) }
         bind() from provider { ByDistanceViewModelFactory(instance()) }
         bind() from provider { ProfileDetailViewModelFactory(instance()) }

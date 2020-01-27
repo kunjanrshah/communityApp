@@ -52,10 +52,29 @@ public class DashboardFragment extends Fragment {
     String[] ProfileNames = {"Rajendra", "Tejas", "Kunjan", "Kushal","Mukund"};
     int[] ProfileImages = {R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg};
 
-    String[] MenuNames = {"Browse","My QRCode", "By Distance", "Matrimony", "Documents", "Paytm","App Tour", "Admins", "NonActives", "Add New", "Share Event"};
-    int[] MenuImages = {R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon,R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon, R.drawable.dark_icon};
-    private boolean isTouch = false;
+    String[] MenuNames = {
+            getResources().getString(R.string.menu_city),
+            getResources().getString(R.string.menu_qrcode),
+            getResources().getString(R.string.menu_distance),
+            getResources().getString(R.string.menu_matrimony),
+            getResources().getString(R.string.menu_mypost),
+            getResources().getString(R.string.menu_favorite),
+            getResources().getString(R.string.menu_admin),
+            getResources().getString(R.string.menu_restricted),
+            getResources().getString(R.string.menu_newpost),
+            getResources().getString(R.string.menu_documents),
+            getResources().getString(R.string.menu_paytm),
+            getResources().getString(R.string.menu_new),
+            getResources().getString(R.string.menu_tour)};
+    int[] MenuImages = {
+            R.drawable.search_city, R.drawable.qrcode_search,
+            R.drawable.search_distance, R.drawable.search_heart,
+            R.drawable.ic_rss,R.drawable.ic_star,
+            R.drawable.search_admin, R.drawable.restricted,
+            R.drawable.search_event, R.drawable.documents,
+            R.drawable.ic_paytm, R.drawable.add_user, R.drawable.ic_tour};
 
+    private boolean isTouch = false;
     public static final String TAG=DashboardFragment.class.getSimpleName();
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -104,13 +123,11 @@ public class DashboardFragment extends Fragment {
         return rootView;
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
         isTouch = false;
     }
-
 
     private void setSliderViews() {
 
@@ -138,13 +155,6 @@ public class DashboardFragment extends Fragment {
             sliderView.setOnSliderClickListener(sliderView1 -> {
                 Toast.makeText(getActivity(), "This is slider " + (finalI + 1), Toast.LENGTH_SHORT).show();
                 Utility.movetoFragment(getActivity(),new NewsListFragment());
-
-                /*Fragment fragment = new NewsFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container_body, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();*/
             });
 
             //at last add this view in your layout :
@@ -214,13 +224,12 @@ public class DashboardFragment extends Fragment {
             viewHolder.textView.setText(MenuNames[position]);
 
             convertView.setOnClickListener(v -> {
-                switch (position)
-                {
+                switch (position){
+
                    case 0:
                         Utility.movetoFragment(getActivity(),new BrowseByCityFragment());
                        break;
                     case 1:
-
                         Bundle mBundle=new Bundle();
                         String loginMember= Guru.getString(getString(R.string.loginUser),"");
                         Member member=new Gson().fromJson(loginMember, Member.class);
@@ -237,29 +246,37 @@ public class DashboardFragment extends Fragment {
                         Utility.movetoFragment(getActivity(),new MatrimonyFragment());
                         break;
                     case 4:
-                        startActivity(new Intent(getActivity(), ActivityDebugTools.class));
-                        //Utility.movetoFragment(getActivity(),new DocumentsFragment());
+                        Utility.movetoFragment(getActivity(),new NewsListFragment());
                         break;
                     case 5:
-                        Utility.movetoFragment(getActivity(),new PaytmFragment());
+                        Intent mIntent=new Intent(getActivity(), FavoriteProfileActivity.class);
+                        startActivity(mIntent);
+                        Utility.fade(getActivity());
                         break;
                     case 6:
-                        Utility.movetoFragment(getActivity(),new TourVideoFragment());
-                        break;
-                    case 7:
                         Utility.movetoFragment(getActivity(),new AdminsFragment());
                         break;
-                    case 8:
+                    case 7:
                         Utility.movetoFragment(getActivity(),new NonActivesFragment());
                         break;
+                    case 8:
+                        Utility.movetoFragment(getActivity(),new ShareEventFragment());
+                        break;
                     case 9:
+                        //startActivity(new Intent(getActivity(), ActivityDebugTools.class));
+                        Utility.movetoFragment(getActivity(),new DocumentsFragment());
+                        break;
+                    case 10:
+                        Utility.movetoFragment(getActivity(),new PaytmFragment());
+                        break;
+                    case 11:
                         Intent intent=new Intent(getActivity(),RegisterActivty.class);
                         startActivity(intent);
                         Utility.fade(getActivity());
 
                         break;
-                    case 10:
-                        Utility.movetoFragment(getActivity(),new ShareEventFragment());
+                    case 12:
+                        Utility.movetoFragment(getActivity(),new TourVideoFragment());
                         break;
                 }
 

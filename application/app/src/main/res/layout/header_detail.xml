@@ -169,7 +169,7 @@
                         android:id="@+id/tv_role"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:background="@drawable/world_map"
+                        android:background="@drawable/map"
                         android:gravity="center" />
 
                 </LinearLayout>

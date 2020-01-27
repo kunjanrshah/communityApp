@@ -8,7 +8,6 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="30dp"
         android:isScrollContainer="true">
 
         <RelativeLayout
@@ -90,7 +89,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Favorites"
+                        android:text="Shared Location"
                         android:textColor="@color/colorPrimary"
                         android:textSize="14sp" />
 
@@ -112,7 +111,7 @@
                     android:id="@+id/lstFavProfile"
                     android:layout_width="match_parent"
                     android:layout_gravity="top"
-                    android:paddingBottom="30dp"
+                    android:paddingBottom="10dp"
                     android:layout_height="match_parent" />
 
                 <com.krs.community.utils.ExpandableHeightGridView
@@ -125,6 +124,7 @@
                     android:horizontalSpacing="2dp"
                     android:isScrollContainer="false"
                     android:numColumns="4"
+                    android:layout_marginBottom="50dp"
                     android:stretchMode="columnWidth"
                     android:verticalSpacing="20dp" />
 

@@ -54,6 +54,27 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener 
         profileDetailViewModel.mEditMemberListener=this
 
         member = arguments?.getSerializable(getString(R.string.member)) as Member
+        val loginMember=Guru.getString(getString(R.string.loginUser),"")
+        val loginMem= Gson().fromJson(loginMember,Member::class.java)
+        if(member.id == loginMem.id || member.headId == loginMem.id){
+            binding.imgLogo.isEnabled=true
+            binding.edtComName.isFocusable=true
+            binding.spMainCat.isClickable=true
+            binding.spSubCat.isClickable=true
+            binding.spOccupation.isClickable=true
+            binding.edtUrl.isFocusable=true
+            binding.edtDetail.isFocusable=true
+            binding.edtAddr.isFocusable=true
+        }else{
+            binding.imgLogo.isEnabled=false
+            binding.edtComName.isFocusable=false
+            binding.spMainCat.isClickable=false
+            binding.spSubCat.isClickable=false
+            binding.spOccupation.isClickable=false
+            binding.edtUrl.isFocusable=false
+            binding.edtDetail.isFocusable=false
+            binding.edtAddr.isFocusable=false
+        }
 
         if (!member.businessLogo.isNullOrEmpty()) {
             try {

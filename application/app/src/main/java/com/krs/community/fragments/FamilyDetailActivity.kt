@@ -344,9 +344,9 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
                 } else if (it == 4) {
                     shareDetails(this@FamilyDetailActivity, tvName.text.toString(), member.mobile, member.emailAddress, member.area, member.address)
                 } else if (it == 5) {
-                    val adapter: LocationAdapter = LocationAdapter(AppController.mApplication.applicationContext, member)
+                    val adapter: LocationAdapter = LocationAdapter(this@FamilyDetailActivity, member)
                     adapter.setLocationListner(this@FamilyDetailActivity)
-                    setLocationDialog = DialogPlus.newDialog(AppController.mApplication.applicationContext)
+                    setLocationDialog = DialogPlus.newDialog(this@FamilyDetailActivity)
                             .setAdapter(adapter)
                             .setGravity(Gravity.BOTTOM)
                             .setCancelable(true)

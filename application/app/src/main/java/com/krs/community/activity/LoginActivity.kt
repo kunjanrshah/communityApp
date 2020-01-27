@@ -352,6 +352,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
     fun goToDashboardScreen(){
         Guru.putString(getString(R.string.loginUser),Gson().toJson(member))
+        Guru.putString(getString(R.string.user_email),member.emailAddress)
         Guru.putString(getString(R.string.user_mobile),member.mobile)
         Guru.putString(getString(R.string.user_id),member.id)
         Guru.putString(getString(R.string.access_token),member.accessToken)
@@ -369,9 +370,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         Log.d(TAG, "login data: $message")
     }
 
-    override fun userForgotPass(data: String) {
-        Log.d(TAG, "forgot data: $data")
-    }
 
     // Fetches reg id from shared preferences
    /* private fun displayFirebaseRegId() {

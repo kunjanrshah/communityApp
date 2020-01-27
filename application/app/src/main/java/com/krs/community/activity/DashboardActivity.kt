@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.easywaylocation.EasyWayLocation
 import com.example.easywaylocation.GetLocationDetail
@@ -300,6 +299,7 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_profile -> {
+                Utility.startSweetProgress(this,"Move profile detail",getString(R.string.loading))
                 val intent = Intent(this, ProfileDetailActivity::class.java)
                 val memberString = Guru.getString(getString(R.string.loginUser), "")
                 val member = Gson().fromJson(memberString, Member::class.java)

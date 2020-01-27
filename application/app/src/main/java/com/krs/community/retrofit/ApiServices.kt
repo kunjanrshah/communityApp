@@ -119,6 +119,12 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_LOGIN)
     suspend fun getUserLogin(@Body request: AppConstants.LoginRequest): Response<LoginResponse>
 
+    @POST(AppConstants.UrlPath.GET_CHANGE_PASS)
+    suspend fun changePassword(@Body request: JsonObject): Response<LoginResponse>
+
+    @POST(AppConstants.UrlPath.GET_FORGOT_PASS)
+    suspend fun forgotPassword(@Body request: JsonObject): Response<LoginResponse>
+
     @Multipart
     @POST(AppConstants.UrlPath.UPLOAD_PROFILE_IMAGE)
     suspend fun uploadProfileImage(@Part file: MultipartBody.Part, @Part("id")id: RequestBody, @Part("user_id") user_id: RequestBody,@Part("access_token") access_token: RequestBody): Response<JsonObject>

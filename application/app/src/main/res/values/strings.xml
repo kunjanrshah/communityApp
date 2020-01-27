@@ -348,6 +348,7 @@
     <string name="updated_dt" translatable="false">updated_dt</string>
     <string name="user_id" translatable="false">user_id</string>
     <string name="user_mobile" translatable="false">user_mobile</string>
+    <string name="user_email" translatable="false">user_email</string>
     <string name="access_token" translatable="false">access_token</string>
     <string name="date" translatable="false">date</string>
     <string name="state" translatable="false">state</string>
@@ -417,5 +418,20 @@
     <string name="mobile_not_found">Mobile not found!</string>
     <string name="filter_values">filter_values</string>
     <string name="no_selection">No Selection</string>
+    <string name="current_password">current_password</string>
+    <string name="new_password">new_password</string>
+    <string name="menu_city">City</string>
+    <string name="menu_qrcode">QRCode</string>
+    <string name="menu_distance">Distance</string>
+    <string name="menu_matrimony">Matrimony</string>
+    <string name="menu_mypost">MyPost</string>
+    <string name="menu_favorite">Favorite</string>
+    <string name="menu_admin">Admin</string>
+    <string name="menu_restricted">Restricted</string>
+    <string name="menu_newpost">NewPost</string>
+    <string name="menu_documents">Documents</string>
+    <string name="menu_paytm">Paytm</string>
+    <string name="menu_new">New</string>
+    <string name="menu_tour">Tour</string>
 
 </resources>

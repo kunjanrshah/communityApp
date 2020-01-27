@@ -185,7 +185,7 @@ class RegisterActivty : BaseActivity() ,IRegisterListener,KodeinAware{
         //mPreferencesManager=PreferencesManager(this)
         //mPreferencesManager.resetAll()
 
-        scroll.viewTreeObserver.addOnScrollChangedListener {
+        /*scroll.viewTreeObserver.addOnScrollChangedListener {
             if (scroll.getChildAt(0).bottom > (scroll.height + scroll.scrollY)) {
                if(isShow2){
                    isShow2=false
@@ -195,7 +195,7 @@ class RegisterActivty : BaseActivity() ,IRegisterListener,KodeinAware{
                    }, 400)
                }
             }
-        }
+        }*/
     }
 
     private fun ScrollView.scrollToBottom() {

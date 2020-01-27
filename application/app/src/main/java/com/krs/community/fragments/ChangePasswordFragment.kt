@@ -1,0 +1,179 @@
+package com.krs.community.fragments
+
+import android.annotation.SuppressLint
+import android.os.Build
+import android.os.Bundle
+import android.text.InputType
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import cn.pedant.SweetAlert.SweetAlertDialog
+import com.github.squti.guru.Guru
+import com.google.android.material.snackbar.Snackbar
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.krs.community.R
+import com.krs.community.activity.DashboardActivity.Companion.binding
+import com.krs.community.databinding.FragmentChangePassBinding
+import com.krs.community.interfaces.ILoginListener
+import com.krs.community.model.LoginResponse
+
+import com.krs.community.utils.Utility
+import com.krs.community.viewmodel.PasswordViewModel
+import com.krs.community.viewmodelfactory.PasswordViewModelFactory
+import org.json.JSONObject
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.kodein
+import org.kodein.di.generic.instance
+
+private lateinit var passBinding: FragmentChangePassBinding
+
+class ChangePasswordFragment : Fragment() , KodeinAware,ILoginListener {
+
+    override val kodein by kodein()
+
+    private lateinit var passwordViewModel: PasswordViewModel
+    private val passwordViewModelFactory: PasswordViewModelFactory by instance()
+    private var showCurr = true
+    private var showNew = true
+    private var showConfirm = true
+
+    @SuppressLint("ClickableViewAccessibility")
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        passwordViewModel = ViewModelProviders.of(this,passwordViewModelFactory).get(PasswordViewModel::class.java)
+        passwordViewModel.mLoginListener=this
+        passBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_change_pass, container, false)
+
+        passBinding.ivLanCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
+        Utility.changeStatusbarColor(activity, R.color.colorPrivacyPolictyBG, false)
+
+        passBinding.btnUpdate.setOnClickListener {
+            val newPass=passBinding.edtNew.text.trim()
+            val currPass=passBinding.edtCurr.text.trim()
+            if(currPass.isNotEmpty() && newPass.isNotEmpty() && newPass == currPass){
+                val jsonObject= JSONObject()
+                jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id),""))
+                jsonObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
+                jsonObject.put(getString(R.string.current_password), passBinding.edtCurr.text.trim())
+                jsonObject.put(getString(R.string.new_password),passBinding.edtNew.text.trim())
+                val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+                passwordViewModel.changePassword(updated)
+            }else{
+                Snackbar.make(passBinding.llParent, "Invalid input", Snackbar.LENGTH_LONG).show()
+            }
+        }
+
+        passBinding.tvForgot.setOnClickListener {
+
+            SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Forgot Password")
+                    .setConfirmText("Let me check")
+                    .setCancelText("Cancel")
+                    .setCancelClickListener {
+                        it.dismissWithAnimation()
+                    }
+                    .setContentText("Password will be sending to "+Guru.getString(getString(R.string.user_email),""))
+                    .setConfirmClickListener {
+                        it.dismissWithAnimation()
+                        val jsonObject= JSONObject()
+                        jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id),""))
+                        jsonObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
+                        val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+                        passwordViewModel.forgotPassword(updated)
+                    }
+                    .show()
+        }
+
+        passBinding.edtCurr.setOnTouchListener(fun(_: View, event: MotionEvent): Boolean {
+            val DRAWABLE_RIGHT = 2
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (event.rawX >= passBinding.edtCurr.right - passBinding.edtCurr.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
+                    if (showCurr) {
+                        passBinding.edtCurr.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.show_pass, 0)
+                        passBinding.edtCurr.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        showCurr = false
+                    } else {
+                        passBinding.edtCurr.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.hide_pass, 0)
+                        passBinding.edtCurr.inputType =InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        showCurr = true
+                    }
+                    passBinding.edtCurr.setSelection(passBinding.edtCurr.length())
+                    return true
+                }
+            }
+            return false
+        })
+
+        passBinding.edtNew.setOnTouchListener(fun(_: View, event: MotionEvent): Boolean {
+            val DRAWABLE_RIGHT = 2
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (event.rawX >= passBinding.edtNew.right - passBinding.edtNew.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
+                    if (showNew) {
+                        passBinding.edtNew.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.show_pass, 0)
+                        passBinding.edtNew.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        showNew = false
+                    } else {
+                        passBinding.edtNew.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.hide_pass, 0)
+                        passBinding.edtNew.inputType =InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        showNew = true
+                    }
+                    passBinding.edtNew.setSelection(passBinding.edtNew.length())
+                    return true
+                }
+            }
+            return false
+        })
+
+
+        passBinding.edtConfirm.setOnTouchListener(fun(_: View, event: MotionEvent): Boolean {
+            val DRAWABLE_RIGHT = 2
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (event.rawX >= passBinding.edtConfirm.right - passBinding.edtConfirm.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
+                    if (showConfirm) {
+                        passBinding.edtConfirm.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.show_pass, 0)
+                        passBinding.edtConfirm.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        showConfirm = false
+                    } else {
+                        passBinding.edtConfirm.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.hide_pass, 0)
+                        passBinding.edtConfirm.inputType =InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        showConfirm = true
+                    }
+                    passBinding.edtConfirm.setSelection(passBinding.edtConfirm.length())
+                    return true
+                }
+            }
+            return false
+        })
+
+
+        return passBinding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+        binding.space.visibility = View.GONE
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+        binding.space.visibility = View.VISIBLE
+    }
+
+    override fun getUserLogin(response: LoginResponse) {
+        Snackbar.make(passBinding.llParent, response.message, Snackbar.LENGTH_LONG).show()
+    }
+
+    override fun getFailure(message: String) {
+        Snackbar.make(passBinding.llParent, message, Snackbar.LENGTH_LONG).show()
+    }
+}
