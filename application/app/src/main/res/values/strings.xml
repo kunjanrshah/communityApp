@@ -3,6 +3,7 @@
 
 
     <string name="action_delete">Delete</string>
+    <string name="action_location">Location</string>
     <string name="action_active">Active</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
@@ -407,6 +408,7 @@
     <string name="Family_Head" translatable="false">Family Head</string>
     <string name="Member" translatable="false">Member</string>
     <string name="idList" translatable="false">idList</string>
+    <string name="sharing_id" translatable="false">sharing_id</string>
     <string name="start" translatable="false">start</string>
     <string name="length" translatable="false">length</string>
     <string name="filter_by" translatable="false">filter_by</string>

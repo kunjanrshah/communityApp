@@ -40,7 +40,7 @@ import java.util.List;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
-public class FavoriteFragment extends Fragment {
+public class SharedLocationFragment extends Fragment {
 
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
@@ -160,7 +160,7 @@ public class FavoriteFragment extends Fragment {
             selectedItems.put(pos, true);
             animationItemsIndex.put(pos, true);
         }
-        adapter.notifyItemChanged(pos);
+        adapter.notifyItemChanged(pos+1);
     }
 
     private class ListViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
@@ -247,22 +247,19 @@ public class FavoriteFragment extends Fragment {
         });
 
 
-        holder.messageContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // verify whether action mode is enabled or not
-                // if enabled, change the row state to activated
-                if (getSelectedItemCount() > 0) {
-                    enableActionMode(position);
-                } else {
-                    // read the message which removes bold from the row
-                    Message message = messages.get(position);
-                    message.setRead(true);
-                    messages.set(position, message);
-                    adapter.notifyDataSetChanged();
+        holder.messageContainer.setOnClickListener(view -> {
+            // verify whether action mode is enabled or not
+            // if enabled, change the row state to activated
+            if (getSelectedItemCount() > 0) {
+                enableActionMode(position);
+            } else {
+                // read the message which removes bold from the row
+                Message message = messages.get(position);
+                message.setRead(true);
+                messages.set(position, message);
+                adapter.notifyDataSetChanged();
 
-                    Toast.makeText(getActivity(), "Read: " + message.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(getActivity(), "Read: " + message.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

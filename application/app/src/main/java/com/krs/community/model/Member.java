@@ -13,6 +13,11 @@ import java.util.List;
 public class Member implements Serializable {
 
 
+
+    @SerializedName("sharing_id")
+    @Expose
+    private String sharingId="";
+
     @SerializedName("matched")
     @Expose
     private String matched="";
@@ -922,5 +927,13 @@ public class Member implements Serializable {
 
     public void setMatched(String matched) {
         this.matched = matched;
+    }
+
+    public String getSharingId() {
+        return sharingId;
+    }
+
+    public void setSharingId(String sharingId) {
+        this.sharingId = sharingId;
     }
 }

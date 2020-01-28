@@ -184,7 +184,13 @@ fun openImageDialog(activity: AppCompatActivity,url: String) {
     dialog.setContentView(R.layout.image_dialog)
     dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation;
     val image: ImageView = dialog.findViewById(R.id.img_dialog)
-    Glide.with(activity).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(image)
+    Glide.with(activity)
+            .load(url)
+            .apply(RequestOptions.circleCropTransform())
+            .apply(RequestOptions()
+                    .placeholder(R.drawable.image_placeholder)
+            )
+            .thumbnail(1f).into(image)
     dialog.show()
 }
 

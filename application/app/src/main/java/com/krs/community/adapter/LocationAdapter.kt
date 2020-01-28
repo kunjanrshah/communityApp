@@ -5,11 +5,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import com.example.easywaylocation.EasyWayLocation
+import com.github.squti.guru.Guru
+import com.google.gson.Gson
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity.Companion.cur_lat
 import com.krs.community.activity.DashboardActivity.Companion.cur_lng
@@ -47,26 +46,27 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
             viewHolder = convertView.tag as ViewHolder
         }
 
-
         viewHolder.ivCancel.setOnClickListener { v: View? ->
             setLocationListner?.cancelDialog()
         }
 
         viewHolder.llHome.setOnClickListener { v: View? ->
             if(!member.homeLat.isNullOrEmpty() &&  !member.homeLng.isNullOrEmpty()){
-                Utility.showDirections(mContext as Activity, member.homeLat.toDouble(), member.homeLng.toDouble(), "${member?.firstName}'s Home")
+                Utility.showDirections(mContext as Activity, member.homeLat.toDouble(), member.homeLng.toDouble(), "${member.firstName}'s Home")
             }
         }
 
         viewHolder.llOffice.setOnClickListener { v: View? ->
             if(!member.officeLat.isNullOrEmpty() &&  !member.officeLng.isNullOrEmpty()){
-                Utility.showDirections(mContext as Activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member?.firstName}'s Office")
+                Utility.showDirections(mContext as Activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member.firstName}'s Office")
             }
         }
 
         viewHolder.llUser.setOnClickListener { v: View? ->
-            if(!member.userLat.isNullOrEmpty() &&  !member.userLng.isNullOrEmpty()){
-                Utility.showDirections(mContext as Activity, member.userLat.toDouble(), member.userLng.toDouble(), "${member?.firstName}'s Location")
+            if(!member.userLat.isNullOrEmpty() &&  !member.userLng.isNullOrEmpty() && isShareLocation()){
+                Utility.showDirections(mContext as Activity, member.userLat.toDouble(), member.userLng.toDouble(), "${member.firstName}'s Location")
+            }else{
+               Toast.makeText(mContext,"Private",Toast.LENGTH_LONG).show()
             }
         }
 
@@ -81,8 +81,24 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
         return convertView!!
     }
 
+    private fun isShareLocation():Boolean{
+        val loginUser= Guru.getString(mContext.getString(R.string.loginUser),"")
+        val loginMember = Gson().fromJson<Member>(loginUser, Member::class.java)
+        var isShare=false
+        val arrayId = loginMember?.sharingId?.split(',')
+        if (arrayId!= null) {
+            for(id in arrayId){
+                if(member.id==id){
+                    isShare=true
+                    break
+                }
+            }
+        }
+        return isShare
+    }
+
     private fun setDistance(tvHome:TextView,tvOffice:TextView,tvUser:TextView){
-        if(!member.isLocationEnable.isNullOrEmpty() && member.isLocationEnable.equals("1")){
+        if(!member.isLocationEnable.isNullOrEmpty() && member.isLocationEnable.equals("1") && isShareLocation()){
             if (cur_lat.value != null && cur_lng.value != null && !member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
                 val userDist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member.userLat.toDouble(), member.userLng.toDouble()) / 1000
                 tvUser.text= String.format("%.2f KM", userDist)

@@ -108,17 +108,11 @@ public class DashboardFragment extends Fragment {
         setFavoriteList();
         gridMenu.setAdapter(new MenuAdapter(getActivity()));
 
-        TextView tv_all_favorites=rootView.findViewById(R.id.tv_all_favorites);
-        tv_all_favorites.setOnClickListener(v -> {
-            Intent mIntent=new Intent(getActivity(), FavoriteProfileActivity.class);
-            startActivity(mIntent);
-            Utility.fade(getActivity());
-        });
+        TextView tv_all_shared=rootView.findViewById(R.id.tv_all_favorites);
+        tv_all_shared.setOnClickListener(v -> Utility.movetoFragment(getActivity(), new SharedLocationFragment()));
 
         TextView tv_all_news=rootView.findViewById(R.id.tv_all_news);
-        tv_all_news.setOnClickListener(v -> {
-            Utility.movetoFragment(getActivity(),new NewsListFragment());
-        });
+        tv_all_news.setOnClickListener(v -> Utility.movetoFragment(getActivity(),new NewsListFragment()));
 
         Utility.changeStatusbarColor(getActivity(),R.color.white,false);
         return rootView;
