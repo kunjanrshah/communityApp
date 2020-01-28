@@ -155,6 +155,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
                     viewHolder.tvSubtext.text = member.relation
                     viewHolder.tvEmail.text = member.emailAddress
                     viewHolder.tvMobile.text = member.mobile
+                    viewHolder.tvUpdate.text = "updated "+Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                     viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                     viewHolder.frontLayout.setOnClickListener {
                         val intent = Intent(this@FamilyDetailActivity, ProfileDetailActivity::class.java)
@@ -163,7 +164,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
                         startActivity(intent)
                         Utility.fade(this@FamilyDetailActivity)
                     }
-                    viewHolder.deleteLayout.setOnClickListener {
+                   /* viewHolder.deleteLayout.setOnClickListener {
 
                         SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
@@ -178,7 +179,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
                                     it.dismiss()
                                 }
                                 .show()
-                    }
+                    }*/
                     viewHolder.boomMenuButton.clearBuilders()
                     for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
                         val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
@@ -234,6 +235,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
                     viewHolder.boomMenuButton.setOnClickListener {
                         viewHolder.boomMenuButton.boom()
                     }
+
+                    //viewHolder.imgState
 
                     applyClickEvents(viewHolder, i,member)
                     applyProfilePicture(viewHolder, member)
@@ -303,6 +306,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
 
         val tvAddr: TextView = header.findViewById(R.id.tv_addr)
         tvAddr.text=member.address
+
+        val imgState: ImageView = header.findViewById(R.id.img_state)
+
+
 
         val tvLabel: TextView = header.findViewById(R.id.tv_label)
         tvLabel.text="Family Member List (${members.size})"
@@ -431,12 +438,14 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
         var tvSubtext: TextView = v.findViewById(R.id.tv_subtext)
         var tvEmail: TextView = v.findViewById(R.id.tv_email)
         var tvMobile: TextView = v.findViewById(R.id.tv_mobile)
+        var tvUpdate: TextView = v.findViewById(R.id.tv_update)
         var boomMenuButton: BoomMenuButton = v.findViewById(R.id.bmb1)
-        var deleteLayout: FrameLayout = v.findViewById(R.id.delete_layout)
+        //var deleteLayout: FrameLayout = v.findViewById(R.id.delete_layout)
         var frontLayout: FrameLayout = v.findViewById(R.id.front_layout)
         var iconText: TextView = v.findViewById(R.id.icon_text1)
         var llMobile: LinearLayout = v.findViewById(R.id.llMobile)
         var imgProfile: ImageView = v.findViewById(R.id.icon_profile1)
+        val imgState: ImageView = v.findViewById(R.id.img_state)
     }
 
     override fun getMessage(response: DeleteProfileResponse) {

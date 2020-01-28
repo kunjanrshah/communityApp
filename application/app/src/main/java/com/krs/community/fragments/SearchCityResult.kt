@@ -324,7 +324,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         if (data.success) {
             if (data.members.size > 0) {
                 val count= data.totalHead+ data.totalMem
-                tvCount.text="Families: ${data.totalHead}. Members: $count"
+                tvCount.text="Families: ${data.totalHead}, Members: $count"
                 for (user in data.members) {
                     members.add(user)
                 }

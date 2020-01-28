@@ -31,6 +31,7 @@ import com.krs.community.R;
 import com.krs.community.activity.FavoriteProfileActivity;
 import com.krs.community.activity.QRCodeActivity;
 import com.krs.community.activity.RegisterActivty;
+import com.krs.community.app.AppController;
 import com.krs.community.model.FavProfiles;
 import com.krs.community.model.Member;
 import com.krs.community.utils.ExpandableHeightGridView;
@@ -53,19 +54,19 @@ public class DashboardFragment extends Fragment {
     int[] ProfileImages = {R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg, R.drawable.man_reg};
 
     String[] MenuNames = {
-            getResources().getString(R.string.menu_city),
-            getResources().getString(R.string.menu_qrcode),
-            getResources().getString(R.string.menu_distance),
-            getResources().getString(R.string.menu_matrimony),
-            getResources().getString(R.string.menu_mypost),
-            getResources().getString(R.string.menu_favorite),
-            getResources().getString(R.string.menu_admin),
-            getResources().getString(R.string.menu_restricted),
-            getResources().getString(R.string.menu_newpost),
-            getResources().getString(R.string.menu_documents),
-            getResources().getString(R.string.menu_paytm),
-            getResources().getString(R.string.menu_new),
-            getResources().getString(R.string.menu_tour)};
+            AppController.mApplication.getString(R.string.menu_city),
+            AppController.mApplication.getString(R.string.menu_qrcode),
+            AppController.mApplication.getString(R.string.menu_distance),
+            AppController.mApplication.getString(R.string.menu_matrimony),
+            AppController.mApplication.getString(R.string.menu_mypost),
+            AppController.mApplication.getString(R.string.menu_favorite),
+            AppController.mApplication.getString(R.string.menu_admin),
+            AppController.mApplication.getString(R.string.menu_restricted),
+            AppController.mApplication.getString(R.string.menu_newpost),
+            AppController.mApplication.getString(R.string.menu_documents),
+            AppController.mApplication.getString(R.string.menu_paytm),
+            AppController.mApplication.getString(R.string.menu_new),
+            AppController.mApplication.getString(R.string.menu_tour)};
     int[] MenuImages = {
             R.drawable.search_city, R.drawable.qrcode_search,
             R.drawable.search_distance, R.drawable.search_heart,

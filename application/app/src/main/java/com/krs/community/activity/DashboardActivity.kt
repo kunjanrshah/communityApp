@@ -168,7 +168,7 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
             Utility.requestLocationPermission(this)
         }
 
-        getMasterList()
+       // getMasterList()
         Utility.movetoFragment(this@DashboardActivity, DashboardFragment())
         //spaceNavigationView.showIconOnly();
     }
