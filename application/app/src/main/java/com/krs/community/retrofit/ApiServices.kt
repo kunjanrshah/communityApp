@@ -88,6 +88,9 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_USERS_BYDATE)
     suspend fun getSearchByDate(@Body request: JsonObject): Response<SmartFilterResponse>
 
+    @POST(AppConstants.UrlPath.GET_SHARED_PROFILE)
+    suspend fun getSharedProfile(@Body request: JsonObject): Response<SmartFilterResponse>
+
     @POST(AppConstants.UrlPath.GET_EVENTS)
     suspend fun getNewsList(@Body request: JsonObject): Response<NewsResponse>
 

@@ -122,12 +122,12 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         browseCityViewModel.ibrowseCityRecordsListener = this
         roomMemberViewModel.mRoomMemberListener=this
         profileDetailViewModel.mEditMemberListener=this
-        /*if (this.arguments != null){
+        if (this.arguments != null){
             cityName = this.arguments!!.getString("city_name").toString()
             cityId =  this.arguments!!.getString("city_id").toString()
-            Guru.putString("user_city",cityName)
-            Guru.putString("user_city_id",cityId)
-        }*/
+            /*Guru.putString("user_city",cityName)
+            Guru.putString("user_city_id",cityId)*/
+        }
 
         members.clear()
         adapter = object : ParallaxRecyclerAdapter<Member>(members) {
