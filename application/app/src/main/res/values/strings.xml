@@ -50,6 +50,22 @@
         <item>AB-Ve</item>
     </string-array>
 
+    <string-array name="main_menu">
+        <item>City</item>
+        <item>QRCode</item>
+        <item >Distance</item>
+        <item>Matrimony</item>
+        <item>MyPost</item>
+        <item>Favorite</item>
+        <item>Admin</item>
+        <item>Restricted</item>
+        <item>NewPost</item>
+        <item>Documents</item>
+        <item>Paytm</item>
+        <item>New</item>
+        <item>Tour</item>
+    </string-array>
+
     <string name="married" translatable="false">Married</string>
     <string-array name="marital">
         <item>Single</item>
@@ -423,18 +439,7 @@
     <string name="no_selection">No Selection</string>
     <string name="current_password">current_password</string>
     <string name="new_password">new_password</string>
-    <string name="menu_city">City</string>
-    <string name="menu_qrcode">QRCode</string>
-    <string name="menu_distance">Distance</string>
-    <string name="menu_matrimony">Matrimony</string>
-    <string name="menu_mypost">MyPost</string>
-    <string name="menu_favorite">Favorite</string>
-    <string name="menu_admin">Admin</string>
-    <string name="menu_restricted">Restricted</string>
-    <string name="menu_newpost">NewPost</string>
-    <string name="menu_documents">Documents</string>
-    <string name="menu_paytm">Paytm</string>
-    <string name="menu_new">New</string>
-    <string name="menu_tour">Tour</string>
+
+
 
 </resources>

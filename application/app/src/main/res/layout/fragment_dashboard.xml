@@ -1,140 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
 
-    <androidx.core.widget.NestedScrollView
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:shimmer="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:isScrollContainer="true">
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:isScrollContainer="true">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/edt_search"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@drawable/home_search_bar_bg"
-                    android:drawableStart="@drawable/home_search"
-                    android:drawableEnd="@drawable/voice"
-                    android:drawablePadding="10dp"
-                    android:focusable="false"
-                    android:hint="Search Here..."
-                    android:importantForAutofill="no"
-                    android:inputType="text"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:singleLine="true"
-                    tools:ignore="UnusedAttribute" />
+                android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="3dp"
-                    android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:text="News &amp; Events"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/montserrat_semibold" />
-
-                    <TextView
-                        android:id="@+id/tv_all_news"
-                        android:layout_width="wrap_content"
-                        android:text="View All"
-                        android:textSize="14sp"
-                        android:layout_marginRight="10dp"
-                        android:textColor="@color/black1"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:layout_gravity="bottom"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
-
-                <com.smarteist.autoimageslider.SliderLayout
-                    android:id="@+id/imageSlider"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp" />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/montserrat_semibold"
-                        android:text="Shared Location"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="14sp" />
-
-
-                    <TextView
-                        android:id="@+id/tv_all_favorites"
-                        android:layout_width="wrap_content"
-                        android:text="View All"
-                        android:textSize="14sp"
-                        android:layout_marginRight="10dp"
-                        android:textColor="@color/black1"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:layout_gravity="bottom"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/lstFavProfile"
-                    android:layout_width="match_parent"
-                    android:layout_gravity="top"
-                    android:paddingBottom="10dp"
-                    android:layout_height="match_parent" />
-
-                <com.krs.community.utils.ExpandableHeightGridView
-                    android:id="@+id/grid_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackground"
-                    android:drawSelectorOnTop="true"
-                    android:gravity="center"
-                    android:horizontalSpacing="2dp"
-                    android:isScrollContainer="false"
-                    android:numColumns="4"
-                    android:layout_marginBottom="50dp"
-                    android:stretchMode="columnWidth"
-                    android:verticalSpacing="20dp" />
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <EditText
+                        android:id="@+id/edt_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/home_search_bar_bg"
+                        android:drawableStart="@drawable/home_search"
+                        android:drawableEnd="@drawable/voice"
+                        android:drawablePadding="10dp"
+                        android:focusable="false"
+                        android:hint="Search Here..."
+                        android:importantForAutofill="no"
+                        android:inputType="text"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:singleLine="true"
+                        tools:ignore="UnusedAttribute" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="News &amp; Events"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tv_all_news"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginRight="10dp"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:text="View All"
+                            android:textColor="@color/black1"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <com.smarteist.autoimageslider.SliderLayout
+                        android:id="@+id/imageSlider"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp" />
 
 
-        </RelativeLayout>
-    </androidx.core.widget.NestedScrollView>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-</LinearLayout>
+                        <com.facebook.shimmer.ShimmerFrameLayout
+                            android:id="@+id/shimmer_view_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="20dp"
+                            android:orientation="horizontal"
+                            shimmer:duration="600">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <include layout="@layout/shared_list_profle_shimmer" />
+
+                                <include layout="@layout/shared_list_profle_shimmer" />
+
+                                <include layout="@layout/shared_list_profle_shimmer" />
+
+                                <include layout="@layout/shared_list_profle_shimmer" />
+
+                                <include layout="@layout/shared_list_profle_shimmer" />
+
+                                <include layout="@layout/shared_list_profle_shimmer" />
+
+                            </LinearLayout>
+
+                        </com.facebook.shimmer.ShimmerFrameLayout>
+
+                        <LinearLayout
+                            android:alpha="0.25"
+                            android:id="@+id/ll_shared"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:visibility="gone"
+                                android:id="@+id/lbl_shared"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/montserrat_semibold"
+                                    android:text="Shared Location"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="14sp" />
+
+
+                                <TextView
+                                    android:id="@+id/tv_all_shared"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="bottom"
+                                    android:layout_marginRight="10dp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:text="View All"
+                                    android:textColor="@color/black1"
+                                    android:textSize="14sp" />
+
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/lstSharedProfile"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="top"
+                                android:paddingBottom="5dp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/lbl_private"
+                            android:layout_width="wrap_content"
+                            android:textSize="20sp"
+                            android:visibility="gone"
+                            android:alpha="0.5"
+                            android:layout_marginTop="50dp"
+                            android:layout_gravity="center_horizontal"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="Your location is private"
+                            android:layout_height="match_parent"/>
+
+                    </FrameLayout>
+
+                    <com.krs.community.utils.ExpandableHeightGridView
+                        android:id="@+id/grid_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="50dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:drawSelectorOnTop="true"
+                        android:gravity="center"
+                        android:horizontalSpacing="2dp"
+                        android:isScrollContainer="false"
+                        android:numColumns="4"
+                        android:stretchMode="columnWidth"
+                        android:verticalSpacing="20dp" />
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+</layout>
 
 
 

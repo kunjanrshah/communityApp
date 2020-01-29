@@ -15,7 +15,7 @@
         android:id="@+id/action_location"
         android:orderInCategory="100"
         android:title="@string/action_location"
-        android:icon="@drawable/location_primary"
+        android:icon="@drawable/menu_location"
         app:showAsAction="always"
         tools:ignore="AppCompatResource"  />
 

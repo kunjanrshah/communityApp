@@ -284,6 +284,11 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
         }
 
         val imgProfile: ImageView = header.findViewById(R.id.icon_profile1)
+        imgProfile.setOnClickListener {
+            val path = getString(R.string.base_url_original) + "" + member.profilePic
+            Log.d(TAG, "path: $path")
+            openImageDialog(this,path)
+        }
         if (!TextUtils.isEmpty(member.profilePic)) {
             imgProfile.isClickable = true
             val url=resources.getString(R.string.base_url_thumb)+member.profilePic

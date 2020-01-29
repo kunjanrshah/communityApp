@@ -1,13 +1,20 @@
 package com.krs.community.fragments
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
+import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,69 +22,181 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
+import com.github.squti.guru.Guru
+import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.activity.FamilyTreeListActivity
+import com.krs.community.activity.ProfileDetailActivity
+import com.krs.community.activity.QRCodeActivity
+import com.krs.community.adapter.LocationAdapter
+import com.krs.community.databinding.FragmnetSharedLocationBinding
+import com.krs.community.entities.RoomMember
+import com.krs.community.interfaces.ByFilterListener
+import com.krs.community.interfaces.RoomMemberListener
 import com.krs.community.model.Member
-import com.krs.community.model.Message
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
-import com.krs.community.utils.FlipAnimator
-import com.krs.community.utils.Utility
+import com.krs.community.responses.SmartFilterResponse
+import com.krs.community.utils.*
+import com.krs.community.viewmodel.ProfileDetailViewModel
+import com.krs.community.viewmodel.RoomMemberViewModel
+import com.krs.community.viewmodel.SmartFilterViewModel
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
+import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
+import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
+import com.nightonke.boommenu.Util
+import com.orhanobut.dialogplus.DialogPlus
+import org.json.JSONObject
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.kodein
+import org.kodein.di.generic.instance
 import java.util.*
 
-class SharedLocationFragment : Fragment() {
+class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocationListner , ByFilterListener, RoomMemberListener {
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private var actionModeCallback: ActionModeCallback? = null
     private var actionMode: ActionMode? = null
     private var selectedItems: SparseBooleanArray  = SparseBooleanArray()
     private var animationItemsIndex: SparseBooleanArray = SparseBooleanArray()
     private var reverseAllAnimations = false
-    private lateinit var rvProfiles: RecyclerView
-    private val messages: MutableList<Member> = ArrayList()
+    private val members: MutableList<Member> = ArrayList()
+
+    override val kodein by kodein()
+
+    private lateinit var profileDetailViewModel: ProfileDetailViewModel
+    private lateinit var filterViewModel: SmartFilterViewModel
+    private lateinit var roomMemberViewModel: RoomMemberViewModel
+
+    private val filterViewModelFactory: SmartFilterViewModelFactory by instance()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
+    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
+
+    private lateinit var binding:FragmnetSharedLocationBinding
+    private var setLocationDialog: DialogPlus? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.colorBG, false)
         }
-        val root = inflater.inflate(R.layout.fragmnet_favorite, container, false)
+
+        binding=DataBindingUtil.inflate(inflater,R.layout.fragmnet_shared_location,container,false)
+
+        roomMemberViewModel = ViewModelProviders.of(this,roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
+        profileDetailViewModel = ViewModelProviders.of(this,profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
+        filterViewModel = ViewModelProviders.of(this,filterViewModelFactory).get(SmartFilterViewModel::class.java)
+        filterViewModel.mByFilterListener=this
 
         actionModeCallback = ActionModeCallback()
-        adapter = object : ParallaxRecyclerAdapter<Member>(messages) {
+        adapter = object : ParallaxRecyclerAdapter<Member>(members) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
-                val message = messages[position]
-                val name = "Kunjan Shah"
+
+                val member = members[position]
                 val holder = viewHolder as ListViewHolder
-                holder.tv_name.text = name
-                holder.boomMenuButton.clearBuilders()
-                for (i in 0 until holder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
-                    holder.boomMenuButton.addBuilder(Utility.getTextInsideCircleButtonBuilder())
+                val name=member.firstName
+                Coroutines.main {
+                    val lastname= filterViewModel.getLastNameById(Integer.parseInt(member.subCastId.toString()))
+                    holder.tvName.text= "$name $lastname"
                 }
-                holder.boomMenuButton.setOnClickListener { v: View? -> holder.boomMenuButton.boom() }
                 holder.iconText.text = name.substring(0, 1)
-                holder.itemView.isActivated = selectedItems!![position, false]
+                holder.itemView.isActivated = selectedItems.get(position, false)
+                holder.tvArea.text = member.area
+                holder.tvEmail.text = member.emailAddress
+                holder.tvMobile.text = member.mobile
+                holder.imgLocation.visibility=View.GONE
+                holder.tvUpdate.text="updated "+Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+
+                if (member.headId.equals("0")) {
+                    holder.tvRole.text = resources.getString(R.string.Family_Head)
+                } else {
+                    holder.tvRole.text = resources.getString(R.string.Member)
+                }
+
+                holder.boomMenuButton.clearBuilders()
+                for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
+                    val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
+                    builder?.listener {
+                        if (it == 0) {
+                            if (Utility.hasReadStoragePermission(activity as AppCompatActivity) && Utility.hasWriteStoragePermission(activity as AppCompatActivity)) {
+                                createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
+
+                                Handler().post(Runnable {
+                                    Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                                })
+                                Handler().postDelayed({
+                                    Utility.hideSweetProgress()
+                                }, 5000)
+
+                            } else {
+                                Utility.requestStoragePermission(activity as AppCompatActivity)
+                            }
+                        } else if (it == 1) {
+                            val intent = Intent(activity, FamilyTreeListActivity::class.java)
+                            startActivity(intent)
+                        } else if (it == 2) {
+                            if (!member.mobile.isNullOrEmpty()) {
+                                Utility.sendWhatsappMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
+                            } else {
+                                Toast.makeText(activity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
+                            }
+                        } else if (it == 3) {
+                            val mBundle = Bundle()
+                            mBundle.putSerializable(getString(R.string.member), member)
+                            val intent = Intent(activity, QRCodeActivity::class.java)
+                            intent.putExtras(mBundle)
+                            startActivity(intent)
+                            Utility.fade(activity)
+                        } else if (it == 4) {
+                            shareDetails(activity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, viewHolder.tvArea.text.toString(), member.address)
+                        } else if (it == 5) {
+                            val adapter: LocationAdapter = LocationAdapter(context as AppCompatActivity, member)
+                            adapter.setLocationListner(this@SharedLocationFragment)
+                            setLocationDialog = DialogPlus.newDialog(context)
+                                    .setAdapter(adapter)
+                                    .setGravity(Gravity.BOTTOM)
+                                    .setCancelable(true)
+                                    .setExpanded(true, 600)
+                                    .setContentBackgroundResource(R.drawable.popup_top_corner)
+                                    .create()
+                            setLocationDialog?.show()
+                        }
+                    }
+                    viewHolder.boomMenuButton.addBuilder(builder)
+                }
+
+                holder.boomMenuButton.setOnClickListener { v: View? -> holder.boomMenuButton.boom() }
+
                 applyIconAnimation(holder, position)
-                applyProfilePicture(holder, message)
+                applyProfilePicture(holder, member)
                 applyClickEvents(holder, position)
+                applyImportant(viewHolder, member)
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
-                return ListViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.favorite_list_item, viewGroup, false))
+                return ListViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.filter_result_list, viewGroup, false))
             }
 
             override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<Member>): Int {
-                return messages.size
+                return members.size
             }
         }
-        val MyLayoutManager = LinearLayoutManager(activity)
-        rvProfiles = root.findViewById(R.id.rv_favorite)
-        rvProfiles.setLayoutManager(MyLayoutManager)
-        rvProfiles.setItemAnimator(DefaultItemAnimator())
-        rvProfiles.setHasFixedSize(true)
+        val layoutManager = LinearLayoutManager(activity)
+
+        binding.rvLocation.layoutManager = layoutManager
+        binding.rvLocation.itemAnimator = DefaultItemAnimator()
+        binding.rvLocation.setHasFixedSize(true)
         val header = LayoutInflater.from(activity).inflate(R.layout.header_favorite, container, false)
-        val iv_cancel = header.findViewById<ImageView>(R.id.iv_cancel)
-        iv_cancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
-        adapter.setParallaxHeader(header, rvProfiles)
-        rvProfiles.setAdapter(adapter)
-        inbox
-        return root
+        val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
+        ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
+        adapter.setParallaxHeader(header, binding.rvLocation)
+        binding.rvLocation.adapter = adapter
+
+        getSharedProfiles()
+
+        return binding.root
     }
 
     override fun onResume() {
@@ -90,24 +209,17 @@ class SharedLocationFragment : Fragment() {
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 
-    private val inbox: Unit
-        private get() {
-            messages.clear()
-            for (i in 0..19) {
-                val message = Message()
-                message.id = 1
-                message.isImportant = false
-                message.message = "Now android supports multiple voice recogonization"
-                message.picture = "https://api.androidhive.info/json/google.png"
-                message.isRead = false
-                message.timestamp = "10:30 AM"
-                message.from = "Google Alerts"
-                message.subject = "Google Alert - android"
-                message.color = Utility.getRandomMaterialColor(activity, "400")
-                messages.add(message)
-            }
-            adapter.notifyDataSetChanged()
-        }
+    private fun getSharedProfiles(){
+        binding.shimmerViewContainer.startShimmerAnimation()
+        binding.shimmerViewContainer.visibility = View.VISIBLE
+
+        val jsonObj= JSONObject()
+        jsonObj.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
+        jsonObj.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
+        jsonObj.put(getString(R.string.id),Guru.getString(getString(R.string.user_id),""))
+        val updated=  JsonParser().parse(jsonObj.toString()) as JsonObject
+        filterViewModel.getSharedProfiles(updated)
+    }
 
     private fun toggleSelected(pos: Int) {
         currentSelectedIndex = pos
@@ -121,46 +233,78 @@ class SharedLocationFragment : Fragment() {
         adapter.notifyItemChanged(pos + 1)
     }
 
+    private fun applyImportant(holder: ListViewHolder, member: Member) {
+
+        roomMemberViewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, androidx.lifecycle.Observer {
+            try {
+                if (it != null) {
+                    holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_black_24dp))
+                    holder.iconImp.setColorFilter(ContextCompat.getColor(activity as AppCompatActivity, R.color.icon_tint_selected))
+                } else {
+                    holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_border_black_24dp))
+                    holder.iconImp.setColorFilter(ContextCompat.getColor(activity as AppCompatActivity, R.color.icon_tint_normal))
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+
+        })
+    }
+
     private fun applyClickEvents(holder: ListViewHolder, position: Int) {
-        holder.iconContainer.setOnClickListener {
-            if (actionMode == null) {
-                actionMode = activity!!.startActionMode(actionModeCallback)
-            }
-            toggleSelection(position)
-        }
-        holder.messageContainer.setOnClickListener { view: View? ->
-            // verify whether action mode is enabled or not
-            // if enabled, change the row state to activated
-            if (selectedItemCount > 0) {
-                enableActionMode(position)
-            } else { // read the message which removes bold from the row
-                val message = messages[position]
-                message.isRead = true
-                messages[position] = message
-                adapter.notifyDataSetChanged()
-                Toast.makeText(activity, "Read: " + message.message, Toast.LENGTH_SHORT).show()
+        holder.imgProfile.setOnClickListener {
+            try {
+                val path = getString(R.string.base_url_original) + "" +members.get(position).profilePic
+               // Log.d(TAG, "path: $path")
+                openImageDialog(activity as AppCompatActivity,path)
+            } catch (e: Exception) {
+                e.message
             }
         }
+
+        holder.iconImp.setOnClickListener {
+
+            val member: Member = members.get(position)
+            var flag = true
+            roomMemberViewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, androidx.lifecycle.Observer {
+                if (flag) {
+                    flag = false
+                    if (it != null) {
+                        roomMemberViewModel.deleteRoomMember(Integer.parseInt(member.id))
+                    } else {
+                        roomMemberViewModel.insertRoomMember(getRoomMemberFromMember(member))
+                    }
+                }
+            })
+        }
+
+        holder.llMobile.setOnClickListener {
+            val intent = Intent(Intent.ACTION_DIAL)
+            val str = "tel:" + holder.tvMobile.text
+            intent.data = Uri.parse(str)
+            startActivity(intent)
+        }
+
+        holder.messageContainer.setOnClickListener { onMessageRowClicked(position) }
         holder.messageContainer.setOnLongClickListener { view ->
-            enableActionMode(position)
+            onRowLongClicked(position)
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             true
         }
     }
 
-    private fun applyProfilePicture(holder: ListViewHolder, message: Member) {
-        if (!TextUtils.isEmpty(message.picture)) {
-            Glide.with(activity!!).load(message.picture)
-                    .thumbnail(0.5f)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .apply(RequestOptions.circleCropTransform())
-                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-                    .into(holder.imgProfile)
+    private fun applyProfilePicture(holder: ListViewHolder, member: Member) {
+        if (!TextUtils.isEmpty(member.profilePic)) {
+            val url=resources.getString(R.string.base_url_thumb)+member.profilePic
+            //Log.d(TAG,"url: "+url)
+            Glide.with(activity!!).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE
+            holder.imgProfile.isClickable = true
         } else {
+            holder.imgProfile.isClickable = false
             holder.imgProfile.setImageResource(R.drawable.bg_circle)
-            holder.imgProfile.setColorFilter(message.color)
+            holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(activity!!, "400"))
             holder.iconText.visibility = View.VISIBLE
         }
     }
@@ -202,6 +346,21 @@ class SharedLocationFragment : Fragment() {
         }
     }
 
+    private fun onMessageRowClicked(position: Int) {
+        if (selectedItemCount > 0) {
+            enableActionMode(position)
+        } else {
+            val intent=Intent(activity, ProfileDetailActivity::class.java)
+            intent.putExtra(getString(R.string.member),members.get(position))
+            startActivity(intent)
+            Utility.fade(activity)
+        }
+    }
+
+    private fun onRowLongClicked(position: Int) {
+        enableActionMode(position)
+    }
+
     private fun enableActionMode(position: Int) {
         if (actionMode == null) {
             actionMode = activity!!.startActionMode(actionModeCallback)
@@ -227,7 +386,7 @@ class SharedLocationFragment : Fragment() {
     }
 
     private fun removeData(position: Int) {
-        messages.removeAt(position)
+        members.removeAt(position)
         resetCurrentIndex()
     }
 
@@ -252,14 +411,23 @@ class SharedLocationFragment : Fragment() {
         get() = selectedItems.size()
 
     private inner class ListViewHolder internal constructor(v: View) : RecyclerView.ViewHolder(v), View.OnLongClickListener {
-        var boomMenuButton: BoomMenuButton
-        var iconContainer: RelativeLayout
-        var iconBack: RelativeLayout
-        var iconFront: RelativeLayout
-        var iconText: TextView
-        var tv_name: TextView
-        var imgProfile: ImageView
-        var messageContainer: LinearLayout
+
+        val boomMenuButton: BoomMenuButton = itemView.findViewById(R.id.bmb1)
+        var imgProfile: ImageView = itemView.findViewById(R.id.icon_profile)
+        var tvName: TextView = itemView.findViewById(R.id.tv_name)
+        val tvArea: TextView = itemView.findViewById(R.id.tv_area)
+        val tvRole: TextView = itemView.findViewById(R.id.tv_role)
+        val tvMobile: TextView = itemView.findViewById(R.id.tv_mobile)
+        val tvEmail: TextView = itemView.findViewById(R.id.tv_email)
+        var iconImp: ImageView = itemView.findViewById(R.id.icon_star)
+        var imgLocation: ImageView = itemView.findViewById(R.id.img_location)
+        var iconBack: RelativeLayout = itemView.findViewById(R.id.icon_back)
+        var iconFront: RelativeLayout = itemView.findViewById(R.id.icon_front)
+        var iconText: TextView = itemView.findViewById(R.id.icon_text)
+        var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
+        var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
+        var tvUpdate:TextView=  itemView.findViewById(R.id.tv_update)
+
         override fun onLongClick(v: View): Boolean {
             enableActionMode(adapterPosition)
             v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
@@ -267,14 +435,6 @@ class SharedLocationFragment : Fragment() {
         }
 
         init {
-            tv_name = v.findViewById(R.id.tv_name)
-            boomMenuButton = v.findViewById(R.id.boomMenuButton)
-            iconText = v.findViewById(R.id.icon_text)
-            iconBack = v.findViewById(R.id.icon_back)
-            iconFront = v.findViewById(R.id.icon_front)
-            imgProfile = v.findViewById(R.id.icon_profile)
-            messageContainer = v.findViewById(R.id.message_container)
-            iconContainer = v.findViewById(R.id.icon_container)
             v.setOnLongClickListener(this)
         }
     }
@@ -291,10 +451,16 @@ class SharedLocationFragment : Fragment() {
 
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             return when (item.itemId) {
-                R.id.action_delete -> {
-                    // delete all the selected messages
+                R.id.action_activate -> {
                     deleteMessages()
                     mode.finish()
+                    true
+                }
+                R.id.action_select_all -> {
+                    clearSelections()
+                    for (i in members.indices) {
+                        enableActionMode(i)
+                    }
                     true
                 }
                 else -> false
@@ -307,7 +473,7 @@ class SharedLocationFragment : Fragment() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(activity, R.color.colorBG, false)
             }
-            rvProfiles.post {
+            binding.rvLocation.post {
                 resetAnimationIndex()
                 adapter.notifyDataSetChanged()
             }
@@ -316,5 +482,39 @@ class SharedLocationFragment : Fragment() {
 
     companion object {
         private var currentSelectedIndex = -1
+    }
+
+    override fun getMembers(response: SmartFilterResponse) {
+        if(response.success){
+            if(response.members!=null){
+                members.clear()
+                members.addAll(response.members)
+                adapter.notifyDataSetChanged()
+            }
+        }
+
+        binding.rvLocation.snackbar(response.message.toString(),Snackbar.LENGTH_LONG)
+
+        Handler().post {
+            binding.shimmerViewContainer.stopShimmerAnimation()
+            binding.shimmerViewContainer.visibility = View.GONE
+        }
+    }
+
+    override fun refreshList() {
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun getRoomMembers(response: List<RoomMember>) {
+
+    }
+
+    override suspend fun getFailure(message: String) {
+        binding.shimmerViewContainer.stopShimmerAnimation()
+        binding.shimmerViewContainer.visibility = View.GONE
+    }
+
+    override fun cancelDialog() {
+        setLocationDialog?.dismiss()
     }
 }

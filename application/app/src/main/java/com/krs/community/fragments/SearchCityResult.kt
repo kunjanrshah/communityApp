@@ -58,6 +58,8 @@ import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
+import kotlinx.android.synthetic.main.fragment_admins.*
+import kotlinx.android.synthetic.main.fragment_change_pass.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -122,6 +124,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         browseCityViewModel.ibrowseCityRecordsListener = this
         roomMemberViewModel.mRoomMemberListener=this
         profileDetailViewModel.mEditMemberListener=this
+
         if (this.arguments != null){
             cityName = this.arguments!!.getString("city_name").toString()
             cityId =  this.arguments!!.getString("city_id").toString()
@@ -141,7 +144,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                  val lastname= browseCityViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
                     holder.tvName.text= "$name $lastname"
                 }
-
+                holder.iconText.text = name.substring(0, 1)
+                holder.itemView.isActivated = selectedItems.get(position, false)
                 holder.tvArea.text = member.area
                 holder.tvEmail.text = member.emailAddress
                 holder.tvMobile.text = member.mobile
@@ -219,8 +223,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
                 holder.boomMenuButton.setOnClickListener({ v -> holder.boomMenuButton.boom() })
 
-                holder.iconText.text = name.substring(0, 1)
-                holder.itemView.isActivated = selectedItems.get(position, false)
+
                 applyIconAnimation(holder, position)
                 applyProfilePicture(holder, member)
                 applyClickEvents(holder, position)
@@ -368,13 +371,17 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     }
 
     override fun getScanResult(response: SmartFilterResponse) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
         if(response.member!=null){
             Guru.putString(getString(R.string.loginUser), Gson().toJson(response.member))
         }
+        binding.shimmerViewContainer.stopShimmerAnimation()
+        binding.shimmerViewContainer.visibility = View.GONE
+        binding.llParent.snackbar(response.message,Snackbar.LENGTH_LONG)
+        clearSelections()
+        actionMode?.finish()
     }
 
     override suspend fun getFailure(message: String) {
@@ -618,9 +625,9 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                                 Ids = Ids.substring(0, Ids.length - 1)
                                 jsonObject.put(getString(R.string.sharing_id), Ids)
                                 val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-                                members.clear()
+                                /*members.clear()
                                 tvCount.visibility=View.GONE
-                                adapter.notifyDataSetChanged()
+                                adapter.notifyDataSetChanged()*/
                                 binding.shimmerViewContainer.startShimmerAnimation()
                                 binding.shimmerViewContainer.visibility = View.VISIBLE
                                 profileDetailViewModel.updateProfile(updated,true)
@@ -688,8 +695,6 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                             .setContentBackgroundResource(R.drawable.popup_top_corner)
                             .create()
                     changeRoleDialog?.show()
-
-
 
                     true
                 }
@@ -807,6 +812,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     override fun cancelDialog() {
         actionMode?.finish()
         changeRoleDialog?.dismiss()
+        setLocationDialog?.dismiss()
     }
 
 

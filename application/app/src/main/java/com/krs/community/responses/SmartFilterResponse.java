@@ -13,7 +13,7 @@ public class SmartFilterResponse {
     private Boolean success;
     @SerializedName("message")
     @Expose
-    private Boolean message;
+    private String message;
     @SerializedName("total_records")
     @Expose
     private Integer totalRecords;
@@ -45,11 +45,11 @@ public class SmartFilterResponse {
         this.members = members;
     }
 
-    public Boolean getMessage() {
+    public String getMessage() {
         return message;
     }
 
-    public void setMessage(Boolean message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 }
