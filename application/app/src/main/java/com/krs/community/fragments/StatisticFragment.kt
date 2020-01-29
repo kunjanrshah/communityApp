@@ -59,7 +59,7 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
         }
 
         getStatisticsResult(0)
-        binding.ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
+        binding.ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         return binding.root
     }
 

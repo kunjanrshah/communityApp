@@ -3,7 +3,6 @@ package com.krs.community.adapter
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +17,7 @@ import com.krs.community.fragments.SmartFilterResult
 import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
+
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
@@ -313,15 +313,34 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                         viewHolder.llIsspect.visibility = View.VISIBLE
                         viewHolder.chkIsSpect.isChecked = true
                     }
-                } else if (key.equals(_context.resources.getString(R.string.ss_edt_created), ignoreCase = true)) {
+                } else if (key.equals(_context.resources.getString(R.string.ss_edt_bdate), ignoreCase = true)) {
+                    if (value.isNotEmpty()) {
+                        viewHolder.llBirthDate.visibility = View.VISIBLE
+                        viewHolder.tvBirthDate.text = value1
+                    }
+                }else if (key.equals(_context.resources.getString(R.string.ss_edt_mdate), ignoreCase = true)) {
+                    if (value.isNotEmpty()) {
+                        viewHolder.llMdate.visibility = View.VISIBLE
+                        viewHolder.tvMdate.text = value1
+                    }
+                }
+
+                else if (key.equals(_context.resources.getString(R.string.ss_edt_created), ignoreCase = true)) {
                     if (value.isNotEmpty()) {
                         viewHolder.llCreated.visibility = View.VISIBLE
-                        viewHolder.edtCreated.setText(value1)
+                        viewHolder.tvCreated.setText(value1)
+                    }
+                }
+
+                else if (key.equals(_context.resources.getString(R.string.ss_edt_created), ignoreCase = true)) {
+                    if (value.isNotEmpty()) {
+                        viewHolder.llCreated.visibility = View.VISIBLE
+                        viewHolder.tvCreated.setText(value1)
                     }
                 } else if (key.equals(_context.resources.getString(R.string.ss_edt_updated), ignoreCase = true)) {
                     if (value.isNotEmpty()) {
                         viewHolder.llUpdated.visibility = View.VISIBLE
-                        viewHolder.edtUpdated.setText(value1)
+                        viewHolder.tvUpdated.setText(value1)
                     }
                 } else if (key.equals(_context.resources.getString(R.string.ss_minUpdate), ignoreCase = true)) {
                     if (value.isNotEmpty()) {
@@ -561,10 +580,10 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
             }
 
             if (viewHolder.llBirthDate.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_edt_bdate), viewHolder.edtBirthDate.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_edt_bdate), viewHolder.tvBirthDate.text.toString().trim { it <= ' ' })
             }
             if (viewHolder.llMdate.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_edt_mdate), viewHolder.edtMdate.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_edt_mdate), viewHolder.tvMdate.text.toString().trim { it <= ' ' })
             }
             if (viewHolder.llMosad.isShown) {
                 lstValues.put(_context.resources.getString(R.string.ss_edt_mosad), viewHolder.edtMosad.text.toString().trim { it <= ' ' })
@@ -608,10 +627,10 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                 lstValues.put(_context.resources.getString(R.string.ss_edt_weight_kg), viewHolder.edtWeightKg.text.toString().trim { it <= ' ' })
             }
             if (viewHolder.llCreated.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_edt_created), viewHolder.edtCreated.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_edt_created), viewHolder.tvCreated.text.toString().trim { it <= ' ' })
             }
             if (viewHolder.llUpdated.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_edt_updated), viewHolder.edtUpdated.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_edt_updated), viewHolder.tvUpdated.text.toString().trim { it <= ' ' })
             }
             if (viewHolder.llPercentage.isShown) {
                 lstValues.put(_context.resources.getString(R.string.ss_maxUpdate), viewHolder.rangeUpdationBar.selectedMaxValue.toString().trim { it <= ' ' })
@@ -733,14 +752,14 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         var edtLocalAdd: EditText = view.findViewById(R.id.edt_local_add)
         var edtPermanentAdd: EditText = view.findViewById(R.id.edt_permanent_add)
         var edtPincode: EditText = view.findViewById(R.id.edt_pincode)
-        var edtBirthDate: EditText = view.findViewById(R.id.edt_birth_date)
-        var edtMdate: EditText = view.findViewById(R.id.edt_mdate)
+        var tvBirthDate: TextView = view.findViewById(R.id.tv_birth_date)
+        var tvMdate: TextView = view.findViewById(R.id.tv_mdate)
         var edtOffice: EditText = view.findViewById(R.id.edt_office)
         var edtBtime: EditText = view.findViewById(R.id.edt_btime)
         var edtHeightMeter: EditText = view.findViewById(R.id.edt_height_meter)
         var edtWeightKg: EditText = view.findViewById(R.id.edt_weight_kg)
-        var edtUpdated: EditText = view.findViewById(R.id.edt_updated)
-        var edtCreated: EditText = view.findViewById(R.id.edt_created)
+        var tvUpdated: TextView = view.findViewById(R.id.tv_updated)
+        var tvCreated: TextView = view.findViewById(R.id.tv_created)
         var edtArea: EditText = view.findViewById(R.id.edt_area)
         var edtBplace: EditText = view.findViewById(R.id.edt_bplace)
         var edtMosad: EditText = view.findViewById(R.id.edt_mosad)

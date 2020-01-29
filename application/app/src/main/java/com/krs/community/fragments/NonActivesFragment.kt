@@ -141,7 +141,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         val header = LayoutInflater.from(activity).inflate(R.layout.header_nonactives, container, false)
         tvCount = header.findViewById(R.id.tv_count)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
-        ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
+        ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         adapter.setParallaxHeader(header, rvSearch)
         rvSearch.adapter = adapter
 

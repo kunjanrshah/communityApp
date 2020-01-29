@@ -20,8 +20,9 @@
             android:layout_marginBottom="10dp"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/edt_birth_time"
+            <TextView
+                android:id="@+id/tv_birth_time"
+                android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:singleLine="true"
@@ -89,6 +90,9 @@
                         android:singleLine="true"
                         android:background="@drawable/border"
                         android:hint="Height"
+                        android:inputType="number"
+                        android:maxLength="8"
+                        android:digits="0123456789."
                         android:fontFamily="@font/montserrat_regular"
                         android:textSize="14sp"
                         android:paddingLeft="10dp" />
@@ -114,6 +118,9 @@
                         android:singleLine="true"
                         android:background="@drawable/border"
                         android:hint="Weight"
+                        android:inputType="number"
+                        android:maxLength="8"
+                        android:digits="0123456789."
                         android:fontFamily="@font/montserrat_regular"
                         android:textSize="14sp"
                         android:paddingLeft="10dp" />

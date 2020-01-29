@@ -42,7 +42,7 @@ class MatrimonyFragment : Fragment(), KodeinAware {
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
 
-        binding.ivCancel.setOnClickListener { Utility.movetoFragment(activity, DashboardFragment()) }
+        binding.ivCancel.setOnClickListener { Utility.backNavigation(activity) }
 
         binding.edtName.setOnTouchListener { _: View?, event: MotionEvent ->
             val RIGHT = 2

@@ -1,18 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_activate"
-        android:icon="@drawable/del_fav"
-        android:orderInCategory="100"
-        android:title="UnFavorite"
-        app:showAsAction="always" />
-
 
     <item
         android:id="@+id/action_select_all"
-        android:icon="@drawable/select_all_color_primary"
-        android:orderInCategory="100"
+        android:icon="@drawable/select_all"
         android:title="Select All"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_activate"
+        android:icon="@drawable/gps_off"
+        android:title="GpsOff"
+        app:showAsAction="always" />
+
 </menu>

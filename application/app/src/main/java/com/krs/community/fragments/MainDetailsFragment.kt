@@ -43,7 +43,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     lateinit var binding: FragmentMainDetailsBinding
     private lateinit var member: Member
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-    private val factory: ProfileDetailViewModelFactory by instance()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
     var numberOfLines=5
     override val kodein by kodein()
     @SuppressLint("ClickableViewAccessibility")
@@ -51,25 +51,34 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_details, container, false)
-        profileDetailViewModel = ViewModelProviders.of(this, factory).get(ProfileDetailViewModel::class.java)
+        profileDetailViewModel = ViewModelProviders.of(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener=this
         member = arguments?.getSerializable(getString(R.string.member)) as Member
         val loginMember=Guru.getString(getString(R.string.loginUser),"")
         val loginMem= Gson().fromJson(loginMember,Member::class.java)
-        if(loginMem.id == member.id){
-            binding.spState.isEnabled=true
-            binding.spCity.isEnabled=true
+        if(member.id == loginMem.id || member.headId == loginMem.id){
+
+            binding.fname.isFocusable=true
             binding.edtArea.isFocusable=true
             binding.edtAddr.isFocusable=true
             binding.edtPincode.isFocusable=true
-            binding.chkRented.isEnabled=true
-        }else{
-            binding.spState.isEnabled=false
-            binding.spCity.isEnabled=false
-            binding.edtArea.isFocusable=false
-            binding.edtAddr.isFocusable=false
-            binding.edtPincode.isFocusable=false
-            binding.chkRented.isEnabled=false
+            binding.edtFather.isFocusable=true
+            binding.edtMother.isFocusable=true
+            binding.edtEmail.isFocusable=true
+            binding.edtMobile.isFocusable=true
+            binding.edtCode.setText(member.memberCode)
+
+            binding.spState.isEnabled=true
+            binding.spCity.isEnabled=true
+            binding.spRelation.isEnabled=true
+            binding.spLastname.isEnabled=true
+            binding.spGender.isEnabled=true
+
+            binding.chkRented.isFocusable=false
+            binding.chkRented.isClickable=true
+
+            binding.llMcode.visibility=View.VISIBLE
+
             member.stateId=loginMem.stateId
             member.cityId=loginMem.cityId
             member.city=loginMem.city
@@ -77,13 +86,32 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             member.pincode=loginMem.pincode
             member.address=loginMem.address
             member.isRented=loginMem.isRented
-        }
-
-        if(member.memberCode.isNullOrEmpty()){
-            binding.llMcode.visibility=View.GONE
         }else{
-            binding.llMcode.visibility=View.VISIBLE
-            binding.edtCode.setText(member.memberCode)
+            binding.fname.isFocusable=false
+            binding.edtEmail.isFocusable=false
+            binding.edtMobile.isFocusable=false
+            binding.edtMother.isFocusable=false
+            binding.edtFather.isFocusable=false
+            binding.edtArea.isFocusable=false
+            binding.edtAddr.isFocusable=false
+            binding.edtPincode.isFocusable=false
+            binding.edtCode.isFocusable=false
+            binding.edtCode.isClickable=false
+
+            binding.spGender.isEnabled=false
+            binding.spLastname.isEnabled=false
+            binding.spRelation.isEnabled=false
+            binding.spState.isEnabled=false
+            binding.spCity.isEnabled=false
+            binding.chkRented.isFocusable=false
+            binding.chkRented.isClickable=false
+
+            if(member.memberCode.isNullOrEmpty()){
+                binding.llMcode.visibility=View.GONE
+            }else{
+                binding.llMcode.visibility=View.VISIBLE
+                binding.edtCode.setText(member.memberCode)
+            }
         }
 
         binding.fname.setText(member.firstName)
@@ -334,12 +362,12 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
     }
 
-    override fun getMembers(response: SmartFilterResponse) {
+    override fun getScanResult(response: SmartFilterResponse) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 
-    override fun getMessage(response: UpdateProfileResponse) {
+    override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
         Utility.hideSweetProgress()
         val updatedMem = response.member
         member.homeLat=ProfileDetailActivity.cur_lat.value.toString()

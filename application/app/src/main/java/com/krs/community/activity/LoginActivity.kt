@@ -16,7 +16,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.facebook.*
@@ -34,6 +33,7 @@ import com.krs.community.app.AppController
 import com.krs.community.app.AppSignatureHashHelper
 import com.krs.community.app.SMSReceiver
 import com.krs.community.databinding.ActivityLoginwithBinding
+import com.krs.community.fragments.FamilyDetailActivity
 import com.krs.community.interfaces.ILoginListener
 import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
@@ -206,7 +206,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         btnContinue.setOnClickListener { v ->
 
             if(!ReceviedOTP.isNullOrEmpty() && ReceviedOTP==squareField.text.toString()){
-                goToDashboardScreen()
+                goToFamilyDetailScreen()
                 return@setOnClickListener
             }
 
@@ -319,7 +319,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         }
         if(ReceviedOTP!=null){
             if(ReceviedOTP.equals(otp1)){
-                goToDashboardScreen()
+                goToFamilyDetailScreen()
             }
         }
     }
@@ -341,16 +341,22 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             startSMSListener()
             ReceviedOTP=response.otp
         }else{
-            goToDashboardScreen()
+            if(response.success){
+                goToFamilyDetailScreen()
+            }else{
+                Snackbar.make(findViewById(R.id.ll_login), response.message, Snackbar.LENGTH_LONG).show()
+            }
         }
     }
 
-    fun goToDashboardScreen(){
+    private fun goToFamilyDetailScreen(){
         Guru.putString(getString(R.string.loginUser),Gson().toJson(member))
+        Guru.putString(getString(R.string.user_email),member.emailAddress)
         Guru.putString(getString(R.string.user_mobile),member.mobile)
         Guru.putString(getString(R.string.user_id),member.id)
         Guru.putString(getString(R.string.access_token),member.accessToken)
-        val intent = Intent(applicationContext, DashboardActivity::class.java)
+        val intent = Intent(applicationContext, FamilyDetailActivity::class.java)
+        intent.putExtra(getString(R.string.id), member.id)
         startActivity(intent)
         finish()
     }
@@ -364,9 +370,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         Log.d(TAG, "login data: $message")
     }
 
-    override fun userForgotPass(data: String) {
-        Log.d(TAG, "forgot data: $data")
-    }
 
     // Fetches reg id from shared preferences
    /* private fun displayFirebaseRegId() {

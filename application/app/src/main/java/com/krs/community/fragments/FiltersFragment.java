@@ -60,7 +60,7 @@ public class FiltersFragment extends Fragment {
         View header=LayoutInflater.from(getActivity()).inflate(R.layout.header_filters, container, false);
         ImageView iv_cancel= header.findViewById(R.id.iv_cancel);
         iv_cancel.setOnClickListener(v -> {
-            Utility.movetoFragment(getActivity(),new DashboardFragment());
+            Utility.backNavigation(getActivity());
         });
 
         adapter.setParallaxHeader(header, rv_filters);

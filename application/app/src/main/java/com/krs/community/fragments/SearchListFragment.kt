@@ -95,6 +95,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
     private var actionMode: ActionMode? = null
     private lateinit var actionModeCallback: ActionModeCallback
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_search_list, container, false)
@@ -102,7 +103,6 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
-
 
         smartSearchViewModel = ViewModelProviders.of(this, smartSearchViewModelFactory).get(SmartSearchViewModel::class.java)
         roomMemberViewModel = ViewModelProviders.of(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
@@ -820,6 +820,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
 
     override fun cancelDialog() {
         actionMode?.finish()
+        setLocationDialog?.dismiss()
         changeRoleDialog?.dismiss()
     }
 

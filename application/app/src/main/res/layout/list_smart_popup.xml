@@ -1164,7 +1164,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Permanent Add: "
+                android:text="Pincode :"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -1173,6 +1173,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:inputType="number"
+                android:maxLength="6"
+                android:digits="0123456789"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1194,6 +1197,7 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
+            android:gravity="center_vertical"
             android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
@@ -1204,15 +1208,16 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Birth Date: "
+                android:text="Birth Date : "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
-            <EditText
-                android:id="@+id/edt_birth_date"
+            <TextView
+                android:id="@+id/tv_birth_date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:gravity="center_vertical"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1233,10 +1238,10 @@
             android:id="@+id/ll_mdate"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
+            android:visibility="gone"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:orientation="horizontal"         >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -1244,15 +1249,16 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Marriage Date :"
+                android:text="Marriage Date : "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
-            <EditText
-                android:id="@+id/edt_mdate"
+            <TextView
+                android:id="@+id/tv_mdate"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:gravity="center_vertical"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1269,6 +1275,7 @@
 
         </LinearLayout>
 
+
         <LinearLayout
             android:id="@+id/ll_mosad"
             android:layout_width="wrap_content"
@@ -1284,7 +1291,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Mosad :"
+                android:text="Wife Native : "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -1324,7 +1331,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Office Add: "
+                android:text="Office Add :"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -1494,7 +1501,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Weight: "
+                android:text="Weight :"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -1542,15 +1549,16 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Created Date :"
+                android:text="Created Date : "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
-            <EditText
-                android:id="@+id/edt_created"
+            <TextView
+                android:id="@+id/tv_created"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:gravity="center_vertical"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1572,9 +1580,9 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
+            android:visibility="gone"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -1582,15 +1590,16 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Updated Date :"
+                android:text="Updated Date : "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
-            <EditText
-                android:id="@+id/edt_updated"
+            <TextView
+                android:id="@+id/tv_updated"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:gravity="center_vertical"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />

@@ -12,6 +12,8 @@ import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.github.squti.guru.Guru
+import com.google.gson.Gson
 import com.krs.community.R
 import com.krs.community.databinding.FragmentMatrimonyDetailsBinding
 import com.krs.community.model.Member
@@ -28,6 +30,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
 
     lateinit var binding: FragmentMatrimonyDetailsBinding
     private lateinit var member: Member
+    private lateinit var loginMem: Member
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: ProfileDetailViewModelFactory by instance()
     var numberOfLines=5
@@ -39,10 +42,37 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         profileDetailViewModel = ViewModelProviders.of(this, factory).get(ProfileDetailViewModel::class.java)
         member = arguments?.getSerializable(getString(R.string.member)) as Member
 
+        val loginMember= Guru.getString(getString(R.string.loginUser),"")
+        loginMem= Gson().fromJson(loginMember,Member::class.java)
+        if(member.id == loginMem.id || member.headId == loginMem.id){
+        binding.chkInterested.isClickable=true
+        binding.chkGlass.isClickable=true
+        binding.chkIsMangal.isClickable=true
+        binding.chkIsShani.isClickable=true
+        binding.edtAbout.isFocusable=true
+        binding.edtFbUrl.isFocusable=true
+        binding.edtBplace.isFocusable=true
+        binding.edtHobby.isFocusable=true
+        binding.edtExpectation.isFocusable=true
+        binding.edtWeight.isFocusable=true
+        binding.edtHeight.isFocusable=true
+        }else{
+            binding.chkInterested.isClickable=false
+            binding.chkGlass.isClickable=false
+            binding.chkIsMangal.isClickable=false
+            binding.chkIsShani.isClickable=false
+            binding.edtAbout.isFocusable=false
+            binding.edtFbUrl.isFocusable=false
+            binding.edtBplace.isFocusable=false
+            binding.edtHobby.isFocusable=false
+            binding.edtExpectation.isFocusable=false
+            binding.edtWeight.isFocusable=false
+            binding.edtHeight.isFocusable=false
+        }
 
         binding.edtAbout.setText(member.aboutMe)
         binding.edtFbUrl.setText(member.facebookProfile)
-        binding.txtBtime.setText(member.birthTime)
+        binding.txtBtime.text = member.birthTime
         binding.edtBplace.setText(member.birthPlace)
         binding.edtHobby.setText(member.hobby)
         binding.edtExpectation.setText(member.expectation)
@@ -54,7 +84,9 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         binding.chkInterested.isChecked = member.matrimony.toString().toLowerCase().equals("yes")
 
         binding.txtBtime.setOnClickListener {
-            NumberPadTimePickerDialogFragment.newInstance(mListener).show(activity!!.getSupportFragmentManager(), "bottom_sheet")
+            if(member.id == loginMem.id || member.headId == loginMem.id){
+                NumberPadTimePickerDialogFragment.newInstance(mListener).show(activity!!.getSupportFragmentManager(), "bottom_sheet")
+            }
         }
 
         binding.edtAbout.addTextChangedListener(object: TextWatcher {

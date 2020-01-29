@@ -30,53 +30,71 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <RelativeLayout
-                    android:id="@+id/icon_container"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:orientation="vertical">
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/img_location"
+                        android:visibility="gone"
+                        android:layout_gravity="center"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/back_image" />
 
                     <RelativeLayout
-                        android:id="@+id/icon_back"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fillAfter="false"
-                        android:fillEnabled="false">
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:id="@+id/icon_container"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/bg_circle" />
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:src="@drawable/ic_done_white_24dp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/icon_front"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fillAfter="false"
-                        android:fillEnabled="false">
-
-                        <ImageView
-                            android:id="@+id/icon_profile"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp" />
-
-                        <TextView
-                            android:id="@+id/icon_text"
+                        <RelativeLayout
+                            android:id="@+id/icon_back"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:textColor="@android:color/white"
-                            android:textSize="22sp" />
+                            android:fillAfter="false"
+                            android:fillEnabled="false">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:src="@drawable/bg_circle" />
+
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/ic_done_white_24dp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/icon_front"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fillAfter="false"
+                            android:fillEnabled="false">
+
+                            <ImageView
+                                android:id="@+id/icon_profile"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp" />
+
+                            <TextView
+                                android:id="@+id/icon_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:textColor="@android:color/white"
+                                android:textSize="22sp" />
+                        </RelativeLayout>
+
                     </RelativeLayout>
 
-                </RelativeLayout>
+                </FrameLayout>
+
 
                 <com.nightonke.boommenu.BoomMenuButton
                     android:id="@+id/bmb1"

@@ -38,6 +38,7 @@ import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentFilterResultBinding
 import com.krs.community.entities.RoomMember
+import com.krs.community.interfaces.EditMemberListener
 import com.krs.community.interfaces.IbrowseCityRecordsListener
 import com.krs.community.interfaces.RoomMemberListener
 import com.krs.community.model.FilterBy
@@ -45,6 +46,8 @@ import com.krs.community.model.Member
 import com.krs.community.model.SearchByCityData
 import com.krs.community.model.SearchByCityModel
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
+import com.krs.community.responses.SmartFilterResponse
+import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.BrowseCityViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModel
@@ -61,7 +64,7 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.util.*
 
-class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCityRecordsListener, ParallaxRecyclerAdapter.OnLoadMore,AtoZBottomAdapter.ISortingRecords, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner {
+class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCityRecordsListener, ParallaxRecyclerAdapter.OnLoadMore,AtoZBottomAdapter.ISortingRecords, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner , EditMemberListener {
 
     companion object {
         var alpha:String=""
@@ -98,7 +101,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
     private var changeRoleDialog: DialogPlus? = null
     private var setLocationDialog: DialogPlus? = null
-
+    private var loginMember:Member?=null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -118,12 +121,12 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
         browseCityViewModel.ibrowseCityRecordsListener = this
         roomMemberViewModel.mRoomMemberListener=this
-
+        profileDetailViewModel.mEditMemberListener=this
         if (this.arguments != null){
             cityName = this.arguments!!.getString("city_name").toString()
             cityId =  this.arguments!!.getString("city_id").toString()
-            Guru.putString("user_city",cityName)
-            Guru.putString("user_city_id",cityId)
+            /*Guru.putString("user_city",cityName)
+            Guru.putString("user_city_id",cityId)*/
         }
 
         members.clear()
@@ -146,6 +149,17 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     holder.tvRole.text = resources.getString(R.string.Family_Head)
                 } else {
                     holder.tvRole.text = resources.getString(R.string.Member)
+                }
+
+                val arrayId = loginMember?.sharingId?.split(',')
+                if (arrayId!= null) {
+                    for(id in arrayId){
+                        if(member.id==id){
+                            holder.imgLocation.visibility=View.VISIBLE
+                        }else{
+                            holder.imgLocation.visibility=View.GONE
+                        }
+                    }
                 }
 
                 holder.tvUpdate.text="updated "+Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
@@ -203,7 +217,6 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     viewHolder.boomMenuButton.addBuilder(builder)
                 }
 
-
                 holder.boomMenuButton.setOnClickListener({ v -> holder.boomMenuButton.boom() })
 
                 holder.iconText.text = name.substring(0, 1)
@@ -232,7 +245,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         edtFilterName.visibility = View.GONE
 
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
-        ivCancel.setOnClickListener { v -> Utility.movetoFragment(activity, BrowseByCityFragment()) }
+        ivCancel.setOnClickListener { v -> Utility.backNavigation(activity) }
 
         val ivExport = header.findViewById<ImageView>(R.id.iv_export)
         ivExport.setOnClickListener {
@@ -292,6 +305,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 binding.shimmerViewContainer.startShimmerAnimation()
                 binding.shimmerViewContainer.visibility = View.VISIBLE
             }
+            val loginuser= Guru.getString(getString(R.string.loginUser),"")
+            loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
             browseCityViewModel.fetchRecordsByCity(data)
         }
     }
@@ -324,7 +339,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         if (data.success) {
             if (data.members.size > 0) {
                 val count= data.totalHead+ data.totalMem
-                tvCount.text="Families: ${data.totalHead}. Members: $count"
+                tvCount.text="Families: ${data.totalHead}, Members: $count"
                 for (user in data.members) {
                     members.add(user)
                 }
@@ -350,6 +365,16 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
         binding.shimmerViewContainer.stopShimmerAnimation()
         binding.shimmerViewContainer.visibility = View.GONE
+    }
+
+    override fun getScanResult(response: SmartFilterResponse) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
+        if(response.member!=null){
+            Guru.putString(getString(R.string.loginUser), Gson().toJson(response.member))
+        }
     }
 
     override suspend fun getFailure(message: String) {
@@ -523,12 +548,14 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         val tvMobile: TextView = itemView.findViewById(R.id.tv_mobile)
         val tvEmail: TextView = itemView.findViewById(R.id.tv_email)
         var iconImp: ImageView = itemView.findViewById(R.id.icon_star)
+        var imgLocation: ImageView = itemView.findViewById(R.id.img_location)
         var iconBack: RelativeLayout = itemView.findViewById(R.id.icon_back)
         var iconFront: RelativeLayout = itemView.findViewById(R.id.icon_front)
         var iconText: TextView = itemView.findViewById(R.id.icon_text)
         var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
         var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
         var tvUpdate:TextView=  itemView.findViewById(R.id.tv_update)
+
         init {
             itemView.setOnLongClickListener(this)
         }
@@ -569,6 +596,45 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem):Boolean =
             when (item.itemId) {
+
+                R.id.action_location -> {
+                    val selectedItemPositions = getSelectedItems()
+                    SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText(getString(R.string.you_sure))
+                            .setContentText("Want to share your location to ${selectedItemPositions.size} Profiles!")
+                            .setConfirmText("Yes,Share it!")
+                            .setCancelText("No")
+                            .setConfirmClickListener {
+                                it.dismiss()
+                                val jsonObject = JSONObject()
+                                jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                                jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+
+                                var Ids = ""
+                                for (index in selectedItemPositions) {
+                                    Ids += members[index].id + ","
+                                }
+
+                                Ids = Ids.substring(0, Ids.length - 1)
+                                jsonObject.put(getString(R.string.sharing_id), Ids)
+                                val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                                members.clear()
+                                tvCount.visibility=View.GONE
+                                adapter.notifyDataSetChanged()
+                                binding.shimmerViewContainer.startShimmerAnimation()
+                                binding.shimmerViewContainer.visibility = View.VISIBLE
+                                profileDetailViewModel.updateProfile(updated,true)
+
+                            }
+                            .setCancelClickListener {
+                                it.dismiss()
+                            }
+                            .show()
+
+                    true
+                }
+
+
                 R.id.action_delete -> {
                     val selectedItemPositions = getSelectedItems()
                     SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
@@ -609,7 +675,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 }
                 R.id.action_my_role -> {
 
-                    val adapter: MyRoleAdapter = MyRoleAdapter(context)
+                    val adapter = MyRoleAdapter(context)
                     adapter.setChangeRoleListner(this@SearchCityResult)
                     changeRoleDialog = DialogPlus.newDialog(context)
                             .setAdapter(adapter)
@@ -713,10 +779,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     }
 
                     jsonObject.put(getString(R.string.role), changed)
-                    val loginuser= Guru.getString(getString(R.string.loginUser),"")
-                    val member: Member = Gson().fromJson<Member>(loginuser, Member::class.java)
-                    jsonObject.put(getString(R.string.local_community_id),member.localCommunityId)
-                    jsonObject.put(getString(R.string.sub_community_id), member.subCommunityId)
+                    jsonObject.put(getString(R.string.local_community_id),loginMember?.localCommunityId)
+                    jsonObject.put(getString(R.string.sub_community_id), loginMember?.subCommunityId)
 
                     var Ids = ""
                     for (index in selectedItemPositions) {

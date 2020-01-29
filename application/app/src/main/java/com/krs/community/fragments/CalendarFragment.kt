@@ -403,7 +403,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         lstCalFliter.setHasFixedSize(true)
         val ivCancel:ImageView=header.findViewById(R.id.iv_cancel)
         ivCancel.setOnClickListener {
-            Utility.movetoFragment(activity,DashboardFragment())
+            Utility.backNavigation(activity)
         }
 
         val linearLayoutManager = LinearLayoutManager(activity)

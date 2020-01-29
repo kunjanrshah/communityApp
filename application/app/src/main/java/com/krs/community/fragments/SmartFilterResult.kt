@@ -216,7 +216,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         }
         val header = LayoutInflater.from(activity).inflate(R.layout.header_smart_filter, container, false)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
-        ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, ExpandableFilterListFragment()) }
+        ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         tvCount = header.findViewById(R.id.tv_count)
         val ivExport = header.findViewById<ImageView>(R.id.iv_export)
         ivExport.setOnClickListener {

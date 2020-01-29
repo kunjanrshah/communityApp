@@ -20,25 +20,34 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-
         <TextView
             android:id="@+id/tv_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimary"
-            android:layout_marginRight="25dp"
+            android:layout_marginRight="15dp"
             android:layout_gravity="center_vertical"
             android:fontFamily="@font/montserrat_semibold"
             android:text="Filter me!"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/tv_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black1"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="Clear"
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/iv_filter"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center_vertical"
-            android:layout_margin="5dp"
+            android:layout_marginRight="15dp"
             android:background="@drawable/view_all_48" />
 
     </LinearLayout>

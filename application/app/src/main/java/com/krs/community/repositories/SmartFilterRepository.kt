@@ -19,6 +19,12 @@ class SmartFilterRepository(private val api: ApiServices, private val db:AppData
         }
     }
 
+    suspend fun getSharedProfile(jsonObject: JsonObject): SmartFilterResponse {
+        return apiRequest{
+            api.getSharedProfile(jsonObject)
+        }
+    }
+
     suspend fun getInActiveRecords(jsonObject: JsonObject): SmartFilterResponse {
         return apiRequest{
             api.getInActiveUsers(jsonObject)

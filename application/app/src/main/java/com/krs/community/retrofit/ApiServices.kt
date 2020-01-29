@@ -88,6 +88,9 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_USERS_BYDATE)
     suspend fun getSearchByDate(@Body request: JsonObject): Response<SmartFilterResponse>
 
+    @POST(AppConstants.UrlPath.GET_SHARED_PROFILE)
+    suspend fun getSharedProfile(@Body request: JsonObject): Response<SmartFilterResponse>
+
     @POST(AppConstants.UrlPath.GET_EVENTS)
     suspend fun getNewsList(@Body request: JsonObject): Response<NewsResponse>
 
@@ -118,6 +121,12 @@ interface ApiServices {
 
     @POST(AppConstants.UrlPath.GET_LOGIN)
     suspend fun getUserLogin(@Body request: AppConstants.LoginRequest): Response<LoginResponse>
+
+    @POST(AppConstants.UrlPath.GET_CHANGE_PASS)
+    suspend fun changePassword(@Body request: JsonObject): Response<LoginResponse>
+
+    @POST(AppConstants.UrlPath.GET_FORGOT_PASS)
+    suspend fun forgotPassword(@Body request: JsonObject): Response<LoginResponse>
 
     @Multipart
     @POST(AppConstants.UrlPath.UPLOAD_PROFILE_IMAGE)

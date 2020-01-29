@@ -3,6 +3,7 @@
 
 
     <string name="action_delete">Delete</string>
+    <string name="action_location">Location</string>
     <string name="action_active">Active</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
@@ -155,17 +156,13 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="invalid_username_password">Invalid username or hashkey</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Working...</string>
     <string name="incorrect" translatable="false">incorrect</string>
-
-
-
-
 
     <!-- Register Screen -->
     <string name="hint_address">Address</string>
     <string name="register_now">REGISTER NOW</string>
-    <string name="hint_name">Family Head First Name</string>
+    <string name="hint_name">First Name</string>
     <string name="hint_email">Email ID</string>
     <string name="hint_mobile">10 digit mobile</string>
     <string name="hint_password">Password</string>
@@ -282,6 +279,7 @@
     <string name="enter_firstname">Please enter your FirstName</string>
     <string name="enter_lastname">Please enter your LastName</string>
     <string name="enter_email">Please enter your Email</string>
+    <string name="enter_gender">Please select gender</string>
     <string name="enter_mobile">Please enter your Mobile</string>
     <string name="select_country_code">Please select your Country</string>
     <string name="enter_password">Please enter your Password</string>
@@ -292,7 +290,7 @@
     <string name="select_state">Please select state</string>
     <string name="select_sub_comm">Please select Sub Community</string>
     <string name="select_local">Please select Local Community</string>
-    <string name="make_strong_pass">Make more than 6 characters long your hashkey to make strong</string>
+    <string name="make_strong_pass">Make password more than 6 characters</string>
     <string name="_continue">Continue</string>
     <string name="hash_key">hash_key</string>
     <string name="otp_send">Messaging OTP Code on your number!</string>
@@ -352,6 +350,7 @@
     <string name="updated_dt" translatable="false">updated_dt</string>
     <string name="user_id" translatable="false">user_id</string>
     <string name="user_mobile" translatable="false">user_mobile</string>
+    <string name="user_email" translatable="false">user_email</string>
     <string name="access_token" translatable="false">access_token</string>
     <string name="date" translatable="false">date</string>
     <string name="state" translatable="false">state</string>
@@ -410,6 +409,7 @@
     <string name="Family_Head" translatable="false">Family Head</string>
     <string name="Member" translatable="false">Member</string>
     <string name="idList" translatable="false">idList</string>
+    <string name="sharing_id" translatable="false">sharing_id</string>
     <string name="start" translatable="false">start</string>
     <string name="length" translatable="false">length</string>
     <string name="filter_by" translatable="false">filter_by</string>
@@ -420,5 +420,21 @@
     <string name="install_app">"Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"</string>
     <string name="mobile_not_found">Mobile not found!</string>
     <string name="filter_values">filter_values</string>
+    <string name="no_selection">No Selection</string>
+    <string name="current_password">current_password</string>
+    <string name="new_password">new_password</string>
+    <string name="menu_city">City</string>
+    <string name="menu_qrcode">QRCode</string>
+    <string name="menu_distance">Distance</string>
+    <string name="menu_matrimony">Matrimony</string>
+    <string name="menu_mypost">MyPost</string>
+    <string name="menu_favorite">Favorite</string>
+    <string name="menu_admin">Admin</string>
+    <string name="menu_restricted">Restricted</string>
+    <string name="menu_newpost">NewPost</string>
+    <string name="menu_documents">Documents</string>
+    <string name="menu_paytm">Paytm</string>
+    <string name="menu_new">New</string>
+    <string name="menu_tour">Tour</string>
 
 </resources>

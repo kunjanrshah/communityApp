@@ -14,6 +14,10 @@ public class LoginResponse {
     @Expose
     private String OTP;
 
+    @SerializedName("message")
+    @Expose
+    private String message;
+
     @SerializedName("data")
     @Expose
     private Member data;
@@ -40,5 +44,13 @@ public class LoginResponse {
 
     public void setOTP(String OTP) {
         this.OTP = OTP;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
