@@ -67,6 +67,7 @@
                 android:textSize="18sp" />
 
             <EditText
+                android:id="@+id/edt_title"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/round1_corner_mid_gray"
@@ -109,6 +110,7 @@
                 android:textSize="18sp" />
 
             <EditText
+                android:id="@+id/edt_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/round1_corner_mid_gray"
@@ -151,7 +153,8 @@
                         android:textColor="@color/black1"
                         android:textSize="14sp" />
 
-                    <EditText
+                    <TextView
+                        android:id="@+id/edt_start"
                         android:layout_width="150dp"
                         android:layout_height="40dp"
                         android:background="@drawable/round_mid_corner_white"
@@ -172,7 +175,8 @@
                         android:textColor="@color/black1"
                         android:textSize="14sp" />
 
-                    <EditText
+                    <TextView
+                        android:id="@+id/edt_end_date"
                         android:layout_width="150dp"
                         android:layout_height="40dp"
                         android:background="@drawable/round_mid_corner_white"
@@ -203,7 +207,8 @@
                         android:textColor="@color/black1"
                         android:textSize="14sp" />
 
-                    <EditText
+                    <TextView
+                        android:id="@+id/txt_start_time"
                         android:layout_width="100dp"
                         android:layout_height="40dp"
                         android:background="@drawable/round_mid_corner_white"
@@ -224,7 +229,8 @@
                         android:textColor="@color/black1"
                         android:textSize="14sp" />
 
-                    <EditText
+                    <TextView
+                        android:id="@+id/txt_end_time"
                         android:layout_width="100dp"
                         android:layout_height="40dp"
                         android:background="@drawable/round_mid_corner_white"

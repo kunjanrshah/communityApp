@@ -2,8 +2,10 @@ package com.krs.community.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,17 +47,23 @@ import com.zfdang.multiple_images_selector.SelectorSettings;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+
+import ru.slybeaver.slycalendarview.SlyCalendarDialog;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
-public class ShareEventFragment extends Fragment {
+public class ShareEventFragment extends Fragment implements SlyCalendarDialog.Callback {
 
     // class variables
     private final int REQUEST_CODE = 123;
     private ImagesAdapter adapter;
     private ArrayList<String> mResults = new ArrayList<>();
     private ArrayList<String> yURLs = new ArrayList<>();
+    TextView txt_start, edt_end_date, txt_end_time, txt_start_time;
+    boolean isStart;
 
     @Nullable
     @Override
@@ -79,6 +89,11 @@ public class ShareEventFragment extends Fragment {
         rv_images.setLayoutManager(MyLayoutManager);
 
         RecyclerView rv_parent = root.findViewById(R.id.rv_parent);
+        EditText edt_title = root.findViewById(R.id.edt_title);
+        EditText edt_address = root.findViewById(R.id.edt_address);
+        EditText edt_description = root.findViewById(R.id.edt_description);
+
+
         rv_parent.setHasFixedSize(true);
         LinearLayoutManager MyLayoutManager1 = new LinearLayoutManager(getActivity());
         MyLayoutManager1.setOrientation(RecyclerView.VERTICAL);
@@ -90,8 +105,9 @@ public class ShareEventFragment extends Fragment {
         rv_parent.setAdapter(adapter1);
         rv_parent.setLayoutManager(MyLayoutManager1);
 
-        ImageView iv_add_url= root.findViewById(R.id.iv_add_url);
+        ImageView iv_add_url = root.findViewById(R.id.iv_add_url);
         iv_add_url.setOnClickListener(v -> {
+            yURLs.add("test");
             adapter1.notifyDataSetChanged();
         });
 
@@ -110,18 +126,95 @@ public class ShareEventFragment extends Fragment {
         Button btnShare, btnCreate;
         btnShare = root.findViewById(R.id.btnShare);
         btnCreate = root.findViewById(R.id.btnCreate);
+        txt_start = root.findViewById(R.id.edt_start);
+        edt_end_date = root.findViewById(R.id.edt_end_date);
+        txt_start_time = root.findViewById(R.id.txt_start_time);
+        txt_end_time = root.findViewById(R.id.txt_end_time);
+
+        txt_start.setOnClickListener(view -> {
+            isStart = true;
+            showCalendar();
+        });
+        edt_end_date.setOnClickListener(view -> {
+            isStart = false;
+            showCalendar();
+        });
+
+        txt_start_time.setOnClickListener(view -> {
+            isStart = true;
+            showTimerSelection();
+        });
+        txt_end_time.setOnClickListener(view -> {
+            isStart = false;
+            showTimerSelection();
+        });
 
         btnCreate.setOnClickListener(v -> {
+            boolean isValidated = true;
+            if (edt_title.getText().toString().length() == 0) {
+                edt_title.setError("Event title is required");
+                 isValidated = false;
+            }
+            if (edt_address.getText().toString().length() == 0) {
+                edt_address.setError("Event address is required");
+                isValidated = false;
+            }
+            if (edt_description.getText().toString().length() == 0) {
+                edt_description.setError("Event description is required");
+                isValidated = false;
+            }
+
+            if (txt_start.getText().toString().length() == 0) {
+                txt_start.setError("Start date is required");
+                isValidated = false;
+            }else {
+                txt_start.setError(null);
+            }
+
+            if (edt_end_date.getText().toString().length() == 0) {
+                edt_end_date.setError("End date is required");
+                isValidated = false;
+            }else {
+                edt_end_date.setError(null);
+            }
+
+            if (txt_start_time.getText().toString().length() == 0) {
+                txt_start_time.setError("Start time is required");
+                isValidated = false;
+            }else{
+                txt_start_time.setError(null);
+            }
+
+            if (txt_end_time.getText().toString().length() == 0) {
+                txt_end_time.setError("End time is required");
+                isValidated = false;
+            }else{
+                txt_end_time.setError(null);
+            }
+
+            if (isValidated){
+                Toast.makeText(getActivity(),"Api call",Toast.LENGTH_SHORT).show();
+            }
 
         });
 
         btnShare.setOnClickListener(v -> {
             ShareEventAdapter adapter = new ShareEventAdapter();
-            DialogPlus dialog = DialogPlus.newDialog(getContext()).setAdapter(adapter).setGravity(Gravity.BOTTOM).setCancelable(true).setExpanded(true,900).setContentBackgroundResource(R.drawable.popup_top_corner).create();
+            DialogPlus dialog = DialogPlus.newDialog(getContext()).setAdapter(adapter).setGravity(Gravity.BOTTOM).setCancelable(true).setExpanded(true, 900).setContentBackgroundResource(R.drawable.popup_top_corner).create();
             dialog.show();
         });
 
         return root;
+    }
+
+    private void showCalendar() {
+        new SlyCalendarDialog()
+                .setSingle(false)
+                .setCallback(this)
+                .setHeaderColor(getResources().getColor(R.color.colorPrimary))
+                .setBackgroundColor(Color.parseColor("#ffffff"))
+                .setSelectedColor(Color.parseColor("#c48395"))
+                .show(getActivity().getSupportFragmentManager(), "TAG_SLYCALENDAR");
     }
 
 
@@ -160,8 +253,46 @@ public class ShareEventFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    class URLAdapter extends RecyclerView.Adapter<URLViewHolder>
-    {
+    @Override
+    public void onCancelled() {
+
+    }
+
+    void showTimerSelection() {
+        Calendar mcurrentTime = Calendar.getInstance();
+        int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = mcurrentTime.get(Calendar.MINUTE);
+        TimePickerDialog mTimePicker;
+        mTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                if (isStart){
+                    txt_start_time.setError(null);
+                    txt_start_time.setText(selectedHour<10?"0"+selectedHour:selectedHour + ":" + (selectedMinute<10 ?"0"+selectedMinute:selectedMinute));}
+                else{
+                    txt_end_time.setText(selectedHour<10?"0"+selectedHour:selectedHour + ":" + (selectedMinute<10 ?"0"+selectedMinute:selectedMinute));
+                    txt_end_time.setError(null);
+                }
+            }
+        }, hour, minute, true);//Yes 24 hour time
+        mTimePicker.setTitle("Select Time");
+        mTimePicker.show();
+
+
+    }
+
+    @Override
+    public void onDataSelected(Calendar firstDate, Calendar secondDate, int hours, int minutes) {
+        String str = new SimpleDateFormat(getString(R.string.dateFormat_first)).format(firstDate.getTime());
+        if (isStart){
+            txt_start.setError(null);
+            txt_start.setText(str);}
+        else{
+            edt_end_date.setError(null);
+            edt_end_date.setText(str);}
+    }
+
+    class URLAdapter extends RecyclerView.Adapter<URLViewHolder> {
 
         @NonNull
         @Override
@@ -174,14 +305,14 @@ public class ShareEventFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull URLViewHolder holder, int position) {
 
-            holder.edt_yurl.setText(yURLs.get(position));
+
 
             holder.edt_yurl.setOnTouchListener((v, event) -> {
                 final int DRAWABLE_RIGHT = 2;
 
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (holder.edt_yurl.getRight() - holder.edt_yurl.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        Log.d("YoutubeURL","position: "+position);
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (holder.edt_yurl.getRight() - holder.edt_yurl.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        Log.d("YoutubeURL", "position: " + position);
                         yURLs.remove(position);
                         notifyDataSetChanged();
 
@@ -205,13 +336,12 @@ public class ShareEventFragment extends Fragment {
 
     }
 
-    private class URLViewHolder extends RecyclerView.ViewHolder
-    {
+    private class URLViewHolder extends RecyclerView.ViewHolder {
         EditText edt_yurl;
-        URLViewHolder(View view)
-        {
+
+        URLViewHolder(View view) {
             super(view);
-            edt_yurl=view.findViewById(R.id.edt_yurl);
+            edt_yurl = view.findViewById(R.id.edt_yurl);
         }
     }
 
