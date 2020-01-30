@@ -76,7 +76,6 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             binding.lstSharedProfile.smoothScrollBy(pixelsToMove, 0)
             mHandler.postDelayed(this, duration)
         }
-
     }
 
     override val kodein by kodein()
@@ -95,10 +94,10 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         binding.gridView.setExpanded(true)
         binding.imageSlider.setIndicatorAnimation(IndicatorAnimations.SWAP)
         binding.imageSlider.setSliderTransformAnimation(SliderAnimations.FADETRANSFORMATION)
-        binding.imageSlider.setScrollTimeInSec(3) //set scroll delay in seconds :
+        binding.imageSlider.scrollTimeInSec = 3 //set scroll delay in seconds :
         (activity as AppCompatActivity?)!!.supportActionBar!!.setTitle("Home")
-        binding.edtSearch.setInputType(InputType.TYPE_NULL)
-        binding.edtSearch.setKeyListener(null)
+        binding.edtSearch.inputType = InputType.TYPE_NULL
+        binding.edtSearch.keyListener = null
         binding.edtSearch.setOnTouchListener { _: View?, event: MotionEvent? ->
             if (!isTouch) {
                 isTouch = true
@@ -115,7 +114,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         binding.lstSharedProfile.adapter =sharedAdapter
         binding.lstSharedProfile.layoutManager = layoutManager
 
-        for(index in 1..5){
+        for(index in 1..25){
             val member=Member()
             member.profilePic="bca0551003e90e62d027158c287424a5.jpg"
             member.firstName="name"
@@ -128,7 +127,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         binding.tvAllShared.setOnClickListener { v: View? -> Utility.movetoFragment(activity, SharedLocationFragment()) }
         binding.tvAllNews.setOnClickListener { v: View? -> Utility.movetoFragment(activity, NewsListFragment()) }
         Utility.changeStatusbarColor(activity, R.color.white, false)
-        setRecyclerViewScrollListener()
+        //setRecyclerViewScrollListener()
 
 
         return binding.root
