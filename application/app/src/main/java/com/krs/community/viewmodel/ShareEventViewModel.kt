@@ -1,0 +1,104 @@
+package com.krs.community.viewmodel
+
+import android.app.Application
+import android.util.Log
+import androidx.lifecycle.AndroidViewModel
+import com.google.gson.JsonObject
+import com.krs.community.interfaces.CreateEventListener
+import com.krs.community.repositories.ShareEventRepository
+import com.krs.community.utils.ApiException
+import com.krs.community.utils.NoInternetException
+import kotlinx.coroutines.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import org.json.JSONObject
+import java.io.File
+
+class ShareEventViewModel(
+        private val shareEventRepository: ShareEventRepository,
+        var app: Application) : AndroidViewModel(app) {
+
+    private var TAG: String = ShareEventViewModel::class.java.simpleName
+    private lateinit var job_by_update: CompletableJob
+    lateinit var mCreateEventListener: CreateEventListener
+
+
+    fun createEvent(images: List<String>, id : String, user_id : String, access_token: String, params: String, yourtube:List<String>) {
+
+        job_by_update = Job()
+        job_by_update.let { thejob ->
+
+            CoroutineScope(Dispatchers.IO + thejob).launch {
+                try {
+                    var imagesList:MutableList<MultipartBody.Part> = ArrayList();
+                    var videoURLs:MutableList<RequestBody> = ArrayList();
+
+                    for (i in 0..images.size-1) {
+                        val requestFile = RequestBody.create(
+                                MediaType.parse("image/*"),
+                                File(images.get(i))
+                        )
+                        val body = MultipartBody.Part.createFormData("uploaded_file", File(images.get(i)).name, requestFile)
+                        imagesList.add(body);
+                    }
+
+                    for (i in 0..videoURLs.size-1) {
+                        val url = RequestBody.create(
+                                MediaType.parse("text/plain"),
+                                id)
+                        videoURLs.add(url);
+                    }
+
+                    val id = RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            id)
+
+
+                    val user_id = RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            user_id)
+
+                    val access_token = RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            access_token)
+
+                    val body = RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            params)
+
+                    val response: JsonObject = shareEventRepository.createEvent(imagesList, id, user_id, access_token,body,videoURLs);
+
+
+                    response.let {
+                        withContext(Dispatchers.Main) {
+                            Log.d("Response", response.toString());
+                            if (response.get("success").asString.equals("success")) {
+                                mCreateEventListener.getResult(response.getAsJsonObject("data").get("profile").asString)
+                            } else {
+                                mCreateEventListener.onFailure(response.get("message").asString)
+                            }
+                            response.get("data")
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                } catch (e: ApiException) {
+                    e.message?.let {
+                        mCreateEventListener.onFailure(it)
+                    }
+                } catch (e: NoInternetException) {
+                    e.message?.let {
+                        mCreateEventListener.onFailure(it)
+                    }
+                } catch (e: Exception) {
+                    e.message?.let {
+                        mCreateEventListener.onFailure(it)
+                    }
+                }
+                thejob.complete()
+            }
+        }
+
+    }
+}

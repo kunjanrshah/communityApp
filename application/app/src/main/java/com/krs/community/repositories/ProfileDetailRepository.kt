@@ -4,8 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
-import com.krs.community.entities.LocalCommunity
-import com.krs.community.model.SearchData
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.retrofit.ApiServices
@@ -30,6 +28,7 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
             api.uploadProfileImage(profile,id,user_id,access_token);
         }
     }
+
     suspend fun addProfile(profile: JsonObject): UpdateProfileResponse {
         return apiRequest{
             api.addMember(profile)

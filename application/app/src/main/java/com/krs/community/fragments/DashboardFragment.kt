@@ -71,9 +71,12 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     private val pixelsToMove = 30
     private val mHandler = Handler(Looper.getMainLooper())
 
-    var SCROLLING_RUNNABLE= Runnable {
-        binding.lstSharedProfile.smoothScrollBy(pixelsToMove, 0)
-        mHandler.postDelayed(this, duration)
+    var SCROLLING_RUNNABLE:Runnable =object : Runnable {
+        override fun run() {
+            binding.lstSharedProfile.smoothScrollBy(pixelsToMove, 0)
+            mHandler.postDelayed(this, duration)
+        }
+
     }
 
     override val kodein by kodein()

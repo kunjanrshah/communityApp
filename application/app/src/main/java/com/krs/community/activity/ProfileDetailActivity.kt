@@ -86,8 +86,8 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         profileDetailViewModel.mImageUploadListener = this
         member = intent.getSerializableExtra(getString(R.string.member)) as Member?
         scanId=intent.getStringExtra(getString(R.string.scanId))
-        userId=Guru.getString(getString(R.string.user_id), "")
 
+        userId=Guru.getString(getString(R.string.user_id), "")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(this, R.color.mdtp_white, false)
         }

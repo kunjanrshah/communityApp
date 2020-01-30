@@ -323,6 +323,7 @@ public class AppConstants {
         String GET_REGISTER = "Registration";
         String GET_LOGIN = "Login";
         String UPLOAD_PROFILE_IMAGE = "Upload";
+        String CREATE_EVENT = "CreateEvent";
         String GET_FORGOT_PASS = "ForgotPassword";
         String GET_CHANGE_PASS = "ChangePassword";
     }

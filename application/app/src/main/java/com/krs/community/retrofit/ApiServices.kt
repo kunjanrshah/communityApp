@@ -14,6 +14,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 
+@JvmSuppressWildcards
 interface ApiServices {
 
     @POST(AppConstants.UrlPath.UPDATE_PROFILE)
@@ -131,6 +132,10 @@ interface ApiServices {
     @Multipart
     @POST(AppConstants.UrlPath.UPLOAD_PROFILE_IMAGE)
     suspend fun uploadProfileImage(@Part file: MultipartBody.Part, @Part("id")id: RequestBody, @Part("user_id") user_id: RequestBody,@Part("access_token") access_token: RequestBody): Response<JsonObject>
+
+    @Multipart
+    @POST(AppConstants.UrlPath.CREATE_EVENT)
+    suspend fun createEvent(@Part file: List<MultipartBody.Part>, @Part("id")id: RequestBody, @Part("user_id") user_id: RequestBody,@Part("access_token") access_token: RequestBody,@Part("params") params: RequestBody,@Part("youtube[]") youtube: List<RequestBody>): Response<JsonObject>
 
     companion object{
         operator fun invoke():ApiServices{
