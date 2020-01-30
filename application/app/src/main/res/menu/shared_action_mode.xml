@@ -9,7 +9,7 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_activate"
+        android:id="@+id/action_private"
         android:icon="@drawable/gps_off"
         android:title="GpsOff"
         app:showAsAction="always" />

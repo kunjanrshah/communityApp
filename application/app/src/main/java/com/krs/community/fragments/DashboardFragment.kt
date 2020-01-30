@@ -21,7 +21,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.postDelayed
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -114,7 +113,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         binding.lstSharedProfile.adapter =sharedAdapter
         binding.lstSharedProfile.layoutManager = layoutManager
 
-        for(index in 1..25){
+        for(index in 1..4){
             val member=Member()
             member.profilePic="bca0551003e90e62d027158c287424a5.jpg"
             member.firstName="name"
@@ -122,7 +121,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         }
 
         setSliderViews()
-        setSharedProfileList()
+        getSharedProfileList()
         binding.gridView.adapter = MenuAdapter(activity!!)
         binding.tvAllShared.setOnClickListener { v: View? -> Utility.movetoFragment(activity, SharedLocationFragment()) }
         binding.tvAllNews.setOnClickListener { v: View? -> Utility.movetoFragment(activity, NewsListFragment()) }
@@ -301,7 +300,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
 
 
-    private fun setSharedProfileList() {
+    private fun getSharedProfileList() {
         binding.shimmerViewContainer.startShimmerAnimation()
         binding.shimmerViewContainer.visibility = View.VISIBLE
 
@@ -323,6 +322,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                 sharedAdapter?.notifyDataSetChanged()
                 binding.lblShared.visibility=View.VISIBLE
                 binding.lblShared.alpha=1.0f
+                binding.lstSharedProfile.alpha=1.0f
                 binding.lblPrivate.visibility=View.GONE
                 binding.tvAllShared.isClickable=true
             }else{
@@ -341,6 +341,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
     private fun setDefaultProfileList(){
         binding.lblShared.alpha=0.25f
+        binding.lstSharedProfile.alpha=0.25f
         binding.tvAllShared.isClickable=false
         binding.lblPrivate.visibility=View.VISIBLE
         binding.lblShared.visibility=View.VISIBLE

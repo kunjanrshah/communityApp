@@ -161,7 +161,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                                 }, 5000)
 
                             } else {
-                                Utility.requestStoragePermission(activity as AppCompatActivity)
+                                Utility.requestReadStoragePermission(activity as AppCompatActivity)
                             }
                         } else if (it == 1) {
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
@@ -232,7 +232,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                     }, 7000)
 
                 } else {
-                    Utility.requestStoragePermission(activity)
+                    Utility.requestReadStoragePermission(activity)
                 }
             }
         }

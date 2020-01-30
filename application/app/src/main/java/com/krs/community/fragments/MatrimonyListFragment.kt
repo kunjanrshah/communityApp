@@ -121,7 +121,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
                     }, 7000)
 
                 } else {
-                    Utility.requestStoragePermission(activity)
+                    Utility.requestReadStoragePermission(activity)
                 }
             }
         }
@@ -179,7 +179,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
                                 }, 5000)
 
                             } else {
-                                Utility.requestStoragePermission(activity as AppCompatActivity)
+                                Utility.requestReadStoragePermission(activity as AppCompatActivity)
                             }
                         } else if (it == 1) {
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)

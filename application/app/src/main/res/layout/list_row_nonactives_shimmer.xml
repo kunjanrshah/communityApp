@@ -21,55 +21,13 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <RelativeLayout
-                    android:id="@+id/icon_container"
-                    android:layout_width="40dp"
-                    android:background="@color/placeholder_bg"
-                    android:layout_height="40dp"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:id="@+id/icon_back"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fillAfter="false"
-                        android:fillEnabled="false">
-
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp" />
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                             />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/icon_front"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fillAfter="false"
-                        android:background="@color/placeholder_bg"
-                        android:fillEnabled="false">
-
-                        <ImageView
-                            android:id="@+id/icon_profile"
-                            android:layout_width="40dp"
-                            android:background="@color/placeholder_bg"
-                            android:layout_height="40dp" />
-
-                        <TextView
-                            android:id="@+id/icon_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:textColor="@android:color/white"
-                            android:textSize="22sp" />
-                    </RelativeLayout>
-
-                </RelativeLayout>
+                <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@color/placeholder_bg"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerCrop"
+                />
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -12,7 +12,7 @@ public class UpdateProfileResponse {
     @SerializedName("message")
     @Expose
     private String message;
-    @SerializedName("data")
+    @SerializedName("data") //members
     @Expose
     private Member member;
 

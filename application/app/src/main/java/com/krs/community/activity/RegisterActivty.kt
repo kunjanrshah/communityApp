@@ -1,6 +1,7 @@
 package com.krs.community.activity
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -11,6 +12,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ScrollView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
@@ -26,6 +28,9 @@ import com.krs.community.viewmodel.RegisterViewModel
 import com.krs.community.viewmodelfactory.RegisterViewModelFactory
 import com.wooplr.spotlight.prefs.PreferencesManager
 import com.wooplr.spotlight.utils.SpotlightSequence
+import com.yalantis.ucrop.UCrop.*
+import com.yalantis.ucrop.UCropFragment
+import com.yalantis.ucrop.UCropFragmentCallback
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.withContext
@@ -33,12 +38,15 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
-class RegisterActivty : BaseActivity() ,IRegisterListener,KodeinAware{
+class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener,KodeinAware{
 
+    private var str_profile_hash = ""
     private var isShow = true
     private var isShow1 = true
     private var isShow2 = true
     private lateinit var mPreferencesManager:PreferencesManager;
+    private var mShowLoader: Boolean = false
+    private val PICK_GALLERY_REQUEST = 1
     private lateinit var logger: Logger
     private lateinit var lstLastnameId:Array<Int?>
     private lateinit var lstStateId:Array<Int?>
@@ -81,6 +89,15 @@ class RegisterActivty : BaseActivity() ,IRegisterListener,KodeinAware{
         txt_already?.setOnClickListener { registerViewModel.onTextAlreadyClicked(this) }
 
         txt_how_register.setOnClickListener { registerViewModel.onHowRegisterClicked(this) }
+
+        img_cancel.setOnClickListener {
+            img_profile.setImageResource(R.drawable.man_reg)
+            img_cancel.visibility = View.GONE
+            val icon = BitmapFactory.decodeResource(resources, R.drawable.man_reg)
+            if (icon != null) {
+                str_profile_hash = Utility.getBase64(icon)
+            }
+        }
 
         edt_password.setOnTouchListener(fun(_: View, event: MotionEvent): Boolean {
             val DRAWABLE_RIGHT = 2
@@ -179,6 +196,14 @@ class RegisterActivty : BaseActivity() ,IRegisterListener,KodeinAware{
 
         binding.spinnerGender.setOnClickListener {
             registerViewModel.gender=it.toString()
+        }
+
+        binding.imgProfile.setOnClickListener { v ->
+            if (Utility.readExternalStoragePermissionIsGranted(this)) {
+                pickFromGallery(this)
+            }else{
+                Utility.requestReadStoragePermission(this)
+            }
         }
 
 
@@ -322,6 +347,55 @@ class RegisterActivty : BaseActivity() ,IRegisterListener,KodeinAware{
     override fun onDestroy() {
         super.onDestroy()
         registerViewModel.cancelAllJobs()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PICK_GALLERY_REQUEST) {
+                val selectedUri = data!!.data
+                if (selectedUri != null) {
+                    startCrop(selectedUri,this)
+                } else {
+                    Toast.makeText(this@RegisterActivty, "Cannot retrieve selected image", Toast.LENGTH_SHORT).show()
+                }
+            } else if (requestCode == REQUEST_CROP) {
+                handleCropResult(data!!,this,binding.imgProfile)
+            }
+        }
+        if (resultCode == RESULT_ERROR) {
+            handleCropError(data!!,this)
+        }
+
+    }
+
+    override fun showPermissionGranted(permission: String) {
+        super.showPermissionGranted(permission)
+        if(permission.contains("READ_EXTERNAL_STORAGE")){
+            pickFromGallery(this)
+        }
+    }
+
+    override fun showPermissionDenied(permission: String, isPermanentlyDenied: Boolean) {
+        super.showPermissionDenied(permission, isPermanentlyDenied)
+
+        if(isPermanentlyDenied){
+            displayNeverAskAgainDialog(this)
+        }else{
+           Utility.requestReadStoragePermission(this)
+        }
+    }
+
+    override fun onCropFinish(result: UCropFragment.UCropResult) {
+        when (result.mResultCode) {
+            RESULT_OK -> handleCropResult(result.mResultData,this,binding.imgProfile)
+            RESULT_ERROR -> handleCropError(result.mResultData,this)
+        }
+    }
+
+    override fun loadingProgress(showLoader: Boolean) {
+        mShowLoader = showLoader
     }
 }
 

@@ -36,7 +36,7 @@ public class BaseActivity extends AppCompatActivity {
         Log.d("BaseActivity","Denied: "+permission+" isPermanentlyDenied: "+isPermanentlyDenied);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+   /* @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void showPermissionRationale(final PermissionToken token) {
         new AlertDialog.Builder(this).setTitle(R.string.permission_rationale_title)
                 .setMessage(R.string.permission_rationale_message)
@@ -58,6 +58,6 @@ public class BaseActivity extends AppCompatActivity {
                     }
                 })
                 .show();
-    }
+    }*/
 
 }

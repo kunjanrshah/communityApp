@@ -160,7 +160,7 @@ fun advancedConfig(uCrop: UCrop, context: Context): UCrop {
 fun displayNeverAskAgainDialog(context: Context) {
 
     SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-            .setTitleText("Storage read Permission")
+            .setTitleText("Storage Read Permission")
             .setContentText("Permission is needed to pick image from gallery for your Profile. Please permit the permission through " + "Settings screen.\n\nSelect Permissions -> Enable permission")
             .setConfirmText("Permit Manually")
             .setCustomImage(R.drawable.ic_app)
@@ -195,16 +195,20 @@ fun openImageDialog(activity: AppCompatActivity,url: String) {
 }
 
 fun pickFromGallery(context: FragmentActivity) {
-    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+
+    val intent = Intent(Intent.ACTION_GET_CONTENT).setType("image/*").addCategory(Intent.CATEGORY_OPENABLE)
+    val mimeTypes = arrayOf("image/jpeg", "image/png")
+    intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
+    context.startActivityForResult(Intent.createChooser(intent, "Select Picture"), BaseActivity.PICK_GALLERY_REQUEST)
+
+    /*if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
         if (Build.VERSION.SDK_INT >= 23) {
             promptReadPermission(context)
         }
     } else {
-        val intent = Intent(Intent.ACTION_GET_CONTENT).setType("image/*").addCategory(Intent.CATEGORY_OPENABLE)
-        val mimeTypes = arrayOf("image/jpeg", "image/png")
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
-        context.startActivityForResult(Intent.createChooser(intent, "Select Picture"), BaseActivity.PICK_GALLERY_REQUEST)
-    }
+
+    }*/
 }
 
 fun promptReadPermission(context: Context) {
@@ -218,7 +222,7 @@ fun promptReadPermission(context: Context) {
                 .showCancelButton(true)
                 .setConfirmClickListener { sDialog ->
                     sDialog.dismiss()
-                Utility.requestStoragePermission(context as Activity)
+                Utility.requestReadStoragePermission(context as Activity)
                 }
                 .show()
     }

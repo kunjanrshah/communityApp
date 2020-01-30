@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
+                <!--<TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -78,7 +78,41 @@
                     android:gravity="end"
                     android:layout_marginEnd="10dp"
                     android:text="@string/register_now"
-                    android:textSize="20sp" />
+                    android:textSize="20sp" />-->
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_profile"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/man_reg" />
+
+                    <ImageView
+                        android:id="@+id/img_cancel"
+                        android:layout_width="25dip"
+                        android:layout_height="25dip"
+                        android:layout_marginStart="80dp"
+                        android:padding="5dp"
+                        android:src="@drawable/cancel_popup"
+                        tools:ignore="ContentDescription" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="end"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/register_now"
+                        android:textSize="20sp" />
+
+                </FrameLayout>
+
 
                 <EditText
                     android:id="@+id/edt_head_name"
