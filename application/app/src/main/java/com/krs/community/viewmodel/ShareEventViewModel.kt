@@ -43,7 +43,7 @@ class ShareEventViewModel(
                         imagesList.add(body);
                     }
 
-                    for (i in 0..videoURLs.size-1) {
+                    for (i in 0..yourtube.size-1) {
                         val url = RequestBody.create(
                                 MediaType.parse("text/plain"),
                                 id)
@@ -73,12 +73,11 @@ class ShareEventViewModel(
                     response.let {
                         withContext(Dispatchers.Main) {
                             Log.d("Response", response.toString());
-                            if (response.get("success").asString.equals("success")) {
-                                mCreateEventListener.getResult(response.getAsJsonObject("data").get("profile").asString)
+                            if (response.get("success").asString.equals("true")) {
+                                mCreateEventListener.getResult(response.get("message").asString)
                             } else {
                                 mCreateEventListener.onFailure(response.get("message").asString)
                             }
-                            response.get("data")
                             thejob.complete()
                         }
                         return@launch

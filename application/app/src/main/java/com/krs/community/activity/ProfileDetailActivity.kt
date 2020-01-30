@@ -47,6 +47,7 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
 import kotlinx.android.synthetic.main.activity_profile_detail.*
+import kotlinx.android.synthetic.main.fragment_share_event.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -418,6 +419,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         member?.profilePic= profile
         Guru.putString(getString(R.string.loginUser),Gson().toJson(member))
         Utility.displaySnackBarWithBottomMargin(binding.llParent, "Profile updated!")
+
     }
 
     override suspend fun onFailure(message: String) {

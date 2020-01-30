@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -53,6 +54,7 @@ import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
     override val kodein by kodein()
@@ -62,7 +64,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
     private val REQUEST_CODE = 123
     private var adapter: ImagesAdapter? = null
     private var mResults: ArrayList<String> = ArrayList()
-    private val yURLs = ArrayList<String>()
+    private var yURLs = ArrayList<String>()
     lateinit var txt_start: TextView
     lateinit var edt_end_date: TextView
     lateinit var txt_end_time: TextView
@@ -70,7 +72,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
     var isStart = false
     private lateinit var userId:String
     lateinit var linearLayout:LinearLayout
-
+    lateinit  var adapter1:URLAdapter;
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_share_event, container, false)
         shareEventViewModel = ViewModelProviders.of(this,shareEventFactory).get(ShareEventViewModel::class.java)
@@ -102,7 +104,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
         yURLs.add("1")
         yURLs.add("2")
         yURLs.add("3")
-        val adapter1 = URLAdapter()
+        adapter1 = URLAdapter()
         rv_parent.adapter = adapter1
         rv_parent.layoutManager = MyLayoutManager1
         val iv_add_url = root.findViewById<ImageView>(R.id.iv_add_url)
@@ -182,9 +184,21 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
                 txt_end_time.setError(null)
             }
             if (isValidated) {
-                val data = "{\"id\":\"1\",\"event_date\":\"2020-01-01\",\"title\":\"DemoTitile\",\"description\":\"DemoDescription\",\"location\":\"DemoLocation\",\"lat\":\"23.7546\",\"lng\":\"72.2308\",\"youtube\":[\"https:\\/\\/youtube.com\",\"https:\\/\\/youtube.com\"]}";
+                val json = JSONObject()
+                json.put("id",userId);
+                json.put("event_date","2020-01-01")
+                json.put("title",edt_title.text.toString())
+                json.put("description",edt_description.text.toString())
+                json.put("location",edt_address.text.toString())
+                json.put("lat","23.7546")
+                json.put("lng","72.2308")
+                json.put("youtube",yURLs);
+
+//                {"id":"39","event_date":"06\/01\/2020","title":"bnn","description":"nn","location":"nn","lat":"23.7546","lng":"72.2308","youtube":"[\"https:\\\/\\\/youtube.com\\\",\\\"https:\\\/\\\/youtube.com\"]"}
+
+//                val data = "{\"id\":\"1\",\"event_date\":\"2020-01-01\",\"title\":\"DemoTitile\",\"description\":\"DemoDescription\",\"location\":\"DemoLocation\",\"lat\":\"23.7546\",\"lng\":\"72.2308\",\"youtube\":[\"https:\\/\\/youtube.com\",\"https:\\/\\/youtube.com\"]}";
                 Utility.startSweetProgress(activity, "Creating an event", "Please wait...")
-                shareEventViewModel.createEvent(mResults,userId,userId,Guru.getString(getString(R.string.access_token), "").toString(),data,yURLs)
+                shareEventViewModel.createEvent(mResults,userId,userId,Guru.getString(getString(R.string.access_token), "").toString(),json.toString(),yURLs)
             }
         }
         btnShare.setOnClickListener { v: View? ->
@@ -200,14 +214,19 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
                 .setSingle(false)
                 .setCallback(object:SlyCalendarDialog.Callback{
                     override fun onDataSelected(firstDate: Calendar?, secondDate: Calendar?, hours: Int, minutes: Int) {
-                        val str = SimpleDateFormat(getString(R.string.dateFormat_first)).format(firstDate?.time)
-                        if (isStart) {
-                            txt_start.error = null
-                            txt_start.text = str
-                        } else {
-                            edt_end_date.error = null
-                            edt_end_date.text = str
-                        }
+                       try {
+                           val str = SimpleDateFormat(getString(R.string.dateFormat_first)).format(firstDate?.time)
+                           if (isStart) {
+                               txt_start.error = null
+                               txt_start.text = str
+                           } else {
+                               edt_end_date.error = null
+                               edt_end_date.text = str
+                           }
+                       }catch (ignore:java.lang.Exception){
+
+                       }
+
                     }
 
                     override fun onCancelled() {
@@ -271,7 +290,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
     }
 
 
-    private inner class URLAdapter : RecyclerView.Adapter<URLViewHolder>() {
+     inner class URLAdapter : RecyclerView.Adapter<URLViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): URLViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_youtube_url, parent, false)
             return URLViewHolder(view)
@@ -302,7 +321,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
         }
     }
 
-    private inner class URLViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
+    inner class URLViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         var edt_yurl: EditText
 
         init {
@@ -400,7 +419,19 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
 
     override fun getResult(profile: String) {
         Utility.hideSweetProgress()
-        Utility.displaySnackBarWithBottomMargin(linearLayout, "Profile updated!")
+        linearLayout.snackbar( profile,Snackbar.LENGTH_SHORT)
+        edt_title.setText("")
+        edt_description.setText("")
+        edt_address.setText("")
+        edt_start.setText("")
+        edt_end_date.setText("")
+        txt_start_time.setText("")
+        txt_end_time.setText("")
+        txt_end_time.setText("")
+        mResults = ArrayList()
+        yURLs = ArrayList()
+        adapter?.notifyDataSetChanged()
+        adapter1.notifyDataSetChanged()
     }
 
     override suspend fun onFailure(message: String) {

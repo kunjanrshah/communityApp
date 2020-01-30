@@ -280,7 +280,7 @@ class ProfileDetailViewModel(
                     response.let {
                         withContext(Dispatchers.Main) {
                             Log.d("Response", response.toString());
-//                            {"data":{"user_id":"39","profile":"487728a63f914e63b5198c67004d91e9.jpg"},"success":"success","message":"File uploaded successfully!!!"}
+//
                             if (response.get("success").asString.equals("success")) {
                                 mImageUploadListener.getResult(response.getAsJsonObject("data").get("profile").asString)
                             } else {
