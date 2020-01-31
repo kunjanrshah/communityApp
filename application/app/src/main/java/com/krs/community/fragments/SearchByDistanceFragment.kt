@@ -41,6 +41,7 @@ import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
+import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
 import com.krs.community.interfaces.ByDistanceListener
 import com.krs.community.interfaces.RoomMemberListener
@@ -86,8 +87,6 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     private var curr_lng = MutableLiveData<Double>()
     private var isCallAPI=false
     private var selectedPosition = 0
-    private var start: Int = 0
-    private val length: Int = 30
     private lateinit var distance:ByDistanceModel
 
     internal lateinit var mByDistanceViewModel: ByDistanceViewModel
@@ -131,7 +130,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         request.interval = Utility.INTERVAL
         request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         easyWayLocation = EasyWayLocation(activity, request, false, this)
-
+        AppController.mApplication.start=0
         DashboardActivity.stop=false
         isCallAPI=true
         callDistanceAPI()
@@ -376,6 +375,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         byDistanceAdapter?.isShouldClipView = false
         byDistanceAdapter?.setParallaxHeader(header, recyclerView)
         byDistanceAdapter?.data = lstMembers
+        byDistanceAdapter?.setContext(this)
         recyclerView.adapter = byDistanceAdapter
 
     }
@@ -506,8 +506,8 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
             }
 
             distance = ByDistanceModel()
-            distance.start=start.toString()
-            distance.length=length.toString()
+            distance.start=AppController.mApplication.start.toString()
+            distance.length=AppController.mApplication.length.toString()
             distance.km = edtKm.text.toString().trim()
             distance.nearBy = nearBy
             distance.userId = Guru.getString(getString(R.string.user_id),Guru.getString(getString(R.string.user_id),""))
@@ -541,8 +541,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     override fun loadApi() {
         if (!DashboardActivity.stop) {
             DashboardActivity.stop = true
-            start = (lstMembers.size+1)
-            distance.start=start.toString()
+            distance.start=(lstMembers.size+1).toString()
             mByDistanceViewModel.getUserByDistance(distance)
         }
     }
@@ -551,20 +550,20 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         DashboardActivity.stop=false
         if(response.success){
             lstMembers.clear()
-            start=0
-            for (item in response.member) {
+
+            /*for (item in response.member) {
                 if(item.isLocationEnable=="0" && item.nearBy.toLowerCase() == "user"){
 
                 }else{
                     lstMembers.add(item)
                 }
-            }
+            }*/
+            lstMembers.addAll(response.member)
             byDistanceAdapter?.notifyDataSetChanged()
             recyclerView.layoutManager?.scrollToPosition(selectedPosition)
             selectedPosition = lstMembers.size - 1
-            DashboardActivity.stop = false
 
-            if(Integer.parseInt(response.totalRecords)<=length){
+            if(Integer.parseInt(response.totalRecords)<=AppController.mApplication.length){
                 DashboardActivity.stop = true
                 Snackbar.make(llRoot, "End of the Records", Snackbar.LENGTH_LONG).show()
             }
@@ -579,6 +578,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                 DashboardActivity.stop = true
             }
         }else{
+            DashboardActivity.stop = true
             tvRecords.visibility=View.GONE
             imgMap.visibility=View.VISIBLE
         }
@@ -598,7 +598,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
             mShimmerViewContainer.visibility = View.GONE
             imgMap.visibility=View.VISIBLE
             tvRecords.visibility=View.GONE
-            DashboardActivity.stop = false
+            DashboardActivity.stop = true
         }
 
         llRoot.snackbar(message,Snackbar.LENGTH_LONG)

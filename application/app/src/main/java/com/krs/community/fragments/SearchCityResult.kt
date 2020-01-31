@@ -125,8 +125,6 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         if (this.arguments != null) {
             cityName = this.arguments!!.getString("city_name").toString()
             cityId = this.arguments!!.getString("city_id").toString()
-            /*Guru.putString("user_city",cityName)
-            Guru.putString("user_city_id",cityId)*/
         }
 
         members.clear()
@@ -243,12 +241,12 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         val ivExport = header.findViewById<ImageView>(R.id.iv_export)
         ivExport.setOnClickListener {
             if (members.size > 0) {
-                    Handler().post {
-                        Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
-                    }
-                    Handler().postDelayed({
-                        Utility.hideSweetProgress()
-                    }, 7000)
+                Handler().post {
+                    Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
+                }
+                Handler().postDelayed({
+                    Utility.hideSweetProgress()
+                }, 7000)
                 createMemberListPDF(activity as AppCompatActivity, members, profileDetailViewModel)
             }
         }
@@ -362,13 +360,13 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         binding.shimmerViewContainer.visibility = View.GONE
         clearSelections()
         actionMode?.finish()
-       // if (response.success || response.success.equals("success")) {
+        if (response.success) {
             if (response.member != null) {
                 Guru.putString(getString(R.string.loginUser), Gson().toJson(response.member))
                 adapter.notifyDataSetChanged()
             }
             binding.llParent.snackbar("Location shared successfully", Snackbar.LENGTH_LONG)
-       // }
+        }
     }
 
     override suspend fun getFailure(message: String) {
@@ -386,9 +384,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
-
 
     private fun applyImportant(holder: ViewHolder, member: Member) {
 

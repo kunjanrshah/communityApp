@@ -246,7 +246,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
 
         rvAdapter.setParallaxHeader(header, rvSearch)
         rvSearch.adapter = rvAdapter
-
+        rvAdapter.setContext(this)
         multiSearchView.setSearchViewListener(object : MultiSearchView.MultiSearchViewListener {
             override fun onTextChanged(index: Int, s: CharSequence) {
                 //   Toast.makeText(getActivity(), "onTextChanged", Toast.LENGTH_SHORT).show();

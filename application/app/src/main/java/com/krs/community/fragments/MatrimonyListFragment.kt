@@ -21,9 +21,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
@@ -80,7 +82,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
         profileDetailViewModel = ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         roomMemberViewModel.mRoomMemberListener= this
         smartFilterViewModel.mByFilterListener =this
-
+        AppController.mApplication.start=0
         val header = LayoutInflater.from(activity).inflate(R.layout.header_matrimony, container, false)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         val ivExport= header.findViewById<ImageView>(R.id.iv_export)
@@ -102,6 +104,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 jsonObj=JSONObject()
                 jsonObj.put(getString(R.string.first_name),edtSearch.text)
+                DashboardActivity.stop = false
                 searchMatrimonyList(jsonObj)
                 true
             }
@@ -220,7 +223,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
             }
         }
         adapter.setParallaxHeader(header, binding.listMatrimony)
-
+        adapter.setContext(this)
         adapter.setOnClickEvent { _, position ->
             val intent= Intent(activity,ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstMembers[position])
@@ -250,6 +253,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
                 edtSearch.setText("")
             }
         }
+        DashboardActivity.stop = false
         searchMatrimonyList(jsonObj)
         return binding.root
     }
@@ -334,23 +338,27 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
 
 
     private fun searchMatrimonyList(jsonObj:JSONObject){
-        val jsonObject=JSONObject()
-        jsonObject.put(getString(R.string.start), AppController.mApplication.start)
-        jsonObject.put(getString(R.string.length), AppController.mApplication.length)
-        jsonObj.put(getString(R.string.matrimony),"Yes")
-        jsonObject.put(getString(R.string.filter_by),jsonObj)
-        val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
-        smartFilterViewModel.smartFilterSearch(updated)
-        Handler().postDelayed({
-            binding.shimmerViewContainer.stopShimmerAnimation()
-            binding.shimmerViewContainer.visibility=View.GONE
-        },4000)
-        lstMembers.clear()
-        adapter.notifyDataSetChanged()
-        tvRecords.visibility = View.GONE
-        binding.shimmerViewContainer.startShimmerAnimation()
-        binding.shimmerViewContainer.visibility = View.VISIBLE
-        Utility.hideKeyboard(activity)
+        if (!DashboardActivity.stop) {
+            DashboardActivity.stop = true
+            val jsonObject=JSONObject()
+            jsonObject.put(getString(R.string.start), AppController.mApplication.start)
+            jsonObject.put(getString(R.string.length), AppController.mApplication.length)
+            jsonObj.put(getString(R.string.matrimony),"Yes")
+            jsonObject.put(getString(R.string.filter_by),jsonObj)
+            val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+            smartFilterViewModel.smartFilterSearch(updated)
+            Handler().postDelayed({
+                binding.shimmerViewContainer.stopShimmerAnimation()
+                binding.shimmerViewContainer.visibility=View.GONE
+            },4000)
+            lstMembers.clear()
+            adapter.notifyDataSetChanged()
+            tvRecords.visibility = View.GONE
+            binding.shimmerViewContainer.startShimmerAnimation()
+            binding.shimmerViewContainer.visibility = View.VISIBLE
+            Utility.hideKeyboard(activity)
+        }
+
     }
 
     inner class ListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -374,15 +382,29 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
         binding.shimmerViewContainer.stopShimmerAnimation()
         binding.shimmerViewContainer.visibility=View.GONE
         if(response.success){
-            lstMembers.clear()
-            for(member in response.members) {
-                if(member.maritalStatus!=getString(R.string.married)){
-                    lstMembers.add(member)
-                }
-            }
-            tvRecords.text = "Records found: " + lstMembers.size
+            tvRecords.text = "Records found: " + response.totalRecords
             tvRecords.visibility = View.VISIBLE
-            adapter.notifyDataSetChanged()
+            if(response.members.size>0){
+                lstMembers.clear()
+                DashboardActivity.stop = false
+                for(member in response.members) {
+                    if(member.maritalStatus!=getString(R.string.married)){
+                        lstMembers.add(member)
+                    }
+                }
+                if (response.totalRecords <= AppController.mApplication.length) {
+                    DashboardActivity.stop = true
+                    Snackbar.make(binding.listMatrimony, "End of Records", Snackbar.LENGTH_LONG).show()
+                }
+                adapter.notifyDataSetChanged()
+            }else {
+                tvRecords.visibility = View.GONE
+                DashboardActivity.stop = true
+                Snackbar.make(binding.listMatrimony, "No records found!", Snackbar.LENGTH_LONG).show()
+            }
+        }else{
+            tvRecords.visibility = View.GONE
+            DashboardActivity.stop = true
         }
     }
 
@@ -414,8 +436,10 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
     }
 
     override fun loadApi() {
-        AppController.mApplication.start = (lstMembers.size + 1)
-        searchMatrimonyList(jsonObj)
+        if (!DashboardActivity.stop) {
+            AppController.mApplication.start = (lstMembers.size + 1)
+            searchMatrimonyList(jsonObj)
+        }
     }
 
     override fun cancelDialog() {

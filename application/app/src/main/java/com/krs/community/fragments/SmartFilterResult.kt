@@ -226,6 +226,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         }
 
         adapter.setParallaxHeader(header, rvFilters)
+        adapter.setContext(this)
         rvFilters.layoutManager = LinearLayoutManager(activity)
         rvFilters.adapter = adapter
 

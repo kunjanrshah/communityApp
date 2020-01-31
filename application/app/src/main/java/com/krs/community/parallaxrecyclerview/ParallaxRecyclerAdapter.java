@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -222,10 +223,10 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
     @Override
     public int getItemViewType(int position) {
 
+        Log.d("ParallaxRecycler","position: "+position+" size: "+mData.size() +" stop: "+DashboardActivity.Companion.getStop());
         if (position == 1){
             return VIEW_TYPES.FIRST_VIEW;
-        }
-        else if(position == mData.size() && !DashboardActivity.Companion.getStop()){
+        } else if(position == mData.size() && !DashboardActivity.Companion.getStop()){
             if(mOnLoadMore!=null){
                 mOnLoadMore.loadApi();
                 return VIEW_TYPES.VIEW_TYPE_LOADING;

@@ -30,9 +30,9 @@ import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
+import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmnetSharedLocationBinding
 import com.krs.community.entities.RoomMember
-import com.krs.community.interfaces.ByFilterListener
 import com.krs.community.interfaces.EditMemberListener
 import com.krs.community.interfaces.RoomMemberListener
 import com.krs.community.interfaces.SharedProfileListener
@@ -55,14 +55,12 @@ import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.util.*
-import kotlin.collections.ArrayList
 
-class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocationListner , SharedProfileListener, RoomMemberListener, EditMemberListener {
+class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocationListner, SharedProfileListener, RoomMemberListener, EditMemberListener {
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private var actionModeCallback: ActionModeCallback? = null
     private var actionMode: ActionMode? = null
-    private var selectedItems: SparseBooleanArray  = SparseBooleanArray()
+    private var selectedItems: SparseBooleanArray = SparseBooleanArray()
     private var animationItemsIndex: SparseBooleanArray = SparseBooleanArray()
     private var reverseAllAnimations = false
     private val members: MutableList<Member> = ArrayList()
@@ -77,7 +75,7 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
     private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
     private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
 
-    private lateinit var binding:FragmnetSharedLocationBinding
+    private lateinit var binding: FragmnetSharedLocationBinding
     private var setLocationDialog: DialogPlus? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -85,13 +83,13 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
             Utility.changeStatusbarColor(activity, R.color.colorBG, false)
         }
 
-        binding=DataBindingUtil.inflate(inflater,R.layout.fragmnet_shared_location,container,false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragmnet_shared_location, container, false)
 
-        roomMemberViewModel = ViewModelProviders.of(this,roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
-        profileDetailViewModel = ViewModelProviders.of(this,profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
-        profileDetailViewModel.mEditMemberListener=this
-        filterViewModel = ViewModelProviders.of(this,filterViewModelFactory).get(SmartFilterViewModel::class.java)
-        filterViewModel.sharedProfileListener=this
+        roomMemberViewModel = ViewModelProviders.of(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
+        profileDetailViewModel = ViewModelProviders.of(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
+        profileDetailViewModel.mEditMemberListener = this
+        filterViewModel = ViewModelProviders.of(this, filterViewModelFactory).get(SmartFilterViewModel::class.java)
+        filterViewModel.sharedProfileListener = this
 
         actionModeCallback = ActionModeCallback()
         adapter = object : ParallaxRecyclerAdapter<Member>(members) {
@@ -99,18 +97,18 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
 
                 val member = members[position]
                 val holder = viewHolder as ListViewHolder
-                val name=member.firstName
+                val name = member.firstName
                 Coroutines.io {
-                    val lastname= filterViewModel.getLastNameById(Integer.parseInt(member.subCastId.toString()))
-                    holder.tvName.text= "$name $lastname"
+                    val lastname = filterViewModel.getLastNameById(Integer.parseInt(member.subCastId.toString()))
+                    holder.tvName.text = "$name $lastname"
                 }
                 holder.iconText.text = name.substring(0, 1)
                 holder.itemView.isActivated = selectedItems.get(position, false)
                 holder.tvArea.text = member.area
                 holder.tvEmail.text = member.emailAddress
                 holder.tvMobile.text = member.mobile
-                holder.imgLocation.visibility=View.GONE
-                holder.tvUpdate.text="updated "+Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+                holder.imgLocation.visibility = View.GONE
+                holder.tvUpdate.text = "updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
 
                 if (member.headId.equals("0")) {
                     holder.tvRole.text = resources.getString(R.string.Family_Head)
@@ -186,11 +184,11 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
         binding.rvLocation.itemAnimator = DefaultItemAnimator()
         binding.rvLocation.setHasFixedSize(true)
         val header = LayoutInflater.from(activity).inflate(R.layout.header_shared, container, false)
+        val tvCount = header.findViewById<ImageView>(R.id.tv_count)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
         adapter.setParallaxHeader(header, binding.rvLocation)
         binding.rvLocation.adapter = adapter
-
         getSharedProfiles()
 
         return binding.root
@@ -206,16 +204,19 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
         (activity as AppCompatActivity).supportActionBar!!.show()
     }
 
-    private fun getSharedProfiles(){
-        binding.shimmerViewContainer.startShimmerAnimation()
-        binding.shimmerViewContainer.visibility = View.VISIBLE
+    private fun getSharedProfiles() {
 
-        val jsonObj= JSONObject()
-        jsonObj.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
-        jsonObj.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-        jsonObj.put(getString(R.string.id),Guru.getString(getString(R.string.user_id),""))
-        val updated=  JsonParser().parse(jsonObj.toString()) as JsonObject
+        if (AppController.mApplication.start == 0) {
+            binding.shimmerViewContainer.startShimmerAnimation()
+            binding.shimmerViewContainer.visibility = View.VISIBLE
+        }
+        val jsonObj = JSONObject()
+        jsonObj.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+        jsonObj.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+        jsonObj.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+        val updated = JsonParser().parse(jsonObj.toString()) as JsonObject
         filterViewModel.getSharedProfiles(updated)
+
     }
 
     private fun toggleSelected(pos: Int) {
@@ -251,9 +252,9 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
     private fun applyClickEvents(holder: ListViewHolder, position: Int) {
         holder.imgProfile.setOnClickListener {
             try {
-                val path = getString(R.string.base_url_original) + "" +members.get(position).profilePic
-               // Log.d(TAG, "path: $path")
-                openImageDialog(activity as AppCompatActivity,path)
+                val path = getString(R.string.base_url_original) + "" + members.get(position).profilePic
+                // Log.d(TAG, "path: $path")
+                openImageDialog(activity as AppCompatActivity, path)
             } catch (e: Exception) {
                 e.message
             }
@@ -292,7 +293,7 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
 
     private fun applyProfilePicture(holder: ListViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
-            val url=resources.getString(R.string.base_url_thumb)+member.profilePic
+            val url = resources.getString(R.string.base_url_thumb) + member.profilePic
             //Log.d(TAG,"url: "+url)
             Glide.with(activity!!).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
             holder.imgProfile.colorFilter = null
@@ -347,8 +348,8 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
         if (selectedItemCount > 0) {
             enableActionMode(position)
         } else {
-            val intent=Intent(activity, ProfileDetailActivity::class.java)
-            intent.putExtra(getString(R.string.member),members.get(position))
+            val intent = Intent(activity, ProfileDetailActivity::class.java)
+            intent.putExtra(getString(R.string.member), members.get(position))
             startActivity(intent)
             Utility.fade(activity)
         }
@@ -423,7 +424,7 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
         var iconText: TextView = itemView.findViewById(R.id.icon_text)
         var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
         var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
-        var tvUpdate:TextView=  itemView.findViewById(R.id.tv_update)
+        var tvUpdate: TextView = itemView.findViewById(R.id.tv_update)
 
         override fun onLongClick(v: View): Boolean {
             enableActionMode(adapterPosition)
@@ -466,13 +467,13 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
                                 val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
 
                                 val loginSharedIds = loginMember.sharingId.split(',')
-                                val sharedId=loginSharedIds.toMutableList()
+                                val sharedId = loginSharedIds.toMutableList()
                                 for (index in selectedItemPositions) {
                                     if (loginSharedIds.contains(members[index].id)) {
                                         sharedId.remove(members[index].id)
                                     }
                                 }
-                                val Ids=sharedId.toString().substring(1,sharedId.toString().length-1)
+                                val Ids = sharedId.toString().substring(1, sharedId.toString().length - 1)
                                 jsonObject.put(getString(R.string.sharing_id), Ids)
                                 val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                                 binding.shimmerViewContainer.startShimmerAnimation()
@@ -515,15 +516,17 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
     }
 
     override fun getMembers(response: SharedProfileResponse) {
-        if(response.success){
-            if(response.members!=null){
-                members.clear()
-                members.addAll(response.members)
-                adapter.notifyDataSetChanged()
+        if (response.success) {
+            if (response.members != null) {
+                if (response.members.size > 0) {
+                    members.clear()
+                    members.addAll(response.members)
+                    adapter.notifyDataSetChanged()
+                }
             }
         }
 
-        binding.rvLocation.snackbar(response.message.toString(),Snackbar.LENGTH_LONG)
+        binding.rvLocation.snackbar(response.message.toString(), Snackbar.LENGTH_LONG)
 
         Handler().post {
             binding.shimmerViewContainer.stopShimmerAnimation()
@@ -547,13 +550,12 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
         binding.shimmerViewContainer.stopShimmerAnimation()
         binding.shimmerViewContainer.visibility = View.GONE
 
-       // if (response.success) {
-        if (response.member != null) {
-            Guru.putString(getString(R.string.loginUser), Gson().toJson(response.member))
+        if (response.success) {
+            if (response.member != null) {
+                Guru.putString(getString(R.string.loginUser), Gson().toJson(response.member))
+            }
+            binding.rvLocation.snackbar("Location private successfully", Snackbar.LENGTH_LONG)
         }
-        binding.rvLocation.snackbar("Location private successfully", Snackbar.LENGTH_LONG)
-
-       // }
         deleteMessages()
         clearSelections()
         actionMode?.finish()

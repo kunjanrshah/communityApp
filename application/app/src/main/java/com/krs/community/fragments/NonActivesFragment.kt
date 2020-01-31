@@ -77,7 +77,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         roomMemberViewModel = ViewModelProviders.of(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
         roomMemberViewModel.mRoomMemberListener= this
         smartFilterViewModel.mByFilterListener = this
-
+        AppController.mApplication.start=0
         selectedItems = SparseBooleanArray()
         animationItemsIndex = SparseBooleanArray()
         actionModeCallback = ActionModeCallback()
@@ -92,13 +92,6 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
                 val member = lstMembers[position]
                 val holder = viewHolder as MyViewHolder
-
-                /*if (lstMembers.size > 0) {
-                    tvCount.visibility = View.VISIBLE
-                    tvCount.text = "Member ${lstMembers.size} found"
-                } else {
-                    tvCount.visibility = View.GONE
-                }*/
 
                 holder.tvName.text = member.firstName
                 holder.tvArea.text = member.area
@@ -143,6 +136,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         adapter.setParallaxHeader(header, rvSearch)
+        adapter.setContext(this)
         rvSearch.adapter = adapter
 
         DashboardActivity.stop = false
@@ -161,16 +155,14 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
             jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
             smartFilterViewModel.getInActiveRecords(updated)
-            Handler().postDelayed({
-                shimmerFrameLayout.stopShimmerAnimation()
-                shimmerFrameLayout.visibility = View.GONE
-            }, 4000)
-            lstMembers.clear()
-            adapter.notifyDataSetChanged()
 
             if (AppController.mApplication.start == 0) {
                 shimmerFrameLayout.startShimmerAnimation()
                 shimmerFrameLayout.visibility = View.VISIBLE
+                Handler().postDelayed({
+                    shimmerFrameLayout.stopShimmerAnimation()
+                    shimmerFrameLayout.visibility = View.GONE
+                }, 4000)
             }
             Utility.hideKeyboard(activity)
         }
@@ -194,7 +186,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 //selectedPosition = lstMembers.size - 1
                 DashboardActivity.stop = false
 
-                if (lstMembers.size <= AppController.mApplication.length) {
+                if (response.totalRecords <= AppController.mApplication.length) {
                     DashboardActivity.stop = true
                     Snackbar.make(llRoot, "End of Records", Snackbar.LENGTH_LONG).show()
                 }
@@ -205,7 +197,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
             }
         } else {
             tvCount.visibility = View.GONE
-            DashboardActivity.stop = false
+            DashboardActivity.stop = true
         }
     }
 
