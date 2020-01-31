@@ -3,6 +3,7 @@ package com.krs.community.retrofit
 
 import com.google.gson.JsonObject
 import com.krs.community.app.AppController
+import com.krs.community.interfaces.SharedProfileListener
 import com.krs.community.model.*
 import com.krs.community.responses.*
 import com.krs.community.utils.AppConstants
@@ -90,7 +91,7 @@ interface ApiServices {
     suspend fun getSearchByDate(@Body request: JsonObject): Response<SmartFilterResponse>
 
     @POST(AppConstants.UrlPath.GET_SHARED_PROFILE)
-    suspend fun getSharedProfile(@Body request: JsonObject): Response<SmartFilterResponse>
+    suspend fun getSharedProfile(@Body request: JsonObject): Response<SharedProfileResponse>
 
     @POST(AppConstants.UrlPath.GET_EVENTS)
     suspend fun getNewsList(@Body request: JsonObject): Response<NewsResponse>

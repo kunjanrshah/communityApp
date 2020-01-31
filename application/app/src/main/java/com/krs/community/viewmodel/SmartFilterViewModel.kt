@@ -5,6 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.interfaces.ByFilterListener
+import com.krs.community.interfaces.ILoginListener
+import com.krs.community.interfaces.SharedProfileListener
 import com.krs.community.repositories.SmartFilterRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
@@ -17,7 +19,8 @@ class SmartFilterViewModel(
     private var TAG: String = SmartFilterViewModel::class.java.simpleName
     private lateinit var completableJob: CompletableJob
     lateinit var mByFilterListener: ByFilterListener
-
+    lateinit var mLoginListener: ILoginListener
+    lateinit var sharedProfileListener: SharedProfileListener
     fun getSubCommunity(id: String):String{
         return mSmartFilterRepository.getSubCommunity(id)
     }
@@ -57,22 +60,22 @@ class SmartFilterViewModel(
                     val response = mSmartFilterRepository.getSharedProfile(jsonObject)
                     response.let {
                         withContext(Dispatchers.Main) {
-                            mByFilterListener.getMembers(response)
+                            sharedProfileListener.getMembers(response)
                             thejob.complete()
                         }
                         return@launch
                     }
                 } catch (e: ApiException) {
                     e.message?.let {
-                        mByFilterListener.getFailure(it)
+                        sharedProfileListener.getFailure(it)
                     }
                 } catch (e: NoInternetException) {
                     e.message?.let {
-                        mByFilterListener.getFailure(it)
+                        sharedProfileListener.getFailure(it)
                     }
                 } catch (e: Exception) {
                     e.message?.let {
-                        mByFilterListener.getFailure(it)
+                        sharedProfileListener.getFailure(it)
                     }
                 }
                 thejob.complete()

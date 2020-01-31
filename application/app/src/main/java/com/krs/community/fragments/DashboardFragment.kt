@@ -40,7 +40,9 @@ import com.krs.community.activity.RegisterActivty
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentDashboardBinding
 import com.krs.community.interfaces.ByFilterListener
+import com.krs.community.interfaces.SharedProfileListener
 import com.krs.community.model.Member
+import com.krs.community.responses.SharedProfileResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.SmartFilterViewModel
@@ -55,7 +57,7 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.util.*
 
-class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
+class DashboardFragment : Fragment(), KodeinAware, SharedProfileListener {
 
     private var sharedProfiles = ArrayList<Member>()
     private var defaultProfiles = ArrayList<Member>()
@@ -87,7 +89,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
         binding=DataBindingUtil.inflate(inflater,R.layout.fragment_dashboard,container,false)
         filterViewModel = ViewModelProviders.of(this,filterViewModelFactory).get(SmartFilterViewModel::class.java)
-        filterViewModel.mByFilterListener=this
+        filterViewModel.sharedProfileListener=this
 
         Utility.changeStatusbarColor(activity, R.color.colorPrimary, true)
         binding.gridView.setExpanded(true)
@@ -298,8 +300,6 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         }
     }
 
-
-
     private fun getSharedProfileList() {
         binding.shimmerViewContainer.startShimmerAnimation()
         binding.shimmerViewContainer.visibility = View.VISIBLE
@@ -312,7 +312,8 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         filterViewModel.getSharedProfiles(updated)
     }
 
-    override fun getMembers(response: SmartFilterResponse) {
+
+    override fun getMembers(response: SharedProfileResponse) {
         binding.shimmerViewContainer.stopShimmerAnimation()
         binding.shimmerViewContainer.visibility = View.GONE
         if(response.success){

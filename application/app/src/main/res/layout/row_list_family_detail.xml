@@ -50,7 +50,6 @@
     </FrameLayout>-->
 
     <FrameLayout
-        android:id="@+id/delete_layout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
@@ -60,6 +59,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/ll_delete"
                 android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/border_color"
@@ -69,7 +69,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:onClick="deleteOnClick"
                     android:orientation="vertical">
 
                     <ImageView
@@ -92,11 +91,11 @@
 
 
             <LinearLayout
+                android:id="@+id/ll_login"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:background="@drawable/right_corner"
-                android:onClick="loginOnClick"
                 android:orientation="vertical">
 
                 <ImageView
@@ -271,6 +270,7 @@
 
                         <TextView
                             android:id="@+id/tv_email"
+                            android:autoLink="email"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"

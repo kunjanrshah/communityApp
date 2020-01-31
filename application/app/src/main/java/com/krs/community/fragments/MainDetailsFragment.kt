@@ -56,7 +56,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         member = arguments?.getSerializable(getString(R.string.member)) as Member
         val loginMember=Guru.getString(getString(R.string.loginUser),"")
         val loginMem= Gson().fromJson(loginMember,Member::class.java)
-        if(member.id == loginMem.id || member.headId == loginMem.id){
+        if(member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id){
 
             binding.fname.isFocusable=true
             binding.edtArea.isFocusable=true

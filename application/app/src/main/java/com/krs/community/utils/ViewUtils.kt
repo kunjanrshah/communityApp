@@ -1,17 +1,14 @@
 package com.krs.community.utils
 
-import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -22,7 +19,6 @@ import android.view.Window
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ViewUtils
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
@@ -32,7 +28,6 @@ import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
-import com.krs.community.activity.BaseActivity
 import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
 import com.krs.community.fragments.MatrimonyListFragment
@@ -81,13 +76,9 @@ fun handleCropResult(result: Intent, context: Context, image: ImageView) {
         }
         logger.debug("resultUri: $resultUri")
 
-        try {
-
+        /*try {
             val uploadImage = File(resultUri.path.toString())
-
-
-
-            /*runOnUiThread {
+            *//*runOnUiThread {
                 var bmp1: Bitmap? = null
                 try {
                     bmp1 = Utility.getBitmap(this, f)
@@ -95,12 +86,12 @@ fun handleCropResult(result: Intent, context: Context, image: ImageView) {
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
-            }*/
+            }*//*
             // img_cancel!!.visibility = View.VISIBLE
             //  binding.imgProfile.setImageURI(resultUri)
         } catch (e: Exception) {
             e.printStackTrace()
-        }
+        }*/
 
     } else {
         Toast.makeText(context, "Cannot retrieve cropped image", Toast.LENGTH_SHORT).show()
@@ -195,37 +186,31 @@ fun openImageDialog(activity: AppCompatActivity,url: String) {
 }
 
 fun pickFromGallery(context: FragmentActivity) {
-
-
-    val intent = Intent(Intent.ACTION_GET_CONTENT).setType("image/*").addCategory(Intent.CATEGORY_OPENABLE)
-    val mimeTypes = arrayOf("image/jpeg", "image/png")
-    intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
-    context.startActivityForResult(Intent.createChooser(intent, "Select Picture"), BaseActivity.PICK_GALLERY_REQUEST)
-
-    /*if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            promptReadPermission(context)
-        }
-    } else {
-
-    }*/
+    if(Utility.checkReadExternalStoragePermission(context)){
+        val intent = Intent(Intent.ACTION_GET_CONTENT).setType("image/*").addCategory(Intent.CATEGORY_OPENABLE)
+        val mimeTypes = arrayOf("image/jpeg", "image/png")
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
+        context.startActivityForResult(Intent.createChooser(intent, "Select Picture"), Utility.PICK_GALLERY_REQUEST)
+    }else{
+        promptReadPermission(context)
+    }
 }
 
 fun promptReadPermission(context: Context) {
-    if (!Utility.hasReadStoragePermission(context)) {
+
         SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                .setTitleText("Storage read Permission")
-                .setContentText("Permission is needed to pick image from gallery for your Profile")
+                .setTitleText("Storage Read Permission")
+                .setContentText("Permission is needed to pick image from gallery")
                 .setConfirmText("Yes, please!")
                 .setCancelText("No!")
                 .setCustomImage(R.drawable.ic_app)
                 .showCancelButton(true)
                 .setConfirmClickListener { sDialog ->
                     sDialog.dismiss()
-                Utility.requestReadStoragePermission(context as Activity)
+                Utility.requestReadStoragePermission(context as AppCompatActivity)
                 }
                 .show()
-    }
+
 }
 
 fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
@@ -594,7 +579,11 @@ fun createMemberListPDF(mContext:Context, lstMember: ArrayList<Member>, profileD
                 "<tr><td colspan='2'> $lblAddress</td></tr></table><br><br>"
     }
 
-    createPdf(mContext,"community_${currentdate}",rows)
+    if(Utility.checkExternalStoragePermission(mContext)){
+        createPdf(mContext,"community_${currentdate}",rows)
+    }else{
+        Utility.requestStoragePermission(mContext as AppCompatActivity)
+    }
 }
 
 fun createMemberPDF(mContext:Context, member: Member, profileDetailViewModel: ProfileDetailViewModel) = Coroutines.main{
@@ -845,7 +834,13 @@ fun createMemberPDF(mContext:Context, member: Member, profileDetailViewModel: Pr
 
         val MailString = MainDetail + PersonalDetail + ProfessionalDetail + MatrimonyDetail
         Log.v("ViewUtils","MailString: $MailString")
-         createPdf(mContext,name,MailString)
+
+        if(Utility.checkExternalStoragePermission(mContext)){
+            createPdf(mContext,name,MailString)
+        }else{
+            Utility.requestStoragePermission(mContext as AppCompatActivity)
+        }
+
     },1500)
 
 }

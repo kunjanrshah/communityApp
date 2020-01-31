@@ -143,20 +143,20 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar!!.hide()
-        if (Utility.finePermissionIsGranted(activity)) {
+        if (Utility.checkFineLocationPermission(activity)) {
             easyWayLocation.startLocation() //calculateDistance()
         } else {
-            Utility.requestLocationPermission(activity)
+            Utility.requestFineLocationPermission(activity as AppCompatActivity)
         }
     }
 
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity).supportActionBar!!.show()
-        if (Utility.finePermissionIsGranted(activity)) {
+        if (Utility.checkFineLocationPermission(activity)) {
             easyWayLocation.endUpdates()
         } else {
-            Utility.requestLocationPermission(activity)
+            Utility.requestFineLocationPermission(activity as AppCompatActivity)
         }
     }
 
@@ -251,7 +251,12 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                             val profileDetailFactory: ProfileDetailViewModelFactory by instance()
                             val profileDetailViewModel= ViewModelProviders.of(activity as AppCompatActivity, profileDetailFactory).get(ProfileDetailViewModel::class.java)
                             createMemberPDF(activity as AppCompatActivity, member,profileDetailViewModel)
-
+                            Handler().post {
+                                Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                            }
+                            Handler().postDelayed({
+                                Utility.hideSweetProgress()
+                            }, 5000)
                         }else if(it == 1) {
                             val intent: Intent = Intent(activity as AppCompatActivity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
@@ -319,22 +324,28 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
 
                     val elements: List<String> = member.distance.split(",")
                     if(member.nearBy.contains("home")){
-                        viewHolder.llHome.visibility=View.VISIBLE
-                        viewHolder.tvHome.visibility=View.VISIBLE
-                        viewHolder.tvHome.text="Home"
-                        viewHolder.tvHomeDist.text=getDistance(elements[0])
+                        if(elements[0].isNotEmpty()){
+                            viewHolder.llHome.visibility=View.VISIBLE
+                            viewHolder.tvHome.visibility=View.VISIBLE
+                            viewHolder.tvHome.text="Home"
+                            viewHolder.tvHomeDist.text=getDistance(elements[0].trim())
+                        }
                     }
                     if(member.nearBy.contains("office")){
-                        viewHolder.llOffice.visibility=View.VISIBLE
-                        viewHolder.tvOffice.visibility=View.VISIBLE
-                        viewHolder.tvOffice.text="Office"
-                        viewHolder.tvOfficeDist.text=getDistance(elements[1])
+                        if(elements[1].isNotEmpty()){
+                            viewHolder.llOffice.visibility=View.VISIBLE
+                            viewHolder.tvOffice.visibility=View.VISIBLE
+                            viewHolder.tvOffice.text="Office"
+                            viewHolder.tvOfficeDist.text=getDistance(elements[1].trim())
+                        }
                     }
                     if(member.nearBy.contains("user")){
-                        viewHolder.llUser.visibility=View.VISIBLE
-                        viewHolder.tvUser.visibility=View.VISIBLE
-                        viewHolder.tvUser.text="User"
-                        viewHolder.tvUserDist.text=getDistance(elements[2])
+                        if(elements[1].isNotEmpty()){
+                            viewHolder.llUser.visibility=View.VISIBLE
+                            viewHolder.tvUser.visibility=View.VISIBLE
+                            viewHolder.tvUser.text="User"
+                            viewHolder.tvUserDist.text=getDistance(elements[1].trim())
+                        }
                     }
                 }
 

@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
@@ -34,8 +35,7 @@ import com.krs.community.fragments.*
 import com.krs.community.fragments.FragmentDrawer.FragmentDrawerListener
 import com.krs.community.model.Member
 import com.krs.community.utils.Coroutines
-import com.krs.community.utils.Utility
-import com.krs.community.utils.Utility.backNavigation
+import com.krs.community.utils.Utility.*
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.DashboardViewModel
 import com.krs.community.viewmodelfactory.DashboardViewModelFactory
@@ -46,7 +46,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
-class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, Listener, LocationData.AddressCallBack {
+class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAware, Listener, LocationData.AddressCallBack {
 
     private val TAG = DashboardActivity::class.java.simpleName
     private lateinit var dashboardViewModel: DashboardViewModel
@@ -74,7 +74,7 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
             val mIntent = Intent(this@DashboardActivity, SplashActivity::class.java)
             startActivity(mIntent)
             finish()
-            Utility.fade(this)
+            fade(this)
         }
 
         setSupportActionBar(binding.toolbar as Toolbar)
@@ -112,7 +112,7 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
         binding.space.setSpaceOnClickListener(object : SpaceOnClickListener {
             override fun onCentreButtonClick() {
                 Log.d("onCentreButtonClick ", "onCentreButtonClick")
-                Utility.movetoFragment(this@DashboardActivity, ExpandableFilterListFragment())
+                movetoFragment(this@DashboardActivity, ExpandableFilterListFragment())
             }
 
             override fun onItemClick(itemIndex: Int, itemName: String) {
@@ -120,12 +120,12 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
                 if (itemIndex == 1) {
                     val fragment = supportFragmentManager.findFragmentByTag(CalendarFragment::class.java.simpleName)
                     if (fragment == null || !fragment.isVisible) {
-                        Utility.movetoFragment(this@DashboardActivity, CalendarFragment())
+                        movetoFragment(this@DashboardActivity, CalendarFragment())
                     }
                 } else if (itemIndex == 0) {
                     val fragment = supportFragmentManager.findFragmentByTag(DashboardFragment::class.java.simpleName)
                     if (fragment == null || !fragment.isVisible) {
-                        Utility.movetoFragment(this@DashboardActivity, DashboardFragment())
+                        movetoFragment(this@DashboardActivity, DashboardFragment())
                     }
                 }
             }
@@ -135,12 +135,12 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
                 if (itemIndex == 1) {
                     val fragment = supportFragmentManager.findFragmentByTag(CalendarFragment::class.java.simpleName)
                     if (fragment == null || !fragment.isVisible) {
-                        Utility.movetoFragment(this@DashboardActivity, CalendarFragment())
+                        movetoFragment(this@DashboardActivity, CalendarFragment())
                     }
                 } else if (itemIndex == 0) {
                     val fragment = supportFragmentManager.findFragmentByTag(DashboardFragment::class.java.simpleName)
                     if (fragment == null || !fragment.isVisible) {
-                        Utility.movetoFragment(this@DashboardActivity, DashboardFragment())
+                        movetoFragment(this@DashboardActivity, DashboardFragment())
                     }
                 }
             }
@@ -158,38 +158,38 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
 
         getLocationDetail = GetLocationDetail(this, this)
         request = LocationRequest()
-        request.interval = Utility.INTERVAL
+        request.interval = INTERVAL
         request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         easyWayLocation = EasyWayLocation(this, request, true, this)
 
-        if (Utility.finePermissionIsGranted(this)) {
+        if (checkFineLocationPermission(this)) {
             easyWayLocation.startLocation() //calculateDistance()
         } else {
-            Utility.requestLocationPermission(this)
+            requestFineLocationPermission(this)
         }
 
-       // getMasterList()
-        Utility.movetoFragment(this@DashboardActivity, DashboardFragment())
+        getMasterList()
+        movetoFragment(this@DashboardActivity, DashboardFragment())
         //spaceNavigationView.showIconOnly();
     }
 
 
     override fun onResume() {
         super.onResume()
-        if (Utility.finePermissionIsGranted(this)) {
+        if (checkFineLocationPermission(this)) {
             easyWayLocation.startLocation() //calculateDistance()
         } else {
-            Utility.requestLocationPermission(this)
+            requestFineLocationPermission(this)
         }
         loadProfile()
     }
 
     override fun onPause() {
         super.onPause()
-        if (Utility.finePermissionIsGranted(this)) {
+        if (checkFineLocationPermission(this)) {
             easyWayLocation.endUpdates()
         } else {
-            Utility.requestLocationPermission(this)
+            requestFineLocationPermission(this)
         }
     }
 
@@ -206,19 +206,11 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
 
     }
 
-    override fun showPermissionGranted(permission: String?) {
-        super.showPermissionGranted(permission)
-        if (permission != null) {
-            if(permission.contains("LOCATION")){
-                easyWayLocation.startLocation()
-            }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode==FINE_LOCATION_REQUEST){
+            easyWayLocation.startLocation()
         }
-             Log.d(TAG, "PermissionGranted: $permission")
-    }
-
-    override fun showPermissionDenied(permission: String?, isPermanentlyDenied: Boolean) {
-        super.showPermissionDenied(permission, isPermanentlyDenied)
-        Log.d(TAG, "PermissionDenied: $permission")
     }
 
 
@@ -258,13 +250,13 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
     override fun onDrawerItemSelected(view: View, position: Int) {
         Log.d(TAG, "position: $position")
         if (position == 0) {
-            Utility.movetoFragment(this, DashboardFragment())
+            movetoFragment(this, DashboardFragment())
         } else if (position == 1) {
-            Utility.movetoFragment(this, FiltersFragment())
+            movetoFragment(this, FiltersFragment())
         } else if (position == 2) {
-            Utility.movetoFragment(this, StatisticFragment())
+            movetoFragment(this, StatisticFragment())
         } else if (position == 3) {
-            Utility.movetoFragment(this, CommitteeFragment())
+            movetoFragment(this, CommitteeFragment())
         }
     }
 
@@ -299,17 +291,17 @@ class DashboardActivity : BaseActivity(), FragmentDrawerListener, KodeinAware, L
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_profile -> {
-                Utility.startSweetProgress(this,"Move profile detail",getString(R.string.loading))
+                startSweetProgress(this,"Move profile detail",getString(R.string.loading))
                 val intent = Intent(this, ProfileDetailActivity::class.java)
                 val memberString = Guru.getString(getString(R.string.loginUser), "")
                 val member = Gson().fromJson(memberString, Member::class.java)
                 intent.putExtra(getString(R.string.member), member)
                 startActivity(intent)
-                Utility.fade(this)
+                fade(this)
                 true
             }
             R.id.action_notify -> {
-                Utility.movetoFragment(this, NotificationListFragment())
+                movetoFragment(this, NotificationListFragment())
                 true
             }
             else -> super.onOptionsItemSelected(item)

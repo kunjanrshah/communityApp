@@ -3,19 +3,15 @@ package com.krs.community.utils;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -28,7 +24,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -44,21 +39,16 @@ import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.text.Html;
 import android.text.InputFilter;
-import android.text.Spanned;
 import android.text.format.DateFormat;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,41 +56,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.github.squti.guru.Guru;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.listener.PermissionRequestErrorListener;
-import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.karumi.dexter.listener.multi.SnackbarOnAnyDeniedMultiplePermissionsListener;
-import com.karumi.dexter.listener.single.CompositePermissionListener;
-import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
-import com.karumi.dexter.listener.single.PermissionListener;
 import com.krs.community.R;
-import com.krs.community.activity.BaseActivity;
-import com.krs.community.app.AppController;
-import com.krs.community.dexter.SampleErrorListener;
-import com.krs.community.dexter.SampleMultiplePermissionListener;
-import com.krs.community.dexter.SamplePermissionListener;
-import com.krs.community.fragments.DashboardFragment;
 import com.krs.community.model.ErrorObject;
 import com.krs.community.model.Member;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 import com.nightonke.boommenu.Util;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -144,110 +114,84 @@ public class Utility {
     public static String dd_MM_yyyy = "dd-MM-yyyy";
     public static String yyyy_MM_dd_TIME = "yyyy-MM-dd HH:mm:ss";
     public static String dd_MM_yyyy_TIME = "dd-MM-yyyy h:mm a";
-    public static String dd_MMM_yyyy = "dd-MMM-yyyy";
-    public static String ddMMMyyyy = "dd/MM/yyyy";
+   /* public static String dd_MMM_yyyy = "dd-MMM-yyyy";
+    public static String ddMMMyyyy = "dd/MM/yyyy";*/
     public static SweetAlertDialog dialog = null;
     private static ProgressDialog pDialog;
     private static final String ALLOWED_CHARACTERS ="0123456789qwertyuiopasdfghjklzxcvbnm";
     public static long INTERVAL=5*60*1000;
-    private static MultiplePermissionsListener allPermissionsListener;
-    private static CompositePermissionListener cameraPermissionListener;
-    private static CompositePermissionListener readStoragePermissionListener;
-    //private static CompositeMultiplePermissionsListener storagePermissionListener;
-    private static CompositePermissionListener callPhonePermissionListener;
-    private static CompositePermissionListener locationPermissionListener;
-    private static PermissionRequestErrorListener errorListener;
     private static Logger logger = new Logger(Utility.class.getSimpleName());
 
-    public static void createPermissionListeners(BaseActivity activity, View contentView) {
-        PermissionListener dialogOnDeniedLocationListener =
-                DialogOnDeniedPermissionListener.Builder.withContext(activity)
-                        .withTitle(R.string.camera_permission_denied_dialog_title)
-                        .withMessage(R.string.camera_permission_denied_dialog_feedback)
-                        .withButtonText(android.R.string.ok)
-                        .withIcon(R.drawable.ic_app)
-                        .build();
+    public static final int PICK_GALLERY_REQUEST = 1;
+    public static final int FINE_LOCATION_REQUEST = 2;
+    public static final int EXTERNAL_STORAGE_REQUEST = 3;
 
-        PermissionListener dialogOnDeniedCallPhoneListener =
-                DialogOnDeniedPermissionListener.Builder.withContext(activity)
-                        .withTitle(R.string.camera_permission_denied_dialog_title)
-                        .withMessage(R.string.camera_permission_denied_dialog_feedback)
-                        .withButtonText(android.R.string.ok)
-                        .withIcon(R.drawable.ic_app)
-                        .build();
 
-        PermissionListener dialogOnDeniedCameraListener =
-                DialogOnDeniedPermissionListener.Builder.withContext(activity)
-                        .withTitle(R.string.camera_permission_denied_dialog_title)
-                        .withMessage(R.string.camera_permission_denied_dialog_feedback)
-                        .withButtonText(android.R.string.ok)
-                        .withIcon(R.drawable.ic_app)
-                        .build();
-
-        PermissionListener feedbackViewPermissionListener = new SamplePermissionListener(activity);
-        MultiplePermissionsListener feedbackViewMultiplePermissionListener = new SampleMultiplePermissionListener(activity);
-        allPermissionsListener =   new CompositeMultiplePermissionsListener(feedbackViewMultiplePermissionListener,
-                SnackbarOnAnyDeniedMultiplePermissionsListener.Builder.with(contentView, R.string.all_permissions_denied_feedback)
-                        .withOpenSettingsButton(R.string.permission_rationale_settings_button_text)
-                        .build());
-
-        callPhonePermissionListener = new CompositePermissionListener(feedbackViewPermissionListener,dialogOnDeniedCallPhoneListener);
-        cameraPermissionListener = new CompositePermissionListener(feedbackViewPermissionListener,dialogOnDeniedCameraListener);
-        locationPermissionListener = new CompositePermissionListener(feedbackViewPermissionListener,dialogOnDeniedLocationListener);
-        readStoragePermissionListener= new CompositePermissionListener(feedbackViewPermissionListener);
-        /*storagePermissionListener = new CompositeMultiplePermissionsListener(feedbackViewMultiplePermissionListener,
-                SnackbarOnAnyDeniedMultiplePermissionsListener.Builder.with(contentView, R.string.location_permissions_denied_feedback)
-                        .withOpenSettingsButton(R.string.permission_rationale_settings_button_text)
-                        .build());*/
-
-        errorListener = new SampleErrorListener();
+    public static boolean checkReadExternalStoragePermission(Context mContext) {
+        int permissionState = ActivityCompat.checkSelfPermission(mContext,Manifest.permission.READ_EXTERNAL_STORAGE);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
-    public static void requestCameraPermission(Activity activity){
-        Dexter.withActivity(activity)
-                .withPermission(Manifest.permission.CAMERA)
-                .withListener(cameraPermissionListener)
-                .withErrorListener(errorListener)
-                .check();
+    public static boolean checkFineLocationPermission(Context mContext) {
+        int permissionState = ActivityCompat.checkSelfPermission(mContext,Manifest.permission.ACCESS_FINE_LOCATION);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
-    public static void requestLocationPermission(Activity activity){
-        Dexter.withActivity(activity)
-                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(locationPermissionListener)
-                .withErrorListener(errorListener)
-                .check();
+    public static boolean checkExternalStoragePermission(Context mContext) {
+        int permissionState;
+        int permissionState1 = ActivityCompat.checkSelfPermission(mContext,Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permissionState2 = ActivityCompat.checkSelfPermission(mContext,Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(permissionState1==0 && permissionState2==0){
+            permissionState=0;
+        }else{
+            permissionState=1;
+        }
+        return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
-    public static void requestReadStoragePermission(Activity activity){
-        Dexter.withActivity(activity)
-                //.withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                .withListener(readStoragePermissionListener)
-                .withErrorListener(errorListener)
-                .check();
+    public static void requestReadStoragePermission(AppCompatActivity mActivity){
+        ActivityCompat.requestPermissions(mActivity,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},PICK_GALLERY_REQUEST);
     }
 
-    public static void requestCallPhonePermission(AppCompatActivity activity){
-        Dexter.withActivity(activity)
-                .withPermission(Manifest.permission.CALL_PHONE)
-                .withListener(callPhonePermissionListener)
-                .withErrorListener(errorListener)
-                .check();
+    public static void requestStoragePermission(AppCompatActivity mActivity){
+        ActivityCompat.requestPermissions(mActivity,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},EXTERNAL_STORAGE_REQUEST);
     }
 
-    public static void requestAllPermission(Activity activity){
-        Dexter.withActivity(activity)
-                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.CALL_PHONE,
-                        Manifest.permission.CAMERA)
-                .withListener(allPermissionsListener)
-                .withErrorListener(errorListener)
-                .check();
+    public static void requestFineLocationPermission(AppCompatActivity mActivity){
+        ActivityCompat.requestPermissions(mActivity,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},FINE_LOCATION_REQUEST);
+    }
+/*
+    public static boolean hasCamera(@NonNull Context mContext) {
+        return (hasPermission(mContext, Manifest.permission.CAMERA));
     }
 
+    public static boolean hasCallPhone(@NonNull Context mContext) {
+        return (!hasPermission(mContext, Manifest.permission.CALL_PHONE));
+    }
+
+    public static boolean hasAccessLocation(@NonNull Context mContext) {
+        return (hasPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION));
+    }
+
+    public static boolean hasSMS(@NonNull Context mContext) {
+        return (hasPermission(mContext, Manifest.permission.SEND_SMS));
+    }
+
+    public static boolean hasReadContacts(@NonNull Context mContext) {
+        return (Utility.hasPermission(mContext, Manifest.permission.READ_CONTACTS));
+    }
+
+    public static boolean hasReadStoragePermission(@NonNull Context mContext) {
+        return (hasPermission(mContext,Manifest.permission.READ_EXTERNAL_STORAGE ));
+    }
+
+    public static boolean hasWriteStoragePermission(@NonNull Context mContext) {
+        return (hasPermission(mContext,Manifest.permission.WRITE_EXTERNAL_STORAGE ));
+    }
+
+    private static boolean hasPermission(@NonNull Context mContext, @NonNull String perm) {
+        return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
+    }*/
 
     public static String getRandomString(final int sizeOfRandomString){
         final Random random=new Random();
@@ -490,15 +434,9 @@ public class Utility {
         return outputDateStr;
     }
 
-    public static boolean finePermissionIsGranted(Context context) {
-        int permissionState = ActivityCompat.checkSelfPermission(context,Manifest.permission.ACCESS_FINE_LOCATION);
-        return permissionState == PackageManager.PERMISSION_GRANTED;
-    }
 
-    public static boolean readExternalStoragePermissionIsGranted(Context context) {
-        int permissionState = ActivityCompat.checkSelfPermission(context,Manifest.permission.READ_EXTERNAL_STORAGE);
-        return permissionState == PackageManager.PERMISSION_GRANTED;
-    }
+
+
 
    /* public static String distance(float lat1, float lng1, float lat2, float lng2) {
         double earthRadius = 6371000; //meters
@@ -771,38 +709,6 @@ public class Utility {
             return false;
         }
         return true;
-    }
-
-    public static boolean hasCamera(@NonNull Context mContext) {
-        return (hasPermission(mContext, Manifest.permission.CAMERA));
-    }
-
-    public static boolean hasCallPhone(@NonNull Context mContext) {
-        return (!hasPermission(mContext, Manifest.permission.CALL_PHONE));
-    }
-
-    public static boolean hasAccessLocation(@NonNull Context mContext) {
-        return (hasPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION));
-    }
-
-    public static boolean hasSMS(@NonNull Context mContext) {
-        return (hasPermission(mContext, Manifest.permission.SEND_SMS));
-    }
-
-    public static boolean hasReadContacts(@NonNull Context mContext) {
-        return (Utility.hasPermission(mContext, Manifest.permission.READ_CONTACTS));
-    }
-
-    public static boolean hasReadStoragePermission(@NonNull Context mContext) {
-        return (hasPermission(mContext,Manifest.permission.READ_EXTERNAL_STORAGE ));
-    }
-
-    public static boolean hasWriteStoragePermission(@NonNull Context mContext) {
-        return (hasPermission(mContext,Manifest.permission.WRITE_EXTERNAL_STORAGE ));
-    }
-
-    private static boolean hasPermission(@NonNull Context mContext, @NonNull String perm) {
-        return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
     }
 
     public static void backNavigation(Activity activity){

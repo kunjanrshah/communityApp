@@ -4,8 +4,6 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Html
 import android.text.InputType
 import android.util.Log
@@ -13,6 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
@@ -24,6 +23,8 @@ import com.krs.community.entities.SubCommunity
 import com.krs.community.interfaces.IRegisterListener
 import com.krs.community.model.*
 import com.krs.community.utils.*
+import com.krs.community.utils.Utility.checkReadExternalStoragePermission
+import com.krs.community.utils.Utility.requestReadStoragePermission
 import com.krs.community.viewmodel.RegisterViewModel
 import com.krs.community.viewmodelfactory.RegisterViewModelFactory
 import com.wooplr.spotlight.prefs.PreferencesManager
@@ -38,7 +39,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
-class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener,KodeinAware{
+class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterListener,KodeinAware{
 
     private var str_profile_hash = ""
     private var isShow = true
@@ -199,11 +200,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         }
 
         binding.imgProfile.setOnClickListener { v ->
-            if (Utility.readExternalStoragePermissionIsGranted(this)) {
-                pickFromGallery(this)
-            }else{
-                Utility.requestReadStoragePermission(this)
-            }
+            pickFromGallery(this)
         }
 
 
@@ -222,6 +219,14 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
             }
         }*/
     }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode==PICK_GALLERY_REQUEST){
+            pickFromGallery(this)
+        }
+    }
+
 
     private fun ScrollView.scrollToBottom() {
         val lastChild = getChildAt(childCount - 1)
@@ -370,12 +375,17 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
 
     }
 
-    override fun showPermissionGranted(permission: String) {
+    /*override fun showPermissionGranted(permission: String) {
         super.showPermissionGranted(permission)
         if(permission.contains("READ_EXTERNAL_STORAGE")){
             pickFromGallery(this)
         }
     }
+
+    override fun shouldShowRequestPermissionRationale(permission: String): Boolean {
+        return super.shouldShowRequestPermissionRationale(permission)
+    }
+
 
     override fun showPermissionDenied(permission: String, isPermanentlyDenied: Boolean) {
         super.showPermissionDenied(permission, isPermanentlyDenied)
@@ -385,7 +395,7 @@ class RegisterActivty : BaseActivity(), UCropFragmentCallback ,IRegisterListener
         }else{
            Utility.requestReadStoragePermission(this)
         }
-    }
+    }*/
 
     override fun onCropFinish(result: UCropFragment.UCropResult) {
         when (result.mResultCode) {

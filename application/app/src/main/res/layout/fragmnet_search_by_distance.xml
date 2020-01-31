@@ -48,7 +48,7 @@
     <ImageView
         android:layout_marginTop="200dp"
         android:id="@+id/img_map"
-        android:background="@drawable/map"
+        android:background="@drawable/bg_distance"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

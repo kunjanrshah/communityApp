@@ -132,8 +132,6 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
         ivExport = header.findViewById(R.id.iv_export)
         ivExport.setOnClickListener {
             if (lstMembers.size > 0) {
-                if (Utility.hasReadStoragePermission(activity as AppCompatActivity) && Utility.hasWriteStoragePermission(activity as AppCompatActivity)) {
-
                     Handler().post {
                         Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
                     }
@@ -141,10 +139,6 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                     Handler().postDelayed({
                         Utility.hideSweetProgress()
                     }, 7000)
-
-                } else {
-                    Utility.requestReadStoragePermission(activity)
-                }
             }
         }
 
@@ -186,19 +180,13 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                     val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
                     builder?.listener {
                         if (it == 0) {
-                            if (Utility.hasReadStoragePermission(activity as AppCompatActivity) && Utility.hasWriteStoragePermission(activity as AppCompatActivity)) {
-                                createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
-
-                                Handler().post(Runnable {
-                                    Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
-                                })
-                                Handler().postDelayed({
-                                    Utility.hideSweetProgress()
-                                }, 5000)
-
-                            } else {
-                                Utility.requestReadStoragePermission(activity as AppCompatActivity)
-                            }
+                            createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
+                            Handler().post(Runnable {
+                                Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                            })
+                            Handler().postDelayed({
+                                Utility.hideSweetProgress()
+                            }, 5000)
                         } else if (it == 1) {
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)

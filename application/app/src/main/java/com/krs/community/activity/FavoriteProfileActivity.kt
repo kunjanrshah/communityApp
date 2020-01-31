@@ -49,7 +49,7 @@ import java.text.Normalizer
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FavoriteProfileActivity : BaseActivity() , SearchLiveo.OnSearchListener, KodeinAware, RoomMemberListener {
+class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListener, KodeinAware, RoomMemberListener {
 
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var mBinding:ActivityFavoriteBinding

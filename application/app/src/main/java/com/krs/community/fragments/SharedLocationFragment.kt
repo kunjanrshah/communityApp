@@ -35,8 +35,10 @@ import com.krs.community.entities.RoomMember
 import com.krs.community.interfaces.ByFilterListener
 import com.krs.community.interfaces.EditMemberListener
 import com.krs.community.interfaces.RoomMemberListener
+import com.krs.community.interfaces.SharedProfileListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
+import com.krs.community.responses.SharedProfileResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.*
@@ -56,7 +58,7 @@ import org.kodein.di.generic.instance
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocationListner , ByFilterListener, RoomMemberListener, EditMemberListener {
+class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocationListner , SharedProfileListener, RoomMemberListener, EditMemberListener {
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private var actionModeCallback: ActionModeCallback? = null
     private var actionMode: ActionMode? = null
@@ -89,7 +91,7 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
         profileDetailViewModel = ViewModelProviders.of(this,profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener=this
         filterViewModel = ViewModelProviders.of(this,filterViewModelFactory).get(SmartFilterViewModel::class.java)
-        filterViewModel.mByFilterListener=this
+        filterViewModel.sharedProfileListener=this
 
         actionModeCallback = ActionModeCallback()
         adapter = object : ParallaxRecyclerAdapter<Member>(members) {
@@ -121,19 +123,13 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
                     val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
                     builder?.listener {
                         if (it == 0) {
-                            if (Utility.hasReadStoragePermission(activity as AppCompatActivity) && Utility.hasWriteStoragePermission(activity as AppCompatActivity)) {
-                                createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
-
-                                Handler().post {
-                                    Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
-                                }
-                                Handler().postDelayed({
-                                    Utility.hideSweetProgress()
-                                }, 5000)
-
-                            } else {
-                                Utility.requestReadStoragePermission(activity as AppCompatActivity)
+                            createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
+                            Handler().post {
+                                Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
                             }
+                            Handler().postDelayed({
+                                Utility.hideSweetProgress()
+                            }, 5000)
                         } else if (it == 1) {
                             val intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
@@ -518,7 +514,7 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
         private var currentSelectedIndex = -1
     }
 
-    override fun getMembers(response: SmartFilterResponse) {
+    override fun getMembers(response: SharedProfileResponse) {
         if(response.success){
             if(response.members!=null){
                 members.clear()

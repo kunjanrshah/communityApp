@@ -164,7 +164,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
                         startActivity(intent)
                         Utility.fade(this@FamilyDetailActivity)
                     }
-                   /* viewHolder.deleteLayout.setOnClickListener {
+                    viewHolder.llDelete.setOnClickListener {
 
                         SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
@@ -179,13 +179,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
                                     it.dismiss()
                                 }
                                 .show()
-                    }*/
+                    }
                     viewHolder.boomMenuButton.clearBuilders()
                     for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
                         val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
                         builder?.listener {
                             if (it == 0) {
-                                if (Utility.hasReadStoragePermission(this@FamilyDetailActivity) && Utility.hasWriteStoragePermission(this@FamilyDetailActivity)) {
+
                                     createMemberPDF(this@FamilyDetailActivity, member, profileDetailViewModel)
 
                                     Handler().post(Runnable {
@@ -195,9 +195,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
                                         Utility.hideSweetProgress()
                                     }, 5000)
 
-                                } else {
-                                    Utility.requestReadStoragePermission(this@FamilyDetailActivity)
-                                }
+
                             } else if (it == 1) {
                                 val intent: Intent = Intent(this@FamilyDetailActivity, FamilyTreeListActivity::class.java)
                                 startActivity(intent)
@@ -324,19 +322,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
             val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
             builder?.listener {
                 if (it == 0) {
-                    if (Utility.hasReadStoragePermission(this@FamilyDetailActivity) && Utility.hasWriteStoragePermission(this@FamilyDetailActivity)) {
                         createMemberPDF(this@FamilyDetailActivity, member, profileDetailViewModel)
-
-                        Handler().post(Runnable {
+                        Handler().post {
                             Utility.startSweetProgress(this@FamilyDetailActivity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
-                        })
+                        }
                         Handler().postDelayed({
                             Utility.hideSweetProgress()
                         }, 5000)
-
-                    } else {
-                        Utility.requestReadStoragePermission(this@FamilyDetailActivity)
-                    }
                 } else if (it == 1) {
                     val intent: Intent = Intent(this@FamilyDetailActivity, FamilyTreeListActivity::class.java)
                     startActivity(intent)
@@ -445,9 +437,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
         var tvMobile: TextView = v.findViewById(R.id.tv_mobile)
         var tvUpdate: TextView = v.findViewById(R.id.tv_update)
         var boomMenuButton: BoomMenuButton = v.findViewById(R.id.bmb1)
-        //var deleteLayout: FrameLayout = v.findViewById(R.id.delete_layout)
         var frontLayout: FrameLayout = v.findViewById(R.id.front_layout)
         var iconText: TextView = v.findViewById(R.id.icon_text1)
+        var llDelete: LinearLayout = v.findViewById(R.id.ll_delete)
+        var llLogin: LinearLayout = v.findViewById(R.id.ll_login)
         var llMobile: LinearLayout = v.findViewById(R.id.llMobile)
         var imgProfile: ImageView = v.findViewById(R.id.icon_profile1)
         val imgState: ImageView = v.findViewById(R.id.img_state)

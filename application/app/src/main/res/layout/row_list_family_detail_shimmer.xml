@@ -88,6 +88,7 @@
                             <TextView
                                 android:background="@color/placeholder_bg"
                                 android:id="@+id/tv_email"
+                                android:autoLink="email"
                                 android:singleLine="true"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

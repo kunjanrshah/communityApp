@@ -8,6 +8,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -41,6 +42,7 @@ import com.krs.community.model.Member
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.*
+import com.krs.community.utils.Utility.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.yalantis.ucrop.UCrop
@@ -55,7 +57,7 @@ import org.kodein.di.generic.instance
 import java.io.File
 
 
-class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, UCropFragmentCallback, Listener, LocationData.AddressCallBack , ImageUploadListener {
+class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListener, UCropFragmentCallback, Listener, LocationData.AddressCallBack , ImageUploadListener {
 
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: ProfileDetailViewModelFactory by instance()
@@ -140,10 +142,10 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
             }
         }
 
-        if (Utility.finePermissionIsGranted(this)) {
-            easyWayLocation.startLocation() //calculateDistance()
+        if (checkFineLocationPermission(this)) {
+            easyWayLocation.startLocation()
         } else {
-            Utility.requestLocationPermission(this)
+            requestFineLocationPermission(this)
         }
 
         cur_lat.observe(this, Observer {
@@ -180,8 +182,8 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
 
         binding.imgBack.setOnClickListener {
             finish()
-            Utility.hideKeyboard(this)
-            Utility.fade(this)
+            hideKeyboard(this)
+            fade(this)
         }
 
         binding.imgProfile.setOnClickListener {
@@ -255,19 +257,20 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
         }else{
             intent.putExtra(getString(R.string.id), member?.headId)
         }
-        if(!member?.id.isNullOrEmpty()){
-            startActivity(intent)
-            Utility.fade(this)
+        startActivity(intent)
+        fade(this)
+        /*if(!member?.id.isNullOrEmpty()){
+
         }else{
-            Utility.displaySnackBarWithBottomMargin(binding.llParent, "Add profile to view family")
-        }
+            displaySnackBarWithBottomMargin(binding.llParent, "Add profile to view family")
+        }*/
     }
 
     private fun startLocationService(){
         member?.isLocationEnable="1"
         try{
             if (easyWayLocation.hasLocationEnabled()) {
-                if (Utility.finePermissionIsGranted(this)) {
+                if (checkFineLocationPermission(this)) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         RestartServiceBroadcastReceiver.scheduleJob(applicationContext)
                     } else {
@@ -277,10 +280,10 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
                     setDistance()
                 } else {
 
-                    if (Utility.finePermissionIsGranted(this)) {
+                    if (checkFineLocationPermission(this)) {
                         easyWayLocation.startLocation() //calculateDistance()
                     } else {
-                        Utility.requestLocationPermission(this)
+                        Utility.requestFineLocationPermission(this)
                     }
                 }
             } else {
@@ -364,7 +367,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
     }
 
     override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
-        Utility.hideSweetProgress()
+        hideSweetProgress()
         if (response.message.toString().toLowerCase().contains("added")) {
             member?.headId= response.member.headId
             goToFamilyDetailActivity()
@@ -389,7 +392,7 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
                 str="Location updated"
             }
 
-            Utility.startSweetDialog(this,SweetAlertDialog.SUCCESS_TYPE,"Success",str)
+            startSweetDialog(this,SweetAlertDialog.SUCCESS_TYPE,"Success",str)
 
             isStopService=false
         }else{
@@ -442,13 +445,30 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
 
     override fun onResume() {
         super.onResume()
-        easyWayLocation.startLocation()
+        if(checkFineLocationPermission(this)){
+            easyWayLocation.startLocation()
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        easyWayLocation.endUpdates()
+        try{
+            easyWayLocation.endUpdates()
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
     }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if(requestCode==PICK_GALLERY_REQUEST){
+            pickFromGallery(this)
+        }else if(requestCode== FINE_LOCATION_REQUEST){
+            easyWayLocation.startLocation()
+        }
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -496,8 +516,6 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
     }
 
 
-
-
     class MyPagerAdapter(val listFragments: List<Fragment>, fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
         override fun getItem(position: Int): Fragment {
             return listFragments[position]
@@ -505,26 +523,6 @@ class ProfileDetailActivity : BaseActivity(), KodeinAware, EditMemberListener, U
 
         override fun getCount(): Int {
             return listFragments.size
-        }
-    }
-
-
-    override fun showPermissionGranted(permission: String) {
-        super.showPermissionGranted(permission)
-        if(permission.contains("EXTERNAL_STORAGE")){
-            pickFromGallery(this)
-        }
-    }
-
-    override fun showPermissionDenied(permission: String, isPermanentlyDenied: Boolean) {
-        super.showPermissionDenied(permission, isPermanentlyDenied)
-
-        if(permission.contains("EXTERNAL_STORAGE")){
-            promptReadPermission(this)
-        }
-
-        if(isPermanentlyDenied){
-            displayNeverAskAgainDialog(this)
         }
     }
 
