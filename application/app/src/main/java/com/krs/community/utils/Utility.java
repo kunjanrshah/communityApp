@@ -152,7 +152,8 @@ public class Utility {
     public static long INTERVAL=5*60*1000;
     private static MultiplePermissionsListener allPermissionsListener;
     private static CompositePermissionListener cameraPermissionListener;
-    private static CompositeMultiplePermissionsListener storagePermissionListener;
+    private static CompositePermissionListener readStoragePermissionListener;
+    //private static CompositeMultiplePermissionsListener storagePermissionListener;
     private static CompositePermissionListener callPhonePermissionListener;
     private static CompositePermissionListener locationPermissionListener;
     private static PermissionRequestErrorListener errorListener;
@@ -193,10 +194,11 @@ public class Utility {
         callPhonePermissionListener = new CompositePermissionListener(feedbackViewPermissionListener,dialogOnDeniedCallPhoneListener);
         cameraPermissionListener = new CompositePermissionListener(feedbackViewPermissionListener,dialogOnDeniedCameraListener);
         locationPermissionListener = new CompositePermissionListener(feedbackViewPermissionListener,dialogOnDeniedLocationListener);
-        storagePermissionListener = new CompositeMultiplePermissionsListener(feedbackViewMultiplePermissionListener,
+        readStoragePermissionListener= new CompositePermissionListener(feedbackViewPermissionListener);
+        /*storagePermissionListener = new CompositeMultiplePermissionsListener(feedbackViewMultiplePermissionListener,
                 SnackbarOnAnyDeniedMultiplePermissionsListener.Builder.with(contentView, R.string.location_permissions_denied_feedback)
                         .withOpenSettingsButton(R.string.permission_rationale_settings_button_text)
-                        .build());
+                        .build());*/
 
         errorListener = new SampleErrorListener();
     }
@@ -217,10 +219,11 @@ public class Utility {
                 .check();
     }
 
-    public static void requestStoragePermission(Activity activity){
+    public static void requestReadStoragePermission(Activity activity){
         Dexter.withActivity(activity)
-                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .withListener(storagePermissionListener)
+                //.withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(readStoragePermissionListener)
                 .withErrorListener(errorListener)
                 .check();
     }
@@ -489,6 +492,11 @@ public class Utility {
 
     public static boolean finePermissionIsGranted(Context context) {
         int permissionState = ActivityCompat.checkSelfPermission(context,Manifest.permission.ACCESS_FINE_LOCATION);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static boolean readExternalStoragePermissionIsGranted(Context context) {
+        int permissionState = ActivityCompat.checkSelfPermission(context,Manifest.permission.READ_EXTERNAL_STORAGE);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 

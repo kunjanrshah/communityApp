@@ -298,7 +298,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                                 }, 5000)
 
                             } else {
-                                Utility.requestStoragePermission(activity as AppCompatActivity)
+                                Utility.requestReadStoragePermission(activity as AppCompatActivity)
                             }
                         } else if (it == 1) {
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)

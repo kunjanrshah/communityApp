@@ -16,9 +16,6 @@
 
 package com.krs.community.dexter;
 
-import android.app.Activity;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -50,6 +47,6 @@ public class SampleMultiplePermissionListener implements MultiplePermissionsList
 
   @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions,
       PermissionToken token) {
-    activity.showPermissionRationale(token);
+   // activity.showPermissionRationale(token);
   }
 }

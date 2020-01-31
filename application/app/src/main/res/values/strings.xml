@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">Community</string>
+    <string name="app_name">Ghanchi</string>
 
 
     <string name="action_delete">Delete</string>
+    <string name="action_disable">Disable</string>
     <string name="action_location">Location</string>
     <string name="action_active">Active</string>
     <string name="drawer_open">Open</string>

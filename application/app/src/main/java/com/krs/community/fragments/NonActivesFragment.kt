@@ -183,7 +183,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         selectedItems.clear()
         if (response.success) {
             if (response.members.size > 0) {
-                lstMembers.clear()
+              //  lstMembers.clear()
                 tvCount.visibility = View.VISIBLE
                 lstMembers.addAll(response.members)
                 adapter.notifyDataSetChanged()
@@ -213,16 +213,35 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
     override fun getRoomMembers(response: List<RoomMember>) {
     }
 
+    private fun deleteMessages() {
+        resetAnimationIndex()
+        val selectedItemPositions = getSelectedItems()
+        for (i in selectedItemPositions.indices.reversed()) {
+            removeData(selectedItemPositions[i])
+        }
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun clearSelections() {
+        reverseAllAnimations = true
+        selectedItems.clear()
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun removeData(position: Int) {
+        lstMembers.removeAt(position)
+        resetCurrentIndex()
+    }
+
     override suspend fun getFailure(message: String) {
         Coroutines.main {
-            DashboardActivity.stop = false
             if(message.contains("success")){
-                Utility.startSweetDialog(activity,SweetAlertDialog.SUCCESS_TYPE,"Approved","${selectedItems.size()} Profiles are ready to login")
-                getNonActivesUsers()
+                Utility.startSweetDialog(activity,SweetAlertDialog.SUCCESS_TYPE,"Approved","${selectedItems.size()} Profiles approved")
+                deleteMessages()
+                clearSelections()
+                actionMode?.finish()
             }else{
-                shimmerFrameLayout.stopShimmerAnimation()
-                shimmerFrameLayout.visibility = View.GONE
-                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+                Utility.startSweetDialog(activity,SweetAlertDialog.ERROR_TYPE,"Restricted",message)
             }
         }
     }
@@ -234,7 +253,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
          }
     }
 
-    inner class MyViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view), View.OnLongClickListener {
+    inner class MyViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         var iconText: TextView = view.findViewById(R.id.icon_text)
         var tvName: TextView = view.findViewById(R.id.tv_name)
         var imgProfile: ImageView = view.findViewById(R.id.icon_profile)
@@ -246,7 +265,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         var tvEmail: TextView = view.findViewById(R.id.tv_email)
         var tvAddr: TextView = view.findViewById(R.id.tv_addr)
 
-        init {
+       /* init {
             view.setOnLongClickListener(this)
         }
 
@@ -254,7 +273,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
             enableActionMode(adapterPosition)
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             return true
-        }
+        }*/
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int,member: Member) {
@@ -423,8 +442,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
-                                .setContentText("want to Active ${selectedItemPositions.size} Profiles!")
-                                .setConfirmText("Yes,Active it!")
+                                .setContentText("Approve ${selectedItemPositions.size} Profiles!")
+                                .setConfirmText("Yes,Approve it!")
                                 .setCancelText("No")
                                 .setConfirmClickListener {
                                     it.dismiss()
@@ -442,11 +461,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                                     Ids = Ids.substring(0, Ids.length - 1)
                                     jsonObject.put(getString(R.string.idList), Ids)
                                     val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-                                    lstMembers.clear()
-                                    tvCount.visibility=View.GONE
-                                    adapter.notifyDataSetChanged()
-                                    shimmerFrameLayout.startShimmerAnimation()
-                                    shimmerFrameLayout.visibility = View.VISIBLE
+
+                                    Utility.startSweetProgress(activity,"Restricted",getString(R.string.loading))
                                     roomMemberViewModel.changeStatus(updated)
                                 }
                                 .setCancelClickListener {

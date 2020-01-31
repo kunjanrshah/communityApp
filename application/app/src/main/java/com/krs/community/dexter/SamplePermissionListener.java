@@ -45,6 +45,6 @@ public class SamplePermissionListener implements PermissionListener {
 
   @Override public void onPermissionRationaleShouldBeShown(PermissionRequest permission,
                                                            PermissionToken token) {
-    activity.showPermissionRationale(token);
+    //activity.showPermissionRationale(token);
   }
 }

@@ -196,7 +196,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
                                     }, 5000)
 
                                 } else {
-                                    Utility.requestStoragePermission(this@FamilyDetailActivity)
+                                    Utility.requestReadStoragePermission(this@FamilyDetailActivity)
                                 }
                             } else if (it == 1) {
                                 val intent: Intent = Intent(this@FamilyDetailActivity, FamilyTreeListActivity::class.java)
@@ -335,7 +335,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
                         }, 5000)
 
                     } else {
-                        Utility.requestStoragePermission(this@FamilyDetailActivity)
+                        Utility.requestReadStoragePermission(this@FamilyDetailActivity)
                     }
                 } else if (it == 1) {
                     val intent: Intent = Intent(this@FamilyDetailActivity, FamilyTreeListActivity::class.java)

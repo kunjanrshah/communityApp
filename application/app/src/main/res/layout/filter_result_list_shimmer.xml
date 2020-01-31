@@ -28,16 +28,18 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/iv_profile"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@color/placeholder_bg" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@color/placeholder_bg"
+                    android:layout_gravity="center_horizontal"
+                    android:scaleType="centerCrop"
+                    />
 
                 <TextView
-                    android:id="@+id/bmb1"
-                    android:layout_width="40dp"
+                    android:layout_width="match_parent"
                     android:layout_height="20dp"
+                    android:layout_gravity="center"
                     android:layout_marginTop="5dp"
                     android:background="@color/placeholder_bg" />
 

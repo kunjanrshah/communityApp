@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
-import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.*
 import android.widget.*
@@ -18,9 +17,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
@@ -35,10 +33,12 @@ import com.krs.community.adapter.LocationAdapter
 import com.krs.community.databinding.FragmnetSharedLocationBinding
 import com.krs.community.entities.RoomMember
 import com.krs.community.interfaces.ByFilterListener
+import com.krs.community.interfaces.EditMemberListener
 import com.krs.community.interfaces.RoomMemberListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
+import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
@@ -48,15 +48,15 @@ import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
 import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
-import com.nightonke.boommenu.Util
 import com.orhanobut.dialogplus.DialogPlus
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.util.*
+import kotlin.collections.ArrayList
 
-class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocationListner , ByFilterListener, RoomMemberListener {
+class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocationListner , ByFilterListener, RoomMemberListener, EditMemberListener {
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private var actionModeCallback: ActionModeCallback? = null
     private var actionMode: ActionMode? = null
@@ -87,6 +87,7 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
 
         roomMemberViewModel = ViewModelProviders.of(this,roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
         profileDetailViewModel = ViewModelProviders.of(this,profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
+        profileDetailViewModel.mEditMemberListener=this
         filterViewModel = ViewModelProviders.of(this,filterViewModelFactory).get(SmartFilterViewModel::class.java)
         filterViewModel.mByFilterListener=this
 
@@ -97,7 +98,7 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
                 val member = members[position]
                 val holder = viewHolder as ListViewHolder
                 val name=member.firstName
-                Coroutines.main {
+                Coroutines.io {
                     val lastname= filterViewModel.getLastNameById(Integer.parseInt(member.subCastId.toString()))
                     holder.tvName.text= "$name $lastname"
                 }
@@ -123,15 +124,15 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
                             if (Utility.hasReadStoragePermission(activity as AppCompatActivity) && Utility.hasWriteStoragePermission(activity as AppCompatActivity)) {
                                 createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
 
-                                Handler().post(Runnable {
+                                Handler().post {
                                     Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
-                                })
+                                }
                                 Handler().postDelayed({
                                     Utility.hideSweetProgress()
                                 }, 5000)
 
                             } else {
-                                Utility.requestStoragePermission(activity as AppCompatActivity)
+                                Utility.requestReadStoragePermission(activity as AppCompatActivity)
                             }
                         } else if (it == 1) {
                             val intent = Intent(activity, FamilyTreeListActivity::class.java)
@@ -188,7 +189,7 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
         binding.rvLocation.layoutManager = layoutManager
         binding.rvLocation.itemAnimator = DefaultItemAnimator()
         binding.rvLocation.setHasFixedSize(true)
-        val header = LayoutInflater.from(activity).inflate(R.layout.header_favorite, container, false)
+        val header = LayoutInflater.from(activity).inflate(R.layout.header_shared, container, false)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
         adapter.setParallaxHeader(header, binding.rvLocation)
@@ -201,12 +202,12 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
 
     override fun onResume() {
         super.onResume()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+        (activity as AppCompatActivity).supportActionBar!!.hide()
     }
 
     override fun onStop() {
         super.onStop()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+        (activity as AppCompatActivity).supportActionBar!!.show()
     }
 
     private fun getSharedProfiles(){
@@ -441,7 +442,7 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
 
     private inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-            mode.menuInflater.inflate(R.menu.fav_action_mode, menu)
+            mode.menuInflater.inflate(R.menu.shared_action_mode, menu)
             return true
         }
 
@@ -451,9 +452,42 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
 
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             return when (item.itemId) {
-                R.id.action_activate -> {
-                    deleteMessages()
-                    mode.finish()
+                R.id.action_private -> {
+                    val selectedItemPositions = getSelectedItems()
+                    SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText(getString(R.string.you_sure))
+                            .setContentText("Private your location to " + selectedItemPositions.size + " Profiles!")
+                            .setConfirmText("Yes,Private it!")
+                            .setCancelText("No")
+                            .setConfirmClickListener {
+                                it.dismiss()
+                                val jsonObject = JSONObject()
+                                jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                                jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+                                jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+
+                                val loginuser = Guru.getString(getString(R.string.loginUser), "")
+                                val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
+
+                                val loginSharedIds = loginMember.sharingId.split(',')
+                                val sharedId=loginSharedIds.toMutableList()
+                                for (index in selectedItemPositions) {
+                                    if (loginSharedIds.contains(members[index].id)) {
+                                        sharedId.remove(members[index].id)
+                                    }
+                                }
+                                val Ids=sharedId.toString().substring(1,sharedId.toString().length-1)
+                                jsonObject.put(getString(R.string.sharing_id), Ids)
+                                val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                                binding.shimmerViewContainer.startShimmerAnimation()
+                                binding.shimmerViewContainer.visibility = View.VISIBLE
+                                profileDetailViewModel.updateProfile(updated, true)
+
+                            }
+                            .setCancelClickListener {
+                                it.dismiss()
+                            }
+                            .show()
                     true
                 }
                 R.id.action_select_all -> {
@@ -507,6 +541,26 @@ class SharedLocationFragment : Fragment(), KodeinAware,LocationAdapter.SetLocati
 
     override fun getRoomMembers(response: List<RoomMember>) {
 
+    }
+
+    override fun getScanResult(response: SmartFilterResponse) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
+        binding.shimmerViewContainer.stopShimmerAnimation()
+        binding.shimmerViewContainer.visibility = View.GONE
+
+       // if (response.success) {
+        if (response.member != null) {
+            Guru.putString(getString(R.string.loginUser), Gson().toJson(response.member))
+        }
+        binding.rvLocation.snackbar("Location private successfully", Snackbar.LENGTH_LONG)
+
+       // }
+        deleteMessages()
+        clearSelections()
+        actionMode?.finish()
     }
 
     override suspend fun getFailure(message: String) {
