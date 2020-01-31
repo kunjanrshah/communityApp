@@ -303,13 +303,18 @@ class DashboardFragment : Fragment(), KodeinAware, SharedProfileListener {
     private fun getSharedProfileList() {
         binding.shimmerViewContainer.startShimmerAnimation()
         binding.shimmerViewContainer.visibility = View.VISIBLE
-
+        Handler().postDelayed({
+            binding.shimmerViewContainer.stopShimmerAnimation()
+            binding.shimmerViewContainer.visibility=View.GONE
+        },4000)
         val jsonObj= JSONObject()
         jsonObj.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
         jsonObj.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
         jsonObj.put(getString(R.string.id),Guru.getString(getString(R.string.user_id),""))
         val updated=  JsonParser().parse(jsonObj.toString()) as JsonObject
         filterViewModel.getSharedProfiles(updated)
+
+
     }
 
 

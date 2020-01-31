@@ -93,12 +93,12 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 val member = lstMembers[position]
                 val holder = viewHolder as MyViewHolder
 
-                if (lstMembers.size > 0) {
+                /*if (lstMembers.size > 0) {
                     tvCount.visibility = View.VISIBLE
                     tvCount.text = "Member ${lstMembers.size} found"
                 } else {
                     tvCount.visibility = View.GONE
-                }
+                }*/
 
                 holder.tvName.text = member.firstName
                 holder.tvArea.text = member.area
@@ -185,6 +185,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
             if (response.members.size > 0) {
               //  lstMembers.clear()
                 tvCount.visibility = View.VISIBLE
+                tvCount.text = "Member ${response.totalRecords} found"
+
                 lstMembers.addAll(response.members)
                 adapter.notifyDataSetChanged()
 
@@ -202,6 +204,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 Snackbar.make(llRoot, "No records found!", Snackbar.LENGTH_LONG).show()
             }
         } else {
+            tvCount.visibility = View.GONE
             DashboardActivity.stop = false
         }
     }

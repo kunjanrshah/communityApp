@@ -29,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
@@ -258,6 +259,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
         val cancel:ImageView
         cancel = header.findViewById(R.id.img_cancel1)
         cancel.setOnClickListener {
+            val intent=Intent(this,DashboardActivity::class.java)
+            startActivity(intent)
             finish()
             Utility.fade(this)
         }
