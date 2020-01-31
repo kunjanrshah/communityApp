@@ -10,6 +10,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -101,15 +103,15 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
         rv_parent.setHasFixedSize(true)
         val MyLayoutManager1 = LinearLayoutManager(activity)
         MyLayoutManager1.orientation = RecyclerView.VERTICAL
-        yURLs.add("1")
-        yURLs.add("2")
-        yURLs.add("3")
+        yURLs.add("")
+        yURLs.add("")
+        yURLs.add("")
         adapter1 = URLAdapter()
         rv_parent.adapter = adapter1
         rv_parent.layoutManager = MyLayoutManager1
         val iv_add_url = root.findViewById<ImageView>(R.id.iv_add_url)
         iv_add_url.setOnClickListener { v: View? ->
-            yURLs.add("test")
+            yURLs.add("")
             adapter1.notifyDataSetChanged()
         }
         val iv_upload = root.findViewById<ImageView>(R.id.iv_upload)
@@ -184,9 +186,10 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
                 txt_end_time.setError(null)
             }
             if (isValidated) {
+                yURLs.removeAll(Arrays.asList(""));
                 val json = JSONObject()
                 json.put("id",userId);
-                json.put("event_date","2020-01-01")
+                json.put("event_date",edt_start.text.toString())
                 json.put("title",edt_title.text.toString())
                 json.put("description",edt_description.text.toString())
                 json.put("location",edt_address.text.toString())
@@ -194,9 +197,8 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
                 json.put("lng","72.2308")
                 json.put("youtube",yURLs);
 
-//                {"id":"39","event_date":"06\/01\/2020","title":"bnn","description":"nn","location":"nn","lat":"23.7546","lng":"72.2308","youtube":"[\"https:\\\/\\\/youtube.com\\\",\\\"https:\\\/\\\/youtube.com\"]"}
 
-//                val data = "{\"id\":\"1\",\"event_date\":\"2020-01-01\",\"title\":\"DemoTitile\",\"description\":\"DemoDescription\",\"location\":\"DemoLocation\",\"lat\":\"23.7546\",\"lng\":\"72.2308\",\"youtube\":[\"https:\\/\\/youtube.com\",\"https:\\/\\/youtube.com\"]}";
+//              val data = "{\"id\":\"1\",\"event_date\":\"2020-01-01\",\"title\":\"DemoTitile\",\"description\":\"DemoDescription\",\"location\":\"DemoLocation\",\"lat\":\"23.7546\",\"lng\":\"72.2308\",\"youtube\":[\"https:\\/\\/youtube.com\",\"https:\\/\\/youtube.com\"]}";
                 Utility.startSweetProgress(activity, "Creating an event", "Please wait...")
                 shareEventViewModel.createEvent(mResults,userId,userId,Guru.getString(getString(R.string.access_token), "").toString(),json.toString(),yURLs)
             }
@@ -278,11 +280,11 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
         val mTimePicker: TimePickerDialog
         mTimePicker = TimePickerDialog(activity, TimePickerDialog.OnTimeSetListener { timePicker, selectedHour, selectedMinute ->
             if (isStart) {
-                txt_start_time!!.error = null
-                txt_start_time!!.text = (if (selectedHour < 10) "0$selectedHour" else selectedHour.toString() ).plus( ":") .plus( if (selectedMinute < 10) "0$selectedMinute" else selectedMinute)
+                txt_start_time.error = null
+                txt_start_time.text = (if (selectedHour < 10) "0$selectedHour" else selectedHour.toString() ).plus( ":") .plus( if (selectedMinute < 10) "0$selectedMinute" else selectedMinute)
             } else {
-                txt_end_time!!.text = (if (selectedHour < 10) "0$selectedHour" else selectedHour.toString() ).plus( ":") .plus( if (selectedMinute < 10) "0$selectedMinute" else selectedMinute)
-                txt_end_time!!.error = null
+                txt_end_time.text = (if (selectedHour < 10) "0$selectedHour" else selectedHour.toString() ).plus( ":") .plus( if (selectedMinute < 10) "0$selectedMinute" else selectedMinute)
+                txt_end_time.error = null
             }
         }, hour, minute, true) //Yes 24 hour time
         mTimePicker.setTitle("Select Time")
@@ -310,6 +312,22 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
                 }
                 false
             }
+
+            holder.edt_yurl.addTextChangedListener(object : TextWatcher {
+
+                override fun afterTextChanged(s: Editable) {
+
+                }
+
+                override fun beforeTextChanged(s: CharSequence, start: Int,
+                                               count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence, start: Int,
+                                           before: Int, count: Int) {
+                    yURLs[position] = s.toString();
+                }
+            })
         }
 
         override fun getItemId(position: Int): Long {

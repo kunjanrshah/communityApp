@@ -27,7 +27,7 @@
 
     <application
         android:name="com.krs.community.app.AppController"
-        android:icon="@drawable/ic_app"
+        android:icon="@drawable/app_logo"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/MyMaterialTheme"
