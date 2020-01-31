@@ -111,7 +111,7 @@ class DashboardFragment : Fragment(), KodeinAware, SharedProfileListener {
         layoutManager = LinearLayoutManager(AppController.mApplication.applicationContext)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
 
-        sharedAdapter=SharedProfileAdapter(sharedProfiles)
+
         binding.lstSharedProfile.adapter =sharedAdapter
         binding.lstSharedProfile.layoutManager = layoutManager
 
@@ -123,6 +123,7 @@ class DashboardFragment : Fragment(), KodeinAware, SharedProfileListener {
         }
 
         setSliderViews()
+        setDefaultProfileList()
         getSharedProfileList()
         binding.gridView.adapter = MenuAdapter(activity!!)
         binding.tvAllShared.setOnClickListener { v: View? -> Utility.movetoFragment(activity, SharedLocationFragment()) }
@@ -323,7 +324,8 @@ class DashboardFragment : Fragment(), KodeinAware, SharedProfileListener {
             if(response.members!=null && response.members.size>0){
                 sharedProfiles.clear()
                 sharedProfiles.addAll(response.members)
-                sharedAdapter?.notifyDataSetChanged()
+                sharedAdapter=SharedProfileAdapter(sharedProfiles)
+                binding.lstSharedProfile.adapter =sharedAdapter
                 binding.lblShared.visibility=View.VISIBLE
                 binding.lblShared.alpha=1.0f
                 binding.lstSharedProfile.alpha=1.0f
