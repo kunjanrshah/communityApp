@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
-import com.krs.community.interfaces.ByFilterListener
+import com.krs.community.listeners.ByFilterListener
 import com.krs.community.repositories.CalendarSearchRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException

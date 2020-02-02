@@ -3,7 +3,7 @@ package com.krs.community.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import com.krs.community.interfaces.ByDistanceListener
+import com.krs.community.listeners.ByDistanceListener
 import com.krs.community.model.ByDistanceModel
 import com.krs.community.repositories.ByDistanceRepository
 import com.krs.community.utils.ApiException

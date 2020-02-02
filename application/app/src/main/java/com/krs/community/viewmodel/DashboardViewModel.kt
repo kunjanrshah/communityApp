@@ -2,15 +2,7 @@ package com.krs.community.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import com.krs.community.app.lazyDeferred
-import com.krs.community.interfaces.DashboardListener
-import com.krs.community.model.Datum
 import com.krs.community.repositories.DashboardRepository
-import com.krs.community.utils.ApiException
-import com.krs.community.utils.Coroutines
-import com.krs.community.utils.NoInternetException
-import kotlinx.coroutines.*
 
 class DashboardViewModel(
         private val mDashboardRepository: DashboardRepository,

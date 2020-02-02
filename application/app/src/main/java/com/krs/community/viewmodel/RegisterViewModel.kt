@@ -6,7 +6,7 @@ import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import com.krs.community.R
 import com.krs.community.activity.LoginActivity
-import com.krs.community.interfaces.IRegisterListener
+import com.krs.community.listeners.IRegisterListener
 import com.krs.community.repositories.RegisterRepository
 import com.krs.community.utils.*
 import kotlinx.coroutines.*

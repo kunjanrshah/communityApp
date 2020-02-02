@@ -39,8 +39,8 @@ import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
-import com.krs.community.interfaces.ByKeywordListener
-import com.krs.community.interfaces.RoomMemberListener
+import com.krs.community.listeners.ByKeywordListener
+import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.searchByKeywordsResponse

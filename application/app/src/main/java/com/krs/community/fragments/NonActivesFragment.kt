@@ -26,8 +26,8 @@ import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
-import com.krs.community.interfaces.ByFilterListener
-import com.krs.community.interfaces.RoomMemberListener
+import com.krs.community.listeners.ByFilterListener
+import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse

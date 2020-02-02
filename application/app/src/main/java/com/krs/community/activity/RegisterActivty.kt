@@ -20,11 +20,9 @@ import com.krs.community.databinding.ActivityRegisterBinding
 import com.krs.community.entities.LastName
 import com.krs.community.entities.States
 import com.krs.community.entities.SubCommunity
-import com.krs.community.interfaces.IRegisterListener
+import com.krs.community.listeners.IRegisterListener
 import com.krs.community.model.*
 import com.krs.community.utils.*
-import com.krs.community.utils.Utility.checkReadExternalStoragePermission
-import com.krs.community.utils.Utility.requestReadStoragePermission
 import com.krs.community.viewmodel.RegisterViewModel
 import com.krs.community.viewmodelfactory.RegisterViewModelFactory
 import com.wooplr.spotlight.prefs.PreferencesManager
@@ -42,9 +40,6 @@ import org.kodein.di.generic.instance
 class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterListener,KodeinAware{
 
     private var str_profile_hash = ""
-    private var isShow = true
-    private var isShow1 = true
-    private var isShow2 = true
     private lateinit var mPreferencesManager:PreferencesManager;
     private var mShowLoader: Boolean = false
     private val PICK_GALLERY_REQUEST = 1
@@ -100,50 +95,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
             }
         }
 
-        edt_password.setOnTouchListener(fun(_: View, event: MotionEvent): Boolean {
-            val DRAWABLE_RIGHT = 2
-            if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= edt_password.right - edt_password!!.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
-                    if (isShow) {
-                        edt_password.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.show_pass, 0)
-                        edt_password.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                        isShow = false
-                    } else {
-                        edt_password.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.hide_pass, 0)
-                        edt_password.inputType =InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                        isShow = true
-                    }
-                    edt_password.setSelection(edt_password.length())
-                    return true
-                }
-            }
-            return false
-        })
-
-        edt_cpassword.setOnTouchListener(fun(v: View, event: MotionEvent): Boolean {
-            val DRAWABLE_RIGHT = 2
-            if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= edt_cpassword!!.right - edt_cpassword!!.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
-                    if (isShow1) {
-                        edt_cpassword.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.show_pass, 0)
-                        edt_cpassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                        isShow1 = false
-                    } else {
-                        edt_cpassword.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.hide_pass, 0)
-                        edt_cpassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                        isShow1 = true
-                    }
-                    try {
-                        edt_cpassword.setSelection(edt_cpassword.length())
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                    return true
-                }
-            }
-            return false
-        })
-
         /*get Lastnames */
         registerViewModel.getUserLastName()
 
@@ -161,7 +112,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         registerViewModel.getUserStates()
         spinnerStates.setOnItemClickListener {
             //Utility.startSweetProgress(this,"Fetching Cities of ${spinnerStates.text}","Loading...")
-            Utility.startSweetProgress(this,"fetching city",resources.getString(R.string.loading))
+            Utility.startSweetProgress(this,"Fetching City",resources.getString(R.string.loading))
             registerViewModel.stateId=lstStateId[it]
             registerViewModel.fetchCitiesForStateId(it + 1)
         }
@@ -170,7 +121,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         /*get sub communities */
         registerViewModel.getLstSubCommunity()
         spinnerSub.setOnItemClickListener {
-            Utility.startSweetProgress(this,"fetching local Community",resources.getString(R.string.loading))
+            Utility.startSweetProgress(this,"Fetching Local Community",resources.getString(R.string.loading))
             //Utility.startSweetProgress(this,"Fetching Local Communities of ${spinnerSub.text}","Loading...")
             registerViewModel.subCommId=lstSubCommId[it]
             registerViewModel.getLstLocalCommunity(it + 1)

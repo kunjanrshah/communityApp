@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.krs.community.BuildConfig;
 import com.krs.community.R;
-import com.krs.community.interfaces.RetrofitListener;
+import com.krs.community.listeners.RetrofitListener;
 import com.krs.community.model.ErrorObject;
 import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.Logger;

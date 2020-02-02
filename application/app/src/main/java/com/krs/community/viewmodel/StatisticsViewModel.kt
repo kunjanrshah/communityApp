@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
 import com.krs.community.app.lazyDeferred
-import com.krs.community.interfaces.StatisticsListener
+import com.krs.community.listeners.StatisticsListener
 import com.krs.community.repositories.StatisticsRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException

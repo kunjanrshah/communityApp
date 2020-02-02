@@ -23,7 +23,7 @@ import com.krs.community.R
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.ProfileDetailActivity.Companion.setPercentage
 import com.krs.community.databinding.FragmentMainDetailsBinding
-import com.krs.community.interfaces.EditMemberListener
+import com.krs.community.listeners.EditMemberListener
 import com.krs.community.model.Member
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse

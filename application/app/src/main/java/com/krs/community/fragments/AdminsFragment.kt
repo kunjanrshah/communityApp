@@ -35,13 +35,12 @@ import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
-import com.krs.community.interfaces.ByFilterListener
-import com.krs.community.interfaces.RoomMemberListener
+import com.krs.community.listeners.ByFilterListener
+import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.*
-import com.krs.community.utils.Utility.requestReadStoragePermission
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel

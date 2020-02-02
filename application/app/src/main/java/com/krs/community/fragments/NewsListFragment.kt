@@ -28,7 +28,7 @@ import com.github.squti.guru.Guru
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.interfaces.NewsListener
+import com.krs.community.listeners.NewsListener
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.News
 import com.krs.community.responses.NewsResponse

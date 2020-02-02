@@ -3,7 +3,7 @@ package com.krs.community.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
-import com.krs.community.interfaces.NewsListener
+import com.krs.community.listeners.NewsListener
 import com.krs.community.repositories.NewsRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException

@@ -257,14 +257,13 @@
                         tools:ignore="Autofill" />
                 </LinearLayout>
 
-                <EditText
+                <com.krs.community.utils.ChromaHashView
                     android:id="@+id/edt_password"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/register_field_height"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/lock"
-                    android:drawableEnd="@drawable/hide_pass"
                     android:drawablePadding="15dp"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_password"
@@ -278,7 +277,7 @@
                     android:textSize="16sp"
                     tools:ignore="Autofill" />
 
-                <EditText
+                <com.krs.community.utils.ChromaHashView
                     tools:ignore="Autofill"
                     android:id="@+id/edt_cpassword"
                     android:layout_width="match_parent"
@@ -286,7 +285,6 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/lock"
-                    android:drawableEnd="@drawable/hide_pass"
                     android:drawablePadding="15dp"
                     android:textSize="16sp"
                     android:text="@={registerviewmodel.cpass}"

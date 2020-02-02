@@ -38,9 +38,9 @@ import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentFilterResultBinding
 import com.krs.community.entities.RoomMember
-import com.krs.community.interfaces.EditMemberListener
-import com.krs.community.interfaces.IbrowseCityRecordsListener
-import com.krs.community.interfaces.RoomMemberListener
+import com.krs.community.listeners.EditMemberListener
+import com.krs.community.listeners.IbrowseCityRecordsListener
+import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.model.FilterBy
 import com.krs.community.model.Member
 import com.krs.community.model.SearchByCityData

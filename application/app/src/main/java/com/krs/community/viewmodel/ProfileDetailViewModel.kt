@@ -5,8 +5,8 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
 import com.krs.community.app.lazyDeferred
-import com.krs.community.interfaces.EditMemberListener
-import com.krs.community.interfaces.ImageUploadListener
+import com.krs.community.listeners.EditMemberListener
+import com.krs.community.listeners.ImageUploadListener
 import com.krs.community.repositories.ProfileDetailRepository
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.ApiException

@@ -12,7 +12,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.krs.community.R
-import com.krs.community.interfaces.ILoginListener
+import com.krs.community.listeners.ILoginListener
 import com.krs.community.repositories.LoginRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.AppConstants
@@ -152,7 +152,7 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                     val response = loginRepository.getLogin(req_login)
                     response.let {
                         withContext(Dispatchers.Main) {
-                            iLoginListener.getUserLogin(response)
+                            iLoginListener.userLogin(response)
                             thejob.complete()
                         }
                         return@launch

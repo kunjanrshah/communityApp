@@ -36,8 +36,8 @@ import com.krs.community.bkservice.ProcessMainClass
 import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
 import com.krs.community.databinding.ActivityProfileDetailBinding
 import com.krs.community.fragments.*
-import com.krs.community.interfaces.EditMemberListener
-import com.krs.community.interfaces.ImageUploadListener
+import com.krs.community.listeners.EditMemberListener
+import com.krs.community.listeners.ImageUploadListener
 import com.krs.community.model.Member
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
@@ -49,7 +49,6 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
 import kotlinx.android.synthetic.main.activity_profile_detail.*
-import kotlinx.android.synthetic.main.fragment_share_event.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein

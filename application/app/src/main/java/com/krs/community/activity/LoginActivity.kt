@@ -34,7 +34,7 @@ import com.krs.community.app.AppSignatureHashHelper
 import com.krs.community.app.SMSReceiver
 import com.krs.community.databinding.ActivityLoginwithBinding
 import com.krs.community.fragments.FamilyDetailActivity
-import com.krs.community.interfaces.ILoginListener
+import com.krs.community.listeners.ILoginListener
 import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
 import com.krs.community.utils.AppConstants
@@ -329,7 +329,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         //toast("OTP Time out")
     }
 
-    override fun getUserLogin(response: LoginResponse) {
+    override fun userLogin(response: LoginResponse) {
         hideSweetProgress()
         hideProgressDialog()
         Log.d(TAG, "login data: $response")
@@ -350,7 +350,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
     private fun goToFamilyDetailScreen(){
-        Guru.putString(getString(R.string.loginUser),Gson().toJson(member))
+        /*Guru.putString(getString(R.string.loginUser),Gson().toJson(member))*/
         Guru.putString(getString(R.string.user_email),member.emailAddress)
         Guru.putString(getString(R.string.user_mobile),member.mobile)
         Guru.putString(getString(R.string.user_id),member.id)
@@ -365,7 +365,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         error?.let { toast(it) }
     }
 
-    override fun getFailure(message: String) {
+    override suspend fun getFailure(message: String) {
         loginViewModel!!.status.value=false
         Log.d(TAG, "login data: $message")
     }

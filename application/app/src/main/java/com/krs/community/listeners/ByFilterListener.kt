@@ -1,4 +1,4 @@
-package com.krs.community.interfaces
+package com.krs.community.listeners
 
 import com.krs.community.responses.SmartFilterResponse
 

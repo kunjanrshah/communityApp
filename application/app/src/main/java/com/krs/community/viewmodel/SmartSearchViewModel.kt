@@ -4,8 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
-import com.krs.community.entities.RoomMember
-import com.krs.community.interfaces.ByKeywordListener
+import com.krs.community.listeners.ByKeywordListener
 import com.krs.community.repositories.SmartSearchRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException

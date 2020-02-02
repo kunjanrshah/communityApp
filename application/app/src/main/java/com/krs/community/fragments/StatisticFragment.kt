@@ -16,7 +16,7 @@ import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.databinding.FragmentStatisticsBinding
-import com.krs.community.interfaces.StatisticsListener
+import com.krs.community.listeners.StatisticsListener
 import com.krs.community.responses.StatisticResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility

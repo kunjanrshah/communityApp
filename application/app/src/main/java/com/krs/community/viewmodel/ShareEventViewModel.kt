@@ -4,7 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
-import com.krs.community.interfaces.CreateEventListener
+import com.krs.community.listeners.CreateEventListener
 import com.krs.community.repositories.ShareEventRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
@@ -12,7 +12,6 @@ import kotlinx.coroutines.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.json.JSONObject
 import java.io.File
 
 class ShareEventViewModel(

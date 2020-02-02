@@ -26,7 +26,7 @@ import com.krs.community.R
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentProfessionalDetailsBinding
-import com.krs.community.interfaces.EditMemberListener
+import com.krs.community.listeners.EditMemberListener
 import com.krs.community.model.Member
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse

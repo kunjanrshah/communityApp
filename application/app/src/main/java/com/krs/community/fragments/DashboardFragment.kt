@@ -39,11 +39,11 @@ import com.krs.community.activity.QRCodeActivity
 import com.krs.community.activity.RegisterActivty
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentDashboardBinding
-import com.krs.community.interfaces.ByFilterListener
-import com.krs.community.interfaces.SharedProfileListener
+import com.krs.community.listeners.ActivityStatusListner
+import com.krs.community.listeners.ByFilterListener
 import com.krs.community.model.Member
-import com.krs.community.responses.SharedProfileResponse
 import com.krs.community.responses.SmartFilterResponse
+import com.krs.community.responses.UserActivityStatusResponse
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
@@ -57,7 +57,7 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.util.*
 
-class DashboardFragment : Fragment(), KodeinAware, SharedProfileListener {
+class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
     private var sharedProfiles = ArrayList<Member>()
     private var defaultProfiles = ArrayList<Member>()
@@ -89,7 +89,7 @@ class DashboardFragment : Fragment(), KodeinAware, SharedProfileListener {
 
         binding=DataBindingUtil.inflate(inflater,R.layout.fragment_dashboard,container,false)
         filterViewModel = ViewModelProviders.of(this,filterViewModelFactory).get(SmartFilterViewModel::class.java)
-        filterViewModel.sharedProfileListener=this
+        filterViewModel.mByFilterListener=this
 
         Utility.changeStatusbarColor(activity, R.color.colorPrimary, true)
         binding.gridView.setExpanded(true)
@@ -316,10 +316,9 @@ class DashboardFragment : Fragment(), KodeinAware, SharedProfileListener {
         filterViewModel.getSharedProfiles(updated)
     }
 
-
-    override fun getMembers(response: SharedProfileResponse) {
+    override fun getMembers(response: SmartFilterResponse) {
         /*binding.shimmerViewContainer.stopShimmerAnimation()
-        binding.shimmerViewContainer.visibility = View.GONE*/
+       binding.shimmerViewContainer.visibility = View.GONE*/
         if(response.success){
             if(response.members!=null && response.members.size>0){
                 sharedProfiles.clear()

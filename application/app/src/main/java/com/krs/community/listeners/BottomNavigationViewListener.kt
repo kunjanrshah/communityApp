@@ -1,4 +1,4 @@
-package com.krs.community.interfaces
+package com.krs.community.listeners
 
 /**
  * Created by Alexander Kolpakov on 29.07.2018

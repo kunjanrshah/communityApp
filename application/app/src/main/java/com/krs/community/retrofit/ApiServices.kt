@@ -3,7 +3,6 @@ package com.krs.community.retrofit
 
 import com.google.gson.JsonObject
 import com.krs.community.app.AppController
-import com.krs.community.interfaces.SharedProfileListener
 import com.krs.community.model.*
 import com.krs.community.responses.*
 import com.krs.community.utils.AppConstants
@@ -91,7 +90,7 @@ interface ApiServices {
     suspend fun getSearchByDate(@Body request: JsonObject): Response<SmartFilterResponse>
 
     @POST(AppConstants.UrlPath.GET_SHARED_PROFILE)
-    suspend fun getSharedProfile(@Body request: JsonObject): Response<SharedProfileResponse>
+    suspend fun getSharedProfile(@Body request: JsonObject): Response<SmartFilterResponse>
 
     @POST(AppConstants.UrlPath.GET_EVENTS)
     suspend fun getNewsList(@Body request: JsonObject): Response<NewsResponse>
@@ -114,6 +113,13 @@ interface ApiServices {
 
     @POST(AppConstants.UrlPath.GET_FAMILY_MEMBER)
     suspend fun getFamilyMembers(@Body request: JsonObject): Response<FamilyDetailResponse>
+
+
+    @POST(AppConstants.UrlPath.INNER_LOGIN)
+    suspend fun innerLogin(@Body request: JsonObject): Response<LoginResponse>
+
+    @POST(AppConstants.UrlPath.GET_USER_ACTIVITY_STATUS)
+    suspend fun getUserActivityStatus(@Body request: JsonObject): Response<UserActivityStatusResponse>
 
     @POST(AppConstants.UrlPath.GET_SEARCH_BY_CITY)
     suspend fun getSearchByCity(@Body request: SearchByCityData): Response<SearchByCityModel>

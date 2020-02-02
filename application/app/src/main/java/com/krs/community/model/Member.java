@@ -12,7 +12,17 @@ import java.util.List;
 @Entity
 public class Member implements Serializable {
 
+    @SerializedName("login_status")
+    @Expose
+    private int loginStatus=0;
 
+    @SerializedName("last_login")
+    @Expose
+    private String lastLogin="";
+
+    @SerializedName("online_status")
+    @Expose
+    private int onlineStatus=0;
 
     @SerializedName("sharing_id")
     @Expose
@@ -935,5 +945,29 @@ public class Member implements Serializable {
 
     public void setSharingId(String sharingId) {
         this.sharingId = sharingId;
+    }
+
+    public int getLoginStatus() {
+        return loginStatus;
+    }
+
+    public void setLoginStatus(int loginStatus) {
+        this.loginStatus = loginStatus;
+    }
+
+    public String getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(String lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public int getOnlineStatus() {
+        return onlineStatus;
+    }
+
+    public void setOnlineStatus(int onlineStatus) {
+        this.onlineStatus = onlineStatus;
     }
 }

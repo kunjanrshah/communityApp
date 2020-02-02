@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.krs.community.entities.City
 import com.krs.community.entities.States
-import com.krs.community.interfaces.IbrowseCityRecordsListener
+import com.krs.community.listeners.IbrowseCityRecordsListener
 import com.krs.community.model.SearchByCityData
 import com.krs.community.repositories.BrowseCityRepository
 import com.krs.community.utils.ApiException

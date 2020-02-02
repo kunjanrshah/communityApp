@@ -3,7 +3,7 @@ package com.krs.community.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
-import com.krs.community.interfaces.ILoginListener
+import com.krs.community.listeners.ILoginListener
 import com.krs.community.repositories.PasswordRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
@@ -27,7 +27,7 @@ class PasswordViewModel(
                     val response = passwordRepository.changePassword(jsonObject)
                     response.let {
                         withContext(Dispatchers.Main) {
-                            mLoginListener.getUserLogin(response)
+                            mLoginListener.userLogin(response)
                             thejob.complete()
                         }
                         return@launch
@@ -59,7 +59,7 @@ class PasswordViewModel(
                     val response = passwordRepository.forgotPassword(jsonObject)
                     response.let {
                         withContext(Dispatchers.Main) {
-                            mLoginListener.getUserLogin(response)
+                            mLoginListener.userLogin(response)
                             thejob.complete()
                         }
                         return@launch

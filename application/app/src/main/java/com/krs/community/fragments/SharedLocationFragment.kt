@@ -33,12 +33,11 @@ import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmnetSharedLocationBinding
 import com.krs.community.entities.RoomMember
-import com.krs.community.interfaces.EditMemberListener
-import com.krs.community.interfaces.RoomMemberListener
-import com.krs.community.interfaces.SharedProfileListener
+import com.krs.community.listeners.EditMemberListener
+import com.krs.community.listeners.RoomMemberListener
+import com.krs.community.listeners.ByFilterListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
-import com.krs.community.responses.SharedProfileResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.*
@@ -56,7 +55,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocationListner, SharedProfileListener, RoomMemberListener, EditMemberListener {
+class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocationListner, ByFilterListener, RoomMemberListener, EditMemberListener {
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private var actionModeCallback: ActionModeCallback? = null
     private var actionMode: ActionMode? = null
@@ -89,7 +88,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         profileDetailViewModel = ViewModelProviders.of(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener = this
         filterViewModel = ViewModelProviders.of(this, filterViewModelFactory).get(SmartFilterViewModel::class.java)
-        filterViewModel.sharedProfileListener = this
+        filterViewModel.mByFilterListener = this
 
         actionModeCallback = ActionModeCallback()
         adapter = object : ParallaxRecyclerAdapter<Member>(members) {
@@ -515,7 +514,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         private var currentSelectedIndex = -1
     }
 
-    override fun getMembers(response: SharedProfileResponse) {
+    override fun getMembers(response: SmartFilterResponse) {
         if (response.success) {
             if (response.members != null) {
                 if (response.members.size > 0) {

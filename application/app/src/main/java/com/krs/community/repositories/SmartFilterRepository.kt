@@ -3,15 +3,8 @@ package com.krs.community.repositories
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
-import com.krs.community.entities.City
-import com.krs.community.interfaces.SharedProfileListener
-import com.krs.community.model.*
-import com.krs.community.responses.ByDistanceResponse
-import com.krs.community.responses.SharedProfileResponse
 import com.krs.community.responses.SmartFilterResponse
-import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.retrofit.ApiServices
-import org.json.JSONObject
 
 class SmartFilterRepository(private val api: ApiServices, private val db:AppDatabase): SafeApiRequest()  {
 
@@ -21,7 +14,7 @@ class SmartFilterRepository(private val api: ApiServices, private val db:AppData
         }
     }
 
-    suspend fun getSharedProfile(jsonObject: JsonObject): SharedProfileResponse {
+    suspend fun getSharedProfile(jsonObject: JsonObject): SmartFilterResponse {
         return apiRequest{
             api.getSharedProfile(jsonObject)
         }

@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.entities.RoomMember
-import com.krs.community.interfaces.RoomMemberListener
+import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.repositories.RoomMemberRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException

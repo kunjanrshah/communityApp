@@ -1,6 +1,4 @@
-package com.krs.community.interfaces
-
-import com.google.gson.JsonObject
+package com.krs.community.listeners
 
 
 interface CreateEventListener {

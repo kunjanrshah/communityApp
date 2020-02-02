@@ -26,6 +26,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
@@ -35,13 +36,17 @@ import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
-import com.krs.community.interfaces.IFamilyMembersListener
-import com.krs.community.interfaces.OnBackPressedListener
+import com.krs.community.listeners.ActivityStatusListner
+import com.krs.community.listeners.IFamilyMembersListener
+import com.krs.community.listeners.ILoginListener
+import com.krs.community.listeners.OnBackPressedListener
+import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.FamilyDetailResponse
+import com.krs.community.responses.UserActivityStatusResponse
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.FamilyDetailViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModel
@@ -51,13 +56,14 @@ import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
 import kotlinx.android.synthetic.main.header_detail.view.*
+import kotlinx.android.synthetic.main.jrspinner_layout_dialog.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
 
-class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedListener, IFamilyMembersListener,  LocationAdapter.SetLocationListner {
+class FamilyDetailActivity : AppCompatActivity(), KodeinAware, ActivityStatusListner, ILoginListener, OnBackPressedListener, IFamilyMembersListener,  LocationAdapter.SetLocationListner {
 
     lateinit var members:ArrayList<Member>
     var headId:String?=null
@@ -87,7 +93,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
         profileDetailViewModel = ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         familyDetailViewModel = ViewModelProviders.of(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
         familyDetailViewModel.mIFamilyMembersListener = this
-
+        familyDetailViewModel.mILoginListener=this
+        familyDetailViewModel.mActivityStatusListner=this
         mShimmerViewContainer = findViewById(R.id.shimmer_view_container1)
         rvDetail=findViewById(R.id.rv_detail)
         llRoot=findViewById(R.id.ll_root)
@@ -98,6 +105,41 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
         rvDetail.itemAnimator = DefaultItemAnimator()
 
         getFamilyDetails()
+    }
+
+    private fun getMemberLogin(id:String,password:String){
+        val jsonObject=JSONObject()
+        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
+        jsonObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
+        jsonObject.put(getString(R.string.id),id)
+        jsonObject.put(getString(R.string.profile_password),password)
+        val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
+        familyDetailViewModel.getUserActivityStatus(records)
+    }
+
+    private fun getActivityStatus(){
+        val jsonObject=JSONObject()
+        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
+        jsonObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
+        jsonObject.put(getString(R.string.id),headId)
+        val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
+        familyDetailViewModel.getUserActivityStatus(records)
+    }
+
+    override fun memberStatus(response: UserActivityStatusResponse) {
+        /*response.data.get(0).id
+        members.get(0).id=*/
+    }
+
+    override fun userLogin(response: LoginResponse) {
+        if(response.success){
+            Guru.putString(getString(R.string.loginUser), Gson().toJson(response.data))
+            val mIntent = Intent(this@FamilyDetailActivity, DashboardActivity::class.java)
+            startActivity(mIntent)
+            finish()
+            Utility.fade(this)
+        }
+
     }
 
     private fun getFamilyDetails(){
@@ -138,6 +180,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
        if(data.success){
            members= data.member as ArrayList<Member>
            createCardAdapter()
+           //getActivityStatus()
        }
     }
 
@@ -158,6 +201,41 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
                     viewHolder.tvMobile.text = member.mobile
                     viewHolder.tvUpdate.text = "updated "+Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                     viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
+                    var imgLogin=R.drawable.ic_logout
+                    if(member.loginStatus==1){
+                        imgLogin=R.drawable.ic_logout
+                        viewHolder.tvLogin.setText("Exit")
+                    }else{
+                        imgLogin=R.drawable.ic_login
+                        viewHolder.tvLogin.setText("Enter")
+                    }
+                    try {
+                        Glide.with(AppController.mApplication).load(imgLogin).thumbnail(0.5f).into(viewHolder.imgLogin)
+                    } catch (e: Exception) {
+                        e.message
+                    }
+                    
+                    var imgStatus=R.drawable.ico_red
+                    if(member.loginStatus==1 && member.onlineStatus==0){
+                        imgStatus=R.drawable.ico_pink
+                    }else if(member.loginStatus==0){
+                        imgStatus=R.drawable.ico_red
+                    }else if(member.onlineStatus==1){
+                        imgStatus=R.drawable.ico_green
+                    }
+                    try {
+                        Glide.with(AppController.mApplication).load(imgStatus).thumbnail(0.5f).into(viewHolder.imgState)
+                    } catch (e: Exception) {
+                        e.message
+                    }
+                    viewHolder.llLogin.setOnClickListener {
+
+                       if(member.loginStatus==0){
+                           //getMemberLogin()
+                       }
+
+                    }
+
                     viewHolder.frontLayout.setOnClickListener {
                         val intent = Intent(this@FamilyDetailActivity, ProfileDetailActivity::class.java)
                         intent.putExtra(getString(R.string.member), member)
@@ -447,6 +525,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
         var llMobile: LinearLayout = v.findViewById(R.id.llMobile)
         var imgProfile: ImageView = v.findViewById(R.id.icon_profile1)
         val imgState: ImageView = v.findViewById(R.id.img_state)
+        val imgLogin: ImageView = v.findViewById(R.id.img_login)
+        val tvLogin: TextView = v.findViewById(R.id.tv_login)
     }
 
     override fun getMessage(response: DeleteProfileResponse) {
@@ -469,7 +549,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
         llRoot.snackbar(response.message,Snackbar.LENGTH_LONG)
     }
 
-    override fun getFailure(message: String) {
+    override suspend fun getFailure(message: String) {
         mShimmerViewContainer?.stopShimmerAnimation()
         mShimmerViewContainer?.visibility=View.GONE
         llRoot.snackbar(message,Snackbar.LENGTH_LONG)
@@ -495,4 +575,11 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, OnBackPressedList
     override fun cancelDialog() {
         setLocationDialog?.dismiss()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        familyDetailViewModel.cancelAllJobs()
+    }
+
+
 }

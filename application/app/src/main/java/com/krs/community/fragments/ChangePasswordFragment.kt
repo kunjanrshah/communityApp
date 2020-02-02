@@ -21,7 +21,7 @@ import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity.Companion.binding
 import com.krs.community.databinding.FragmentChangePassBinding
-import com.krs.community.interfaces.ILoginListener
+import com.krs.community.listeners.ILoginListener
 import com.krs.community.model.LoginResponse
 
 import com.krs.community.utils.Utility
@@ -169,11 +169,11 @@ class ChangePasswordFragment : Fragment() , KodeinAware,ILoginListener {
         binding.space.visibility = View.VISIBLE
     }
 
-    override fun getUserLogin(response: LoginResponse) {
+    override fun userLogin(response: LoginResponse) {
         Snackbar.make(passBinding.llParent, response.message, Snackbar.LENGTH_LONG).show()
     }
 
-    override fun getFailure(message: String) {
+    override suspend fun getFailure(message: String) {
         Snackbar.make(passBinding.llParent, message, Snackbar.LENGTH_LONG).show()
     }
 }
