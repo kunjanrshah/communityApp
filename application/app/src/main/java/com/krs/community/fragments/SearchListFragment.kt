@@ -247,6 +247,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
         rvAdapter.setParallaxHeader(header, rvSearch)
         rvSearch.adapter = rvAdapter
         rvAdapter.setContext(this)
+
         multiSearchView.setSearchViewListener(object : MultiSearchView.MultiSearchViewListener {
             override fun onTextChanged(index: Int, s: CharSequence) {
                 //   Toast.makeText(getActivity(), "onTextChanged", Toast.LENGTH_SHORT).show();
@@ -260,10 +261,8 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
             }
 
             override fun onSearchItemRemoved(index: Int) {
-
                 searchWord = ""
                 lstKeyword.removeAt(index)
-
                 if (lstKeyword.size > 0) {
                     if (lstKeyword.size == 1) {
                         searchWord = lstKeyword[0]
@@ -294,7 +293,15 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
             }
         })
 
-        DashboardActivity.stop = false
+        DashboardActivity.stop = true
+
+        val keyword= arguments?.getString("keyword")
+        if(!keyword.isNullOrEmpty()){
+            searchWord = keyword
+            DashboardActivity.stop = false
+            getMembersByKeyword()
+        }
+
         return rootView
     }
 

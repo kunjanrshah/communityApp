@@ -339,6 +339,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         if (!member?.profilePic.isNullOrEmpty()) {
             try {
                 val str=resources.getString(R.string.base_url_thumb)+member?.profilePic
+                Log.d(TAG, "path: $str")
                 Glide.with(mApplication).load(str).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgProfile)
             } catch (e: Exception) {
                 e.message

@@ -2,6 +2,7 @@ package com.krs.community.fragments
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.content.res.TypedArray
@@ -9,8 +10,10 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.speech.RecognizerIntent
 import android.text.InputType
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -30,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.github.squti.guru.Guru
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -39,12 +43,11 @@ import com.krs.community.activity.QRCodeActivity
 import com.krs.community.activity.RegisterActivty
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentDashboardBinding
-import com.krs.community.listeners.ActivityStatusListner
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.model.Member
 import com.krs.community.responses.SmartFilterResponse
-import com.krs.community.responses.UserActivityStatusResponse
 import com.krs.community.utils.Utility
+import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
 import com.smarteist.autoimageslider.DefaultSliderView
@@ -99,10 +102,21 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         (activity as AppCompatActivity?)!!.supportActionBar!!.setTitle("Home")
         binding.edtSearch.inputType = InputType.TYPE_NULL
         binding.edtSearch.keyListener = null
+
         binding.edtSearch.setOnTouchListener { _: View?, event: MotionEvent? ->
-            if (!isTouch) {
-                isTouch = true
-                Utility.movetoFragment(activity, SearchListFragment())
+            val DRAWABLE_RIGHT = 2
+            if(event?.action == MotionEvent.ACTION_UP) {
+                if((event.rawX +70) >= (binding.edtSearch.getRight() - binding.edtSearch.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    getSpeechInput()
+                    true
+                }
+                else{
+                    if (!isTouch) {
+                        isTouch = true
+                        Utility.movetoFragment(activity, SearchListFragment())
+                        true
+                    }
+                }
             }
             false
         }
@@ -134,6 +148,35 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
         return binding.root
     }
+
+    private fun getSpeechInput() {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+        if (intent.resolveActivity(activity!!.packageManager) != null) {
+            startActivityForResult(intent, 10)
+        } else {
+            binding.llParent.snackbar("Your Device Don't Support Speech Input",Snackbar.LENGTH_LONG)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            10 -> if (resultCode == RESULT_OK && data != null) {
+                val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                Log.d(TAG,"data: "+result[0])
+
+                val searchFragment=SearchListFragment()
+                val bundle = Bundle()
+                bundle.putString("keyword", result[0])
+                searchFragment.arguments= bundle
+                Utility.movetoFragment(activity, searchFragment)
+            }
+        }
+    }
+
+
     private lateinit var scrollListener: OnScrollListener
     private fun setRecyclerViewScrollListener() {
         scrollListener = object : OnScrollListener() {

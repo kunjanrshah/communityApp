@@ -45,6 +45,11 @@ public class Member implements Serializable {
     @SerializedName("profile_completed")
     @Expose
     private String profileCompleted="0%";
+
+    @SerializedName("profile_password")
+    @Expose
+    private String profilePassword="";
+
     @SerializedName("distance")
     @Expose
     private String distance="";
@@ -969,5 +974,13 @@ public class Member implements Serializable {
 
     public void setOnlineStatus(int onlineStatus) {
         this.onlineStatus = onlineStatus;
+    }
+
+    public String getProfilePassword() {
+        return profilePassword;
+    }
+
+    public void setProfilePassword(String profilePassword) {
+        this.profilePassword = profilePassword;
     }
 }

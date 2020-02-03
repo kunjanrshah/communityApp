@@ -456,6 +456,10 @@ public class Utility {
         ((Activity) context).overridePendingTransition(R.anim.fade_enter, R.anim.fade_exit);
     }
 
+    public static void fade1(Context context) {
+        ((Activity) context).overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
+    }
+
     public static Bitmap fastblur(Bitmap sentBitmap, float scale, int radius) {
 
         int width = Math.round(sentBitmap.getWidth() * scale);

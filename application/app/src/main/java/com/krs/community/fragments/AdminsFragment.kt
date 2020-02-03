@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -316,7 +317,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
         if(message.toLowerCase().contains("success")){
             getSubAdmin()
         }else{
-            Toast.makeText(activity,message,Toast.LENGTH_SHORT).show()
+            llRoot.snackbar("Something went wrong!",Snackbar.LENGTH_LONG)
         }
     }
 
