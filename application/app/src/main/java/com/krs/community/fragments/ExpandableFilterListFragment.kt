@@ -9,17 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.adapter.SmartFilterAdapter
+import com.krs.community.utils.MovableFloatingActionButton
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+
 
 class ExpandableFilterListFragment : Fragment() , KodeinAware {
 
@@ -35,7 +38,9 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_smart_search, container, false)
-
+        val fab = rootView.findViewById(R.id.fab) as MovableFloatingActionButton
+        val lp = fab.layoutParams as CoordinatorLayout.LayoutParams
+        fab.coordinatorLayout = lp
         profileDetailViewModel = ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
 
         expandableListView = rootView.findViewById(R.id.lst_expandable)
@@ -43,6 +48,7 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
+
         adapter = SmartFilterAdapter(activity as AppCompatActivity,profileDetailViewModel)
         expandableListView.setAdapter(adapter)
         (activity as AppCompatActivity?)!!.supportActionBar!!.setTitle("Smart Filter")
@@ -50,7 +56,7 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
         val iv_cancel = rootView.findViewById<ImageView>(R.id.iv_cancel)
         iv_cancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
         val iv_filter = rootView.findViewById<ImageView>(R.id.iv_filter)
-        iv_filter.setOnClickListener { v: View? -> Utility.movetoFragment(activity, FiltersFragment()) }
+        iv_filter.setOnClickListener { v: View? -> Utility.movetoFragment(activity, FilterListFragment()) }
 
         val tvClear= rootView.findViewById<TextView>(R.id.tv_clear)
         tvClear.setOnClickListener {
@@ -58,7 +64,7 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
             adapter?.clearAll()
         }
 
-        val tvDone = rootView.findViewById<TextView>(R.id.tv_done)
+        val tvDone = rootView.findViewById<MovableFloatingActionButton>(R.id.fab)
         tvDone.setOnClickListener { v: View? ->
             Utility.hideKeyboard(activity)
             Handler().postDelayed({ adapter?.openBottomSheetDailog() }, 250)

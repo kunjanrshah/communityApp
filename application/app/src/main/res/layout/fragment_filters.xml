@@ -15,7 +15,7 @@
         android:clipToPadding="false"
         android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/row_list_calendar" />
+        tools:listitem="@layout/filters_list_item" />
 
 
 </LinearLayout>

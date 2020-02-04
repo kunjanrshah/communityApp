@@ -9,9 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+import com.github.squti.guru.Guru
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayout
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.fragments.SmartFilterResult
 import com.krs.community.jrspinner.JRSpinner
@@ -21,6 +24,7 @@ import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
@@ -439,6 +443,24 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                 mBundle.putString(_context.getString(R.string.filter_values), filter)
                 filterResult.arguments = mBundle
                 Utility.movetoFragment(_context as Activity, filterResult)
+
+                if(viewHolder.chkSave.isChecked && viewHolder.edtFilterName.text.trim().isNotEmpty()){
+                    val jsonArray:JSONArray
+                    val listFilter= Guru.getString(_context.getString(R.string.list_filter),"")
+                    if(listFilter.isNullOrEmpty()){
+                        jsonArray= JSONArray()
+                    }else{
+                        jsonArray= JSONArray(listFilter)
+                    }
+                    val jsonObject= JSONObject()
+                    jsonObject.put(_context.getString(R.string.name_filter),viewHolder.edtFilterName.text.trim())
+                    jsonObject.put(_context.getString(R.string.value_filter),filter)
+                    jsonArray.put(jsonObject)
+                    Guru.putString(_context.getString(R.string.list_filter),jsonArray.toString())
+                }else{
+                    Toast.makeText(_context, "Filter not saved!", Toast.LENGTH_LONG).show()
+                }
+
             } else {
                 Toast.makeText(_context, "No Filter found!", Toast.LENGTH_SHORT).show()
             }

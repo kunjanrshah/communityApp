@@ -452,7 +452,9 @@
     <string name="no_selection">No Selection</string>
     <string name="current_password">current_password</string>
     <string name="new_password">new_password</string>
-
+    <string name="list_filter">list_filter</string>
+    <string name="name_filter">name</string>
+    <string name="value_filter">value</string>
 
 
 </resources>

@@ -9,16 +9,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.LuminanceSource;
@@ -31,9 +26,6 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.krs.community.BuildConfig;
 import com.krs.community.R;
-import com.krs.community.activity.DashboardActivity;
-import com.krs.community.activity.ProfileDetailActivity;
-import com.krs.community.activity.ScanQRCodeActivity;
 import com.krs.community.databinding.FragmentByQrcodeBinding;
 import com.krs.community.model.Member;
 import com.krs.community.utils.AESUtils;
@@ -48,9 +40,7 @@ import java.util.Calendar;
 
 import me.ydcool.lib.qrmodule.encoding.QrGenerator;
 
-import static android.app.Activity.RESULT_OK;
 import static com.facebook.AccessTokenManager.TAG;
-import static com.facebook.FacebookSdk.getCacheDir;
 
 public class QRCodeActivity extends AppCompatActivity {
 

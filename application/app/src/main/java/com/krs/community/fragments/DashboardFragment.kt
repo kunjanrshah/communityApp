@@ -331,7 +331,11 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             if (!TextUtils.isEmpty(member.profilePic)) {
                 holder.imgProfile.isClickable = true
                 val url=resources.getString(R.string.base_url_thumb)+member.profilePic
-                Glide.with(activity!!).load(url).placeholder(R.drawable.user_profile).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
+                try{
+                    Glide.with(activity!!).load(url).placeholder(R.drawable.user_profile).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
+                }catch(e:Exception){
+                    e.message
+                }
                 holder.imgProfile.colorFilter = null
                 holder.iconText.visibility = View.GONE
 

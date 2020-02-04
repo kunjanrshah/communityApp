@@ -252,7 +252,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         if (position == 0) {
             movetoFragment(this, DashboardFragment())
         } else if (position == 1) {
-            movetoFragment(this, FiltersFragment())
+            movetoFragment(this, FilterListFragment())
         } else if (position == 2) {
             movetoFragment(this, StatisticFragment())
         } else if (position == 3) {

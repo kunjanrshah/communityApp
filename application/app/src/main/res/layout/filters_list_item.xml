@@ -37,6 +37,7 @@
                 android:textSize="18sp" />
 
             <ImageView
+                android:id="@+id/img_edit"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:background="@drawable/settings" />
@@ -63,22 +64,22 @@
                     android:layout_height="wrap_content"
                     app:alignContent="stretch"
                     app:alignItems="stretch"
-
                     app:flexWrap="wrap">
 
-                    <include layout="@layout/item_filters" />
+                    <ViewStub
+                        android:id="@+id/layout_stub"
+                        android:inflatedId="@+id/message_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
-                    <include layout="@layout/item_filters" />
-
-                    <include layout="@layout/item_filters" />
-
-                    <include layout="@layout/item_filters" />
+                    <!--<include layout="@layout/item_filters" />-->
 
 
                 </com.google.android.flexbox.FlexboxLayout>
             </RelativeLayout>
 
             <ImageView
+                android:id="@+id/img_delete"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="bottom"
