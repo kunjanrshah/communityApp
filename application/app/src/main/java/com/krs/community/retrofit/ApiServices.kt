@@ -118,8 +118,8 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.INNER_LOGIN)
     suspend fun innerLogin(@Body request: JsonObject): Response<LoginResponse>
 
-    @POST(AppConstants.UrlPath.GET_USER_ACTIVITY_STATUS)
-    suspend fun getUserActivityStatus(@Body request: JsonObject): Response<UserActivityStatusResponse>
+    @POST(AppConstants.UrlPath.INNER_LOGOUT)
+    suspend fun getUserLogout(@Body request: JsonObject): Response<UserInnerLogoutResponse>
 
     @POST(AppConstants.UrlPath.GET_SEARCH_BY_CITY)
     suspend fun getSearchByCity(@Body request: SearchByCityData): Response<SearchByCityModel>

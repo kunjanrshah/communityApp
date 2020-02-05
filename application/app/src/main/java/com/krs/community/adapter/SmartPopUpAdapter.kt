@@ -30,7 +30,7 @@ import java.util.*
 
 class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapter,
                         private val mapChildValues: HashMap<String, String>,
-                        var profileDetailViewModel: ProfileDetailViewModel) : BaseAdapter() {
+                        var profileDetailViewModel: ProfileDetailViewModel,val editFilter:String?) : BaseAdapter() {
 
     private var mICloseDialog: ICloseDialog = adapter
 
@@ -426,6 +426,16 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         viewHolder.imgPerClose.setOnClickListener { v: View? -> viewHolder.llPercentage.visibility = View.GONE }
         viewHolder.imgUpdatedClose.setOnClickListener { v: View? -> viewHolder.llUpdated.visibility = View.GONE }
         viewHolder.imgCreatedClose.setOnClickListener { v: View? -> viewHolder.llCreated.visibility = View.GONE }
+        if(!editFilter.isNullOrEmpty()){
+            viewHolder.chkSave.isChecked=true
+            viewHolder.edtFilterName.visibility = View.VISIBLE
+            val json=JSONObject(editFilter)
+            viewHolder.edtFilterName.setText(json.getString(_context.getString(R.string.name_filter)))
+        }else{
+            viewHolder.edtFilterName.visibility = View.INVISIBLE
+            viewHolder.chkSave.isChecked=false
+        }
+
         viewHolder.chkSave.setOnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {
                 viewHolder.edtFilterName.visibility = View.VISIBLE
@@ -451,6 +461,15 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                         jsonArray= JSONArray()
                     }else{
                         jsonArray= JSONArray(listFilter)
+                    }
+
+                    for (i in 0 until jsonArray.length()) {
+                        val item = jsonArray.getJSONObject(i)
+                        val name= item.getString(_context.getString(R.string.name_filter))
+                        if(name.toString() == viewHolder.edtFilterName.text.trim().toString()){
+                            jsonArray.remove(i)
+                            break
+                        }
                     }
                     val jsonObject= JSONObject()
                     jsonObject.put(_context.getString(R.string.name_filter),viewHolder.edtFilterName.text.trim())

@@ -16,7 +16,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.app.AppDatabase
 import com.krs.community.bkservice.utilities.Notification
 import com.krs.community.repositories.ProfileDetailRepository
@@ -27,9 +26,6 @@ import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
 import kotlinx.coroutines.*
 import org.json.JSONObject
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.kodein
-import org.kodein.di.android.x.kodein
 
 class Service : android.app.Service(), Listener, AddressCallBack {
     private lateinit var easyWayLocation: EasyWayLocation

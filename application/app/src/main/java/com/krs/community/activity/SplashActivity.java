@@ -67,7 +67,7 @@ public class SplashActivity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Utility.changeLang(SplashActivity.this, splanguage.getSelectedItem().toString());
-               // btn_login.setText(getResources().getString(R.string.login));
+                btn_login.setText(getResources().getString(R.string.login));
                 btn_register.setText(getResources().getString(R.string.register));
             }
 
@@ -111,8 +111,7 @@ public class SplashActivity extends Activity {
         is_register = false;
     }
 
-    private void setAnimation()
-    {
+    private void setAnimation() {
         RandomTransitionGenerator generator = new RandomTransitionGenerator(19000, new AccelerateDecelerateInterpolator());
         kbv.setTransitionGenerator(generator);
         imglogo.animate().setStartDelay(3000).setDuration(2000).alpha(1).start();

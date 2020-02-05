@@ -75,24 +75,6 @@ fun handleCropResult(result: Intent, context: Context, image: ImageView) {
             e.message
         }
         logger.debug("resultUri: $resultUri")
-
-        /*try {
-            val uploadImage = File(resultUri.path.toString())
-            *//*runOnUiThread {
-                var bmp1: Bitmap? = null
-                try {
-                    bmp1 = Utility.getBitmap(this, f)
-                    str_profile_hash = Utility.getBase64(bmp1)
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            }*//*
-            // img_cancel!!.visibility = View.VISIBLE
-            //  binding.imgProfile.setImageURI(resultUri)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }*/
-
     } else {
         Toast.makeText(context, "Cannot retrieve cropped image", Toast.LENGTH_SHORT).show()
     }

@@ -4,7 +4,7 @@ import com.google.gson.JsonObject
 import com.krs.community.model.LoginResponse
 import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.FamilyDetailResponse
-import com.krs.community.responses.UserActivityStatusResponse
+import com.krs.community.responses.UserInnerLogoutResponse
 import com.krs.community.retrofit.ApiServices
 
 class FamilyDetailRepository(private val api: ApiServices): SafeApiRequest()  {
@@ -27,9 +27,9 @@ class FamilyDetailRepository(private val api: ApiServices): SafeApiRequest()  {
         }
     }
 
-    suspend fun getUserActivityStatus(data: JsonObject): UserActivityStatusResponse {
+    suspend fun getUserLogout(data: JsonObject): UserInnerLogoutResponse {
         return apiRequest{
-            api.getUserActivityStatus(data)
+            api.getUserLogout(data)
         }
     }
 

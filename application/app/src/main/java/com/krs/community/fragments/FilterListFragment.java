@@ -1,5 +1,6 @@
 package com.krs.community.fragments;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.squti.guru.Guru;
+import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayout;
 import com.krs.community.R;
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter;
@@ -72,19 +74,23 @@ public class FilterListFragment extends Fragment {
                     holder.tvName.setText(name);
 
                     JSONObject json=new JSONObject(value);
-                    /*for(Iterator<String> iter = json.keys(); iter.hasNext();) {
+                    for(Iterator<String> iter = json.keys(); iter.hasNext();) {
                         String key = iter.next();
-                        holder.stub.setLayoutResource(R.layout.item_filters);
-                        View inflated = holder.stub.inflate();
-                        TextView label=inflated.findViewById(R.id.tv_label);
-                        label.setText(key);
-                        TextView value1=inflated.findViewById(R.id.tv_value);
-                        value1.setText(json.getString(key));
-                        if(inflated.getParent()!=null){
-                            ((ViewGroup)inflated.getParent()).removeView(inflated);
+                        LayoutInflater layoutInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View view= layoutInflater.inflate(R.layout.item_filters,null,false);
+                        TextView label=view.findViewById(R.id.tv_label);
+                        String str=key.replace("_"," ");
+                        String[] strArray = str.split(" ");
+                        StringBuilder builder = new StringBuilder();
+                        for (String s : strArray) {
+                            String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
+                            builder.append(cap + " ");
                         }
-                        holder.flexboxLayout.addView(inflated);
-                    }*/
+                        label.setText(builder.toString()+": ");
+                        TextView value1=view.findViewById(R.id.tv_value);
+                        value1.setText(json.getString(key)+" ");
+                        holder.flexboxLayout.addView(view);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -97,7 +103,11 @@ public class FilterListFragment extends Fragment {
                 });
 
                 holder.imgEdit.setOnClickListener(v -> {
-
+                        ExpandableFilterListFragment listFragment=new ExpandableFilterListFragment();
+                        Bundle mBundle=new Bundle();
+                        mBundle.putString(getActivity().getString(R.string.edit_filter),lstFilters.get(i).toString());
+                        listFragment.setArguments(mBundle);
+                        Utility.movetoFragment(getActivity(),listFragment);
                 });
 
                 holder.flexboxLayout.setOnClickListener(v -> {
@@ -167,14 +177,15 @@ public class FilterListFragment extends Fragment {
         TextView tvName;
         FlexboxLayout flexboxLayout;
         ImageView imgEdit, imgDelete;
-        ViewStub stub;
+      //  ViewStub stub;
         ListViewHolder(View v) {
             super(v);
             tvName = v.findViewById(R.id.tv_name);
             flexboxLayout = v.findViewById(R.id.flexbox_layout);
+            flexboxLayout.setFlexDirection(FlexDirection.ROW);
             imgEdit = v.findViewById(R.id.img_edit);
             imgDelete = v.findViewById(R.id.img_delete);
-            stub = v.findViewById(R.id.layout_stub);
+           // stub = v.findViewById(R.id.layout_stub);
         }
     }
 }

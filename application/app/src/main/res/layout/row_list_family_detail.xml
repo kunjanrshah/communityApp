@@ -244,8 +244,7 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_gravity="right"
-                            android:layout_marginLeft="5dp"
-                            android:background="@drawable/ico_red" />
+                            android:layout_marginLeft="5dp"  />
 
 
                     </LinearLayout>

@@ -455,6 +455,7 @@
     <string name="list_filter">list_filter</string>
     <string name="name_filter">name</string>
     <string name="value_filter">value</string>
+    <string name="edit_filter">edit_filter</string>
 
 
 </resources>

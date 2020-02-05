@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
 import com.krs.community.listeners.IFamilyMembersListener
 import com.krs.community.listeners.ILoginListener
-import com.krs.community.listeners.ActivityStatusListner
+import com.krs.community.listeners.InnerLogoutListner
 import com.krs.community.repositories.FamilyDetailRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
@@ -18,19 +18,19 @@ class FamilyDetailViewModel(
 
     var jobFamilyDetails: CompletableJob? = null
     var jobDeletMember: CompletableJob? = null
-    var jobUserActivityStatus: CompletableJob? = null
+    var jobInnerLogout: CompletableJob? = null
     var jobInnerLogin: CompletableJob? = null
 
     lateinit var mIFamilyMembersListener: IFamilyMembersListener
     lateinit var mILoginListener: ILoginListener
-    lateinit var mActivityStatusListner: ActivityStatusListner
+    lateinit var innerLogoutListner: InnerLogoutListner
 
     var TAG: String = FamilyDetailViewModel::class.java.simpleName
 
     fun cancelAllJobs() {
         jobFamilyDetails?.cancel()
         jobDeletMember?.cancel()
-        jobUserActivityStatus?.cancel()
+        jobInnerLogout?.cancel()
         jobInnerLogin?.cancel()
     }
 
@@ -84,25 +84,25 @@ class FamilyDetailViewModel(
         }
     }
 
-    fun getUserActivityStatus(data: JsonObject) {
-        jobUserActivityStatus = Job()
-        jobUserActivityStatus.let { thejob ->
+    fun getInnerLogout(data: JsonObject) {
+        jobInnerLogout = Job()
+        jobInnerLogout.let { thejob ->
             CoroutineScope(Dispatchers.IO + thejob!!).launch {
                 try {
-                    val response = mFamilyDetailRepository.getUserActivityStatus(data)
+                    val response = mFamilyDetailRepository.getUserLogout(data)
                     response.let {
                         withContext(Dispatchers.Main) {
-                            mActivityStatusListner.memberStatus(response)
+                            innerLogoutListner.userLogout(response)
                             thejob.complete()
                         }
                         return@launch
                     }
                 } catch (e: ApiException) {
-                    e.message?.let { mActivityStatusListner.getFailure(it) }
+                    e.message?.let { innerLogoutListner.getFailure(it) }
                 } catch (e: NoInternetException) {
-                    e.message?.let { mActivityStatusListner.getFailure(it) }
+                    e.message?.let { innerLogoutListner.getFailure(it) }
                 } catch (e: Exception) {
-                    e.message?.let { mActivityStatusListner.getFailure(it) }
+                    e.message?.let { innerLogoutListner.getFailure(it) }
                 }
                 thejob.complete()
             }

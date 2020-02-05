@@ -2,7 +2,6 @@ package com.krs.community.fragments
 
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -14,7 +13,6 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
@@ -34,7 +32,7 @@ import com.krs.community.R
 import com.krs.community.activity.*
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
-import com.krs.community.listeners.ActivityStatusListner
+import com.krs.community.listeners.InnerLogoutListner
 import com.krs.community.listeners.IFamilyMembersListener
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.listeners.OnBackPressedListener
@@ -44,7 +42,7 @@ import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.FamilyDetailResponse
-import com.krs.community.responses.UserActivityStatusResponse
+import com.krs.community.responses.UserInnerLogoutResponse
 import com.krs.community.utils.*
 import com.krs.community.utils.Utility.*
 import com.krs.community.viewmodel.FamilyDetailViewModel
@@ -55,14 +53,13 @@ import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
 import kotlinx.android.synthetic.main.header_detail.view.*
-import kotlinx.android.synthetic.main.jrspinner_layout_dialog.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
 
-class FamilyDetailActivity : AppCompatActivity(), KodeinAware, ActivityStatusListner, ILoginListener, OnBackPressedListener, IFamilyMembersListener,  LocationAdapter.SetLocationListner {
+class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedListener, IFamilyMembersListener,  LocationAdapter.SetLocationListner {
 
     lateinit var members:ArrayList<Member>
     var headId:String?=null
@@ -79,6 +76,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, ActivityStatusLis
     private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
     private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
     lateinit var mainHandler: Handler
+    private var isShimmer:Boolean=true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,8 +91,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, ActivityStatusLis
         profileDetailViewModel = ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         familyDetailViewModel = ViewModelProviders.of(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
         familyDetailViewModel.mIFamilyMembersListener = this
-        familyDetailViewModel.mILoginListener=this
-        familyDetailViewModel.mActivityStatusListner=this
         mShimmerViewContainer = findViewById(R.id.shimmer_view_container1)
         rvDetail=findViewById(R.id.rv_detail)
         llRoot=findViewById(R.id.ll_root)
@@ -104,7 +100,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, ActivityStatusLis
         rvDetail.layoutManager = mLayoutManager
         rvDetail.itemAnimator = DefaultItemAnimator()
 
-        getFamilyDetails(true)
     }
 
     override fun onPause() {
@@ -112,52 +107,16 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, ActivityStatusLis
         mainHandler.removeCallbacks(updateAdapter)
     }
 
-
-
     private val updateAdapter = object : Runnable {
         override fun run() {
-            getFamilyDetails(false)
-            mainHandler.postDelayed(this, 1000*60*3)
+            getFamilyDetails()
+            mainHandler.postDelayed(this, 1000*60*2)
         }
     }
 
-    private fun getMemberLogin(id:String,password:String){
-        val jsonObject=JSONObject()
-        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
-        jsonObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-        jsonObject.put(getString(R.string.id),id)
-        jsonObject.put(getString(R.string.profile_password),password)
-        val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
-        familyDetailViewModel.getUserActivityStatus(records)
-    }
-
-    private fun getActivityStatus(){
-        val jsonObject=JSONObject()
-        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
-        jsonObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-        jsonObject.put(getString(R.string.id),headId)
-        val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
-        familyDetailViewModel.getUserActivityStatus(records)
-    }
-
-    override fun memberStatus(response: UserActivityStatusResponse) {
-        /*response.data.get(0).id
-        members.get(0).id=*/
-    }
-
-    override fun userLogin(response: LoginResponse) {
-        if(response.success){
-            Guru.putString(getString(R.string.loginUser), Gson().toJson(response.data))
-            val mIntent = Intent(this@FamilyDetailActivity, DashboardActivity::class.java)
-            startActivity(mIntent)
-            finish()
-            Utility.fade(this)
-        }
-
-    }
-
-    private fun getFamilyDetails(isVisible:Boolean){
-        if(isVisible){
+    private fun getFamilyDetails(){
+        if(isShimmer){
+            isShimmer=false
             mShimmerViewContainer?.visibility=View.VISIBLE
             mShimmerViewContainer?.startShimmerAnimation()
         }
@@ -165,10 +124,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, ActivityStatusLis
         jsonObject.put("head_id",headId)
         val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
         familyDetailViewModel.getFamilyDetails(records)
-       /* Handler().postDelayed({
-            mShimmerViewContainer?.stopShimmerAnimation()
-            mShimmerViewContainer?.visibility=View.GONE
-        },4000)*/
     }
 
     private fun deleteFamilyMember(id:String){
@@ -196,7 +151,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, ActivityStatusLis
        if(data.success){
            members= data.member as ArrayList<Member>
            createCardAdapter()
-           //getActivityStatus()
        }
     }
 
@@ -245,24 +199,19 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, ActivityStatusLis
                         e.message
                     }
                     viewHolder.llLogin.setOnClickListener {
-
-                       if(member.loginStatus==0){
-                           //getMemberLogin()
-                           member.profilePassword="1234"
-                           if(!member.profilePassword.isNullOrEmpty()){
-                               val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
-                               intent.putExtra(getString(R.string.member), member)
-                               startActivity(intent)
-                           }else{
-                               llRoot.snackbar("Please set your PIN!",Snackbar.LENGTH_LONG)
-                           }
+                       member.profilePassword="123456"
+                       if(!member.profilePassword.isNullOrEmpty()){
+                           val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
+                           intent.putExtra(getString(R.string.member), member)
+                           startActivity(intent)
+                       }else{
+                           llRoot.snackbar("Please set your PIN!",Snackbar.LENGTH_LONG)
                        }
                     }
 
                     viewHolder.frontLayout.setOnClickListener {
                         val intent = Intent(this@FamilyDetailActivity, ProfileDetailActivity::class.java)
                         intent.putExtra(getString(R.string.member), member)
-                        intent.putExtra("from", FamilyDetailActivity::class.java)
                         startActivity(intent)
                         fade(this@FamilyDetailActivity)
                     }
@@ -415,6 +364,20 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, ActivityStatusLis
         tvAddr.text=member.address
 
         val imgState: ImageView = header.findViewById(R.id.img_state)
+        var icStatus=R.drawable.ico_red
+        if(member.loginStatus==1 && member.onlineStatus==0){
+            icStatus=R.drawable.ico_pink
+        }else if(member.loginStatus==0){
+            icStatus=R.drawable.ico_red
+        }else if(member.onlineStatus==1){
+            icStatus=R.drawable.ico_green
+        }
+        try {
+            Glide.with(AppController.mApplication).load(icStatus).thumbnail(0.5f).into(imgState)
+        } catch (e: Exception) {
+            e.message
+        }
+
 
         val tvLabel: TextView = header.findViewById(R.id.tv_label)
         tvLabel.text="Family Member List (${members.size})"
@@ -426,17 +389,17 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, ActivityStatusLis
                 if (it == 0) {
                         createMemberPDF(this@FamilyDetailActivity, member, profileDetailViewModel)
                         Handler().post {
-                            Utility.startSweetProgress(this@FamilyDetailActivity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                            startSweetProgress(this@FamilyDetailActivity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
                         }
                         Handler().postDelayed({
-                            Utility.hideSweetProgress()
+                            hideSweetProgress()
                         }, 5000)
                 } else if (it == 1) {
                     val intent: Intent = Intent(this@FamilyDetailActivity, FamilyTreeListActivity::class.java)
                     startActivity(intent)
                 } else if (it == 2) {
                     if (!member.mobile.isNullOrEmpty()) {
-                        Utility.sendWhatsappMessage(this@FamilyDetailActivity, member.mobile, getString(R.string.install_app))
+                        sendWhatsappMessage(this@FamilyDetailActivity, member.mobile, getString(R.string.install_app))
                     } else {
                         Toast.makeText(this@FamilyDetailActivity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
                     }
@@ -446,7 +409,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, ActivityStatusLis
                     val intent: Intent = Intent(this@FamilyDetailActivity, QRCodeActivity::class.java)
                     intent.putExtras(mBundle)
                     startActivity(intent)
-                    Utility.fade(this@FamilyDetailActivity)
+                    fade(this@FamilyDetailActivity)
                 } else if (it == 4) {
                     shareDetails(this@FamilyDetailActivity, tvName.text.toString(), member.mobile, member.emailAddress, member.area, member.address)
                 } else if (it == 5) {
@@ -473,19 +436,16 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, ActivityStatusLis
         llFamilyHead.setOnClickListener {
             val intent = Intent(this, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), members.get(0))
-            intent.putExtra("from", FamilyDetailActivity::class.java)
             startActivity(intent)
-            Utility.fade(this)
+            fade(this)
         }
 
         val tvAdd: TextView = header.findViewById(R.id.tv_add)
         tvAdd.setOnClickListener {
             val intent = Intent(this, ProfileDetailActivity::class.java)
-            intent.putExtra("action", "add")
             intent.putExtra(getString(R.string.member), Member())
-            intent.putExtra("from", FamilyDetailActivity::class.java)
             startActivity(intent)
-            Utility.fade(this)
+            fade(this)
         }
 
 

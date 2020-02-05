@@ -11,11 +11,8 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
-import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener
-import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.krs.community.R
-import com.krs.community.activity.DashboardActivity.Companion.binding
 import com.krs.community.adapter.SmartPopUpAdapter.ICloseDialog
 import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.utils.Coroutines
@@ -26,14 +23,15 @@ import com.orhanobut.dialogplus.DialogPlus
 import com.tsongkha.spinnerdatepicker.DatePicker
 import com.tsongkha.spinnerdatepicker.DatePickerDialog
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
-import org.w3c.dom.Text
+import org.json.JSONObject
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 class SmartFilterAdapter(private val _context: Context,
-                         var profileDetailViewModel: ProfileDetailViewModel) : BaseExpandableListAdapter(), ICloseDialog , DatePickerDialog.OnDateSetListener{
+                         var profileDetailViewModel: ProfileDetailViewModel,
+                         private val editFilter:String?) : BaseExpandableListAdapter(), ICloseDialog , DatePickerDialog.OnDateSetListener{
     var previousGroup = -1
     private val header: MutableList<String>
     private val mapChildValues: HashMap<String, String> = HashMap()
@@ -92,6 +90,10 @@ class SmartFilterAdapter(private val _context: Context,
     private var pattern="dd-MM-yyyy"
     private var datepicker = SpinnerDatePickerDialogBuilder()
     private lateinit var dialog: DialogPlus
+
+    init{
+        setEditFilterValues()
+    }
 
     override fun getGroupCount(): Int {
         return 8
@@ -161,7 +163,22 @@ class SmartFilterAdapter(private val _context: Context,
         return convertView!!
     }
 
-    fun storeFieldsValues() {
+
+    private fun setEditFilterValues(){
+        if(!editFilter.isNullOrEmpty()){
+            val values=JSONObject(editFilter).getString(_context.getString(R.string.value_filter))
+            val json=JSONObject(values)
+            val iterator:Iterator<String>
+            iterator=json.keys()
+            mapChildValues.clear()
+            while(iterator.hasNext()){
+                val key=iterator.next()
+                mapChildValues[key] = json.getString(key)
+            }
+        }
+    }
+
+    fun getFiledValues() {
         if (edtHeadName != null) {
             val familyCode = edtFamilyCode?.text.toString().trim { it <= ' ' }
             if (!familyCode.isEmpty()) {
@@ -348,7 +365,7 @@ class SmartFilterAdapter(private val _context: Context,
         }
     }
 
-    private fun retrieveFieldsValues() {
+    private fun setFieldValues() {
         if (mapChildValues.size > 0) {
             if (edtHeadName != null) {
                 val familyCode = mapChildValues[_context.resources.getString(R.string.ss_family_code)]
@@ -632,7 +649,7 @@ class SmartFilterAdapter(private val _context: Context,
                     }
 
                     rangeAgeBar?.setOnRangeSeekbarFinalValueListener { minValue: Number, maxValue: Number -> Log.d("CRS=>", minValue.toString() + " : " + maxValue) }
-                    retrieveFieldsValues()
+                    setFieldValues()
                 }
 
             }
@@ -665,7 +682,7 @@ class SmartFilterAdapter(private val _context: Context,
                        spState.setItems(lstValue.toTypedArray())
                        spState.setExpandTint(R.color.black)
                    }
-                    retrieveFieldsValues()
+                    setFieldValues()
                 }
             }
             3 -> {
@@ -747,7 +764,7 @@ class SmartFilterAdapter(private val _context: Context,
                         spEducation.setItems(lstValue.toTypedArray())
                         spEducation.setExpandTint(R.color.black)
                     }
-                    retrieveFieldsValues()
+                    setFieldValues()
                 }
 
             }
@@ -818,7 +835,7 @@ class SmartFilterAdapter(private val _context: Context,
                         spActivity.setExpandTint(R.color.black)
                     }
 
-                    retrieveFieldsValues()
+                    setFieldValues()
                 }
 
             }
@@ -839,7 +856,7 @@ class SmartFilterAdapter(private val _context: Context,
                     NumberPadTimePickerDialogFragment.newInstance(mListener).show((_context as AppCompatActivity).getSupportFragmentManager(), "birth_time")
                 }
 
-                retrieveFieldsValues()
+                setFieldValues()
             }
             6 -> {
                 if (inflater != null) convertView = inflater.inflate(R.layout.see_more, null)
@@ -876,7 +893,7 @@ class SmartFilterAdapter(private val _context: Context,
                 }
 
                 rangeUpdationBar?.setOnRangeSeekbarFinalValueListener({ minValue, maxValue -> Log.d("CRS=>", "$minValue : $maxValue") })
-                retrieveFieldsValues()
+                setFieldValues()
             }
             else -> {
             }
@@ -958,7 +975,7 @@ class SmartFilterAdapter(private val _context: Context,
             rangeUpdationBar?.apply()
         }
         mapChildValues.clear()
-        storeFieldsValues()
+        getFiledValues()
     }
 
     override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
@@ -972,9 +989,9 @@ class SmartFilterAdapter(private val _context: Context,
     }
 
     fun openBottomSheetDailog() {
-        storeFieldsValues()
+        getFiledValues()
         if (mapChildValues.size > 0) {
-            val popUpAdapter = SmartPopUpAdapter(_context, this, mapChildValues,profileDetailViewModel)
+            val popUpAdapter = SmartPopUpAdapter(_context, this, mapChildValues,profileDetailViewModel,editFilter)
             dialog = DialogPlus
                     .newDialog(_context)
                     .setAdapter(popUpAdapter)

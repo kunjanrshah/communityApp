@@ -37,6 +37,11 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
     override val kodein by kodein()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Utility.changeStatusbarColor(activity, R.color.white, false)
+        }
+
         val rootView = inflater.inflate(R.layout.fragment_smart_search, container, false)
         val fab = rootView.findViewById(R.id.fab) as MovableFloatingActionButton
         val lp = fab.layoutParams as CoordinatorLayout.LayoutParams
@@ -45,19 +50,17 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
 
         expandableListView = rootView.findViewById(R.id.lst_expandable)
         expandableListView.setGroupIndicator(null)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(activity, R.color.white, false)
-        }
 
-        adapter = SmartFilterAdapter(activity as AppCompatActivity,profileDetailViewModel)
+        val editFilter=  arguments?.getString(activity?.getString(R.string.edit_filter))
+        adapter = SmartFilterAdapter(activity as AppCompatActivity,profileDetailViewModel,editFilter)
         expandableListView.setAdapter(adapter)
         (activity as AppCompatActivity?)!!.supportActionBar!!.setTitle("Smart Filter")
         setListener()
-        val iv_cancel = rootView.findViewById<ImageView>(R.id.iv_cancel)
-        iv_cancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
-        val iv_filter = rootView.findViewById<ImageView>(R.id.iv_filter)
-        iv_filter.setOnClickListener { v: View? -> Utility.movetoFragment(activity, FilterListFragment()) }
 
+        val ivFilter = rootView.findViewById<ImageView>(R.id.iv_filter)
+        ivFilter.setOnClickListener { v: View? -> Utility.movetoFragment(activity, FilterListFragment()) }
+        val ivCancel = rootView.findViewById<ImageView>(R.id.iv_cancel)
+        ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
         val tvClear= rootView.findViewById<TextView>(R.id.tv_clear)
         tvClear.setOnClickListener {
             Utility.hideKeyboard(activity)
@@ -100,7 +103,7 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
             if (group_pos == 0 || group_pos == 7) {
                 return@setOnGroupClickListener true
             } else {
-                adapter!!.storeFieldsValues()
+                adapter!!.getFiledValues()
                 return@setOnGroupClickListener false
             }
         }

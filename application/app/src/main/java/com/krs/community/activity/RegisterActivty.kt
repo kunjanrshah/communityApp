@@ -2,28 +2,33 @@ package com.krs.community.activity
 
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
-import android.text.InputType
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
+import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
+import com.krs.community.app.AppController
 import com.krs.community.databinding.ActivityRegisterBinding
 import com.krs.community.entities.LastName
 import com.krs.community.entities.States
 import com.krs.community.entities.SubCommunity
 import com.krs.community.listeners.IRegisterListener
+import com.krs.community.listeners.ImageUploadListener
 import com.krs.community.model.*
 import com.krs.community.utils.*
+import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RegisterViewModel
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodelfactory.RegisterViewModelFactory
 import com.wooplr.spotlight.prefs.PreferencesManager
 import com.wooplr.spotlight.utils.SpotlightSequence
@@ -36,8 +41,9 @@ import kotlinx.coroutines.withContext
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
+import java.io.File
 
-class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterListener,KodeinAware{
+class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterListener,KodeinAware, ImageUploadListener {
 
     private var str_profile_hash = ""
     private lateinit var mPreferencesManager:PreferencesManager;
@@ -51,20 +57,27 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     private lateinit var lstLocalCommId:Array<Int?>
     lateinit var binding:ActivityRegisterBinding
     private lateinit var registerViewModel: RegisterViewModel
+    private lateinit var profileDetailViewModel: ProfileDetailViewModel
+    private val resultUri: Uri?=null
 
     companion object {
         private val TAG = RegisterActivty::class.java.simpleName
     }
 
     override val kodein by kodein()
-    private val factory: RegisterViewModelFactory by instance()
+    private val registerViewModelFactory: RegisterViewModelFactory by instance()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         logger = Logger(TAG)
 
-        registerViewModel = ViewModelProviders.of(this,factory).get(RegisterViewModel::class.java)
+        registerViewModel = ViewModelProviders.of(this,registerViewModelFactory).get(RegisterViewModel::class.java)
         registerViewModel.iRegisterListener=this
+
+        profileDetailViewModel = ViewModelProviders.of(this,profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
+        profileDetailViewModel.mImageUploadListener=this
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_register)
         binding.lifecycleOwner = this
@@ -111,7 +124,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         /*get states */
         registerViewModel.getUserStates()
         spinnerStates.setOnItemClickListener {
-            //Utility.startSweetProgress(this,"Fetching Cities of ${spinnerStates.text}","Loading...")
             Utility.startSweetProgress(this,"Fetching City",resources.getString(R.string.loading))
             registerViewModel.stateId=lstStateId[it]
             registerViewModel.fetchCitiesForStateId(it + 1)
@@ -122,7 +134,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         registerViewModel.getLstSubCommunity()
         spinnerSub.setOnItemClickListener {
             Utility.startSweetProgress(this,"Fetching Local Community",resources.getString(R.string.loading))
-            //Utility.startSweetProgress(this,"Fetching Local Communities of ${spinnerSub.text}","Loading...")
             registerViewModel.subCommId=lstSubCommId[it]
             registerViewModel.getLstLocalCommunity(it + 1)
         }
@@ -215,8 +226,23 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
 
     override fun getRegisterSuccess(data: RegisterModel) {
         Utility.hideSweetProgress()
-        root_layout.snackbar(data.message, Snackbar.LENGTH_INDEFINITE)
         Log.d(TAG, "onRegisterButtonClick")
+        if(resultUri!=null){
+            try {
+                val uploadImage = File(resultUri.path.toString())
+                Utility.startSweetProgress(this, "Register", getString(R.string.loading))
+                profileDetailViewModel.uploadImage(uploadImage, data.userId.toString(), data.userId.toString(), Guru.getString(getString(R.string.access_token), "").toString())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }else{
+            moveToLogin(data.message)
+        }
+    }
+
+
+    private fun moveToLogin(message: String){
+        root_layout.snackbar(message, Snackbar.LENGTH_INDEFINITE)
         val mIntent = Intent(this, LoginActivity::class.java)
         startActivity(mIntent)
         finish()
@@ -289,6 +315,16 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         spinnerLname.setExpandTint(R.color.black)
     }
 
+    override fun getResult(profile: String) {
+        Utility.hideSweetProgress()
+        moveToLogin("Request sent to your admin")
+    }
+
+    override suspend fun onFailure(message: String) {
+        Utility.hideSweetProgress()
+        root_layout.snackbar(message, Snackbar.LENGTH_INDEFINITE)
+    }
+
     override suspend fun getFailure(message: String) {
 
         withContext(Main){
@@ -317,7 +353,13 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
                     Toast.makeText(this@RegisterActivty, "Cannot retrieve selected image", Toast.LENGTH_SHORT).show()
                 }
             } else if (requestCode == REQUEST_CROP) {
-                handleCropResult(data!!,this,binding.imgProfile)
+                val resultUri = getOutput(data!!)
+                try {
+                    Glide.with(AppController.mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
+                } catch (e: Exception) {
+                    e.message
+                }
+                //handleCropResult(data!!,this,binding.imgProfile,profileDetailViewModel)
             }
         }
         if (resultCode == RESULT_ERROR) {
@@ -358,5 +400,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     override fun loadingProgress(showLoader: Boolean) {
         mShowLoader = showLoader
     }
+
+
 }
 

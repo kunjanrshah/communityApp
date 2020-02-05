@@ -18,9 +18,8 @@ class RegisterRepository(
 
     suspend fun userState(): StateResponse {
         return apiRequest{
-            val date= db.getLastUpdatedDao().getLastUpdatedDate("state")
             val mJSONObject= JSONObject()
-            mJSONObject.put("date",date)
+            mJSONObject.put("date","")
             val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
             api.getUserState(updated)
         }
@@ -45,9 +44,8 @@ class RegisterRepository(
 
     suspend fun userSubCommunity(): SubCommResponse? {
        return apiRequest{
-           val date= db.getLastUpdatedDao().getLastUpdatedDate("sub_community")
            val mJSONObject= JSONObject()
-           mJSONObject.put("date",date)
+           mJSONObject.put("date","")
            val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
            api.getSubCommunity(updated)
        }

@@ -8,6 +8,7 @@
     android:background="@color/colorPrimary"
     android:paddingBottom="60dp"
     android:paddingLeft="16dp"
+    android:id="@+id/ll_parent"
     android:paddingRight="16dp"
     android:paddingTop="50dp"  >
 

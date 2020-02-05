@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UserActivityStatusResponse {
+public class UserInnerLogoutResponse {
 
     @SerializedName("success")
     @Expose
@@ -13,9 +13,6 @@ public class UserActivityStatusResponse {
     @SerializedName("message")
     @Expose
     private String message;
-    @SerializedName("data")
-    @Expose
-    private List<ActivityStatus> data = null;
 
     public Boolean getSuccess() {
         return success;
@@ -31,14 +28,6 @@ public class UserActivityStatusResponse {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public List<ActivityStatus> getData() {
-        return data;
-    }
-
-    public void setData(List<ActivityStatus> data) {
-        this.data = data;
     }
 
 }

@@ -30,7 +30,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.app.AppController
 import com.krs.community.app.AppController.Companion.mApplication
 import com.krs.community.bkservice.ProcessMainClass
 import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
@@ -56,21 +55,21 @@ import org.kodein.di.generic.instance
 import java.io.File
 
 
-class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListener, UCropFragmentCallback, Listener, LocationData.AddressCallBack , ImageUploadListener {
+class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListener, UCropFragmentCallback, Listener, LocationData.AddressCallBack, ImageUploadListener {
 
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: ProfileDetailViewModelFactory by instance()
     private val listFragments = mutableListOf<Fragment>()
     private var isProfileImage = false
-    private var member: Member?=null
+    private var member: Member? = null
     override val kodein by kodein()
     private lateinit var logger: Logger
     private lateinit var professionalDetailsFragment: ProfessionalDetailsFragment
     private lateinit var easyWayLocation: EasyWayLocation
     private lateinit var request: LocationRequest
-    private var scanId:String?=null
-    private var userId:String?=null
-    private var isStopService=false
+    private var scanId: String? = null
+    private var userId: String? = null
+    private var isStopService = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,11 +86,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         profileDetailViewModel.mEditMemberListener = this
         profileDetailViewModel.mImageUploadListener = this
         member = intent.getSerializableExtra(getString(R.string.member)) as Member?
-        scanId=intent.getStringExtra(getString(R.string.scanId))
+        scanId = intent.getStringExtra(getString(R.string.scanId))
 
-        userId=Guru.getString(getString(R.string.user_id), "")
+        userId = Guru.getString(getString(R.string.user_id), "")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(this, R.color.mdtp_white, false)
+            changeStatusbarColor(this, R.color.mdtp_white, false)
         }
 
         val mainDetailsFragment = MainDetailsFragment()
@@ -109,35 +108,35 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         imageSteps.scaleUp = 2.0f
         imageSteps.animationDuration = 500
         imageSteps.setupWithViewPager(binding.viewpager)
-        if(member!=null){
+        if (member != null) {
             val percentage = Utility.calculatePercentage(member)
             setPercentage(percentage)
             setMemberValues()
         }
 
-        if(!scanId.isNullOrEmpty()){
-            val jsonObject=JSONObject()
-            jsonObject.put(""+mApplication.start,"0")
-            jsonObject.put(""+mApplication.length,"1")
-            val jsonObj=JSONObject()
-            jsonObj.put(getString(R.string.id),scanId)
-            jsonObject.put(getString(R.string.filter_by),jsonObj)
-            val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+        if (!scanId.isNullOrEmpty()) {
+            val jsonObject = JSONObject()
+            jsonObject.put("" + mApplication.start, "0")
+            jsonObject.put("" + mApplication.length, "1")
+            val jsonObj = JSONObject()
+            jsonObj.put(getString(R.string.id), scanId)
+            jsonObject.put(getString(R.string.filter_by), jsonObj)
+            val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
             profileDetailViewModel.getMemberByFilters(updated)
         }
 
         if (member?.isLocationEnable == "1") {
-            binding.switchLocation.isActivated=true
+            binding.switchLocation.isActivated = true
             binding.switchLocation.isOn = true
-            binding.switchLocation.labelOn="ON"
+            binding.switchLocation.labelOn = "ON"
             binding.tvDistance.text = "Finding"
             startLocationService()
         } else {
             binding.switchLocation.isOn = false
-            binding.switchLocation.labelOff="OFF"
+            binding.switchLocation.labelOff = "OFF"
             binding.tvDistance.text = "User"
-            if(!userId.equals(member?.id)){
-                binding.switchLocation.isActivated=false
+            if (!userId.equals(member?.id)) {
+                binding.switchLocation.isActivated = false
             }
         }
 
@@ -157,7 +156,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
         binding.switchLocation.setOnClickListener {
             if (!binding.switchLocation.isOn) {
-                member?.isLocationEnable="1"
+                member?.isLocationEnable = "1"
                 startLocationService()
             } else {
                 stopLocationServiceAndUpdateProfile()
@@ -169,7 +168,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 // val address= Utility.getAddress(this,member.userLat.toDouble(),member.userLng.toDouble())
                 Utility.showDirections(this, member!!.userLat.toDouble(), member!!.userLng.toDouble(), "${member?.firstName}'s Location")
             } else {
-                if(!member?.id.isNullOrEmpty()){
+                if (!member?.id.isNullOrEmpty()) {
                     Toast.makeText(this, "${member?.firstName}'s location is off", Toast.LENGTH_LONG).show()
                 }
             }
@@ -226,17 +225,17 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                         .show()
 
             } else {
-                if(jsonObject.getString(getString(R.string.first_name)).isNullOrEmpty()){
+                if (jsonObject.getString(getString(R.string.first_name)).isNullOrEmpty()) {
                     mainDetailsFragment.binding.fname.error = "Enter your FirstName"
                     return@setOnClickListener
-                }else if(jsonObject.getString(getString(R.string.sub_cast_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.sub_cast_id))=="0"){
-                   Utility.displaySnackBarWithBottomMargin(ll_parent,"Select your LastName")
+                } else if (jsonObject.getString(getString(R.string.sub_cast_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.sub_cast_id)) == "0") {
+                    Utility.displaySnackBarWithBottomMargin(ll_parent, "Select your LastName")
                     return@setOnClickListener
-                }else if(jsonObject.getString(getString(R.string.gender)).isNullOrEmpty()){
-                    Utility.displaySnackBarWithBottomMargin(ll_parent,"Select your Gender")
+                } else if (jsonObject.getString(getString(R.string.gender)).isNullOrEmpty()) {
+                    Utility.displaySnackBarWithBottomMargin(ll_parent, "Select your Gender")
                     return@setOnClickListener
-                }else if(jsonObject.getString(getString(R.string.relation_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.relation_id))=="0"){
-                    Utility.displaySnackBarWithBottomMargin(ll_parent,"Select your Relation")
+                } else if (jsonObject.getString(getString(R.string.relation_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.relation_id)) == "0") {
+                    Utility.displaySnackBarWithBottomMargin(ll_parent, "Select your Relation")
                     return@setOnClickListener
                 }
 
@@ -249,11 +248,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         Utility.hideSweetProgress()
     }
 
-    private fun goToFamilyDetailActivity(){
+    private fun goToFamilyDetailActivity() {
         val intent = Intent(this, FamilyDetailActivity::class.java)
-        if(member?.headId=="0"){
+        if (member?.headId == "0") {
             intent.putExtra(getString(R.string.id), member?.id)
-        }else{
+        } else {
             intent.putExtra(getString(R.string.id), member?.headId)
         }
         startActivity(intent)
@@ -265,9 +264,9 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }*/
     }
 
-    private fun startLocationService(){
-        member?.isLocationEnable="1"
-        try{
+    private fun startLocationService() {
+        member?.isLocationEnable = "1"
+        try {
             if (easyWayLocation.hasLocationEnabled()) {
                 if (checkFineLocationPermission(this)) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -288,13 +287,13 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             } else {
                 easyWayLocation = EasyWayLocation(this, request, true, this)
             }
-        }catch (e:java.lang.Exception){
+        } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun stopLocationServiceAndUpdateProfile(){
-        isStopService=true
+    private fun stopLocationServiceAndUpdateProfile() {
+        isStopService = true
         member?.isLocationEnable = "0"
         binding.tvDistance.text = "Distance"
         stopService(ProcessMainClass.serviceIntent)
@@ -315,30 +314,30 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         if (member?.id == userId || member?.headId == userId) {
             binding.tvSave.visibility = View.VISIBLE
             binding.tvSave.text = "Save"
-            binding.imgProfile.isEnabled=true
+            binding.imgProfile.isEnabled = true
         } else if (member?.id.isNullOrEmpty()) {
             binding.tvSave.text = "Add"
-            binding.imgProfile.isEnabled=true
+            binding.imgProfile.isEnabled = true
             binding.txtTitle.text = "New Profile"
         } else {
-            binding.imgProfile.isEnabled=false
+            binding.imgProfile.isEnabled = false
             binding.tvSave.visibility = View.GONE
         }
 
-        if(!member?.isLocationEnable.isNullOrEmpty() && member?.isLocationEnable.equals("1")){
-            binding.switchLocation.isOn=true
-            binding.switchLocation.isEnabled=true
-        }else{
-            binding.tvDistance.text="Distance"
-            binding.switchLocation.isOn=false
-            if(!userId.equals(member?.id)){
-                binding.switchLocation.isEnabled=false
+        if (!member?.isLocationEnable.isNullOrEmpty() && member?.isLocationEnable.equals("1")) {
+            binding.switchLocation.isOn = true
+            binding.switchLocation.isEnabled = true
+        } else {
+            binding.tvDistance.text = "Distance"
+            binding.switchLocation.isOn = false
+            if (!userId.equals(member?.id)) {
+                binding.switchLocation.isEnabled = false
             }
         }
 
         if (!member?.profilePic.isNullOrEmpty()) {
             try {
-                val str=resources.getString(R.string.base_url_thumb)+member?.profilePic
+                val str = resources.getString(R.string.base_url_thumb) + member?.profilePic
                 Log.d(TAG, "path: $str")
                 Glide.with(mApplication).load(str).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgProfile)
             } catch (e: Exception) {
@@ -358,8 +357,8 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     }
 
     override fun getScanResult(response: SmartFilterResponse) {
-        if(response.success){
-          member = response.members[0]
+        if (response.success) {
+            member = response.members[0]
             val percentage = Utility.calculatePercentage(member)
             setPercentage(percentage)
             setMemberValues()
@@ -369,44 +368,42 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
         hideSweetProgress()
         if (response.message.toString().toLowerCase().contains("added")) {
-            member?.headId= response.member.headId
+            member?.headId = response.member.headId
             goToFamilyDetailActivity()
-        } else if (response.message.toString().toLowerCase().contains("updated")){
+        } else if (response.message.toString().toLowerCase().contains("updated")) {
             val member = response.member
 
             val memberString = Guru.getString(getString(R.string.loginUser), "")
             val loginMember = Gson().fromJson(memberString, Member::class.java)
 
-            if (loginMember.id==member.id) {
+            if (loginMember.id == member.id) {
                 Guru.putString(getString(R.string.loginUser), Gson().toJson(member))
                 Guru.putString(getString(R.string.user_mobile), member.mobile)
                 Guru.putString(getString(R.string.user_email), member.emailAddress)
             }
 
-            var str=""
-            if(!isStopService){
+            var str = ""
+            if (!isStopService) {
                 val percentage = Utility.calculatePercentage(member)
                 setPercentage(percentage)
-                str="Profile updated!"
-            }else{
-                str="Location updated"
+                str = "Profile updated!"
+            } else {
+                str = "Location updated"
             }
 
-            startSweetDialog(this,SweetAlertDialog.SUCCESS_TYPE,"Success",str)
+            startSweetDialog(this, SweetAlertDialog.SUCCESS_TYPE, "Success", str)
 
-            isStopService=false
-        }else{
+            isStopService = false
+        } else {
             val member = response.member
-            if(!member.mobile.isNullOrEmpty()){
-                Toast.makeText(this,response.member.mobile,Toast.LENGTH_LONG).show()
-            }else if(!member.emailAddress.isNullOrEmpty()){
-                Toast.makeText(this,response.member.emailAddress,Toast.LENGTH_LONG).show()
-            }
-            else if(!member.memberCode.isNullOrEmpty()){
-                Toast.makeText(this,response.member.memberCode,Toast.LENGTH_LONG).show()
-            }
-            else{
-                Toast.makeText(this,response.message,Toast.LENGTH_LONG).show()
+            if (!member.mobile.isNullOrEmpty()) {
+                Toast.makeText(this, response.member.mobile, Toast.LENGTH_LONG).show()
+            } else if (!member.emailAddress.isNullOrEmpty()) {
+                Toast.makeText(this, response.member.emailAddress, Toast.LENGTH_LONG).show()
+            } else if (!member.memberCode.isNullOrEmpty()) {
+                Toast.makeText(this, response.member.memberCode, Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, response.message, Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -418,11 +415,10 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     }
 
     override fun getResult(profile: String) {
-        Utility.hideSweetProgress()
-        member?.profilePic= profile
-        Guru.putString(getString(R.string.loginUser),Gson().toJson(member))
-        Utility.displaySnackBarWithBottomMargin(binding.llParent, "Profile updated!")
-
+        hideSweetProgress()
+        member?.profilePic = profile
+        Guru.putString(getString(R.string.loginUser), Gson().toJson(member))
+        displaySnackBarWithBottomMargin(binding.llParent, "Profile updated!")
     }
 
     override suspend fun onFailure(message: String) {
@@ -445,16 +441,16 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     override fun onResume() {
         super.onResume()
-        if(checkFineLocationPermission(this)){
+        if (checkFineLocationPermission(this)) {
             easyWayLocation.startLocation()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        try{
+        try {
             easyWayLocation.endUpdates()
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
@@ -462,9 +458,9 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if(requestCode==PICK_GALLERY_REQUEST){
+        if (requestCode == PICK_GALLERY_REQUEST) {
             pickFromGallery(this)
-        }else if(requestCode== FINE_LOCATION_REQUEST){
+        } else if (requestCode == FINE_LOCATION_REQUEST) {
             easyWayLocation.startLocation()
         }
     }
@@ -484,28 +480,33 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             } else if (requestCode == UCrop.REQUEST_CROP) {
                 if (isProfileImage) {
                     isProfileImage = false
+
+
+
+
                     data?.let {
                         val resultUri = UCrop.getOutput(it)
                         if (resultUri != null) {
                             try {
-                                Glide.with(AppController.mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
+                                Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
                             } catch (e: Exception) {
                                 e.message
                             }
                             com.krs.community.utils.logger.debug("resultUri: $resultUri")
 
                             try {
-
                                 val uploadImage = File(resultUri.path.toString())
-                                Utility.startSweetProgress(this, "Updating your profile", "Please wait...")
-                                profileDetailViewModel.uploadImage(uploadImage,userId!!, member?.id.toString(), Guru.getString(getString(R.string.access_token), "").toString())
-                            }catch (e:Exception){
-                            e.printStackTrace();}
+                                startSweetProgress(this, "Image", getString(R.string.loading))
+                                profileDetailViewModel.uploadImage(uploadImage,member?.id.toString(), userId!!,  Guru.getString(getString(R.string.access_token), "").toString())
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
 
                         } else {
                             professionalDetailsFragment.onActivityResult(requestCode, resultCode, data)
-                        }}
+                        }
                     }
+                }
             } else if (requestCode == EasyWayLocation.LOCATION_SETTING_REQUEST_CODE) {
                 easyWayLocation.onActivityResult(resultCode)
             }
