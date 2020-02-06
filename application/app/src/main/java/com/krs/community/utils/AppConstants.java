@@ -328,6 +328,7 @@ public class AppConstants {
         String GET_CHANGE_PASS = "ChangePassword";
         String INNER_LOGIN = "InnerLogin";
         String INNER_LOGOUT = "InnerLogout";
+        String GET_USER_STATUS = "GetUserActivityStatus";
     }
 
     public interface TimeOut {

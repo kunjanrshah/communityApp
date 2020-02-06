@@ -6,25 +6,36 @@ import android.app.Application
 import android.content.Context
 import android.content.IntentFilter
 import android.graphics.Typeface
+import android.os.Handler
 import android.os.StrictMode
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.postDelayed
+import androidx.lifecycle.ViewModelProviders
 import androidx.multidex.MultiDex
 import com.crashlytics.android.Crashlytics
 import com.facebook.FacebookSdk
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.github.squti.guru.Guru
 import com.github.squti.guru.GuruConfig
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.model.Member
 import com.krs.community.repositories.*
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.retrofit.RetrofitBase
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.ConnectivityReceiver
+import com.krs.community.utils.Coroutines
 import com.krs.community.utils.LocaleHelper
+import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.*
 import io.fabric.sdk.android.Fabric
+import org.json.JSONObject
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
@@ -32,22 +43,25 @@ import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 
 class AppController : Application(), KodeinAware{
 
     internal var broadcastRevcevier: ConnectivityReceiver? = null
     lateinit var mGoogleSignInClient: GoogleSignInClient
-
     lateinit var typeface: Typeface
     lateinit var typeface_bold: Typeface
     lateinit var retrofitBase: RetrofitBase
     var start: Int = 0
     val length: Int = 30
-
+    val mHandler:Handler = Handler()
     companion object {
         val TAG = AppController::class.java.simpleName
         lateinit var mApplication: AppController
+        val INTERVAL = 1000 * 60 * 3 //3 minutes
     }
 
     override val kodein= Kodein.lazy {
@@ -70,7 +84,7 @@ class AppController : Application(), KodeinAware{
         bind() from singleton {  SmartSearchRepository(instance(),instance()) }
         bind() from singleton {  SmartFilterRepository(instance(),instance()) }
         bind() from provider  {  CalendarSearchRepository(instance(),instance()) }
-        bind() from provider  {  NewsRepository(instance(),instance()) }
+        bind() from provider  {  NewsRepository(instance()) }
         bind() from provider  {  RoomMemberRepository(instance(),instance()) }
 
         bind() from provider { StatisticsViewModelFactory(instance()) }
@@ -89,6 +103,21 @@ class AppController : Application(), KodeinAware{
         bind() from provider { NewsModelFactory(instance()) }
         bind() from provider { RoomMemberViewModelFactory(instance()) }
 
+    }
+
+    private val mHandlerTask= object:Runnable {
+        override fun run() {
+            updateUserStatus()
+            mHandler.postDelayed(this, INTERVAL.toLong())
+        }
+    }
+
+    private fun startRepeatingTask(){
+        mHandlerTask.run()
+    }
+
+    private fun stopRepeatingTask(){
+        mHandler.removeCallbacks(mHandlerTask);
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -127,13 +156,30 @@ class AppController : Application(), KodeinAware{
                 .requestEmail().build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
+        startRepeatingTask()
     }
 
     override fun onTerminate() {
         super.onTerminate()
+        stopRepeatingTask()
         if (broadcastRevcevier != null) {
             unregisterReceiver(broadcastRevcevier)
             broadcastRevcevier = null
+        }
+    }
+
+    private fun updateUserStatus(){
+        Coroutines.io{
+            val memberString = Guru.getString(getString(R.string.loginUser), "")
+            val member = Gson().fromJson(memberString, Member::class.java)
+            if(member!=null){
+                val jsonObject=JSONObject()
+                jsonObject.put(getString(R.string.id),member.id)
+                jsonObject.put(getString(R.string.user_id),Guru.getString(getString(R.string.user_id), ""))
+                jsonObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token), ""))
+                val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+                retrofitBase.apiServices.getUserStatus(updated)
+            }
         }
     }
 
@@ -144,5 +190,4 @@ class AppController : Application(), KodeinAware{
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(LocaleHelper.onAttach(base, "en"))
     }
-
 }

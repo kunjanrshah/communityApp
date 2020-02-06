@@ -448,14 +448,18 @@
     <string name="exporting_search_list">Exporting Search List</string>
     <string name="install_app">"Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"</string>
     <string name="mobile_not_found">Mobile not found!</string>
-    <string name="filter_values">filter_values</string>
+    <string name="filter_values" translatable="false">filter_values</string>
     <string name="no_selection">No Selection</string>
-    <string name="current_password">current_password</string>
-    <string name="new_password">new_password</string>
-    <string name="list_filter">list_filter</string>
-    <string name="name_filter">name</string>
-    <string name="value_filter">value</string>
-    <string name="edit_filter">edit_filter</string>
+    <string name="current_password" translatable="false">current_password</string>
+    <string name="new_password" translatable="false">new_password</string>
+    <string name="list_filter" translatable="false">list_filter</string>
+    <string name="name_filter" translatable="false">name</string>
+    <string name="value_filter" translatable="false">value</string>
+    <string name="edit_filter" translatable="false">edit_filter</string>
+    <string name="head_id" translatable="false">head_id</string>
 
+    <string name="type" translatable="false">type</string>
+    <string name="profile" translatable="false">profile</string>
+    <string name="company" translatable="false">company</string>
 
 </resources>

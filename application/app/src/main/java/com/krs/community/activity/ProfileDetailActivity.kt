@@ -76,7 +76,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
         getLocationDetail = GetLocationDetail(this, this)
         request = LocationRequest()
-        request.interval = Utility.INTERVAL
+        request.interval = INTERVAL
         request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         easyWayLocation = EasyWayLocation(this, request, true, this)
 
@@ -409,7 +409,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     }
 
     override suspend fun getFailure(message: String) {
-        Utility.hideSweetProgress()
+        hideSweetProgress()
         binding.viewpager.snackbar("Something went wrong!", Snackbar.LENGTH_LONG)
         Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
     }
@@ -422,7 +422,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     }
 
     override suspend fun onFailure(message: String) {
-        Utility.hideSweetProgress()
+        hideSweetProgress()
         binding.viewpager.snackbar("Something went wrong!", Snackbar.LENGTH_LONG)
         Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
     }
@@ -465,7 +465,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -480,10 +479,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             } else if (requestCode == UCrop.REQUEST_CROP) {
                 if (isProfileImage) {
                     isProfileImage = false
-
-
-
-
                     data?.let {
                         val resultUri = UCrop.getOutput(it)
                         if (resultUri != null) {
@@ -497,11 +492,10 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                             try {
                                 val uploadImage = File(resultUri.path.toString())
                                 startSweetProgress(this, "Image", getString(R.string.loading))
-                                profileDetailViewModel.uploadImage(uploadImage,member?.id.toString(), userId!!,  Guru.getString(getString(R.string.access_token), "").toString())
+                                profileDetailViewModel.uploadImage(uploadImage,member?.id.toString(),getString(R.string.profile))
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
-
                         } else {
                             professionalDetailsFragment.onActivityResult(requestCode, resultCode, data)
                         }

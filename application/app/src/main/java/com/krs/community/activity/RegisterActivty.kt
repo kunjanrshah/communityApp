@@ -58,7 +58,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     lateinit var binding:ActivityRegisterBinding
     private lateinit var registerViewModel: RegisterViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-    private val resultUri: Uri?=null
+    private var resultUri: Uri?=null
 
     companion object {
         private val TAG = RegisterActivty::class.java.simpleName
@@ -229,9 +229,9 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         Log.d(TAG, "onRegisterButtonClick")
         if(resultUri!=null){
             try {
-                val uploadImage = File(resultUri.path.toString())
+                val uploadImage = File(resultUri?.path.toString())
                 Utility.startSweetProgress(this, "Register", getString(R.string.loading))
-                profileDetailViewModel.uploadImage(uploadImage, data.userId.toString(), data.userId.toString(), Guru.getString(getString(R.string.access_token), "").toString())
+                profileDetailViewModel.uploadImage(uploadImage, data.userId.toString(),getString(R.string.profile))
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -353,44 +353,20 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
                     Toast.makeText(this@RegisterActivty, "Cannot retrieve selected image", Toast.LENGTH_SHORT).show()
                 }
             } else if (requestCode == REQUEST_CROP) {
-                val resultUri = getOutput(data!!)
+                resultUri = getOutput(data!!)
                 try {
                     Glide.with(AppController.mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
                 } catch (e: Exception) {
                     e.message
                 }
-                //handleCropResult(data!!,this,binding.imgProfile,profileDetailViewModel)
             }
         }
         if (resultCode == RESULT_ERROR) {
             handleCropError(data!!,this)
         }
-
     }
 
-    /*override fun showPermissionGranted(permission: String) {
-        super.showPermissionGranted(permission)
-        if(permission.contains("READ_EXTERNAL_STORAGE")){
-            pickFromGallery(this)
-        }
-    }
-
-    override fun shouldShowRequestPermissionRationale(permission: String): Boolean {
-        return super.shouldShowRequestPermissionRationale(permission)
-    }
-
-
-    override fun showPermissionDenied(permission: String, isPermanentlyDenied: Boolean) {
-        super.showPermissionDenied(permission, isPermanentlyDenied)
-
-        if(isPermanentlyDenied){
-            displayNeverAskAgainDialog(this)
-        }else{
-           Utility.requestReadStoragePermission(this)
-        }
-    }*/
-
-    override fun onCropFinish(result: UCropFragment.UCropResult) {
+   override fun onCropFinish(result: UCropFragment.UCropResult) {
         when (result.mResultCode) {
             RESULT_OK -> handleCropResult(result.mResultData,this,binding.imgProfile)
             RESULT_ERROR -> handleCropError(result.mResultData,this)

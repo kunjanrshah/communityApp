@@ -1,5 +1,6 @@
 package com.krs.community.fragments
 
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -19,34 +21,42 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.easywaylocation.EasyWayLocation
 import com.github.squti.guru.Guru
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.app.AppController
+import com.krs.community.app.AppController.Companion.mApplication
 import com.krs.community.databinding.FragmentProfessionalDetailsBinding
 import com.krs.community.listeners.EditMemberListener
+import com.krs.community.listeners.ImageUploadListener
 import com.krs.community.model.Member
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.*
+import com.krs.community.utils.Utility.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
+import com.yalantis.ucrop.UCrop
+import com.yalantis.ucrop.UCropFragment
+import com.yalantis.ucrop.UCropFragmentCallback
 import kotlinx.android.synthetic.main.fragment_professional_details.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import java.io.File
 
-class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
+class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener, UCropFragmentCallback, ImageUploadListener {
 
     lateinit var binding: FragmentProfessionalDetailsBinding
     private lateinit var member: Member
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: ProfileDetailViewModelFactory by instance()
     var numberOfLines = 5
-
+    private var isLogo = false
     override val kodein by kodein()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -215,6 +225,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener 
         })
 
         binding.imgLogo.setOnClickListener {
+            isLogo = true
             activity?.let { it1 -> pickFromGallery(it1) }
         }
 
@@ -224,7 +235,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener 
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode==Utility.PICK_GALLERY_REQUEST){
+        if(requestCode==PICK_GALLERY_REQUEST){
             pickFromGallery(activity as AppCompatActivity)
         }
     }
@@ -232,7 +243,44 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        data?.let { activity?.let { it1 -> handleCropResult(it, it1,binding.imgLogo) } }
+        /*data?.let { activity?.let {
+            it1 -> handleCropResult(it, it1,binding.imgLogo) }
+        }*/
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PICK_GALLERY_REQUEST) {
+                val selectedUri = data?.data
+                if (selectedUri != null) {
+                    startCrop(selectedUri, activity!!)
+                } else {
+                    binding.llMain.snackbar("Cannot retrieve selected image",Snackbar.LENGTH_SHORT)
+                }
+            } else if (requestCode == UCrop.REQUEST_CROP) {
+                if (isLogo) {
+                    isLogo = false
+                    data?.let {
+                        val resultUri = UCrop.getOutput(it)
+                        if (resultUri != null) {
+                            try {
+                                Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgLogo)
+                            } catch (e: Exception) {
+                                e.message
+                            }
+                            logger.debug("resultUri: $resultUri")
+                            try {
+                                val uploadImage = File(resultUri.path.toString())
+                                startSweetProgress(activity!!, "Image", getString(R.string.loading))
+                                profileDetailViewModel.uploadImage(uploadImage,member.id.toString(),getString(R.string.company))
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (resultCode == UCrop.RESULT_ERROR) {
+            data?.let { handleCropError(it, activity!!) }
+        }
     }
 
 
@@ -294,7 +342,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener 
     }
 
     override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
-        Utility.hideSweetProgress()
+        hideSweetProgress()
         val updatedMem = response.member
         member.officeLat=ProfileDetailActivity.cur_lat.value.toString()
         member.officeLng=ProfileDetailActivity.cur_lng.value.toString()
@@ -309,11 +357,34 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener 
             dist /= 1000
             binding.tvDistance.text=String.format("%.2f KM",dist)
         }
-        Utility.displaySnackBarWithBottomMargin(binding.llMain, "Office location updated!")
+        displaySnackBarWithBottomMargin(binding.llMain, "Office location updated!")
     }
 
     override suspend fun getFailure(message: String) {
-        Utility.hideSweetProgress()
-        Utility.displaySnackBarWithBottomMargin(binding.llMain, message)
+        hideSweetProgress()
+        displaySnackBarWithBottomMargin(binding.llMain, message)
+    }
+
+    override fun onCropFinish(result: UCropFragment.UCropResult?) {
+        when (result?.mResultCode) {
+            AppCompatActivity.RESULT_OK -> handleCropResult(result.mResultData, activity!!, binding.imgLogo)
+            UCrop.RESULT_ERROR -> handleCropError(result.mResultData, activity!!)
+        }
+    }
+
+    override fun loadingProgress(p0: Boolean) {
+
+    }
+
+    override fun getResult(profile: String) {
+        hideSweetProgress()
+        member.businessLogo = profile
+        Guru.putString(getString(R.string.loginUser), Gson().toJson(member))
+        displaySnackBarWithBottomMargin(binding.llMain, "Logo updated!")
+    }
+
+    override suspend fun onFailure(message: String) {
+        hideSweetProgress()
+        binding.llMain.snackbar("Something went wrong!", Snackbar.LENGTH_LONG)
     }
 }

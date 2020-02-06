@@ -249,7 +249,7 @@ class ProfileDetailViewModel(
         }
     }
 
-    fun uploadImage(file: File, id: String, user_id: String, access_token: String) {
+    fun uploadImage(file: File, id: String, type: String) {
 
         job_by_update = Job()
         job_by_update.let { thejob ->
@@ -266,15 +266,11 @@ class ProfileDetailViewModel(
                             id)
 
 
-                    val user_id = RequestBody.create(
+                    val _type = RequestBody.create(
                             MediaType.parse("text/plain"),
-                            user_id)
+                            type)
 
-                    val access_token = RequestBody.create(
-                            MediaType.parse("text/plain"),
-                            access_token)
-
-                    val response: JsonObject = mProfileDetailRepository.uploadProfileImage(body, id, user_id, access_token)
+                    val response: JsonObject = mProfileDetailRepository.uploadProfileImage(body, id, _type)
 
 
                     response.let {

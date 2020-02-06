@@ -114,6 +114,8 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_FAMILY_MEMBER)
     suspend fun getFamilyMembers(@Body request: JsonObject): Response<FamilyDetailResponse>
 
+    @POST(AppConstants.UrlPath.GET_USER_STATUS)
+    suspend fun getUserStatus(@Body request: JsonObject): Response<UserStatusResponse>
 
     @POST(AppConstants.UrlPath.INNER_LOGIN)
     suspend fun innerLogin(@Body request: JsonObject): Response<LoginResponse>
@@ -138,7 +140,7 @@ interface ApiServices {
 
     @Multipart
     @POST(AppConstants.UrlPath.UPLOAD_PROFILE_IMAGE)
-    suspend fun uploadProfileImage(@Part file: MultipartBody.Part, @Part("id")id: RequestBody, @Part("user_id") user_id: RequestBody,@Part("access_token") access_token: RequestBody): Response<JsonObject>
+    suspend fun uploadProfileImage(@Part file: MultipartBody.Part, @Part("id")id: RequestBody, @Part("type") type: RequestBody): Response<JsonObject>
 
     @Multipart
     @POST(AppConstants.UrlPath.CREATE_EVENT)

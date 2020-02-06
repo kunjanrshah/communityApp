@@ -122,7 +122,9 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
                         holder.tvRole.text = resources.getString(R.string.Local_Admin)
                         Coroutines.io {
                            val name= smartFilterViewModel.getLocalCommunity(member.localCommunityId)
-                            holder.tvRegion.text=name
+                            Coroutines.main{
+                                holder.tvRegion.text=name
+                            }
                         }
                     }
                     strRole == resources.getString(R.string.SUB_ADMIN) -> {
@@ -140,11 +142,17 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
 
                 Coroutines.io {
                     if(!member.subCastId.isNullOrEmpty()){
-                        viewHolder.tvName.text=member.firstName+" "+smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                        val name=member.firstName+" "+smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                        Coroutines.main{
+                            viewHolder.tvName.text=name
+                        }
                     }
 
                     if(!member.cityId.isNullOrEmpty()){
-                        viewHolder.tvArea.text = member.area+" "+smartFilterViewModel.getCityNamebyId(member.cityId)
+                        val area= member.area+" "+smartFilterViewModel.getCityNamebyId(member.cityId)
+                        Coroutines.main{
+                            viewHolder.tvArea.text =area
+                        }
                     }
                 }
 

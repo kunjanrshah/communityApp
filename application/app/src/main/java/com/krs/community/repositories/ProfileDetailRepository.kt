@@ -23,9 +23,9 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-    suspend fun uploadProfileImage(profile: MultipartBody.Part,id : RequestBody,user_id : RequestBody,access_token:RequestBody): JsonObject {
+    suspend fun uploadProfileImage(profile: MultipartBody.Part,id : RequestBody,type : RequestBody): JsonObject {
         return apiRequest{
-            api.uploadProfileImage(profile,id,user_id,access_token);
+            api.uploadProfileImage(profile,id,type)
         }
     }
 

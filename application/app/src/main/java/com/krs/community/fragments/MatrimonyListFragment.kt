@@ -384,14 +384,12 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
         if(response.success){
             tvRecords.text = "Records found: " + response.totalRecords
             tvRecords.visibility = View.VISIBLE
+
             if(response.members.size>0){
-                lstMembers.clear()
                 DashboardActivity.stop = false
-                for(member in response.members) {
-                    if(member.maritalStatus!=getString(R.string.married)){
-                        lstMembers.add(member)
-                    }
-                }
+                lstMembers.clear()
+                lstMembers.addAll(response.members)
+
                 if (response.totalRecords <= AppController.mApplication.length) {
                     DashboardActivity.stop = true
                     Snackbar.make(binding.listMatrimony, "End of Records", Snackbar.LENGTH_LONG).show()

@@ -3,7 +3,7 @@ package com.krs.community.responses;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AddProfileResponse {
+public class UserStatusResponse {
 
     @SerializedName("success")
     @Expose

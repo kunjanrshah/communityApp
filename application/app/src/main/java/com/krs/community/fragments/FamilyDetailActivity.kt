@@ -95,8 +95,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
         rvDetail=findViewById(R.id.rv_detail)
         llRoot=findViewById(R.id.ll_root)
 
-        rvDetail.setHasFixedSize(true)
         val mLayoutManager = LinearLayoutManager(applicationContext)
+        rvDetail.setHasFixedSize(true)
         rvDetail.layoutManager = mLayoutManager
         rvDetail.itemAnimator = DefaultItemAnimator()
 
@@ -110,7 +110,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
     private val updateAdapter = object : Runnable {
         override fun run() {
             getFamilyDetails()
-            mainHandler.postDelayed(this, 1000*60*2)
+            mainHandler.postDelayed(this, 1000*60*3)
         }
     }
 
@@ -121,7 +121,12 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
             mShimmerViewContainer?.startShimmerAnimation()
         }
         val jsonObject=JSONObject()
-        jsonObject.put("head_id",headId)
+        val memberString = Guru.getString(getString(R.string.loginUser), "")
+        val member = Gson().fromJson(memberString, Member::class.java)
+        if(member!=null){
+            jsonObject.put(getString(R.string.id),member.id)
+        }
+        jsonObject.put(getString(R.string.head_id),headId)
         val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
         familyDetailViewModel.getFamilyDetails(records)
     }

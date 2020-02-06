@@ -145,6 +145,8 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
             startActivity(Intent(this, DashboardActivity::class.java))
             finish()
             fade(this)
+        }else{
+            relative.snackbar(response.message,Snackbar.LENGTH_LONG)
         }
     }
 
@@ -161,6 +163,8 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
              startActivity(intent)
              finish()
              fade(this)
+         }else{
+
          }
     }
 
