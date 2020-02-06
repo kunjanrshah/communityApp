@@ -19,7 +19,6 @@ interface RelationDao {
     @Query("SELECT name FROM Relations WHERE id == :id")
     fun getRelationById(id:Int) : LiveData<String>
 
-
     @Query("SELECT name FROM Relations WHERE id == :id")
     fun getRelationNameById(id:Int) : String
 

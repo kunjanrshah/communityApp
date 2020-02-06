@@ -1,11 +1,10 @@
 package com.krs.community.dao
 
-import androidx.lifecycle.LiveData
-import androidx.room.*
-import com.krs.community.entities.Designation
-import com.krs.community.entities.Gotra
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.krs.community.entities.LastUpdated
-import com.krs.community.entities.SubCommunity
 
 @Dao
 interface LastUpdatedDao {

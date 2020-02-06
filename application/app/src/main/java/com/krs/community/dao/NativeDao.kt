@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.krs.community.entities.Native
-import com.krs.community.entities.SubCommunity
 
 @Dao
 interface NativeDao {

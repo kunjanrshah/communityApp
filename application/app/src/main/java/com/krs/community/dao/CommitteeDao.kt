@@ -6,9 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.krs.community.entities.Committee
-import com.krs.community.entities.Designation
-import com.krs.community.entities.Gotra
-import com.krs.community.entities.SubCommunity
 
 @Dao
 interface CommitteeDao {

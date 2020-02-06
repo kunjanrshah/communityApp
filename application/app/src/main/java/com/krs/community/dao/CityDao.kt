@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.krs.community.entities.City
-import com.krs.community.entities.SubCommunity
 
 @Dao
 interface CityDao {

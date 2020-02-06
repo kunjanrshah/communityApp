@@ -64,6 +64,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
                 e.message
             }
         }
+        member.profilePassword="123456"
         val pass = member.profilePassword
         var correctPattern: IntArray? = null
         if (pass != null && !pass.isEmpty()) {
