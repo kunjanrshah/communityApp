@@ -461,5 +461,6 @@
     <string name="type" translatable="false">type</string>
     <string name="profile" translatable="false">profile</string>
     <string name="company" translatable="false">company</string>
+    <string name="enter_pin">Please enter your PIN</string>
 
 </resources>

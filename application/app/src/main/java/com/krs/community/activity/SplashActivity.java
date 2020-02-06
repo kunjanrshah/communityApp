@@ -15,7 +15,10 @@ import android.widget.Spinner;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
 import com.github.squti.guru.Guru;
+import com.google.gson.Gson;
 import com.krs.community.R;
+import com.krs.community.fragments.FamilyDetailActivity;
+import com.krs.community.model.Member;
 import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.Utility;
 
@@ -81,14 +84,22 @@ public class SplashActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
+
         String userId=Guru.getString(getString(R.string.user_id),"");
-        if (userId==null || userId.isEmpty()) {
-            return;
+        String member = Guru.getString(getString(R.string.loginUser), "");
+
+        if( (userId==null || userId.isEmpty()) && (member==null || member.isEmpty())){
+        }else if(member==null || member.isEmpty()){
+            Intent mIntent = new Intent(SplashActivity.this, FamilyDetailActivity.class);
+            mIntent.putExtra(getString(R.string.user_id),userId);
+            startActivity(mIntent);
+            finish();
+        }else{
+            Intent mIntent = new Intent(SplashActivity.this, DashboardActivity.class);
+            mIntent.putExtra(getString(R.string.user_id),userId);
+            startActivity(mIntent);
+            finish();
         }
-        Intent mIntent = new Intent(SplashActivity.this, DashboardActivity.class);
-        mIntent.putExtra(getString(R.string.user_id),userId);
-        startActivity(mIntent);
-        finish();
     }
 
     @Override

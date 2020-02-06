@@ -77,7 +77,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
     private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
     lateinit var mainHandler: Handler
     private var isShimmer:Boolean=true
-
+    private var loginMember:Member?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -100,6 +100,9 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
         rvDetail.layoutManager = mLayoutManager
         rvDetail.itemAnimator = DefaultItemAnimator()
 
+        val memberString = Guru.getString(getString(R.string.loginUser), "")
+        loginMember = Gson().fromJson(memberString, Member::class.java)
+
     }
 
     override fun onPause() {
@@ -121,10 +124,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
             mShimmerViewContainer?.startShimmerAnimation()
         }
         val jsonObject=JSONObject()
-        val memberString = Guru.getString(getString(R.string.loginUser), "")
-        val member = Gson().fromJson(memberString, Member::class.java)
-        if(member!=null){
-            jsonObject.put(getString(R.string.id),member.id)
+        if(loginMember!=null){
+            jsonObject.put(getString(R.string.id),loginMember?.id)
         }
         jsonObject.put(getString(R.string.head_id),headId)
         val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
@@ -204,7 +205,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                         e.message
                     }
                     viewHolder.llLogin.setOnClickListener {
-                       member.profilePassword="123456"
+
                        if(!member.profilePassword.isNullOrEmpty()){
                            val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
                            intent.putExtra(getString(R.string.member), member)
@@ -215,26 +216,34 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                     }
 
                     viewHolder.frontLayout.setOnClickListener {
-                        val intent = Intent(this@FamilyDetailActivity, ProfileDetailActivity::class.java)
-                        intent.putExtra(getString(R.string.member), member)
-                        startActivity(intent)
-                        fade(this@FamilyDetailActivity)
+                        if(loginMember!=null){
+                            val intent = Intent(this@FamilyDetailActivity, ProfileDetailActivity::class.java)
+                            intent.putExtra(getString(R.string.member), member)
+                            startActivity(intent)
+                            fade(this@FamilyDetailActivity)
+                        }else{
+                            llRoot.snackbar(getString(R.string.enter_pin),Snackbar.LENGTH_LONG)
+                        }
+
                     }
                     viewHolder.llDelete.setOnClickListener {
-
-                        SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText(getString(R.string.you_sure))
-                                .setContentText("Won't be able to recover this Profile!")
-                                .setConfirmText("Yes,delete it!")
-                                .setCancelText("No")
-                                .setConfirmClickListener {
-                                    it.dismiss()
-                                    deleteFamilyMember(member.id)
-                                }
-                                .setCancelClickListener {
-                                    it.dismiss()
-                                }
-                                .show()
+                        if(loginMember!=null){
+                            SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText(getString(R.string.you_sure))
+                                    .setContentText("Won't be able to recover this Profile!")
+                                    .setConfirmText("Yes,delete it!")
+                                    .setCancelText("No")
+                                    .setConfirmClickListener {
+                                        it.dismiss()
+                                        deleteFamilyMember(member.id)
+                                    }
+                                    .setCancelClickListener {
+                                        it.dismiss()
+                                    }
+                                    .show()
+                        }else{
+                            llRoot.snackbar(getString(R.string.enter_pin),Snackbar.LENGTH_LONG)
+                        }
                     }
                     viewHolder.boomMenuButton.clearBuilders()
                     for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
@@ -290,11 +299,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                         viewHolder.boomMenuButton.boom()
                     }
 
-                    //viewHolder.imgState
-
                     applyClickEvents(viewHolder, i,member)
                     applyProfilePicture(viewHolder, member)
-
                 }
 
                 override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
@@ -311,8 +317,12 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
         rvDetail.layoutManager = layoutManagerFixed
         val header = layoutInflater.inflate(R.layout.header_detail, rvDetail, false)
 
-        val cancel:ImageView
-        cancel = header.findViewById(R.id.img_cancel1)
+        val cancel = header.findViewById<ImageView>(R.id.img_cancel1)
+        if(loginMember!=null){
+            cancel.visibility=View.VISIBLE
+        }else{
+            cancel.visibility=View.INVISIBLE
+        }
         cancel.setOnClickListener {
             val intent=Intent(this,DashboardActivity::class.java)
             startActivity(intent)
@@ -439,18 +449,27 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
 
         val llFamilyHead: LinearLayout = header.findViewById(R.id.ll_family_head)
         llFamilyHead.setOnClickListener {
-            val intent = Intent(this, ProfileDetailActivity::class.java)
-            intent.putExtra(getString(R.string.member), members.get(0))
-            startActivity(intent)
-            fade(this)
+            if(loginMember!=null){
+                val intent = Intent(this, ProfileDetailActivity::class.java)
+                intent.putExtra(getString(R.string.member), members.get(0))
+                startActivity(intent)
+                fade(this)
+            }else{
+                llRoot.snackbar(getString(R.string.enter_pin),Snackbar.LENGTH_LONG)
+            }
+
         }
 
         val tvAdd: TextView = header.findViewById(R.id.tv_add)
         tvAdd.setOnClickListener {
-            val intent = Intent(this, ProfileDetailActivity::class.java)
-            intent.putExtra(getString(R.string.member), Member())
-            startActivity(intent)
-            fade(this)
+            if(loginMember!=null){
+                val intent = Intent(this, ProfileDetailActivity::class.java)
+                intent.putExtra(getString(R.string.member), Member())
+                startActivity(intent)
+                fade(this)
+            }else{
+                llRoot.snackbar(getString(R.string.enter_pin),Snackbar.LENGTH_LONG)
+            }
         }
 
 
