@@ -91,7 +91,7 @@ public class SplashActivity extends Activity {
         if( (userId==null || userId.isEmpty()) && (member==null || member.isEmpty())){
         }else if(member==null || member.isEmpty()){
             Intent mIntent = new Intent(SplashActivity.this, FamilyDetailActivity.class);
-            mIntent.putExtra(getString(R.string.user_id),userId);
+            mIntent.putExtra(getString(R.string.id),userId);
             startActivity(mIntent);
             finish();
         }else{
