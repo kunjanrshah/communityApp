@@ -282,7 +282,7 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
                 Utility.fade(this@FavoriteProfileActivity)
             }
 
-            viewHolder.llMobile.setOnClickListener {
+            viewHolder.tvMobile.setOnClickListener {
                 val intent = Intent(Intent.ACTION_DIAL)
                 val str = "tel:" + viewHolder.tvMobile.text
                 intent.data = Uri.parse(str)

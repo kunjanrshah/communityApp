@@ -15,11 +15,8 @@ import android.widget.Spinner;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
 import com.github.squti.guru.Guru;
-import com.google.gson.Gson;
 import com.krs.community.R;
 import com.krs.community.fragments.FamilyDetailActivity;
-import com.krs.community.model.Member;
-import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.Utility;
 
 public class SplashActivity extends Activity {
@@ -86,7 +83,7 @@ public class SplashActivity extends Activity {
         super.onStart();
 
         String userId=Guru.getString(getString(R.string.user_id),"");
-        String member = Guru.getString(getString(R.string.loginUser), "");
+        String member = Guru.getString(getString(R.string.loginMember), "");
 
         if( (userId==null || userId.isEmpty()) && (member==null || member.isEmpty())){
         }else if(member==null || member.isEmpty()){

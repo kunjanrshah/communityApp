@@ -32,17 +32,13 @@ import com.krs.community.R
 import com.krs.community.activity.*
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
-import com.krs.community.listeners.InnerLogoutListner
 import com.krs.community.listeners.IFamilyMembersListener
-import com.krs.community.listeners.ILoginListener
 import com.krs.community.listeners.OnBackPressedListener
-import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.FamilyDetailResponse
-import com.krs.community.responses.UserInnerLogoutResponse
 import com.krs.community.utils.*
 import com.krs.community.utils.Utility.*
 import com.krs.community.viewmodel.FamilyDetailViewModel
@@ -77,7 +73,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
     private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
     lateinit var mainHandler: Handler
     private var isShimmer:Boolean=true
-    private var loginMember:Member?=null
+    private var memberId:String?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -99,10 +95,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
         rvDetail.setHasFixedSize(true)
         rvDetail.layoutManager = mLayoutManager
         rvDetail.itemAnimator = DefaultItemAnimator()
-
-        val memberString = Guru.getString(getString(R.string.loginUser), "")
-        loginMember = Gson().fromJson(memberString, Member::class.java)
-
+        memberId = Guru.getString(getString(R.string.member_id), "")
     }
 
     override fun onPause() {
@@ -124,8 +117,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
             mShimmerViewContainer?.startShimmerAnimation()
         }
         val jsonObject=JSONObject()
-        if(loginMember!=null){
-            jsonObject.put(getString(R.string.id),loginMember?.id)
+        if(!memberId.isNullOrEmpty()){
+            jsonObject.put(getString(R.string.id),memberId)
         }
         jsonObject.put(getString(R.string.head_id),headId)
         val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
@@ -175,7 +168,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                     viewHolder.tvSubtext.text = member.relation
                     viewHolder.tvEmail.text = member.emailAddress
                     viewHolder.tvMobile.text = member.mobile
-                    viewHolder.tvUpdate.text = "updated "+Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+                    viewHolder.tvUpdate.text = "updated "+changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                     viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                     var imgLogin=R.drawable.ic_logout
                     if(member.loginStatus==1){
@@ -192,7 +185,9 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                     }
                     
                     var imgStatus=R.drawable.ico_red
-                    if(member.loginStatus==1 && member.onlineStatus==0){
+                    if(memberId==member.id){
+                        imgStatus=R.drawable.ico_blue
+                    }else if(member.loginStatus==1 && member.onlineStatus==0){
                         imgStatus=R.drawable.ico_pink
                     }else if(member.loginStatus==0){
                         imgStatus=R.drawable.ico_red
@@ -204,30 +199,25 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                     } catch (e: Exception) {
                         e.message
                     }
-                    viewHolder.llLogin.setOnClickListener {
-
-                       if(!member.profilePassword.isNullOrEmpty()){
-                           val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
-                           intent.putExtra(getString(R.string.member), member)
-                           startActivity(intent)
-                       }else{
-                           llRoot.snackbar("Please set your PIN!",Snackbar.LENGTH_LONG)
-                       }
-                    }
 
                     viewHolder.frontLayout.setOnClickListener {
-                        if(loginMember!=null){
+                        if(!memberId.isNullOrEmpty()){
                             val intent = Intent(this@FamilyDetailActivity, ProfileDetailActivity::class.java)
                             intent.putExtra(getString(R.string.member), member)
                             startActivity(intent)
                             fade(this@FamilyDetailActivity)
                         }else{
-                            llRoot.snackbar(getString(R.string.enter_pin),Snackbar.LENGTH_LONG)
+                            if(!member.profilePassword.isNullOrEmpty()){
+                                val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
+                                intent.putExtra(getString(R.string.member), member)
+                                startActivity(intent)
+                            }else{
+                                llRoot.snackbar("PIN not found!",Snackbar.LENGTH_LONG)
+                            }
                         }
-
                     }
                     viewHolder.llDelete.setOnClickListener {
-                        if(loginMember!=null){
+                        if(!memberId.isNullOrEmpty()){
                             SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
                                     .setTitleText(getString(R.string.you_sure))
                                     .setContentText("Won't be able to recover this Profile!")
@@ -318,7 +308,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
         val header = layoutInflater.inflate(R.layout.header_detail, rvDetail, false)
 
         val cancel = header.findViewById<ImageView>(R.id.img_cancel1)
-        if(loginMember!=null){
+        if(!memberId.isNullOrEmpty()){
             cancel.visibility=View.VISIBLE
         }else{
             cancel.visibility=View.INVISIBLE
@@ -331,7 +321,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
         }
 
         val member = members.get(0)
-
         val tvName: TextView = header.findViewById(R.id.tv_name1)
         tvName.text = member.firstName+" "+member.lastName
 
@@ -341,8 +330,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
         val tvMobile: TextView = header.findViewById(R.id.tv_mobile)
         tvMobile.text=member.mobile
 
-        val llMobile: LinearLayout = header.findViewById(R.id.llMobile)
-        llMobile.setOnClickListener {
+        tvMobile.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
             val str = "tel:" + tvMobile.text
             intent.data = Uri.parse(str)
@@ -380,7 +368,9 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
 
         val imgState: ImageView = header.findViewById(R.id.img_state)
         var icStatus=R.drawable.ico_red
-        if(member.loginStatus==1 && member.onlineStatus==0){
+        if(memberId==member.id){
+            icStatus=R.drawable.ico_blue
+        }else if(member.loginStatus==1 && member.onlineStatus==0){
             icStatus=R.drawable.ico_pink
         }else if(member.loginStatus==0){
             icStatus=R.drawable.ico_red
@@ -449,27 +439,37 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
 
         val llFamilyHead: LinearLayout = header.findViewById(R.id.ll_family_head)
         llFamilyHead.setOnClickListener {
-            if(loginMember!=null){
+            if(!memberId.isNullOrEmpty()){
                 val intent = Intent(this, ProfileDetailActivity::class.java)
                 intent.putExtra(getString(R.string.member), members.get(0))
                 startActivity(intent)
                 fade(this)
             }else{
-                llRoot.snackbar(getString(R.string.enter_pin),Snackbar.LENGTH_LONG)
+
+                if(!member.profilePassword.isNullOrEmpty()){
+                    val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
+                    intent.putExtra(getString(R.string.member), member)
+                    startActivity(intent)
+                }else{
+                    llRoot.snackbar("PIN not found!",Snackbar.LENGTH_LONG)
+                }
+
+
             }
 
         }
 
         val tvAdd: TextView = header.findViewById(R.id.tv_add)
+        if(!memberId.isNullOrEmpty()){
+            tvAdd.visibility=View.VISIBLE
+        }else{
+            tvAdd.visibility=View.GONE
+        }
         tvAdd.setOnClickListener {
-            if(loginMember!=null){
                 val intent = Intent(this, ProfileDetailActivity::class.java)
                 intent.putExtra(getString(R.string.member), Member())
                 startActivity(intent)
                 fade(this)
-            }else{
-                llRoot.snackbar(getString(R.string.enter_pin),Snackbar.LENGTH_LONG)
-            }
         }
 
 
@@ -498,7 +498,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
     }
 
     private fun applyClickEvents(holder: FamilyDetailViewHolder, position: Int, member: Member) {
-        holder.llMobile.setOnClickListener {
+        holder.tvMobile.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
             val str = "tel:" + holder.tvMobile.text
             intent.data = Uri.parse(str)

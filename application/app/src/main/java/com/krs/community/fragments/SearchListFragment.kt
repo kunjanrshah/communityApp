@@ -536,7 +536,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
             })
         }
 
-        holder.llMobile.setOnClickListener {
+        holder.tvMobile.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
             val str = "tel:" + holder.tvMobile.text
             intent.data = Uri.parse(str)
@@ -784,7 +784,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                     }
 
                     jsonObject.put(getString(R.string.role), changed)
-                    val loginuser= Guru.getString(getString(R.string.loginUser),"")
+                    val loginuser= Guru.getString(getString(R.string.loginMember),"")
                     val member: Member = Gson().fromJson<Member>(loginuser, Member::class.java)
                     jsonObject.put(getString(R.string.local_community_id), member.localCommunityId)
                     jsonObject.put(getString(R.string.sub_community_id), member.subCommunityId)

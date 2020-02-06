@@ -373,11 +373,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         } else if (response.message.toString().toLowerCase().contains("updated")) {
             val member = response.member
 
-            val memberString = Guru.getString(getString(R.string.loginUser), "")
+            val memberString = Guru.getString(getString(R.string.loginMember), "")
             val loginMember = Gson().fromJson(memberString, Member::class.java)
 
             if (loginMember.id == member.id) {
-                Guru.putString(getString(R.string.loginUser), Gson().toJson(member))
+                Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
                 Guru.putString(getString(R.string.user_mobile), member.mobile)
                 Guru.putString(getString(R.string.user_email), member.emailAddress)
             }
@@ -410,20 +410,20 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     override suspend fun getFailure(message: String) {
         hideSweetProgress()
-        binding.viewpager.snackbar("Something went wrong!", Snackbar.LENGTH_LONG)
+        binding.viewpager.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
         Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
     }
 
     override fun getResult(profile: String) {
         hideSweetProgress()
         member?.profilePic = profile
-        Guru.putString(getString(R.string.loginUser), Gson().toJson(member))
+        Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
         displaySnackBarWithBottomMargin(binding.llParent, "Profile updated!")
     }
 
     override suspend fun onFailure(message: String) {
         hideSweetProgress()
-        binding.viewpager.snackbar("Something went wrong!", Snackbar.LENGTH_LONG)
+        binding.viewpager.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
         Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
     }
 

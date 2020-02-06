@@ -42,7 +42,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         profileDetailViewModel = ViewModelProviders.of(this, factory).get(ProfileDetailViewModel::class.java)
         member = arguments?.getSerializable(getString(R.string.member)) as Member
 
-        val loginMember= Guru.getString(getString(R.string.loginUser),"")
+        val loginMember= Guru.getString(getString(R.string.loginMember),"")
         loginMem= Gson().fromJson(loginMember,Member::class.java)
         if(member.id == loginMem.id || member.headId == loginMem.id){
         binding.chkInterested.isClickable=true

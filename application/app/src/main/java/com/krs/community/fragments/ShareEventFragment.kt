@@ -444,7 +444,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
 
     override suspend fun onFailure(message: String) {
         Utility.hideSweetProgress()
-        linearLayout.snackbar("Something went wrong!", Snackbar.LENGTH_LONG)
+        linearLayout.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
         Log.d(ShareEventFragment::class.java.simpleName, "getFailure: " + message)
     }
 }

@@ -266,7 +266,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     0 -> Utility.movetoFragment(activity, BrowseByCityFragment())
                     1 -> {
                         val mBundle = Bundle()
-                        val loginMember = Guru.getString(getString(R.string.loginUser), "")
+                        val loginMember = Guru.getString(getString(R.string.loginMember), "")
                         val member = Gson().fromJson(loginMember, Member::class.java)
                         mBundle.putSerializable(getString(R.string.member), member)
                         val intent1 = Intent(activity, QRCodeActivity::class.java)

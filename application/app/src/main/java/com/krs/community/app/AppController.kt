@@ -9,8 +9,6 @@ import android.graphics.Typeface
 import android.os.Handler
 import android.os.StrictMode
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.os.postDelayed
-import androidx.lifecycle.ViewModelProviders
 import androidx.multidex.MultiDex
 import com.crashlytics.android.Crashlytics
 import com.facebook.FacebookSdk
@@ -32,7 +30,6 @@ import com.krs.community.utils.AppConstants
 import com.krs.community.utils.ConnectivityReceiver
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.LocaleHelper
-import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.*
 import io.fabric.sdk.android.Fabric
 import org.json.JSONObject
@@ -43,9 +40,6 @@ import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
 
 
 class AppController : Application(), KodeinAware{
@@ -170,11 +164,10 @@ class AppController : Application(), KodeinAware{
 
     private fun updateUserStatus(){
         Coroutines.io{
-            val memberString = Guru.getString(getString(R.string.loginUser), "")
-            val member = Gson().fromJson(memberString, Member::class.java)
-            if(member!=null){
+            val memberId = Guru.getString(getString(R.string.member_id), "")
+            if(!memberId.isNullOrEmpty()){
                 val jsonObject=JSONObject()
-                jsonObject.put(getString(R.string.id),member.id)
+                jsonObject.put(getString(R.string.id),memberId)
                 jsonObject.put(getString(R.string.user_id),Guru.getString(getString(R.string.user_id), ""))
                 jsonObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token), ""))
                 val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject

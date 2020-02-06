@@ -152,7 +152,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
                     val response: UpdateProfileResponse = mProfileDetailRepository.updateProfile(profile)
                     response.let {
                         withContext(Dispatchers.Main) {
-                            Guru.putString(getString(R.string.loginUser), Gson().toJson(response.member))
+                            Guru.putString(getString(R.string.loginMember), Gson().toJson(response.member))
                             Log.d("Location Service: ",response.message)
                             thejob.complete()
                         }

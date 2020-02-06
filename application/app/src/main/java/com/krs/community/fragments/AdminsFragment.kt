@@ -246,7 +246,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
         rvAdmins.adapter = adapter
         rvAdmins.setHasFixedSize(true)
 
-        val loginuser= Guru.getString(getString(R.string.loginUser),"")
+        val loginuser= Guru.getString(getString(R.string.loginMember),"")
         val member: Member = Gson().fromJson<Member>(loginuser, Member::class.java)
         loginUserSubCommunityId=member.subCommunityId
         loginUserLocalCommunityId=member.localCommunityId
@@ -325,7 +325,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
         if(message.toLowerCase().contains("success")){
             getSubAdmin()
         }else{
-            llRoot.snackbar("Something went wrong!",Snackbar.LENGTH_LONG)
+            llRoot.snackbar(getString(R.string.went_wrong),Snackbar.LENGTH_LONG)
         }
     }
 
@@ -421,7 +421,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
             })
         }
 
-        holder.llMobile.setOnClickListener {
+        holder.tvMobile.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
             val str = "tel:" + holder.tvMobile.text
             intent.data = Uri.parse(str)

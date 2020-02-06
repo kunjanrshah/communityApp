@@ -275,7 +275,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
             })
         }
 
-        holder.llMobile.setOnClickListener {
+        holder.tvMobile.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
             val str = "tel:" + holder.tvMobile.text
             intent.data = Uri.parse(str)
@@ -462,7 +462,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                                 jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
                                 jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
 
-                                val loginuser = Guru.getString(getString(R.string.loginUser), "")
+                                val loginuser = Guru.getString(getString(R.string.loginMember), "")
                                 val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
 
                                 val loginSharedIds = loginMember.sharingId.split(',')
@@ -551,7 +551,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
 
         if (response.success) {
             if (response.member != null) {
-                Guru.putString(getString(R.string.loginUser), Gson().toJson(response.member))
+                Guru.putString(getString(R.string.loginMember), Gson().toJson(response.member))
             }
             binding.rvLocation.snackbar("Location private successfully", Snackbar.LENGTH_LONG)
         }

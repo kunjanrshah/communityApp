@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -65,7 +64,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         profileDetailViewModel.mEditMemberListener=this
 
         member = arguments?.getSerializable(getString(R.string.member)) as Member
-        val loginMember=Guru.getString(getString(R.string.loginUser),"")
+        val loginMember=Guru.getString(getString(R.string.loginMember),"")
         val loginMem= Gson().fromJson(loginMember,Member::class.java)
         if(member.id == loginMem.id || member.headId == loginMem.id){
             binding.imgLogo.isEnabled=true
@@ -349,7 +348,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         val percentage = Utility.calculatePercentage(updatedMem)
         ProfileDetailActivity.setPercentage(percentage)
         if (updatedMem.headId == "0") {
-            Guru.putString(getString(R.string.loginUser), Gson().toJson(updatedMem))
+            Guru.putString(getString(R.string.loginMember), Gson().toJson(updatedMem))
             Guru.putString(getString(R.string.user_mobile), updatedMem.mobile)
         }
         if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){
@@ -379,12 +378,12 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
     override fun getResult(profile: String) {
         hideSweetProgress()
         member.businessLogo = profile
-        Guru.putString(getString(R.string.loginUser), Gson().toJson(member))
+        Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
         displaySnackBarWithBottomMargin(binding.llMain, "Logo updated!")
     }
 
     override suspend fun onFailure(message: String) {
         hideSweetProgress()
-        binding.llMain.snackbar("Something went wrong!", Snackbar.LENGTH_LONG)
+        binding.llMain.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
     }
 }

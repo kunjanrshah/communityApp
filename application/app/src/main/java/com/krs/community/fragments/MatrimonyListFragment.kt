@@ -294,7 +294,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
             })
         }
 
-        holder.llMobile.setOnClickListener {
+        holder.tvMobile.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
             val str = "tel:" + holder.tvMobile.text
             intent.data = Uri.parse(str)

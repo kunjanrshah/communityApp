@@ -54,7 +54,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         profileDetailViewModel = ViewModelProviders.of(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener=this
         member = arguments?.getSerializable(getString(R.string.member)) as Member
-        val loginMember=Guru.getString(getString(R.string.loginUser),"")
+        val loginMember=Guru.getString(getString(R.string.loginMember),"")
         val loginMem= Gson().fromJson(loginMember,Member::class.java)
         if(member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id){
 
@@ -375,7 +375,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         val percentage = Utility.calculatePercentage(updatedMem)
         setPercentage(percentage)
         if (updatedMem.headId == "0") {
-            Guru.putString(getString(R.string.loginUser), Gson().toJson(updatedMem))
+            Guru.putString(getString(R.string.loginMember), Gson().toJson(updatedMem))
             Guru.putString(getString(R.string.user_mobile), updatedMem.mobile)
         }
         if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){

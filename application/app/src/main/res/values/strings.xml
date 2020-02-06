@@ -405,7 +405,8 @@
     <string name="home_lng" translatable="false">home_lng</string>
     <string name="office_lat" translatable="false">office_lat</string>
     <string name="office_lng" translatable="false">office_lng</string>
-    <string name="loginUser" translatable="false">loginUser</string>
+    <!--<string name="loginMember" translatable="false">loginUser</string>-->
+    <string name="member_id" translatable="false">member_id</string>
     <string name="member" translatable="false">member</string>
     <string name="head_name" translatable="false">head_name</string>
     <string name="min_age" translatable="false">min_age</string>
@@ -462,5 +463,6 @@
     <string name="profile" translatable="false">profile</string>
     <string name="company" translatable="false">company</string>
     <string name="enter_pin">Please enter your PIN</string>
+    <string name="went_wrong">Something went wrong!</string>
 
 </resources>

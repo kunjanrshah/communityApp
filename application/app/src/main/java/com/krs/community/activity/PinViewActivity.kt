@@ -142,10 +142,15 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
     override fun userLogin(response: LoginResponse) {
         hideSweetProgress()
         if(response.success){
-            Guru.putString(getString(R.string.loginUser), Gson().toJson(response.data))
-            startActivity(Intent(this, DashboardActivity::class.java))
-            finish()
-            fade(this)
+            if(response.data!=null){
+                Guru.putString(getString(R.string.loginMember), Gson().toJson(response.data))
+                Guru.putString(getString(R.string.member_id), Gson().toJson(response.data.id))
+                startActivity(Intent(this, DashboardActivity::class.java))
+                finish()
+                fade(this)
+            }else{
+                relative.snackbar(getString(R.string.went_wrong),Snackbar.LENGTH_LONG)
+            }
         }else{
             relative.snackbar(response.message,Snackbar.LENGTH_LONG)
         }
@@ -154,7 +159,8 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
     override fun userLogout(response: UserInnerLogoutResponse) {
          hideSweetProgress()
          if(response.success){
-            Guru.putString(getString(R.string.loginUser),"")
+            Guru.putString(getString(R.string.loginMember),"")
+            Guru.putString(getString(R.string.member_id), "")
              val intent = Intent(applicationContext, FamilyDetailActivity::class.java)
              if(member.headId=="0"){
                  intent.putExtra(getString(R.string.id), member.id)

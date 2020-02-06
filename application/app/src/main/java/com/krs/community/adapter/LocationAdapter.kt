@@ -82,7 +82,7 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
     }
 
     private fun isShareLocation():Boolean{
-        val loginUser= Guru.getString(mContext.getString(R.string.loginUser),"")
+        val loginUser= Guru.getString(mContext.getString(R.string.loginMember),"")
         val loginMember = Gson().fromJson<Member>(loginUser, Member::class.java)
         var isShare=false
         val arrayId = loginMember?.sharingId?.split(',')

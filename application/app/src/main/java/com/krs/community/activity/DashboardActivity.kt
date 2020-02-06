@@ -269,7 +269,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     }
 
     private fun loadProfile(){
-        val memberString = Guru.getString(getString(R.string.loginUser), "")
+        val memberString = Guru.getString(getString(R.string.loginMember), "")
         val member = Gson().fromJson(memberString, Member::class.java)
         val str=resources.getString(R.string.base_url_thumb)+member?.profilePic
 
@@ -293,7 +293,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             R.id.action_profile -> {
                 startSweetProgress(this,"Move profile detail",getString(R.string.loading))
                 val intent = Intent(this, ProfileDetailActivity::class.java)
-                val memberString = Guru.getString(getString(R.string.loginUser), "")
+                val memberString = Guru.getString(getString(R.string.loginMember), "")
                 val member = Gson().fromJson(memberString, Member::class.java)
                 intent.putExtra(getString(R.string.member), member)
                 startActivity(intent)

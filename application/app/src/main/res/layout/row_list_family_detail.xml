@@ -13,42 +13,6 @@
     app:dragEdge="right"
     app:mode="same_level">
 
-    <!--<FrameLayout
-        android:id="@+id/delete_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_gravity="center"
-            android:background="@drawable/delete"
-            android:layout_height="50dp"/>
-
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@drawable/right_corner"
-            android:fontFamily="@font/montserrat_semibold"
-            android:text="Login"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-        &lt;!&ndash;<TextView
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/green_button_background"
-            android:fontFamily="@font/montserrat_semibold"
-            android:text="Delete"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />&ndash;&gt;
-
-
-
-
-    </FrameLayout>-->
-
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
@@ -60,7 +24,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_delete"
-                android:layout_width="70dp"
+                android:layout_width="120dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/border_color"
                 android:gravity="center">
@@ -72,14 +36,15 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_gravity="center"
                         android:background="@drawable/delete" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
                         android:fontFamily="@font/montserrat_semibold"
                         android:gravity="center"
                         android:text="Delete"
@@ -92,6 +57,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_login"
+                android:visibility="gone"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -241,8 +207,8 @@
 
                         <ImageView
                             android:id="@+id/img_state"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
                             android:layout_gravity="right"
                             android:layout_marginLeft="5dp"  />
 

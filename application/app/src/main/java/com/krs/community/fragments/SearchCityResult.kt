@@ -149,7 +149,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 } else {
                     holder.tvRole.text = resources.getString(R.string.Member)
                 }
-                val loginuser = Guru.getString(getString(R.string.loginUser), "")
+                val loginuser = Guru.getString(getString(R.string.loginMember), "")
                 val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
                 val arrayId = loginMember?.sharingId?.split(',')
                 if (arrayId != null) {
@@ -362,7 +362,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         actionMode?.finish()
         if (response.success) {
             if (response.member != null) {
-                Guru.putString(getString(R.string.loginUser), Gson().toJson(response.member))
+                Guru.putString(getString(R.string.loginMember), Gson().toJson(response.member))
                 adapter.notifyDataSetChanged()
             }
             binding.llParent.snackbar("Location shared successfully", Snackbar.LENGTH_LONG)
@@ -378,7 +378,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             if (message.toLowerCase().contains("success")) {
                 setupList()
             } else {
-                Snackbar.make(binding.llParent, "Something went wrong!", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.llParent, getString(R.string.went_wrong), Snackbar.LENGTH_LONG).show()
             }
 
         } catch (e: Exception) {
@@ -431,7 +431,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             })
         }
 
-        holder.llMobile.setOnClickListener {
+        holder.tvMobile.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
             val str = "tel:" + holder.tvMobile.text
             intent.data = Uri.parse(str)
@@ -602,7 +602,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                                     jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
 
                                     var Ids = ""
-                                    val loginuser = Guru.getString(getString(R.string.loginUser), "")
+                                    val loginuser = Guru.getString(getString(R.string.loginMember), "")
                                     val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
                                     if (loginMember?.sharingId != null && loginMember.sharingId.isNotEmpty()) {
                                         Ids = loginMember.sharingId + ","
@@ -770,7 +770,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     } else {
                         changed = getString(R.string.User)
                     }
-                    val loginuser = Guru.getString(getString(R.string.loginUser), "")
+                    val loginuser = Guru.getString(getString(R.string.loginMember), "")
                     val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
                     jsonObject.put(getString(R.string.role), changed)
                     jsonObject.put(getString(R.string.local_community_id), loginMember?.localCommunityId)
