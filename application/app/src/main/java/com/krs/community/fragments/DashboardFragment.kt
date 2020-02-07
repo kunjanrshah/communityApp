@@ -131,7 +131,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
         for(index in 1..4){
             val member=Member()
-            member.profilePic="bca0551003e90e62d027158c287424a5.jpg"
+            member.profilePic="noimage.png"
             member.firstName="name"
             defaultProfiles.add(member)
         }

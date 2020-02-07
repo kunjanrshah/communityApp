@@ -142,10 +142,10 @@ class Service : android.app.Service(), Listener, AddressCallBack {
                     val jsonObject = JSONObject()
                     jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
                     jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id),""))
-                    jsonObject.put(getString(R.string.is_location_enable), "1")
                     jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token),""))
                     jsonObject.put(getString(R.string.user_lat),location.latitude)
                     jsonObject.put(getString(R.string.user_lng), location.longitude)
+                    jsonObject.put(getString(R.string.is_location_enable), "1")
 
                     val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
 

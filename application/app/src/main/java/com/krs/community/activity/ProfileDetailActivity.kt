@@ -408,9 +408,9 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
     }
 
-    override fun getResult(profile: String) {
+    override fun getResult(jsonObject: JsonObject) {
         hideSweetProgress()
-        member?.profilePic = profile
+        member?.profilePic = jsonObject.get("profile").asString
         Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
         displaySnackBarWithBottomMargin(binding.llParent, "Profile updated!")
     }
@@ -461,44 +461,42 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == RESULT_OK) {
-            if (requestCode == PICK_GALLERY_REQUEST) {
-                val selectedUri = data?.data
-                if (selectedUri != null) {
-                    startCrop(selectedUri, this)
-                } else {
-                    Toast.makeText(this@ProfileDetailActivity, "Cannot retrieve selected image", Toast.LENGTH_SHORT).show()
-                }
-            } else if (requestCode == UCrop.REQUEST_CROP) {
-                if (isProfileImage) {
-                    isProfileImage = false
+        if (isProfileImage) {
+            isProfileImage=false
+            if (resultCode == RESULT_OK) {
+                if (requestCode == PICK_GALLERY_REQUEST) {
+                    val selectedUri = data?.data
+                    if (selectedUri != null) {
+                        startCrop(selectedUri, this)
+                    } else {
+                        Toast.makeText(this@ProfileDetailActivity, "Cannot retrieve selected image", Toast.LENGTH_SHORT).show()
+                    }
+                } else if (requestCode == UCrop.REQUEST_CROP) {
                     data?.let {
                         val resultUri = UCrop.getOutput(it)
+                        com.krs.community.utils.logger.debug("resultUri: $resultUri")
                         if (resultUri != null) {
-                            try {
-                                Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
-                            } catch (e: Exception) {
-                                e.message
-                            }
-                            com.krs.community.utils.logger.debug("resultUri: $resultUri")
-
-                            try {
-                                val uploadImage = File(resultUri.path.toString())
-                                startSweetProgress(this, "Image", getString(R.string.loading))
-                                profileDetailViewModel.uploadImage(uploadImage,member?.id.toString(),getString(R.string.profile))
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
+                                try {
+                                    Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
+                                    val uploadImage = File(resultUri.path.toString())
+                                    startSweetProgress(this, "Image", getString(R.string.loading))
+                                    profileDetailViewModel.uploadImage(uploadImage,member?.id.toString(),getString(R.string.profile))
+                                } catch (e: Exception) {
+                                    e.message
+                                }
                         } else {
-                            professionalDetailsFragment.onActivityResult(requestCode, resultCode, data)
+                            binding.llParent.snackbar("Requested crop image not found!",Snackbar.LENGTH_LONG)
                         }
                     }
+
+                } else if (requestCode == EasyWayLocation.LOCATION_SETTING_REQUEST_CODE) {
+                    easyWayLocation.onActivityResult(resultCode)
                 }
-            } else if (requestCode == EasyWayLocation.LOCATION_SETTING_REQUEST_CODE) {
-                easyWayLocation.onActivityResult(resultCode)
             }
+        }else{
+            professionalDetailsFragment.onActivityResult(requestCode, resultCode, data)
         }
+
         if (resultCode == UCrop.RESULT_ERROR) {
             data?.let { handleCropError(it, this) }
         }

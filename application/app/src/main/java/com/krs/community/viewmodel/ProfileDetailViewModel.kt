@@ -278,7 +278,7 @@ class ProfileDetailViewModel(
                             Log.d("Response", response.toString());
 //
                             if (response.get("success").asString.equals("success")) {
-                                mImageUploadListener.getResult(response.getAsJsonObject("data").get("profile").asString)
+                                mImageUploadListener.getResult(response.getAsJsonObject("data"))
                             } else {
                                 mImageUploadListener.onFailure(response.get("message").asString)
                             }
