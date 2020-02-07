@@ -164,8 +164,8 @@
     <string name="_mobile">Mobile</string>
     <string name="email">Email</string>
     <string name="enter_mobile_no">Enter Mobile no</string>
-    <string name="password">Password</string>
-    <string name="_forgot_password">Forgot Password?</string>
+    <string name="password">PIN</string>
+    <string name="_forgot_password">Forgot PIN?</string>
     <string name="or_login_with">Or Login with</string>
     <string name="enter_email_id">Enter Email ID</string>
     <string name="send_sms">Send SMS</string>
@@ -173,7 +173,7 @@
     <string name="send_email">send email</string>
     <string name="do_you_have_an_account_register_now">Do you have an account?</string>
     <string name="err_msg_blank">Please enter missing details</string>
-    <string name="nav_item_change_password">Change Password</string>
+    <string name="nav_item_change_password">Change PIN</string>
     <string name="err_msg_invalid_mobile">Invalid Mobile Number</string>
     <string name="invalid_mobile" translatable="false">Invalid Mobile Number</string>
     <string name="type_otp">Type OTP</string>
@@ -193,8 +193,8 @@
     <string name="hint_name">First Name</string>
     <string name="hint_email">Email ID</string>
     <string name="hint_mobile">10 digit mobile</string>
-    <string name="hint_password">Password</string>
-    <string name="hint_conform_password">Confirm Password</string>
+    <string name="hint_password">PIN</string>
+    <string name="hint_conform_password">Confirm PIN</string>
     <string name="how_to_register">How to Register?</string>
     <string name="already_have_a_account_sign_in">Already have a account?</string>
     <string name="hint_surname">Last Name</string>
@@ -202,7 +202,7 @@
     <string name="invalid_mobile_range">Mobile number must be 10 digit</string>
     <string name="invalid_email">Invalid Email Address!</string>
     <string name="err_invalid_email" translatable="false">Invalid Email Address!</string>
-    <string name="err_msg_repeat_password" >Password and Repeat hashkey not match</string>
+    <string name="err_msg_repeat_password" >PIN and Repeat hashkey not match</string>
     <string name="user_not" translatable="false">User not</string>
     <string name="user_not_found" >User not found!</string>
 
@@ -310,15 +310,15 @@
     <string name="enter_gender">Please select gender</string>
     <string name="enter_mobile">Please enter your Mobile</string>
     <string name="select_country_code">Please select your Country</string>
-    <string name="enter_password">Please enter your Password</string>
-    <string name="confirm_password">Please enter to confirm Password</string>
-    <string name="password_mismatch">Password is mismatch</string>
+    <string name="enter_password">Please enter your PIN</string>
+    <string name="confirm_password">Please enter to confirm PIN</string>
+    <string name="password_mismatch">PIN is mismatch</string>
     <string name="enter_home_address">Please enter your home address</string>
     <string name="select_city">Please select state</string>
     <string name="select_state">Please select state</string>
     <string name="select_sub_comm">Please select Sub Community</string>
     <string name="select_local">Please select Local Community</string>
-    <string name="make_strong_pass">Make password more than 6 characters</string>
+    <string name="make_strong_pass">Make PIN more than 6 characters</string>
     <string name="_continue">Continue</string>
     <string name="hash_key">hash_key</string>
     <string name="otp_send">Messaging OTP Code on your number!</string>
@@ -405,7 +405,7 @@
     <string name="home_lng" translatable="false">home_lng</string>
     <string name="office_lat" translatable="false">office_lat</string>
     <string name="office_lng" translatable="false">office_lng</string>
-    <!--<string name="loginMember" translatable="false">loginUser</string>-->
+    <string name="loginMember" translatable="false">loginUser</string>
     <string name="member_id" translatable="false">member_id</string>
     <string name="member" translatable="false">member</string>
     <string name="head_name" translatable="false">head_name</string>

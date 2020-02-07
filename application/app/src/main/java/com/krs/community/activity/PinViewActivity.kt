@@ -64,7 +64,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
                 e.message
             }
         }
-        member.profilePassword="123456"
+        //member.profilePassword="123456"
         val pass = member.profilePassword
         var correctPattern: IntArray? = null
         if (pass != null && !pass.isEmpty()) {
@@ -143,8 +143,9 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
         hideSweetProgress()
         if(response.success){
             if(response.data!=null){
-                Guru.putString(getString(R.string.loginMember), Gson().toJson(response.data))
-                Guru.putString(getString(R.string.member_id), Gson().toJson(response.data.id))
+                val json= Gson().toJson(response.data)
+                Guru.putString(getString(R.string.loginMember), json)
+                Guru.putString(getString(R.string.member_id),response.data.id)
                 startActivity(Intent(this, DashboardActivity::class.java))
                 finish()
                 fade(this)

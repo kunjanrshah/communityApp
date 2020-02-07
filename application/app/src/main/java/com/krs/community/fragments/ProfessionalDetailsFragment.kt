@@ -347,9 +347,8 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         member.officeLng=ProfileDetailActivity.cur_lng.value.toString()
         val percentage = Utility.calculatePercentage(updatedMem)
         ProfileDetailActivity.setPercentage(percentage)
-        if (updatedMem.headId == "0") {
+        if (updatedMem.id == member.id) {
             Guru.putString(getString(R.string.loginMember), Gson().toJson(updatedMem))
-            Guru.putString(getString(R.string.user_mobile), updatedMem.mobile)
         }
         if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){
             var dist= EasyWayLocation.calculateDistance(member.officeLat.toDouble(),member.officeLng.toDouble(),ProfileDetailActivity.cur_lat.value!!.toDouble(),ProfileDetailActivity.cur_lng.value!!.toDouble())

@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
@@ -23,6 +24,7 @@ import com.krs.community.activity.DashboardActivity.Companion.binding
 import com.krs.community.databinding.FragmentChangePassBinding
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.model.LoginResponse
+import com.krs.community.model.Member
 
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.PasswordViewModel
@@ -72,15 +74,16 @@ class ChangePasswordFragment : Fragment() , KodeinAware,ILoginListener {
         }
 
         passBinding.tvForgot.setOnClickListener {
-
+            val memberString = Guru.getString(getString(R.string.loginMember), "")
+            val loginMember = Gson().fromJson(memberString, Member::class.java)
             SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Forgot Password")
+                    .setTitleText("Forgot PIN")
                     .setConfirmText("Let me check")
                     .setCancelText("Cancel")
                     .setCancelClickListener {
                         it.dismissWithAnimation()
                     }
-                    .setContentText("Password will be sending to "+Guru.getString(getString(R.string.user_email),""))
+                    .setContentText("PIN will be sent to ${loginMember.emailAddress}")
                     .setConfirmClickListener {
                         it.dismissWithAnimation()
                         val jsonObject= JSONObject()

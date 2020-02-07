@@ -52,7 +52,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/montserrat_semibold"
                 android:gravity="center_vertical"
-                android:text="Change Password"
+                android:text="Change PIN"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 

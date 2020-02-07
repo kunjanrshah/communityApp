@@ -245,7 +245,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             }
             Log.d(ProfileDetailActivity::class.java.simpleName, "jsonObject: " + jsonObject.toString())
         }
-        Utility.hideSweetProgress()
+        hideSweetProgress()
     }
 
     private fun goToFamilyDetailActivity() {
@@ -257,11 +257,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
         startActivity(intent)
         fade(this)
-        /*if(!member?.id.isNullOrEmpty()){
 
-        }else{
-            displaySnackBarWithBottomMargin(binding.llParent, "Add profile to view family")
-        }*/
     }
 
     private fun startLocationService() {
@@ -378,8 +374,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
             if (loginMember.id == member.id) {
                 Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
-                Guru.putString(getString(R.string.user_mobile), member.mobile)
-                Guru.putString(getString(R.string.user_email), member.emailAddress)
             }
 
             var str = ""

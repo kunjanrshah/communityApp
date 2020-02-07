@@ -23,7 +23,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/montserrat_semibold"
-            android:text="Change Password"
+            android:text="Change PIN"
             android:textColor="@color/light_gray"
             android:textSize="24sp" />
 
@@ -58,7 +58,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Current Password"
+                        android:text="Current PIN"
                         android:textColor="#272727"
                         android:textSize="14sp" />
 
@@ -71,7 +71,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Forgot Password?"
+                        android:text="Forgot PIN?"
                         android:textColor="@color/colorGray"
                         android:textSize="10sp"
                          />
@@ -89,7 +89,7 @@
                     android:drawableEnd="@drawable/hide_pass"
                     android:fontFamily="@font/montserrat_semibold"
                     android:background="@drawable/round_corner_white"
-                    android:hint="Enter Current Password"
+                    android:hint="Enter Current PIN"
                     android:textColorHint="@color/color_mid_light_gray"
                     android:paddingLeft="20dp" />
 
@@ -109,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:text="New Password"
+                    android:text="New PIN"
                     android:textColor="#272727"
                     android:textSize="14sp" />
 
@@ -121,7 +121,7 @@
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:background="@drawable/round_corner_white"
-                    android:hint="Enter New Password"
+                    android:hint="Enter New PIN"
                     android:paddingRight="20dp"
                     android:drawableEnd="@drawable/hide_pass"
                     android:textColorHint="@color/color_mid_light_gray"
@@ -143,7 +143,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:text="Confirm Password"
+                    android:text="Confirm PIN"
                     android:textColor="#272727"
                     android:textSize="14sp" />
 
@@ -157,7 +157,7 @@
                     android:drawableEnd="@drawable/hide_pass"
                     android:textColorHint="@color/color_mid_light_gray"
                     android:background="@drawable/round_corner_white"
-                    android:hint="Enter Confirm Password"
+                    android:hint="Enter Confirm PIN"
                     android:fontFamily="@font/montserrat_semibold"
                     android:paddingLeft="20dp" />
 
@@ -171,7 +171,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/round_corner_primary"
-                android:text="Update Password"
+                android:text="Update PIN"
                 android:fontFamily="@font/montserrat_semibold"
                 android:textColor="@color/white" />
 

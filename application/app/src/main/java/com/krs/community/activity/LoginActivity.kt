@@ -351,8 +351,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
     private fun goToFamilyDetailScreen(){
         /*Guru.putString(getString(R.string.loginUser),Gson().toJson(member))*/
-        Guru.putString(getString(R.string.user_email),member.emailAddress)
-        Guru.putString(getString(R.string.user_mobile),member.mobile)
+
+
         Guru.putString(getString(R.string.user_id),member.id)
         Guru.putString(getString(R.string.access_token),member.accessToken)
         val intent = Intent(applicationContext, FamilyDetailActivity::class.java)
