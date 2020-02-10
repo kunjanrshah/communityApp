@@ -107,6 +107,8 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.CHANGE_ROLE)
     suspend fun changeRole(@Body request:JsonObject): Response<searchByKeywordsResponse>
 
+    @POST(AppConstants.UrlPath.GET_INACTIVE_USERS)
+    suspend fun getUsersInCommittee(@Body request:JsonObject): Response<SmartFilterResponse>
 
     @POST(AppConstants.UrlPath.GET_INACTIVE_USERS)
     suspend fun getInActiveUsers(@Body request:JsonObject): Response<SmartFilterResponse>
@@ -131,6 +133,8 @@ interface ApiServices {
 
     @POST(AppConstants.UrlPath.GET_LOGIN)
     suspend fun getUserLogin(@Body request: AppConstants.LoginRequest): Response<LoginResponse>
+
+
 
     @POST(AppConstants.UrlPath.GET_CHANGE_PASS)
     suspend fun changePassword(@Body request: JsonObject): Response<LoginResponse>

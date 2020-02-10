@@ -140,7 +140,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         edt_mobile?.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 btnContinue.performClick()
-                true;
+                true
             }
             false;
         })
@@ -353,7 +353,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         Guru.putString(getString(R.string.loginMember),Gson().toJson(member))
         Guru.putString(getString(R.string.user_id),member.id)
         Guru.putString(getString(R.string.access_token),member.accessToken)
-        val intent = Intent(applicationContext, DashboardActivity::class.java)
+        val intent = Intent(applicationContext, FamilyDetailActivity::class.java)
         intent.putExtra(getString(R.string.id), member.id)
         startActivity(intent)
         finish()

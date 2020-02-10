@@ -11,14 +11,17 @@ import com.krs.community.entities.LocalCommunity
 @Dao
 interface LocalCommunityDao {
 
-    @Query("SELECT * FROM LocalCommunity")
-    fun getLocalCommunity() : LiveData<List<LocalCommunity>>
+    @Query("SELECT * FROM LocalCommunity WHERE parent_id=:id")
+    fun getLocalCommunity(id: Int) : LiveData<List<LocalCommunity>>
 
     @Query("SELECT name FROM LocalCommunity ORDER BY name ASC")
     fun getLocalCommName() : LiveData<List<String>>
 
+    @Query("SELECT name FROM LocalCommunity WHERE parent_id=:id ORDER BY name ASC")
+    fun getLocalCommNameBySubId(id:Int) : LiveData<List<String>>
+
     @Query("SELECT name FROM LocalCommunity WHERE id=:id")
-    fun getLocalCommunity(id:String) : String
+    fun getLocalCommName(id:String) : String
 
     @Query("SELECT id FROM LocalCommunity WHERE name=:name")
     fun getLocalCommunityId(name:String) : Int

@@ -444,6 +444,8 @@
     <string name="start" translatable="false">start</string>
     <string name="length" translatable="false">length</string>
     <string name="filter_by" translatable="false">filter_by</string>
+    <string name="designation_id" translatable="false">designation_id</string>
+    <string name="committee_id" translatable="false">committee_id</string>
     <string name="local_community_id" translatable="false">local_community_id</string>
     <string name="sub_community_id" translatable="false">sub_community_id</string>
     <string name="please_wait">Please Wait...</string>
