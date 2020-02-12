@@ -2,18 +2,16 @@ package com.krs.community.fragments
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.TimePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -29,11 +27,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.listeners.CreateEventListener
+import com.krs.community.utils.MovableFloatingActionButton
 import com.krs.community.utils.Utility
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.ShareEventViewModel
 import com.krs.community.viewmodelfactory.ShareEventViewModelFactory
-import com.orhanobut.dialogplus.DialogPlus
 import com.zfdang.multiple_images_selector.ImagesSelectorActivity
 import com.zfdang.multiple_images_selector.SelectorSettings
 import kotlinx.android.synthetic.main.fragment_share_event.*
@@ -41,10 +39,8 @@ import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import ru.slybeaver.slycalendarview.SlyCalendarDialog
 import java.io.File
 import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -57,18 +53,18 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
     private var adapter: ImagesAdapter? = null
     private var mResults: ArrayList<String> = ArrayList()
     private var yURLs = ArrayList<String>()
-    lateinit var txt_start: TextView
-    lateinit var edt_end_date: TextView
-    lateinit var txt_end_time: TextView
-    lateinit var txt_start_time: TextView
+    lateinit var txtStart: TextView
+    //lateinit var edtEndDate: TextView
+    //  private lateinit var txtEndTime: TextView
+    private lateinit var txtStartTime: TextView
     var isStart = false
     private lateinit var userId:String
     lateinit var linearLayout:LinearLayout
-    lateinit  var adapter1:URLAdapter;
+    lateinit var adapter1: URLAdapter
+    lateinit var fab: MovableFloatingActionButton
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_share_event, container, false)
         shareEventViewModel = ViewModelProviders.of(this,shareEventFactory).get(ShareEventViewModel::class.java)
-
 
         shareEventViewModel.mCreateEventListener = this
         userId= Guru.getString(getString(R.string.user_id), "")!!
@@ -76,36 +72,36 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.color_mid_light_gray, false)
         }
-        val iv_cancel = root.findViewById<ImageView>(R.id.iv_cancel)
+        val ivCancel = root.findViewById<ImageView>(R.id.iv_cancel)
         linearLayout = root.findViewById(R.id.main_content)
-        iv_cancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
-        val rv_images: RecyclerView = root.findViewById(R.id.rv_images)
-        rv_images.setHasFixedSize(true)
-        val MyLayoutManager = LinearLayoutManager(activity)
-        MyLayoutManager.orientation = RecyclerView.HORIZONTAL
+        ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
+        val rvImages: RecyclerView = root.findViewById(R.id.rv_images)
+        rvImages.setHasFixedSize(true)
+        val linearLayoutManager = LinearLayoutManager(activity)
+        linearLayoutManager.orientation = RecyclerView.HORIZONTAL
         adapter = ImagesAdapter()
-        rv_images.adapter = adapter
-        rv_images.layoutManager = MyLayoutManager
-        val rv_parent: RecyclerView = root.findViewById(R.id.rv_parent)
-        val edt_title = root.findViewById<EditText>(R.id.edt_title)
-        val edt_address = root.findViewById<EditText>(R.id.edt_address)
-        val edt_description = root.findViewById<EditText>(R.id.edt_description)
-        rv_parent.setHasFixedSize(true)
-        val MyLayoutManager1 = LinearLayoutManager(activity)
-        MyLayoutManager1.orientation = RecyclerView.VERTICAL
+        rvImages.adapter = adapter
+        rvImages.layoutManager = linearLayoutManager
+        val rvParent: RecyclerView = root.findViewById(R.id.rv_parent)
+        val edtTitle = root.findViewById<EditText>(R.id.edt_title)
+        val edtAddress = root.findViewById<EditText>(R.id.edt_address)
+        val edtDescription = root.findViewById<EditText>(R.id.edt_description)
+        rvParent.setHasFixedSize(true)
+        val layoutManager = LinearLayoutManager(activity)
+        layoutManager.orientation = RecyclerView.VERTICAL
         yURLs.add("")
-        yURLs.add("")
-        yURLs.add("")
+        /*yURLs.add("")
+        yURLs.add("")*/
         adapter1 = URLAdapter()
-        rv_parent.adapter = adapter1
-        rv_parent.layoutManager = MyLayoutManager1
-        val iv_add_url = root.findViewById<ImageView>(R.id.iv_add_url)
-        iv_add_url.setOnClickListener { v: View? ->
+        rvParent.adapter = adapter1
+        rvParent.layoutManager = layoutManager
+        val ivAddUrl = root.findViewById<ImageView>(R.id.iv_add_url)
+        ivAddUrl.setOnClickListener { v: View? ->
             yURLs.add("")
             adapter1.notifyDataSetChanged()
         }
-        val iv_upload = root.findViewById<ImageView>(R.id.iv_upload)
-        iv_upload.setOnClickListener { v: View? ->
+        val ivUpload = root.findViewById<ImageView>(R.id.iv_upload)
+        ivUpload.setOnClickListener { v: View? ->
             val intent = Intent(activity, ImagesSelectorActivity::class.java)
             intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 15)
             intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 100000)
@@ -113,79 +109,80 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
             intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, mResults)
             startActivityForResult(intent, REQUEST_CODE)
         }
-        val btnShare: Button
-        val btnCreate: Button
-        btnShare = root.findViewById(R.id.btnShare)
-        btnCreate = root.findViewById(R.id.btnCreate)
-        txt_start = root.findViewById(R.id.edt_start)
-        edt_end_date = root.findViewById(R.id.edt_end_date)
-        txt_start_time = root.findViewById(R.id.txt_start_time)
-        txt_end_time = root.findViewById(R.id.txt_end_time)
-        txt_start.setOnClickListener(View.OnClickListener { view: View? ->
+        // val btnShare: Button
+        // val btnCreate: Button
+        // btnShare = root.findViewById(R.id.btnShare)
+        /*btnCreate = root.findViewById(R.id.btnCreate)*/
+        fab = root.findViewById(R.id.fab)
+        txtStart = root.findViewById(R.id.edt_start)
+        //  edtEndDate = root.findViewById(R.id.edt_end_date)
+        txtStartTime = root.findViewById(R.id.txt_start_time)
+        // txtEndTime = root.findViewById(R.id.txt_end_time)
+        txtStart.setOnClickListener { view: View? ->
             isStart = true
-            showCalendar()
-        })
-        edt_end_date.setOnClickListener({ view: View? ->
-            isStart = false
-            showCalendar()
-        })
-        txt_start_time.setOnClickListener({ view: View? ->
+            // showCalendar()
+        }
+        /* edtEndDate.setOnClickListener({ view: View? ->
+             isStart = false
+             showCalendar()
+         })*/
+        txtStartTime.setOnClickListener { view: View? ->
             isStart = true
-            showTimerSelection()
-        })
-        txt_end_time.setOnClickListener({ view: View? ->
+            //showTimerSelection()
+        }
+        /*txtEndTime.setOnClickListener({ view: View? ->
             isStart = false
             showTimerSelection()
-        })
-        btnCreate.setOnClickListener { v: View? ->
+        })*/
+        fab.setOnClickListener { v: View? ->
             var isValidated = true
-            if (edt_title.text.toString().length == 0) {
-                edt_title.error = "Event title is required"
+            if (edtTitle.text.toString().isEmpty()) {
+                edtTitle.error = "Event title is required"
                 isValidated = false
             }
-            if (edt_address.text.toString().length == 0) {
-                edt_address.error = "Event address is required"
+            if (edtAddress.text.toString().isEmpty()) {
+                edtAddress.error = "Event address is required"
                 isValidated = false
             }
-            if (edt_description.text.toString().length == 0) {
-                edt_description.error = "Event description is required"
+            if (edtDescription.text.toString().isEmpty()) {
+                edtDescription.error = "Event description is required"
                 isValidated = false
             }
-            if (txt_start.getText().toString().length == 0) {
-                txt_start.setError("Start date is required")
-                isValidated = false
-            } else {
-                txt_start.setError(null)
-            }
-            if (edt_end_date.getText().toString().length == 0) {
-                edt_end_date.setError("End date is required")
+            if (txtStart.text.toString().isEmpty()) {
+                txtStart.error = "Start date is required"
                 isValidated = false
             } else {
-                edt_end_date.setError(null)
+                txtStart.setError(null)
             }
-            if (txt_start_time.getText().toString().length == 0) {
-                txt_start_time.setError("Start time is required")
+            /* if (edtEndDate.getText().toString().length == 0) {
+                 edtEndDate.setError("End date is required")
+                 isValidated = false
+             } else {
+                 edtEndDate.setError(null)
+             }*/
+            if (txtStartTime.getText().toString().length == 0) {
+                txtStartTime.setError("Start time is required")
                 isValidated = false
             } else {
-                txt_start_time.setError(null)
+                txtStartTime.setError(null)
             }
-            if (txt_end_time.getText().toString().length == 0) {
-                txt_end_time.setError("End time is required")
+            /*if (txtEndTime.getText().toString().length == 0) {
+                txtEndTime.setError("End time is required")
                 isValidated = false
             } else {
-                txt_end_time.setError(null)
-            }
+                txtEndTime.setError(null)
+            }*/
             if (isValidated) {
                 yURLs.removeAll(Arrays.asList(""));
                 val json = JSONObject()
                 json.put("id",userId);
                 json.put("event_date",edt_start.text.toString())
-                json.put("title",edt_title.text.toString())
-                json.put("description",edt_description.text.toString())
-                json.put("location",edt_address.text.toString())
+                json.put("title", edtTitle.text.toString())
+                json.put("description", edtDescription.text.toString())
+                json.put("location", edtAddress.text.toString())
                 json.put("lat","23.7546")
                 json.put("lng","72.2308")
-                json.put("youtube",yURLs);
+                json.put("youtube", yURLs)
 
 
 //              val data = "{\"id\":\"1\",\"event_date\":\"2020-01-01\",\"title\":\"DemoTitile\",\"description\":\"DemoDescription\",\"location\":\"DemoLocation\",\"lat\":\"23.7546\",\"lng\":\"72.2308\",\"youtube\":[\"https:\\/\\/youtube.com\",\"https:\\/\\/youtube.com\"]}";
@@ -193,15 +190,15 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
                 shareEventViewModel.createEvent(mResults,userId,userId,Guru.getString(getString(R.string.access_token), "").toString(),json.toString(),yURLs)
             }
         }
-        btnShare.setOnClickListener { v: View? ->
-            val adapter = ShareEventAdapter()
-            val dialog = DialogPlus.newDialog(context).setAdapter(adapter).setGravity(Gravity.BOTTOM).setCancelable(true).setExpanded(true, 900).setContentBackgroundResource(R.drawable.popup_top_corner).create()
-            dialog.show()
-        }
+        /* btnShare.setOnClickListener { v: View? ->
+             val adapter = ShareEventAdapter()
+             val dialog = DialogPlus.newDialog(context).setAdapter(adapter).setGravity(Gravity.BOTTOM).setCancelable(true).setExpanded(true, 900).setContentBackgroundResource(R.drawable.popup_top_corner).create()
+             dialog.show()
+         }*/
         return root
     }
 
-    private fun showCalendar() {
+    /*private fun showCalendar() {
         SlyCalendarDialog()
                 .setSingle(false)
                 .setCallback(object:SlyCalendarDialog.Callback{
@@ -209,11 +206,11 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
                        try {
                            val str = SimpleDateFormat(getString(R.string.dateFormat_first)).format(firstDate?.time)
                            if (isStart) {
-                               txt_start.error = null
-                               txt_start.text = str
+                               txtStart.error = null
+                               txtStart.text = str
                            } else {
-                               edt_end_date.error = null
-                               edt_end_date.text = str
+                               edtEndDate.error = null
+                               edtEndDate.text = str
                            }
                        }catch (ignore:java.lang.Exception){
 
@@ -230,7 +227,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
                 .setBackgroundColor(Color.parseColor("#ffffff"))
                 .setSelectedColor(Color.parseColor("#c48395"))
                 .show(activity!!.supportFragmentManager, "TAG_SLYCALENDAR")
-    }
+    }*/
 
     override fun onResume() {
         super.onResume()
@@ -263,23 +260,23 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
     }
 
 
-    fun showTimerSelection() {
+    /*fun showTimerSelection() {
         val mcurrentTime = Calendar.getInstance()
         val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
         val minute = mcurrentTime[Calendar.MINUTE]
         val mTimePicker: TimePickerDialog
         mTimePicker = TimePickerDialog(activity, TimePickerDialog.OnTimeSetListener { timePicker, selectedHour, selectedMinute ->
             if (isStart) {
-                txt_start_time.error = null
-                txt_start_time.text = (if (selectedHour < 10) "0$selectedHour" else selectedHour.toString() ).plus( ":") .plus( if (selectedMinute < 10) "0$selectedMinute" else selectedMinute)
+                txtStartTime.error = null
+                txtStartTime.text = (if (selectedHour < 10) "0$selectedHour" else selectedHour.toString() ).plus( ":") .plus( if (selectedMinute < 10) "0$selectedMinute" else selectedMinute)
             } else {
-                txt_end_time.text = (if (selectedHour < 10) "0$selectedHour" else selectedHour.toString() ).plus( ":") .plus( if (selectedMinute < 10) "0$selectedMinute" else selectedMinute)
-                txt_end_time.error = null
+                txtEndTime.text = (if (selectedHour < 10) "0$selectedHour" else selectedHour.toString() ).plus( ":") .plus( if (selectedMinute < 10) "0$selectedMinute" else selectedMinute)
+                txtEndTime.error = null
             }
         }, hour, minute, true) //Yes 24 hour time
         mTimePicker.setTitle("Select Time")
         mTimePicker.show()
-    }
+    }*/
 
 
      inner class URLAdapter : RecyclerView.Adapter<URLViewHolder>() {
@@ -290,34 +287,34 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
 
         @SuppressLint("ClickableViewAccessibility")
         override fun onBindViewHolder(holder: URLViewHolder, position: Int) {
-            holder.edt_yurl.setOnTouchListener { v: View?, event: MotionEvent ->
-                val DRAWABLE_RIGHT = 2
-                if (event.action == MotionEvent.ACTION_UP) {
-                    if (event.rawX >= holder.edt_yurl.right - holder.edt_yurl.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
-                        Log.d("YoutubeURL", "position: $position")
-                        yURLs.removeAt(position)
-                        notifyDataSetChanged()
-                        return@setOnTouchListener true
-                    }
-                }
-                false
-            }
+            /* holder.edt_yurl.setOnTouchListener { v: View?, event: MotionEvent ->
+                 val DRAWABLE_RIGHT = 2
+                 if (event.action == MotionEvent.ACTION_UP) {
+                     if (event.rawX >= holder.edt_yurl.right - holder.edt_yurl.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
+                         Log.d("YoutubeURL", "position: $position")
+                         yURLs.removeAt(position)
+                         notifyDataSetChanged()
+                         return@setOnTouchListener true
+                     }
+                 }
+                 false
+             }*/
 
-            holder.edt_yurl.addTextChangedListener(object : TextWatcher {
+            /* holder.edt_yurl.addTextChangedListener(object : TextWatcher {
 
-                override fun afterTextChanged(s: Editable) {
+                 override fun afterTextChanged(s: Editable) {
 
-                }
+                 }
 
-                override fun beforeTextChanged(s: CharSequence, start: Int,
-                                               count: Int, after: Int) {
-                }
+                 override fun beforeTextChanged(s: CharSequence, start: Int,
+                                                count: Int, after: Int) {
+                 }
 
-                override fun onTextChanged(s: CharSequence, start: Int,
-                                           before: Int, count: Int) {
-                    yURLs[position] = s.toString();
-                }
-            })
+                 override fun onTextChanged(s: CharSequence, start: Int,
+                                            before: Int, count: Int) {
+                     yURLs[position] = s.toString();
+                 }
+             })*/
         }
 
         override fun getItemId(position: Int): Long {
@@ -431,11 +428,8 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
         edt_title.setText("")
         edt_description.setText("")
         edt_address.setText("")
-        edt_start.setText("")
-        edt_end_date.setText("")
-        txt_start_time.setText("")
-        txt_end_time.setText("")
-        txt_end_time.setText("")
+        edt_start.text = ""
+        txtStartTime.text = ""
         mResults = ArrayList()
         yURLs = ArrayList()
         adapter?.notifyDataSetChanged()
