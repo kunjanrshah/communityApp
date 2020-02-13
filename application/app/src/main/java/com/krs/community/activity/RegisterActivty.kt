@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
@@ -14,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
-import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonObject
 import com.krs.community.R
@@ -25,7 +25,8 @@ import com.krs.community.entities.States
 import com.krs.community.entities.SubCommunity
 import com.krs.community.listeners.IRegisterListener
 import com.krs.community.listeners.ImageUploadListener
-import com.krs.community.model.*
+import com.krs.community.model.Datum
+import com.krs.community.model.RegisterModel
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RegisterViewModel
@@ -90,6 +91,21 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
 
         val str = resources.getString(R.string.already_have_a_account_sign_in) + "<b>" + " " + getString(R.string.login) + "</b>"
         txt_already?.text = Html.fromHtml(str)
+
+        btn_register.setOnTouchListener { v, event ->
+              when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    btn_register.background = resources.getDrawable(R.drawable.btn_registration_pressed)
+                    return@setOnTouchListener true
+                }
+                MotionEvent.ACTION_UP -> {
+                    btn_register.background = resources.getDrawable(R.drawable.btn_registration)
+                    btn_register.performClick()
+                    return@setOnTouchListener true
+                }
+                else -> return@setOnTouchListener false
+            }
+        }
 
         btn_register?.setOnClickListener {
             Utility.startSweetProgress(this,"Registering your family",resources.getString(R.string.loading))

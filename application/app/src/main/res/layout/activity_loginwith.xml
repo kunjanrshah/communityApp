@@ -225,7 +225,7 @@
             android:layout_height="55dp"
             android:layout_gravity="center"
             android:layout_marginTop="90dp"
-            android:background="@drawable/round_corner_primary"
+            android:background="@drawable/btn_registration"
             android:fontFamily="@font/montserrat_semibold"
             android:text="@string/_continue"
             android:textAllCaps="false"
@@ -278,14 +278,14 @@
                     android:id="@+id/btn_login_google"
                     android:layout_width="150dp"
                     android:layout_height="50dp"
-                    android:background="@drawable/google" />
+                    android:background="@drawable/google_btn" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_login_fb"
                     android:layout_width="150dp"
                     android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:background="@drawable/facebook" />
+                    android:background="@drawable/facebook_btn" />
 
             </LinearLayout>
 

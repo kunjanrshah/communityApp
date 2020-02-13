@@ -16,6 +16,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.app.AppController
 import com.krs.community.app.AppDatabase
 import com.krs.community.bkservice.utilities.Notification
 import com.krs.community.repositories.ProfileDetailRepository
@@ -31,7 +32,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
     private lateinit var easyWayLocation: EasyWayLocation
     private lateinit var getLocationDetail: GetLocationDetail
     private lateinit var completableJob: CompletableJob
-    private val mProfileDetailRepository= ProfileDetailRepository(ApiServices(),AppDatabase.invoke(this))
+
 
     override fun onCreate() {
         super.onCreate()
@@ -148,7 +149,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
                     jsonObject.put(getString(R.string.is_location_enable), "1")
 
                     val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-
+                    val mProfileDetailRepository= ProfileDetailRepository(ApiServices(),AppDatabase.invoke(AppController.mApplication))
                     val response: UpdateProfileResponse = mProfileDetailRepository.updateProfile(profile)
                     response.let {
                         withContext(Dispatchers.Main) {

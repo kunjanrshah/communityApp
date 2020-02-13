@@ -1,9 +1,11 @@
 package com.krs.community.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
@@ -22,13 +24,14 @@ import com.krs.community.utils.Utility;
 public class SplashActivity extends Activity {
 
     private KenBurnsView kbv;
-    private View imglogo,darkoverlay, ll_spinner;//, ll_login;
-    private Button btn_login, btn_register;
+    private View imglogo,darkoverlay, llSpinner;
+    private Button btnLogin, btnRegister;
     private Spinner splanguage;
     private DisplayMetrics dm;
-    private boolean is_login = false;
-    private boolean is_register = false;
+    private boolean isLogin = false;
+    private boolean isRegister = false;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,23 +45,48 @@ public class SplashActivity extends Activity {
         ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, languages);
         splanguage.setAdapter(aa);
 
+        btnLogin.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    btnLogin.setBackgroundColor(getResources().getColor(R.color.colorDark));
+                    return true;
+                case MotionEvent.ACTION_UP:
+                    btnLogin.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    btnLogin.performClick();
+                    return true;
+                default:
+                    return false;
+            }
+        });
 
-        btn_login.setOnClickListener(v -> {
-            if (!is_login) {
-                is_login = true;
+        btnRegister.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    btnRegister.setBackgroundColor(getResources().getColor(R.color.gray_btn_bg_pressed_color));
+                    return true;
+                case MotionEvent.ACTION_UP:
+                    btnRegister.setBackgroundColor(getResources().getColor(R.color.white));
+                    btnRegister.performClick();
+                    return true;
+                default:
+                    return false;
+            }
+        });
+
+        btnLogin.setOnClickListener(v -> {
+            if (!isLogin) {
+                isLogin = true;
                 Intent mIntent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(mIntent);
-                finish();
                 Utility.fade(this);
             }
         });
 
-        btn_register.setOnClickListener(v -> {
-            if (!is_register) {
-                is_register = true;
+        btnRegister.setOnClickListener(v -> {
+            if (!isRegister) {
+                isRegister = true;
                 Intent mIntent = new Intent(SplashActivity.this, RegisterActivty.class);
                 startActivity(mIntent);
-                finish();
                 Utility.fade(this);
             }
         });
@@ -67,8 +95,8 @@ public class SplashActivity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Utility.changeLang(SplashActivity.this, splanguage.getSelectedItem().toString());
-                btn_login.setText(getResources().getString(R.string.login));
-                btn_register.setText(getResources().getString(R.string.register));
+                btnLogin.setText(getResources().getString(R.string.login));
+                btnRegister.setText(getResources().getString(R.string.register));
             }
 
             @Override
@@ -115,8 +143,8 @@ public class SplashActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        is_login = false;
-        is_register = false;
+        isLogin = false;
+        isRegister = false;
     }
 
     private void setAnimation() {
@@ -126,14 +154,14 @@ public class SplashActivity extends Activity {
 
         darkoverlay.animate().setStartDelay(3000).setDuration(3000).alpha(0.6f).start();
 
-        ll_spinner.animate().translationY(dm.heightPixels).setStartDelay(0).setDuration(0).start();
-        ll_spinner.animate().translationY(0).setDuration(2000).alpha(1).setStartDelay(5000).start();
+        llSpinner.animate().translationY(dm.heightPixels).setStartDelay(0).setDuration(0).start();
+        llSpinner.animate().translationY(0).setDuration(2000).alpha(1).setStartDelay(5000).start();
 
-        btn_login.animate().translationX(dm.widthPixels+ btn_login.getMeasuredWidth()).setDuration(0).setStartDelay(0).start();
-        btn_login.animate().translationX(0).setStartDelay(5500).setDuration(2000).setInterpolator(new OvershootInterpolator()).start();
+        btnLogin.animate().translationX(dm.widthPixels+ btnLogin.getMeasuredWidth()).setDuration(0).setStartDelay(0).start();
+        btnLogin.animate().translationX(0).setStartDelay(5500).setDuration(2000).setInterpolator(new OvershootInterpolator()).start();
 
-        btn_register.animate().translationX(dm.widthPixels+ btn_register.getMeasuredWidth()).setDuration(0).setStartDelay(0).start();
-        btn_register.animate().translationX(0).setStartDelay(5500).setDuration(2000).setInterpolator(new OvershootInterpolator()).start();
+        btnRegister.animate().translationX(dm.widthPixels+ btnRegister.getMeasuredWidth()).setDuration(0).setStartDelay(0).start();
+        btnRegister.animate().translationX(0).setStartDelay(5500).setDuration(2000).setInterpolator(new OvershootInterpolator()).start();
     }
 
     private void MemoryAllocation()
@@ -142,12 +170,12 @@ public class SplashActivity extends Activity {
         dm = getResources().getDisplayMetrics();
         kbv= findViewById(R.id.fragmentloginKenBurnsView1);
         darkoverlay=findViewById(R.id.fragmentloginView1);
-        ll_spinner =findViewById(R.id.ll_spinner);
-       // btn_login =findViewById(R.id.btn_login);
+        llSpinner =findViewById(R.id.ll_spinner);
+       // btnLogin =findViewById(R.id.btnLogin);
         splanguage = findViewById(R.id.splanguage);
-        btn_login = findViewById(R.id.btn_login);
-        btn_login.setTag(0);
-        btn_register = findViewById(R.id.btn_register1);
-        btn_register.setTag(0);
+        btnLogin = findViewById(R.id.btn_login);
+        btnLogin.setTag(0);
+        btnRegister = findViewById(R.id.btn_register1);
+        btnRegister.setTag(0);
     }
 }

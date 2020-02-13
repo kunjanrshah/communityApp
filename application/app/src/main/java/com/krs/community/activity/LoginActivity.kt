@@ -9,6 +9,7 @@ import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -203,6 +204,21 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             btnContinue.performClick()
         }
 
+        btnContinue.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    btnContinue.background = resources.getDrawable(R.drawable.btn_registration_pressed)
+                    return@setOnTouchListener true
+                }
+                MotionEvent.ACTION_UP -> {
+                    btnContinue.background = resources.getDrawable(R.drawable.btn_registration)
+                    btnContinue.performClick()
+                    return@setOnTouchListener true
+                }
+                else -> return@setOnTouchListener false
+            }
+        }
+
         btnContinue.setOnClickListener { v ->
 
             if(!ReceviedOTP.isNullOrEmpty() && ReceviedOTP==squareField.text.toString()){
@@ -350,7 +366,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
     private fun goToFamilyDetailScreen(){
-        Guru.putString(getString(R.string.loginMember),Gson().toJson(member))
         Guru.putString(getString(R.string.user_id),member.id)
         Guru.putString(getString(R.string.access_token),member.accessToken)
         val intent = Intent(applicationContext, FamilyDetailActivity::class.java)
@@ -423,7 +438,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == RC_SIGN_IN && resultCode!=0) {
+
             try {
                 startSweetProgress(this@LoginActivity, getString(R.string.seat_back_relax), getString(R.string.loading))
                 loginViewModel?.loginWithGoogle(data)

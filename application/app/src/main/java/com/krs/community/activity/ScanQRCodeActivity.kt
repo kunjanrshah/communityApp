@@ -6,14 +6,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
-import com.google.gson.Gson
 import com.krs.community.R
-import com.krs.community.model.Member
 import com.krs.community.utils.AESUtils
 
 
@@ -28,7 +25,7 @@ class ScanQRCodeActivity : AppCompatActivity() {
         val scannerView = findViewById<CodeScannerView>(R.id.scanner_view)
 
 
-        setupPermissions();
+        setupPermissions()
 
         codeScanner = CodeScanner(this, scannerView)
 

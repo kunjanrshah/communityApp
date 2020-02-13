@@ -110,6 +110,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
         }
     }
 
+
+
     private fun getFamilyDetails(){
         if(isShimmer){
             isShimmer=false
@@ -575,9 +577,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
     override fun onStop() {
         super.onStop()
         supportActionBar?.show()
-    }
-    override fun onBackPressed() {
-        //  animateViewsOut()
     }
 
     override fun cancelDialog() {

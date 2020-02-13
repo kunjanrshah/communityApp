@@ -128,10 +128,10 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
         binding.lstSharedProfile.adapter =sharedAdapter
         binding.lstSharedProfile.layoutManager = layoutManager
-
+        defaultProfiles.clear()
         for(index in 1..4){
             val member=Member()
-            member.profilePic="noimage.png"
+            member.profilePic="noimage.png?fhtfhjuyffgh"
             member.firstName="name"
             defaultProfiles.add(member)
         }
@@ -331,8 +331,9 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             if (!TextUtils.isEmpty(member.profilePic)) {
                 holder.imgProfile.isClickable = true
                 val url=resources.getString(R.string.base_url_thumb)+member.profilePic
+                Log.d(TAG, "url: $url")
                 try{
-                    Glide.with(activity!!).load(url).placeholder(R.drawable.user_profile).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
+                    Glide.with(activity!!).load(url).placeholder(R.drawable.user_face).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
                 }catch(e:Exception){
                     e.message
                 }

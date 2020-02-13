@@ -13,6 +13,7 @@
     <color name="colorPrivacyPolictyBG">#f2f2f2</color>
 
     <color name="colorPrimaryDark">#843f52</color>
+    <color name="colorDark">#5E2D39</color>
 
     <color name="colorGray">#d3d3d3</color>
     <color name="color_mid_light_gray">@color/bg_gray</color>//#E8E8E8
