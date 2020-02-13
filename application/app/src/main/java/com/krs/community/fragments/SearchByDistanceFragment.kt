@@ -222,7 +222,6 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         }
 
         byDistanceAdapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
-            @SuppressLint("SetTextI18n")
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, i: Int) {
                 val viewHolder: DistanceViewHolder = viewHolder as DistanceViewHolder
                 val member = lstMembers[i]
@@ -323,29 +322,24 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                     viewHolder.tvUserDist.text=getDistance(member.distance)
                 }else if(nearBy.equals("All")){
 
+                    val nearBy: List<String> = member.nearBy.split(",")
                     val elements: List<String> = member.distance.split(",")
-                    if(member.nearBy.contains("home")){
-                        if(elements[0].isNotEmpty()){
+                    for(count in nearBy.indices){
+                        if(nearBy[count].contains("home")){
                             viewHolder.llHome.visibility=View.VISIBLE
                             viewHolder.tvHome.visibility=View.VISIBLE
                             viewHolder.tvHome.text=getString(R.string.homeDistance)
-                            viewHolder.tvHomeDist.text=getDistance(elements[0].trim())
-                        }
-                    }
-                    if(member.nearBy.contains("office")){
-                        if(elements[1].isNotEmpty()){
+                            viewHolder.tvHomeDist.text=getDistance(elements[count].trim())
+                        }else if(nearBy[count].contains("office")){
                             viewHolder.llOffice.visibility=View.VISIBLE
                             viewHolder.tvOffice.visibility=View.VISIBLE
-                            viewHolder.tvOffice.text=getDistance(member.distance)
-                            viewHolder.tvOfficeDist.text=getDistance(elements[1].trim())
-                        }
-                    }
-                    if(member.nearBy.contains("user")){
-                        if(elements[1].isNotEmpty()){
+                            viewHolder.tvOffice.text="Office"
+                            viewHolder.tvOfficeDist.text=getDistance(elements[count].trim())
+                        }else if(nearBy[count].contains("user")){
                             viewHolder.llUser.visibility=View.VISIBLE
                             viewHolder.tvUser.visibility=View.VISIBLE
-                            viewHolder.tvUser.text=getString(R.string.userDetails)
-                            viewHolder.tvUserDist.text=getDistance(elements[1].trim())
+                            viewHolder.tvUser.text="User"
+                            viewHolder.tvUserDist.text=getDistance(elements[count].trim())
                         }
                     }
                 }

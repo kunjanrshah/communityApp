@@ -272,12 +272,13 @@ class ProfileDetailViewModel(
 
                     val response: JsonObject = mProfileDetailRepository.uploadProfileImage(body, id, _type)
 
+
                     response.let {
                         withContext(Dispatchers.Main) {
                             Log.d("Response", response.toString());
 //
                             if (response.get("success").asString.equals("success")) {
-                               // mImageUploadListener.getResult(response.getAsJsonObject("data"))
+                                mImageUploadListener.getResult(response.getAsJsonObject("data"))
                             } else {
                                 mImageUploadListener.onFailure(response.get("message").asString)
                             }

@@ -63,7 +63,7 @@ import org.kodein.di.generic.instance
 import java.util.*
 
 
-class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSReceiver.OTPReceiveListener, TruecallerAdapter.SetSetTruecallListner {
+class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSReceiver.OTPReceiveListener {
 
 
     override val kodein by kodein()
@@ -163,7 +163,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 }
             })
 
-            binding.edtMobile.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+            binding.edtMobile.setOnEditorActionListener({ v, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     btnContinue.performClick()
                     true;
@@ -402,9 +402,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
     private fun goToFamilyDetailScreen() {
-        Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
-        Guru.putString(getString(R.string.user_id), member.id)
-        Guru.putString(getString(R.string.access_token), member.accessToken)
+        Guru.putString(getString(R.string.user_id),member.id)
+        Guru.putString(getString(R.string.access_token),member.accessToken)
         val intent = Intent(applicationContext, FamilyDetailActivity::class.java)
         intent.putExtra(getString(R.string.id), member.id)
         startActivity(intent)
@@ -489,10 +488,4 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             mCallbackManager?.onActivityResult(requestCode, resultCode, data)
         }
     }
-
-    override fun cancelDialog() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 }
-
-

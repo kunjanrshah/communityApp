@@ -124,7 +124,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
         var correctPattern: IntArray? = null
         if (pass != null && !pass.isEmpty()) {
             correctPattern = IntArray(pass.length)
-            for (i in 0 until pass.length) {
+            for (i in pass.indices) {
                 try {
                     correctPattern[i] = pass[i].toString().toInt()
                 } catch (nfe: NumberFormatException) {
@@ -167,7 +167,6 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
                     getMemberLogin()
                 }
             }
-
             override fun onAuthenticationFailed() {
             }
         })

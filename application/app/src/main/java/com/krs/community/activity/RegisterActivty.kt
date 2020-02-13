@@ -20,6 +20,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.JsonObject
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.databinding.ActivityRegisterBinding
@@ -366,7 +367,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         spinnerLname.setExpandTint(R.color.black)
     }
 
-    override fun getResult(profile: String) {
+    override fun getResult(profile: JsonObject) {
         Utility.hideSweetProgress()
         moveToLogin(getString(R.string.RequestAdmin))
     }

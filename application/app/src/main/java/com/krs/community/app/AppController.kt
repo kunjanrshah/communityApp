@@ -84,6 +84,7 @@ class AppController : Application(), KodeinAware{
         bind() from provider  {  CalendarSearchRepository(instance(),instance()) }
         bind() from provider  {  NewsRepository(instance()) }
         bind() from provider  {  RoomMemberRepository(instance(),instance()) }
+        bind() from provider  {  CommitteeRepository(instance(),instance()) }
 
         bind() from provider { StatisticsViewModelFactory(instance()) }
         bind() from provider { FamilyDetailViewModelFactory(instance()) }
@@ -100,6 +101,7 @@ class AppController : Application(), KodeinAware{
         bind() from provider { CalendarSearchViewModelFactory(instance()) }
         bind() from provider { NewsModelFactory(instance()) }
         bind() from provider { RoomMemberViewModelFactory(instance()) }
+        bind() from provider { CommiteeViewModelFactory(instance()) }
 
     }
 

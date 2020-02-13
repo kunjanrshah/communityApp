@@ -55,14 +55,13 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: ProfileDetailViewModelFactory by instance()
     var numberOfLines = 5
-    private var isLogo = false
     override val kodein by kodein()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_professional_details, container, false)
         profileDetailViewModel = ViewModelProviders.of(this, factory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener=this
-
+        profileDetailViewModel.mImageUploadListener=this
         member = arguments?.getSerializable(getString(R.string.member)) as Member
         val loginMember=Guru.getString(getString(R.string.loginMember),"")
         val loginMem= Gson().fromJson(loginMember,Member::class.java)
@@ -88,7 +87,8 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
 
         if (!member.businessLogo.isNullOrEmpty()) {
             try {
-                Glide.with(AppController.mApplication).load(member.businessLogo).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgLogo)
+                val str=getString(R.string.base_url_logo)+""+member.businessLogo
+                Glide.with(mApplication).load(str).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgLogo)
             } catch (e: Exception) {
                 e.message
             }
@@ -224,21 +224,21 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         })
 
         binding.imgLogo.setOnClickListener {
-            isLogo = true
-            activity?.let { it1 -> pickFromGallery(it1) }
+            pickFromGallery(activity!!)
         }
 
         getMasterList()
         return binding.root
     }
 
+
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode==PICK_GALLERY_REQUEST){
-            pickFromGallery(activity as AppCompatActivity)
+            pickFromGallery(activity!!)
         }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -254,8 +254,6 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                     binding.llMain.snackbar(getString(R.string.SelectedImageDetails),Snackbar.LENGTH_SHORT)
                 }
             } else if (requestCode == UCrop.REQUEST_CROP) {
-                if (isLogo) {
-                    isLogo = false
                     data?.let {
                         val resultUri = UCrop.getOutput(it)
                         if (resultUri != null) {
@@ -274,7 +272,6 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                             }
                         }
                     }
-                }
             }
         }
         if (resultCode == UCrop.RESULT_ERROR) {
@@ -299,38 +296,38 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
     }
 
     private fun getMasterList() = Coroutines.main {
-        profileDetailViewModel.lstBusinessCategoryName.await().observe(this, Observer {
+        profileDetailViewModel.lstBusinessCategoryName.await().observe(viewLifecycleOwner, Observer {
             binding.spMainCat.setItems(it.toTypedArray())
             binding.spMainCat.setExpandTint(R.color.black)
         })
-        profileDetailViewModel.businessCategoryIds.await().observe(this, Observer {
+        profileDetailViewModel.businessCategoryIds.await().observe(viewLifecycleOwner, Observer {
             profileDetailViewModel.lstBusinessCategoryId = it
         })
-        profileDetailViewModel.businessCategoryName.await().observe(this, Observer {
+        profileDetailViewModel.businessCategoryName.await().observe(viewLifecycleOwner, Observer {
             binding.spMainCat.setText(it)
         })
 
 
-        profileDetailViewModel.lstBusinessSubCategoryName.await().observe(this, Observer {
+        profileDetailViewModel.lstBusinessSubCategoryName.await().observe(viewLifecycleOwner, Observer {
             binding.spSubCat.setItems(it.toTypedArray())
             binding.spSubCat.setExpandTint(R.color.black)
         })
-        profileDetailViewModel.businessSubCategoryIds.await().observe(this, Observer {
+        profileDetailViewModel.businessSubCategoryIds.await().observe(viewLifecycleOwner, Observer {
             profileDetailViewModel.lstBusinessSubCategoryId = it
         })
-        profileDetailViewModel.businessSubCategoryName.await().observe(this, Observer {
+        profileDetailViewModel.businessSubCategoryName.await().observe(viewLifecycleOwner, Observer {
             binding.spSubCat.setText(it)
         })
 
 
-        profileDetailViewModel.lstOccupationName.await().observe(this, Observer {
+        profileDetailViewModel.lstOccupationName.await().observe(viewLifecycleOwner, Observer {
             binding.spOccupation.setItems(it.toTypedArray())
             binding.spOccupation.setExpandTint(R.color.black)
         })
-        profileDetailViewModel.occupationIds.await().observe(this, Observer {
+        profileDetailViewModel.occupationIds.await().observe(viewLifecycleOwner, Observer {
             profileDetailViewModel.lstOccupationId = it
         })
-        profileDetailViewModel.occupationName.await().observe(this, Observer {
+        profileDetailViewModel.occupationName.await().observe(viewLifecycleOwner, Observer {
             binding.spOccupation.setText(it)
         })
 
@@ -374,9 +371,9 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
 
     }
 
-    override fun getResult(profile: String) {
+    override fun getResult(jsonObject: JsonObject) {
         hideSweetProgress()
-        member.businessLogo = profile
+        member.businessLogo = jsonObject.get("business_logo").asString
         Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
         displaySnackBarWithBottomMargin(binding.llMain, "Logo updated!")
     }

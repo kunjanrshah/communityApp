@@ -200,7 +200,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         binding.spCity.setOnItemClickListener {
             profileDetailViewModel.selectedCityName = binding.spCity.text.toString().trim()
             Coroutines.main {
-                profileDetailViewModel.cityId.await().observe(this, Observer {
+                profileDetailViewModel.cityId.await().observe(viewLifecycleOwner, Observer {
                     profileDetailViewModel.selectedCityId = it
                 })
             }
@@ -324,7 +324,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         binding.spGender.setItems(lstGender)
         binding.spGender.setExpandTint(R.color.black)
 
-        profileDetailViewModel.lstRelationName.await().observe(this, Observer {
+        profileDetailViewModel.lstRelationName.await().observe(viewLifecycleOwner, Observer {
            if(member.relationId != "0"){
                if(it.isNotEmpty()){
                    binding.spRelation.setItems(it.subList(1,it.size).toTypedArray())
@@ -333,26 +333,26 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
            }
         })
-        profileDetailViewModel.relationIds.await().observe(this, Observer {
+        profileDetailViewModel.relationIds.await().observe(viewLifecycleOwner, Observer {
           if(it.isNotEmpty()){
               profileDetailViewModel.lstRelationId = it.subList(1,it.size)
           }
         })
 
-        profileDetailViewModel.lstLastName.await().observe(this, Observer {
+        profileDetailViewModel.lstLastName.await().observe(viewLifecycleOwner, Observer {
             binding.spLastname.setItems(it.toTypedArray())
             binding.spLastname.setExpandTint(R.color.black)
         })
-        profileDetailViewModel.lastNameIds.await().observe(this, Observer {
+        profileDetailViewModel.lastNameIds.await().observe(viewLifecycleOwner, Observer {
             profileDetailViewModel.lstLastNameId = it
         })
 
-        profileDetailViewModel.lstStateName.await().observe(this, Observer {
+        profileDetailViewModel.lstStateName.await().observe(viewLifecycleOwner, Observer {
             binding.spState.setItems(it.toTypedArray())
             binding.spState.setExpandTint(R.color.black)
         })
 
-        profileDetailViewModel.stateIds.await().observe(this, Observer {
+        profileDetailViewModel.stateIds.await().observe(viewLifecycleOwner, Observer {
             profileDetailViewModel.lstStateId = it
         })
         val cities= profileDetailViewModel.getCityNamebyState(profileDetailViewModel.selectedStateId)

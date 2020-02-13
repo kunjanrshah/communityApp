@@ -13,6 +13,12 @@ interface DesignationDao {
     @Query("SELECT * FROM Designation")
     fun getDesignation() : LiveData<List<Designation>>
 
+    @Query("SELECT id FROM Designation WHERE name=:name")
+    fun getDesignationName(name:String) : Int
+
+    @Query("SELECT name FROM Designation ORDER BY name ASC")
+    fun getDesignationName() : LiveData<List<String>>
+
     @Query("SELECT id FROM Designation WHERE id NOT IN (:Ids)")
     fun getRemovedDesignationIds(Ids: List<String>) : List<Int>
 

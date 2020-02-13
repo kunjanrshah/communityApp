@@ -13,6 +13,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
@@ -79,6 +80,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     private var isStopService = false
     private var mNetworkReceiver: BroadcastReceiver? = null
 
+    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,7 +105,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
         userId = Guru.getString(getString(R.string.user_id), "")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            changeStatusbarColor(this, R.color.mdtp_white, false)
+            changeStatusbarColor(this, R.color.white, false)
         }
 
         val mainDetailsFragment = MainDetailsFragment()
@@ -471,9 +473,9 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
     }
 
-    override fun getResult(profile: String) {
+    override fun getResult(jsonObject: JsonObject) {
         hideSweetProgress()
-        member?.profilePic = profile
+        member?.profilePic = jsonObject.get("profile").asString
         Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
         displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.profileUpdate))
     }
@@ -526,43 +528,42 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == PICK_GALLERY_REQUEST) {
-                val selectedUri = data?.data
-                if (selectedUri != null) {
-                    startCrop(selectedUri, this)
-                } else {
-                    Toast.makeText(this@ProfileDetailActivity, getString(R.string.selectedImage), Toast.LENGTH_SHORT).show()
-                }
-            } else if (requestCode == UCrop.REQUEST_CROP) {
-                if (isProfileImage) {
-                    isProfileImage = false
+        if (isProfileImage) {
+            isProfileImage=false
+            if (resultCode == RESULT_OK) {
+                if (requestCode == PICK_GALLERY_REQUEST) {
+                    val selectedUri = data?.data
+                    if (selectedUri != null) {
+                        startCrop(selectedUri, this)
+                    } else {
+                        Toast.makeText(this@ProfileDetailActivity, "Cannot retrieve selected image", Toast.LENGTH_SHORT).show()
+                    }
+                } else if (requestCode == UCrop.REQUEST_CROP) {
                     data?.let {
                         val resultUri = UCrop.getOutput(it)
+                        com.krs.community.utils.logger.debug("resultUri: $resultUri")
                         if (resultUri != null) {
                             try {
                                 Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
+                                val uploadImage = File(resultUri.path.toString())
+                                startSweetProgress(this, "Image", getString(R.string.loading))
+                                profileDetailViewModel.uploadImage(uploadImage,member?.id.toString(),getString(R.string.profile))
                             } catch (e: Exception) {
                                 e.message
                             }
-                            com.krs.community.utils.logger.debug("resultUri: $resultUri")
-
-                            try {
-                                val uploadImage = File(resultUri.path.toString())
-                                startSweetProgress(this, getString(R.string.image), getString(R.string.loading))
-                                profileDetailViewModel.uploadImage(uploadImage,member?.id.toString(),getString(R.string.profile))
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
                         } else {
-                            professionalDetailsFragment.onActivityResult(requestCode, resultCode, data)
+                            binding.llParent.snackbar("Requested crop image not found!",Snackbar.LENGTH_LONG)
                         }
                     }
+
+                } else if (requestCode == EasyWayLocation.LOCATION_SETTING_REQUEST_CODE) {
+                    easyWayLocation.onActivityResult(resultCode)
                 }
-            } else if (requestCode == EasyWayLocation.LOCATION_SETTING_REQUEST_CODE) {
-                easyWayLocation.onActivityResult(resultCode)
             }
+        }else{
+            professionalDetailsFragment.onActivityResult(requestCode, resultCode, data)
         }
+
         if (resultCode == UCrop.RESULT_ERROR) {
             data?.let { handleCropError(it, this) }
         }
@@ -618,6 +619,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         var cur_lng = MutableLiveData<Double>()
         var cur_addr = MutableLiveData<String>()
 
+        @SuppressLint("NewApi")
         fun setPercentage(percentage: Int) {
             binding.progressView.setAnimate(true)
             binding.progressView.setAnimateDuration(5000)
