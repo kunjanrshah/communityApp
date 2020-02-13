@@ -29,10 +29,10 @@ public class MyRoleAdapter extends BaseAdapter {
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         lstRole = new ArrayList<>();
-        lstRole.add("Select");
-        lstRole.add("User");
-        lstRole.add("Local Admin");
-        lstRole.add("Sub Admin");
+        lstRole.add(mContext.getString(R.string.select));
+        lstRole.add(mContext.getString(R.string.user));
+        lstRole.add(mContext.getString(R.string.localAdmin));
+        lstRole.add(mContext.getString(R.string.subAdmin));
         roleAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, lstRole);
         roleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     }

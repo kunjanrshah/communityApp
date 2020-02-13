@@ -22,7 +22,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/montserrat_semibold"
-        android:text="Welcome To,\nMatrimony Section"
+        android:text="@string/welcome_to_nmatrimony_section"
         android:textColor="@color/colorPrimary"
         android:textSize="30sp" />
 
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:fontFamily="@font/montserrat_regular"
-        android:text="Search with given filter or skip directly" />
+        android:text="@string/search_with_given_filter_or_skip_directly" />
 
 
      <ImageView
@@ -52,7 +52,7 @@
         android:digits="@string/restrict_space"
         android:background="@drawable/border_color_primary"
         android:drawableEnd="@drawable/controls"
-        android:hint="Search Name"
+        android:hint="@string/search_nameMatrimony"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:paddingLeft="10dp"
@@ -67,7 +67,7 @@
         android:background="@drawable/round_corner_primary"
         android:fontFamily="@font/montserrat_semibold"
         android:gravity="center"
-        android:text="Search Now"
+        android:text="@string/search_now"
         android:textColor="@color/white" />
 
 
@@ -101,7 +101,7 @@
                 android:textSize="14sp"
                 android:layout_marginBottom="20dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Skip" />
+                android:text="@string/skip" />
 
 
         </LinearLayout>

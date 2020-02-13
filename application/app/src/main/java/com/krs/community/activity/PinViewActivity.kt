@@ -1,11 +1,21 @@
 
 package com.krs.community.activity
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -21,6 +31,7 @@ import com.kevalpatel.passcodeview.interfaces.AuthenticationListener
 import com.kevalpatel.passcodeview.keys.KeyNamesBuilder
 import com.kevalpatel.passcodeview.keys.RoundKey
 import com.krs.community.R
+import com.krs.community.app.AppSignatureHashHelper
 import com.krs.community.fragments.FamilyDetailActivity
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.listeners.InnerLogoutListner
@@ -30,7 +41,9 @@ import com.krs.community.responses.UserInnerLogoutResponse
 import com.krs.community.utils.Utility.*
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.FamilyDetailViewModel
+import com.krs.community.viewmodel.LoginViewModel
 import com.krs.community.viewmodelfactory.FamilyDetailViewModelFactory
+import com.wessam.library.NetworkChecker
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -44,12 +57,54 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
     private lateinit var familyDetailViewModel: FamilyDetailViewModel
     private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
     override val kodein by kodein()
+    private var mNetworkReceiver: BroadcastReceiver? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         familyDetailViewModel = ViewModelProviders.of(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
         familyDetailViewModel.mILoginListener=this
         familyDetailViewModel.innerLogoutListner=this
 
+        mNetworkReceiver = NetworkChangeReceiver()
+
+        registerNetworkBroadcastForNougat()
+
+        if (NetworkChecker.isNetworkConnected(this)) {
+
+
+            setScreenLayout()
+
+        } else {
+            setNoInternetLayout()
+        }
+    }
+
+    inner class NetworkChangeReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            try {
+                if (NetworkChecker.isNetworkConnected(context)) {
+                    setScreenLayout()
+                } else {
+                    setNoInternetLayout()
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+
+
+
+
+    }
+
+
+    private fun setNoInternetLayout() {
+        setContentView(R.layout.no_internet_layout)
+        //val binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.no_internet_layout)
+        val retryButton: AppCompatButton = findViewById(R.id.retry_button)
+        retryButton.setOnClickListener { v: View? -> setScreenLayout() }
+    }
+    private fun setScreenLayout() {
         setContentView(R.layout.activity_pinview)
         relative=findViewById(R.id.ll_parent)
         mPinView = findViewById(R.id.pattern_view)
@@ -64,7 +119,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
                 e.message
             }
         }
-        //member.profilePassword="123456"
+        member.profilePassword="123456"
         val pass = member.profilePassword
         var correctPattern: IntArray? = null
         if (pass != null && !pass.isEmpty()) {
@@ -103,7 +158,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
                 .setKeyEight(this, R.string.key_8)
                 .setKeyNine(this, R.string.key_9)
                 .setKeyZero(this, R.string.key_0))
-        mPinView.title = "Enter the PIN"
+        mPinView.title = getString(R.string.EnterThePin)
         mPinView.setAuthenticationListener(object : AuthenticationListener {
             override fun onAuthenticationSuccessful() {
                 if (member.loginStatus == 1) {
@@ -117,8 +172,29 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
         })
     }
 
+    private fun registerNetworkBroadcastForNougat() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+    }
+
+    private fun unregisterNetworkBroadcastForNougat() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                unregisterReceiver(mNetworkReceiver)
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                unregisterReceiver(mNetworkReceiver)
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
     private fun getMemberLogin(){
-        startSweetProgress(this,"Enter",getString(R.string.loading))
+        startSweetProgress(this,getString(R.string.enter),getString(R.string.loading))
         val jsonObject= JSONObject()
         jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
         jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token),""))
@@ -129,7 +205,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
     }
 
     private fun getMemberLogout(){
-        startSweetProgress(this,"Exit",getString(R.string.loading))
+        startSweetProgress(this,getString(R.string.Exit),getString(R.string.loading))
         val jsonObject= JSONObject()
         jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
         jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token),""))
@@ -192,6 +268,11 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
 
     companion object {
         private const val ARG_CURRENT_PIN = "current_pin"
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterNetworkBroadcastForNougat()
     }
 
 }

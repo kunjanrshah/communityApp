@@ -99,7 +99,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         binding.imageSlider.setIndicatorAnimation(IndicatorAnimations.SWAP)
         binding.imageSlider.setSliderTransformAnimation(SliderAnimations.FADETRANSFORMATION)
         binding.imageSlider.scrollTimeInSec = 3 //set scroll delay in seconds :
-        (activity as AppCompatActivity?)!!.supportActionBar!!.setTitle("Home")
+        (activity as AppCompatActivity?)!!.supportActionBar!!.setTitle(getString(R.string.home))
         binding.edtSearch.inputType = InputType.TYPE_NULL
         binding.edtSearch.keyListener = null
 
@@ -156,7 +156,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         if (intent.resolveActivity(activity!!.packageManager) != null) {
             startActivityForResult(intent, 10)
         } else {
-            binding.llParent.snackbar("Your Device Don't Support Speech Input",Snackbar.LENGTH_LONG)
+            binding.llParent.snackbar(getString(R.string.DevicDont),Snackbar.LENGTH_LONG)
         }
     }
 
@@ -217,7 +217,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
             sliderView.description = "The quick brown fox jumps over the lazy dog.\n" + "Jackdaws love my big sphinx of quartz. " + (i + 1)
             sliderView.setOnSliderClickListener { sliderView1: SliderView? ->
-                Toast.makeText(activity, "This is slider " + (i + 1), Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, getString(R.string.ThisIsSlider) + (i + 1), Toast.LENGTH_SHORT).show()
                 Utility.movetoFragment(activity, NewsListFragment())
             }
           binding.imageSlider.addSliderView(sliderView)

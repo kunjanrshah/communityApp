@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">घांची</string>
+
+    <string name="action_delete">हटाएं</string>
+    <string name="action_disable">अक्षम</string>
+    <string name="action_location">स्थान</string>
+    <string name="action_active">सक्रिय</string>
+    <string name="drawer_open">खुला हुआ</string>
+    <string name="drawer_close">बंद करे</string>
+
+
+    <!--Splash screen -->
+    <string name="CityList_SP" translatable="false">CityList_SP</string>
+    <string name="allow_get_data_value" translatable="false">1</string>
+    <string name="all_cities_list" translatable="false">all_cities</string>
+
+    <!--Choose Language screen -->
+
+    <string name="register">रजिस्टर</string>
+    <string name="choose_language">भाषा बदलें</string>
+
+    <!--Login page-->
+    <string name="login_now">अब लॉगिन करें</string>
+    <string name="please_login_to_continue_using_our_app">कृप्या एप्लिकेशन जारी रखने के लिए लॉगिन करे</string>
+    <string name="login_with">के साथ लॉगिन करें</string>
+    <string name="_mobile">मोबाइल</string>
+    <string name="email">ई-मेल</string>
+    <string name="enter_email_id">ईमेल आईडी दर्ज करें</string>
+    <string name="enter_mobile_no">मोबाइल नंबर दर्ज करें</string>
+    <string name="hashkey">पासवर्ड</string>
+    <string name="_forgot_password">पासवर्ड भूल गए ?</string>
+
+    <string name="do_you_have_an_account_register_now">क्या आपका अकाउंट है??</string>
+    <string name="send_otp">OTP भेजें</string>
+    <string name="send_email">ईमेल भेजें</string>
+    <string name="err_msg_blank">कृपया खाली विवरण दर्ज करें</string>
+    <string name="nav_item_change_password">पासवर्ड बदलें</string>
+    <string name="err_msg_invalid_mobile">अमान्य मोबाइल नंबर</string>
+    <string name="type_otp">ओटीपी टाइप करें</string>
+    <string name="registraion_request_pending">रजिस्ट्रेशन रिक्वेस्ट पेंडिंग हे. कृपया व्यवस्थापक से संपर्क करें।</string>
+    <string name="invalid_username">इनवैलिड यूजर</string>
+    <string name="error_msg_get_data_social_site">सोसिअल अकाउंट से डिटेल्स नहीं ले सकते</string>
+    <string name="update_profile_photo">क्या आप फ़ोटो अपडेट करना चाहते हैं?</string>
+    <string name="yes">यस </string>
+    <string name="no">नहीं</string>
+    <string name="invalid_username_password">उपयोगकर्ता नाम या पासवर्ड गलत है</string>
+    <string name="loading">काम चालू है...</string>
+    <string name="user_not_found" >यूजर नॉट फाउंड!</string>
+
+    <!--Registraion page-->
+    <string name="register_now">रजिस्टर करें</string>
+    <string name="already_have_a_account_sign_in">क्या आपके पास पहले से एक खाता मौजूद है? </string>
+    <string name="hint_name">परिवार के मुखिया का नाम</string>
+    <string name="hint_email">ईमेल आईडी</string>
+    <string name="hint_mobile">मोबाइल नंबर</string>
+    <string name="hint_password">पासवर्ड</string>
+    <string name="hint_conform_password">पासवर्ड की पुष्टि कीजिये</string>
+    <string name="hint_address">पता</string>
+    <string name="how_to_register">कैसे करें रजिस्टर?</string>
+    <string name="hint_surname">लास्ट नाम</string>
+    <string name="hint_city">शहर</string>
+    <string name="invalid_mobile_range">मोबाइल नंबर 10 अंकों का होना चाहिए</string>
+    <string name="invalid_email">अमान्य ईमेल!</string>
+    <string name="err_msg_repeat_password">पासवर्ड और रिपीट पासवर्ड मेल नहीं खाते</string>
+
+    <!-- Common Screen -->
+    <string name="can_not_connect_to_internet">इंटरनेट से कनेक्ट नहीं किया जा सकता ... कृपया अपना कनेक्शन जांचें!</string>
+    <string name="server_could_not_found">सर्वर नहीं मिल सका। कृपया कुछ समय बाद फिर से प्रयास करें !!</string>
+    <string name="parsing_error">पार्सिंग की त्रुटि! कृपया कुछ समय बाद फिर से प्रयास करें !!</string>
+    <string name="connection_timeout">कनेक्शन का समय समाप्त! कृपया अपने इंटरनेट कनेक्शन की जाँच करें।</string>
+
+
+
+    <!-- Login Sccren -->
+
+    <string name="welcome">स्वागत हे !</string>
+    <string name="_10_digit_number">10 अंकों की संख्या</string>
+    <string name="_4_digit_otp_will_be_sent_via_sms_to_verify_your_mobile_number">4 अंकों का ओटीपी आपके मोबाइल नंबर को सत्यापित करने के लिए एसएमएस के माध्यम से भेजा जाएगा!</string>
+    <string name="do_you_have_an_account">क्या आपका अकाउंट है?</string>
+    <string name="phoneNumber">फोन नंबर आवश्यक है</string>
+    <string name="pleaseEnterValidPhone">एक मान्य फ़ोन दर्ज करें</string>
+    <string name="Authenticationfailed">प्रमाणीकरण विफल हो गया।</string>
+    <string name="SmsExternalStorage">अनुमति आपके बाहरी संग्रहण को एसएमएस करने से इनकार कर दिया</string>
+
+
+    <!-- Register Sccren -->
+    <string name="code">Code</string>
+    <string name="select_sub_community">उप समुदाय का चयन करें</string>
+    <string name="select_local_community">स्थानीय समुदाय का चयन करें</string>
+    <string name="RegisterFamily">अपने परिवार को पंजीकृत करना</string>
+    <string name="FetchingCity">लाते शहर</string>
+    <string name="male">पुरुष</string>
+    <string name="female">महिला</string>
+    <string name="youtubeVideo">यूट्यूब वीडियो</string>
+    <string name="HowToRegister">कैसे पंजीकृत करें?</string>
+    <string name="hoeRegister">कैसे पंजीकरण करें</string>
+    <string name="RegisterButton">रजिस्टर बटन</string>
+    <string name="ClickToRegister">पंजीकरण करने के लिए यहां क्लिक करें</string>
+    <string name="FillUpYourDetail">अपना विवरण भरें</string>
+
+
+    <!-- DashBoard Sccren -->
+    <string name="home">घर</string>
+    <string name="Calendar">पंचांग</string>
+    <string name="onCentreButtonLongClick">ऑनकॉस्ट बटन</string>
+    <string name="MoveProfile">प्रोफ़ाइल का विस्तार करें</string>
+
+
+    <!-- FamilyTreeDetail Sccren -->
+    <string name="TimeLine">इस समय</string>
+    <string name="ViewTree">पेड़ में देखें</string>
+    <string name="ProfileDetail">प्रोफाइल का विवरण</string>
+    <string name="SetOptionall">setOptionalIconsVisible</string>
+
+
+    <!-- FamilyTreeList Sccren -->
+    <string name="GotoFamilyTree">फैमिली ट्री पर जाएं</string>
+    <string name="RelationShip">संबंध</string>
+    <string name="FirstName">पहला नाम</string>
+    <string name="LastAdded">अंतिम बार जोड़ा गया</string>
+    <string name="serOptinall">setOptionalIconsVisible</string>
+    <string name="AddRelative">रिश्तेदार जोड़ें</string>
+
+
+    <string name="welcome_to">में स्वागत,</string>
+    <string name="shah_family_tree">शाह परिवार का पेड़</string>
+    <string name="_5_people">5 लोग</string>
+    <string name="find_person">व्यक्ति खोजें ...</string>
+
+
+    <!-- FavoriteProfile Sccren -->
+    <string name="Search">खोज</string>
+    <string name="Updated">अपडेट किया गया</string>
+    <string name="InstallApp">अपना सामुदायिक ऐप इंस्टॉल करें</string>
+    <string name="number">+91</string>
+    <string name="tel">टेलीफोन:</string>
+
+    <!-- PinView Sccren -->
+    <string name="EnterThePin">पिन दर्ज करें</string>
+    <string name="enter">दर्ज</string>
+    <string name="Exit">बाहर जाएं</string>
+
+
+    <!-- ProfileDetail Sccren -->
+    <string name="Finding">खोज</string>
+    <string name="user">उपयोगकर्ता</string>
+    <string name="locationOff">स्थान बंद है</string>
+    <string name="updateprofile">प्रोफ़ाइल अपडेट करें</string>
+    <string name="update">अपडेट करें</string>
+
+
+    <string name="updatingProfile">अपनी प्रोफ़ाइल अपडेट कर रहा है</string>
+    <string name="pleaseWait">कृपया प्रतीक्षा करें...</string>
+    <string name="EnterFirstName">अपना पहला नाम दर्ज करें</string>
+    <string name="selectYourLastName">अपना अंतिम नाम चुनें</string>
+    <string name="SelectYourGender">अपना लिंग चुनें</string>
+    <string name="SelectRelation">अपना संबंध चुनें</string>
+
+    <string name="Profile">का प्रोफ़ाइल</string>
+
+    <string name="add">जोड़ना</string>
+    <string name="newProfile">नई प्रोफ़ाइल</string>
+
+    <string name="Success">सफलता</string>
+    <string name="profileUpdate">प्रोफ़ाइल अपडेट!</string>
+    <string name="locationUpdate">स्थान अपडेट किया गया</string>
+
+    <string name="km">%.2f किमी</string>
+    <string name="Distance">दूरी</string>
+    <string name="selectedImage">चयनित छवि पुनः प्राप्त नहीं कर सकता</string>
+    <string name="image">छवि</string>
+
+
+    <string name="my_profile">मेरी प्रोफाइल</string>
+
+    <string name="view_family">परिवार देखें</string>
+    <string name="on">पर</string>
+    <string name="off">बंद</string>
+    <string name="distance">दूरी</string>
+    <string name="save">सहेजें</string>
+    <string name="save_amp_next"><![CDATA[Save & Next]]></string>
+
+    <!-- QRCode Sccren -->
+    <string name="share_qr_code">क्यूआर कोड साझा करें</string>
+    <string name="you_can_share_this_qr_code_to_other_you_can_scan_qr_code_by_camera_and_gallery">आप इस QR कोड को अन्य को साझा कर सकते हैं, आप कैमरा और गैलरी द्वारा QR कोड स्कैन कर सकते हैं</string>
+    <string name="pratik_soni">PRATIK SONI</string>
+    <string name="_9427051418">9427051418</string>
+    <string name="ShareQrCode">शेयर QR कोड</string>
+    <string name="qr_code_gallery">QR कोड गैलरी</string>
+
+
+    <!-- AtoZ Bottom Adapter -->
+    <string name="sorting_by_a_z">ए-जेड द्वारा छंटनी</string>
+    <string name="a">ए</string>
+    <string name="b">बी</string>
+    <string name="c">सी</string>
+    <string name="d">डी</string>
+    <string name="e">इ</string>
+    <string name="f">एफ</string>
+    <string name="g">जी</string>
+    <string name="h">एच</string>
+    <string name="i">मैं</string>
+    <string name="j">जे</string>
+    <string name="k">क</string>
+    <string name="l">एल</string>
+    <string name="m">म</string>
+    <string name="n">एन</string>
+    <string name="o">O</string>
+    <string name="p">पी</string>
+    <string name="q">क्यू</string>
+    <string name="r">आर</string>
+    <string name="s">एस</string>
+    <string name="t">टी</string>
+    <string name="u">U</string>
+    <string name="v">वी</string>
+    <string name="w">डब्ल्यू</string>
+    <string name="x">एक्स</string>
+    <string name="y">Y</string>
+    <string name="z">जेड</string>
+    <string name="all">सब</string>
+    <string name="Selected">चयनित \'ए\'</string>
+    <string name="SelectedB">चयनित \'बी\'</string>
+    <string name="SelectedC">चयनित \'सी\'</string>
+    <string name="SelecetdD">चयनित \'डी\'</string>
+    <string name="SelecetdE">चयनित \'इ\'</string>
+    <string name="SelecetdF">चयनित \'एफ\'</string>
+    <string name="SelectedG">चयनित \'जी\'</string>
+    <string name="SelecetdH">चयनित \'एच\'</string>
+    <string name="SelecetdeI">चयनित \'मैं\'</string>
+    <string name="SelecetedJ">चयनित \'जे\'</string>
+    <string name="SelecetedK">चयनित \'क\'</string>
+    <string name="SelectedL">चयनित \'एल\'</string>
+    <string name="SelectedM">चयनित \'म\'</string>
+    <string name="SelectedN">चयनित \'एन\'</string>
+    <string name="SelectedO">चयनित \'O\'</string>
+    <string name="SelectedP">चयनित \'पी\'</string>
+    <string name="SelectedQ">चयनित \'क्यू\'</string>
+    <string name="SelectedR">चयनित \'आर\'</string>
+    <string name="SelectedS">चयनित \'एस\'</string>
+    <string name="SelectedT">चयनित \'टी\'</string>
+    <string name="SelectedU">चयनित \'U\'</string>
+    <string name="SelectedV">चयनित \'वी\'</string>
+    <string name="SelectedW">चयनित \'डब्ल्यू\'</string>
+    <string name="SelectedX">चयनित \'एक्स\'</string>
+    <string name="SelectedY">चयनित \'Y\'</string>
+    <string name="SelectedZ">चयनित \'जेड\'</string>
+    <string name="SelectedAll">चयनित \'सब\'</string>
+
+    <!-- Location Adapter -->
+    <string name="Private">निजी</string>
+    <string name="location">स्थान</string>
+
+
+
+    <string name="office">कार्यालय</string>
+
+    <!-- MyRole Adapter -->
+
+    <string name="select">चुनते हैं</string>
+
+
+    <string name="subAdmin">उप व्यवस्थापक</string>
+    <string name="my_role">मेरी भूमिका</string>
+    <string name="select_role">भूमिका का चयन करें</string>
+    <string name="change_role">भूमिका बदलें</string>
+
+
+    <!-- SmartFilter Adapter -->
+    <string name="smart_search">स्मार्ट खोज</string>
+    <string name="click">क्लिक करें</string>
+    <string name="icon_to_search_members">सदस्यों को खोजने के लिए आइकन</string>
+
+    <!-- SmartPopUp Adapter -->
+    <string name="filterNotsaved">फ़िल्टर नहीं सहेजा गया!</string>
+    <string name="noFilterFound">कोई फ़िल्टर नहीं मिला!</string>
+    <string name="filter_name">फ़िल्टर का नाम</string>
+    <string name="filter_1">फ़िल्टर 1</string>
+
+    <string name="apply">लागू</string>
+    <string name="head">सिर :</string>
+    <string name="membar">सदस्य :</string>
+    <string name="lastname">उपनाम :</string>
+    <string name="samaj">समाज:</string>
+    <string name="samajSecond">समाज</string>
+    <string name="genderPopup">लिंग:</string>
+    <string name="GenderSecondPopup">लिंग:</string>
+    <string name="maritalPopup">वैवाहिक:</string>
+    <string name="maritalSecondPopup">वैवाहिक</string>
+    <string name="nativePopup">मूल निवासी:</string>
+    <string name="nativeSecondPopo">देशी</string>
+    <string name="cityPopup">शहर :</string>
+    <string name="citySecondPopup">शहर</string>
+    <string name="statePopup">राज्य :</string>
+    <string name="stateSecondPopup">राज्य</string>
+    <string name="educationPopup">शिक्षा :</string>
+    <string name="educationSecondPopop">शिक्षा</string>
+    <string name="gotraPopup">गोत्र :</string>
+    <string name="gotraSecondPopup">गोत्र</string>
+    <string name="bgSecond">बीजी :</string>
+    <string name="bgSecondpopup">बीजी</string>
+    <string name="categoryPopup">वर्ग :</string>
+    <string name="categorySecondPopup">वर्ग</string>
+    <string name="sub_categoryPopup">उप श्रेणी :</string>
+    <string name="sub_categorySecondPopup">उप श्रेणी</string>
+    <string name="occupationPopup">व्यवसाय :</string>
+    <string name="occupationSecondPopup">व्यवसाय</string>
+    <string name="activityPopup">गतिविधि :</string>
+    <string name="activity">गतिविधि</string>
+    <string name="age">आयु</string>
+    <string name="age_0">आयु 0</string>
+    <string name="age_100">आयु 100</string>
+    <string name="emailPopup">ईमेल :</string>
+    <string name="areaPopup">क्षेत्र :</string>
+    <string name="mobilePopup">मोबाइल :</string>
+    <string name="local_addPopup">स्थानीय जोड़ें :</string>
+    <string name="permanent_addPopup">स्थायी ऐड :</string>
+    <string name="pincodePopup">पिन कोड :</string>
+    <string name="birth_datePopup">जन्म दिन :</string>
+    <string name="marriage_datePopup">शादी की तारीख :</string>
+    <string name="wife_nativePopup">पत्नी मूलनिवासी :</string>
+    <string name="office_addPopup">कार्यालय जोड़ें :</string>
+    <string name="birth_timePopup">जन्म समय :</string>
+    <string name="birth_placePopup">जन्म स्थान :</string>
+    <string name="heightPopup">ऊंचाई :</string>
+    <string name="meterPopup">मीटर</string>
+    <string name="weightPopup">वजन :</string>
+    <string name="kgPopup">किलोग्राम</string>
+    <string name="created_datePopup">रचना तिथि :</string>
+    <string name="updated_datePopup">अद्यतन दिनांक :</string>
+    <string name="is_donorPopup">डोनर है?</string>
+    <string name="is_rentedPopup">रेंटेड है?</string>
+    <string name="is_expiredPopup">समाप्त हो चुका है?</string>
+    <string name="is_spectPopup">स्पेक्ट्रम है?</string>
+    <string name="is_shaniPopup">शनि है?</string>
+    <string name="is_mangalPopup">मंगल है?</string>
+    <string name="percentagePopup">प्रतिशत :</string>
+    <string name="_0Popup">0%</string>
+    <string name="_100Popup">100%</string>
+
+
+    <!-- ViewPager Fragment -->
+
+    <string name="mainAction">मुख्य कार्रवाई पर क्लिक किया!</string>
+
+
+    <!-- AddFacts Fragment -->
+    <string name="add_fact">तथ्य जोड़ें</string>
+    <string name="saveAddfacts">सहेजें</string>
+    <string name="event_name">कार्यक्रम नाम</string>
+    <string name="dateAddFacts">दिनांक</string>
+    <string name="event_date">आयोजन दिनांक</string>
+    <string name="place">स्थान</string>
+    <string name="event_place">घटना स्थल</string>
+    <string name="description">विवरण</string>
+
+
+    <!-- AddFacts Fragment -->
+    <string name="add_relative_to_kunjan_shah">Add Relative to Kunjan Shah</string>
+    <string name="you_can_search_total_number_of_family_members_male_female_unmarried">आप परिवार, सदस्य, पुरुष, महिला, अविवाहित की कुल संख्या खोज सकते हैं</string>
+    <string name="total_villages">कुल गाँव</string>
+
+    <!-- Admins Fragment -->
+    <string name="RoleAdmins">भूमिका</string>
+    <string name="regionAdmin">क्षेत्र</string>
+    <string name="wantDisable">निष्क्रिय करना चाहते हैं</string>
+    <string name="profileAdmins">प्रोफाइल!</string>
+    <string name="YesDisable">हां, इसे अक्षम करें!</string>
+    <string name="NoAdmins">नहीं</string>
+
+
+    <!-- BrowseByCity Fragment -->
+    <string name="browse_by_city">शहर से ब्राउज़ करें</string>
+
+    <!-- Calendar Fragment -->
+    <string name="endRecord">रिकॉर्ड्स का अंत</string>
+    <string name="memberCalendar">सदस्य</string>
+
+    <!-- ChangePassword Fragment -->
+    <string name="forgotPin">पिन भूल गए</string>
+    <string name="letMeCheck">मुझे जाँचने दो</string>
+    <string name="Cancel">रद्द करना</string>
+    <string name="pinWillsend">पिन के लिए भेजा जाएगा</string>
+    <string name="change_pin">पिन बदलिए</string>
+    <string name="current_pin">वर्तमान पिन</string>
+    <string name="forgot_pin">पिन भूल गए?</string>
+    <string name="enter_current_pin">करंट पिन डालें</string>
+    <string name="new_pin">नया पिन</string>
+    <string name="enter_new_pin">नया पिन दर्ज करें</string>
+    <string name="confirm_pin">पिन की पुष्टि करें</string>
+    <string name="enter_confirm_pin">पिन की पुष्टि करें</string>
+    <string name="update_pin">पिन अपडेट करें</string>
+
+    <!-- ContactUs Fragment -->
+    <string name="contact_us">संपर्क करें</string>
+    <string name="you_can_contact_us_on_various_platform_and_also_send_your_feedback_with_us">आप विभिन्न प्लेटफॉर्म पर हमसे संपर्क कर सकते हैं और अपनी प्रतिक्रिया भी हमारे साथ भेज सकते हैं</string>
+    <string name="type_your_message">अपना संदेश टाइप करें...</string>
+    <string name="send_now">अभी भेजो</string>
+
+    <!-- DashBoard Fragment -->
+    <string name="DevicDont">आपका उपकरण डॉन \'टी समर्थन भाषण इनपुट</string>
+    <string name="ThisIsSlider">यह स्लाइडर है</string>
+    <string name="search_here">यहाँ ढूँढे...</string>
+    <string name="news_amp_events"><![CDATA[News & Events]]></string>
+    <string name="view_all">सभी देखें</string>
+    <string name="shared_location">साझा स्थान</string>
+    <string name="your_location_is_private">आपका स्थान निजी है</string>
+    <string name="clear">स्पष्ट</string>
+
+    <!-- FamilyDetail Fragment -->
+    <string name="updateDtail">अद्यतन</string>
+    <string name="ExitDetail">बाहर जाएं</string>
+    <string name="EnterDetail">दर्ज</string>
+    <string name="pinFoundDetail">पिन नहीं मिला!</string>
+    <string name="RecoverProfileDetail">जीते गए इस प्रोफ़ाइल को पुनर्प्राप्त करने में सक्षम हो!</string>
+    <string name="YesDeleteDetail">हाँ, इसे हटा दें!</string>
+    <string name="delete">हटाएं</string>
+
+    <!-- Fragment Drawer Fragment -->
+    <string name="Version">संस्करण</string>
+    <string name="vastipatrak">वास्तिपत्रक</string>
+    <string name="settings">समायोजन</string>
+
+    <string name="logout">लॉग आउट</string>
+    <string name="version_1_2">संस्करण1.2</string>
+
+    <!-- MainDetails Fragment -->
+    <string name="homeLocation">घर का स्थान</string>
+    <string name="withGoogleMap">Google मानचित्र के साथ</string>
+    <string name="set">सेट</string>
+    <string name="View">राय</string>
+    <string name="updatingLocation">अपने घर का स्थान अपडेट करना</string>
+    <string name="PleaseWait">कृपया प्रतीक्षा करें...</string>
+    <string name="OnlyFamilyHeadLocation">केवल परिवार का मुखिया घर का स्थान निर्धारित करें</string>
+    <string name="homeDetail">के घर</string>
+
+
+    <!-- MatrimonyDetail Fragment -->
+    <string name="bottomSheet">सबसे निचली शीट</string>
+    <string name="matrimonyDetail">विवाह</string>
+    <string name="interested">इच्छुक</string>
+    <string name="about_meDetails">मेरे बारे में</string>
+    <string name="facebook_profile_url">फेसबुक प्रोफाइल यूआरएल</string>
+    <string name="birthtime">जन्म समय</string>
+    <string name="birthplace">जन्म-स्थान</string>
+    <string name="hh_mm_with_24_hours">HH: 24 घंटे के साथ एम.एम.</string>
+    <string name="meter">मीटर</string>
+    <string name="spectacles">चश्मा</string>
+    <string name="mangal">मंगल</string>
+    <string name="shani">शनि</string>
+
+    <!-- MatriMony Fragment -->
+    <string name="enterName">कृपया नाम दर्ज करें</string>
+    <string name="welcome_to_nmatrimony_section">आपका स्वागत है, वैवाहिक अनुभाग</string>
+    <string name="search_with_given_filter_or_skip_directly">दिए गए फ़िल्टर के साथ खोजें या सीधे छोड़ें</string>
+    <string name="search_nameMatrimony">खोज नाम</string>
+    <string name="search_now">अभी खोजो</string>
+    <string name="skip">छोड़ें</string>
+
+    <!-- MatriMonyList Fragment -->
+    <string name="ExportingList">निर्यात</string>
+    <string name="DetailList">विवरण</string>
+    <string name="EndRecordList">रिकॉर्ड्स का अंत</string>
+    <string name="ageList">आयु :</string>
+    <string name="statusList">स्थिति :</string>
+
+    <!-- NonActives Fragment -->
+    <string name="endNonActives">रिकॉर्ड्स का अंत</string>
+    <string name="noFoundNonActives">कोई रिकॉर्ड नहीं मिला!</string>
+    <string name="Approved">मंजूर की</string>
+    <string name="Restricted">वर्जित</string>
+    <string name="YesApprovenon">हाँ, इसे स्वीकार करें!</string>
+
+    <string name="addressNon">पता</string>
+
+    <!-- PersonalDetail Fragment -->
+    <string name="localAdmin">स्थानीय व्यवस्थापक</string>
+    <string name="SubAdmin">उप व्यवस्थापक</string>
+    <string name="personalDetail">निजी</string>
+    <string name="blood_donorDetail">रक्त दाता?</string>
+    <string name="roleDetails">भूमिका</string>
+    <string name="nativeDetails">देशी</string>
+    <string name="selectDetails">चुनते हैं</string>
+    <string name="birth_dateDetail">जन्म दिन</string>
+    <string name="expire_dateDetails">समाप्त होने की तिथि</string>
+    <string name="blood_groupDetails">रक्त समूह</string>
+    <string name="gotraDetails">गोत्र</string>
+    <string name="educationDetails">शिक्षा</string>
+    <string name="current_activityDetails">वर्तमान कार्य</string>
+    <string name="marital_statusDetails">वैवाहिक स्थिति</string>
+    <string name="marriage_dateDetails">शादी की तारीख</string>
+    <string name="local_address_if_anyDetails">स्थानीय पता (यदि कोई हो)</string>
+
+    <!-- PrivancyPolicy Fragment -->
+    <string name="privacy_policy">गोपनीयता नीति</string>
+    <string name="photoPolicy">तस्वीर</string>
+    <string name="all_communityPolicy">सभी समुदाय</string>
+    <string name="my_communityPolicy">मेरा समाज</string>
+    <string name="hidePolicy">छिपाना</string>
+    <string name="navigate">पथ प्रदर्शन</string>
+
+
+    <!-- PRofessionDetail Fragment -->
+    <string name="kmPDetail">%.2f के.एम.</string>
+    <string name="OfficeLocation">कार्यालय स्थान</string>
+    <string name="WithGoogle">Google मानचित्र के साथ</string>
+    <string name="SetDetail">सेट</string>
+    <string name="ViewDetails">राय</string>
+    <string name="updatingLocationDetail">अपने कार्यालय के स्थान को अद्यतन करना</string>
+    <string name="PleasWaitDetails">कृपया प्रतीक्षा करें...</string>
+    <string name="headDetails">कृपया प्रतीक्षा करें...</string>
+    <string name="SelectedImageDetails">चयनित छवि पुनः प्राप्त नहीं कर सकता</string>
+    <string name="imageDetails">छवि</string>
+    <string name="professionalDetails">पेशेवर</string>
+    <string name="company_namePdetails">कंपनी का नाम</string>
+    <string name="work_categorypDetails">काम की श्रेणी</string>
+    <string name="selectpDetails">चुनते हैं</string>
+    <string name="work_sub_categorypDetails">काम उप श्रेणी</string>
+
+    <!-- SearchByDistance Fragment -->
+    <string name="occupationpDetails">व्यवसाय</string>
+    <string name="website_urlPdetails">वेबसाइट यू.आर. एल</string>
+    <string name="work_detailPdetails">कार्य विस्तार</string>
+    <string name="workPdetails">काम</string>
+    <string name="work_addressPdetails">कार्यालय का पता</string>
+    <string name="SearchDistance">दूरी द्वारा खोजें</string>
+    <string name="homeDistance">घर</string>
+    <string name="Officedistance">कार्यालय</string>
+    <string name="userDetails">उपयोगकर्ता</string>
+    <string name="EndRecordDistance">अभिलेखों का अंत</string>
+    <string name="RecordDistance">अभिलेख मिले :</string>
+
+    <!-- SearchCity Fragment -->
+    <string name="UpdateCity">अद्यतन</string>
+    <string name="EndCity">का अंत</string>
+    <string name="RecordCity">अभिलेख</string>
+    <string name="LocationCity">स्थान सफलतापूर्वक साझा किया गया</string>
+    <string name="ShareCity">को अपना स्थान साझा करें</string>
+    <string name="ProfileCity">प्रोफाइल!</string>
+    <string name="YesCity">हाँ, इसे साझा करें!</string>
+    <string name="ProfileRoleCity">प्रोफाइल रोल को बदल दिया जाएगा</string>
+    <string name="YesPleaseCity">जी कहिये !</string>
+
+    <!-- SearchList Fragment -->
+    <string name="UpdateList">अपडेट किया गया</string>
+    <string name="ExportList">निर्यात</string>
+    <string name="DetailsList">विवरण</string>
+    <string name="NoRecordList">कोई रिकॉर्ड नहीं मिला!</string>
+    <string name="RecordList">अभिलेख मिले :</string>
+    <string name="WantDisable">निष्क्रिय करना चाहते हैं</string>
+    <string name="Proffiles">प्रोफाइल !</string>
+
+    <string name="ProfileList">प्रोफाइल रोल को बदल दिया जाएगा</string>
+    <string name="YesPlList">जी कहिये!</string>
+
+    <!-- ShareEvent Fragment -->
+    <string name="EventRequired">घटना शीर्षक आवश्यक है</string>
+    <string name="EventAddress">घटना का पता आवश्यक है</string>
+    <string name="EnetDescription">घटना का विवरण आवश्यक है</string>
+    <string name="StartDate">प्रारंभ तिथि आवश्यक है</string>
+    <string name="EndDate">अंतिम तिथि आवश्यक है</string>
+    <string name="StartTime">प्रारंभ समय की आवश्यकता है</string>
+    <string name="EndTime">अंत समय की आवश्यकता है</string>
+    <string name="Creating">एक घटना बनाना</string>
+
+    <string name="SelectTime">समय का चयन करें</string>
+    <string name="share_event">घटना साझा करें</string>
+    <string name="event_title">कार्यक्रम का शीर्षक</string>
+    <string name="event_address">घटना का पता </string>
+    <string name="event_description">घटना विवरण</string>
+    <string name="event_date_amp_time"><![CDATA[Event Date & Time]]></string>
+    <string name="startEvent">शुरू</string>
+    <string name="timeEvent">समय</string>
+    <string name="endEvent">समाप्त</string>
+
+    <string name="upload_imagesEvent">तश्वीरें अपलोड करो</string>
+    <string name="add_youtube_urlsEvent">ट्यूब यूआरएल जोड़ें</string>
+    <string name="create_eventEvent">कार्यक्रम बनाएँ</string>
+    <string name="share_nowEvent">अब साझा करें</string>
+
+    <!-- SmartFilter Fragment -->
+    <string name="endrecord">रिकॉर्ड्स का अंत</string>
+    <string name="yesDisable">हां, इसे अक्षम करें!</string>
+    <string name="YesPFilter">जी कहिये!</string>
+    <string name="profileRole">हां, कृपया प्रोफाइल रोल को बदल दिया जाएगा</string>
+
+    <!-- Statistic Fragment -->
+    <string name="samaj_statistics">समाज सांख्यिकी</string>
+    <string name="search_village_here">यहां विलेज सर्च करें</string>
+    <string name="unmarried_female">अविवाहित स्त्री</string>
+
+
+</resources>

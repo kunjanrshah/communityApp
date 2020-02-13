@@ -168,7 +168,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
                         if (it == 0) {
                             createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
                             Handler().post(Runnable {
-                                Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                                Utility.startSweetProgress(activity, getString(R.string.ExportingList)+"${member.firstName}" +getString(R.string.DetailList), getString(R.string.please_wait))
                             })
                             Handler().postDelayed({
                                 Utility.hideSweetProgress()
@@ -392,13 +392,13 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
 
                 if (response.totalRecords <= AppController.mApplication.length) {
                     DashboardActivity.stop = true
-                    Snackbar.make(binding.listMatrimony, "End of Records", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(binding.listMatrimony, getString(R.string.EndRecordList), Snackbar.LENGTH_LONG).show()
                 }
                 adapter.notifyDataSetChanged()
             }else {
                 tvRecords.visibility = View.GONE
                 DashboardActivity.stop = true
-                Snackbar.make(binding.listMatrimony, "No records found!", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.listMatrimony, getString(R.string.EndRecordList), Snackbar.LENGTH_LONG).show()
             }
         }else{
             tvRecords.visibility = View.GONE

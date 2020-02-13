@@ -340,7 +340,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
             val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
             committeeViewModel.getLocalCommunity(Integer.parseInt(loginMember.subCommunityId)).observeForever {
                 val list=ArrayList<String>()
-                list.add(getString(R.string.Select))
+                list.add(getString(R.string.select))
                 list.addAll(it)
                 spLocalCommunity.setItems(list.toTypedArray())
                 spLocalCommunity.setExpandTint(R.color.black)
@@ -348,7 +348,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
 
             committeeViewModel.getCommitteeList().observeForever {
                 val list=ArrayList<String>()
-                list.add(getString(R.string.Select))
+                list.add(getString(R.string.select))
                 list.addAll(it)
                 spCommittee.setItems(list.toTypedArray())
                 spCommittee.setExpandTint(R.color.black)
@@ -356,7 +356,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
 
             committeeViewModel.getDesignation().observeForever {
                 val list=ArrayList<String>()
-                list.add(getString(R.string.Select))
+                list.add(getString(R.string.select))
                 list.addAll(it)
                 spDesignation.setItems(list.toTypedArray())
                 spDesignation.setExpandTint(R.color.black)
@@ -400,7 +400,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         val jsonObject=JSONObject()
         Coroutines.io{
             val lcomm=spLocalCommunity.text.toString().trim()
-            if(!lcomm.isNullOrEmpty() && lcomm != getString(R.string.Select)){
+            if(!lcomm.isNullOrEmpty() && lcomm != getString(R.string.select)){
                 val id=committeeViewModel.getLocalCommunityName(lcomm)
                 jsonObject.put(getString(R.string.local_community_id),id)
                 Coroutines.main {
@@ -408,7 +408,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                 }
             }
             val designation=spDesignation.text.toString().trim()
-            if(!designation.isNullOrEmpty() && designation != getString(R.string.Select)){
+            if(!designation.isNullOrEmpty() && designation != getString(R.string.select)){
                 Coroutines.main {
                     txtDesignation.text=designation
                 }
@@ -417,7 +417,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                 jsonObject.put(getString(R.string.designation_id),id)
             }
             val commitee=spCommittee.text.toString().trim()
-            if(!commitee.isNullOrEmpty() && commitee != getString(R.string.Select)){
+            if(!commitee.isNullOrEmpty() && commitee != getString(R.string.select)){
 
                 Coroutines.main {
                     txtCommittee.text=commitee

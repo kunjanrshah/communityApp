@@ -188,12 +188,12 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
                 if (response.totalRecords <= AppController.mApplication.length) {
                     DashboardActivity.stop = true
-                    Snackbar.make(llRoot, "End of Records", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(llRoot, getString(R.string.endNonActives), Snackbar.LENGTH_LONG).show()
                 }
             } else {
                 tvCount.visibility = View.GONE
                 DashboardActivity.stop = true
-                Snackbar.make(llRoot, "No records found!", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(llRoot, getString(R.string.noFoundNonActives), Snackbar.LENGTH_LONG).show()
             }
         } else {
             tvCount.visibility = View.GONE
@@ -231,12 +231,12 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
     override suspend fun getFailure(message: String) {
         Coroutines.main {
             if(message.contains("success")){
-                Utility.startSweetDialog(activity,SweetAlertDialog.SUCCESS_TYPE,"Approved","${selectedItems.size()} Profiles approved")
+                Utility.startSweetDialog(activity,SweetAlertDialog.SUCCESS_TYPE,getString(R.string.Approved),"${selectedItems.size()} Profiles approved")
                 deleteMessages()
                 clearSelections()
                 actionMode?.finish()
             }else{
-                Utility.startSweetDialog(activity,SweetAlertDialog.ERROR_TYPE,"Restricted",message)
+                Utility.startSweetDialog(activity,SweetAlertDialog.ERROR_TYPE,getString(R.string.Restricted),message)
             }
         }
     }
@@ -437,9 +437,9 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
-                                .setContentText("Approve ${selectedItemPositions.size} Profiles!")
-                                .setConfirmText("Yes,Approve it!")
-                                .setCancelText("No")
+                                .setContentText( getString(R.string.Approved)+"${selectedItemPositions.size}"+" Profiles!")
+                                .setConfirmText(getString(R.string.YesApprovenon))
+                                .setCancelText(getString(R.string.no))
                                 .setConfirmClickListener {
                                     it.dismiss()
 
@@ -457,7 +457,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                                     jsonObject.put(getString(R.string.idList), Ids)
                                     val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
 
-                                    Utility.startSweetProgress(activity,"Restricted",getString(R.string.loading))
+                                    Utility.startSweetProgress(activity,getString(R.string.Restricted),getString(R.string.loading))
                                     roomMemberViewModel.changeStatus(updated)
                                 }
                                 .setCancelClickListener {

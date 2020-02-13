@@ -46,9 +46,8 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
     var numberOfLines=5
     override val kodein by kodein()
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_details, container, false)
         profileDetailViewModel = ViewModelProviders.of(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
@@ -128,10 +127,10 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
         binding.llHome.setOnClickListener {
             SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                    .setTitleText("Home Location")
-                    .setContentText("With Google Map")
-                    .setConfirmText("Set")
-                    .setCancelText("View")
+                    .setTitleText(getString(R.string.homeLocation))
+                    .setContentText(getString(R.string.withGoogleMap))
+                    .setConfirmText(getString(R.string.set))
+                    .setCancelText(getString(R.string.View))
                     .setCustomImage(R.drawable.ic_app)
                     .setConfirmClickListener {
                         it.dismiss()
@@ -145,17 +144,17 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
                             val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
 
-                            Utility.startSweetProgress(activity, "Updating your home location", "Please wait...")
+                            Utility.startSweetProgress(activity, getString(R.string.updatingLocation), getString(R.string.PleaseWait))
                             profileDetailViewModel.updateProfile(profile, true)
                         }else{
-                            Utility.displaySnackBarWithBottomMargin(ll_main,"Only Family Head Set the Home Location")
+                            Utility.displaySnackBarWithBottomMargin(ll_main,getString(R.string.OnlyFamilyHeadLocation))
                         }
 
 
                     }
                     .setCancelClickListener {
                         it.dismiss()
-                        Utility.showDirections(activity,member.homeLat.toDouble(),member.homeLng.toDouble(),"${member.firstName}'s Home")
+                        Utility.showDirections(activity,member.homeLat.toDouble(),member.homeLng.toDouble(),"${member.firstName}"+getString(R.string.homeDetail))
                     }
                     .show()
         }
@@ -191,7 +190,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             Coroutines.main {
                val cities=  profileDetailViewModel.getCityNamebyState(profileDetailViewModel.selectedStateId)
                 binding.spCity.clear()
-                binding.spCity.setText("Select")
+                binding.spCity.setText(getString(R.string.select))
                 profileDetailViewModel.selectedCityId=0
                 binding.spCity.setItems(cities.toTypedArray())
                 binding.spCity.setExpandTint(R.color.black)

@@ -160,7 +160,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     }
                 }
 
-                holder.tvUpdate.text = "updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                holder.tvUpdate.text = getString(R.string.UpdateCity) + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
 
                 holder.boomMenuButton.clearBuilders()
 
@@ -335,13 +335,13 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
                 if (data.totalHead <= AppController.mApplication.length) {
                     DashboardActivity.stop = true
-                    Snackbar.make(binding.llParent, "End of $alpha Records", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(binding.llParent, getString(R.string.EndCity)+ "$alpha"+getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
                 }
 
             } else {
                 DashboardActivity.stop = true
                 //rootView!!.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
-                Snackbar.make(binding.llParent, "End of $alpha Records", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.llParent, getString(R.string.EndCity)+ "$alpha"+getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
             }
         } else {
             DashboardActivity.stop = false
@@ -365,7 +365,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 Guru.putString(getString(R.string.loginMember), Gson().toJson(response.member))
                 adapter.notifyDataSetChanged()
             }
-            binding.llParent.snackbar("Location shared successfully", Snackbar.LENGTH_LONG)
+            binding.llParent.snackbar(getString(R.string.LocationCity), Snackbar.LENGTH_LONG)
         }
     }
 
@@ -591,9 +591,9 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
-                                .setContentText("Share your location to ${selectedItemPositions.size} Profiles!")
-                                .setConfirmText("Yes,Share it!")
-                                .setCancelText("No")
+                                .setContentText(getString(R.string.ShareCity)+" ${selectedItemPositions.size}"+getString(R.string.ProfileCity))
+                                .setConfirmText(getString(R.string.YesCity))
+                                .setCancelText(getString(R.string.no))
                                 .setConfirmClickListener {
                                     it.dismiss()
                                     val jsonObject = JSONObject()
@@ -635,9 +635,9 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
-                                .setContentText("want to disable ${selectedItemPositions.size} Profiles!")
-                                .setConfirmText("Yes,Disable it!")
-                                .setCancelText("No")
+                                .setContentText(getString(R.string.ShareCity)+" ${selectedItemPositions.size}"+getString(R.string.ProfileCity))
+                                .setConfirmText(getString(R.string.YesCity))
+                                .setCancelText(getString(R.string.no))
                                 .setConfirmClickListener {
                                     it.dismiss()
 
@@ -752,9 +752,9 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         val selectedItemPositions = getSelectedItems()
         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText(getString(R.string.you_sure))
-                .setContentText("${selectedItemPositions.size} Profiles Role will be changed to '$role'!")
-                .setConfirmText("Yes,Please!")
-                .setCancelText("No")
+                .setContentText("${selectedItemPositions.size}"+ getString(R.string.ProfileRoleCity) +"'$role'!")
+                .setConfirmText(getString(R.string.YesPleaseCity))
+                .setCancelText(getString(R.string.no))
                 .setConfirmClickListener {
                     it.dismiss()
 

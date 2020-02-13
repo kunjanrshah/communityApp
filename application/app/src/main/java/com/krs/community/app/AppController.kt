@@ -3,9 +3,12 @@ package com.krs.community.app
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
 import android.graphics.Typeface
+import android.net.ConnectivityManager
+import android.os.Build
 import android.os.Handler
 import android.os.StrictMode
 import androidx.core.content.res.ResourcesCompat
@@ -18,11 +21,9 @@ import com.github.squti.guru.GuruConfig
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.model.Member
 import com.krs.community.repositories.*
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.retrofit.RetrofitBase
@@ -49,9 +50,12 @@ class AppController : Application(), KodeinAware{
     lateinit var typeface: Typeface
     lateinit var typeface_bold: Typeface
     lateinit var retrofitBase: RetrofitBase
+    private var mNetworkReceiver: BroadcastReceiver? = null
     var start: Int = 0
+    var internet: Int = 0
     val length: Int = 30
     val mHandler:Handler = Handler()
+
     companion object {
         val TAG = AppController::class.java.simpleName
         lateinit var mApplication: AppController
@@ -121,6 +125,7 @@ class AppController : Application(), KodeinAware{
         super.onCreate()
 
         mApplication = this
+
         FacebookSdk.sdkInitialize(applicationContext);
 
         typeface = ResourcesCompat.getFont(applicationContext, R.font.montserrat_regular)!!
@@ -152,7 +157,16 @@ class AppController : Application(), KodeinAware{
                 .requestEmail().build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        }
+
         startRepeatingTask()
+
     }
 
     override fun onTerminate() {
@@ -178,6 +192,7 @@ class AppController : Application(), KodeinAware{
         }
     }
 
+
     fun setConnectivityListener(listener: ConnectivityReceiver.ConnectivityReceiverListener) {
         ConnectivityReceiver.connectivityReceiverListener = listener
     }
@@ -185,4 +200,5 @@ class AppController : Application(), KodeinAware{
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(LocaleHelper.onAttach(base, "en"))
     }
+
 }

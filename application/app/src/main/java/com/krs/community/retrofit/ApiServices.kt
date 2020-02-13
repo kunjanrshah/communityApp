@@ -134,8 +134,6 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_LOGIN)
     suspend fun getUserLogin(@Body request: AppConstants.LoginRequest): Response<LoginResponse>
 
-
-
     @POST(AppConstants.UrlPath.GET_CHANGE_PASS)
     suspend fun changePassword(@Body request: JsonObject): Response<LoginResponse>
 

@@ -108,7 +108,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                     }
                 } else if (key.equals(_context.resources.getString(R.string.ss_sp_gender), ignoreCase = true)) {
                     if (value.isNotEmpty() && !value.equals(_context.getString(R.string.ss_gender), ignoreCase = true)) {
-                        val lstGender = arrayOf("Male", "Female")
+                        val lstGender = arrayOf(_context.getString(R.string.male), _context.getString(R.string.female))
                         viewHolder.spGender.setItems(lstGender)
                         viewHolder.spGender.setExpandTint(R.color.black)
                         viewHolder.spGender.setText(value1)
@@ -477,11 +477,11 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                     jsonArray.put(jsonObject)
                     Guru.putString(_context.getString(R.string.list_filter),jsonArray.toString())
                 }else{
-                    Toast.makeText(_context, "Filter not saved!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(_context, _context.getString(R.string.filterNotsaved), Toast.LENGTH_LONG).show()
                 }
 
             } else {
-                Toast.makeText(_context, "No Filter found!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(_context, _context.getString(R.string.noFilterFound), Toast.LENGTH_SHORT).show()
             }
         }
         return convertView!!

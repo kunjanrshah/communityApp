@@ -1,5 +1,6 @@
 package com.krs.community.activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -109,7 +110,7 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
 
     private fun onInitView(){
         mBinding=  DataBindingUtil.setContentView(this,R.layout.activity_favorite)
-        this.onInitToolbar(mBinding.toolbar,"Search",R.drawable.ic_arrow_back_white_24dp)
+        this.onInitToolbar(mBinding.toolbar,getString(R.string.Search),R.drawable.ic_arrow_back_white_24dp)
 
         mBinding.searchLiveo.with(this).removeMinToSearch().removeSearchDelay().build()
         mBinding.recyclerView.setHasFixedSize(true)
@@ -193,6 +194,7 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
             return ViewHolder(view)
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
             val member = mMembers[viewHolder.adapterPosition]
             viewHolder.lstFound.visibility=View.GONE
@@ -220,7 +222,7 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
                 viewHolder.tvRole.text = resources.getString(R.string.Member)
             }
             if (!member.updatedDt.isNullOrEmpty()) {
-                viewHolder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                viewHolder.tvUpdate.text = getString(R.string.Updated) + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
             }
 
             viewHolder.boomMenuButton.clearBuilders()
@@ -238,8 +240,8 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
 
                     } else if (it == 2) {
                         if(!member.mobile.isNullOrEmpty()){
-                            val toNumber = "+91" + member.mobile
-                            val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
+                            val toNumber = getString(R.string.number) + member.mobile
+                            val text = getString(R.string.InstallApp)+"\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
                             Utility.sendWhatsappMessage(this@FavoriteProfileActivity,toNumber,text)
                         }
 
@@ -284,7 +286,7 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
 
             viewHolder.tvMobile.setOnClickListener {
                 val intent = Intent(Intent.ACTION_DIAL)
-                val str = "tel:" + viewHolder.tvMobile.text
+                val str = getString(R.string.tel) + viewHolder.tvMobile.text
                 intent.data = Uri.parse(str)
                 startActivity(intent)
             }

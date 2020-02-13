@@ -154,7 +154,7 @@
 
     <!--Choose Language screen -->
     <string name="choose_language">Change Language</string>
-    <string name="login">Login</string>
+
     <string name="register">Register</string>
 
     <!-- Login Screen -->
@@ -182,7 +182,6 @@
     <string name="error_msg_get_data_social_site">Not able to get your details from Social account</string>
     <string name="update_profile_photo">Do you want to update Profile Photo?</string>
     <string name="yes">Yes</string>
-    <string name="no">No</string>
     <string name="invalid_username_password">Invalid username or hashkey</string>
     <string name="loading">Working...</string>
     <string name="incorrect" translatable="false">incorrect</string>
@@ -221,6 +220,8 @@
     <string name="professonal">Professional details</string>
     <string name="_matrimony">Matrimony details</string>
     <string name="some_more">Some more</string>
+
+
     <string name="ss_head_name" translatable="false">@string/head_name</string>
     <string name="ss_family_code" translatable="false">@string/member_code</string>
     <string name="ss_mem_name" translatable="false">@string/first_name</string>
@@ -411,7 +412,7 @@
     <string name="head_name" translatable="false">head_name</string>
     <string name="min_age" translatable="false">min_age</string>
     <string name="max_age" translatable="false">max_age</string>
-    <string name="Select" translatable="false">Select</string>
+
 
     <string name="base_url_logo" translatable="false">https://muslimghanchisamaj.in/uploads/logos/</string>
     <string name="base_url_thumb" translatable="false">https://muslimghanchisamaj.in/uploads/users/thumb/</string>
@@ -468,4 +469,641 @@
     <string name="enter_pin">Please enter your PIN</string>
     <string name="went_wrong">Something went wrong!</string>
 
+
+    <!-- Login Sccren -->
+
+    <string name="welcome">Welcome !</string>
+    <string name="_10_digit_number">10 digit number</string>
+    <string name="_4_digit_otp_will_be_sent_via_sms_to_verify_your_mobile_number">4 digit OTP will be sent via SMS to verify your mobile number!</string>
+    <string name="do_you_have_an_account">Do you have an account?</string>
+    <string name="phoneNumber">Phone number is required</string>
+    <string name="pleaseEnterValidPhone">Please enter a valid phone</string>
+    <string name="Authenticationfailed">Authentication Failed.</string>
+    <string name="SmsExternalStorage">Permission denied to SMS your External storage</string>
+
+
+    <!-- Register Sccren -->
+    <string name="code">Code</string>
+    <string name="select_sub_community">Select Sub Community</string>
+    <string name="select_local_community">Select Local Community</string>
+    <string name="RegisterFamily">Registering your family</string>
+    <string name="FetchingCity">Fetching City</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="youtubeVideo">Youtube Video</string>
+    <string name="HowToRegister">How to Register?</string>
+    <string name="hoeRegister">how_register</string>
+    <string name="RegisterButton">Register Button</string>
+    <string name="ClickToRegister">Click here to Register</string>
+    <string name="FillUpYourDetail">Fill up your details</string>
+    <string name="btnRegister">btn_register</string>
+    <string name="Register">Register</string>
+    <string name="RequestAdmin">Request sent to your admin</string>
+    <string name="CannotImage">Cannot retrieve selected image</string>
+
+
+    <!-- DashBoard Sccren -->
+    <string name="home">Home</string>
+    <string name="Calendar">Calendar</string>
+    <string name="onCentreButtonLongClick">onCentreButtonLongClick</string>
+    <string name="MoveProfile">Move profile detail</string>
+    <string name="LocationOff">Location Off</string>
+    <string name="LocationOn">Location On</string>
+
+
+    <!-- FamilyTreeDetail Sccren -->
+    <string name="TimeLine">TimeLine</string>
+
+
+    <string name="SetOptionall">setOptionalIconsVisible</string>
+
+
+    <!-- FamilyTreeList Sccren -->
+    <string name="GotoFamilyTree">Go to Family tree</string>
+    <string name="RelationShip">Relationship</string>
+    <string name="FirstName">First name</string>
+    <string name="LastAdded">Last added</string>
+    <string name="serOptinall">setOptionalIconsVisible</string>
+    <string name="AddRelative">Add relative</string>
+    <string name="ViewTree">view in tree</string>
+    <string name="ProfileDetail">Profile Detail</string>
+    <string name="welcome_to">Welcome To,</string>
+    <string name="shah_family_tree">Shah Family tree</string>
+    <string name="_5_people">5 People</string>
+    <string name="find_person">Find Person...</string>
+
+    <!-- FavoriteProfile Sccren -->
+    <string name="Search">Search</string>
+    <string name="Updated">Updated</string>
+    <string name="InstallApp">Install your Community App</string>
+    <string name="number">+91</string>
+    <string name="tel">tel:</string>
+
+
+    <!-- PinView Sccren -->
+    <string name="EnterThePin">Enter the PIN</string>
+    <string name="enter">Enter</string>
+    <string name="Exit">Exit</string>
+
+
+    <!-- ProfileDetail Sccren -->
+    <string name="Finding">Finding</string>
+    <string name="user">User</string>
+    <string name="locationOff">\'s location is off</string>
+    <string name="updateprofile">Update Profile</string>
+    <string name="update">Update</string>
+    <string name="no">No</string>
+    <string name="updatingProfile">Updating your profile</string>
+    <string name="pleaseWait">Please wait...</string>
+    <string name="EnterFirstName">Enter your FirstName</string>
+    <string name="selectYourLastName">Select your LastName</string>
+    <string name="SelectYourGender">Select your Gender</string>
+    <string name="SelectRelation">Select your Relation</string>
+    <string name="Distance">Distance</string>
+    <string name="Profile">\'s Profile</string>
+
+    <string name="add">Add</string>
+    <string name="newProfile">New Profile</string>
+
+    <string name="Success">Success</string>
+    <string name="profileUpdate">Profile updated!</string>
+    <string name="locationUpdate">Location updated</string>
+
+
+
+    <string name="selectedImage">Cannot retrieve selected image</string>
+    <string name="image">Image</string>
+
+    <string name="my_profile">My Profile</string>
+
+    <string name="view_family">View Family</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+
+
+    <string name="save_amp_next"><![CDATA[Save & Next]]></string>
+
+
+    <!-- QRCode Sccren -->
+    <string name="share_qr_code">SHARE QR CODE</string>
+    <string name="you_can_share_this_qr_code_to_other_you_can_scan_qr_code_by_camera_and_gallery">you can share this QR code to other, you can scan QR code by Camera and Gallery</string>
+    <string name="pratik_soni">PRATIK SONI</string>
+    <string name="_9427051418">9427051418</string>
+    <string name="ShareQrCode">Share QR Code</string>
+    <string name="qr_code_gallery">QR Code Gallery</string>
+
+
+    <!-- AtoZ Bottom Adapter -->
+    <string name="sorting_by_a_z">Sorting by A-Z</string>
+    <string name="a">A</string>
+    <string name="b">B</string>
+    <string name="c">C</string>
+    <string name="d">D</string>
+    <string name="e">E</string>
+    <string name="f">F</string>
+    <string name="g">G</string>
+    <string name="h">H</string>
+    <string name="i">I</string>
+    <string name="j">J</string>
+    <string name="k">K</string>
+    <string name="l">L</string>
+    <string name="m">M</string>
+    <string name="n">N</string>
+    <string name="o">O</string>
+    <string name="p">P</string>
+    <string name="q">Q</string>
+    <string name="r">R</string>
+    <string name="s">S</string>
+    <string name="t">T</string>
+    <string name="u">U</string>
+    <string name="v">V</string>
+    <string name="w">W</string>
+    <string name="x">X</string>
+    <string name="y">Y</string>
+    <string name="z">Z</string>
+    <string name="all">ALL</string>
+    <string name="Selected">Selected \'A\'</string>
+    <string name="SelectedB">Selected \'B\'</string>
+    <string name="SelectedC">Selected \'C\'</string>
+    <string name="SelecetdD">Selected \'D\'</string>
+    <string name="SelecetdE">Selected \'E\'</string>
+    <string name="SelecetdF">Selected \'F\'</string>
+    <string name="SelectedG">Selected \'G\'</string>
+    <string name="SelecetdH">Selected \'H\'</string>
+    <string name="SelecetdeI">Selected \'I\'</string>
+    <string name="SelecetedJ">Selected \'J\'</string>
+    <string name="SelecetedK">Selected \'K\'</string>
+    <string name="SelectedL">Selected \'L\'</string>
+    <string name="SelectedM">Selected \'M\'</string>
+    <string name="SelectedN">Selected \'N\'</string>
+    <string name="SelectedO">Selected \'O\'</string>
+    <string name="SelectedP">Selected \'P\'</string>
+    <string name="SelectedQ">Selected \'Q\'</string>
+    <string name="SelectedR">Selected \'R\'</string>
+    <string name="SelectedS">Selected \'S\'</string>
+    <string name="SelectedT">Selected \'T\'</string>
+    <string name="SelectedU">Selected \'U\'</string>
+    <string name="SelectedV">Selected \'V\'</string>
+    <string name="SelectedW">Selected \'W\'</string>
+    <string name="SelectedX">Selected \'X\'</string>
+    <string name="SelectedY">Selected \'Y\'</string>
+    <string name="SelectedZ">Selected \'Z\'</string>
+    <string name="SelectedAll">Selected \'ALL\'</string>
+
+    <!-- Location Adapter -->
+    <string name="Private">Private</string>
+    <string name="location">Location</string>
+
+
+
+    <string name="office">Office</string>
+
+    <!-- MyRole Adapter -->
+
+
+
+    <string name="subAdmin">Sub Admin</string>
+    <string name="my_role">My Role</string>
+    <string name="select_role">Select Role</string>
+    <string name="change_role">Change Role</string>
+
+
+    <!-- SmartFilter Adapter -->
+    <string name="smart_search">Smart Search</string>
+    <string name="click">Click</string>
+    <string name="icon_to_search_members">Icon to Search Members</string>
+
+    <!-- SmartPopUp Adapter -->
+    <string name="filterNotsaved">Filter not saved!</string>
+    <string name="noFilterFound">No Filter found!</string>
+    <string name="filter_name">Filter Name</string>
+    <string name="filter_1">Filter 1</string>
+    <string name="save">Save</string>
+    <string name="apply">Apply</string>
+    <string name="head">Head :</string>
+    <string name="membar">Member :</string>
+    <string name="lastname">LastName :</string>
+    <string name="samaj">Samaj :</string>
+    <string name="samajSecond">Samaj</string>
+    <string name="genderPopup">Gender :</string>
+    <string name="GenderSecondPopup">Gender</string>
+    <string name="maritalPopup">Marital :</string>
+    <string name="maritalSecondPopup">Marital</string>
+    <string name="nativePopup">Native :</string>
+    <string name="nativeSecondPopo">Native</string>
+    <string name="cityPopup">City :</string>
+    <string name="citySecondPopup">City</string>
+    <string name="statePopup">State :</string>
+    <string name="stateSecondPopup">State</string>
+    <string name="educationPopup">Education :</string>
+    <string name="educationSecondPopop">Education</string>
+    <string name="gotraPopup">Gotra :</string>
+    <string name="gotraSecondPopup">Gotra</string>
+    <string name="bgSecond">BG :</string>
+    <string name="bgSecondpopup">BG</string>
+    <string name="categoryPopup">Category :</string>
+    <string name="categorySecondPopup">Category</string>
+    <string name="sub_categoryPopup">Sub Category :</string>
+    <string name="sub_categorySecondPopup">Sub Category</string>
+    <string name="occupationPopup">Occupation :</string>
+    <string name="occupationSecondPopup">Occupation</string>
+    <string name="activityPopup">Activity :</string>
+    <string name="activity">Activity</string>
+    <string name="age">Age</string>
+    <string name="age_0">Age 0</string>
+    <string name="age_100">Age 100</string>
+    <string name="emailPopup">Email:</string>
+    <string name="areaPopup">Area :</string>
+    <string name="mobilePopup">Mobile:</string>
+    <string name="local_addPopup">Local Add:</string>
+    <string name="permanent_addPopup">Permanent Add:</string>
+    <string name="pincodePopup">Pincode :</string>
+    <string name="birth_datePopup">Birth Date :</string>
+    <string name="marriage_datePopup">Marriage Date :</string>
+    <string name="wife_nativePopup">Wife Native :</string>
+    <string name="office_addPopup">Office Add :</string>
+    <string name="birth_timePopup">Birth Time :</string>
+    <string name="birth_placePopup">Birth Place :</string>
+    <string name="heightPopup">Height :</string>
+    <string name="meterPopup">Meter</string>
+    <string name="weightPopup">Weight :</string>
+    <string name="kgPopup">Kg</string>
+    <string name="created_datePopup">Created Date :</string>
+    <string name="updated_datePopup">Updated Date :</string>
+    <string name="is_donorPopup">is Donor?</string>
+    <string name="is_rentedPopup">is Rented?</string>
+    <string name="is_expiredPopup">is Expired?</string>
+    <string name="is_spectPopup">is Spect?</string>
+    <string name="is_shaniPopup">is Shani?</string>
+    <string name="is_mangalPopup">is Mangal?</string>
+    <string name="percentagePopup">Percentage :</string>
+    <string name="_0Popup">0%</string>
+    <string name="_100Popup">100%</string>
+
+
+    <!-- ViewPager Fragment -->
+
+    <string name="mainAction">Main action clicked!</string>
+
+
+    <!-- AddFacts Fragment -->
+    <string name="add_fact">Add Fact</string>
+    <string name="saveAddfacts">Save</string>
+    <string name="event_name">Event Name</string>
+    <string name="dateAddFacts">Date</string>
+    <string name="event_date">Event Date</string>
+    <string name="place">Place</string>
+    <string name="event_place">Event Place</string>
+    <string name="description">Description</string>
+
+
+    <!-- AddFacts Fragment -->
+    <string name="add_relative_to_kunjan_shah">Add Relative to Kunjan Shah</string>
+    <string name="you_can_search_total_number_of_family_members_male_female_unmarried">You can search Total number of family, Members, Male, Female, Unmarried</string>
+    <string name="total_villages">Total Villages</string>
+
+    <!-- Admins Fragment -->
+    <string name="RoleAdmins">Role</string>
+    <string name="regionAdmin">Region</string>
+    <string name="wantDisable">want to disable</string>
+    <string name="profileAdmins">Profiles!</string>
+    <string name="YesDisable">Yes,Disable it!</string>
+    <string name="NoAdmins">No</string>
+
+
+    <!-- BrowseByCity Fragment -->
+    <string name="browse_by_city">Browse by city</string>
+
+    <!-- Calendar Fragment -->
+    <string name="endRecord">End of Records</string>
+    <string name="memberCalendar">Member</string>
+
+    <!-- ChangePassword Fragment -->
+    <string name="forgotPin">Forgot PIN</string>
+    <string name="letMeCheck">Let me check</string>
+    <string name="Cancel">Cancel</string>
+    <string name="pinWillsend">PIN will be sent to</string>
+    <string name="change_pin">Change PIN</string>
+    <string name="current_pin">Current PIN</string>
+    <string name="forgot_pin">Forgot PIN?</string>
+    <string name="enter_current_pin">Enter Current PIN</string>
+    <string name="new_pin">New PIN</string>
+    <string name="enter_new_pin">Enter New PIN</string>
+    <string name="confirm_pin">Confirm PIN</string>
+    <string name="enter_confirm_pin">Enter Confirm PIN</string>
+    <string name="update_pin">Update PIN</string>
+
+    <!-- ContactUs Fragment -->
+    <string name="contact_us">Contact Us</string>
+    <string name="you_can_contact_us_on_various_platform_and_also_send_your_feedback_with_us">You can contact us on various platform and also send your feedback with us</string>
+    <string name="type_your_message">Type Your Message...</string>
+    <string name="send_now">Send Now</string>
+
+    <!-- DashBoard Fragment -->
+    <string name="DevicDont">Your Device Don\'t Support Speech Input</string>
+    <string name="ThisIsSlider">This is slider</string>
+    <string name="search_here">Search Here...</string>
+    <string name="news_amp_events"><![CDATA[News & Events]]></string>
+    <string name="view_all">View All</string>
+    <string name="shared_location">Shared Location</string>
+    <string name="your_location_is_private">Your location is private</string>
+    <string name="clear">Clear</string>
+
+    <!-- FamilyDetail Fragment -->
+    <string name="updateDtail">updated</string>
+    <string name="ExitDetail">Exit</string>
+    <string name="EnterDetail">Enter</string>
+    <string name="pinFoundDetail">PIN not found!</string>
+    <string name="RecoverProfileDetail">Won\'t be able to recover this Profile!</string>
+    <string name="YesDeleteDetail">Yes,delete it!</string>
+    <string name="delete">Delete</string>
+
+    <!-- Fragment Drawer Fragment -->
+    <string name="Version">Version</string>
+    <string name="vastipatrak">Vastipatrak</string>
+    <string name="settings">Settings</string>
+
+    <string name="logout">Logout</string>
+    <string name="version_1_2">Version 1.2</string>
+
+    <!-- MainDetails Fragment -->
+    <string name="homeLocation">Home Location</string>
+    <string name="withGoogleMap">With Google Map</string>
+    <string name="set">Set</string>
+    <string name="View">View</string>
+    <string name="updatingLocation">Updating your home location</string>
+    <string name="PleaseWait">Please wait...</string>
+    <string name="OnlyFamilyHeadLocation">Only Family Head Set the Home Location</string>
+    <string name="homeDetail">\'s Home</string>
+
+
+    <!-- MatrimonyDetail Fragment -->
+    <string name="bottomSheet">bottom_sheet</string>
+    <string name="matrimonyDetail">Matrimony</string>
+    <string name="interested">Interested</string>
+    <string name="about_meDetails">About Me</string>
+    <string name="facebook_profile_url">Facebook Profile URL</string>
+    <string name="birthtime">BirthTime</string>
+    <string name="birthplace">BirthPlace</string>
+    <string name="hh_mm_with_24_hours">HH:MM with 24 Hours</string>
+    <string name="meter">Meter</string>
+    <string name="spectacles">Spectacles</string>
+    <string name="mangal">Mangal</string>
+    <string name="shani">Shani</string>
+
+    <!-- MatriMony Fragment -->
+    <string name="enterName">Enter name please</string>
+    <string name="welcome_to_nmatrimony_section">Welcome To, Matrimony Section</string>
+    <string name="search_with_given_filter_or_skip_directly">Search with given filter or skip directly</string>
+    <string name="search_nameMatrimony">Search Name</string>
+    <string name="search_now">Search Now</string>
+    <string name="skip">Skip</string>
+
+    <!-- MatriMonyList Fragment -->
+    <string name="ExportingList">Exporting</string>
+    <string name="DetailList">\'s Details</string>
+    <string name="EndRecordList">End of Records</string>
+    <string name="ageList">Age:</string>
+    <string name="statusList">Status:</string>
+
+    <!-- NonActives Fragment -->
+    <string name="endNonActives">End of Records</string>
+    <string name="noFoundNonActives">No records found!</string>
+    <string name="Approved">Approved</string>
+    <string name="Restricted">Restricted</string>
+    <string name="YesApprovenon">Yes,Approve it!</string>
+
+    <string name="addressNon">Address</string>
+
+    <!-- PersonalDetail Fragment -->
+    <string name="localAdmin">Local Admin</string>
+    <string name="SubAdmin">Sub Admin</string>
+    <string name="personalDetail">Personal</string>
+    <string name="blood_donorDetail">Blood Donor?</string>
+    <string name="roleDetails">Role</string>
+    <string name="nativeDetails">Native</string>
+    <string name="selectDetails">Select</string>
+    <string name="birth_dateDetail">Birth Date</string>
+    <string name="expire_dateDetails">Expire Date</string>
+    <string name="blood_groupDetails">Blood Group</string>
+    <string name="gotraDetails">Gotra</string>
+    <string name="educationDetails">Education</string>
+    <string name="current_activityDetails">Current Activity</string>
+    <string name="marital_statusDetails">Marital Status</string>
+    <string name="marriage_dateDetails">Marriage Date</string>
+    <string name="local_address_if_anyDetails">Local Address (If any)</string>
+
+    <!-- PrivancyPolicy Fragment -->
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="photoPolicy">Photo</string>
+    <string name="all_communityPolicy">All Community</string>
+    <string name="my_communityPolicy">My Community</string>
+    <string name="hidePolicy">Hide</string>
+    <string name="navigate">Navigation</string>
+    <string name="login">Login</string>
+
+    <!-- PRofessionDetail Fragment -->
+    <string name="kmPDetail">%.2f KM</string>
+    <string name="OfficeLocation">Office Location</string>
+    <string name="WithGoogle">With Google Map</string>
+    <string name="SetDetail">Set</string>
+    <string name="ViewDetails">View</string>
+    <string name="updatingLocationDetail">Updating your office location</string>
+    <string name="PleasWaitDetails">Please wait...</string>
+    <string name="headDetails">Only Family Head Set the Office Location</string>
+    <string name="SelectedImageDetails">Cannot retrieve selected image</string>
+    <string name="imageDetails">Image</string>
+    <string name="professionalDetails">Professional</string>
+    <string name="company_namePdetails">Company Name</string>
+    <string name="work_categorypDetails">Work Category</string>
+    <string name="selectpDetails">Select</string>
+    <string name="work_sub_categorypDetails">Work Sub Category</string>
+
+    <!-- SearchByDistance Fragment -->
+    <string name="occupationpDetails">Occupation</string>
+    <string name="website_urlPdetails">Website URL</string>
+    <string name="work_detailPdetails">Work Detail</string>
+    <string name="workPdetails">Work</string>
+    <string name="work_addressPdetails">Work Address</string>
+    <string name="SearchDistance">Search by Distance</string>
+    <string name="homeDistance">Home</string>
+    <string name="Officedistance">Office</string>
+    <string name="userDetails">User</string>
+    <string name="EndRecordDistance">End of the Records</string>
+    <string name="RecordDistance">Records found:</string>
+
+    <!-- SearchCity Fragment -->
+    <string name="UpdateCity">updated</string>
+    <string name="EndCity">End of</string>
+    <string name="RecordCity">Records</string>
+    <string name="LocationCity">Location shared successfully</string>
+    <string name="ShareCity">Share your location to</string>
+    <string name="ProfileCity">Profiles!</string>
+    <string name="YesCity">Yes,Share it!</string>
+    <string name="ProfileRoleCity">Profiles Role will be changed to</string>
+    <string name="YesPleaseCity">Yes,Please!</string>
+
+    <!-- SearchList Fragment -->
+    <string name="UpdateList">Updated</string>
+    <string name="ExportList">Exporting</string>
+    <string name="DetailsList">\'s Details</string>
+    <string name="NoRecordList">No Records Found!</string>
+    <string name="RecordList">Records found:</string>
+    <string name="WantDisable">want to disable</string>
+    <string name="Proffiles">Profiles!</string>
+
+    <string name="ProfileList">Profiles Role will be changed to</string>
+    <string name="YesPlList">Yes,Please!</string>
+
+    <!-- ShareEvent Fragment -->
+    <string name="EventRequired">Event title is required</string>
+    <string name="EventAddress">Event address is required</string>
+    <string name="EnetDescription">Event description is required</string>
+    <string name="StartDate">Start date is required</string>
+    <string name="EndDate">End date is required</string>
+    <string name="StartTime">Start time is required</string>
+    <string name="EndTime">End time is required</string>
+    <string name="Creating">Creating an event</string>
+
+    <string name="SelectTime">Select Time</string>
+    <string name="share_event">Share Event</string>
+    <string name="event_title">Event Title</string>
+    <string name="event_address">Event Address</string>
+    <string name="event_description">Event Description</string>
+    <string name="event_date_amp_time"><![CDATA[Event Date & Time]]></string>
+    <string name="startEvent">Start</string>
+    <string name="timeEvent">Time</string>
+    <string name="endEvent">End</string>
+
+    <string name="upload_imagesEvent">Upload Images</string>
+    <string name="add_youtube_urlsEvent">Add Youtube URLs</string>
+    <string name="create_eventEvent">Create Event</string>
+    <string name="share_nowEvent">Share Now</string>
+
+    <!-- SmartFilter Fragment -->
+    <string name="endrecord">End of Records</string>
+    <string name="yesDisable">Yes,Disable it!</string>
+    <string name="YesPFilter">Yes,Please!</string>
+    <string name="profileRole">Profiles Role will be changed to</string>
+
+    <!-- Statistic Fragment -->
+    <string name="samaj_statistics">Samaj Statistics</string>
+    <string name="search_village_here">Search Village Here</string>
+    <string name="unmarried_female">Unmarried Female</string>
+
+
+    <!-- Pther Fragment -->
+
+    <string name="Mobile">Mobile</string>
+
+    <string name="main_detail">Main Detail</string>
+    <string name="memberDetails">Member Code</string>
+    <string name="relationDetails">Relation</string>
+    <string name="select">Select</string>
+
+
+
+    <string name="first_nameDetails">First Name</string>
+    <string name="last_nameDetails">Last Name</string>
+    <string name="fatherDetails">Father</string>
+    <string name="motherDetails">Mother</string>
+    <string name="mobileDetails">Mobile</string>
+    <string name="genderDetails">Gender</string>
+    <string name="emailDetails">Email</string>
+    <string name="stateDetails">State</string>
+    <string name="cityDetails">City</string>
+    <string name="areaDetails">Area</string>
+    <string name="pincodeDetails">Pincode</string>
+    <string name="home_addressDetails">Home Address</string>
+    <string name="homeDetails">Home</string>
+    <string name="rentedDetails">Rented</string>
+
+
+    <string name="EmailContact">Email Address</string>
+    <string name="MobileContact">Mobile Number</string>
+    <string name="LocalDetails">Local Address</string>
+    <string name="PermanetDetails">Permanent Address</string>
+    <string name="PinDetails">PinCode</string>
+    <string name="AreaContact">Area</string>
+    <string name="StateContact">Select State</string>
+    <string name="MemberCodeDetails">Member Code</string>
+    <string name="HeadDetails">Head Name</string>
+    <string name="MemberNameDetails">Member Name</string>
+    <string name="LastNameDetails">Last Name</string>
+    <string name="LocalComDetails">Local Community</string>
+    <string name="MaritalDetails">Marital Status</string>
+    <string name="SelectNDetails">Select Native</string>
+    <string name="SelectCDetails">Select City</string>
+    <string name="EductionDetails">Education</string>
+    <string name="SelectGDetails">Select Gotra</string>
+    <string name="SelectBDetails">Select BloodGroup</string>
+    <string name="BirthDetails">Birth Date</string>
+    <string name="MarriageDetails">Marriage Date</string>
+    <string name="WifeDetails">Wife\'s Native</string>
+    <string name="IsDonorDetails">is Doner?</string>
+    <string name="isRentedDetails">is Rented?</string>
+    <string name="isExpiredDetails">is Expired?</string>
+    <string name="OfficeDetails">Office Address</string>
+    <string name="CategoryDetails">Category</string>
+    <string name="SubCategoryDetails">Sub Category</string>
+    <string name="OccupationDetails">Occupation</string>
+    <string name="CurrentActivtyDetails">Current Activity</string>
+    <string name="isSpectaDetails">is Spectacles?</string>
+    <string name="isShaniDetails">is Shani?</string>
+    <string name="isMangalDetails">is Mangal?</string>
+    <string name="HeightDetails">Height</string>
+    <string name="MeterDetails">Meter</string>
+    <string name="WeghtDetails">Weight</string>
+    <string name="kg">Kg</string>
+    <string name="ProfileDetails">Profile Created Date</string>
+    <string name="UpdateDetails">Profile Updated Date</string>
+    <string name="ProfilePDetails">Profile updatation Percentage</string>
+    <string name="WelcomeSmart">Welcome to  Smart Filter</string>
+    <string name="youDetails">You can search here using many filter options(Like Family head,Family members, Mobile No, Email Id etc...)</string>
+    <string name="MainDetails">Main Details</string>
+
+
+    <string name="FamilyDetail">Family Detail</string>
+    <string name="AddDetails">Address</string>
+    <string name="FamilyMemberDetail">Family Member List (0)</string>
+    <string name="AddMemberDetails">Add Member</string>
+    <string name="Unlock">Scan your finger to unlock application</string>
+    <string name="SearchNearby">Search by Distance</string>
+    <string name="EnterNewrby">Enter Distance(Km)</string>
+    <string name="SearchNearBy">Search Now</string>
+    <string name="NameFilter">Name</string>
+    <string name="SurnameFilter">Surname</string>
+    <string name="HeadFilter">Head Name</string>
+    <string name="MailFilter">Mail</string>
+    <string name="CityFilter">City</string>
+    <string name="MaritalFilter">Marital</string>
+    <string name="AgeFilter">Age:</string>
+    <string name="ClearFilter">Clear</string>
+    <string name="SearchFilter">Search</string>
+    <string name="AdminList">Admin List</string>
+    <string name="RestrictedProfile">Restricted Profiles</string>
+    <string name="FindRecord">Find Records</string>
+
+
+    <string name="backmatrimony">Back to Matrimony</string>
+    <string name="SearchName">Search Name</string>
+    <string name="Find">Find Records</string>
+    <string name="AllNotification">All Notifications</string>
+    <string name="AllFilter">All Filters</string>
+    <string name="youFilte">You can see list of offline filters and edit, delete or apply it.</string>
+    <string name="LocalCommnunity">Local Community</string>
+    <string name="Community">COMMITTEE</string>
+    <string name="Designation">DESIGNATION</string>
+    <string name="Duration">DURATION</string>
+    <string name="SarchKeyword">SEARCH KEYWORD</string>
+    <string name="Commi">Committee</string>
+    <string name="RegionName">Region name</string>
+    <string name="DurationCommitee">Duration</string>
+    <string name="CommiteeName">Committee name</string>
+    <string name="DesignCommi">Designation</string>
+
+    <string name="no_internet">No internet connection!</string>
+
+    <string name="check_network">Please check your internet connection and try again</string>
+    <string name="retry">Retry</string>
 </resources>

@@ -85,7 +85,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
 
         binding.txtBtime.setOnClickListener {
             if(member.id == loginMem.id || member.headId == loginMem.id){
-                NumberPadTimePickerDialogFragment.newInstance(mListener).show(activity!!.getSupportFragmentManager(), "bottom_sheet")
+                NumberPadTimePickerDialogFragment.newInstance(mListener).show(activity!!.getSupportFragmentManager(), getString(R.string.bottomSheet))
             }
         }
 
