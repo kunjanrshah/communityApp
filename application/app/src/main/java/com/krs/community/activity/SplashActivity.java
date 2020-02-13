@@ -1,7 +1,12 @@
 package com.krs.community.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -12,88 +17,156 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import androidx.appcompat.widget.AppCompatButton;
+
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
 import com.github.squti.guru.Guru;
 import com.krs.community.R;
 import com.krs.community.fragments.FamilyDetailActivity;
 import com.krs.community.utils.Utility;
+import com.wessam.library.NetworkChecker;
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends Activity{
 
     private KenBurnsView kbv;
-    private View imglogo,darkoverlay, ll_spinner;//, ll_login;
+    private View imglogo, darkoverlay, ll_spinner;//, ll_login;
     private Button btn_login, btn_register;
     private Spinner splanguage;
     private DisplayMetrics dm;
     private boolean is_login = false;
     private boolean is_register = false;
+    NetworkChangeReceiver mNetworkReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_splash);
+        mNetworkReceiver = new NetworkChangeReceiver();
 
-        MemoryAllocation();
-        setAnimation();
+        registerNetworkBroadcastForNougat();
 
-        String[] languages = getResources().getStringArray(R.array.languages);
-        ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, languages);
-        splanguage.setAdapter(aa);
+        if (NetworkChecker.isNetworkConnected(this)) {
+            setScreenLayout();
+        }else{
+            setNoInternetLayout();
+        }
 
+    }
 
-        btn_login.setOnClickListener(v -> {
-            if (!is_login) {
-                is_login = true;
-                Intent mIntent = new Intent(SplashActivity.this, LoginActivity.class);
-                startActivity(mIntent);
-                finish();
-                Utility.fade(this);
-            }
-        });
-
-        btn_register.setOnClickListener(v -> {
-            if (!is_register) {
-                is_register = true;
-                Intent mIntent = new Intent(SplashActivity.this, RegisterActivty.class);
-                startActivity(mIntent);
-                finish();
-                Utility.fade(this);
-            }
-        });
-
-        splanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Utility.changeLang(SplashActivity.this, splanguage.getSelectedItem().toString());
-                btn_login.setText(getResources().getString(R.string.login));
-                btn_register.setText(getResources().getString(R.string.register));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+    private void setNoInternetLayout(){
+        setContentView(R.layout.no_internet_layout);
+        AppCompatButton retryButton=findViewById(R.id.retry_button);
+        retryButton.setOnClickListener(v -> {
+            setScreenLayout();
         });
     }
+
+   class NetworkChangeReceiver extends BroadcastReceiver{
+
+       @Override
+       public void onReceive(Context context, Intent intent) {
+           try{
+               if (NetworkChecker.isNetworkConnected(context)) {
+                   setScreenLayout();
+               }else{
+                   setNoInternetLayout();
+               }
+           }catch(Exception e){
+               e.printStackTrace();
+           }
+       }
+   }
+
+    private void setScreenLayout(){
+
+        if (NetworkChecker.isNetworkConnected(this)) {
+            setContentView(R.layout.activity_splash);
+            MemoryAllocation();
+            setAnimation();
+
+            String[] languages = getResources().getStringArray(R.array.languages);
+            ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, languages);
+            splanguage.setAdapter(aa);
+            btn_login.setOnClickListener(v -> {
+                if (!is_login) {
+                    is_login = true;
+                    Intent mIntent = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(mIntent);
+                    finish();
+                    Utility.fade(this);
+                }
+            });
+            btn_register.setOnClickListener(v -> {
+                if (!is_register) {
+                    is_register = true;
+                    Intent mIntent = new Intent(SplashActivity.this, RegisterActivty.class);
+                    startActivity(mIntent);
+                    finish();
+                    Utility.fade(this);
+                }
+            });
+            splanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Utility.changeLang(SplashActivity.this, splanguage.getSelectedItem().toString());
+                    btn_login.setText(getResources().getString(R.string.login));
+                    btn_register.setText(getResources().getString(R.string.register));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+    }
+
+    private void registerNetworkBroadcastForNougat() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterNetworkBroadcastForNougat();
+    }
+
+    private void unregisterNetworkBroadcastForNougat() {
+        try{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                unregisterReceiver(mNetworkReceiver);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                unregisterReceiver(mNetworkReceiver);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        String userId=Guru.getString(getString(R.string.user_id),"");
+        String userId = Guru.getString(getString(R.string.user_id), "");
         String member = Guru.getString(getString(R.string.loginMember), "");
 
-        if( (userId==null || userId.isEmpty()) && (member==null || member.isEmpty())){
-        }else if(member==null || member.isEmpty()){
+        if ((userId == null || userId.isEmpty()) && (member == null || member.isEmpty())) {
+        } else if (member == null || member.isEmpty()) {
             Intent mIntent = new Intent(SplashActivity.this, FamilyDetailActivity.class);
-            mIntent.putExtra(getString(R.string.id),userId);
+            mIntent.putExtra(getString(R.string.id), userId);
             startActivity(mIntent);
             finish();
-        }else{
+        } else {
             Intent mIntent = new Intent(SplashActivity.this, DashboardActivity.class);
-            mIntent.putExtra(getString(R.string.user_id),userId);
+            mIntent.putExtra(getString(R.string.user_id), userId);
             startActivity(mIntent);
             finish();
         }
@@ -102,14 +175,24 @@ public class SplashActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        String locale = Guru.getString(getResources().getString(R.string.locale_sp), getResources().getString(R.string._english));
-        if (locale.equalsIgnoreCase(getResources().getString(R.string._gujarati))) {
-            splanguage.setSelection(2);
-        } else if (locale.equalsIgnoreCase(getResources().getString(R.string._hindi))) {
-            splanguage.setSelection(3);
-        } else {
-            splanguage.setSelection(1);
+        if(splanguage!=null){
+            String locale = Guru.getString(getResources().getString(R.string.locale_sp), getResources().getString(R.string._english));
+            if (locale.equalsIgnoreCase(getResources().getString(R.string._gujarati))) {
+                splanguage.setSelection(2);
+            } else if (locale.equalsIgnoreCase(getResources().getString(R.string._hindi))) {
+                splanguage.setSelection(3);
+            } else {
+                splanguage.setSelection(1);
+            }
         }
+
+
+       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            RestartServiceBroadcastReceiver.scheduleJob(getApplicationContext());
+        } else {
+            ProcessMainClass bck = new ProcessMainClass();
+            bck.launchService(getApplicationContext());
+        }*/
     }
 
     @Override
@@ -129,21 +212,20 @@ public class SplashActivity extends Activity {
         ll_spinner.animate().translationY(dm.heightPixels).setStartDelay(0).setDuration(0).start();
         ll_spinner.animate().translationY(0).setDuration(2000).alpha(1).setStartDelay(5000).start();
 
-        btn_login.animate().translationX(dm.widthPixels+ btn_login.getMeasuredWidth()).setDuration(0).setStartDelay(0).start();
+        btn_login.animate().translationX(dm.widthPixels + btn_login.getMeasuredWidth()).setDuration(0).setStartDelay(0).start();
         btn_login.animate().translationX(0).setStartDelay(5500).setDuration(2000).setInterpolator(new OvershootInterpolator()).start();
 
-        btn_register.animate().translationX(dm.widthPixels+ btn_register.getMeasuredWidth()).setDuration(0).setStartDelay(0).start();
+        btn_register.animate().translationX(dm.widthPixels + btn_register.getMeasuredWidth()).setDuration(0).setStartDelay(0).start();
         btn_register.animate().translationX(0).setStartDelay(5500).setDuration(2000).setInterpolator(new OvershootInterpolator()).start();
     }
 
-    private void MemoryAllocation()
-    {
-        imglogo=findViewById(R.id.fragmentloginLogo);
+    private void MemoryAllocation() {
+        imglogo = findViewById(R.id.fragmentloginLogo);
         dm = getResources().getDisplayMetrics();
-        kbv= findViewById(R.id.fragmentloginKenBurnsView1);
-        darkoverlay=findViewById(R.id.fragmentloginView1);
-        ll_spinner =findViewById(R.id.ll_spinner);
-       // btn_login =findViewById(R.id.btn_login);
+        kbv = findViewById(R.id.fragmentloginKenBurnsView1);
+        darkoverlay = findViewById(R.id.fragmentloginView1);
+        ll_spinner = findViewById(R.id.ll_spinner);
+        // btn_login =findViewById(R.id.btn_login);
         splanguage = findViewById(R.id.splanguage);
         btn_login = findViewById(R.id.btn_login);
         btn_login.setTag(0);

@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Main Detail"
+                android:text="@string/main_detail"
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp" />
 
@@ -50,7 +50,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Member Code" />
+                        android:text="@string/memberDetails" />
 
                     <EditText
                         android:id="@+id/edt_code"
@@ -75,7 +75,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Relation" />
+                        android:text="@string/relationDetails" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -91,7 +91,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:singleLine="true"
-                            android:hint="Select"
+                            android:hint="@string/select"
                             android:background="@null"
                             android:nextFocusDown="@+id/fname"
                             android:imeOptions="actionNext"
@@ -126,7 +126,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="First Name" />
+                        android:text="@string/first_nameDetails" />
 
                     <EditText
                         android:id="@+id/fname"
@@ -152,7 +152,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Last Name" />
+                        android:text="@string/last_nameDetails" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -168,7 +168,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:singleLine="true"
-                            android:hint="Select"
+                            android:hint="@string/select"
                             android:background="@null"
                             android:nextFocusDown="@+id/fname"
                             android:imeOptions="actionNext"
@@ -202,7 +202,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Father" />
+                        android:text="@string/fatherDetails" />
 
                     <EditText
                         android:id="@+id/edt_father"
@@ -228,7 +228,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Mother" />
+                        android:text="@string/motherDetails" />
 
                     <EditText
                         android:id="@+id/edt_mother"
@@ -261,7 +261,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Mobile" />
+                        android:text="@string/mobileDetails" />
 
                     <EditText
                         android:id="@+id/edt_mobile"
@@ -288,7 +288,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Gender" />
+                        android:text="@string/genderDetails" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -301,7 +301,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:singleLine="true"
-                            android:hint="Select"
+                            android:hint="@string/select"
                             android:background="@null"
                             android:nextFocusDown="@+id/fname"
                             android:imeOptions="actionNext"
@@ -329,7 +329,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:text="Email" />
+                    android:text="@string/emailDetails" />
 
                 <EditText
                     android:id="@+id/edt_email"
@@ -358,7 +358,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="State" />
+                        android:text="@string/stateDetails" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -370,7 +370,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:singleLine="true"
-                            android:hint="Select"
+                            android:hint="@string/select"
                             android:background="@null"
                             android:nextFocusDown="@+id/fname"
                             android:imeOptions="actionNext"
@@ -396,7 +396,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="City" />
+                        android:text="@string/cityDetails" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -444,7 +444,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Area" />
+                        android:text="@string/areaDetails" />
 
                     <EditText
                         android:id="@+id/edt_area"
@@ -470,7 +470,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Pincode" />
+                        android:text="@string/pincodeDetails" />
 
                     <EditText
                         android:id="@+id/edt_pincode"
@@ -506,7 +506,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Home Address" />
+                        android:text="@string/home_addressDetails" />
 
                     <EditText
                         android:id="@+id/edt_addr"
@@ -547,7 +547,7 @@
                     <TextView
                         android:id="@+id/tv_distance"
                         android:layout_width="wrap_content"
-                        android:text="Home"
+                        android:text="@string/homeDetails"
                         android:textSize="14sp"
                         android:singleLine="true"
                         android:layout_marginLeft="5dp"
@@ -562,7 +562,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/montserrat_regular"
-                    android:text="Rented" />
+                    android:text="@string/rentedDetails" />
                 </LinearLayout>
 
             </LinearLayout>

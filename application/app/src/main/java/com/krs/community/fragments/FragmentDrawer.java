@@ -108,7 +108,7 @@ public class FragmentDrawer extends Fragment {
         });
 
         TextView tv_version=layout.findViewById(R.id.tv_version);
-        tv_version.setText("Version "+BuildConfig.VERSION_NAME);
+        tv_version.setText(getResources().getString(R.string.Version)+BuildConfig.VERSION_NAME);
 
         tv_settings.setOnClickListener(v -> {
             mDrawerLayout.closeDrawers();

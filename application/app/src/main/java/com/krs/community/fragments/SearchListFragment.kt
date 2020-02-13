@@ -172,7 +172,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                     viewHolder.tvRole.text = resources.getString(R.string.Member)
                 }
                 if (member.updatedDt.isNotEmpty()) {
-                    viewHolder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    viewHolder.tvUpdate.text = getString(R.string.UpdateList) + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                 }
 
                 viewHolder.boomMenuButton.clearBuilders()
@@ -182,7 +182,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                         if (it == 0) {
                             createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
                             Handler().post(Runnable {
-                                Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                                Utility.startSweetProgress(activity, getString(R.string.ExportList)+"${member.firstName}" +getString(R.string.DetailsList), getString(R.string.please_wait))
                             })
                             Handler().postDelayed({
                                 Utility.hideSweetProgress()
@@ -206,6 +206,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                         } else if (it == 4) {
                             shareDetails(activity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, viewHolder.tvArea.text.toString(), member.address)
                         } else if (it == 5) {
+
                             val adapter: LocationAdapter = LocationAdapter(context as AppCompatActivity, member)
                             adapter.setLocationListner(this@SearchListFragment)
                             setLocationDialog = DialogPlus.newDialog(context)
@@ -216,6 +217,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                                     .create()
                             setLocationDialog?.show()
+
                         }
                     }
                     viewHolder.boomMenuButton.addBuilder(builder)
@@ -388,14 +390,14 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
             if (Integer.parseInt(response.totalRecords) <= AppController.mApplication.length) {
                 DashboardActivity.stop = true
                 if (Integer.parseInt(response.totalRecords) == 0) {
-                    Snackbar.make(frameRoot, "No Records Found!", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(frameRoot, getString(R.string.NoRecordList), Snackbar.LENGTH_LONG).show()
                 } else {
-                    Snackbar.make(frameRoot, "End of the Records!", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(frameRoot, getString(R.string.endRecord), Snackbar.LENGTH_LONG).show()
                 }
 
             }
             if (lstMembers.size > 0) {
-                tvRecords.text = "Records found: " + response.totalRecords
+                tvRecords.text = getString(R.string.RecordList) + response.totalRecords
                 tvRecords.visibility = View.VISIBLE
                 llLabel.visibility = View.GONE
                 ivExport.visibility = View.VISIBLE
@@ -682,9 +684,9 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
-                                .setContentText("want to disable ${selectedItemPositions.size} Profiles!")
-                                .setConfirmText("Yes,Disable it!")
-                                .setCancelText("No")
+                                .setContentText(getString(R.string.WantDisable)+"${selectedItemPositions.size}"+getString(R.string.Proffiles))
+                                .setConfirmText(getString(R.string.YesDisable))
+                                .setCancelText(getString(R.string.no))
                                 .setConfirmClickListener {
                                     it.dismiss()
 
@@ -764,9 +766,9 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
         val selectedItemPositions = getSelectedItems()
         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText(getString(R.string.you_sure))
-                .setContentText("${selectedItemPositions.size} Profiles Role will be changed to '$role'!")
-                .setConfirmText("Yes,Please!")
-                .setCancelText("No")
+                .setContentText("${selectedItemPositions.size}"+getString(R.string.ProfileList) +"'$role'!")
+                .setConfirmText(getString(R.string.YesPlList))
+                .setCancelText(getString(R.string.no))
                 .setConfirmClickListener {
                     it.dismiss()
 

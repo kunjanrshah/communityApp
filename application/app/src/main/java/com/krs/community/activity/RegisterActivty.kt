@@ -1,7 +1,11 @@
 package com.krs.community.activity
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.BitmapFactory
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -11,10 +15,10 @@ import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
-import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.app.AppController
@@ -24,12 +28,14 @@ import com.krs.community.entities.States
 import com.krs.community.entities.SubCommunity
 import com.krs.community.listeners.IRegisterListener
 import com.krs.community.listeners.ImageUploadListener
-import com.krs.community.model.*
+import com.krs.community.model.Datum
+import com.krs.community.model.RegisterModel
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RegisterViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodelfactory.RegisterViewModelFactory
+import com.wessam.library.NetworkChecker
 import com.wooplr.spotlight.prefs.PreferencesManager
 import com.wooplr.spotlight.utils.SpotlightSequence
 import com.yalantis.ucrop.UCrop.*
@@ -59,6 +65,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     private lateinit var registerViewModel: RegisterViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private var resultUri: Uri?=null
+    private var mNetworkReceiver: BroadcastReceiver? = null
 
     companion object {
         private val TAG = RegisterActivty::class.java.simpleName
@@ -71,116 +78,162 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        logger = Logger(TAG)
 
-        registerViewModel = ViewModelProviders.of(this,registerViewModelFactory).get(RegisterViewModel::class.java)
-        registerViewModel.iRegisterListener=this
+        mNetworkReceiver = NetworkChangeReceiver()
 
-        profileDetailViewModel = ViewModelProviders.of(this,profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
-        profileDetailViewModel.mImageUploadListener=this
+        registerNetworkBroadcastForNougat()
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_register)
-        binding.lifecycleOwner = this
-        binding.registerviewmodel = registerViewModel
+        if (NetworkChecker.isNetworkConnected(this)) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(this, R.color.colorBG, false)
+            setScreenLayout()
+
+        } else {
+            setNoInternetLayout()
         }
 
-        val str = resources.getString(R.string.already_have_a_account_sign_in) + "<b>" + " " + getString(R.string.login) + "</b>"
-        txt_already?.text = Html.fromHtml(str)
-
-        btn_register?.setOnClickListener {
-            Utility.startSweetProgress(this,"Registering your family",resources.getString(R.string.loading))
-            registerViewModel.getUserRegistration()
-        }
-
-        txt_already?.setOnClickListener { registerViewModel.onTextAlreadyClicked(this) }
-
-        txt_how_register.setOnClickListener { registerViewModel.onHowRegisterClicked(this) }
-
-        img_cancel.setOnClickListener {
-            img_profile.setImageResource(R.drawable.man_reg)
-            img_cancel.visibility = View.GONE
-            val icon = BitmapFactory.decodeResource(resources, R.drawable.man_reg)
-            if (icon != null) {
-                str_profile_hash = Utility.getBase64(icon)
-            }
-        }
-
-        /*get Lastnames */
-        registerViewModel.getUserLastName()
-
-        /*get countries */
-        /*spinnerCountries.setItems(CountryData.countryNames)
-        spinnerCountries.setExpandTint(R.color.black)
-        spinnerCountries.select(0)
-        registerViewModel.country_code=CountryData.countryAreaCodes[0]*/
-
-        spinnerCountries.setOnItemClickListener { pos->
-            registerViewModel.countryCode =CountryData.countryAreaCodes[pos]
-        }
-
-        /*get states */
-        registerViewModel.getUserStates()
-        spinnerStates.setOnItemClickListener {
-            Utility.startSweetProgress(this,"Fetching City",resources.getString(R.string.loading))
-            registerViewModel.stateId=lstStateId[it]
-            registerViewModel.fetchCitiesForStateId(it + 1)
-        }
-
-
-        /*get sub communities */
-        registerViewModel.getLstSubCommunity()
-        spinnerSub.setOnItemClickListener {
-            Utility.startSweetProgress(this,"Fetching Local Community",resources.getString(R.string.loading))
-            registerViewModel.subCommId=lstSubCommId[it]
-            registerViewModel.getLstLocalCommunity(it + 1)
-        }
-
-        spinnerLname.setOnItemClickListener {position->
-            Log.d(TAG,"spinnerLname: "+lstLastnameId[position])
-            registerViewModel.lastnameId=lstLastnameId[position]
-        }
-
-        spinnerCities.setOnItemClickListener {position->
-            Log.d(TAG,"spinnerCities: "+lstCityId[position])
-            registerViewModel.cityId=lstCityId[position]
-        }
-
-        spinnerLocal.setOnItemClickListener {position->
-            Log.d(TAG,"spinnerLocal: "+lstLocalCommId[position])
-            registerViewModel.localCommId=lstLocalCommId[position]
-        }
-
-        val lstGender = arrayOf("Male", "Female")
-        binding.spinnerGender.setItems(lstGender)
-        binding.spinnerGender.setExpandTint(R.color.black)
-
-        binding.spinnerGender.setOnClickListener {
-            registerViewModel.gender=it.toString()
-        }
-
-        binding.imgProfile.setOnClickListener { v ->
-            pickFromGallery(this)
-        }
-
-
-        //mPreferencesManager=PreferencesManager(this)
-        //mPreferencesManager.resetAll()
-
-        /*scroll.viewTreeObserver.addOnScrollChangedListener {
-            if (scroll.getChildAt(0).bottom > (scroll.height + scroll.scrollY)) {
-               if(isShow2){
-                   isShow2=false
-                   Handler(Looper.getMainLooper()).postDelayed({
-                       scroll.scrollToBottom()
-                       showSequence()
-                   }, 400)
-               }
-            }
-        }*/
     }
+
+    fun setNoInternetLayout() {
+        setContentView(R.layout.no_internet_layout)
+        //val binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.no_internet_layout)
+        val retryButton: AppCompatButton = findViewById(R.id.retry_button)
+        retryButton.setOnClickListener { v: View? -> setScreenLayout() }
+    }
+    fun setScreenLayout() {
+        if (NetworkChecker.isNetworkConnected(this)) {
+            logger = Logger(TAG)
+
+            registerViewModel = ViewModelProviders.of(this,registerViewModelFactory).get(RegisterViewModel::class.java)
+            registerViewModel.iRegisterListener=this
+
+            profileDetailViewModel = ViewModelProviders.of(this,profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
+            profileDetailViewModel.mImageUploadListener=this
+
+            binding = DataBindingUtil.setContentView(this, R.layout.activity_register)
+            binding.lifecycleOwner = this
+            binding.registerviewmodel = registerViewModel
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Utility.changeStatusbarColor(this, R.color.colorBG, false)
+            }
+
+            val str = resources.getString(R.string.already_have_a_account_sign_in) + "<b>" + " " + getString(R.string.login) + "</b>"
+            txt_already?.text = Html.fromHtml(str)
+
+            binding.btnRegister.setOnClickListener {
+                Utility.startSweetProgress(this,getString(R.string.RegisterFamily),resources.getString(R.string.loading))
+                registerViewModel.getUserRegistration()
+            }
+
+            binding.txtAlready.setOnClickListener { registerViewModel.onTextAlreadyClicked(this) }
+
+            binding.txtHowRegister.setOnClickListener { registerViewModel.onHowRegisterClicked(this) }
+
+            binding.imgCancel.setOnClickListener {
+                binding.imgProfile.setImageResource(R.drawable.man_reg)
+                binding.imgCancel.visibility = View.GONE
+                val icon = BitmapFactory.decodeResource(resources, R.drawable.man_reg)
+                if (icon != null) {
+                    str_profile_hash = Utility.getBase64(icon)
+                }
+            }
+
+            /*get Lastnames */
+            registerViewModel.getUserLastName()
+
+            /*get countries */
+            /*spinnerCountries.setItems(CountryData.countryNames)
+            spinnerCountries.setExpandTint(R.color.black)
+            spinnerCountries.select(0)
+            registerViewModel.country_code=CountryData.countryAreaCodes[0]*/
+
+            binding. spinnerCountries.setOnItemClickListener { pos->
+                registerViewModel.countryCode =CountryData.countryAreaCodes[pos]
+            }
+
+            /*get states */
+            registerViewModel.getUserStates()
+            binding. spinnerStates.setOnItemClickListener {
+                Utility.startSweetProgress(this,getString(R.string.FetchingCity),resources.getString(R.string.loading))
+                registerViewModel.stateId=lstStateId[it]
+                registerViewModel.fetchCitiesForStateId(it + 1)
+            }
+
+
+            /*get sub communities */
+            registerViewModel.getLstSubCommunity()
+            binding. spinnerSub.setOnItemClickListener {
+                Utility.startSweetProgress(this,"FetchiCng Local Community",resources.getString(R.string.loading))
+                registerViewModel.subCommId=lstSubCommId[it]
+                registerViewModel.getLstLocalCommunity(it + 1)
+            }
+
+            binding.spinnerLname.setOnItemClickListener {position->
+                Log.d(TAG,"spinnerLname: "+lstLastnameId[position])
+                registerViewModel.lastnameId=lstLastnameId[position]
+            }
+
+            binding.spinnerCities.setOnItemClickListener {position->
+                Log.d(TAG,"spinnerCities: "+lstCityId[position])
+                registerViewModel.cityId=lstCityId[position]
+            }
+
+            binding.spinnerLocal.setOnItemClickListener {position->
+                Log.d(TAG,"spinnerLocal: "+lstLocalCommId[position])
+                registerViewModel.localCommId=lstLocalCommId[position]
+            }
+
+            val lstGender = arrayOf(getString(R.string.male), getString(R.string.female))
+            binding.spinnerGender.setItems(lstGender)
+            binding.spinnerGender.setExpandTint(R.color.black)
+
+            binding.spinnerGender.setOnClickListener {
+                registerViewModel.gender=it.toString()
+            }
+
+            binding.imgProfile.setOnClickListener { v ->
+                pickFromGallery(this)
+            }
+
+
+        }
+    }
+    inner class NetworkChangeReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            try {
+                if (NetworkChecker.isNetworkConnected(context)) {
+                    setScreenLayout()
+                } else {
+                    setNoInternetLayout()
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+    private fun registerNetworkBroadcastForNougat() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(mNetworkReceiver,  IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+    }
+
+
+    private fun unregisterNetworkBroadcastForNougat() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                unregisterReceiver(mNetworkReceiver)
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                unregisterReceiver(mNetworkReceiver)
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -197,12 +250,10 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         smoothScrollBy(0, delta)
     }
 
-    private fun showSequence(){
-        SpotlightSequence.getInstance(this, null)
-                .addSpotlight(txt_how_register, "Youtube Video", "How to Register?", "how_register")
-                .addSpotlight(btn_register, "Register Button", "Fill up your details\n" +"Click here to Register", "btn_register")
-                .startSequence()
-    }
+    private fun showSequence() = SpotlightSequence.getInstance(this, null)
+            .addSpotlight(txt_how_register, getString(R.string.youtubeVideo), getString(R.string.HowToRegister), getString(R.string.hoeRegister))
+            .addSpotlight(btn_register, getString(R.string.RegisterButton), getString(R.string.FillUpYourDetail)+"\n "+getString(R.string.ClickToRegister), getString(R.string.btnRegister))
+            .startSequence()
 
     override fun getRegisterFailure(message: String,filed:Int) {
         Utility.hideSweetProgress()
@@ -230,7 +281,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         if(resultUri!=null){
             try {
                 val uploadImage = File(resultUri?.path.toString())
-                Utility.startSweetProgress(this, "Register", getString(R.string.loading))
+                Utility.startSweetProgress(this, getString(R.string.Register), getString(R.string.loading))
                 profileDetailViewModel.uploadImage(uploadImage, data.userId.toString(),getString(R.string.profile))
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -317,7 +368,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
 
     override fun getResult(profile: String) {
         Utility.hideSweetProgress()
-        moveToLogin("Request sent to your admin")
+        moveToLogin(getString(R.string.RequestAdmin))
     }
 
     override suspend fun onFailure(message: String) {
@@ -339,6 +390,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     override fun onDestroy() {
         super.onDestroy()
         registerViewModel.cancelAllJobs()
+        unregisterNetworkBroadcastForNougat()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -350,7 +402,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
                 if (selectedUri != null) {
                     startCrop(selectedUri,this)
                 } else {
-                    Toast.makeText(this@RegisterActivty, "Cannot retrieve selected image", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@RegisterActivty, getString(R.string.CannotImage), Toast.LENGTH_SHORT).show()
                 }
             } else if (requestCode == REQUEST_CROP) {
                 resultUri = getOutput(data!!)

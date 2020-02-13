@@ -4,10 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.krs.community.bkservice.Service
 import com.krs.community.dao.*
 import com.krs.community.entities.*
-import com.krs.community.model.Datum
-import com.krs.community.model.Member
 
 @Database(entities = [RoomMember::class,Designation::class,Committee::class,States::class,Relations::class,Occupations::class,
                     Native::class,LastName::class,Gotra::class,Educations::class,CurrentActivity::class,City::class,

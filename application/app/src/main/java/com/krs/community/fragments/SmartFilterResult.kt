@@ -285,11 +285,11 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
                 if(lstMembers.size<=AppController.mApplication.length){
                     DashboardActivity.stop = true
-                    Snackbar.make(llRoot, "End of Records", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(llRoot, getString(R.string.endrecord), Snackbar.LENGTH_LONG).show()
                 }
             }else{
                 DashboardActivity.stop = true
-                Snackbar.make(llRoot, "End of Records", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(llRoot, getString(R.string.endrecord), Snackbar.LENGTH_LONG).show()
             }
         }else {
             DashboardActivity.stop = false
@@ -528,8 +528,8 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
                                 .setContentText("want to disable ${selectedItemPositions.size} Profiles!")
-                                .setConfirmText("Yes,Disable it!")
-                                .setCancelText("No")
+                                .setConfirmText(getString(R.string.yesDisable))
+                                .setCancelText(getString(R.string.no))
                                 .setConfirmClickListener {
                                     it.dismiss()
 
@@ -640,9 +640,9 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         val selectedItemPositions = getSelectedItems()
         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText(getString(R.string.you_sure))
-                .setContentText("${selectedItemPositions.size} Profiles Role will be changed to '$role'!")
-                .setConfirmText("Yes,Please!")
-                .setCancelText("No")
+                .setContentText("${selectedItemPositions.size}"+getString(R.string.profileRole)+"'$role'!")
+                .setConfirmText(getString(R.string.YesPFilter))
+                .setCancelText(getString(R.string.no))
                 .setConfirmClickListener {
                     it.dismiss()
 

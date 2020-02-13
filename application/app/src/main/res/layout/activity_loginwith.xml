@@ -52,7 +52,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:text="Welcome !"
+                    android:text="@string/welcome"
                     android:textColor="@color/black"
                     android:textSize="26sp" />
 
@@ -62,7 +62,7 @@
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:text="Mobile"
+                    android:text="@string/Mobile"
                     android:textSize="20sp" />
 
                 <LinearLayout
@@ -100,7 +100,7 @@
                         android:background="@drawable/round_corner_mid_light_gray"
                         android:digits="0123456789"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:hint="10 digit number"
+                        android:hint="@string/_10_digit_number"
                         android:inputType="number"
                         android:paddingLeft="20dp"
                         android:singleLine="true"
@@ -117,7 +117,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
                     android:fontFamily="@font/montserrat_light"
-                    android:text="4 digit OTP will be sent via SMS to verify your mobile number!"
+                    android:text="@string/_4_digit_otp_will_be_sent_via_sms_to_verify_your_mobile_number"
                     android:textColor="@color/mdtp_transparent_black"
                     android:textSize="14sp" />
 
@@ -258,7 +258,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:fontFamily="@font/montserrat_medium"
-                    android:text="or Login with" />
+                    android:text="@string/or_login_with" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -295,7 +295,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="60dp"
-                android:text="Do you have an account?"
+                android:text="@string/do_you_have_an_account"
                 android:textColor="@color/dark_color_primary" />
 
         </LinearLayout>

@@ -8,6 +8,7 @@ import com.krs.community.responses.*
 import com.krs.community.utils.AppConstants
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Multipart
@@ -132,6 +133,9 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_LOGIN)
     suspend fun getUserLogin(@Body request: AppConstants.LoginRequest): Response<LoginResponse>
 
+   // @POST(AppConstants.UrlPath.GET_LOGIN)
+   // suspend fun getDemoAPI(@Body request: AppConstants.LoginRequest): Response<LoginResponse>
+
     @POST(AppConstants.UrlPath.GET_CHANGE_PASS)
     suspend fun changePassword(@Body request: JsonObject): Response<LoginResponse>
 
@@ -150,5 +154,8 @@ interface ApiServices {
         operator fun invoke():ApiServices{
             return AppController.mApplication.retrofitBase.apiServices
         }
+
     }
+
+
 }

@@ -2,10 +2,14 @@ package com.krs.community.activity;
 
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Outline;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
 import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +19,8 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -23,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
@@ -38,8 +45,11 @@ import com.krs.community.awareviewpager.PhotosFragment;
 import com.krs.community.awareviewpager.RelativesFragment;
 import com.krs.community.awareviewpager.SlidingTabLayout;
 import com.krs.community.awareviewpager.ViewPagerFragmentBase;
+import com.krs.community.utils.Utility;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.wessam.library.NetworkChecker;
+import com.wessam.library.NoInternetLayout;
 
 import java.lang.reflect.Method;
 
@@ -93,130 +103,193 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
     private ImageView back_button_icon;
     private Handler mHandler;
     private IhideView ihideOverlay;
+    NetworkChangeReceiver mNetworkReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tree_detailview);
-
-        mHandler = new Handler();
-
-        //instantiate views
-        //base views
-        mFauxToolbar = findViewById(R.id.faux_toolbar);
-        mToolbarBackButtonContainer = findViewById(R.id.back_button_container);
-        mHeader = findViewById(R.id.header_box);
-        mViewPager = findViewById(R.id.view_pager);
-        mTitleBox = findViewById(R.id.title_box);
-        mTitleText = findViewById(R.id.title_text);
-        mSubtitleText = findViewById(R.id.level_text);
-        mTitleBackground = findViewById(R.id.title_background);
-        mSlidingTabLayout = findViewById(R.id.sliding_tabs);
-        mOverFlow = findViewById(R.id.overflow_button);
-        mFab = findViewById(R.id.fab_layout);
-        kv_header_img = findViewById(R.id.kv_header_img);
-        back_button_icon = findViewById(R.id.back_button_icon);
-        back_button_icon.setOnClickListener(v -> {
-            finish();
-        });
-        //measure view sizes for reference later that don't require first being added to view hierarchy
-        setHeaderHeight(); //set the height of the header area
-        mActionBarHeight = getDimPx(R.dimen.large_fab_size);
-        mMinimumFontScale = (double) getDimPx(R.dimen.action_bar_text_size) / (double) getDimPx(R.dimen.title_text_size);
-
-        mBeginTransformations = (mHeaderHeight / 4);
-
-        //set up fab and its initial position
-        //the fab has to be pushed down to center itself on the line between the header image and the titlebox
-        int fabTop = mHeaderHeight
-                - getDimPx(R.dimen.bar_height)
-                - getDimPx(R.dimen.small_tab_size)
-                - (getDimPx(R.dimen.large_fab_size) / 2);
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mFab.getLayoutParams();
-        layoutParams.setMargins(0, fabTop, getDimPx(R.dimen.keyline_1), 0);
-        clipAndElevate(mFab, getResources().getInteger(R.integer.fab_elevation));
-
-        int backgroundHeight = getDimPx(R.dimen.bar_height) + getDimPx(R.dimen.small_tab_size);
-        RelativeLayout.LayoutParams titleBackgroundParams = (RelativeLayout.LayoutParams) mTitleBackground.getLayoutParams();
-        titleBackgroundParams.height = backgroundHeight;
-
-        //set viewpager adapter
-        mFragmentViewPagerAdapter = new FragmentViewPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mFragmentViewPagerAdapter);
 
 
-        //set up sliding tabs to go with viewpager
-        mSlidingTabLayout.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
-        Resources res = getResources();
-        mSlidingTabLayout.setSelectedIndicatorColors(res.getColor(R.color.colorAccent));
-        mSlidingTabLayout.setDistributeEvenly(true);
-        mSlidingTabLayout.setViewPager(mViewPager);
-        setSlidingTabLayoutContentDescriptions();
 
-        //position views dependent on other views positions. Views need to be added before calculations can be done.
-        //TODO: if possible, change all view dimensions to constants in dimens file to allow for measurement in onCreate
-        adjustLayoutSetConstants();
-        ihideOverlay=relativesFragment;
-        mOverFlow.setOnClickListener(v -> {
-            try {
-                PopupMenu popup = new PopupMenu(this, v);
-                popup.getMenuInflater().inflate(R.menu.menu_tree_detail_item, popup.getMenu());
+        mNetworkReceiver = new NetworkChangeReceiver();
 
-                popup.getMenu().getItem(0).setOnMenuItemClickListener(item -> {
-                    Toast.makeText(this, "TimeLine", Toast.LENGTH_SHORT).show();
-                    return false;
-                });
+        registerNetworkBroadcastForNougat();
 
-                popup.getMenu().getItem(1).setOnMenuItemClickListener(item -> {
-                    Toast.makeText(this, "view in tree", Toast.LENGTH_SHORT).show();
-                    return false;
-                });
 
-                popup.getMenu().getItem(2).setOnMenuItemClickListener(item -> {
-                    Toast.makeText(this, "Profile Detail", Toast.LENGTH_SHORT).show();
-                    return false;
-                });
+        if (NetworkChecker.isNetworkConnected(this)) {
+            setScreenLayout();
+        }else{
+            setNoInternetLayout();
+        }
 
-                Method method = popup.getMenu().getClass().getDeclaredMethod("setOptionalIconsVisible", boolean.class);
-                method.setAccessible(true);
-                method.invoke(popup.getMenu(), true);
-                popup.show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
 
-        mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.d(TAG,"onPageScrolled: "+position);
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-                if (position == 0) {
-                    ihideOverlay = relativesFragment;
-                } else if (position == 1) {
-                    ihideOverlay = photosFragment;
-                } else if (position == 2) {
-                    ihideOverlay = factsFragment;
-                }
-                ihideOverlay.hideOverlay();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                Log.d(TAG,"onPageScrollStateChanged: "+state);
-            }
-        });
-
-        ActivityCompat.requestPermissions(FamilyTreeDetailActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
     }
+    private void setScreenLayout(){
+
+        if (NetworkChecker.isNetworkConnected(this)) {
+            setContentView(R.layout.activity_tree_detailview);
+
+            mHandler = new Handler();
+            mFauxToolbar = findViewById(R.id.faux_toolbar);
+            mToolbarBackButtonContainer = findViewById(R.id.back_button_container);
+            mHeader = findViewById(R.id.header_box);
+            mViewPager = findViewById(R.id.view_pager);
+            mTitleBox = findViewById(R.id.title_box);
+            mTitleText = findViewById(R.id.title_text);
+            mSubtitleText = findViewById(R.id.level_text);
+            mTitleBackground = findViewById(R.id.title_background);
+            mSlidingTabLayout = findViewById(R.id.sliding_tabs);
+            mOverFlow = findViewById(R.id.overflow_button);
+            mFab = findViewById(R.id.fab_layout);
+            kv_header_img = findViewById(R.id.kv_header_img);
+            back_button_icon = findViewById(R.id.back_button_icon);
+            back_button_icon.setOnClickListener(v -> {
+                finish();
+            });
+            //measure view sizes for reference later that don't require first being added to view hierarchy
+            setHeaderHeight(); //set the height of the header area
+            mActionBarHeight = getDimPx(R.dimen.large_fab_size);
+            mMinimumFontScale = (double) getDimPx(R.dimen.action_bar_text_size) / (double) getDimPx(R.dimen.title_text_size);
+
+            mBeginTransformations = (mHeaderHeight / 4);
+
+            //set up fab and its initial position
+            //the fab has to be pushed down to center itself on the line between the header image and the titlebox
+            int fabTop = mHeaderHeight
+                    - getDimPx(R.dimen.bar_height)
+                    - getDimPx(R.dimen.small_tab_size)
+                    - (getDimPx(R.dimen.large_fab_size) / 2);
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mFab.getLayoutParams();
+            layoutParams.setMargins(0, fabTop, getDimPx(R.dimen.keyline_1), 0);
+            clipAndElevate(mFab, getResources().getInteger(R.integer.fab_elevation));
+
+            int backgroundHeight = getDimPx(R.dimen.bar_height) + getDimPx(R.dimen.small_tab_size);
+            RelativeLayout.LayoutParams titleBackgroundParams = (RelativeLayout.LayoutParams) mTitleBackground.getLayoutParams();
+            titleBackgroundParams.height = backgroundHeight;
+
+            //set viewpager adapter
+            mFragmentViewPagerAdapter = new FragmentViewPagerAdapter(getSupportFragmentManager());
+            mViewPager.setAdapter(mFragmentViewPagerAdapter);
 
 
+            //set up sliding tabs to go with viewpager
+            mSlidingTabLayout.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
+            Resources res = getResources();
+            mSlidingTabLayout.setSelectedIndicatorColors(res.getColor(R.color.colorAccent));
+            mSlidingTabLayout.setDistributeEvenly(true);
+            mSlidingTabLayout.setViewPager(mViewPager);
+            setSlidingTabLayoutContentDescriptions();
 
+            //position views dependent on other views positions. Views need to be added before calculations can be done.
+            //TODO: if possible, change all view dimensions to constants in dimens file to allow for measurement in onCreate
+            adjustLayoutSetConstants();
+            ihideOverlay=relativesFragment;
+            mOverFlow.setOnClickListener(v -> {
+                try {
+                    PopupMenu popup = new PopupMenu(this, v);
+                    popup.getMenuInflater().inflate(R.menu.menu_tree_detail_item, popup.getMenu());
+
+                    popup.getMenu().getItem(0).setOnMenuItemClickListener(item -> {
+                        Toast.makeText(this, getResources().getString(R.string.TimeLine), Toast.LENGTH_SHORT).show();
+                        return false;
+                    });
+
+                    popup.getMenu().getItem(1).setOnMenuItemClickListener(item -> {
+                        Toast.makeText(this, getResources().getString(R.string.ViewTree), Toast.LENGTH_SHORT).show();
+                        return false;
+                    });
+
+                    popup.getMenu().getItem(2).setOnMenuItemClickListener(item -> {
+                        Toast.makeText(this, getResources().getString(R.string.ProfileDetail), Toast.LENGTH_SHORT).show();
+                        return false;
+                    });
+
+                    Method method = popup.getMenu().getClass().getDeclaredMethod(getResources().getString(R.string.SetOptionall), boolean.class);
+                    method.setAccessible(true);
+                    method.invoke(popup.getMenu(), true);
+                    popup.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    Log.d(TAG,"onPageScrolled: "+position);
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+
+                    if (position == 0) {
+                        ihideOverlay = relativesFragment;
+                    } else if (position == 1) {
+                        ihideOverlay = photosFragment;
+                    } else if (position == 2) {
+                        ihideOverlay = factsFragment;
+                    }
+                    ihideOverlay.hideOverlay();
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+                    Log.d(TAG,"onPageScrollStateChanged: "+state);
+                }
+            });
+
+            ActivityCompat.requestPermissions(FamilyTreeDetailActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
+        }
+    }
+    private void setNoInternetLayout(){
+        setContentView(R.layout.no_internet_layout);
+        AppCompatButton retryButton=findViewById(R.id.retry_button);
+        retryButton.setOnClickListener(v -> {
+            setScreenLayout();
+        });
+    }
+    private void registerNetworkBroadcastForNougat() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+    }
+    private void unregisterNetworkBroadcastForNougat() {
+        try{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                unregisterReceiver(mNetworkReceiver);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                unregisterReceiver(mNetworkReceiver);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterNetworkBroadcastForNougat();
+    }
+    class NetworkChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try{
+                if (NetworkChecker.isNetworkConnected(context)) {
+                    setScreenLayout();
+                }else{
+                    setNoInternetLayout();
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
 
     /**
      * Watches the state of the current fragments scrolling and translates views accordingly

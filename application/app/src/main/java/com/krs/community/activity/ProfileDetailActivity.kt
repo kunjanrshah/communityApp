@@ -1,7 +1,12 @@
 package com.krs.community.activity
 
+import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.location.Location
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -9,6 +14,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -44,6 +50,7 @@ import com.krs.community.utils.*
 import com.krs.community.utils.Utility.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
+import com.wessam.library.NetworkChecker
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
@@ -70,9 +77,15 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     private var scanId: String? = null
     private var userId: String? = null
     private var isStopService = false
+    private var mNetworkReceiver: BroadcastReceiver? = null
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        mNetworkReceiver = NetworkChangeReceiver()
+
+        registerNetworkBroadcastForNougat()
 
         getLocationDetail = GetLocationDetail(this, this)
         request = LocationRequest()
@@ -129,12 +142,12 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             binding.switchLocation.isActivated = true
             binding.switchLocation.isOn = true
             binding.switchLocation.labelOn = "ON"
-            binding.tvDistance.text = "Finding"
+            binding.tvDistance.text = getString(R.string.Finding)
             startLocationService()
         } else {
             binding.switchLocation.isOn = false
             binding.switchLocation.labelOff = "OFF"
-            binding.tvDistance.text = "User"
+            binding.tvDistance.text = getString(R.string.user)
             if (!userId.equals(member?.id)) {
                 binding.switchLocation.isActivated = false
             }
@@ -169,7 +182,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 Utility.showDirections(this, member!!.userLat.toDouble(), member!!.userLng.toDouble(), "${member?.firstName}'s Location")
             } else {
                 if (!member?.id.isNullOrEmpty()) {
-                    Toast.makeText(this, "${member?.firstName}'s location is off", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "${member?.firstName}"+getString(R.string.locationOff), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -191,63 +204,112 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
         binding.tvSave.setOnClickListener {
 
-            val jsonObject = JSONObject()
-            mainDetailsFragment.getSaveData(jsonObject)
-            personalDetailsFragment.getSaveData(jsonObject)
-            professionalDetailsFragment.getSaveData(jsonObject)
-            matrimonyDetailsFragment.getSaveData(jsonObject)
-            jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+            if (NetworkChecker.isNetworkConnected(this)) {
+                val jsonObject = JSONObject()
+                mainDetailsFragment.getSaveData(jsonObject)
+                personalDetailsFragment.getSaveData(jsonObject)
+                professionalDetailsFragment.getSaveData(jsonObject)
+                matrimonyDetailsFragment.getSaveData(jsonObject)
+                jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
 
-            if (member?.isLocationEnable == "1") {
-                jsonObject.put(getString(R.string.is_location_enable), "1")
-            } else {
-                jsonObject.put(getString(R.string.is_location_enable), "0")
-            }
-            jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-
-            if (binding.tvSave.text.toString().toLowerCase().equals("save")) {
-
-                SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Update Profile")
-                        .setConfirmText("Update")
-                        .setCancelText("No")
-                        .setCancelClickListener {
-                            it.dismissWithAnimation()
-                        }
-                        .setContentText(getString(R.string.you_sure))
-                        .setConfirmClickListener {
-                            it.dismissWithAnimation()
-                            Utility.startSweetProgress(this, "Updating your profile", "Please wait...")
-                            jsonObject.put(getString(R.string.id), member?.id)
-                            val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-                            profileDetailViewModel.updateProfile(profile, true)
-                        }
-                        .show()
-
-            } else {
-                if (jsonObject.getString(getString(R.string.first_name)).isNullOrEmpty()) {
-                    mainDetailsFragment.binding.fname.error = "Enter your FirstName"
-                    return@setOnClickListener
-                } else if (jsonObject.getString(getString(R.string.sub_cast_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.sub_cast_id)) == "0") {
-                    Utility.displaySnackBarWithBottomMargin(ll_parent, "Select your LastName")
-                    return@setOnClickListener
-                } else if (jsonObject.getString(getString(R.string.gender)).isNullOrEmpty()) {
-                    Utility.displaySnackBarWithBottomMargin(ll_parent, "Select your Gender")
-                    return@setOnClickListener
-                } else if (jsonObject.getString(getString(R.string.relation_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.relation_id)) == "0") {
-                    Utility.displaySnackBarWithBottomMargin(ll_parent, "Select your Relation")
-                    return@setOnClickListener
+                if (member?.isLocationEnable == "1") {
+                    jsonObject.put(getString(R.string.is_location_enable), "1")
+                } else {
+                    jsonObject.put(getString(R.string.is_location_enable), "0")
                 }
+                jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
 
-                Utility.startSweetProgress(this, "Adding ${jsonObject.get(getString(R.string.first_name))}'s Profie", "Please wait...")
-                val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-                profileDetailViewModel.updateProfile(profile, false)
+                if (binding.tvSave.text.toString().toLowerCase().equals("save")) {
+
+                    SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText(getString(R.string.updateprofile))
+                            .setConfirmText(getString(R.string.update))
+                            .setCancelText(getString(R.string.no))
+                            .setCancelClickListener {
+                                it.dismissWithAnimation()
+                            }
+                            .setContentText(getString(R.string.you_sure))
+                            .setConfirmClickListener {
+                                it.dismissWithAnimation()
+                                Utility.startSweetProgress(this, getString(R.string.updatingProfile), getString(R.string.pleaseWait))
+                                jsonObject.put(getString(R.string.id), member?.id)
+                                val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
+                                profileDetailViewModel.updateProfile(profile, true)
+                            }
+                            .show()
+
+                } else {
+                    if (jsonObject.getString(getString(R.string.first_name)).isNullOrEmpty()) {
+                        mainDetailsFragment.binding.fname.error = getString(R.string.EnterFirstName)
+                        return@setOnClickListener
+                    } else if (jsonObject.getString(getString(R.string.sub_cast_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.sub_cast_id)) == "0") {
+                        Utility.displaySnackBarWithBottomMargin(ll_parent, getString(R.string.selectYourLastName))
+                        return@setOnClickListener
+                    } else if (jsonObject.getString(getString(R.string.gender)).isNullOrEmpty()) {
+                        Utility.displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectYourGender))
+                        return@setOnClickListener
+                    } else if (jsonObject.getString(getString(R.string.relation_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.relation_id)) == "0") {
+                        Utility.displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectRelation))
+                        return@setOnClickListener
+                    }
+
+                    Utility.startSweetProgress(this, "Adding ${jsonObject.get(getString(R.string.first_name))}'s Profie", "Please wait...")
+                    val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
+                    profileDetailViewModel.updateProfile(profile, false)
+                }
+                Log.d(ProfileDetailActivity::class.java.simpleName, "jsonObject: " + jsonObject.toString())
+                hideSweetProgress()
+            }else{
+                setNoInternetLayout()
             }
-            Log.d(ProfileDetailActivity::class.java.simpleName, "jsonObject: " + jsonObject.toString())
+
         }
-        hideSweetProgress()
+
+    }
+    private fun registerNetworkBroadcastForNougat() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+    }
+    private fun setNoInternetLayout() {
+        setContentView(R.layout.no_internet_layout)
+        //val binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.no_internet_layout)
+        val retryButton: AppCompatButton = findViewById(R.id.retry_button)
+        retryButton.setOnClickListener { v: View? ->  onBackPressed()}
+    }
+    private fun unregisterNetworkBroadcastForNougat() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                unregisterReceiver(mNetworkReceiver)
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                unregisterReceiver(mNetworkReceiver)
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterNetworkBroadcastForNougat()
+    }
+    inner class NetworkChangeReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            try {
+                if (NetworkChecker.isNetworkConnected(context)) {
+
+                } else {
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+
+    }
     private fun goToFamilyDetailActivity() {
         val intent = Intent(this, FamilyDetailActivity::class.java)
         if (member?.headId == "0") {
@@ -288,10 +350,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun stopLocationServiceAndUpdateProfile() {
         isStopService = true
         member?.isLocationEnable = "0"
-        binding.tvDistance.text = "Distance"
+        binding.tvDistance.text = getString(R.string.Distance)
         stopService(ProcessMainClass.serviceIntent)
         val jsonObject = JSONObject()
         jsonObject.put(getString(R.string.is_location_enable), "0")
@@ -304,17 +367,17 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     private fun setMemberValues() {
 
-        binding.txtTitle.text = "${member?.firstName}'s Profile"
+        binding.txtTitle.text = "${member?.firstName}"+getString(R.string.Profile)
 
         val userId = Guru.getString(getString(R.string.user_id), "")
         if (member?.id == userId || member?.headId == userId) {
             binding.tvSave.visibility = View.VISIBLE
-            binding.tvSave.text = "Save"
+            binding.tvSave.text = getString(R.string.save)
             binding.imgProfile.isEnabled = true
         } else if (member?.id.isNullOrEmpty()) {
-            binding.tvSave.text = "Add"
+            binding.tvSave.text = getString(R.string.add)
             binding.imgProfile.isEnabled = true
-            binding.txtTitle.text = "New Profile"
+            binding.txtTitle.text = getString(R.string.newProfile)
         } else {
             binding.imgProfile.isEnabled = false
             binding.tvSave.visibility = View.GONE
@@ -324,7 +387,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             binding.switchLocation.isOn = true
             binding.switchLocation.isEnabled = true
         } else {
-            binding.tvDistance.text = "Distance"
+            binding.tvDistance.text = getString(R.string.Distance)
             binding.switchLocation.isOn = false
             if (!userId.equals(member?.id)) {
                 binding.switchLocation.isEnabled = false
@@ -380,12 +443,12 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             if (!isStopService) {
                 val percentage = Utility.calculatePercentage(member)
                 setPercentage(percentage)
-                str = "Profile updated!"
+                str = getString(R.string.profileUpdate)
             } else {
-                str = "Location updated"
+                str = getString(R.string.locationUpdate)
             }
 
-            startSweetDialog(this, SweetAlertDialog.SUCCESS_TYPE, "Success", str)
+            startSweetDialog(this, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.Success), str)
 
             isStopService = false
         } else {
@@ -412,7 +475,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         hideSweetProgress()
         member?.profilePic = profile
         Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
-        displaySnackBarWithBottomMargin(binding.llParent, "Profile updated!")
+        displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.profileUpdate))
     }
 
     override suspend fun onFailure(message: String) {
@@ -422,13 +485,14 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun setDistance() {
         if (member?.isLocationEnable == "1") {
             if (cur_lat.value != null && cur_lng.value != null && !member?.userLat.isNullOrEmpty() && !member?.userLng.isNullOrEmpty()) {
                 val dist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member!!.userLat.toDouble(), member!!.userLng.toDouble()) / 1000
-                binding.tvDistance.text = String.format("%.2f KM", dist)
+                binding.tvDistance.text = "km"
             } else {
-                binding.tvDistance.text = "Distance"
+                binding.tvDistance.text = getString(R.string.Distance)
             }
         }
     }
@@ -468,7 +532,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 if (selectedUri != null) {
                     startCrop(selectedUri, this)
                 } else {
-                    Toast.makeText(this@ProfileDetailActivity, "Cannot retrieve selected image", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ProfileDetailActivity, getString(R.string.selectedImage), Toast.LENGTH_SHORT).show()
                 }
             } else if (requestCode == UCrop.REQUEST_CROP) {
                 if (isProfileImage) {
@@ -485,7 +549,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
                             try {
                                 val uploadImage = File(resultUri.path.toString())
-                                startSweetProgress(this, "Image", getString(R.string.loading))
+                                startSweetProgress(this, getString(R.string.image), getString(R.string.loading))
                                 profileDetailViewModel.uploadImage(uploadImage,member?.id.toString(),getString(R.string.profile))
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -528,11 +592,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
 
     override fun locationCancelled() {
-        ll_parent.snackbar("Location Off", Snackbar.LENGTH_SHORT)
+        ll_parent.snackbar(getString(R.string.LocationOff), Snackbar.LENGTH_SHORT)
     }
 
     override fun locationOn() {
-        ll_parent.snackbar("Location On", Snackbar.LENGTH_SHORT)
+        ll_parent.snackbar(getString(R.string.LocationOn), Snackbar.LENGTH_SHORT)
     }
 
     override fun currentLocation(location: Location) {

@@ -1,5 +1,6 @@
 package com.krs.community.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
 import android.net.Uri
@@ -102,7 +103,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragmnet_search_by_distance, container, false)
 
-        (activity as AppCompatActivity).supportActionBar!!.title = "Search by Distance"
+        (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.SearchDistance)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.colorPrimary, true)
         }
@@ -221,6 +222,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         }
 
         byDistanceAdapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
+            @SuppressLint("SetTextI18n")
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, i: Int) {
                 val viewHolder: DistanceViewHolder = viewHolder as DistanceViewHolder
                 val member = lstMembers[i]
@@ -307,17 +309,17 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                 if(nearBy.equals("Home")){
                     viewHolder.llHome.visibility=View.VISIBLE
                     viewHolder.tvHome.visibility=View.VISIBLE
-                    viewHolder.tvHome.text="Home"
+                    viewHolder.tvHome.text=getString(R.string.homeDistance)
                     viewHolder.tvHomeDist.text=getDistance(member.distance)
                 }else if(nearBy.equals("Office")){
                     viewHolder.llOffice.visibility=View.VISIBLE
                     viewHolder.tvOffice.visibility=View.VISIBLE
-                    viewHolder.tvOffice.text="Office"
+                    viewHolder.tvOffice.text=getString(R.string.Officedistance)
                     viewHolder.tvOfficeDist.text=getDistance(member.distance)
                 }else if(nearBy.equals("User")){
                     viewHolder.llUser.visibility=View.VISIBLE
                     viewHolder.tvUser.visibility=View.VISIBLE
-                    viewHolder.tvUser.text="User"
+                    viewHolder.tvUser.text=getString(R.string.userDetails)
                     viewHolder.tvUserDist.text=getDistance(member.distance)
                 }else if(nearBy.equals("All")){
 
@@ -326,7 +328,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                         if(elements[0].isNotEmpty()){
                             viewHolder.llHome.visibility=View.VISIBLE
                             viewHolder.tvHome.visibility=View.VISIBLE
-                            viewHolder.tvHome.text="Home"
+                            viewHolder.tvHome.text=getString(R.string.homeDistance)
                             viewHolder.tvHomeDist.text=getDistance(elements[0].trim())
                         }
                     }
@@ -334,7 +336,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                         if(elements[1].isNotEmpty()){
                             viewHolder.llOffice.visibility=View.VISIBLE
                             viewHolder.tvOffice.visibility=View.VISIBLE
-                            viewHolder.tvOffice.text="Office"
+                            viewHolder.tvOffice.text=getDistance(member.distance)
                             viewHolder.tvOfficeDist.text=getDistance(elements[1].trim())
                         }
                     }
@@ -342,7 +344,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                         if(elements[1].isNotEmpty()){
                             viewHolder.llUser.visibility=View.VISIBLE
                             viewHolder.tvUser.visibility=View.VISIBLE
-                            viewHolder.tvUser.text="User"
+                            viewHolder.tvUser.text=getString(R.string.userDetails)
                             viewHolder.tvUserDist.text=getDistance(elements[1].trim())
                         }
                     }
@@ -565,11 +567,11 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
 
             if(Integer.parseInt(response.totalRecords)<=AppController.mApplication.length){
                 DashboardActivity.stop = true
-                Snackbar.make(llRoot, "End of the Records", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(llRoot, getString(R.string.EndRecordDistance), Snackbar.LENGTH_LONG).show()
             }
 
             if(lstMembers.size>0){
-                tvRecords.text="Records found: "+response.totalRecords
+                tvRecords.text=getString(R.string.RecordDistance)+response.totalRecords
                 imgMap.visibility=View.GONE
                 tvRecords.visibility=View.VISIBLE
             }else{

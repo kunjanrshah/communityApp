@@ -140,37 +140,37 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
         btnCreate.setOnClickListener { v: View? ->
             var isValidated = true
             if (edt_title.text.toString().length == 0) {
-                edt_title.error = "Event title is required"
+                edt_title.error = getString(R.string.EventRequired)
                 isValidated = false
             }
             if (edt_address.text.toString().length == 0) {
-                edt_address.error = "Event address is required"
+                edt_address.error = getString(R.string.EventAddress)
                 isValidated = false
             }
             if (edt_description.text.toString().length == 0) {
-                edt_description.error = "Event description is required"
+                edt_description.error = getString(R.string.EnetDescription)
                 isValidated = false
             }
             if (txt_start.getText().toString().length == 0) {
-                txt_start.setError("Start date is required")
+                txt_start.setError(getString(R.string.StartDate))
                 isValidated = false
             } else {
                 txt_start.setError(null)
             }
             if (edt_end_date.getText().toString().length == 0) {
-                edt_end_date.setError("End date is required")
+                edt_end_date.setError(getString(R.string.EndDate))
                 isValidated = false
             } else {
                 edt_end_date.setError(null)
             }
             if (txt_start_time.getText().toString().length == 0) {
-                txt_start_time.setError("Start time is required")
+                txt_start_time.setError(getString(R.string.StartTime))
                 isValidated = false
             } else {
                 txt_start_time.setError(null)
             }
             if (txt_end_time.getText().toString().length == 0) {
-                txt_end_time.setError("End time is required")
+                txt_end_time.setError(getString(R.string.EndTime))
                 isValidated = false
             } else {
                 txt_end_time.setError(null)
@@ -189,7 +189,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
 
 
 //              val data = "{\"id\":\"1\",\"event_date\":\"2020-01-01\",\"title\":\"DemoTitile\",\"description\":\"DemoDescription\",\"location\":\"DemoLocation\",\"lat\":\"23.7546\",\"lng\":\"72.2308\",\"youtube\":[\"https:\\/\\/youtube.com\",\"https:\\/\\/youtube.com\"]}";
-                Utility.startSweetProgress(activity, "Creating an event", "Please wait...")
+                Utility.startSweetProgress(activity, getString(R.string.Creating), getString(R.string.PleaseWait))
                 shareEventViewModel.createEvent(mResults,userId,userId,Guru.getString(getString(R.string.access_token), "").toString(),json.toString(),yURLs)
             }
         }
@@ -277,7 +277,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
                 txt_end_time.error = null
             }
         }, hour, minute, true) //Yes 24 hour time
-        mTimePicker.setTitle("Select Time")
+        mTimePicker.setTitle(getString(R.string.SelectTime))
         mTimePicker.show()
     }
 

@@ -586,9 +586,9 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
-                                .setContentText("want to disable ${selectedItemPositions.size} Profiles!")
-                                .setConfirmText("Yes,Disable it!")
-                                .setCancelText("No")
+                                .setContentText(getString(R.string.wantDisable)+"${selectedItemPositions.size}"+getString(R.string.profileAdmins) )
+                                .setConfirmText(getString(R.string.YesDisable))
+                                .setCancelText(getString(R.string.NoAdmins))
                                 .setConfirmClickListener {
                                     it.dismiss()
 

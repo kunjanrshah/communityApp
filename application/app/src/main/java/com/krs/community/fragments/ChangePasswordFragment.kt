@@ -77,13 +77,13 @@ class ChangePasswordFragment : Fragment() , KodeinAware,ILoginListener {
             val memberString = Guru.getString(getString(R.string.loginMember), "")
             val loginMember = Gson().fromJson(memberString, Member::class.java)
             SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Forgot PIN")
-                    .setConfirmText("Let me check")
-                    .setCancelText("Cancel")
+                    .setTitleText(getString(R.string.forgotPin))
+                    .setConfirmText(getString(R.string.letMeCheck))
+                    .setCancelText(getString(R.string.Cancel))
                     .setCancelClickListener {
                         it.dismissWithAnimation()
                     }
-                    .setContentText("PIN will be sent to ${loginMember.emailAddress}")
+                    .setContentText(getString(R.string.pinWillsend)+" ${loginMember.emailAddress}")
                     .setConfirmClickListener {
                         it.dismissWithAnimation()
                         val jsonObject= JSONObject()

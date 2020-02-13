@@ -99,7 +99,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                 if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){
                     var dist= EasyWayLocation.calculateDistance(member.officeLat.toDouble(),member.officeLng.toDouble(),ProfileDetailActivity.cur_lat.value!!.toDouble(),ProfileDetailActivity.cur_lng.value!!.toDouble())
                     dist /= 1000
-                    binding.tvDistance.text=String.format("%.2f KM",dist)
+                    binding.tvDistance.text=String.format(getString(R.string.kmPDetail),dist)
                 }
             }
 
@@ -107,7 +107,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                 if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){
                     var dist= EasyWayLocation.calculateDistance(member.officeLat.toDouble(),member.officeLng.toDouble(),ProfileDetailActivity.cur_lat.value!!.toDouble(),ProfileDetailActivity.cur_lng.value!!.toDouble())
                     dist /= 1000
-                    binding.tvDistance.text=String.format("%.2f KM",dist)
+                    binding.tvDistance.text=String.format(getString(R.string.kmPDetail),dist)
                 }
             }
         }else{
@@ -115,10 +115,10 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         }
         binding.llWork.setOnClickListener {
             SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                    .setTitleText("Office Location")
-                    .setContentText("With Google Map")
-                    .setConfirmText("Set")
-                    .setCancelText("View")
+                    .setTitleText(getString(R.string.OfficeLocation))
+                    .setContentText(getString(R.string.WithGoogle))
+                    .setConfirmText(getString(R.string.SetDetail))
+                    .setCancelText(getString(R.string.ViewDetails))
                     .setCustomImage(R.drawable.ic_app)
                     .setConfirmClickListener {
                         it.dismiss()
@@ -130,10 +130,10 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                             jsonObject.put(getString(R.string.office_lat), ProfileDetailActivity.cur_lat.value)
                             jsonObject.put(getString(R.string.office_lng), ProfileDetailActivity.cur_lng.value)
                             val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-                            Utility.startSweetProgress(activity, "Updating your office location", "Please wait...")
+                            Utility.startSweetProgress(activity, getString(R.string.updatingLocationDetail), getString(R.string.PleasWaitDetails))
                             profileDetailViewModel.updateProfile(profile, true)
                         }else{
-                            Utility.displaySnackBarWithBottomMargin(ll_main,"Only Family Head Set the Office Location")
+                            Utility.displaySnackBarWithBottomMargin(ll_main,getString(R.string.headDetails))
                         }
                     }
                     .setCancelClickListener {
@@ -251,7 +251,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                 if (selectedUri != null) {
                     startCrop(selectedUri, activity!!)
                 } else {
-                    binding.llMain.snackbar("Cannot retrieve selected image",Snackbar.LENGTH_SHORT)
+                    binding.llMain.snackbar(getString(R.string.SelectedImageDetails),Snackbar.LENGTH_SHORT)
                 }
             } else if (requestCode == UCrop.REQUEST_CROP) {
                 if (isLogo) {
@@ -267,7 +267,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                             logger.debug("resultUri: $resultUri")
                             try {
                                 val uploadImage = File(resultUri.path.toString())
-                                startSweetProgress(activity!!, "Image", getString(R.string.loading))
+                                startSweetProgress(activity!!, getString(R.string.imageDetails), getString(R.string.loading))
                                 profileDetailViewModel.uploadImage(uploadImage,member.id.toString(),getString(R.string.company))
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -353,7 +353,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){
             var dist= EasyWayLocation.calculateDistance(member.officeLat.toDouble(),member.officeLng.toDouble(),ProfileDetailActivity.cur_lat.value!!.toDouble(),ProfileDetailActivity.cur_lng.value!!.toDouble())
             dist /= 1000
-            binding.tvDistance.text=String.format("%.2f KM",dist)
+            binding.tvDistance.text=String.format(getString(R.string.kmPDetail),dist)
         }
         displaySnackBarWithBottomMargin(binding.llMain, "Office location updated!")
     }

@@ -66,7 +66,7 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
             if(!member.userLat.isNullOrEmpty() &&  !member.userLng.isNullOrEmpty() && isShareLocation()){
                 Utility.showDirections(mContext as Activity, member.userLat.toDouble(), member.userLng.toDouble(), "${member.firstName}'s Location")
             }else{
-               Toast.makeText(mContext,"Private",Toast.LENGTH_LONG).show()
+               Toast.makeText(mContext, R.string.Private,Toast.LENGTH_LONG).show()
             }
         }
 

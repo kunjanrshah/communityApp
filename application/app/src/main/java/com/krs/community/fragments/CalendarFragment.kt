@@ -186,11 +186,11 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
 
                 if(lstCalendar.size<=AppController.mApplication.length){
                     DashboardActivity.stop = true
-                    Snackbar.make(llRoot, "End of Records", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(llRoot, getString(R.string.endRecord), Snackbar.LENGTH_LONG).show()
                 }
             }else{
                 DashboardActivity.stop = true
-                Snackbar.make(llRoot, "End of Records", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(llRoot, getString(R.string.endRecord), Snackbar.LENGTH_LONG).show()
             }
         }else {
             DashboardActivity.stop = false

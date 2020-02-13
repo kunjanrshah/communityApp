@@ -1,5 +1,6 @@
 package com.krs.community.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
@@ -47,6 +48,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
     private lateinit var loginMem:Member
     private var pattern="dd-MM-yyyy"
     override val kodein by kodein()
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_personal_details, container, false)
@@ -95,11 +97,11 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
 
 
         if(member.role.equals("LOCAL_ADMIN")){
-            binding.edtRole.text = "Local Admin"
+            binding.edtRole.text = getString(R.string.localAdmin)
         }else if(member.role.equals("SUB_ADMIN")) {
-            binding.edtRole.text = "Sub Admin"
+            binding.edtRole.text = getString(R.string.SubAdmin)
         }else{
-            binding.edtRole.text = "User"
+            binding.edtRole.text = getString(R.string.user)
         }
 
        binding.chkIsDonor.isChecked = member.isDonor.equals("1")

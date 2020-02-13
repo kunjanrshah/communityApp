@@ -69,7 +69,7 @@ class MatrimonyFragment : Fragment(), KodeinAware {
                 jsonObject.put(getString(R.string.first_name),binding.edtName.text.trim())
                 moveToFragmentListScreen(activity,jsonObject.toString())
             }else{
-                binding.edtName.error="Enter name please"
+                binding.edtName.error=getString(R.string.enterName)
             }
 
         }

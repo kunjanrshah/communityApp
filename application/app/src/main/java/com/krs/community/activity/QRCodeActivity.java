@@ -1,8 +1,12 @@
 package com.krs.community.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +16,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
@@ -30,6 +35,7 @@ import com.krs.community.databinding.FragmentByQrcodeBinding;
 import com.krs.community.model.Member;
 import com.krs.community.utils.AESUtils;
 import com.krs.community.utils.Utility;
+import com.wessam.library.NetworkChecker;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,11 +54,34 @@ public class QRCodeActivity extends AppCompatActivity {
     Handler handler;
     private static final int SELECT_PHOTO = 100;
     private Member member;
+    NetworkChangeReceiver mNetworkReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mNetworkReceiver = new NetworkChangeReceiver();
+
+        registerNetworkBroadcastForNougat();
+
+        if (NetworkChecker.isNetworkConnected(this)) {
+            setScreenLayout();
+        }else{
+            setNoInternetLayout();
+        }
+
+
+    }
+
+    private void setNoInternetLayout() {
+        setContentView(R.layout.no_internet_layout);
+        AppCompatButton retryButton=findViewById(R.id.retry_button);
+        retryButton.setOnClickListener(v -> {
+            setScreenLayout();
+        });
+    }
+
+    private void setScreenLayout() {
         FragmentByQrcodeBinding binding = DataBindingUtil.setContentView(this,R.layout.fragment_by_qrcode);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -160,7 +189,47 @@ public class QRCodeActivity extends AppCompatActivity {
         });
     }
 
+    private void registerNetworkBroadcastForNougat() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterNetworkBroadcastForNougat();
+    }
+    private void unregisterNetworkBroadcastForNougat() {
+        try{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                unregisterReceiver(mNetworkReceiver);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                unregisterReceiver(mNetworkReceiver);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    class NetworkChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try{
+                if (NetworkChecker.isNetworkConnected(context)) {
+                    setScreenLayout();
+                }else{
+                    setNoInternetLayout();
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
     private void shareImageUri(Uri uri){
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_STREAM, uri);

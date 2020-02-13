@@ -18,8 +18,10 @@ import android.view.View
 import android.view.Window
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.ViewUtils
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.FragmentActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
@@ -56,6 +58,9 @@ fun ProgressBar.show() {
 fun ProgressBar.hide() {
     visibility = View.GONE
 }
+
+
+
 
 fun View.snackbar(message: String, snack: Int) {
     Snackbar.make(this, message, snack).also { snackbar ->
@@ -234,7 +239,7 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
     smartFilterViewModel.getListCityName().observeForever {
         if (it.isNotEmpty()) {
             val list = ArrayList<String>()
-            list.add(context.getString(R.string.Select))
+            list.add(context.getString(R.string.select))
             list.addAll(it)
             spCity.setItems(list.toTypedArray())
             spCity.setExpandTint(R.color.black)
@@ -244,7 +249,7 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
     smartFilterViewModel.getLastName().observeForever {
         if (it.isNotEmpty()) {
             val list = ArrayList<String>()
-            list.add(context.getString(R.string.Select))
+            list.add(context.getString(R.string.select))
             list.addAll(it)
             spLname.setItems(list.toTypedArray())
             spLname.setExpandTint(R.color.black)
@@ -376,12 +381,12 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
             if (edtMail.text.trim().isNotEmpty()) {
                 jsonObject.put(context.getString(R.string.email_address), edtMail.text.trim())
             }
-            if (!spLname.text.isNullOrEmpty() && spLname.text.toString() != context.getString(R.string.Select)) {
+            if (!spLname.text.isNullOrEmpty() && spLname.text.toString() != context.getString(R.string.select)) {
                 val subCastId = smartFilterViewModel.getIdByLastName(spLname.text.toString())
                 jsonObject.put(context.getString(R.string.sub_cast_id), subCastId)
             }
 
-            if (!spCity.text.isNullOrEmpty() && spCity.text.toString() != context.getString(R.string.Select)) {
+            if (!spCity.text.isNullOrEmpty() && spCity.text.toString() != context.getString(R.string.select)) {
                 val cityId = smartFilterViewModel.getCityIdByName(spCity.text.toString())
                 jsonObject.put(context.getString(R.string.city_id), cityId)
             }
@@ -402,7 +407,6 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
             }
 
         }
-
 
     }
     dialog.show()

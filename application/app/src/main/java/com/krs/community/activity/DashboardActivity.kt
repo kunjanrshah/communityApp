@@ -42,6 +42,7 @@ import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.luseen.spacenavigation.SpaceItem
 import com.luseen.spacenavigation.SpaceOnClickListener
 import com.luseen.spacenavigation.SpaceOnLongClickListener
+import com.wessam.library.NoInternetLayout
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -70,6 +71,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         binding = DataBindingUtil.setContentView(this@DashboardActivity, R.layout.activity_dashboard)
         dashboardViewModel = ViewModelProviders.of(this, factory).get(DashboardViewModel::class.java)
 
+
+    //    NoInternetLayout.Builder(this@DashboardActivity, R.layout.activity_dashboard).animate()
+
         if (Guru.getString(getString(R.string.user_id), "")!!.isEmpty()) {
             val mIntent = Intent(this@DashboardActivity, SplashActivity::class.java)
             startActivity(mIntent)
@@ -80,7 +84,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         setSupportActionBar(binding.toolbar as Toolbar)
         (binding.toolbar as Toolbar).setTitleTextColor(resources.getColor(R.color.colorPrimary))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Home"
+        supportActionBar?.title = getString(R.string.home)
 
         binding.myAppBar.translationY = -toolbarHeight.toFloat()
         binding.myAppBar.animate().translationY(0f).alpha(1f).setDuration(2000).start()
@@ -102,8 +106,8 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         }
 
         binding.space.initWithSaveInstanceState(savedInstanceState)
-        binding.space.addSpaceItem(SpaceItem("Home", R.drawable.home))
-        binding.space.addSpaceItem(SpaceItem("Calendar", R.drawable.calendar4))
+        binding.space.addSpaceItem(SpaceItem(getString(R.string.home), R.drawable.home))
+        binding.space.addSpaceItem(SpaceItem(getString(R.string.Calendar), R.drawable.calendar4))
         binding.space.shouldShowFullBadgeText(false)
         binding.space.setCentreButtonIconColorFilterEnabled(false)
         binding.space.setCentreButtonIcon(R.drawable.filter_icon)
@@ -148,7 +152,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
         binding.space.setSpaceOnLongClickListener(object : SpaceOnLongClickListener {
             override fun onCentreButtonLongClick() {
-                Toast.makeText(this@DashboardActivity, "onCentreButtonLongClick", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@DashboardActivity, getString(R.string.onCentreButtonLongClick), Toast.LENGTH_SHORT).show()
             }
 
             override fun onItemLongClick(itemIndex: Int, itemName: String) {
@@ -182,7 +186,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             requestFineLocationPermission(this)
         }
         loadProfile()
+        hideSweetProgress()
     }
+
 
     override fun onPause() {
         super.onPause()
@@ -291,7 +297,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_profile -> {
-                startSweetProgress(this,"Move profile detail",getString(R.string.loading))
+                startSweetProgress(this,getString(R.string.MoveProfile),getString(R.string.loading))
                 val intent = Intent(this, ProfileDetailActivity::class.java)
                 val memberString = Guru.getString(getString(R.string.loginMember), "")
                 val member = Gson().fromJson(memberString, Member::class.java)
@@ -309,11 +315,11 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     }
 
     override fun locationCancelled() {
-        binding.containerBody.snackbar("Location Off", Snackbar.LENGTH_SHORT)
+        binding.containerBody.snackbar(getString(R.string.LocationOff), Snackbar.LENGTH_SHORT)
     }
 
     override fun locationOn() {
-        binding.containerBody.snackbar("Location On", Snackbar.LENGTH_SHORT)
+        binding.containerBody.snackbar(getString(R.string.LocationOn), Snackbar.LENGTH_SHORT)
     }
 
     override fun currentLocation(location: Location) {

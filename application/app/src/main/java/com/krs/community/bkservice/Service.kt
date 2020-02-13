@@ -17,6 +17,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.app.AppDatabase
+import com.krs.community.bkservice.ProcessMainClass.serviceIntent
 import com.krs.community.bkservice.utilities.Notification
 import com.krs.community.repositories.ProfileDetailRepository
 import com.krs.community.responses.UpdateProfileResponse
@@ -92,6 +93,10 @@ class Service : android.app.Service(), Listener, AddressCallBack {
                 startForeground(NOTIFICATION_ID, notification.setNotification(this, "Service notification", "This is the service's notification", R.drawable.ic_app))
                 Log.i(TAG, "restarting foreground successful")
                 easyWayLocation.startLocation()
+
+
+                serviceIntent = Intent(this, PhonecallReceiver::class.java)
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error in notification " + e.message)
             }

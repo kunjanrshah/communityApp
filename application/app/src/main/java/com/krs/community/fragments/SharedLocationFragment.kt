@@ -107,7 +107,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 holder.tvEmail.text = member.emailAddress
                 holder.tvMobile.text = member.mobile
                 holder.imgLocation.visibility = View.GONE
-                holder.tvUpdate.text = "updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                holder.tvUpdate.text = getString(R.string.UpdateList) + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
 
                 if (member.headId.equals("0")) {
                     holder.tvRole.text = resources.getString(R.string.Family_Head)
