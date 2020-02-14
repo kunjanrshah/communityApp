@@ -7,10 +7,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -235,6 +232,8 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
                         createMemberPDF(this@FavoriteProfileActivity, getMemberFromRoomMember(member),profileDetailViewModel)
 
                     }else if(it == 1) {
+                        Toast.makeText(this@FavoriteProfileActivity,"Coming soon", Toast.LENGTH_SHORT).show()
+                        return@listener
                         val intent: Intent = Intent(this@FavoriteProfileActivity, FamilyTreeListActivity::class.java)
                         startActivity(intent)
 

@@ -164,13 +164,13 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 }
             })
 
-            binding.edtMobile.setOnEditorActionListener({ v, actionId, event ->
+            binding.edtMobile.setOnEditorActionListener { v, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     btnContinue.performClick()
                     true;
                 }
                 false;
-            })
+            }
 
             binding.imgCancel.setOnClickListener {
                 card_view_otp.visibility = View.GONE
@@ -366,7 +366,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         when (requestCode) {
             1 -> {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted
                 } else {
                     // permission denied

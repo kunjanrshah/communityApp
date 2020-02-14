@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="loginViewModel"
             type="com.krs.community.viewmodel.LoginViewModel" />
@@ -31,11 +32,15 @@
 
         </LinearLayout>
 
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content">
         <androidx.cardview.widget.CardView
             android:id="@+id/card_view_mobile"
             android:layout_width="match_parent"
             android:layout_height="230dp"
-            android:layout_gravity="center"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginBottom="20dp"
@@ -124,107 +129,117 @@
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_view_otp"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="230dp"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="20dp"
-            app:cardCornerRadius="15dp">
-
-            <ImageView
-                android:id="@+id/img_cancel"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="right"
-                android:layout_marginTop="2dp"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/cancel_gray" />
-
-            <LinearLayout
+            android:layout_height="wrap_content">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view_otp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="230dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="20dp"
+                android:visibility="gone"
+                app:cardCornerRadius="15dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="5dp"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:text="OTP Verification"
-                    android:textColor="@color/black"
-                    android:textSize="26sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/montserrat_light"
-                    android:text="Enter the OTP you have received to "
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:text="@={loginViewModel.mobile}"
-                    android:textColor="@color/dark_color_primary"
-                    android:textSize="16sp" />
-
-                <com.poovam.pinedittextfield.SquarePinField
-                    android:id="@+id/squareField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="20dp"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:inputType="number"
-                    android:textSelectHandle="@drawable/text_handle"
-                    android:textSize="22sp"
-                    app:cornerRadius="10dp"
-                    app:fieldBgColor="#ddd"
-                    app:noOfFields="4" />
+                <ImageView
+                    android:id="@+id/img_cancel"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="2dp"
+                    android:background="@drawable/cancel_gray" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginRight="15dp"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tv_resend"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="false"
-                        android:enabled="true"
-                        android:text="Resend OTP?"
-                        android:textColor="@color/light_gray" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@={loginViewModel.otp_timer}" />
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="5dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="OTP Verification"
+                        android:textColor="@color/black"
+                        android:textSize="26sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/montserrat_light"
+                        android:text="Enter the OTP you have received to "
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@={loginViewModel.mobile}"
+                        android:textColor="@color/dark_color_primary"
+                        android:textSize="16sp" />
+
+                    <com.poovam.pinedittextfield.SquarePinField
+                        android:id="@+id/squareField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="20dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:inputType="number"
+                        android:textSelectHandle="@drawable/text_handle"
+                        android:textSize="22sp"
+                        app:cornerRadius="10dp"
+                        app:fieldBgColor="#ddd"
+                        app:noOfFields="4" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_resend"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clickable="false"
+                            android:enabled="true"
+                            android:text="Resend OTP?"
+                            android:textColor="@color/light_gray" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@={loginViewModel.otp_timer}" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnContinue"
             android:layout_width="170dp"
-            android:layout_height="55dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="90dp"
+            android:layout_height="50dp"
             android:background="@drawable/btn_registration"
             android:fontFamily="@font/montserrat_semibold"
             android:text="@string/_continue"
@@ -232,76 +247,78 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
 
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="- - - - - -  - - - - -" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="@string/or_login_with" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="- - - - - - - - - - - -" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_login_google"
-                    android:layout_width="150dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/google_btn" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_login_fb"
-                    android:layout_width="150dp"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="15dp"
-                    android:background="@drawable/facebook_btn" />
-
-            </LinearLayout>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/have_acc"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="60dp"
-                android:text="@string/do_you_have_an_account"
-                android:textColor="@color/dark_color_primary" />
+                android:text="- - - - - -  - - - - -" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="@string/or_login_with" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="- - - - - - - - - - - -" />
 
         </LinearLayout>
 
-    </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
-</layout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_login_google"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:background="@drawable/google_btn" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_login_fb"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/facebook_btn" />
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/have_acc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="60dp"
+            android:text="@string/do_you_have_an_account"
+            android:textColor="@color/dark_color_primary" />
+
+    </LinearLayout>
+
+</FrameLayout>
+
+    </layout>
 
 

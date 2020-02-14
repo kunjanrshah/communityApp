@@ -254,6 +254,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
 
 
                             } else if (it == 1) {
+                               Toast.makeText(this@FamilyDetailActivity,"Coming soon",Toast.LENGTH_SHORT).show()
+                               return@listener
                                 val intent: Intent = Intent(this@FamilyDetailActivity, FamilyTreeListActivity::class.java)
                                 startActivity(intent)
                             } else if (it == 2) {
@@ -272,9 +274,9 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                             } else if (it == 4) {
                                 shareDetails(this@FamilyDetailActivity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, member.area, member.address)
                             } else if (it == 5) {
-                                val adapter: LocationAdapter = LocationAdapter(AppController.mApplication.applicationContext, member)
+                                val adapter: LocationAdapter = LocationAdapter(this@FamilyDetailActivity, member)
                                 adapter.setLocationListner(this@FamilyDetailActivity)
-                                setLocationDialog = DialogPlus.newDialog(AppController.mApplication.applicationContext)
+                                setLocationDialog = DialogPlus.newDialog(this@FamilyDetailActivity)
                                         .setAdapter(adapter)
                                         .setGravity(Gravity.BOTTOM)
                                         .setCancelable(true)
@@ -402,6 +404,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                             hideSweetProgress()
                         }, 5000)
                 } else if (it == 1) {
+                    Toast.makeText(this@FamilyDetailActivity,"Coming soon",Toast.LENGTH_SHORT).show()
+                    return@listener
                     val intent: Intent = Intent(this@FamilyDetailActivity, FamilyTreeListActivity::class.java)
                     startActivity(intent)
                 } else if (it == 2) {
