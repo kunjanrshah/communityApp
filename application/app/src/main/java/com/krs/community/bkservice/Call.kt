@@ -73,6 +73,7 @@ abstract class Call : PhonecallReceiver() , Listener {
                         withContext(Dispatchers.Main) {
                             mEditMemberListener.getScanResult(response)
 
+
                             Log.e("mEditMemberListener--",""+mEditMemberListener.toString())
                             thejob.complete()
                         }

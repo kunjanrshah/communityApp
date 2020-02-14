@@ -2,22 +2,37 @@ package com.krs.community.bkservice
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.krs.community.adapter.TruecallerAdapter
+import com.krs.community.app.AppController
+import com.krs.community.listeners.EditMemberListener
+import com.krs.community.repositories.ProfileDetailRepository
+import com.krs.community.utils.ApiException
 import com.orhanobut.dialogplus.DialogPlus
+import kotlinx.coroutines.*
+import org.json.JSONObject
 import java.util.*
 
 class CallReceiver : PhonecallReceiver(),  TruecallerAdapter.SetSetTruecallListner {
 
     private var setLocationDialog: DialogPlus? = null
+    lateinit var mEditMemberListener: EditMemberListener
 
+    private lateinit var job_by_update: CompletableJob
+
+    private lateinit var completableJob: CompletableJob
+    private lateinit var mProfileDetailRepository: ProfileDetailRepository
     override fun onIncomingCallStarted(ctx: Context, number: String, start: Date) {
+
         Toast.makeText(ctx, "onIncomingCallStarted $number", Toast.LENGTH_LONG).show()
 
+        SmartFilterApiData(number,ctx)
 
         //	showDialogSecond(ctx);
-        val intent = Intent(ctx, MyCustomDialog::class.java)
-        ctx.startActivity(intent)
+
 
 
         /*val dialog = Dialog(ctx);
@@ -145,4 +160,42 @@ class CallReceiver : PhonecallReceiver(),  TruecallerAdapter.SetSetTruecallListn
 
 	}
 */
+
+    fun SmartFilterApiData(number: String?, ctx: Context) {
+
+        val jsonObject = JSONObject()
+        jsonObject.put("" + AppController.mApplication.start, "0")
+        jsonObject.put("" + AppController.mApplication.length, "1")
+        val jsonObj = JSONObject()
+        jsonObj.put("mobile", number)
+
+        jsonObject.put("filter_by", jsonObj)
+        val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+
+        completableJob = Job()
+
+        completableJob.let { thejob ->
+
+            CoroutineScope(Dispatchers.IO + thejob).launch {
+                try {
+                    val response = mProfileDetailRepository.searchFilter(updated)
+                    response.let {
+                        withContext(Dispatchers.Main) {
+                            mEditMemberListener.getScanResult(response)
+
+                            val intent = Intent(ctx, MyCustomDialog::class.java)
+                            ctx.startActivity(intent)
+
+                            Log.e("mEditMemberListener--",""+mEditMemberListener.toString())
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                }catch (e: ApiException){
+
+                }
+                thejob.complete()
+            }
+        }
+    }
 }

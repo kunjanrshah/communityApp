@@ -51,6 +51,7 @@
             android:paddingRight="10dp"
             android:singleLine="true"
             android:textColor="@color/black1" />
+
     </RelativeLayout>
 
 
@@ -90,6 +91,7 @@
             android:paddingRight="10dp"
             android:singleLine="true"
             android:textColor="@color/black1" />
+
     </RelativeLayout>
 
 
@@ -129,9 +131,8 @@
             android:paddingRight="10dp"
             android:singleLine="true"
             android:textColor="@color/black1" />
+
     </RelativeLayout>
-
-
 
     <TextView
         android:layout_width="wrap_content"
