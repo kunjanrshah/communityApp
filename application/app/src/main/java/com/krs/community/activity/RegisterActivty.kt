@@ -96,6 +96,10 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
 
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
+
     fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)
         //val binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.no_internet_layout)
@@ -140,7 +144,9 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
             }
 
             binding.btnRegister.setOnClickListener {
+
                 Utility.startSweetProgress(this,getString(R.string.RegisterFamily),resources.getString(R.string.loading))
+
                 registerViewModel.getUserRegistration()
             }
 

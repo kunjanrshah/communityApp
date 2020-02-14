@@ -86,6 +86,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
      * However, the app must call that service's startForeground() method within five seconds
      * after the service is created."
      */
+
     private fun restartForeground() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Log.i(TAG, "restarting foreground")

@@ -172,7 +172,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                                     .setAdapter(adapter)
                                     .setGravity(Gravity.BOTTOM)
                                     .setCancelable(true)
-                                    .setExpanded(true, 600)
+                                    .setExpanded(false, 600)
                                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                                     .create()
                             setLocationDialog?.show()

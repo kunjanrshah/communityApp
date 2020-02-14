@@ -160,6 +160,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             Handler().postDelayed({
                 shimmerFrameLayout.stopShimmerAnimation()
                 shimmerFrameLayout.visibility=View.GONE
+
+
             },4000)
             lstCalendar.clear()
             adapter.notifyDataSetChanged()
@@ -194,6 +196,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             }
         }else {
             DashboardActivity.stop = false
+            Snackbar.make(recyclerView, "No Data Found", Snackbar.LENGTH_LONG).show()
         }
     }
 
@@ -257,8 +260,11 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 if(lstCalendar.size>0){
                     tvCount.visibility=View.VISIBLE
                     tvCount.text = "Members ${lstCalendar.size} found"
+
                 }else{
+
                     tvCount.visibility=View.GONE
+
                 }
                     val member=lstCalendar[i]
                 (viewHolder as CalendarViewHolder).tvName.text = member.firstName
@@ -319,7 +325,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                                     .setAdapter(adapter)
                                     .setGravity(Gravity.BOTTOM)
                                     .setCancelable(true)
-                                    .setExpanded(true, 600)
+                                    .setExpanded(false, 600)
                                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                                     .create()
                             setLocationDialog?.show()

@@ -130,7 +130,6 @@ class RegisterViewModel(
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.select_local),12)
                 return
             }
-
         register.first_name=fname
         register.sub_cast_id=lastnameId.toString()
         register.email_address=email
@@ -142,6 +141,8 @@ class RegisterViewModel(
         register.city_id=cityId.toString()
         register.sub_community_id =subCommId.toString()
         register.local_community_id =localCommId.toString()
+
+
 
         jobRegistration = Job()
         jobRegistration.let { thejob ->

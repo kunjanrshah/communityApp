@@ -1,6 +1,7 @@
 package com.krs.community.fragments
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -11,6 +12,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -45,10 +47,11 @@ import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.utils.*
+import com.krs.community.utils.Utility.hideKeyboard
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
-import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodel.SmartSearchViewModel
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
 import com.krs.community.viewmodelfactory.SmartSearchViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
@@ -58,7 +61,6 @@ import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import kotlin.collections.ArrayList
 
 class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore,MyRoleAdapter.iChangeRoleListner,RoomMemberListener,  LocationAdapter.SetLocationListner {
 
@@ -126,6 +128,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
 
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener {
+            hideKeyboard(activity)
             Utility.backNavigation(activity)
         }
 
@@ -213,7 +216,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                                     .setAdapter(adapter)
                                     .setGravity(Gravity.BOTTOM)
                                     .setCancelable(true)
-                                    .setExpanded(true, 600)
+                                    .setExpanded(false, 600)
                                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                                     .create()
                             setLocationDialog?.show()
@@ -306,7 +309,10 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
 
         return rootView
     }
-
+    fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
+    }
     class FoundListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var txtName: TextView = v.findViewById(R.id.txt_name)
     }
@@ -729,7 +735,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                                 .setOnCancelListener {
                                     actionMode?.finish()
                                 }
-                                .setExpanded(true, 700)
+                                .setExpanded(false, 700)
                                 .setContentBackgroundResource(R.drawable.popup_top_corner)
                                 .create()
                         changeRoleDialog?.show()

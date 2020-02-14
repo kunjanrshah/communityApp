@@ -1000,7 +1000,7 @@ class SmartFilterAdapter(private val _context: Context,
                     .setOnItemClickListener({ dialog12: DialogPlus?, item: Any?, view: View?, position: Int -> Toast.makeText(_context, "Clicked " + position, Toast.LENGTH_SHORT).show() })
                     .setCancelable(true)
                     .setGravity(Gravity.BOTTOM)
-                    .setExpanded(true)
+                    .setExpanded(false)
                     .create()
             dialog.show()
         } else {

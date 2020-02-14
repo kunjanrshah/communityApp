@@ -284,7 +284,7 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
         rangeSeekbar.setMinStartValue(0f)
         rangeSeekbar.setMaxStartValue(100f)
         rangeSeekbar.apply()
-        Toast.makeText(context,"Filter Cleared",Toast.LENGTH_SHORT).show()
+       // Toast.makeText(context,"Filter Cleared",Toast.LENGTH_SHORT).show()
     }
 
     val mdialog = Guru.getString("mdialog", "")

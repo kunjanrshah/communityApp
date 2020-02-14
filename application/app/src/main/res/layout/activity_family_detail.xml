@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_view_container1"
         android:layout_width="match_parent"

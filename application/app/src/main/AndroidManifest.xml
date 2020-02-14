@@ -216,12 +216,12 @@
             android:name=".bkservice.MyCustomDialog"
             android:theme="@style/DialogStyle"/>
 
-        <receiver android:name=".NoInternet.NetworkChangeReceiver" >
+       <!-- <receiver android:name=".NoInternet.NetworkChangeReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
-        </receiver>
+        </receiver>-->
     </application>
 
 </manifest>

@@ -26,6 +26,10 @@ import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
 import com.github.squti.guru.Guru;
 import com.krs.community.R;
+import com.krs.community.bkservice.CallReceiver;
+import com.krs.community.bkservice.PhonecallReceiver;
+import com.krs.community.bkservice.ProcessMainClass;
+import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver;
 import com.krs.community.fragments.FamilyDetailActivity;
 import com.krs.community.utils.Utility;
 import com.wessam.library.NetworkChecker;
@@ -126,7 +130,7 @@ public class SplashActivity extends Activity{
                     isLogin = true;
                     Intent mIntent = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(mIntent);
-                    finish();
+
                     Utility.fade(this);
                 }
             });
@@ -135,7 +139,7 @@ public class SplashActivity extends Activity{
                     isRegister = true;
                     Intent mIntent = new Intent(SplashActivity.this, RegisterActivty.class);
                     startActivity(mIntent);
-                    finish();
+
                     Utility.fade(this);
                 }
             });
@@ -221,12 +225,13 @@ public class SplashActivity extends Activity{
         }
 
 
-       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             RestartServiceBroadcastReceiver.scheduleJob(getApplicationContext());
         } else {
             ProcessMainClass bck = new ProcessMainClass();
             bck.launchService(getApplicationContext());
-        }*/
+        }
+
     }
 
     @Override

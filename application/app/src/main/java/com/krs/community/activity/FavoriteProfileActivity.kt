@@ -21,8 +21,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.adapter.LocationAdapter
+import com.krs.community.app.AppController
 import com.krs.community.app.SearchLiveo
 import com.krs.community.databinding.ActivityFavoriteBinding
 import com.krs.community.entities.RoomMember
@@ -139,9 +141,16 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
     }
 
     override fun getRoomMembers(response: List<RoomMember>) {
-        lstMember.addAll(response)
-        mAdapter = FavoriteAdapter(lstMember as MutableList<RoomMember>)
-        mBinding.recyclerView.adapter = mAdapter
+        if (response.size > 0) {
+            lstMember.addAll(response)
+
+            mAdapter = FavoriteAdapter(lstMember as MutableList<RoomMember>)
+            mBinding.recyclerView.adapter = mAdapter
+        }else{
+            DashboardActivity.stop = true
+            Snackbar.make(mBinding.recyclerView, "No Data Found", Snackbar.LENGTH_LONG).show()
+        }
+
     }
 
     override suspend fun getFailure(message: String) {
@@ -261,7 +270,7 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
                                 .setAdapter(adapter)
                                 .setGravity(Gravity.BOTTOM)
                                 .setCancelable(true)
-                                .setExpanded(true, 600)
+                                .setExpanded(false, 600)
                                 .setContentBackgroundResource(R.drawable.popup_top_corner)
                                 .create()
                         setLocationDialog.show()

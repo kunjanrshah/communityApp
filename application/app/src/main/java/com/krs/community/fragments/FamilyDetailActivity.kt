@@ -25,7 +25,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
@@ -74,6 +73,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
     lateinit var mainHandler: Handler
     private var isShimmer:Boolean=true
     private var memberId:String?=null
+    private var textMsg:String?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -210,9 +210,33 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                             fade(this@FamilyDetailActivity)
                         }else{
                             if(!member.profilePassword.isNullOrEmpty()){
-                                val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
-                                intent.putExtra(getString(R.string.member), member)
-                                startActivity(intent)
+
+                                if(memberId==member.id){
+                                    textMsg = "Exit "
+                                }else if(member.loginStatus==1 && member.onlineStatus==0){
+                                    textMsg = "Exit "
+                                }else if(member.loginStatus==0){
+                                    textMsg = "Enter "
+                                }else if(member.onlineStatus==1){
+                                    textMsg = "Exit "
+
+                                }
+                                SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
+                                        .setTitleText(getString(R.string.you_sure))
+                                        .setContentText("Do you want to " +textMsg + "the Community App?")
+                                        .setConfirmText("Yes")
+                                        .setConfirmClickListener {
+                                            val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
+                                            intent.putExtra(getString(R.string.member), member)
+                                            startActivity(intent)
+
+                                        }
+
+                                        .show()
+                                true
+                                /*  val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
+                                  intent.putExtra(getString(R.string.member), member)
+                                  startActivity(intent)*/
                             }else{
                                 llRoot.snackbar("PIN not found!",Snackbar.LENGTH_LONG)
                             }
@@ -278,7 +302,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                                         .setAdapter(adapter)
                                         .setGravity(Gravity.BOTTOM)
                                         .setCancelable(true)
-                                        .setExpanded(true, 600)
+                                        .setExpanded(false, 650)
                                         .setContentBackgroundResource(R.drawable.popup_top_corner)
                                         .create()
                                 setLocationDialog?.show()
@@ -310,11 +334,14 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
         val header = layoutInflater.inflate(R.layout.header_detail, rvDetail, false)
 
         val cancel = header.findViewById<ImageView>(R.id.img_cancel1)
+        val login = header.findViewById<ImageView>(R.id.login)
+        login.visibility = View.VISIBLE
         if(!memberId.isNullOrEmpty()){
             cancel.visibility=View.VISIBLE
         }else{
             cancel.visibility=View.INVISIBLE
         }
+
         cancel.setOnClickListener {
             val intent=Intent(this,DashboardActivity::class.java)
             startActivity(intent)
@@ -322,6 +349,29 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
             fade(this)
         }
 
+        login.setOnClickListener {
+
+            SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Are you sure want to exit")
+                    .setConfirmText("Yes")
+                    .setCancelText("No")
+                    .setConfirmClickListener {
+
+                        Guru.clear()
+                        val intent = Intent(this, SplashActivity::class.java)
+                        startActivity(intent)
+                        this.finish()
+                        fade(this)
+
+                    }
+                    .setCancelClickListener {
+                        it.dismiss()
+                    }
+                    .show()
+            true
+
+
+        }
         val member = members.get(0)
         val tvName: TextView = header.findViewById(R.id.tv_name1)
         tvName.text = member.firstName+" "+member.lastName
@@ -426,7 +476,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                             .setAdapter(adapter)
                             .setGravity(Gravity.BOTTOM)
                             .setCancelable(true)
-                            .setExpanded(true, 600)
+                            .setExpanded(false, 600)
                             .setContentBackgroundResource(R.drawable.popup_top_corner)
                             .create()
                     setLocationDialog?.show()
@@ -449,9 +499,33 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
             }else{
 
                 if(!member.profilePassword.isNullOrEmpty()){
-                    val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
+                   /* val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
                     intent.putExtra(getString(R.string.member), member)
-                    startActivity(intent)
+                    startActivity(intent)*/
+
+                    if(memberId==member.id){
+                        textMsg = "Exit "
+                    }else if(member.loginStatus==1 && member.onlineStatus==0){
+                        textMsg = "Exit "
+                    }else if(member.loginStatus==0){
+                        textMsg = "Enter "
+                    }else if(member.onlineStatus==1){
+                        textMsg = "Exit "
+
+                    }
+                    SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText(getString(R.string.you_sure))
+                            .setContentText("Do you want to " +textMsg + "the Community App?")
+                            .setConfirmText("Yes")
+                            .setConfirmClickListener {
+                                val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
+                                intent.putExtra(getString(R.string.member), member)
+                                startActivity(intent)
+
+                            }
+
+                            .show()
+                    true
                 }else{
                     llRoot.snackbar("PIN not found!",Snackbar.LENGTH_LONG)
                 }

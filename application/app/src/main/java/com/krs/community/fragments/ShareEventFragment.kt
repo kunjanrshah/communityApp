@@ -26,6 +26,7 @@ import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
+import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.listeners.CreateEventListener
 import com.krs.community.utils.MovableFloatingActionButton
 import com.krs.community.utils.Utility
@@ -72,6 +73,9 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.color_mid_light_gray, false)
         }
+
+        root.snackbar("Coming soon",Snackbar.LENGTH_LONG)
+
         val ivCancel = root.findViewById<ImageView>(R.id.iv_cancel)
         linearLayout = root.findViewById(R.id.main_content)
         ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }

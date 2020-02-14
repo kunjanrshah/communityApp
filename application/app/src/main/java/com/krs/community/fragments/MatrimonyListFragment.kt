@@ -71,6 +71,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private var setLocationDialog: DialogPlus? = null
     private lateinit var tvRecords: TextView
+    private lateinit var ivExport: ImageView
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -85,7 +86,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
         AppController.mApplication.start=0
         val header = LayoutInflater.from(activity).inflate(R.layout.header_matrimony, container, false)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
-        val ivExport= header.findViewById<ImageView>(R.id.iv_export)
+        ivExport= header.findViewById<ImageView>(R.id.iv_export)
         tvRecords= header.findViewById<TextView>(R.id.tvCount)
         ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         val edtSearch = header.findViewById<EditText>(R.id.edtSearch)
@@ -198,7 +199,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
                                     .setAdapter(adapter)
                                     .setGravity(Gravity.BOTTOM)
                                     .setCancelable(true)
-                                    .setExpanded(true, 600)
+                                    .setExpanded(false, 600)
                                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                                     .create()
                             setLocationDialog?.show()
@@ -384,6 +385,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
         if(response.success){
             tvRecords.text = "Records found: " + response.totalRecords
             tvRecords.visibility = View.VISIBLE
+            ivExport.visibility = View.VISIBLE
 
             if(response.members.size>0){
                 DashboardActivity.stop = false
@@ -399,6 +401,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
                 tvRecords.visibility = View.GONE
                 DashboardActivity.stop = true
                 Snackbar.make(binding.listMatrimony, getString(R.string.EndRecordList), Snackbar.LENGTH_LONG).show()
+                ivExport.visibility = View.GONE
             }
         }else{
             tvRecords.visibility = View.GONE

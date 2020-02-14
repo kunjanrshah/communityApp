@@ -16,7 +16,7 @@ import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.util.*
 
-class CallReceiver : PhonecallReceiver(),  TruecallerAdapter.SetSetTruecallListner {
+class CallReceiver : PhonecallReceiver() {
 
     private var setLocationDialog: DialogPlus? = null
     lateinit var mEditMemberListener: EditMemberListener
@@ -78,9 +78,7 @@ class CallReceiver : PhonecallReceiver(),  TruecallerAdapter.SetSetTruecallListn
 					    String getTotal_records = response.body().getTotal_records();
 					   */
 
-    override fun cancelDialog() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+
 /* Fname = response.body().getMembersResModels().get(0).getFirst_name();
 					    Lname = response.body().getMembersResModels().get(0).getLast_name();
 					    Pcode = response.body().getMembersResModels().get(0).getPincode();

@@ -101,7 +101,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
     private var changeRoleDialog: DialogPlus? = null
     private var setLocationDialog: DialogPlus? = null
-
+    private lateinit var ivExport: ImageView
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_filter_result, container, false)
@@ -200,7 +200,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                                     .setAdapter(adapter)
                                     .setGravity(Gravity.BOTTOM)
                                     .setCancelable(true)
-                                    .setExpanded(true, 600)
+                                    .setExpanded(false, 600)
                                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                                     .create()
                             setLocationDialog?.show()
@@ -238,7 +238,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v -> Utility.backNavigation(activity) }
 
-        val ivExport = header.findViewById<ImageView>(R.id.iv_export)
+        ivExport = header.findViewById<ImageView>(R.id.iv_export)
         ivExport.setOnClickListener {
             if (members.size > 0) {
                 Handler().post {
@@ -324,6 +324,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             if (data.members.size > 0) {
                 val count = data.totalHead + data.totalMem
                 tvCount.text = "Families: ${data.totalHead}, Members: $count"
+                ivExport.visibility = View.VISIBLE
                 for (user in data.members) {
                     members.add(user)
                 }
@@ -340,6 +341,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
             } else {
                 DashboardActivity.stop = true
+                ivExport.visibility = View.GONE
                 //rootView!!.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
                 Snackbar.make(binding.llParent, getString(R.string.EndCity)+ "$alpha"+getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
             }
@@ -680,7 +682,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                                 .setOnCancelListener {
                                     actionMode?.finish()
                                 }
-                                .setExpanded(true, 700)
+                                .setExpanded(false, 700)
                                 .setContentBackgroundResource(R.drawable.popup_top_corner)
                                 .create()
                         changeRoleDialog?.show()

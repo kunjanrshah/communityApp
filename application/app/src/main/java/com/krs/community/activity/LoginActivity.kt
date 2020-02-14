@@ -221,7 +221,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             binding.haveAcc.setOnClickListener { v ->
                 val mIntent = Intent(this@LoginActivity, RegisterActivty::class.java)
                 startActivity(mIntent)
-                finish()
+
                 fade(this)
             }
 

@@ -217,7 +217,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
             sliderView.description = "The quick brown fox jumps over the lazy dog.\n" + "Jackdaws love my big sphinx of quartz. " + (i + 1)
             sliderView.setOnSliderClickListener { sliderView1: SliderView? ->
-                Toast.makeText(activity, getString(R.string.ThisIsSlider) + (i + 1), Toast.LENGTH_SHORT).show()
+                //Toast.makeText(activity, getString(R.string.ThisIsSlider) + (i + 1), Toast.LENGTH_SHORT).show()
                 Utility.movetoFragment(activity, NewsListFragment())
             }
           binding.imageSlider.addSliderView(sliderView)
@@ -288,15 +288,24 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     9 ->{
                         //startActivity(new Intent(getActivity(), ActivityDebugTools.class));
                         Utility.movetoFragment(activity, DocumentsFragment())
+                        binding.root.snackbar("Coming soon",Snackbar.LENGTH_LONG)
+
                     }
 
-                    10 -> Utility.movetoFragment(activity, PaytmFragment())
+                    10 -> {
+                        Utility.movetoFragment(activity, PaytmFragment())
+                        binding.root.snackbar("Coming soon",Snackbar.LENGTH_LONG)
+                    }
+
                     11 -> {
                         val intent = Intent(activity, RegisterActivty::class.java)
                         startActivity(intent)
                         Utility.fade(activity)
                     }
-                    12 -> Utility.movetoFragment(activity, TourVideoFragment())
+                    12 ->{
+                        Utility.movetoFragment(activity, TourVideoFragment())
+                        binding.root.snackbar("Coming soon",Snackbar.LENGTH_LONG)
+                    }
                 }
             }
             return convertView!!
