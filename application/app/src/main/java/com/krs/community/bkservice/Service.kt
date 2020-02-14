@@ -98,6 +98,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
 
                 serviceIntent = Intent(this, PhonecallReceiver::class.java)
 
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error in notification " + e.message)
             }
