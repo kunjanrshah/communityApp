@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
@@ -100,9 +100,9 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         actionModeCallback = ActionModeCallback()
         shimmerFrameLayout = rootView.findViewById(R.id.shimmer_view_container)
 
-        smartFilterViewModel = ViewModelProviders.of(this,smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
-        roomMemberViewModel = ViewModelProviders.of(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
-        profileDetailViewModel = ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
+        smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
+        roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
+        profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         smartFilterViewModel.mByFilterListener =this
         roomMemberViewModel.mRoomMemberListener= this
 

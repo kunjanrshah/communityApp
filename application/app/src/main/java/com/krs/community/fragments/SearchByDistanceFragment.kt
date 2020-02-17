@@ -1,6 +1,5 @@
 package com.krs.community.fragments
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
 import android.net.Uri
@@ -21,7 +20,7 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -108,9 +107,9 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
             Utility.changeStatusbarColor(activity, R.color.colorPrimary, true)
         }
 
-        profileDetailViewModel = ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
-        roomMemberViewModel = ViewModelProviders.of(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
-        mByDistanceViewModel = ViewModelProviders.of(this,byDistanceViewModelFactory).get(ByDistanceViewModel::class.java)
+        profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
+        roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
+        mByDistanceViewModel = ViewModelProvider(this, byDistanceViewModelFactory).get(ByDistanceViewModel::class.java)
         mByDistanceViewModel.mByDistanceListener =this
         roomMemberViewModel.mRoomMemberListener= this
 
@@ -249,7 +248,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                     builder?.listener {
                         if (it == 0) {
                             val profileDetailFactory: ProfileDetailViewModelFactory by instance()
-                            val profileDetailViewModel= ViewModelProviders.of(activity as AppCompatActivity, profileDetailFactory).get(ProfileDetailViewModel::class.java)
+                            val profileDetailViewModel = ViewModelProvider(activity as AppCompatActivity, profileDetailFactory).get(ProfileDetailViewModel::class.java)
                             createMemberPDF(activity as AppCompatActivity, member,profileDetailViewModel)
                             Handler().post {
                                 Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))

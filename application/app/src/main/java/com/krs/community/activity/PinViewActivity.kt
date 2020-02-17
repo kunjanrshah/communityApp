@@ -8,15 +8,12 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.github.squti.guru.Guru
@@ -31,7 +28,6 @@ import com.kevalpatel.passcodeview.interfaces.AuthenticationListener
 import com.kevalpatel.passcodeview.keys.KeyNamesBuilder
 import com.kevalpatel.passcodeview.keys.RoundKey
 import com.krs.community.R
-import com.krs.community.app.AppSignatureHashHelper
 import com.krs.community.fragments.FamilyDetailActivity
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.listeners.InnerLogoutListner
@@ -41,7 +37,6 @@ import com.krs.community.responses.UserInnerLogoutResponse
 import com.krs.community.utils.Utility.*
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.FamilyDetailViewModel
-import com.krs.community.viewmodel.LoginViewModel
 import com.krs.community.viewmodelfactory.FamilyDetailViewModelFactory
 import com.wessam.library.NetworkChecker
 import org.json.JSONObject
@@ -61,7 +56,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        familyDetailViewModel = ViewModelProviders.of(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
+        familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
         familyDetailViewModel.mILoginListener=this
         familyDetailViewModel.innerLogoutListner=this
 
@@ -70,10 +65,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
         registerNetworkBroadcastForNougat()
 
         if (NetworkChecker.isNetworkConnected(this)) {
-
-
             setScreenLayout()
-
         } else {
             setNoInternetLayout()
         }
@@ -119,7 +111,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
                 e.message
             }
         }
-        member.profilePassword="123456"
+        //member.profilePassword="123456"
         val pass = member.profilePassword
         var correctPattern: IntArray? = null
         if (pass != null && !pass.isEmpty()) {

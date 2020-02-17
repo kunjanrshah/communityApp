@@ -11,7 +11,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.adapter.SmartFilterAdapter
@@ -46,7 +46,7 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
         val fab = rootView.findViewById(R.id.fab) as MovableFloatingActionButton
         val lp = fab.layoutParams as CoordinatorLayout.LayoutParams
         fab.coordinatorLayout = lp
-        profileDetailViewModel = ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
+        profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
 
         expandableListView = rootView.findViewById(R.id.lst_expandable)
         expandableListView.setGroupIndicator(null)

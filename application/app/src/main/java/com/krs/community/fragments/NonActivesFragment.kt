@@ -7,10 +7,13 @@ import android.text.TextUtils
 import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.*
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -73,8 +76,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
         val root = inflater.inflate(R.layout.fragment_nonactives, container, false)
 
-        smartFilterViewModel = ViewModelProviders.of(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
-        roomMemberViewModel = ViewModelProviders.of(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
+        smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
+        roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
         roomMemberViewModel.mRoomMemberListener= this
         smartFilterViewModel.mByFilterListener = this
         AppController.mApplication.start=0

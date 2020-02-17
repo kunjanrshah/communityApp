@@ -19,7 +19,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonObject
@@ -107,10 +107,10 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         if (NetworkChecker.isNetworkConnected(this)) {
             logger = Logger(TAG)
 
-            registerViewModel = ViewModelProviders.of(this,registerViewModelFactory).get(RegisterViewModel::class.java)
+            registerViewModel = ViewModelProvider(this, registerViewModelFactory).get(RegisterViewModel::class.java)
             registerViewModel.iRegisterListener=this
 
-            profileDetailViewModel = ViewModelProviders.of(this,profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
+            profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
             profileDetailViewModel.mImageUploadListener=this
 
             binding = DataBindingUtil.setContentView(this, R.layout.activity_register)
@@ -141,14 +141,14 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
 
             binding.btnRegister.setOnClickListener {
 
-
+                Utility.startSweetProgress(this, getString(R.string.RegisterFamily), resources.getString(R.string.loading))
                 registerViewModel.getUserRegistration()
             }
 
             binding.txtAlready.setOnClickListener { registerViewModel.onTextAlreadyClicked(this) }
 
             binding.txtHowRegister.setOnClickListener { registerViewModel.onHowRegisterClicked(this) }
-
+            binding.imgCancel.visibility = View.GONE
             binding.imgCancel.setOnClickListener {
                 binding.imgProfile.setImageResource(R.drawable.man_reg)
                 binding.imgCancel.visibility = View.GONE
@@ -183,7 +183,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
             /*get sub communities */
             registerViewModel.getLstSubCommunity()
             binding. spinnerSub.setOnItemClickListener {
-                Utility.startSweetProgress(this,"FetchiCng Local Community",resources.getString(R.string.loading))
+                Utility.startSweetProgress(this, getString(R.string.fetching_local_community), resources.getString(R.string.loading))
                 registerViewModel.subCommId=lstSubCommId[it]
                 registerViewModel.getLstLocalCommunity(it + 1)
             }

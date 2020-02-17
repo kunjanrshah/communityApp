@@ -15,7 +15,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -26,7 +26,6 @@ import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
-import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.listeners.CreateEventListener
 import com.krs.community.utils.MovableFloatingActionButton
 import com.krs.community.utils.Utility
@@ -65,7 +64,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
     lateinit var fab: MovableFloatingActionButton
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_share_event, container, false)
-        shareEventViewModel = ViewModelProviders.of(this,shareEventFactory).get(ShareEventViewModel::class.java)
+        shareEventViewModel = ViewModelProvider(this, shareEventFactory).get(ShareEventViewModel::class.java)
 
         shareEventViewModel.mCreateEventListener = this
         userId= Guru.getString(getString(R.string.user_id), "")!!

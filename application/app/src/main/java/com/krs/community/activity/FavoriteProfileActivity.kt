@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -21,7 +21,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.adapter.LocationAdapter
-import com.krs.community.app.AppController
 import com.krs.community.app.SearchLiveo
 import com.krs.community.databinding.ActivityFavoriteBinding
 import com.krs.community.entities.RoomMember
@@ -61,7 +60,7 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-        roomMemberViewModel = ViewModelProviders.of(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
+        roomMemberViewModel = ViewModelProvider(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
         roomMemberViewModel.mRoomMemberListener = this
         onInitView()
     }
@@ -237,7 +236,7 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
                 builder?.listener {
                     if (it == 0) {
                         val profileDetailFactory: ProfileDetailViewModelFactory by instance()
-                        val profileDetailViewModel= ViewModelProviders.of(this@FavoriteProfileActivity, profileDetailFactory).get(ProfileDetailViewModel::class.java)
+                        val profileDetailViewModel = ViewModelProvider(this@FavoriteProfileActivity, profileDetailFactory).get(ProfileDetailViewModel::class.java)
                         createMemberPDF(this@FavoriteProfileActivity, getMemberFromRoomMember(member),profileDetailViewModel)
 
                     }else if(it == 1) {

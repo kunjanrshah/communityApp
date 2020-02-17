@@ -11,7 +11,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.databinding.FragmentMatrimonyBinding
@@ -36,7 +36,7 @@ class MatrimonyFragment : Fragment(), KodeinAware {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding= DataBindingUtil.inflate(inflater, R.layout.fragment_matrimony, container, false)
-        smartFilterViewModel = ViewModelProviders.of(this,factory).get(SmartFilterViewModel::class.java)
+        smartFilterViewModel = ViewModelProvider(this, factory).get(SmartFilterViewModel::class.java)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.white, false)

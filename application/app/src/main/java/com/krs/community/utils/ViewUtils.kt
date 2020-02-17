@@ -18,10 +18,8 @@ import android.view.View
 import android.view.Window
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.ViewUtils
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.FragmentActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
@@ -229,6 +227,7 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
     }
 
     var isMale: Boolean = false
+    var isFemale: Boolean = false
     val lstMarital = context.resources.getStringArray(R.array.marital)
     val list = ArrayList<String>()
     list.addAll(lstMarital)
@@ -264,7 +263,7 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
         btnFemale.setTextColor(context.resources.getColor(R.color.black))
     }
     btnFemale.setOnClickListener {
-        isMale = false
+        isFemale = true
         btnMale.background = context.resources.getDrawable(R.drawable.round_corner_white)
         btnMale.setTextColor(context.resources.getColor(R.color.black))
         btnFemale.background = context.resources.getDrawable(R.drawable.round_corner_primary)
@@ -280,6 +279,14 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
         spLname.setText("")
         spCity.setText("")
         spMarital.setText("")
+        isFemale = false
+        isMale = false
+        btnMale.background = context.resources.getDrawable(R.drawable.round_corner_white)
+        btnMale.setTextColor(context.resources.getColor(R.color.black))
+
+        btnFemale.background = context.resources.getDrawable(R.drawable.round_corner_white)
+        btnFemale.setTextColor(context.resources.getColor(R.color.black))
+
         btnFemale.performClick()
         rangeSeekbar.setMinStartValue(0f)
         rangeSeekbar.setMaxStartValue(100f)
@@ -392,7 +399,7 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
             }
             if (isMale) {
                 jsonObject.put(context.getString(R.string.gender), "Male")
-            } else {
+            } else if (isFemale) {
                 jsonObject.put(context.getString(R.string.gender), "Female")
             }
             if (!spMarital.text.isNullOrEmpty()) {

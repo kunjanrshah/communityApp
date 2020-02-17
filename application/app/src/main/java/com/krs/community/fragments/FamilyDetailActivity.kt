@@ -15,11 +15,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cn.pedant.SweetAlert.SweetAlertDialog
+import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -84,8 +84,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
         }
         mainHandler = Handler(Looper.getMainLooper())
         headId = intent.getStringExtra(getString(R.string.id))
-        profileDetailViewModel = ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
-        familyDetailViewModel = ViewModelProviders.of(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
+        profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
+        familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
         familyDetailViewModel.mIFamilyMembersListener = this
         mShimmerViewContainer = findViewById(R.id.shimmer_view_container1)
         rvDetail=findViewById(R.id.rv_detail)
@@ -109,8 +109,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
             mainHandler.postDelayed(this, 1000*60*3)
         }
     }
-
-
 
     private fun getFamilyDetails(){
         if(isShimmer){
@@ -172,13 +170,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                     viewHolder.tvMobile.text = member.mobile
                     viewHolder.tvUpdate.text = "updated "+changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                     viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
-                    var imgLogin=R.drawable.ic_logout
+                    var imgLogin: Int
                     if(member.loginStatus==1){
                         imgLogin=R.drawable.ic_logout
-                        viewHolder.tvLogin.text = "Exit"
+                        viewHolder.tvLogin.text = "See you again!"
                     }else{
                         imgLogin=R.drawable.ic_login
-                        viewHolder.tvLogin.text = "Enter"
+                        viewHolder.tvLogin.text = "Happy to see you"
                     }
                     try {
                         Glide.with(AppController.mApplication).load(imgLogin).thumbnail(0.5f).into(viewHolder.imgLogin)
@@ -219,24 +217,33 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                                     textMsg = "Enter "
                                 }else if(member.onlineStatus==1){
                                     textMsg = "Exit "
-
                                 }
-                                SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
-                                        .setTitleText(getString(R.string.you_sure))
-                                        .setContentText("Do you want to " +textMsg + "the Community App?")
-                                        .setConfirmText("Yes")
-                                        .setConfirmClickListener {
+
+                                var gif: Int = R.drawable.gif14
+                                if (textMsg!!.contains("Exit")) {
+                                    gif = R.drawable.gif10
+                                }
+
+                                TTFancyGifDialog.Builder(this@FamilyDetailActivity)
+                                        .setTitle(getString(R.string.you_sure))
+                                        .setMessage(textMsg + "the Community App")
+                                        .setPositiveBtnText("Yes")
+                                        .setPositiveBtnBackground("#22b573")
+                                        .setNegativeBtnText("No")
+                                        .setNegativeBtnBackground("#c1272d")
+                                        .setGifResource(gif)
+                                        .isCancellable(true)
+                                        .OnPositiveClicked {
                                             val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
                                             intent.putExtra(getString(R.string.member), member)
                                             startActivity(intent)
+                                        }
+                                        .OnNegativeClicked {
 
                                         }
-
-                                        .show()
+                                        .build()
                                 true
-                                /*  val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
-                                  intent.putExtra(getString(R.string.member), member)
-                                  startActivity(intent)*/
+
                             }else{
                                 llRoot.snackbar("PIN not found!",Snackbar.LENGTH_LONG)
                             }
@@ -244,19 +251,24 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                     }
                     viewHolder.llDelete.setOnClickListener {
                         if(!memberId.isNullOrEmpty()){
-                            SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
-                                    .setTitleText(getString(R.string.you_sure))
-                                    .setContentText("Won't be able to recover this Profile!")
-                                    .setConfirmText("Yes,delete it!")
-                                    .setCancelText("No")
-                                    .setConfirmClickListener {
-                                        it.dismiss()
+
+
+                            TTFancyGifDialog.Builder(this@FamilyDetailActivity)
+                                    .setTitle(getString(R.string.you_sure))
+                                    .setMessage("Won't be able to recover this Profile!")
+                                    .setPositiveBtnText("Yes,delete it!")
+                                    .setPositiveBtnBackground("#22b573")
+                                    .setNegativeBtnText("No")
+                                    .setNegativeBtnBackground("#c1272d")
+                                    .setGifResource(R.drawable.gif2)
+                                    .isCancellable(true)
+                                    .OnPositiveClicked {
                                         deleteFamilyMember(member.id)
                                     }
-                                    .setCancelClickListener {
-                                        it.dismiss()
+                                    .OnNegativeClicked {
+
                                     }
-                                    .show()
+                                    .build()
                         }else{
                             llRoot.snackbar(getString(R.string.enter_pin),Snackbar.LENGTH_LONG)
                         }
@@ -337,10 +349,12 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
 
         val cancel = header.findViewById<ImageView>(R.id.img_cancel1)
         val login = header.findViewById<ImageView>(R.id.login)
-        login.visibility = View.VISIBLE
+
         if(!memberId.isNullOrEmpty()){
             cancel.visibility=View.VISIBLE
+            login.visibility = View.GONE
         }else{
+            login.visibility = View.VISIBLE
             cancel.visibility=View.INVISIBLE
         }
 
@@ -353,25 +367,28 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
 
         login.setOnClickListener {
 
-            SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Are you sure want to exit")
-                    .setConfirmText("Yes")
-                    .setCancelText("No")
-                    .setConfirmClickListener {
-
+            TTFancyGifDialog.Builder(this)
+                    .setTitle(getString(R.string.you_sure))
+                    .setMessage("Logout the Community App")
+                    .setPositiveBtnText("Yes")
+                    .setPositiveBtnBackground("#22b573")
+                    .setNegativeBtnText("No")
+                    .setNegativeBtnBackground("#c1272d")
+                    .setGifResource(R.drawable.gif2)
+                    .isCancellable(true)
+                    .OnPositiveClicked {
                         Guru.clear()
                         val intent = Intent(this, SplashActivity::class.java)
                         startActivity(intent)
                         this.finish()
                         fade(this)
+                    }
+                    .OnNegativeClicked {
 
                     }
-                    .setCancelClickListener {
-                        it.dismiss()
-                    }
-                    .show()
+                    .build()
+
             true
-
 
         }
         val member = members.get(0)
@@ -503,9 +520,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
             }else{
 
                 if(!member.profilePassword.isNullOrEmpty()){
-                   /* val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
-                    intent.putExtra(getString(R.string.member), member)
-                    startActivity(intent)*/
 
                     if(memberId==member.id){
                         textMsg = "Exit "
@@ -515,28 +529,37 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                         textMsg = "Enter "
                     }else if(member.onlineStatus==1){
                         textMsg = "Exit "
-
                     }
-                    SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText(getString(R.string.you_sure))
-                            .setContentText("Do you want to " +textMsg + "the Community App?")
-                            .setConfirmText("Yes")
-                            .setConfirmClickListener {
+
+                    var gif: Int = R.drawable.gif14
+                    if (textMsg!!.contains("Exit")) {
+                        gif = R.drawable.gif10
+                    }
+
+                    TTFancyGifDialog.Builder(this)
+                            .setTitle(getString(R.string.you_sure))
+                            .setMessage(textMsg + "the Community App")
+                            .setPositiveBtnText("Yes")
+                            .setPositiveBtnBackground("#22b573")
+                            .setNegativeBtnText("No")
+                            .setNegativeBtnBackground("#c1272d")
+                            .setGifResource(gif)
+                            .isCancellable(true)
+                            .OnPositiveClicked {
                                 val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
                                 intent.putExtra(getString(R.string.member), member)
                                 startActivity(intent)
+                            }
+                            .OnNegativeClicked {
 
                             }
+                            .build()
 
-                            .show()
                     true
                 }else{
                     llRoot.snackbar("PIN not found!",Snackbar.LENGTH_LONG)
                 }
-
-
             }
-
         }
 
         val tvAdd: TextView = header.findViewById(R.id.tv_add)

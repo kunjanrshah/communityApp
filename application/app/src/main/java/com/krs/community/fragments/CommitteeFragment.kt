@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,7 +36,6 @@ import com.krs.community.adapter.LocationAdapter
 import com.krs.community.entities.RoomMember
 import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.listeners.ByFilterListener
-import com.krs.community.listeners.EditMemberListener
 import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
@@ -91,9 +90,9 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         val root = inflater.inflate(R.layout.fragment_committee, container, false)
 
         shimmerFrameLayout=root.findViewById(R.id.shimmer_view_container)
-        committeeViewModel = ViewModelProviders.of(this, commiteeViewModelFactory).get(CommitteeViewModel::class.java)
-        roomMemberViewModel = ViewModelProviders.of(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
-        profileDetailViewModel = ViewModelProviders.of(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
+        committeeViewModel = ViewModelProvider(this, commiteeViewModelFactory).get(CommitteeViewModel::class.java)
+        roomMemberViewModel = ViewModelProvider(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
+        profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
 
         committeeViewModel.filterListener=this
         roomMemberViewModel.mRoomMemberListener = this

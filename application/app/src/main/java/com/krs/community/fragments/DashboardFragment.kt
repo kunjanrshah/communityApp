@@ -21,12 +21,11 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
@@ -91,7 +90,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding=DataBindingUtil.inflate(inflater,R.layout.fragment_dashboard,container,false)
-        filterViewModel = ViewModelProviders.of(this,filterViewModelFactory).get(SmartFilterViewModel::class.java)
+        filterViewModel = ViewModelProvider(this, filterViewModelFactory).get(SmartFilterViewModel::class.java)
         filterViewModel.mByFilterListener=this
 
         Utility.changeStatusbarColor(activity, R.color.colorPrimary, true)

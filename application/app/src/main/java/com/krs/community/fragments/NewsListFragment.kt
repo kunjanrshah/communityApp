@@ -14,7 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,8 +33,8 @@ import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.News
 import com.krs.community.responses.NewsResponse
 import com.krs.community.utils.Utility
-import com.krs.community.viewmodelfactory.NewsModelFactory
 import com.krs.community.viewmodel.NewsViewModel
+import com.krs.community.viewmodelfactory.NewsModelFactory
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -57,7 +57,7 @@ class NewsListFragment : Fragment() , KodeinAware,NewsListener {
             Utility.changeStatusbarColor(activity, R.color.bg_gray, false)
         }
 
-        newsViewModel = ViewModelProviders.of(this,factory).get(NewsViewModel::class.java)
+        newsViewModel = ViewModelProvider(this, factory).get(NewsViewModel::class.java)
         newsViewModel.mNewsListener =this
 
         listView = rootView.findViewById(R.id.list)

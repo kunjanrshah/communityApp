@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -26,7 +26,6 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.ProfileDetailActivity
-import com.krs.community.app.AppController
 import com.krs.community.app.AppController.Companion.mApplication
 import com.krs.community.databinding.FragmentProfessionalDetailsBinding
 import com.krs.community.listeners.EditMemberListener
@@ -59,59 +58,68 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_professional_details, container, false)
-        profileDetailViewModel = ViewModelProviders.of(this, factory).get(ProfileDetailViewModel::class.java)
-        profileDetailViewModel.mEditMemberListener=this
-        profileDetailViewModel.mImageUploadListener=this
+        profileDetailViewModel = ViewModelProvider(this, factory).get(ProfileDetailViewModel::class.java)
+        profileDetailViewModel.mEditMemberListener = this
+        profileDetailViewModel.mImageUploadListener = this
         member = arguments?.getSerializable(getString(R.string.member)) as Member
-        val loginMember=Guru.getString(getString(R.string.loginMember),"")
-        val loginMem= Gson().fromJson(loginMember,Member::class.java)
-        if(member.id == loginMem.id || member.headId == loginMem.id){
-            binding.imgLogo.isEnabled=true
-            binding.edtComName.isFocusable=true
-            binding.spMainCat.isClickable=true
-            binding.spSubCat.isClickable=true
-            binding.spOccupation.isClickable=true
-            binding.edtUrl.isFocusable=true
-            binding.edtDetail.isFocusable=true
-            binding.edtAddr.isFocusable=true
-        }else{
-            binding.imgLogo.isEnabled=false
-            binding.edtComName.isFocusable=false
-            binding.spMainCat.isClickable=false
-            binding.spSubCat.isClickable=false
-            binding.spOccupation.isClickable=false
-            binding.edtUrl.isFocusable=false
-            binding.edtDetail.isFocusable=false
-            binding.edtAddr.isFocusable=false
+        val loginMember = Guru.getString(getString(R.string.loginMember), "")
+        val loginMem = Gson().fromJson(loginMember, Member::class.java)
+        if (member.id == loginMem.id || member.headId == loginMem.id) {
+            binding.imgLogo.isEnabled = true
+            binding.edtComName.isFocusable = true
+            binding.spMainCat.isClickable = true
+            binding.spSubCat.isClickable = true
+            binding.spOccupation.isClickable = true
+            binding.edtUrl.isFocusable = true
+            binding.edtDetail.isFocusable = true
+            binding.edtAddr.isFocusable = true
+        } else {
+            binding.imgLogo.isEnabled = false
+            binding.edtComName.isFocusable = false
+            binding.spMainCat.isClickable = false
+            binding.spSubCat.isClickable = false
+            binding.spOccupation.isClickable = false
+            binding.edtUrl.isFocusable = false
+            binding.edtDetail.isFocusable = false
+            binding.edtAddr.isFocusable = false
         }
 
         if (!member.businessLogo.isNullOrEmpty()) {
             try {
-                val str=getString(R.string.base_url_logo)+""+member.businessLogo
+                val str = getString(R.string.base_url_logo) + "" + member.businessLogo
                 Glide.with(mApplication).load(str).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgLogo)
             } catch (e: Exception) {
                 e.message
             }
         }
 
-        if(!member.officeLat.isNullOrEmpty() && !member.officeLng.isNullOrEmpty()){
+        if (!member.officeLat.isNullOrEmpty() && !member.officeLng.isNullOrEmpty()) {
+
             ProfileDetailActivity.cur_lat.observeForever {
-                if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){
-                    var dist= EasyWayLocation.calculateDistance(member.officeLat.toDouble(),member.officeLng.toDouble(),ProfileDetailActivity.cur_lat.value!!.toDouble(),ProfileDetailActivity.cur_lng.value!!.toDouble())
-                    dist /= 1000
-                    binding.tvDistance.text=String.format(getString(R.string.kmPDetail),dist)
+                try {
+                    if (ProfileDetailActivity.cur_lat.value != null && ProfileDetailActivity.cur_lng.value != null) {
+                        var dist = EasyWayLocation.calculateDistance(member.officeLat.toDouble(), member.officeLng.toDouble(), ProfileDetailActivity.cur_lat.value!!.toDouble(), ProfileDetailActivity.cur_lng.value!!.toDouble())
+                        dist /= 1000
+                        binding.tvDistance.text = String.format(getString(R.string.kmPDetail), dist)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            ProfileDetailActivity.cur_lng.observeForever {
+                try {
+                    if (ProfileDetailActivity.cur_lat.value != null && ProfileDetailActivity.cur_lng.value != null) {
+                        var dist = EasyWayLocation.calculateDistance(member.officeLat.toDouble(), member.officeLng.toDouble(), ProfileDetailActivity.cur_lat.value!!.toDouble(), ProfileDetailActivity.cur_lng.value!!.toDouble())
+                        dist /= 1000
+                        binding.tvDistance.text = String.format(getString(R.string.kmPDetail), dist)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
 
-            ProfileDetailActivity.cur_lng.observeForever {
-                if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){
-                    var dist= EasyWayLocation.calculateDistance(member.officeLat.toDouble(),member.officeLng.toDouble(),ProfileDetailActivity.cur_lat.value!!.toDouble(),ProfileDetailActivity.cur_lng.value!!.toDouble())
-                    dist /= 1000
-                    binding.tvDistance.text=String.format(getString(R.string.kmPDetail),dist)
-                }
-            }
-        }else{
-            binding.tvDistance.text="Work"
+        } else {
+            binding.tvDistance.text = "Work"
         }
         binding.llWork.setOnClickListener {
             SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
@@ -122,23 +130,23 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                     .setCustomImage(R.drawable.ic_app)
                     .setConfirmClickListener {
                         it.dismiss()
-                        if(member.headId=="0" && !member.id.isNullOrEmpty()){
+                        if (member.headId == "0" && !member.id.isNullOrEmpty()) {
                             val jsonObject = JSONObject()
-                            jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
+                            jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
                             jsonObject.put(getString(R.string.id), member.id)
-                            jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token),""))
+                            jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
                             jsonObject.put(getString(R.string.office_lat), ProfileDetailActivity.cur_lat.value)
                             jsonObject.put(getString(R.string.office_lng), ProfileDetailActivity.cur_lng.value)
                             val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
                             Utility.startSweetProgress(activity, getString(R.string.updatingLocationDetail), getString(R.string.PleasWaitDetails))
                             profileDetailViewModel.updateProfile(profile, true)
-                        }else{
-                            Utility.displaySnackBarWithBottomMargin(ll_main,getString(R.string.headDetails))
+                        } else {
+                            Utility.displaySnackBarWithBottomMargin(ll_main, getString(R.string.headDetails))
                         }
                     }
                     .setCancelClickListener {
                         it.dismiss()
-                        Utility.showDirections(activity,member.officeLat.toDouble(),member.officeLng.toDouble(),"${member.firstName}'s Work")
+                        Utility.showDirections(activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member.firstName}'s Work")
                     }
                     .show()
         }
@@ -232,10 +240,9 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
     }
 
 
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode==PICK_GALLERY_REQUEST){
+        if (requestCode == PICK_GALLERY_REQUEST) {
             pickFromGallery(activity!!)
         }
     }
@@ -251,27 +258,27 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                 if (selectedUri != null) {
                     startCrop(selectedUri, activity!!)
                 } else {
-                    binding.llMain.snackbar(getString(R.string.SelectedImageDetails),Snackbar.LENGTH_SHORT)
+                    binding.llMain.snackbar(getString(R.string.SelectedImageDetails), Snackbar.LENGTH_SHORT)
                 }
             } else if (requestCode == UCrop.REQUEST_CROP) {
-                    data?.let {
-                        val resultUri = UCrop.getOutput(it)
-                        if (resultUri != null) {
-                            try {
-                                Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgLogo)
-                            } catch (e: Exception) {
-                                e.message
-                            }
-                            logger.debug("resultUri: $resultUri")
-                            try {
-                                val uploadImage = File(resultUri.path.toString())
-                                startSweetProgress(activity!!, getString(R.string.imageDetails), getString(R.string.loading))
-                                profileDetailViewModel.uploadImage(uploadImage,member.id.toString(),getString(R.string.company))
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
+                data?.let {
+                    val resultUri = UCrop.getOutput(it)
+                    if (resultUri != null) {
+                        try {
+                            Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgLogo)
+                        } catch (e: Exception) {
+                            e.message
+                        }
+                        logger.debug("resultUri: $resultUri")
+                        try {
+                            val uploadImage = File(resultUri.path.toString())
+                            startSweetProgress(activity!!, getString(R.string.imageDetails), getString(R.string.loading))
+                            profileDetailViewModel.uploadImage(uploadImage, member.id.toString(), getString(R.string.company))
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
                     }
+                }
             }
         }
         if (resultCode == UCrop.RESULT_ERROR) {
@@ -280,17 +287,17 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
     }
 
 
-    fun getSaveData(jsonObject:JSONObject){
-        try{
-            jsonObject.put(getString(R.string.business_logo),"")
-            jsonObject.put(getString(R.string.company_name),binding.edtComName.text.trim())
-            jsonObject.put(getString(R.string.business_category_id),profileDetailViewModel.selectedBusinessCategoryId)
-            jsonObject.put(getString(R.string.business_sub_category_id),profileDetailViewModel.selectedBusinessSubCategoryId)
-            jsonObject.put(getString(R.string.occupation_id),profileDetailViewModel.selectedOccupationId)
-            jsonObject.put(getString(R.string.website),binding.edtUrl.text.trim())
-            jsonObject.put(getString(R.string.work_details),binding.edtDetail.text.trim())
-            jsonObject.put(getString(R.string.business_address),binding.edtAddr.text.trim())
-        }catch (e:Exception){
+    fun getSaveData(jsonObject: JSONObject) {
+        try {
+            jsonObject.put(getString(R.string.business_logo), "")
+            jsonObject.put(getString(R.string.company_name), binding.edtComName.text.trim())
+            jsonObject.put(getString(R.string.business_category_id), profileDetailViewModel.selectedBusinessCategoryId)
+            jsonObject.put(getString(R.string.business_sub_category_id), profileDetailViewModel.selectedBusinessSubCategoryId)
+            jsonObject.put(getString(R.string.occupation_id), profileDetailViewModel.selectedOccupationId)
+            jsonObject.put(getString(R.string.website), binding.edtUrl.text.trim())
+            jsonObject.put(getString(R.string.work_details), binding.edtDetail.text.trim())
+            jsonObject.put(getString(R.string.business_address), binding.edtAddr.text.trim())
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
@@ -340,17 +347,17 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
     override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
         hideSweetProgress()
         val updatedMem = response.member
-        member.officeLat=ProfileDetailActivity.cur_lat.value.toString()
-        member.officeLng=ProfileDetailActivity.cur_lng.value.toString()
+        member.officeLat = ProfileDetailActivity.cur_lat.value.toString()
+        member.officeLng = ProfileDetailActivity.cur_lng.value.toString()
         val percentage = Utility.calculatePercentage(updatedMem)
         ProfileDetailActivity.setPercentage(percentage)
         if (updatedMem.id == member.id) {
             Guru.putString(getString(R.string.loginMember), Gson().toJson(updatedMem))
         }
-        if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){
-            var dist= EasyWayLocation.calculateDistance(member.officeLat.toDouble(),member.officeLng.toDouble(),ProfileDetailActivity.cur_lat.value!!.toDouble(),ProfileDetailActivity.cur_lng.value!!.toDouble())
+        if (ProfileDetailActivity.cur_lat.value != null && ProfileDetailActivity.cur_lng.value != null) {
+            var dist = EasyWayLocation.calculateDistance(member.officeLat.toDouble(), member.officeLng.toDouble(), ProfileDetailActivity.cur_lat.value!!.toDouble(), ProfileDetailActivity.cur_lng.value!!.toDouble())
             dist /= 1000
-            binding.tvDistance.text=String.format(getString(R.string.kmPDetail),dist)
+            binding.tvDistance.text = String.format(getString(R.string.kmPDetail), dist)
         }
         displaySnackBarWithBottomMargin(binding.llMain, "Office location updated!")
     }

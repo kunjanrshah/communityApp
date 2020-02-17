@@ -8,7 +8,10 @@ import com.krs.community.R
 import com.krs.community.activity.LoginActivity
 import com.krs.community.listeners.IRegisterListener
 import com.krs.community.repositories.RegisterRepository
-import com.krs.community.utils.*
+import com.krs.community.utils.ApiException
+import com.krs.community.utils.AppConstants
+import com.krs.community.utils.NoInternetException
+import com.krs.community.utils.Utility
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -130,7 +133,7 @@ class RegisterViewModel(
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.select_local),12)
                 return
             }
-        Utility.startSweetProgress(app,app.getString(R.string.RegisterFamily),app.resources.getString(R.string.loading))
+
         register.first_name=fname
         register.sub_cast_id=lastnameId.toString()
         register.email_address=email

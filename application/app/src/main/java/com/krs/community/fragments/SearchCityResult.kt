@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
@@ -114,9 +114,9 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         animationItemsIndex = SparseBooleanArray()
         actionModeCallback = ActionModeCallback()
 
-        browseCityViewModel = ViewModelProviders.of(this, browseCityViewModelFactory).get(BrowseCityViewModel::class.java)
-        roomMemberViewModel = ViewModelProviders.of(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
-        profileDetailViewModel = ViewModelProviders.of(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
+        browseCityViewModel = ViewModelProvider(this, browseCityViewModelFactory).get(BrowseCityViewModel::class.java)
+        roomMemberViewModel = ViewModelProvider(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
+        profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
 
         browseCityViewModel.ibrowseCityRecordsListener = this
         roomMemberViewModel.mRoomMemberListener = this

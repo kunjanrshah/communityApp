@@ -16,7 +16,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
@@ -42,7 +42,6 @@ import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.luseen.spacenavigation.SpaceItem
 import com.luseen.spacenavigation.SpaceOnClickListener
 import com.luseen.spacenavigation.SpaceOnLongClickListener
-import com.wessam.library.NoInternetLayout
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -69,8 +68,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this@DashboardActivity, R.layout.activity_dashboard)
-        dashboardViewModel = ViewModelProviders.of(this, factory).get(DashboardViewModel::class.java)
-
+        dashboardViewModel = ViewModelProvider(this, factory).get(DashboardViewModel::class.java)
 
     //    NoInternetLayout.Builder(this@DashboardActivity, R.layout.activity_dashboard).animate()
 
@@ -253,7 +251,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         binding.space.onSaveInstanceState(outState)
     }
 
-    override fun onDrawerItemSelected(view: View, position: Int) {
+    override fun onDrawerItemSelected(view: View?, position: Int) {
         Log.d(TAG, "position: $position")
         if (position == 0) {
             movetoFragment(this, DashboardFragment())
@@ -331,4 +329,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     override fun locationData(locationData: LocationData) {
         cur_addr.postValue(locationData.full_address)
     }
+
+
 }

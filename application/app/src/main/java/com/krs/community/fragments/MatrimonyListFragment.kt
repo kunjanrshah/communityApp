@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -52,7 +52,6 @@ import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.lang.Exception
 
 class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListener, ParallaxRecyclerAdapter.OnLoadMore,LocationAdapter.SetLocationListner {
 
@@ -78,9 +77,9 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
 
         binding=DataBindingUtil.inflate(inflater, R.layout.fragment_matrimonylist, container, false)
 
-        smartFilterViewModel = ViewModelProviders.of(this,smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
-        roomMemberViewModel = ViewModelProviders.of(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
-        profileDetailViewModel = ViewModelProviders.of(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
+        smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
+        roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
+        profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         roomMemberViewModel.mRoomMemberListener= this
         smartFilterViewModel.mByFilterListener =this
         AppController.mApplication.start=0

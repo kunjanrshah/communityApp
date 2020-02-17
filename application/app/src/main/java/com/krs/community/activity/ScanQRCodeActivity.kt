@@ -12,23 +12,13 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProviders
 import com.budiyev.android.codescanner.*
-import com.github.squti.guru.Guru
-import com.google.gson.Gson
 import com.krs.community.R
-import com.krs.community.app.AppSignatureHashHelper
-import com.krs.community.model.Member
 import com.krs.community.utils.AESUtils
-import com.krs.community.utils.Utility
-import com.krs.community.viewmodel.LoginViewModel
 import com.wessam.library.NetworkChecker
 
 

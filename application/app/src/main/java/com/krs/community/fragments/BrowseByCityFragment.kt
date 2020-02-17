@@ -15,7 +15,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.ericliu.asyncexpandablelist.CollectionView
 import com.ericliu.asyncexpandablelist.async.AsyncExpandableListView
@@ -54,7 +54,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
         val binding: FragmentBrowseCityBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_browse_city, container, false)
         val view=  binding.root
 
-        browseCityViewModel = ViewModelProviders.of(this,factory).get(BrowseCityViewModel::class.java)
+        browseCityViewModel = ViewModelProvider(this, factory).get(BrowseCityViewModel::class.java)
 
         mAsyncExpandableListView = view.findViewById(R.id.asyncExpandableCollectionView)
         mAsyncExpandableListView.setCallbacks(this)

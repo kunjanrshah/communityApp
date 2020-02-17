@@ -5,14 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.model.LoginResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.viewmodel.DemoViewModel
-import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodelfactory.DemoViewModelFactory
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -36,7 +35,7 @@ class DemoFragment: Fragment() , KodeinAware, ILoginListener {
         return super.onCreateView(inflater, container, savedInstanceState)
 
 
-        demoViewModel = ViewModelProviders.of(this,filterViewModelFactory).get(DemoViewModel::class.java)
+        demoViewModel = ViewModelProvider(this, filterViewModelFactory).get(DemoViewModel::class.java)
         demoViewModel.mStatisticsListener=this
 
         val json=JSONObject()

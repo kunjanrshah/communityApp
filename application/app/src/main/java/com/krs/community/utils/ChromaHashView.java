@@ -43,7 +43,7 @@ public class ChromaHashView extends EditText {
             md5 = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException nsaex) {
         }
-        setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
         addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

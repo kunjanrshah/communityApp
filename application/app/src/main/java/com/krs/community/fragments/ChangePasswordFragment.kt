@@ -12,7 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
@@ -25,7 +25,6 @@ import com.krs.community.databinding.FragmentChangePassBinding
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
-
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.PasswordViewModel
 import com.krs.community.viewmodelfactory.PasswordViewModelFactory
@@ -50,7 +49,7 @@ class ChangePasswordFragment : Fragment() , KodeinAware,ILoginListener {
     @RequiresApi(api = Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        passwordViewModel = ViewModelProviders.of(this,passwordViewModelFactory).get(PasswordViewModel::class.java)
+        passwordViewModel = ViewModelProvider(this, passwordViewModelFactory).get(PasswordViewModel::class.java)
         passwordViewModel.mLoginListener=this
         passBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_change_pass, container, false)
 

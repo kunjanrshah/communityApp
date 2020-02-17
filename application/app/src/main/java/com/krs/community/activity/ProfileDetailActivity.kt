@@ -22,7 +22,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -97,7 +97,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
         binding = DataBindingUtil.setContentView(this@ProfileDetailActivity, R.layout.activity_profile_detail)
         logger = Logger(TAG)
-        profileDetailViewModel = ViewModelProviders.of(this, factory).get(ProfileDetailViewModel::class.java)
+        profileDetailViewModel = ViewModelProvider(this, factory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener = this
         profileDetailViewModel.mImageUploadListener = this
         member = intent.getSerializableExtra(getString(R.string.member)) as Member?
@@ -371,8 +371,8 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
         binding.txtTitle.text = "${member?.firstName}"+getString(R.string.Profile)
 
-        val userId = Guru.getString(getString(R.string.user_id), "")
-        if (member?.id == userId || member?.headId == userId) {
+        val memberId = Guru.getString(getString(R.string.member_id), "")
+        if (member?.id == memberId) {
             binding.tvSave.visibility = View.VISIBLE
             binding.tvSave.text = getString(R.string.save)
             binding.imgProfile.isEnabled = true

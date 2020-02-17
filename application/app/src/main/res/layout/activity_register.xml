@@ -95,7 +95,7 @@
                         android:id="@+id/img_cancel"
                         android:layout_width="25dip"
                         android:layout_height="25dip"
-                        android:layout_marginStart="80dp"
+                        android:layout_marginStart="75dp"
                         android:padding="5dp"
                         android:src="@drawable/cancel_popup"
                         tools:ignore="ContentDescription" />
@@ -149,7 +149,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="30dp"
                         android:background="@null"
-                        android:hint="@string/last_name"
+                        android:hint="@string/last_nameDetails"
                         android:textSize="16sp"
                         android:imeOptions="actionNext"
                         android:nextFocusDown="@+id/edt_email_id"
@@ -176,7 +176,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"
-                        android:hint="@string/gender"
+                        android:hint="@string/SelectYourGender"
                         android:layout_marginLeft="30dp"
                         android:textSize="16sp"
                         android:imeOptions="actionNext"
@@ -268,7 +268,6 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_password"
                     android:imeOptions="actionNext"
-                    android:inputType="textPassword"
                     android:nextFocusDown="@+id/edt_cpassword"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
@@ -290,7 +289,6 @@
                     android:text="@={registerviewmodel.cpass}"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_conform_password"
-                    android:inputType="textPassword"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:nextFocusDown="@+id/spinnerStates"
@@ -351,10 +349,7 @@
                         android:imeOptions="actionNext"
                         app:jrs_title="City List" />
 
-
                 </RelativeLayout>
-
-
 
                 <EditText
                     tools:ignore="Autofill"

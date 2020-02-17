@@ -12,7 +12,7 @@ import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.easywaylocation.EasyWayLocation
 import com.github.squti.guru.Guru
@@ -50,7 +50,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_details, container, false)
-        profileDetailViewModel = ViewModelProviders.of(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
+        profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener=this
         member = arguments?.getSerializable(getString(R.string.member)) as Member
         val loginMember=Guru.getString(getString(R.string.loginMember),"")

@@ -18,12 +18,11 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -36,9 +35,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
-import com.google.gson.Gson
 import com.krs.community.R
-import com.krs.community.adapter.TruecallerAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.AppSignatureHashHelper
 import com.krs.community.app.SMSReceiver
@@ -54,7 +51,6 @@ import com.krs.community.utils.toast
 import com.krs.community.viewmodel.LoginViewModel
 import com.krs.community.viewmodelfactory.LoginViewModelFactory
 import com.orhanobut.dialogplus.DialogPlus
-import com.wessam.library.NetworkChecker
 import com.wessam.library.NetworkChecker.isNetworkConnected
 import kotlinx.android.synthetic.main.activity_loginwith.*
 import org.json.JSONException
@@ -98,7 +94,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
 
-            loginViewModel = ViewModelProviders.of(this, factory).get(LoginViewModel::class.java)
+            loginViewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
             loginViewModel?.iLoginListener = this
 
 
@@ -362,11 +358,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             1 -> {
-                // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted
                 } else {
-                    // permission denied
                     Toast.makeText(this@LoginActivity, getString(R.string.SmsExternalStorage), Toast.LENGTH_SHORT).show()
                 }
                 return
@@ -486,7 +479,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN && resultCode!=0) {
-
             try {
                 startSweetProgress(this@LoginActivity, getString(R.string.seat_back_relax), getString(R.string.loading))
                 loginViewModel?.loginWithGoogle(data)

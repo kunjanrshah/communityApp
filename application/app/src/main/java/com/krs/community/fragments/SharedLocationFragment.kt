@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,9 +33,9 @@ import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmnetSharedLocationBinding
 import com.krs.community.entities.RoomMember
+import com.krs.community.listeners.ByFilterListener
 import com.krs.community.listeners.EditMemberListener
 import com.krs.community.listeners.RoomMemberListener
-import com.krs.community.listeners.ByFilterListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
@@ -84,10 +84,10 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragmnet_shared_location, container, false)
 
-        roomMemberViewModel = ViewModelProviders.of(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
-        profileDetailViewModel = ViewModelProviders.of(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
+        roomMemberViewModel = ViewModelProvider(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
+        profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener = this
-        filterViewModel = ViewModelProviders.of(this, filterViewModelFactory).get(SmartFilterViewModel::class.java)
+        filterViewModel = ViewModelProvider(this, filterViewModelFactory).get(SmartFilterViewModel::class.java)
         filterViewModel.mByFilterListener = this
 
         actionModeCallback = ActionModeCallback()

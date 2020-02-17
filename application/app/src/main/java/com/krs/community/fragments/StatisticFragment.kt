@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.github.squti.guru.Guru
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -40,7 +40,7 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
             Utility.changeStatusbarColor(activity, R.color.bg_gray, false)
         }
 
-        statisticsViewModel = ViewModelProviders.of(this,factory).get(StatisticsViewModel::class.java)
+        statisticsViewModel = ViewModelProvider(this, factory).get(StatisticsViewModel::class.java)
         statisticsViewModel.mStatisticsListener=this
         binding.spCity.setOnItemClickListener {
             statisticsViewModel.selectedCityName = binding.spCity.text.toString().trim()

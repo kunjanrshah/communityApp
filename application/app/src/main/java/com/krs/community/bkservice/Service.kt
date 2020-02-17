@@ -18,7 +18,6 @@ import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.AppDatabase
-import com.krs.community.bkservice.ProcessMainClass.serviceIntent
 import com.krs.community.bkservice.utilities.Notification
 import com.krs.community.repositories.ProfileDetailRepository
 import com.krs.community.responses.UpdateProfileResponse
@@ -30,7 +29,7 @@ import kotlinx.coroutines.*
 import org.json.JSONObject
 
 class Service : android.app.Service(), Listener, AddressCallBack {
-    private var easyWayLocation: EasyWayLocation?=null
+    private var easyWayLocation: EasyWayLocation? = null
     private lateinit var getLocationDetail: GetLocationDetail
     private lateinit var completableJob: CompletableJob
 
@@ -51,10 +50,10 @@ class Service : android.app.Service(), Listener, AddressCallBack {
         request.interval = Utility.INTERVAL
         request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
 
-        try{
+        try {
             easyWayLocation = EasyWayLocation(this, request, true, this)
             easyWayLocation?.startLocation()
-        }catch (e:Exception){
+        } catch (e: Exception) {
             stopSelf()
         }
 
@@ -66,9 +65,9 @@ class Service : android.app.Service(), Listener, AddressCallBack {
 
         // make sure you call the startForeground on onStartCommand because otherwise
         // when we hide the notification on onScreen it will nto restart in Android 6 and 7
-       // if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            restartForeground()
-       // }
+        // if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+        restartForeground()
+        // }
         // return start sticky so if it is killed by android, it will be restarted with Intent null
         return START_STICKY
     }
@@ -94,8 +93,8 @@ class Service : android.app.Service(), Listener, AddressCallBack {
                 startForeground(NOTIFICATION_ID, notification.setNotification(this, "Service notification", "This is the service's notification", R.drawable.ic_app))
                 Log.i(TAG, "restarting foreground successful")
                 easyWayLocation?.startLocation()
-               // serviceIntent = Intent(this, CallReceiver::class.java)
-               // sendBroadcast(serviceIntent)
+                // serviceIntent = Intent(this, CallReceiver::class.java)
+                // sendBroadcast(serviceIntent)
             } catch (e: Exception) {
                 Log.e(TAG, "Error in notification " + e.message)
             }
@@ -142,38 +141,40 @@ class Service : android.app.Service(), Listener, AddressCallBack {
 
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
+                    val userId = Guru.getString(getString(R.string.user_id), "")
+                    val id = Guru.getString(getString(R.string.user_id), "")
+                    if (!userId.isNullOrEmpty() && !id.isNullOrEmpty()) {
+                        val jsonObject = JSONObject()
+                        jsonObject.put(getString(R.string.user_id), userId)
+                        jsonObject.put(getString(R.string.id), id)
+                        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                        jsonObject.put(getString(R.string.user_lat), location.latitude)
+                        jsonObject.put(getString(R.string.user_lng), location.longitude)
+                        jsonObject.put(getString(R.string.is_location_enable), "1")
 
-                    val jsonObject = JSONObject()
-                    jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
-                    jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id),""))
-                    jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token),""))
-                    jsonObject.put(getString(R.string.user_lat),location.latitude)
-                    jsonObject.put(getString(R.string.user_lng), location.longitude)
-                    jsonObject.put(getString(R.string.is_location_enable), "1")
-
-                    val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-                    val mProfileDetailRepository= ProfileDetailRepository(ApiServices(),AppDatabase.invoke(AppController.mApplication))
-                    val response: UpdateProfileResponse = mProfileDetailRepository.updateProfile(profile)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            Guru.putString(getString(R.string.loginMember), Gson().toJson(response.member))
-                            Log.d("Location Service: ",response.message)
-                            thejob.complete()
+                        val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
+                        val mProfileDetailRepository = ProfileDetailRepository(ApiServices(), AppDatabase.invoke(AppController.mApplication))
+                        val response: UpdateProfileResponse = mProfileDetailRepository.updateProfile(profile)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                Guru.putString(getString(R.string.loginMember), Gson().toJson(response.member))
+                                Log.d("Location Service: ", response.message)
+                                thejob.complete()
+                            }
+                            return@launch
                         }
-                        return@launch
                     }
-                    //mEditMemberListener?.getFailure(response.message)
                 } catch (e: ApiException) {
                     e.message?.let {
-                        Log.d("Location Service: ",it)
+                        Log.d("Location Service: ", it)
                     }
                 } catch (e: NoInternetException) {
                     e.message?.let {
-                        Log.d("Location Service: ",it)
+                        Log.d("Location Service: ", it)
                     }
                 } catch (e: Exception) {
                     e.message?.let {
-                        Log.d("Location Service: ",it)
+                        Log.d("Location Service: ", it)
                     }
                 }
                 thejob.complete()
