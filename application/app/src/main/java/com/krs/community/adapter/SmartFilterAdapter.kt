@@ -252,7 +252,7 @@ class SmartFilterAdapter(private val _context: Context,
             if (!area.isEmpty() && !area.equals("area", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_edt_area)] = area
             }
-            val state = spState?.text.toString().trim { it <= ' ' }
+            val state = spState.text.toString().trim { it <= ' ' }
             if (!state.isEmpty() && !state.equals("State", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_state)] = state
             }
@@ -501,7 +501,7 @@ class SmartFilterAdapter(private val _context: Context,
             if (tvBirthTime != null) {
                 val birth_time = mapChildValues[_context.getString(R.string.ss_edt_birth_time)]
                 if (birth_time != null && !birth_time.isEmpty()) {
-                    tvBirthTime?.setText(birth_time)
+                    tvBirthTime?.text = birth_time
                 }
                 val height_meter = mapChildValues[_context.getString(R.string.ss_edt_height_meter)]
                 if (height_meter != null && !height_meter.isEmpty()) {
@@ -525,11 +525,11 @@ class SmartFilterAdapter(private val _context: Context,
             if (tvCreated != null) {
                 val created = mapChildValues[_context.getString(R.string.ss_edt_created)]
                 if (created != null && !created.isEmpty()) {
-                    tvCreated?.setText(created)
+                    tvCreated?.text = created
                 }
                 val updated = mapChildValues[_context.getString(R.string.ss_edt_updated)]
                 if (updated != null && !updated.isEmpty()) {
-                    tvUpdated?.setText(updated)
+                    tvUpdated?.text = updated
                 }
                 val maxUpdate = mapChildValues[_context.getString(R.string.ss_maxUpdate)]
                 val minUpdate = mapChildValues[_context.getString(R.string.ss_minUpdate)]
@@ -853,7 +853,7 @@ class SmartFilterAdapter(private val _context: Context,
                 chkIsMangal = convertView.findViewById(R.id.chk_is_mangal)
 
                 tvBirthTime?.setOnClickListener {
-                    NumberPadTimePickerDialogFragment.newInstance(mListener).show((_context as AppCompatActivity).getSupportFragmentManager(), "birth_time")
+                    NumberPadTimePickerDialogFragment.newInstance(mListener).show((_context as AppCompatActivity).supportFragmentManager, "birth_time")
                 }
 
                 setFieldValues()
@@ -911,7 +911,7 @@ class SmartFilterAdapter(private val _context: Context,
         if(min.length==1){
             min="0$min"
         }
-        tvBirthTime?.setText("$hour:$min")
+        tvBirthTime?.text = "$hour:$min"
     }
 
     fun clearAll(){

@@ -54,7 +54,7 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
         val editFilter=  arguments?.getString(activity?.getString(R.string.edit_filter))
         adapter = SmartFilterAdapter(activity as AppCompatActivity,profileDetailViewModel,editFilter)
         expandableListView.setAdapter(adapter)
-        (activity as AppCompatActivity?)!!.supportActionBar!!.setTitle("Smart Filter")
+        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Smart Filter"
         setListener()
 
         val ivFilter = rootView.findViewById<ImageView>(R.id.iv_filter)

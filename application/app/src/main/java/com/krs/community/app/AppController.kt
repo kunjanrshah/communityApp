@@ -117,7 +117,7 @@ class AppController : Application(), KodeinAware{
     }
 
     private fun stopRepeatingTask(){
-        mHandler.removeCallbacks(mHandlerTask);
+        mHandler.removeCallbacks(mHandlerTask)
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -126,7 +126,7 @@ class AppController : Application(), KodeinAware{
 
         mApplication = this
 
-        FacebookSdk.sdkInitialize(applicationContext);
+        FacebookSdk.sdkInitialize(applicationContext)
 
         typeface = ResourcesCompat.getFont(applicationContext, R.font.montserrat_regular)!!
         typeface_bold = ResourcesCompat.getFont(applicationContext, R.font.montserrat_semibold)!!

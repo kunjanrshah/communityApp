@@ -139,7 +139,7 @@ class RoomMemberViewModel(
                     response.let {
                         withContext(Dispatchers.Main) {
                             mRoomMemberListener?.getFailure(response.message)
-                            thejob?.complete()
+                            thejob.complete()
                         }
                         return@launch
                     }

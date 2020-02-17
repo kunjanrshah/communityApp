@@ -68,7 +68,7 @@ class ScanQRCodeActivity : AppCompatActivity() {
             setContentView(R.layout.activity_scan_qrcode)
             val scannerView = findViewById<CodeScannerView>(R.id.scanner_view)
 
-            setupPermissions();
+            setupPermissions()
 
             codeScanner = CodeScanner(this, scannerView)
 
@@ -123,10 +123,10 @@ class ScanQRCodeActivity : AppCompatActivity() {
 
     private fun registerNetworkBroadcastForNougat() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(mNetworkReceiver,  IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            registerReceiver(mNetworkReceiver,  IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         }
     }
 

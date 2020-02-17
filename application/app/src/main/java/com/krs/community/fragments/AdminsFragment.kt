@@ -187,6 +187,8 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
 
 
                         } else if (it == 1) {
+                            Toast.makeText(activity,"Coming soon",Toast.LENGTH_SHORT).show()
+                            return@listener
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
                         } else if (it == 2) {

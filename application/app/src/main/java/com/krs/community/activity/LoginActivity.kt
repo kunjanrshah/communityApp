@@ -103,13 +103,10 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
 
             val appSignatureHashHelper = AppSignatureHashHelper(this)
-            var hashkey: String = appSignatureHashHelper.appSignatures.get(0);
+            var hashkey: String = appSignatureHashHelper.appSignatures.get(0)
             hashkey = hashkey.replace("+", "%2B")
             Guru.putString(getString(R.string.hash_key), hashkey)
             Log.e(TAG, "hashcode: " + hashkey)
-
-            getHashKey(this)
-
             setScreenLayout()
 
         } else {
@@ -164,13 +161,13 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 }
             })
 
-            binding.edtMobile.setOnEditorActionListener({ v, actionId, event ->
+            binding.edtMobile.setOnEditorActionListener { v, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     btnContinue.performClick()
-                    true;
+                    true
                 }
-                false;
-            })
+                false
+            }
 
             binding.imgCancel.setOnClickListener {
                 card_view_otp.visibility = View.GONE
@@ -307,10 +304,10 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
     private fun registerNetworkBroadcastForNougat() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         }
     }
 
@@ -366,7 +363,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         when (requestCode) {
             1 -> {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted
                 } else {
                     // permission denied
@@ -378,7 +375,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
     override fun onOTPReceived(otp: String?) {
-        val otp1 = otp?.substring(31, 35);
+        val otp1 = otp?.substring(31, 35)
         Log.i(TAG, "OTP Received: $otp1")
         squareField.setText(otp1)
         if (smsReceiver != null) {
@@ -452,17 +449,12 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         NotificationUtils.clearNotifications(applicationContext)
     }
 
-    override fun onPause() {
-        /*LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver)*/
-        super.onPause()
-    }
-
     override fun onStart() {
         super.onStart()
 
         val currentUser = loginViewModel?.mAuth?.currentUser
         if (currentUser != null) {
-            Log.d(TAG, currentUser?.email)
+            Log.d(TAG, currentUser.email)
         }
         val is_home = Guru.getBoolean(AppConstants.IS_HOME, false)
         if (!is_home) {

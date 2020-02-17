@@ -1,35 +1,23 @@
 package com.krs.community.bkservice
 
 import android.content.Context
-import android.content.Intent
-import android.util.Log
 import android.widget.Toast
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
-import com.krs.community.adapter.TruecallerAdapter
-import com.krs.community.app.AppController
-import com.krs.community.listeners.EditMemberListener
-import com.krs.community.repositories.ProfileDetailRepository
-import com.krs.community.utils.ApiException
-import com.orhanobut.dialogplus.DialogPlus
-import kotlinx.coroutines.*
-import org.json.JSONObject
 import java.util.*
 
 class CallReceiver : PhonecallReceiver() {
 
-    private var setLocationDialog: DialogPlus? = null
-    lateinit var mEditMemberListener: EditMemberListener
+   // private var setLocationDialog: DialogPlus? = null
+   // lateinit var mEditMemberListener: EditMemberListener
 
-    private lateinit var job_by_update: CompletableJob
+  //  private lateinit var job_by_update: CompletableJob
 
-    private lateinit var completableJob: CompletableJob
-    private lateinit var mProfileDetailRepository: ProfileDetailRepository
+   // private lateinit var completableJob: CompletableJob
+    //private lateinit var mProfileDetailRepository: ProfileDetailRepository
     override fun onIncomingCallStarted(ctx: Context, number: String, start: Date) {
 
         Toast.makeText(ctx, "onIncomingCallStarted $number", Toast.LENGTH_LONG).show()
 
-        SmartFilterApiData(number,ctx)
+        //SmartFilterApiData(number,ctx)
 
         //	showDialogSecond(ctx);
 
@@ -54,17 +42,13 @@ class CallReceiver : PhonecallReceiver() {
 //SmartFilterApiData(ctx);
     }
 
-    override fun onOutgoingCallStarted(ctx: Context, number: String, start: Date) { //	Toast.makeText(ctx, " onOutgoingCallStarted" + number, Toast.LENGTH_LONG).show();
-    }
+ override fun onIncomingCallEnded(ctx: Context?, number: String?, start: Date?, end: Date?) {
+  super.onIncomingCallEnded(ctx, number, start, end)
+  Toast.makeText(ctx, "Call dropped$number", Toast.LENGTH_LONG).show()
+ }
 
-    override fun onIncomingCallEnded(ctx: Context, number: String, start: Date, end: Date) { //Toast.makeText(ctx, "onIncomingCallEnded" + number, Toast.LENGTH_LONG).show();
-    }
 
-    override fun onOutgoingCallEnded(ctx: Context, number: String, start: Date, end: Date) { //Toast.makeText(ctx, "onOutgoingCallEnded" + number, Toast.LENGTH_LONG).show();
-    }
-
-    override fun onMissedCall(ctx: Context, number: String, start: Date) { //Toast.makeText(ctx, "onMissedCall " + number, Toast.LENGTH_LONG).show();
-    } /*
+     /*
 	private void SmartFilterApiData(Context ctx) {
 		ApiServices.login("9427051418","0","1",new Callback<LoginResModel>() {
 			@Override
@@ -159,7 +143,7 @@ class CallReceiver : PhonecallReceiver() {
 	}
 */
 
-    fun SmartFilterApiData(number: String?, ctx: Context) {
+    /*fun SmartFilterApiData(number: String?, ctx: Context) {
 
         val jsonObject = JSONObject()
         jsonObject.put("" + AppController.mApplication.start, "0")
@@ -195,5 +179,5 @@ class CallReceiver : PhonecallReceiver() {
                 thejob.complete()
             }
         }
-    }
+    }*/
 }

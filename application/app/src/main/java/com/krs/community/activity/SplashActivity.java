@@ -34,6 +34,8 @@ import com.krs.community.fragments.FamilyDetailActivity;
 import com.krs.community.utils.Utility;
 import com.wessam.library.NetworkChecker;
 
+import static com.krs.community.utils.Utility.getHashKey;
+
 public class SplashActivity extends Activity{
 
     private KenBurnsView kbv;
@@ -52,13 +54,19 @@ public class SplashActivity extends Activity{
 
         mNetworkReceiver = new NetworkChangeReceiver();
 
-        registerNetworkBroadcastForNougat();
-
+        getHashKey(this);
         if (NetworkChecker.isNetworkConnected(this)) {
             setScreenLayout();
         }else{
             setNoInternetLayout();
         }
+
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RestartServiceBroadcastReceiver.scheduleJob(getApplicationContext());
+        } else {
+            ProcessMainClass bck = new ProcessMainClass();
+            bck.launchService(getApplicationContext());
+        }*/
 
     }
 
@@ -159,33 +167,14 @@ public class SplashActivity extends Activity{
         }
     }
 
-    private void registerNetworkBroadcastForNougat() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        }
-    }
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterNetworkBroadcastForNougat();
     }
 
-    private void unregisterNetworkBroadcastForNougat() {
-        try{
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                unregisterReceiver(mNetworkReceiver);
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                unregisterReceiver(mNetworkReceiver);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+
 
 
     @SuppressLint("NewApi")

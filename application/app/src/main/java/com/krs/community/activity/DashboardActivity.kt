@@ -284,7 +284,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                 .apply(RequestOptions.circleCropTransform()).thumbnail(0.5f)
                 .into(object : CustomTarget<Drawable>() {
                     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                        menu?.findItem(R.id.action_profile)?.setIcon(resource)
+                        menu?.findItem(R.id.action_profile)?.icon = resource
                     }
                     override fun onLoadCleared(placeholder: Drawable?) {
 

@@ -95,18 +95,18 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         filterViewModel.mByFilterListener=this
 
         Utility.changeStatusbarColor(activity, R.color.colorPrimary, true)
-        binding.gridView.setExpanded(true)
+        binding.gridView.isExpanded = true
         binding.imageSlider.setIndicatorAnimation(IndicatorAnimations.SWAP)
         binding.imageSlider.setSliderTransformAnimation(SliderAnimations.FADETRANSFORMATION)
         binding.imageSlider.scrollTimeInSec = 3 //set scroll delay in seconds :
-        (activity as AppCompatActivity?)!!.supportActionBar!!.setTitle(getString(R.string.home))
+        (activity as AppCompatActivity?)!!.supportActionBar!!.title = getString(R.string.home)
         binding.edtSearch.inputType = InputType.TYPE_NULL
         binding.edtSearch.keyListener = null
 
         binding.edtSearch.setOnTouchListener { _: View?, event: MotionEvent? ->
             val DRAWABLE_RIGHT = 2
             if(event?.action == MotionEvent.ACTION_UP) {
-                if((event.rawX +70) >= (binding.edtSearch.getRight() - binding.edtSearch.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                if((event.rawX +70) >= (binding.edtSearch.right - binding.edtSearch.compoundDrawables[DRAWABLE_RIGHT].bounds.width())) {
                     getSpeechInput()
                     true
                 }
@@ -188,8 +188,8 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     mHandler.removeCallbacks(SCROLLING_RUNNABLE)
                     val postHandler = Handler()
                     postHandler.postDelayed({
-                        binding.lstSharedProfile.setAdapter(null)
-                        binding.lstSharedProfile.setAdapter(sharedAdapter)
+                        binding.lstSharedProfile.adapter = null
+                        binding.lstSharedProfile.adapter = sharedAdapter
                         mHandler.postDelayed(SCROLLING_RUNNABLE, 2000)
                     }, 2000)
                 }

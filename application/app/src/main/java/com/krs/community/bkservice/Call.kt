@@ -1,3 +1,4 @@
+/*
 package com.krs.community.bkservice
 
 import android.content.Context
@@ -20,11 +21,13 @@ import java.util.*
 
 abstract class Call : PhonecallReceiver() , Listener {
 
-    /*private val mProfileDetailRepository: ProfileDetailRepository
+    */
+/*private val mProfileDetailRepository: ProfileDetailRepository
 
         get() {
             TODO()
-        }*/
+        }*//*
+
 
     lateinit var mEditMemberListener: EditMemberListener
 
@@ -38,20 +41,11 @@ abstract class Call : PhonecallReceiver() , Listener {
 
     }
 
-    override fun onOutgoingCallStarted(ctx: Context?, number: String?, start: Date?) { //	Toast.makeText(ctx, " onOutgoingCallStarted" + number, Toast.LENGTH_LONG).show();
-    }
-
-    override fun onIncomingCallEnded(ctx: Context?, number: String?, start: Date?, end: Date?) { //Toast.makeText(ctx, "onIncomingCallEnded" + number, Toast.LENGTH_LONG).show();
-    }
-
-    override fun onOutgoingCallEnded(ctx: Context?, number: String?, start: Date?, end: Date?) { //Toast.makeText(ctx, "onOutgoingCallEnded" + number, Toast.LENGTH_LONG).show();
-    }
-
-    override fun onMissedCall(ctx: Context?, number: String?, start: Date?) { //Toast.makeText(ctx, "onMissedCall " + number, Toast.LENGTH_LONG).show();
-    }
 
 
-   /* fun SmartFilterApiData(number: String?) {
+
+   */
+/* fun SmartFilterApiData(number: String?) {
 
         val jsonObject = JSONObject()
         jsonObject.put("" + AppController.mApplication.start, "0")
@@ -86,7 +80,8 @@ abstract class Call : PhonecallReceiver() , Listener {
             }
         }
     }
-*/
+*//*
+
     override fun locationCancelled() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -100,3 +95,4 @@ abstract class Call : PhonecallReceiver() , Listener {
     }
 
 }
+*/

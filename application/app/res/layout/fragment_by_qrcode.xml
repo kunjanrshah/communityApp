@@ -34,7 +34,7 @@
             android:layout_marginStart="20dp"
             android:fontFamily="@font/montserrat_regular"
             android:text="@string/you_can_share_this_qr_code_to_other_you_can_scan_qr_code_by_camera_and_gallery"
-            android:textColor="@color/mdtp_transparent_black"
+            android:textColor="@color/black2"
             android:textSize="14sp" />
 
         <ScrollView
