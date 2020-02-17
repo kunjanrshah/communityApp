@@ -55,7 +55,7 @@ import java.io.File
 class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterListener,KodeinAware, ImageUploadListener {
 
     private var str_profile_hash = ""
-    private lateinit var mPreferencesManager:PreferencesManager;
+    private lateinit var mPreferencesManager:PreferencesManager
     private var mShowLoader: Boolean = false
     private val PICK_GALLERY_REQUEST = 1
     private lateinit var logger: Logger
@@ -87,18 +87,14 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         registerNetworkBroadcastForNougat()
 
         if (NetworkChecker.isNetworkConnected(this)) {
-
             setScreenLayout()
-
         } else {
             setNoInternetLayout()
         }
-
     }
 
     fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)
-        //val binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.no_internet_layout)
         val retryButton: AppCompatButton = findViewById(R.id.retry_button)
         retryButton.setOnClickListener { v: View? -> setScreenLayout() }
     }
@@ -140,7 +136,8 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
             }
 
             binding.btnRegister.setOnClickListener {
-                Utility.startSweetProgress(this,getString(R.string.RegisterFamily),resources.getString(R.string.loading))
+
+
                 registerViewModel.getUserRegistration()
             }
 
@@ -232,10 +229,10 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     }
     private fun registerNetworkBroadcastForNougat() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(mNetworkReceiver,  IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            registerReceiver(mNetworkReceiver,  IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         }
     }
 

@@ -275,7 +275,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         if (isVisibleToUser) {
             Handler().postDelayed(Runnable {
-                binding.scroll.fullScroll(ScrollView.FOCUS_UP);
+                binding.scroll.fullScroll(ScrollView.FOCUS_UP)
                 binding.scroll.isSmoothScrollingEnabled=true
             },1000)
         }
@@ -438,7 +438,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         }else if(which==2){
             binding.txtExpire.text = date
             if(!binding.txtBdate.text.toString().isEmpty()){
-                var mydate=binding.txtBdate.text.toString();
+                var mydate=binding.txtBdate.text.toString()
                 mydate=mydate.substringBefore("(")
                 val date1=  Utility.StringToDate(mydate,pattern)
                 val date2=  Utility.StringToDate(date,pattern)

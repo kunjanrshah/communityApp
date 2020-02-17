@@ -554,19 +554,19 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                     }
                     lblDeath -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                     lblBirthday -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                     lblMarriage -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_ann)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                     "Reminder" -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                 }
             }else if(death){
@@ -577,11 +577,11 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                     }
                     lblBirthday -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                     lblMarriage -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_ann)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                     lblDeath -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_fill_panchag)
@@ -589,14 +589,14 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                     }
                     "Reminder" -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                 }
             }else if(birthday){
                 when (holder.txtName.text) {
                     lblAll -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                     lblBirthday -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_fill_birthday)
@@ -604,15 +604,15 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                     }
                     lblMarriage -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_ann)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                     lblDeath -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                     "Reminder" -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                 }
             }else if(anniversay){
@@ -620,11 +620,11 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 when (holder.txtName.text) {
                     lblAll -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                     lblBirthday -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                     lblMarriage -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_fill_ann)
@@ -632,11 +632,11 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                     }
                     lblDeath -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                     "Reminder" -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
-                        holder.txtName.setTextColor(resources.getColor(R.color.mdtp_transparent_black))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                 }
             }

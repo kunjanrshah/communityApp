@@ -118,7 +118,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         binding.edtMother.setText(member.motherName)
         binding.edtMobile.setText(member.mobile)
         binding.edtEmail.setText(member.emailAddress)
-        binding.edtEmail.setFilters(arrayOf(Utility.filter));
+        binding.edtEmail.filters = arrayOf(Utility.filter)
         binding.edtAddr.setText(member.address)
         binding.spGender.setText(member.gender)
         binding.edtArea.setText(member.area)
@@ -170,7 +170,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val lineCount: Int = binding.edtAddr.getLineCount()
+                val lineCount: Int = binding.edtAddr.lineCount
                 if (lineCount > numberOfLines) {
                     binding.edtAddr.setText(text)
                 }
@@ -179,7 +179,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
         binding.edtAddr.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN) {
-                val editTextLineCount: Int = (v as EditText).getLineCount()
+                val editTextLineCount: Int = (v as EditText).lineCount
                 if (editTextLineCount >= numberOfLines) return@OnKeyListener true
             }
             false

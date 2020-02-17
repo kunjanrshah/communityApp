@@ -172,7 +172,7 @@ class NewsListFragment : Fragment() , KodeinAware,NewsListener {
     override fun onPause() {
         super.onPause()
         (activity as AppCompatActivity).supportActionBar?.show()
-        mShimmerViewContainer.stopShimmerAnimation();
+        mShimmerViewContainer.stopShimmerAnimation()
     }
 
     override fun getNewsList(response: NewsResponse) {

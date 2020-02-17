@@ -15,7 +15,7 @@ class ShareEventRepository(
 
     suspend fun createEvent(images: List<MultipartBody.Part>, id : RequestBody, user_id : RequestBody, access_token: RequestBody, params: RequestBody, yourtube:List<RequestBody>): JsonObject {
         return apiRequest{
-            api.createEvent(images,id,user_id,access_token,params,yourtube);
+            api.createEvent(images,id,user_id,access_token,params,yourtube)
         }
     }
 

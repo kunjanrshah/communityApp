@@ -1,3 +1,4 @@
+/*
 package com.krs.community.utils;
 
 import android.annotation.SuppressLint;
@@ -29,30 +30,40 @@ public class FeedImageView extends ImageView {
 		mObserver = observer;
 	}
 
-	/**
+	*/
+/**
 	 * The URL of the network image to load
-	 */
+	 *//*
+
 	private String mUrl;
 
-	/**
+	*/
+/**
 	 * Resource ID of the image to be used as a placeholder until the network
 	 * image is loaded.
-	 */
+	 *//*
+
 	private int mDefaultImageId;
 
-	/**
+	*/
+/**
 	 * Resource ID of the image to be used if the network response fails.
-	 */
+	 *//*
+
 	private int mErrorImageId;
 
-	/**
+	*/
+/**
 	 * Local copy of the ImageLoader.
-	 */
+	 *//*
+
 	private ImageLoader mImageLoader;
 
-	/**
+	*/
+/**
 	 * Current ImageContainer. (either in-flight or finished)
-	 */
+	 *//*
+
 	private ImageContainer mImageContainer;
 
 	public FeedImageView(Context context) {
@@ -68,21 +79,7 @@ public class FeedImageView extends ImageView {
 		super(context, attrs, defStyle);
 	}
 
-	/**
-	 * Sets URL of the image that should be loaded into this view. Note that
-	 * calling this will immediately either set the cached image (if available)
-	 * or the default image specified by
-	 * {@link VolleyImageView#setDefaultImageResId(int)} on the view.
-	 * 
-	 * NOTE: If applicable, {@link VolleyImageView#setDefaultImageResId(int)}
-	 * and {@link VolleyImageView#setErrorImageResId(int)} should be called
-	 * prior to calling this function.
-	 * 
-	 * @param url
-	 *            The URL that should be loaded into this ImageView.
-	 * @param imageLoader
-	 *            ImageLoader that will be used to make the request.
-	 */
+
 	public void setImageUrl(String url, ImageLoader imageLoader) {
 		mUrl = url;
 		mImageLoader = imageLoader;
@@ -90,28 +87,34 @@ public class FeedImageView extends ImageView {
 		loadImageIfNecessary(false);
 	}
 
-	/**
+	*/
+/**
 	 * Sets the default image resource ID to be used for this view until the
 	 * attempt to load it completes.
-	 */
+	 *//*
+
 	public void setDefaultImageResId(int defaultImage) {
 		mDefaultImageId = defaultImage;
 	}
 
-	/**
+	*/
+/**
 	 * Sets the error image resource ID to be used for this view in the event
 	 * that the image requested fails to load.
-	 */
+	 *//*
+
 	public void setErrorImageResId(int errorImage) {
 		mErrorImageId = errorImage;
 	}
 
-	/**
+	*/
+/**
 	 * Loads the image for the view if it isn't already loaded.
 	 * 
 	 * @param isInLayoutPass
 	 *            True if this was invoked from a layout pass, false otherwise.
-	 */
+	 *//*
+
 	private void loadImageIfNecessary(final boolean isInLayoutPass) {
 		final int width = getWidth();
 		int height = getHeight();
@@ -247,9 +250,11 @@ public class FeedImageView extends ImageView {
 		invalidate();
 	}
 
-	/*
+	*/
+/*
 	 * Adjusting imageview height
-	 * */
+	 * *//*
+
 	private void adjustImageAspect(int bWidth, int bHeight) {
 		LinearLayout.LayoutParams params = (LayoutParams) getLayoutParams();
 
@@ -263,4 +268,4 @@ public class FeedImageView extends ImageView {
 		params.height = new_height;
 		setLayoutParams(params);
 	}
-}
+}*/

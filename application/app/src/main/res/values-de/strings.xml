@@ -56,11 +56,11 @@
     <string name="email">ઇમેઇલ</string>
     <string name="enter_mobile_no">એન્ટર મોબાઈલ નંબર</string>
     <string name="enter_email_id">એન્ટર ઇમેઇલ આઈડી</string>
-    <string name="hashkey">પાસવર્ડ</string>
+    <!--<string name="hashkey">પાસવર્ડ</string>-->
     <string name="_forgot_password">પાસવર્ડ ભૂલી ગયા છો?</string>
     <string name="or_login_with">ઓર લોગઇન વિથ</string>
     <string name="do_you_have_an_account_register_now">શું તમારી પાસે એકાઉન્ટ છે?</string>
-    <string name="send_otp">OTP મોકલો</string>
+   <!-- <string name="send_otp">OTP મોકલો</string>-->
     <string name="send_email">ઈ-મેલ મોકલો</string>
     <string name="err_msg_blank">કૃપા કરીને ખાલી વિગતો દાખલ કરો</string>
     <string name="nav_item_change_password">પાસવર્ડ બદલો</string>
@@ -199,7 +199,7 @@
     <string name="profileUpdate">પ્રોફાઇલ અપડેટ થઈ!</string>
     <string name="locationUpdate">સ્થાન અપડેટ કર્યું</string>
 
-    <string name="km">%.2f કે.એમ.</string>
+    <!--<string name="km">%.2f કે.એમ.</string>-->
 
     <string name="selectedImage">પસંદ કરેલી છબી ફરીથી મેળવી શકાતી નથી</string>
     <string name="image">છબી</string>

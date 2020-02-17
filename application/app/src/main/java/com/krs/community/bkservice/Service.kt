@@ -30,7 +30,7 @@ import kotlinx.coroutines.*
 import org.json.JSONObject
 
 class Service : android.app.Service(), Listener, AddressCallBack {
-    private lateinit var easyWayLocation: EasyWayLocation
+    private var easyWayLocation: EasyWayLocation?=null
     private lateinit var getLocationDetail: GetLocationDetail
     private lateinit var completableJob: CompletableJob
 
@@ -53,11 +53,10 @@ class Service : android.app.Service(), Listener, AddressCallBack {
 
         try{
             easyWayLocation = EasyWayLocation(this, request, true, this)
-            easyWayLocation.startLocation()
+            easyWayLocation?.startLocation()
         }catch (e:Exception){
             stopSelf()
         }
-
 
         // it has been killed by Android and now it is restarted. We must make sure to have reinitialised everything
         if (intent == null) {
@@ -67,9 +66,9 @@ class Service : android.app.Service(), Listener, AddressCallBack {
 
         // make sure you call the startForeground on onStartCommand because otherwise
         // when we hide the notification on onScreen it will nto restart in Android 6 and 7
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+       // if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             restartForeground()
-        }
+       // }
         // return start sticky so if it is killed by android, it will be restarted with Intent null
         return START_STICKY
     }
@@ -93,12 +92,9 @@ class Service : android.app.Service(), Listener, AddressCallBack {
                 val notification = Notification()
                 startForeground(NOTIFICATION_ID, notification.setNotification(this, "Service notification", "This is the service's notification", R.drawable.ic_app))
                 Log.i(TAG, "restarting foreground successful")
-                easyWayLocation.startLocation()
-
-
-                serviceIntent = Intent(this, PhonecallReceiver::class.java)
-
-
+                easyWayLocation?.startLocation()
+               // serviceIntent = Intent(this, CallReceiver::class.java)
+               // sendBroadcast(serviceIntent)
             } catch (e: Exception) {
                 Log.e(TAG, "Error in notification " + e.message)
             }
@@ -110,7 +106,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
         // restart the never ending service
         // Intent broadcastIntent = new Intent(Globals.RESTART_INTENT);
         // sendBroadcast(broadcastIntent);
-        easyWayLocation.endUpdates()
+        easyWayLocation?.endUpdates()
         completableJob.cancel()
         super.onDestroy()
         Log.i(TAG, "onDestroy called")

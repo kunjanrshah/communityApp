@@ -152,7 +152,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
                 txtStart.error = "Start date is required"
                 isValidated = false
             } else {
-                txtStart.setError(null)
+                txtStart.error = null
             }
             /* if (edtEndDate.getText().toString().length == 0) {
                  edtEndDate.setError("End date is required")
@@ -160,11 +160,11 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
              } else {
                  edtEndDate.setError(null)
              }*/
-            if (txtStartTime.getText().toString().length == 0) {
-                txtStartTime.setError("Start time is required")
+            if (txtStartTime.text.toString().length == 0) {
+                txtStartTime.error = "Start time is required"
                 isValidated = false
             } else {
-                txtStartTime.setError(null)
+                txtStartTime.error = null
             }
             /*if (txtEndTime.getText().toString().length == 0) {
                 txtEndTime.setError("End time is required")
@@ -173,9 +173,9 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
                 txtEndTime.setError(null)
             }*/
             if (isValidated) {
-                yURLs.removeAll(Arrays.asList(""));
+                yURLs.removeAll(Arrays.asList(""))
                 val json = JSONObject()
-                json.put("id",userId);
+                json.put("id",userId)
                 json.put("event_date",edt_start.text.toString())
                 json.put("title", edtTitle.text.toString())
                 json.put("description", edtDescription.text.toString())
@@ -379,7 +379,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
         override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
             var filepath = ""
             try {
-                filepath = mResults!![position]
+                filepath = mResults[position]
                 val uri = Uri.fromFile(File(filepath))
                 var bitmap: Bitmap? = null
                 try {
@@ -398,16 +398,16 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
                 e.printStackTrace()
             }
             holder.iv_cancel.setOnClickListener { v: View? ->
-                mResults!!.removeAt(position)
+                mResults.removeAt(position)
                 notifyDataSetChanged()
             }
         }
 
         override fun getItemCount(): Int {
-            return if (mResults!!.size < 3) {
+            return if (mResults.size < 3) {
                 3
             } else {
-                mResults!!.size
+                mResults.size
             }
         }
     }

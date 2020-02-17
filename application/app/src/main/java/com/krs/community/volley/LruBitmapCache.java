@@ -1,3 +1,4 @@
+/*
 package com.krs.community.volley;
 
 import android.graphics.Bitmap;
@@ -34,4 +35,4 @@ public class LruBitmapCache extends LruCache<String, Bitmap> implements ImageCac
 	public void putBitmap(String url, Bitmap bitmap) {
 		put(url, bitmap);
 	}
-}
+}*/

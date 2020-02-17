@@ -152,7 +152,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
                 val mBundle = Bundle()
                 mBundle.putString("city_name", textViewCity.text.toString())
                 mBundle.putString("city_id", city_id)
-                fragment.setArguments(mBundle)
+                fragment.arguments = mBundle
                 Utility.movetoFragment(activity, fragment)
              }
         }

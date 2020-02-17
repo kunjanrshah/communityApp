@@ -332,19 +332,19 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                 else if (key.equals(_context.resources.getString(R.string.ss_edt_created), ignoreCase = true)) {
                     if (value.isNotEmpty()) {
                         viewHolder.llCreated.visibility = View.VISIBLE
-                        viewHolder.tvCreated.setText(value1)
+                        viewHolder.tvCreated.text = value1
                     }
                 }
 
                 else if (key.equals(_context.resources.getString(R.string.ss_edt_created), ignoreCase = true)) {
                     if (value.isNotEmpty()) {
                         viewHolder.llCreated.visibility = View.VISIBLE
-                        viewHolder.tvCreated.setText(value1)
+                        viewHolder.tvCreated.text = value1
                     }
                 } else if (key.equals(_context.resources.getString(R.string.ss_edt_updated), ignoreCase = true)) {
                     if (value.isNotEmpty()) {
                         viewHolder.llUpdated.visibility = View.VISIBLE
-                        viewHolder.tvUpdated.setText(value1)
+                        viewHolder.tvUpdated.text = value1
                     }
                 } else if (key.equals(_context.resources.getString(R.string.ss_minUpdate), ignoreCase = true)) {
                     if (value.isNotEmpty()) {

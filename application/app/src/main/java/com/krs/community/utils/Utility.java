@@ -1794,7 +1794,7 @@ public class Utility {
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                Log.v("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
                 hashKey=Base64.encodeToString(md.digest(), Base64.DEFAULT);
             }
         } catch (PackageManager.NameNotFoundException e) {

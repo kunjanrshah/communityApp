@@ -130,7 +130,7 @@ class RegisterViewModel(
                 iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.select_local),12)
                 return
             }
-
+        Utility.startSweetProgress(app,app.getString(R.string.RegisterFamily),app.resources.getString(R.string.loading))
         register.first_name=fname
         register.sub_cast_id=lastnameId.toString()
         register.email_address=email

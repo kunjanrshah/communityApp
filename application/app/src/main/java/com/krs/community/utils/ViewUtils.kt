@@ -160,7 +160,7 @@ fun openImageDialog(activity: AppCompatActivity,url: String) {
     dialog.setCancelable(true)
     dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     dialog.setContentView(R.layout.image_dialog)
-    dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation;
+    dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
     val image: ImageView = dialog.findViewById(R.id.img_dialog)
     Glide.with(activity)
             .load(url)
@@ -429,7 +429,7 @@ fun getRoomMemberFromMember(member:Member):RoomMember{
             member.birthPlace,member.nativePlaceId,member.bloodGroup,member.aboutMe,member.weight,member.height,member.isSpect,member.isMangal,
             member.isShani,member.hobby,member.facebookProfile,member.expectation,member.currentActivityId,member.maritalStatus,member.marriageDate,
             member.gotraId,member.profilePic,member.isRented,member.isExpired,member.expireDate,member.isDonor,member.businessCategoryId,member.businessSubCategoryId,
-            member.workDetails,member.companyName,member.businessAddress,member.businessLogo,member.website,member.educationId,member.occupationId,member?.userLat,member?.userLng,
+            member.workDetails,member.companyName,member.businessAddress,member.businessLogo,member.website,member.educationId,member.occupationId, member.userLat, member.userLng,
             member.homeLat, member.homeLng, member.officeLat, member.officeLng,member.isLocationEnable,member.updatedDt)
     return roomMember
 }
@@ -888,11 +888,11 @@ fun openPdf(context: Context,filePath: String) {
     val file = File(filePath)
     val path = Uri.fromFile(file)
 
-    val pdfOpenintent = Intent(Intent.ACTION_VIEW);
-    pdfOpenintent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
-    pdfOpenintent.setDataAndType(path, "application/pdf");
+    val pdfOpenintent = Intent(Intent.ACTION_VIEW)
+    pdfOpenintent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+    pdfOpenintent.setDataAndType(path, "application/pdf")
     try {
-    context.startActivity(pdfOpenintent);
+    context.startActivity(pdfOpenintent)
     }
     catch ( e: ActivityNotFoundException) {
 
@@ -906,12 +906,12 @@ fun shareFile(context: Context,filePath: String){
     val intent = Intent(Intent.ACTION_SEND)
     if(file.exists()) {
         val path = Uri.fromFile(file)
-        intent.setType("application/pdf");
-        intent.putExtra(Intent.EXTRA_STREAM, path);
-        intent.putExtra(Intent.EXTRA_SUBJECT,"Sharing File from Community App");
-        intent.putExtra(Intent.EXTRA_TEXT, "Sharing File from Community App");
+        intent.type = "application/pdf"
+        intent.putExtra(Intent.EXTRA_STREAM, path)
+        intent.putExtra(Intent.EXTRA_SUBJECT,"Sharing File from Community App")
+        intent.putExtra(Intent.EXTRA_TEXT, "Sharing File from Community App")
 
-        context.startActivity(Intent.createChooser(intent, "Share File Details"));
+        context.startActivity(Intent.createChooser(intent, "Share File Details"))
     }
 }
 

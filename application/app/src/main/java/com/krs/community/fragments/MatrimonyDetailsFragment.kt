@@ -85,7 +85,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
 
         binding.txtBtime.setOnClickListener {
             if(member.id == loginMem.id || member.headId == loginMem.id){
-                NumberPadTimePickerDialogFragment.newInstance(mListener).show(activity!!.getSupportFragmentManager(), getString(R.string.bottomSheet))
+                NumberPadTimePickerDialogFragment.newInstance(mListener).show(activity!!.supportFragmentManager, getString(R.string.bottomSheet))
             }
         }
 
@@ -100,7 +100,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val lineCount: Int = binding.edtAbout.getLineCount()
+                val lineCount: Int = binding.edtAbout.lineCount
                 if (lineCount > numberOfLines) {
                     binding.edtAbout.setText(text)
                 }
@@ -109,13 +109,13 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
 
         binding.edtAbout.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN) {
-                val editTextLineCount: Int = (v as EditText).getLineCount()
+                val editTextLineCount: Int = (v as EditText).lineCount
                 if (editTextLineCount >= numberOfLines) return@OnKeyListener true
             }
             false
         })
         
-        return binding.getRoot()
+        return binding.root
     }
 
     fun getSaveData(jsonObject:JSONObject){
@@ -169,6 +169,6 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
             min="0$min"
         }
 
-        binding.txtBtime.setText("$hour:$min")
+        binding.txtBtime.text = "$hour:$min"
     }
 }

@@ -30,8 +30,8 @@ class ShareEventViewModel(
 
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
-                    var imagesList:MutableList<MultipartBody.Part> = ArrayList();
-                    var videoURLs:MutableList<RequestBody> = ArrayList();
+                    var imagesList:MutableList<MultipartBody.Part> = ArrayList()
+                    var videoURLs:MutableList<RequestBody> = ArrayList()
 
                     for (i in 0..images.size-1) {
                         val requestFile = RequestBody.create(
@@ -39,14 +39,14 @@ class ShareEventViewModel(
                                 File(images.get(i))
                         )
                         val body = MultipartBody.Part.createFormData("uploaded_file", File(images.get(i)).name, requestFile)
-                        imagesList.add(body);
+                        imagesList.add(body)
                     }
 
                     for (i in 0..yourtube.size-1) {
                         val url = RequestBody.create(
                                 MediaType.parse("text/plain"),
                                 id)
-                        videoURLs.add(url);
+                        videoURLs.add(url)
                     }
 
                     val id = RequestBody.create(
@@ -66,12 +66,12 @@ class ShareEventViewModel(
                             MediaType.parse("text/plain"),
                             params)
 
-                    val response: JsonObject = shareEventRepository.createEvent(imagesList, id, user_id, access_token,body,videoURLs);
+                    val response: JsonObject = shareEventRepository.createEvent(imagesList, id, user_id, access_token,body,videoURLs)
 
 
                     response.let {
                         withContext(Dispatchers.Main) {
-                            Log.d("Response", response.toString());
+                            Log.d("Response", response.toString())
                             if (response.get("success").asString.equals("true")) {
                                 mCreateEventListener.getResult(response.get("message").asString)
                             } else {

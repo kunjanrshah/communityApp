@@ -133,7 +133,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
         }
         //final int[] correctPattern = new int[]{1, 2, 3, 5,4,7};
         if (correctPattern != null) {
-            mPinView.setPinAuthenticator(PasscodeViewPinAuthenticator(correctPattern))
+            mPinView.pinAuthenticator = PasscodeViewPinAuthenticator(correctPattern)
         }
         mPinView.setKey(RoundKey.Builder(mPinView)
                 .setKeyPadding(R.dimen.key_padding)
@@ -146,7 +146,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
                 .setIndicatorFilledColorResource(R.color.white)
                 .setIndicatorStrokeColorResource(R.color.white)
                 .setIndicatorStrokeWidth(R.dimen.indicator_stroke_width))
-        mPinView.setPinLength(PinView.DYNAMIC_PIN_LENGTH)
+        mPinView.pinLength = PinView.DYNAMIC_PIN_LENGTH
         mPinView.setKeyNames(KeyNamesBuilder()
                 .setKeyOne(this, R.string.key_1)
                 .setKeyTwo(this, R.string.key_2)
@@ -174,10 +174,10 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
 
     private fun registerNetworkBroadcastForNougat() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         }
     }
 

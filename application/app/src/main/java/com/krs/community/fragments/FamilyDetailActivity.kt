@@ -175,10 +175,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                     var imgLogin=R.drawable.ic_logout
                     if(member.loginStatus==1){
                         imgLogin=R.drawable.ic_logout
-                        viewHolder.tvLogin.setText("Exit")
+                        viewHolder.tvLogin.text = "Exit"
                     }else{
                         imgLogin=R.drawable.ic_login
-                        viewHolder.tvLogin.setText("Enter")
+                        viewHolder.tvLogin.text = "Enter"
                     }
                     try {
                         Glide.with(AppController.mApplication).load(imgLogin).thumbnail(0.5f).into(viewHolder.imgLogin)

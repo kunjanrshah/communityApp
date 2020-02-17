@@ -275,7 +275,7 @@ class ProfileDetailViewModel(
 
                     response.let {
                         withContext(Dispatchers.Main) {
-                            Log.d("Response", response.toString());
+                            Log.d("Response", response.toString())
 //
                             if (response.get("success").asString.equals("success")) {
                                 mImageUploadListener.getResult(response.getAsJsonObject("data"))

@@ -123,7 +123,7 @@
                     android:layout_marginRight="10dp"
                     android:fontFamily="@font/montserrat_light"
                     android:text="@string/_4_digit_otp_will_be_sent_via_sms_to_verify_your_mobile_number"
-                    android:textColor="@color/mdtp_transparent_black"
+                    android:textColor="@color/black2"
                     android:textSize="14sp" />
 
             </LinearLayout>
