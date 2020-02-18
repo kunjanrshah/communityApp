@@ -341,7 +341,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                     if (checkFineLocationPermission(this)) {
                         easyWayLocation.startLocation() //calculateDistance()
                     } else {
-                        Utility.requestFineLocationPermission(this)
+                        requestFineLocationPermission(this)
                     }
                 }
             } else {
