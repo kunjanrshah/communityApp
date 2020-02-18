@@ -2,6 +2,7 @@ package com.krs.community.fragments
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,11 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
             statisticsViewModel.selectedCityName = binding.spCity.text.toString().trim()
             Coroutines.main {
                 statisticsViewModel.cityId.await().observe(this, Observer {
+                    statisticsViewModel.selectedCityId = it
+                    Log.e("Test---",""+it);
+                    Log.e("spCity---",""+binding.spCity.text.toString().trim());
+                    Log.e("spCity---",""+statisticsViewModel.selectedCityName);
+
                     getStatisticsResult(it)
                 })
             }

@@ -19,14 +19,19 @@ class StatisticsViewModel(
     var mStatisticsListener: StatisticsListener? = null
 
     lateinit var selectedCityName:String
-    val cityId by lazyDeferred {
-        mStatisticsRepository.getCityId(selectedCityName)
-    }
+    var selectedCityId: Int = 0
+
+    /* val cityId by lazyDeferred {
+         mStatisticsRepository.getCityId(selectedCityName)
+     }*/
 
     val lstCityName by lazyDeferred {
         mStatisticsRepository.getCityNames()
     }
 
+    val cityId by lazyDeferred {
+        mStatisticsRepository.getcityNameById(selectedCityName)
+    }
 
     fun getStatistics(jsonObject: JsonObject) {
         job_statistics = Job()

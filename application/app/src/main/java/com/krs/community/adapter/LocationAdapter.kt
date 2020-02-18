@@ -48,7 +48,10 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
         }
 
         viewHolder.ivCancel.setOnClickListener { v: View? ->
+
+            Log.e("ivCancel--","ivCancel----");
             setLocationListner?.cancelDialog()
+
         }
 
         viewHolder.llHome.setOnClickListener { v: View? ->

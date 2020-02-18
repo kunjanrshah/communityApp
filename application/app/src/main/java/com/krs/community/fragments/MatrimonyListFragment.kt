@@ -87,7 +87,8 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivExport= header.findViewById<ImageView>(R.id.iv_export)
         tvRecords= header.findViewById<TextView>(R.id.tvCount)
-        ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
+        ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity)
+            Utility.hideKeyboard(activity)}
         val edtSearch = header.findViewById<EditText>(R.id.edtSearch)
         edtSearch.setOnTouchListener { v: View?, event: MotionEvent ->
             val DRAWABLE_RIGHT = 2
@@ -445,6 +446,6 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
     }
 
     override fun cancelDialog() {
-
+        setLocationDialog?.dismiss()
     }
 }

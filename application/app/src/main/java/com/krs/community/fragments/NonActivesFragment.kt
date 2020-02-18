@@ -1,5 +1,7 @@
 package com.krs.community.fragments
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -282,7 +284,12 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             true
         }
-
+        holder.tvMobile.setOnClickListener {
+            val intent = Intent(Intent.ACTION_DIAL)
+            val str = "tel:" + holder.tvMobile.text
+            intent.data = Uri.parse(str)
+            startActivity(intent)
+        }
         holder.imgProfile.setOnClickListener {
             if (member.profilePic.isNotEmpty()) {
                 holder.imgProfile.isClickable = true

@@ -187,7 +187,7 @@
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
-                        app:jrs_title="Select Last Name" />
+                        app:jrs_title="Select Gender" />
 
                 </RelativeLayout>
                 <EditText
