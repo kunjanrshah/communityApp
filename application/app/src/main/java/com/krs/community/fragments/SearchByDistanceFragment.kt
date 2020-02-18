@@ -489,49 +489,56 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
 
     private fun callDistanceAPI(){
         if (!DashboardActivity.stop) {
-            DashboardActivity.stop = true
-            lstMembers.clear()
-            tvRecords.visibility=View.GONE
-            byDistanceAdapter?.notifyDataSetChanged()
-            nearBy="Home"
-            if(rbtnAll.isChecked){
-                nearBy="All"
-            }else if(rbtnOffice.isChecked){
-                nearBy="Office"
-            }else if(rbtnUser.isChecked){
-                nearBy="User"
+
+            Log.e("edtKm---",""+edtKm.text.toString().trim());
+            if (edtKm.text.toString().trim().equals("") && edtKm.text.toString().trim().length ==0){
+
+            }else {
+
+                DashboardActivity.stop = true
+                lstMembers.clear()
+                tvRecords.visibility = View.GONE
+                byDistanceAdapter?.notifyDataSetChanged()
+                nearBy = "Home"
+                if (rbtnAll.isChecked) {
+                    nearBy = "All"
+                } else if (rbtnOffice.isChecked) {
+                    nearBy = "Office"
+                } else if (rbtnUser.isChecked) {
+                    nearBy = "User"
+                }
+
+                distance = ByDistanceModel()
+                distance.start = AppController.mApplication.start.toString()
+                distance.length = AppController.mApplication.length.toString()
+                distance.km = edtKm.text.toString().trim()
+                distance.nearBy = nearBy
+                distance.userId = Guru.getString(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+                distance.accessToken = Guru.getString(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                distance.lat = curr_lat.toString()
+                distance.lng = curr_lng.toString()
+
+                mShimmerViewContainer.startShimmerAnimation()
+                mShimmerViewContainer.visibility = View.VISIBLE
+                imgMap.visibility = View.GONE
+
+                Handler().postDelayed({
+                    if (lstMembers.size == 0) {
+                        mShimmerViewContainer.stopShimmerAnimation()
+                        mShimmerViewContainer.visibility = View.GONE
+                        imgMap.visibility = View.VISIBLE
+                    }
+                }, 5000)
+
+                curr_lng.observe(activity as AppCompatActivity, Observer {
+                    distance.lat = curr_lat.value.toString()
+                    distance.lng = curr_lng.value.toString()
+                    if (curr_lat.value != null && curr_lat.value != 0.0 && curr_lng.value != null && curr_lng.value != 0.0 && isCallAPI) {
+                        isCallAPI = false
+                        mByDistanceViewModel.getUserByDistance(distance)
+                    }
+                })
             }
-
-            distance = ByDistanceModel()
-            distance.start=AppController.mApplication.start.toString()
-            distance.length=AppController.mApplication.length.toString()
-            distance.km = edtKm.text.toString().trim()
-            distance.nearBy = nearBy
-            distance.userId = Guru.getString(getString(R.string.user_id),Guru.getString(getString(R.string.user_id),""))
-            distance.accessToken = Guru.getString(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-            distance.lat=curr_lat.toString()
-            distance.lng=curr_lng.toString()
-
-            mShimmerViewContainer.startShimmerAnimation()
-            mShimmerViewContainer.visibility =View.VISIBLE
-            imgMap.visibility=View.GONE
-
-            Handler().postDelayed({
-                if(lstMembers.size==0){
-                    mShimmerViewContainer.stopShimmerAnimation()
-                    mShimmerViewContainer.visibility =View.GONE
-                    imgMap.visibility=View.VISIBLE
-                }
-            },5000)
-
-            curr_lng.observe(activity as AppCompatActivity, Observer {
-                distance.lat=curr_lat.value.toString()
-                distance.lng=curr_lng.value.toString()
-                if(curr_lat.value!=null && curr_lat.value!=0.0 && curr_lng.value!=null && curr_lng.value!=0.0 && isCallAPI){
-                    isCallAPI=false
-                    mByDistanceViewModel.getUserByDistance(distance)
-                }
-            })
         }
     }
 

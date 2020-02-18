@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
@@ -40,12 +41,13 @@ import java.text.Normalizer
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListener, KodeinAware, RoomMemberListener {
+class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListener, KodeinAware, RoomMemberListener,LocationAdapter.SetLocationListner {
 
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var mBinding:ActivityFavoriteBinding
     private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
     private var mAdapter: FavoriteAdapter? = null
+    private var setLocationDialog: DialogPlus? = null
     private var lstMember = ArrayList<RoomMember>()
     override val kodein by kodein()
 
@@ -239,6 +241,14 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
                         val profileDetailViewModel = ViewModelProvider(this@FavoriteProfileActivity, profileDetailFactory).get(ProfileDetailViewModel::class.java)
                         createMemberPDF(this@FavoriteProfileActivity, getMemberFromRoomMember(member),profileDetailViewModel)
 
+                        Handler().post(Runnable {
+                            Utility.startSweetProgress(this@FavoriteProfileActivity, getString(R.string.ExportingList)+" ${member.firstName}" +getString(R.string.DetailList), getString(R.string.please_wait))
+                        })
+                        Handler().postDelayed({
+                            Utility.hideSweetProgress()
+                        }, 5000)
+
+
                     }else if(it == 1) {
                         Toast.makeText(this@FavoriteProfileActivity,"Coming soon", Toast.LENGTH_SHORT).show()
                         return@listener
@@ -264,14 +274,15 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
                         shareDetails(this@FavoriteProfileActivity,viewHolder.tvName.text.toString(), member.mobile.toString(),member.emailAddress.toString(),viewHolder.tvArea.text.toString(), member.address.toString())
                     } else if (it == 5) {
                         val adapter: LocationAdapter = LocationAdapter(this@FavoriteProfileActivity,getMemberFromRoomMember(member))
-                        val setLocationDialog = DialogPlus.newDialog(this@FavoriteProfileActivity)
+                        adapter.setLocationListner(this@FavoriteProfileActivity)
+                        setLocationDialog = DialogPlus.newDialog(this@FavoriteProfileActivity)
                                 .setAdapter(adapter)
                                 .setGravity(Gravity.BOTTOM)
                                 .setCancelable(true)
                                 .setExpanded(false, 600)
                                 .setContentBackgroundResource(R.drawable.popup_top_corner)
                                 .create()
-                        setLocationDialog.show()
+                        setLocationDialog?.show()
 
                     }
                 }
@@ -338,5 +349,9 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
             }
             notifyDataSetChanged()
         }
+    }
+
+    override fun cancelDialog() {
+        setLocationDialog?.dismiss()
     }
 }

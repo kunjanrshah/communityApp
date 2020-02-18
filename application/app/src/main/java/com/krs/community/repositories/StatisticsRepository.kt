@@ -7,6 +7,7 @@ import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.AppDatabase
+import com.krs.community.entities.City
 import com.krs.community.entities.LastUpdated
 import com.krs.community.responses.StatisticResponse
 import com.krs.community.retrofit.ApiServices
@@ -27,7 +28,7 @@ class StatisticsRepository(
         }
     }
 
-    suspend fun getCityId(name:String): LiveData<Int> {
+    suspend fun getcityNameById(name:String): LiveData<Int> {
         return withContext(Dispatchers.IO) {
             db.getCityDao().getCityIdByName(name)
         }

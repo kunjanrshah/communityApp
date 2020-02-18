@@ -37,6 +37,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.app.AppController
 import com.krs.community.app.AppController.Companion.mApplication
 import com.krs.community.bkservice.ProcessMainClass
 import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
@@ -529,6 +530,40 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         super.onActivityResult(requestCode, resultCode, data)
 
         if (isProfileImage) {
+         /*   isProfileImage=false*/
+            if (resultCode == RESULT_OK) {
+                if (requestCode == PICK_GALLERY_REQUEST) {
+                    val selectedUri = data!!.data
+                    if (selectedUri != null) {
+                        startCrop(selectedUri, this)
+                    } else {
+                        Toast.makeText(this@ProfileDetailActivity, "Cannot retrieve selected image", Toast.LENGTH_SHORT).show()
+                    }
+                } else if (requestCode == UCrop.REQUEST_CROP) {
+                    data?.let {
+                        val resultUri = UCrop.getOutput(it)
+                        com.krs.community.utils.logger.debug("resultUri: $resultUri")
+                        if (resultUri != null) {
+                            try {
+                                Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
+                                val uploadImage = File(resultUri.path.toString())
+                                startSweetProgress(this, "Image", getString(R.string.loading))
+                                profileDetailViewModel.uploadImage(uploadImage, member?.id.toString(), getString(R.string.profile))
+                            } catch (e: Exception) {
+                                e.message
+                            }
+                        } else {
+                            binding.llParent.snackbar("Requested crop image not found!", Snackbar.LENGTH_LONG)
+                        }
+                    }
+                }
+            }
+        }
+        if (resultCode == UCrop.RESULT_ERROR) {
+            handleCropError(data!!,this)
+        }
+
+        /*if (isProfileImage) {
             isProfileImage=false
             if (resultCode == RESULT_OK) {
                 if (requestCode == PICK_GALLERY_REQUEST) {
@@ -562,7 +597,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             }
         }else{
             professionalDetailsFragment.onActivityResult(requestCode, resultCode, data)
-        }
+        }*/
 
         if (resultCode == UCrop.RESULT_ERROR) {
             data?.let { handleCropError(it, this) }

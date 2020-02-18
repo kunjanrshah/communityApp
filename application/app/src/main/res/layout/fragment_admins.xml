@@ -17,7 +17,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:overScrollMode="never"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="10dp"
         android:layoutAnimation="@anim/layout_animation_fall_down"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/admin_list_item" />
