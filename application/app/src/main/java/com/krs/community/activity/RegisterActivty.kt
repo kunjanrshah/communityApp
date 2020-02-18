@@ -207,10 +207,13 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
             binding.spinnerGender.setItems(lstGender)
             binding.spinnerGender.setExpandTint(R.color.black)
 
-            binding.spinnerGender.setOnClickListener {
-                registerViewModel.gender=it.toString()
-            }
 
+            binding.spinnerGender.setOnItemClickListener {position->
+
+                registerViewModel.gender=lstGender[position]
+                Log.e("spinnerGender--",""+lstGender[position]);
+
+            }
             binding.imgProfile.setOnClickListener { v ->
                 pickFromGallery(this)
             }

@@ -17,8 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
-import com.krs.community.fragments.SearchCityResult;
-import com.krs.community.model.User;
 
 import java.util.List;
 

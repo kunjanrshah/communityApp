@@ -182,6 +182,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                             Log.v(TAG, response.toString())
                             try {
                                 val email = `object`.getString("email")
+
+                                Log.e("email",""+email);
                                 //val url = `object`.getJSONObject("picture").getJSONObject("data").getString("url")
                                 loginViewModel?.loginWithFB(email)
                             } catch (e: JSONException) {
