@@ -204,7 +204,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         listCommittee.setHasFixedSize(true)
         val header = LayoutInflater.from(activity).inflate(R.layout.header_committees, container, false)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
-        ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
+        ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         txtRegion = header.findViewById<TextView>(R.id.txt_region)
         txtDuration = header.findViewById<TextView>(R.id.txt_duration)
         txtCommittee = header.findViewById<TextView>(R.id.txt_committee)

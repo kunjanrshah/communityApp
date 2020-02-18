@@ -413,9 +413,11 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         Guru.putString(getString(R.string.user_id),member.id)
         Guru.putString(getString(R.string.access_token),member.accessToken)
         val intent = Intent(applicationContext, FamilyDetailActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.putExtra(getString(R.string.id), member.id)
         startActivity(intent)
         finish()
+        fade(this)
     }
 
     override fun onOTPReceivedError(error: String?) {

@@ -1,6 +1,5 @@
 package com.krs.community.fragments
 
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
@@ -19,9 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
-
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -34,13 +31,11 @@ import com.krs.community.activity.*
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.listeners.IFamilyMembersListener
-import com.krs.community.listeners.OnBackPressedListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.FamilyDetailResponse
-
 import com.krs.community.utils.*
 import com.krs.community.utils.Utility.*
 import com.krs.community.viewmodel.FamilyDetailViewModel
@@ -57,8 +52,7 @@ import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
 
-class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedListener, IFamilyMembersListener,  LocationAdapter.SetLocationListner {
-
+class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersListener, LocationAdapter.SetLocationListner {
 
     lateinit var members:ArrayList<Member>
     var headId:String?=null
@@ -114,8 +108,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
         }
     }
 
-
-
     private fun getFamilyDetails(){
         if(isShimmer){
             isShimmer=false
@@ -137,7 +129,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
         val mJSONObject= JSONObject()
         mJSONObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
         mJSONObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-        mJSONObject.put("member_id", id)
+        mJSONObject.put(getString(R.string.member_id), id)
         deletedId= id
         val records=  JsonParser().parse(mJSONObject.toString()) as JsonObject
         familyDetailViewModel.deleteMember(records)
@@ -153,16 +145,16 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
         mShimmerViewContainer?.stopShimmerAnimation()
         mShimmerViewContainer?.visibility=View.GONE
 
-       if(data.success){
-           members= data.member as ArrayList<Member>
-           createCardAdapter()
-       }
+        if (data.success) {
+            members = data.member as ArrayList<Member>
+            createCardAdapter()
+        }
     }
 
     private fun createCardAdapter() {
         var family:MutableList<Member>?=null
         if(members.size>0){
-           family=members.subList(1,members.size)
+            family = members.subList(1, members.size)
         }
         if(family!=null){
             adapter = object : ParallaxRecyclerAdapter<Member>(family) {
@@ -176,20 +168,20 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                     viewHolder.tvMobile.text = member.mobile
                     viewHolder.tvUpdate.text = "updated "+changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                     viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
-                    var imgLogin=R.drawable.ic_logout
+                    var imgLogin: Int
                     if(member.loginStatus==1){
                         imgLogin=R.drawable.ic_logout
-                        viewHolder.tvLogin.text = "Exit"
+                        viewHolder.tvLogin.text = "See you again!"
                     }else{
                         imgLogin=R.drawable.ic_login
-                        viewHolder.tvLogin.text = "Enter"
+                        viewHolder.tvLogin.text = "Happy to see you"
                     }
                     try {
                         Glide.with(AppController.mApplication).load(imgLogin).thumbnail(0.5f).into(viewHolder.imgLogin)
                     } catch (e: Exception) {
                         e.message
                     }
-                    
+
                     var imgStatus=R.drawable.ico_red
                     if(memberId==member.id){
                         imgStatus=R.drawable.ico_blue
@@ -229,16 +221,25 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                                 if (textMsg!!.contains("Exit")) {
                                     gif = R.drawable.gif10
                                 }
-                                SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
-                                        .setTitleText(getString(R.string.you_sure))
-                                        .setContentText("Do you want to " +textMsg + "the Community App?")
-                                        .setConfirmText("Yes")
-                                        .setConfirmClickListener {
+
+                                TTFancyGifDialog.Builder(this@FamilyDetailActivity)
+                                        .setTitle(getString(R.string.you_sure))
+                                        .setMessage(textMsg + "the Community App")
+                                        .setPositiveBtnText("Yes")
+                                        .setPositiveBtnBackground("#22b573")
+                                        .setNegativeBtnText("No")
+                                        .setNegativeBtnBackground("#c1272d")
+                                        .setGifResource(gif)
+                                        .isCancellable(true)
+                                        .OnPositiveClicked {
                                             val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
                                             intent.putExtra(getString(R.string.member), member)
                                             startActivity(intent)
                                         }
-                                        .show()
+                                        .OnNegativeClicked {
+
+                                        }
+                                        .build()
                                 true
 
                             }else{
@@ -262,8 +263,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                                     .OnPositiveClicked {
                                         deleteFamilyMember(member.id)
                                     }
+                                    .OnNegativeClicked {
 
-
+                                    }
+                                    .build()
                         }else{
                             llRoot.snackbar(getString(R.string.enter_pin),Snackbar.LENGTH_LONG)
                         }
@@ -274,19 +277,19 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                         builder?.listener {
                             if (it == 0) {
 
-                                    createMemberPDF(this@FamilyDetailActivity, member, profileDetailViewModel)
+                                createMemberPDF(this@FamilyDetailActivity, member, profileDetailViewModel)
 
-                                    Handler().post(Runnable {
-                                        startSweetProgress(this@FamilyDetailActivity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
-                                    })
-                                    Handler().postDelayed({
-                                        hideSweetProgress()
-                                    }, 5000)
+                                Handler().post(Runnable {
+                                    startSweetProgress(this@FamilyDetailActivity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                                })
+                                Handler().postDelayed({
+                                    hideSweetProgress()
+                                }, 5000)
 
 
                             } else if (it == 1) {
-                               Toast.makeText(this@FamilyDetailActivity,"Coming soon",Toast.LENGTH_SHORT).show()
-                               return@listener
+                                Toast.makeText(this@FamilyDetailActivity, "Coming soon", Toast.LENGTH_SHORT).show()
+                                return@listener
                                 val intent: Intent = Intent(this@FamilyDetailActivity, FamilyTreeListActivity::class.java)
                                 startActivity(intent)
                             } else if (it == 2) {
@@ -319,84 +322,67 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                         }
                         viewHolder.boomMenuButton.addBuilder(builder)
                     }
-
                     viewHolder.boomMenuButton.setOnClickListener {
                         viewHolder.boomMenuButton.boom()
                     }
-
                     applyClickEvents(viewHolder, i,member)
                     applyProfilePicture(viewHolder, member)
                 }
-
                 override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
                     return FamilyDetailViewHolder(layoutInflater.inflate(R.layout.row_list_family_detail, viewGroup, false))
                 }
-
                 override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<Member>): Int {
                     return (family.size)
                 }
             }
         }
-
         val layoutManagerFixed = HeaderLayoutManagerFixed(this)
         rvDetail.layoutManager = layoutManagerFixed
         val header = layoutInflater.inflate(R.layout.header_detail, rvDetail, false)
-
         val cancel = header.findViewById<ImageView>(R.id.img_cancel1)
         val login = header.findViewById<ImageView>(R.id.login)
-        login.visibility = View.VISIBLE
-
         if(!memberId.isNullOrEmpty()){
-
             cancel.visibility=View.VISIBLE
-
+            login.visibility = View.GONE
         }else{
-
+            login.visibility = View.VISIBLE
             cancel.visibility=View.INVISIBLE
-
         }
-
         cancel.setOnClickListener {
             val intent=Intent(this,DashboardActivity::class.java)
             startActivity(intent)
             finish()
             fade(this)
         }
-
         login.setOnClickListener {
-
-            SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Are you sure want to exit")
-                    .setConfirmText("Yes")
-                    .setCancelText("No")
-                    .setConfirmClickListener {
-
+            TTFancyGifDialog.Builder(this)
+                    .setTitle(getString(R.string.you_sure))
+                    .setMessage("Logout the Community App")
+                    .setPositiveBtnText("Yes")
+                    .setPositiveBtnBackground("#22b573")
+                    .setNegativeBtnText("No")
+                    .setNegativeBtnBackground("#c1272d")
+                    .setGifResource(R.drawable.gif2)
+                    .isCancellable(true)
+                    .OnPositiveClicked {
                         Guru.clear()
                         val intent = Intent(this, SplashActivity::class.java)
                         startActivity(intent)
                         this.finish()
                         fade(this)
-
                     }
-
-                    .setCancelClickListener {
-                        it.dismiss()
+                    .OnNegativeClicked {
                     }
-                    .show()
-
-
-
+                    .build()
+            true
         }
         val member = members.get(0)
         val tvName: TextView = header.findViewById(R.id.tv_name1)
         tvName.text = member.firstName+" "+member.lastName
-
         val iconText: TextView = header.findViewById(R.id.icon_text1)
         iconText.text = tvName.text.substring(0, 1)
-
         val tvMobile: TextView = header.findViewById(R.id.tv_mobile)
         tvMobile.text=member.mobile
-
         tvMobile.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
             val str = "tel:" + tvMobile.text
@@ -459,13 +445,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
             val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
             builder?.listener {
                 if (it == 0) {
-                        createMemberPDF(this@FamilyDetailActivity, member, profileDetailViewModel)
-                        Handler().post {
-                            startSweetProgress(this@FamilyDetailActivity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
-                        }
-                        Handler().postDelayed({
-                            hideSweetProgress()
-                        }, 5000)
+                    createMemberPDF(this@FamilyDetailActivity, member, profileDetailViewModel)
+                    Handler().post {
+                        startSweetProgress(this@FamilyDetailActivity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                    }
+                    Handler().postDelayed({
+                        hideSweetProgress()
+                    }, 5000)
                 } else if (it == 1) {
                     Toast.makeText(this@FamilyDetailActivity,"Coming soon",Toast.LENGTH_SHORT).show()
                     return@listener
@@ -501,11 +487,9 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
             }
             header.bmb.addBuilder(builder)
         }
-
         header.bmb.setOnClickListener {
             header.bmb.boom()
         }
-
         val llFamilyHead: LinearLayout = header.findViewById(R.id.ll_family_head)
         llFamilyHead.setOnClickListener {
             if(!memberId.isNullOrEmpty()){
@@ -514,12 +498,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                 startActivity(intent)
                 fade(this)
             }else{
-
                 if(!member.profilePassword.isNullOrEmpty()){
-                   /* val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
-                    intent.putExtra(getString(R.string.member), member)
-                    startActivity(intent)*/
-
                     if(memberId==member.id){
                         textMsg = "Exit "
                     }else if(member.loginStatus==1 && member.onlineStatus==0){
@@ -528,32 +507,34 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
                         textMsg = "Enter "
                     }else if(member.onlineStatus==1){
                         textMsg = "Exit "
-
                     }
-                    SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText(getString(R.string.you_sure))
-                            .setContentText("Do you want to " +textMsg + "the Community App?")
-                            .setConfirmText("Yes")
-                            .setConfirmClickListener {
+                    var gif: Int = R.drawable.gif14
+                    if (textMsg!!.contains("Exit")) {
+                        gif = R.drawable.gif10
+                    }
+                    TTFancyGifDialog.Builder(this)
+                            .setTitle(getString(R.string.you_sure))
+                            .setMessage(textMsg + "the Community App")
+                            .setPositiveBtnText("Yes")
+                            .setPositiveBtnBackground("#22b573")
+                            .setNegativeBtnText("No")
+                            .setNegativeBtnBackground("#c1272d")
+                            .setGifResource(gif)
+                            .isCancellable(true)
+                            .OnPositiveClicked {
                                 val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
                                 intent.putExtra(getString(R.string.member), member)
                                 startActivity(intent)
                             }
-                            .setCancelClickListener {
-
+                            .OnNegativeClicked {
                             }
-
-                            .show()
+                            .build()
                     true
                 }else{
                     llRoot.snackbar("PIN not found!",Snackbar.LENGTH_LONG)
                 }
-
-
             }
-
         }
-
         val tvAdd: TextView = header.findViewById(R.id.tv_add)
         if(!memberId.isNullOrEmpty()){
             tvAdd.visibility=View.VISIBLE
@@ -561,20 +542,17 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
             tvAdd.visibility=View.GONE
         }
         tvAdd.setOnClickListener {
-                val intent = Intent(this, ProfileDetailActivity::class.java)
-                intent.putExtra(getString(R.string.member), Member())
-                startActivity(intent)
-                fade(this)
+            val intent = Intent(this, ProfileDetailActivity::class.java)
+            intent.putExtra(getString(R.string.member), Member())
+            startActivity(intent)
+            fade(this)
         }
-
-
         layoutManagerFixed.setHeaderIncrementFixer(header)
         adapter.isShouldClipView = false
         adapter.setParallaxHeader(header, rvDetail)
         adapter.data = family
         rvDetail.adapter = adapter
     }
-
     @SuppressLint("CheckResult")
     private fun applyProfilePicture(holder: FamilyDetailViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
@@ -583,7 +561,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
             Glide.with(this@FamilyDetailActivity).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE
-
         } else {
             holder.imgProfile.isClickable = false
             holder.imgProfile.setImageResource(R.drawable.bg_circle)
@@ -591,7 +568,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
             holder.iconText.visibility = View.VISIBLE
         }
     }
-
     private fun applyClickEvents(holder: FamilyDetailViewHolder, position: Int, member: Member) {
         holder.tvMobile.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
@@ -631,19 +607,19 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware,   OnBackPressedLi
 
     override fun getMessage(response: DeleteProfileResponse) {
         if(response.success){
-        var member1:Member?=null
-        for(member in members){
-              if(member.id == deletedId){
-                  member1=member
-                break
-              }
-         }
+            var member1: Member? = null
+            for (member in members) {
+                if (member.id == deletedId) {
+                    member1 = member
+                    break
+                }
+            }
 
-        if(member1!=null){
-            members.remove(member1)
-            createCardAdapter()
+            if (member1 != null) {
+                members.remove(member1)
+                createCardAdapter()
+            }
         }
-      }
         mShimmerViewContainer?.stopShimmerAnimation()
         mShimmerViewContainer?.visibility=View.GONE
         llRoot.snackbar(response.message,Snackbar.LENGTH_LONG)

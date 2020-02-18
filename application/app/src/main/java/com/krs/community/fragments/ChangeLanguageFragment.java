@@ -18,8 +18,6 @@ import androidx.fragment.app.Fragment;
 
 import com.github.squti.guru.Guru;
 import com.krs.community.R;
-import com.krs.community.activity.DashboardActivity;
-import com.krs.community.activity.SplashActivity;
 import com.krs.community.utils.Utility;
 
 import static com.krs.community.utils.Utility.changeStatusbarColor;
@@ -37,7 +35,7 @@ public class ChangeLanguageFragment extends Fragment {
 
         ImageView iv_lan_cancel = root.findViewById(R.id.iv_lan_cancel);
         iv_lan_cancel.setOnClickListener(v -> {
-            Utility.movetoFragment(getActivity(), new DashboardFragment());
+            Utility.backNavigation(getActivity());
         });
 
         changeStatusbarColor(getActivity(), R.color.colorBG, false);

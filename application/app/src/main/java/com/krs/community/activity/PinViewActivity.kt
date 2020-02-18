@@ -213,7 +213,9 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
                 val json= Gson().toJson(response.data)
                 Guru.putString(getString(R.string.loginMember), json)
                 Guru.putString(getString(R.string.member_id),response.data.id)
-                startActivity(Intent(this, DashboardActivity::class.java))
+                val intent = Intent(this, DashboardActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
                 finish()
                 fade(this)
             }else{
@@ -235,6 +237,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
              }else{
                  intent.putExtra(getString(R.string.id), member.headId)
              }
+             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
              startActivity(intent)
              finish()
              fade(this)

@@ -39,7 +39,7 @@ import java.util.*
 
 class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
     var mDrawerToggle: ActionBarDrawerToggle? = null
-    var mDrawerLayout: DrawerLayout? = null
+
     var containerView: View? = null
     private var drawerListener: FragmentDrawerListener? = null
     private var view1: View? = null
@@ -49,6 +49,24 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
 
     fun setDrawerListener(listener: FragmentDrawerListener?) {
         drawerListener = listener
+    }
+
+    private var titles: Array<String>? = null
+    private val data: List<NavDrawerItem>
+        get() {
+            val data: MutableList<NavDrawerItem> = ArrayList()
+            assert(titles != null)
+            for (title in titles!!) {
+                val navItem = NavDrawerItem()
+                navItem.title = title
+                data.add(navItem)
+            }
+            return data
+        }
+
+    companion object {
+        @kotlin.jvm.JvmField
+        var mDrawerLayout: DrawerLayout? = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -223,21 +241,6 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
                 }
             })
         }
-    }
-
-    companion object {
-        private var titles: Array<String>? = null
-        private val data: List<NavDrawerItem>
-            private get() {
-                val data: MutableList<NavDrawerItem> = ArrayList()
-                assert(titles != null)
-                for (title in titles!!) {
-                    val navItem = NavDrawerItem()
-                    navItem.title = title
-                    data.add(navItem)
-                }
-                return data
-            }
     }
 
     override fun userLogout(response: UserInnerLogoutResponse) {

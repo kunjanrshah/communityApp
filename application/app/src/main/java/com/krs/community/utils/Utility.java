@@ -57,7 +57,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -66,6 +66,7 @@ import com.github.squti.guru.Guru;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.krs.community.R;
+import com.krs.community.fragments.FragmentDrawer;
 import com.krs.community.model.ErrorObject;
 import com.krs.community.model.Member;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
@@ -717,11 +718,22 @@ public class Utility {
 
     public static void backNavigation(Activity activity){
         FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
+        /*Fragment oldFragment = fragmentManager.findFragmentByTag("DashboardFragment");
+        if(oldFragment!=null){
+            activity.finish();
+            return;
+        }*/
+        Log.d("backNavigation", "count: " + fragmentManager.getBackStackEntryCount());
         if (fragmentManager.getBackStackEntryCount() > 1) {
             fragmentManager.popBackStack();
             fade(activity);
         } else {
-            activity.finish();
+            if (FragmentDrawer.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                FragmentDrawer.mDrawerLayout.closeDrawers();
+            } else {
+                activity.finish();
+                fade(activity);
+            }
         }
     }
 
@@ -734,7 +746,9 @@ public class Utility {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getSimpleName()).commit();
-        fragmentTransaction.addToBackStack(null);
+        if (oldFragment == null) {
+            fragmentTransaction.addToBackStack(null);
+        }
         fade(activity);
     }
 
