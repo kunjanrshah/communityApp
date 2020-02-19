@@ -114,8 +114,23 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                 }
                 holder.iconText.text = name.substring(0, 1)
                 holder.tvArea.text = member.area
-                holder.tvEmail.text = member.emailAddress
-                holder.tvMobile.text = member.mobile
+
+                if (member.mobile.isEmpty()){
+                    viewHolder.llMobile.visibility = View.GONE
+                }else{
+                    viewHolder.tvMobile.text = member.mobile
+                }
+
+                if (member.emailAddress.isEmpty()){
+                    viewHolder.ll_email.visibility = View.GONE
+
+                }else{
+                    holder.tvEmail.text = member.emailAddress
+
+                }
+
+
+
                 if (member.headId.equals("0")) {
                     holder.tvRole.text = resources.getString(R.string.Family_Head)
                 } else {
@@ -294,6 +309,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
 
     }
 
+
     private fun applyProfilePicture(holder: ListViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
             val url = resources.getString(R.string.base_url_thumb) + member.profilePic
@@ -464,6 +480,8 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         val tvMobile: TextView = itemView.findViewById(R.id.tv_mobile)
         val tvEmail: TextView = itemView.findViewById(R.id.tv_email)
         var imgProfile: ImageView = itemView.findViewById(R.id.icon_profile)
+        var llMobile: LinearLayout = v.findViewById(R.id.ll_mobile)
+        var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
     }
 
     override fun onResume() {
@@ -485,7 +503,6 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
     override fun getRoomMembers(response: List<RoomMember>) {
 
     }
-
 
     override suspend fun getFailure(message: String) {
 

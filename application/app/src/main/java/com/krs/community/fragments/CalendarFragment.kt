@@ -280,11 +280,23 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         viewHolder.tvArea.text = member.area+" "+calendarSearchViewModel.getCityNamebyId(member.cityId)
                     }
                 }
-                if(!member.emailAddress.isNullOrEmpty()){
-                    viewHolder.tvEmail.text = member.emailAddress.toLowerCase()
-                }
 
                 viewHolder.tvMobile.text = member.mobile
+
+                if (member.mobile.isEmpty()){
+                    viewHolder.llMobile.visibility = View.GONE
+                }else{
+                    viewHolder.tvMobile.text = member.mobile
+                }
+
+                if (member.emailAddress.isEmpty()){
+                    viewHolder.ll_email.visibility = View.GONE
+
+                }else{
+                    viewHolder.tvEmail.text = member.emailAddress.toLowerCase()
+
+                }
+
                 if(lstCalendar[i].headId == "0"){
                     viewHolder.tvRole.text = resources.getString(R.string.Family_Head)
                 }else{
@@ -533,6 +545,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         var iconText: TextView = v.findViewById(R.id.icon_text1)
         var imgProfile: ImageView = v.findViewById(R.id.icon_profile1)
         var llMobile: LinearLayout = v.findViewById(R.id.ll_mobile)
+        var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
+
     }
 
     internal inner class FilterViewHolder(v: View) : RecyclerView.ViewHolder(v) {

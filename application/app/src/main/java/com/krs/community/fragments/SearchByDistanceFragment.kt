@@ -234,8 +234,22 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                     viewHolder.tvArea.text = member.area+" "+it
                 }
 
-                viewHolder.tvEmail.text = member.emailAddress
-                viewHolder.tvMobile.text = member.mobile
+                /*viewHolder.tvEmail.text = member.emailAddress
+                viewHolder.tvMobile.text = member.mobile*/
+
+                if (member.mobile.isEmpty()){
+                    viewHolder.llMobile.visibility = View.GONE
+                }else{
+                    viewHolder.tvMobile.text = member.mobile
+                }
+
+                if (member.emailAddress.isEmpty()){
+                    viewHolder.ll_email.visibility = View.GONE
+
+                }else{
+                    viewHolder.tvEmail.text = member.emailAddress
+                }
+
                 if(member.headId.equals("0")){
                     viewHolder.tvRole.text = resources.getString(R.string.Family_Head)
                 }else{
@@ -413,6 +427,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         var imgProfile: ImageView = v.findViewById(R.id.icon_profile1)
         var iconText: TextView = v.findViewById(R.id.icon_text1)
         var llMobile: LinearLayout = v.findViewById(R.id.ll_mobile)
+        var ll_email: LinearLayout = v.findViewById(R.id.ll_email)
 
     }
 

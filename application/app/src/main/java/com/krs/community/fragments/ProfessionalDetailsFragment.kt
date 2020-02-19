@@ -249,7 +249,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        /*data?.let { activity?.let {
+      /*  data?.let { activity?.let {
             it1 -> handleCropResult(it, it1,binding.imgLogo) }
         }*/
         if (resultCode == RESULT_OK) {

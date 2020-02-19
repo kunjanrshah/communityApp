@@ -567,6 +567,8 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                 val name = viewHolder.spCity.text.toString().trim { it <= ' ' }
                 val job1 = async {
                     val city = profileDetailViewModel.getCityIdByName(name)
+
+                    Log.e("city---",""+city);
                     lstValues.put(_context.resources.getString(R.string.ss_sp_city), city)
                 }
                 job1.await()

@@ -164,8 +164,24 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
                     (viewHolder as FamilyDetailViewHolder).tvName.text = "${member.firstName} ${member.lastName}"
                     viewHolder.tvSubtext.text = member.relation
-                    viewHolder.tvEmail.text = member.emailAddress
-                    viewHolder.tvMobile.text = member.mobile
+
+                    /*viewHolder.tvEmail.text = member.emailAddress
+                    viewHolder.tvMobile.text = member.mobile*/
+
+                    if (member.mobile.isEmpty()){
+                        viewHolder.llMobile.visibility = View.GONE
+                    }else{
+                        viewHolder.tvMobile.text = member.mobile
+                    }
+
+                    if (member.emailAddress.isEmpty()){
+                        viewHolder.ll_email.visibility = View.GONE
+
+                    }else{
+                        viewHolder.tvEmail.text = member.emailAddress
+                    }
+
+
                     viewHolder.tvUpdate.text = "updated "+changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                     viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                     var imgLogin: Int
@@ -603,6 +619,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         val imgState: ImageView = v.findViewById(R.id.img_state)
         val imgLogin: ImageView = v.findViewById(R.id.img_login)
         val tvLogin: TextView = v.findViewById(R.id.tv_login)
+        var ll_email: LinearLayout = v.findViewById(R.id.ll_email)
+
     }
 
     override fun getMessage(response: DeleteProfileResponse) {

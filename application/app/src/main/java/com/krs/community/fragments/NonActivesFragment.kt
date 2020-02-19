@@ -112,8 +112,21 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                     }
                 }
 
-                holder.tvEmail.text = member.emailAddress
-                holder.tvMobile.text = member.mobile
+               /* holder.tvEmail.text = member.emailAddress
+                holder.tvMobile.text = member.mobile*/
+
+                if (member.mobile.isEmpty()){
+                    viewHolder.llMobile.visibility = View.GONE
+                }else{
+                    viewHolder.tvMobile.text = member.mobile
+                }
+
+                if (member.emailAddress.isEmpty()){
+                    viewHolder.ll_email.visibility = View.GONE
+
+                }else{
+                    viewHolder.tvEmail.text = member.emailAddress
+                }
 
                 holder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                 viewHolder.itemView.isActivated = selectedItems.get(position, false)
@@ -264,7 +277,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         var tvMobile: TextView = view.findViewById(R.id.tv_mobile)
         var tvEmail: TextView = view.findViewById(R.id.tv_email)
         var tvAddr: TextView = view.findViewById(R.id.tv_addr)
-
+        var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
+        var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
        /* init {
             view.setOnLongClickListener(this)
         }
