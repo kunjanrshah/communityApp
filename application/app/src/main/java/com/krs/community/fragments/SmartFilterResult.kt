@@ -157,7 +157,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                                     Utility.hideSweetProgress()
                                 }, 5000)
                         } else if (it == 1) {
-                            Toast.makeText(activity,"Coming soon",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                             return@listener
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
@@ -502,6 +502,8 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         super.onStop()
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
         mShimmerViewContainer.stopShimmerAnimation()
+        actionMode?.finish()
+        selectedItems.clear()
     }
 
     private fun deleteMessages() {
@@ -574,7 +576,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                                 .setOnCancelListener {
                                     actionMode?.finish()
                                 }
-                                .setExpanded(false, 700)
+                                .setExpanded(true, 700)
                                 .setContentBackgroundResource(R.drawable.popup_top_corner)
                                 .create()
                         changeRoleDialog?.show()
@@ -604,6 +606,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
             }
         }
     }
+
 
     private fun toggleSelection(position: Int) {
         toggleSelected(position)

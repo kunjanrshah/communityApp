@@ -250,7 +250,7 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
 
 
                     }else if(it == 1) {
-                        Toast.makeText(this@FavoriteProfileActivity,"Coming soon", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@FavoriteProfileActivity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                         return@listener
                         val intent: Intent = Intent(this@FavoriteProfileActivity, FamilyTreeListActivity::class.java)
                         startActivity(intent)

@@ -1,19 +1,11 @@
 package com.wessam.library
 
 import android.app.Activity
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.drawable.GradientDrawable
-import android.util.TypedValue
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import com.krs.community.R
 import kotlinx.android.synthetic.main.no_internet_layout.*
-import java.security.AccessController.getContext
 
 class NoInternetLayout(private val activity: Activity, private val layoutResID: Int) {
 
@@ -51,10 +43,8 @@ class NoInternetLayout(private val activity: Activity, private val layoutResID: 
             if (!NetworkChecker.isNetworkConnected(activity.applicationContext)) {
                 val anim = AlphaAnimation(0f, 1f)
                 anim.duration = 6000
-
                 anim.repeatMode = AlphaAnimation.RESTART
                 anim.repeatCount = Animation.INFINITE
-
                 activity.no_internet_image.animation = anim
             }
             return this

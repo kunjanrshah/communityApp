@@ -10,7 +10,6 @@ import android.content.res.Resources;
 import android.graphics.Outline;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,8 +18,8 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.ViewTreeObserver;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -30,6 +29,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
@@ -45,11 +46,9 @@ import com.krs.community.awareviewpager.PhotosFragment;
 import com.krs.community.awareviewpager.RelativesFragment;
 import com.krs.community.awareviewpager.SlidingTabLayout;
 import com.krs.community.awareviewpager.ViewPagerFragmentBase;
-import com.krs.community.utils.Utility;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.wessam.library.NetworkChecker;
-import com.wessam.library.NoInternetLayout;
 
 import java.lang.reflect.Method;
 
@@ -245,6 +244,16 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
     }
     private void setNoInternetLayout(){
         setContentView(R.layout.no_internet_layout);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+        AlphaAnimation anim = new AlphaAnimation(0f, 1f);
+        anim.setDuration(6000);
+        anim.setRepeatMode(AlphaAnimation.RESTART);
+        anim.setRepeatCount(Animation.INFINITE);
+        AppCompatImageView imageView = findViewById(R.id.no_internet_image);
+        imageView.setAnimation(anim);
         AppCompatButton retryButton=findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
             setScreenLayout();

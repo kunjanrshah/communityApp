@@ -257,7 +257,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                                 Utility.hideSweetProgress()
                             }, 5000)
                         }else if(it == 1) {
-                            Toast.makeText(activity,"Coming soon",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                             return@listener
                             val intent: Intent = Intent(activity as AppCompatActivity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
@@ -564,7 +564,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
             }*/
             lstMembers.addAll(response.member)
             byDistanceAdapter?.notifyDataSetChanged()
-            recyclerView.layoutManager?.scrollToPosition(selectedPosition)
+            //recyclerView.layoutManager?.scrollToPosition(selectedPosition)
             selectedPosition = lstMembers.size - 1
 
             if(Integer.parseInt(response.totalRecords)<=AppController.mApplication.length){

@@ -13,10 +13,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
@@ -75,6 +79,16 @@ public class QRCodeActivity extends AppCompatActivity {
 
     private void setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+        AlphaAnimation anim = new AlphaAnimation(0f, 1f);
+        anim.setDuration(6000);
+        anim.setRepeatMode(AlphaAnimation.RESTART);
+        anim.setRepeatCount(Animation.INFINITE);
+        AppCompatImageView imageView = findViewById(R.id.no_internet_image);
+        imageView.setAnimation(anim);
         AppCompatButton retryButton=findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
             setScreenLayout();
@@ -126,12 +140,15 @@ public class QRCodeActivity extends AppCompatActivity {
 
             binding.llGallery.setBackground(getResources().getDrawable(R.drawable.border_bg_color_primary));
             binding.tvGallery.setTextColor(getResources().getColor(R.color.white));
+            binding.ivGallery.setBackground(getResources().getDrawable(R.drawable.gallery_white));
 
             binding.llscan.setBackground(getResources().getDrawable(R.drawable.border_color_gray3));
             binding.tvScan.setTextColor(getResources().getColor(R.color.black1));
+            binding.ivScan.setBackground(getResources().getDrawable(R.drawable.scan_qr_code));
 
             binding.llShare.setBackground(getResources().getDrawable(R.drawable.border_color_gray3));
             binding.tvShare.setTextColor(getResources().getColor(R.color.black1));
+            binding.ivShare.setBackground(getResources().getDrawable(R.drawable.share_black));
 
             Intent photoPic = new Intent(Intent.ACTION_PICK);
             photoPic.setType("image/*");
@@ -143,12 +160,15 @@ public class QRCodeActivity extends AppCompatActivity {
 
             binding.llscan.setBackground(getResources().getDrawable(R.drawable.border_bg_color_primary));
             binding.tvScan.setTextColor(getResources().getColor(R.color.white));
+            binding.ivScan.setBackground(getResources().getDrawable(R.drawable.scan_qr_code_white));
 
             binding.llGallery.setBackground(getResources().getDrawable(R.drawable.border_color_gray3));
             binding.tvGallery.setTextColor(getResources().getColor(R.color.black1));
+            binding.ivGallery.setBackground(getResources().getDrawable(R.drawable.gallery));
 
             binding.llShare.setBackground(getResources().getDrawable(R.drawable.border_color_gray3));
             binding.tvShare.setTextColor(getResources().getColor(R.color.black1));
+            binding.ivShare.setBackground(getResources().getDrawable(R.drawable.share_black));
 
             Intent i = new Intent(this, ScanQRCodeActivity.class);
             startActivity(i);
@@ -158,12 +178,15 @@ public class QRCodeActivity extends AppCompatActivity {
 
             binding.llShare.setBackground(getResources().getDrawable(R.drawable.border_bg_color_primary));
             binding.tvShare.setTextColor(getResources().getColor(R.color.white));
+            binding.ivShare.setBackground(getResources().getDrawable(R.drawable.share));
 
             binding.llscan.setBackground(getResources().getDrawable(R.drawable.border_color_gray3));
             binding.tvScan.setTextColor(getResources().getColor(R.color.black1));
+            binding.ivScan.setBackground(getResources().getDrawable(R.drawable.scan_qr_code));
 
             binding.llGallery.setBackground(getResources().getDrawable(R.drawable.border_color_gray3));
             binding.tvGallery.setTextColor(getResources().getColor(R.color.black1));
+            binding.ivGallery.setBackground(getResources().getDrawable(R.drawable.gallery));
 
             DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
             String date = df.format(Calendar.getInstance().getTime());

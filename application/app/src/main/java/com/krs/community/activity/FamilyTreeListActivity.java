@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -20,11 +22,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.Toolbar;
 
 import com.krs.community.R;
 import com.krs.community.utils.Utility;
 import com.wessam.library.NetworkChecker;
-import com.wessam.library.NoInternetLayout;
 
 import java.lang.reflect.Method;
 
@@ -72,6 +75,16 @@ public class FamilyTreeListActivity extends AppCompatActivity {
     }
     private void setNoInternetLayout(){
         setContentView(R.layout.no_internet_layout);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+        AlphaAnimation anim = new AlphaAnimation(0f, 1f);
+        anim.setDuration(6000);
+        anim.setRepeatMode(AlphaAnimation.RESTART);
+        anim.setRepeatCount(Animation.INFINITE);
+        AppCompatImageView imageView = findViewById(R.id.no_internet_image);
+        imageView.setAnimation(anim);
         AppCompatButton retryButton=findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
             setScreenLayout();

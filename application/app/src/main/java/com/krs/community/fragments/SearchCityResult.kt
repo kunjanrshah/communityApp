@@ -176,7 +176,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                                 Utility.hideSweetProgress()
                             }, 5000)
                         } else if (it == 1) {
-                            Toast.makeText(activity,"Coming soon",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                             return@listener
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
@@ -572,6 +572,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         (activity as AppCompatActivity).supportActionBar!!.show()
         binding.shimmerViewContainer.stopShimmerAnimation()
         binding.shimmerViewContainer.visibility = View.GONE
+        actionMode?.finish()
+        selectedItems.clear()
     }
 
 
@@ -684,7 +686,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                                 .setOnCancelListener {
                                     actionMode?.finish()
                                 }
-                                .setExpanded(false, 700)
+                                .setExpanded(true, 700)
                                 .setContentBackgroundResource(R.drawable.popup_top_corner)
                                 .create()
                         changeRoleDialog?.show()
@@ -710,6 +712,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             binding.lstFilter.post { resetAnimationIndex() }
         }
     }
+
 
     private fun toggleSelection(position: Int) {
         toggleSelected(position)

@@ -36,7 +36,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.krishna.debug_tools.activity.ActivityDebugTools
 import com.krs.community.R
 import com.krs.community.activity.FavoriteProfileActivity
 import com.krs.community.activity.QRCodeActivity
@@ -141,7 +140,11 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         getSharedProfileList()
         binding.gridView.adapter = MenuAdapter(activity!!)
         binding.tvAllShared.setOnClickListener { v: View? -> Utility.movetoFragment(activity, SharedLocationFragment()) }
-        binding.tvAllNews.setOnClickListener { v: View? -> Utility.movetoFragment(activity, NewsListFragment()) }
+        binding.tvAllNews.setOnClickListener { v: View? ->
+            binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+            return@setOnClickListener
+            Utility.movetoFragment(activity, NewsListFragment())
+        }
         Utility.changeStatusbarColor(activity, R.color.white, false)
         //setRecyclerViewScrollListener()
 
@@ -217,7 +220,8 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
             sliderView.description = "The quick brown fox jumps over the lazy dog.\n" + "Jackdaws love my big sphinx of quartz. " + (i + 1)
             sliderView.setOnSliderClickListener { sliderView1: SliderView? ->
-                //Toast.makeText(activity, getString(R.string.ThisIsSlider) + (i + 1), Toast.LENGTH_SHORT).show()
+                binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                return@setOnSliderClickListener
                 Utility.movetoFragment(activity, NewsListFragment())
             }
           binding.imageSlider.addSliderView(sliderView)
@@ -276,7 +280,12 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     }
                     2 -> Utility.movetoFragment(activity, SearchByDistanceFragment())
                     3 -> Utility.movetoFragment(activity, MatrimonyFragment())
-                    4 -> Utility.movetoFragment(activity, NewsListFragment())
+
+                    4 -> {
+                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                        return@setOnClickListener
+                        Utility.movetoFragment(activity, NewsListFragment())
+                    }
                     5 -> {
                         val mIntent = Intent(activity, FavoriteProfileActivity::class.java)
                         startActivity(mIntent)
@@ -284,17 +293,22 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     }
                     6 -> Utility.movetoFragment(activity, AdminsFragment())
                     7 -> Utility.movetoFragment(activity, NonActivesFragment())
-                    8 -> Utility.movetoFragment(activity, ShareEventFragment())
+                    8 -> {
+                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                        return@setOnClickListener
+                        Utility.movetoFragment(activity, ShareEventFragment())
+                    }
                     9 ->{
-                        startActivity(Intent(activity, ActivityDebugTools::class.java))
-                        //Utility.movetoFragment(activity, DocumentsFragment())
-                        binding.root.snackbar("Coming soon",Snackbar.LENGTH_LONG)
-
+                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                        return@setOnClickListener
+                        //startActivity(Intent(activity, ActivityDebugTools::class.java))
+                        Utility.movetoFragment(activity, DocumentsFragment())
                     }
 
                     10 -> {
+                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                        return@setOnClickListener
                         Utility.movetoFragment(activity, PaytmFragment())
-                        binding.root.snackbar("Coming soon",Snackbar.LENGTH_LONG)
                     }
 
                     11 -> {
@@ -303,8 +317,9 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                         Utility.fade(activity)
                     }
                     12 ->{
+                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                        return@setOnClickListener
                         Utility.movetoFragment(activity, TourVideoFragment())
-                        binding.root.snackbar("Coming soon",Snackbar.LENGTH_LONG)
                     }
                 }
             }

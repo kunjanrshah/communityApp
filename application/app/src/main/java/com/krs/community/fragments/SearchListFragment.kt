@@ -190,7 +190,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                                 Utility.hideSweetProgress()
                             }, 5000)
                         } else if (it == 1) {
-                            Toast.makeText(activity,"Coming soon",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                             return@listener
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
@@ -663,10 +663,12 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
 
     override fun onPause() {
         super.onPause()
+        actionMode?.finish()
+        selectedItems.clear()
         mShimmerViewContainer.stopShimmerAnimation()
         super.onStop()
         Handler().postDelayed({
-            Utility.hideKeyboard(activity)
+            hideKeyboard(activity)
         }, 500)
     }
 
@@ -736,7 +738,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                                 .setOnCancelListener {
                                     actionMode?.finish()
                                 }
-                                .setExpanded(false, 700)
+                                .setExpanded(true, 700)
                                 .setContentBackgroundResource(R.drawable.popup_top_corner)
                                 .create()
                         changeRoleDialog?.show()

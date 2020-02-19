@@ -369,6 +369,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+        actionMode?.finish()
+        selectedItems.clear()
     }
 
     private fun resetAnimationIndex() {
@@ -429,6 +431,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         }
         toggleSelection(position)
     }
+
 
     private inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {

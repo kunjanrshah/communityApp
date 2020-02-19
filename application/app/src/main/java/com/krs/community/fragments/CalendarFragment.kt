@@ -304,7 +304,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                                 Utility.hideSweetProgress()
                             }, 5000)
                         } else if (it == 1) {
-                            Toast.makeText(activity,"Coming soon",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                             return@listener
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)

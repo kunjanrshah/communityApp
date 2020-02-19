@@ -288,7 +288,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
 
                             } else if (it == 1) {
-                                Toast.makeText(this@FamilyDetailActivity, "Coming soon", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@FamilyDetailActivity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                                 return@listener
                                 val intent: Intent = Intent(this@FamilyDetailActivity, FamilyTreeListActivity::class.java)
                                 startActivity(intent)
@@ -453,7 +453,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         hideSweetProgress()
                     }, 5000)
                 } else if (it == 1) {
-                    Toast.makeText(this@FamilyDetailActivity,"Coming soon",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@FamilyDetailActivity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                     return@listener
                     val intent: Intent = Intent(this@FamilyDetailActivity, FamilyTreeListActivity::class.java)
                     startActivity(intent)

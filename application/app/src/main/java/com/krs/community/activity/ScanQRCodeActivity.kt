@@ -12,8 +12,12 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
@@ -36,22 +40,30 @@ class ScanQRCodeActivity : AppCompatActivity() {
         registerNetworkBroadcastForNougat()
 
         if (NetworkChecker.isNetworkConnected(this)) {
-
             setScreenLayout()
-
         } else {
             setNoInternetLayout()
         }
 
     }
 
-    private fun setNoInternetLayout() {
 
+    private fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)
-        //val binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.no_internet_layout)
-        val retryButton: AppCompatButton = findViewById(R.id.retry_button)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar.setTitleTextColor(resources.getColor(R.color.colorPrimary))
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setTitle(resources.getString(R.string.app_name))
+        val anim = AlphaAnimation(0f, 1f)
+        anim.duration = 6000
+        anim.repeatMode = AlphaAnimation.RESTART
+        anim.repeatCount = Animation.INFINITE
+        val imageView = findViewById<AppCompatImageView>(R.id.no_internet_image)
+        imageView.animation = anim
+        val retryButton = findViewById<AppCompatButton>(R.id.retry_button)
         retryButton.setOnClickListener { v: View? -> setScreenLayout() }
     }
+
 
     private fun setScreenLayout() {
         if (NetworkChecker.isNetworkConnected(this)) {
@@ -79,6 +91,7 @@ class ScanQRCodeActivity : AppCompatActivity() {
                         val mIntent = Intent(this, ProfileDetailActivity::class.java)
                         mIntent.putExtra(getString(R.string.scanId), decrypted)
                         startActivity(mIntent)
+                        finish()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

@@ -73,7 +73,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
             Utility.changeStatusbarColor(activity, R.color.color_mid_light_gray, false)
         }
 
-        root.snackbar("Coming soon",Snackbar.LENGTH_LONG)
+        root.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
 
         val ivCancel = root.findViewById<ImageView>(R.id.iv_cancel)
         linearLayout = root.findViewById(R.id.main_content)

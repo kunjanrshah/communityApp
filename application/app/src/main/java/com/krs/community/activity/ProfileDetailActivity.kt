@@ -12,10 +12,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -37,7 +41,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.app.AppController
 import com.krs.community.app.AppController.Companion.mApplication
 import com.krs.community.bkservice.ProcessMainClass
 import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
@@ -279,9 +282,18 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     }
     private fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)
-        //val binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.no_internet_layout)
-        val retryButton: AppCompatButton = findViewById(R.id.retry_button)
-        retryButton.setOnClickListener { v: View? ->  onBackPressed()}
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar.setTitleTextColor(resources.getColor(R.color.colorPrimary))
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setTitle(resources.getString(R.string.app_name))
+        val anim = AlphaAnimation(0f, 1f)
+        anim.duration = 6000
+        anim.repeatMode = AlphaAnimation.RESTART
+        anim.repeatCount = Animation.INFINITE
+        val imageView = findViewById<AppCompatImageView>(R.id.no_internet_image)
+        imageView.animation = anim
+        val retryButton = findViewById<AppCompatButton>(R.id.retry_button)
+        retryButton.setOnClickListener { v: View? -> onBackPressed() }
     }
     private fun unregisterNetworkBroadcastForNougat() {
         try {

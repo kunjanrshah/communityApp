@@ -17,10 +17,14 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.facebook.CallbackManager
@@ -112,10 +116,19 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
 
-    fun setNoInternetLayout() {
+    private fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)
-        //val binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.no_internet_layout)
-        val retryButton: AppCompatButton = findViewById(R.id.retry_button)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar.setTitleTextColor(resources.getColor(R.color.colorPrimary))
+        setSupportActionBar(toolbar)
+        supportActionBar!!.title = resources.getString(R.string.app_name)
+        val anim = AlphaAnimation(0f, 1f)
+        anim.duration = 6000
+        anim.repeatMode = AlphaAnimation.RESTART
+        anim.repeatCount = Animation.INFINITE
+        val imageView = findViewById<AppCompatImageView>(R.id.no_internet_image)
+        imageView.animation = anim
+        val retryButton = findViewById<AppCompatButton>(R.id.retry_button)
         retryButton.setOnClickListener { v: View? -> setScreenLayout() }
     }
 

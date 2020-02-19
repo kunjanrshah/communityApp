@@ -66,6 +66,8 @@ import com.github.squti.guru.Guru;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.krs.community.R;
+import com.krs.community.fragments.CalendarFragment;
+import com.krs.community.fragments.DashboardFragment;
 import com.krs.community.fragments.FragmentDrawer;
 import com.krs.community.model.ErrorObject;
 import com.krs.community.model.Member;
@@ -126,6 +128,7 @@ public class Utility {
     public static final int PICK_GALLERY_REQUEST = 1;
     public static final int FINE_LOCATION_REQUEST = 2;
     public static final int EXTERNAL_STORAGE_REQUEST = 3;
+    public static final int CALL_PHONE_REQUEST = 4;
 
 
     public static boolean checkReadExternalStoragePermission(Context mContext) {
@@ -135,6 +138,11 @@ public class Utility {
 
     public static boolean checkFineLocationPermission(Context mContext) {
         int permissionState = ActivityCompat.checkSelfPermission(mContext,Manifest.permission.ACCESS_FINE_LOCATION);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static boolean checkPhoneCallPermission(Context mContext) {
+        int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -160,6 +168,10 @@ public class Utility {
 
     public static void requestFineLocationPermission(AppCompatActivity mActivity){
         ActivityCompat.requestPermissions(mActivity,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},FINE_LOCATION_REQUEST);
+    }
+
+    public static void requestCallPermission(AppCompatActivity mActivity) {
+        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE_REQUEST);
     }
 /*
     public static boolean hasCamera(@NonNull Context mContext) {
@@ -706,7 +718,6 @@ public class Utility {
         sdf.setLenient(false);
 
         try {
-            //if not valid, it will throw ParseException
             Date date = sdf.parse(dateToValidate);
             System.out.println(date);
         } catch (ParseException e) {
@@ -718,15 +729,20 @@ public class Utility {
 
     public static void backNavigation(Activity activity){
         FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
-        /*Fragment oldFragment = fragmentManager.findFragmentByTag("DashboardFragment");
-        if(oldFragment!=null){
-            activity.finish();
-            return;
-        }*/
         Log.d("backNavigation", "count: " + fragmentManager.getBackStackEntryCount());
         if (fragmentManager.getBackStackEntryCount() > 1) {
-            fragmentManager.popBackStack();
-            fade(activity);
+            Fragment dashboard = fragmentManager.findFragmentByTag(DashboardFragment.class.getSimpleName());
+            Fragment calendar = fragmentManager.findFragmentByTag(CalendarFragment.class.getSimpleName());
+            if (dashboard != null && dashboard.isVisible()) {
+                activity.finish();
+                return;
+            } else if (calendar != null && calendar.isVisible()) {
+                movetoFragment(activity, new DashboardFragment());
+                return;
+            } else {
+                fragmentManager.popBackStack();
+                fade(activity);
+            }
         } else {
             if (FragmentDrawer.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                 FragmentDrawer.mDrawerLayout.closeDrawers();

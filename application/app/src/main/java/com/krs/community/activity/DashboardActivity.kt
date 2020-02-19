@@ -169,8 +169,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         } else {
             requestFineLocationPermission(this)
         }
+        if (isOnline(this)) {
+            getMasterList()
+        }
 
-        getMasterList()
         movetoFragment(this@DashboardActivity, DashboardFragment())
         //spaceNavigationView.showIconOnly();
     }
@@ -305,7 +307,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                 true
             }
             R.id.action_notify -> {
-                movetoFragment(this, NotificationListFragment())
+                binding.containerBody.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                true
+                //movetoFragment(this, NotificationListFragment())
                 true
             }
             else -> super.onOptionsItemSelected(item)

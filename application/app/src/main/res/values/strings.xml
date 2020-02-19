@@ -74,7 +74,7 @@
         <item>NewEvent</item>
         <item>Documents</item>
         <item>Paytm</item>
-        <item>New</item>
+        <item>Register</item>
         <item>Tour</item>
     </string-array>
 
@@ -590,6 +590,7 @@
     <string name="pratik_soni">PRATIK SONI</string>
     <string name="_9427051418">9427051418</string>
     <string name="ShareQrCode">Share QR Code</string>
+    <string name="ScanQrCode">Scan QR Code</string>
     <string name="qr_code_gallery">QR Code Gallery</string>
 
 
@@ -1107,4 +1108,6 @@
     <string name="check_network">Please check your internet connection and try again</string>
     <string name="retry">Retry</string>
     <string name="fetching_local_community">Fetching Local Community</string>
+    <string name="coming_soon">Coming soon</string>
+    <string name="contact_number">+919427051418</string>
 </resources>

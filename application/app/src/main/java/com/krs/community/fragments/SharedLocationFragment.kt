@@ -128,7 +128,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                                 Utility.hideSweetProgress()
                             }, 5000)
                         } else if (it == 1) {
-                            Toast.makeText(activity,"Coming soon",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                             return@listener
                             val intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
@@ -203,6 +203,8 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity).supportActionBar!!.show()
+        actionMode?.finish()
+        selectedItems.clear()
     }
 
     private fun getSharedProfiles() {
@@ -511,6 +513,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
             }
         }
     }
+
 
     companion object {
         private var currentSelectedIndex = -1

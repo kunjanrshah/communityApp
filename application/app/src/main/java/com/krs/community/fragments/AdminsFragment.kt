@@ -187,7 +187,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
 
 
                         } else if (it == 1) {
-                            Toast.makeText(activity,"Coming soon",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                             return@listener
                             val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
@@ -292,6 +292,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
             shimmerFrameLayout.visibility=View.GONE
         },4000)
     }
+
 
     override fun getMembers(response: SmartFilterResponse) {
         if(response.success){
@@ -514,6 +515,8 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+        actionMode?.finish()
+        selectedItems.clear()
     }
 
 
@@ -575,6 +578,8 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
     private inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
             mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
+            val locButton = menu.findItem(R.id.action_location)
+            locButton.isVisible = false
             return true
         }
 
@@ -633,13 +638,10 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
                                 .setOnCancelListener {
                                     actionMode?.finish()
                                 }
-                                .setExpanded(false, 700)
+                                .setExpanded(true, 700)
                                 .setContentBackgroundResource(R.drawable.popup_top_corner)
                                 .create()
                         changeRoleDialog?.show()
-
-
-
                         true
                     }
                     R.id.action_select_all -> {

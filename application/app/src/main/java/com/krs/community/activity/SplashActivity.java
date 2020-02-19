@@ -1,33 +1,30 @@
 package com.krs.community.activity;
 
 import android.annotation.SuppressLint;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.Toolbar;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
 import com.github.squti.guru.Guru;
 import com.krs.community.R;
-import com.krs.community.bkservice.CallReceiver;
-import com.krs.community.bkservice.PhonecallReceiver;
 import com.krs.community.bkservice.ProcessMainClass;
 import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver;
 import com.krs.community.fragments.FamilyDetailActivity;
@@ -36,7 +33,7 @@ import com.wessam.library.NetworkChecker;
 
 import static com.krs.community.utils.Utility.getHashKey;
 
-public class SplashActivity extends Activity{
+public class SplashActivity extends AppCompatActivity {
 
     private KenBurnsView kbv;
     private View imglogo, darkoverlay, llSpinner;
@@ -45,14 +42,11 @@ public class SplashActivity extends Activity{
     private DisplayMetrics dm;
     private boolean isLogin = false;
     private boolean isRegister = false;
-    NetworkChangeReceiver mNetworkReceiver;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mNetworkReceiver = new NetworkChangeReceiver();
 
         getHashKey(this);
         if (NetworkChecker.isNetworkConnected(this)) {
@@ -60,39 +54,26 @@ public class SplashActivity extends Activity{
         }else{
             setNoInternetLayout();
         }
-
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            RestartServiceBroadcastReceiver.scheduleJob(getApplicationContext());
-        } else {
-            ProcessMainClass bck = new ProcessMainClass();
-            bck.launchService(getApplicationContext());
-        }*/
-
     }
 
     private void setNoInternetLayout(){
         setContentView(R.layout.no_internet_layout);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+        AlphaAnimation anim = new AlphaAnimation(0f, 1f);
+        anim.setDuration(6000);
+        anim.setRepeatMode(AlphaAnimation.RESTART);
+        anim.setRepeatCount(Animation.INFINITE);
+        AppCompatImageView imageView = findViewById(R.id.no_internet_image);
+        imageView.setAnimation(anim);
         AppCompatButton retryButton=findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
             setScreenLayout();
         });
     }
 
-   class NetworkChangeReceiver extends BroadcastReceiver{
-
-       @Override
-       public void onReceive(Context context, Intent intent) {
-           try{
-               if (NetworkChecker.isNetworkConnected(context)) {
-                   setScreenLayout();
-               }else{
-                   setNoInternetLayout();
-               }
-           }catch(Exception e){
-               e.printStackTrace();
-           }
-       }
-   }
 
     private void setScreenLayout(){
 
@@ -166,15 +147,6 @@ public class SplashActivity extends Activity{
             });
         }
     }
-
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-
 
 
     @SuppressLint("NewApi")
