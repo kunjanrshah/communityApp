@@ -104,8 +104,22 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 holder.iconText.text = name.substring(0, 1)
                 holder.itemView.isActivated = selectedItems.get(position, false)
                 holder.tvArea.text = member.area
-                holder.tvEmail.text = member.emailAddress
-                holder.tvMobile.text = member.mobile
+
+                /*holder.tvEmail.text = member.emailAddress
+                holder.tvMobile.text = member.mobile*/
+
+                if (member.mobile.isEmpty()){
+                    viewHolder.llMobile.visibility = View.GONE
+                }else{
+                    viewHolder.tvMobile.text = member.mobile
+                }
+
+                if (member.emailAddress.isEmpty()){
+                    viewHolder.ll_email.visibility = View.GONE
+
+                }else{
+                    viewHolder.tvEmail.text = member.emailAddress
+                }
                 holder.imgLocation.visibility = View.GONE
                 holder.tvUpdate.text = getString(R.string.UpdateList) + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
 
@@ -426,6 +440,8 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
         var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
         var tvUpdate: TextView = itemView.findViewById(R.id.tv_update)
+        var ll_email: LinearLayout = v.findViewById(R.id.ll_email)
+
 
         override fun onLongClick(v: View): Boolean {
             enableActionMode(adapterPosition)

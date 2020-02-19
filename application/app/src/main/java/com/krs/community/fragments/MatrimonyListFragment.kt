@@ -160,8 +160,23 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
                 }
                 viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                 holder.tvStatus.text= member.maritalStatus
-                holder.tvEmail.text = member.emailAddress
-                holder.tvMobile.text = member.mobile
+
+                /*holder.tvEmail.text = member.emailAddress
+                holder.tvMobile.text = member.mobile*/
+
+                if (member.mobile.isEmpty()){
+                    viewHolder.llMobile.visibility = View.GONE
+                }else{
+                    viewHolder.tvMobile.text = member.mobile
+                }
+
+                if (member.emailAddress.isEmpty()){
+                    viewHolder.ll_email.visibility = View.GONE
+
+                }else{
+                    viewHolder.tvEmail.text = member.emailAddress
+                }
+
                 holder.boomMenuButton.clearBuilders()
                 for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
                     val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
@@ -378,7 +393,8 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
         var boomMenuButton: BoomMenuButton = v.findViewById(R.id.boomMenuButton)
         var messageContainer: LinearLayout = v.findViewById(R.id.message_container1)
         var iconText: TextView = v.findViewById(R.id.icon_text1)
-        var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
+        var llMobile: LinearLayout = v.findViewById(R.id.ll_mobile)
+        var ll_email: LinearLayout = v.findViewById(R.id.ll_email)
     }
 
     override fun getMembers(response: SmartFilterResponse) {

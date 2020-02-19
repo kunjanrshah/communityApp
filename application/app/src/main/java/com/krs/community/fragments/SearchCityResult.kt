@@ -142,8 +142,23 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 holder.iconText.text = name.substring(0, 1)
                 holder.itemView.isActivated = selectedItems.get(position, false)
                 holder.tvArea.text = member.area
-                holder.tvEmail.text = member.emailAddress
-                holder.tvMobile.text = member.mobile
+
+               /* holder.tvEmail.text = member.emailAddress
+                holder.tvMobile.text = member.mobile*/
+
+
+                if (member.mobile.isEmpty()){
+                    viewHolder.llMobile.visibility = View.GONE
+                }else{
+                    viewHolder.tvMobile.text = member.mobile
+                }
+
+                if (member.emailAddress.isEmpty()){
+                    viewHolder.ll_email.visibility = View.GONE
+
+                }else{
+                    viewHolder.tvEmail.text = member.emailAddress
+                }
                 if (member.headId.equals("0")) {
                     holder.tvRole.text = resources.getString(R.string.Family_Head)
                 } else {
@@ -547,8 +562,9 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         var iconFront: RelativeLayout = itemView.findViewById(R.id.icon_front)
         var iconText: TextView = itemView.findViewById(R.id.icon_text)
         var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
-        var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
         var tvUpdate: TextView = itemView.findViewById(R.id.tv_update)
+        var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
+        var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
 
         init {
             itemView.setOnLongClickListener(this)

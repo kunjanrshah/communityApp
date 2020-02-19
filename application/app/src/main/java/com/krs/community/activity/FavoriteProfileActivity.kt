@@ -194,6 +194,7 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
             var boomMenuButton: BoomMenuButton = view.findViewById(R.id.boomMenuButton1)
             var lstFound: RecyclerView = view.findViewById(R.id.lst_found)
             var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
+            var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -220,8 +221,21 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
                     viewHolder.tvArea.text = member.area + " " + it
                 }
             }
-            viewHolder.tvEmail.text = member.emailAddress
-            viewHolder.tvMobile.text = member.mobile
+           /* viewHolder.tvEmail.text = member.emailAddress
+            viewHolder.tvMobile.text = member.mobile*/
+
+            if (member.mobile.isNullOrEmpty()){
+                viewHolder.llMobile.visibility = View.GONE
+            }else{
+                viewHolder.tvMobile.text = member.mobile
+            }
+
+            if (member.emailAddress.isNullOrEmpty()){
+                viewHolder.ll_email.visibility = View.GONE
+
+            }else{
+                viewHolder.tvEmail.text = member.emailAddress
+            }
 
             if (member.headId.equals("0")) {
                 viewHolder.tvRole.text = resources.getString(R.string.Family_Head)

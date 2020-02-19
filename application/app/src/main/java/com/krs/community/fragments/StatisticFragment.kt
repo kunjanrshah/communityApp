@@ -2,6 +2,7 @@ package com.krs.community.fragments
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,13 +45,16 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
         binding.spCity.setOnItemClickListener {
             Coroutines.main {
                 val id = statisticsViewModel.getCityIdByName(binding.spCity.text.toString().trim())
+
+                Log.e("id--",""+id);
                 getStatisticsResult(id)
             }
         }
 
         Coroutines.main {
-            val list = statisticsViewModel.lstCityName()
-            binding.spCity.setItems(list.toTypedArray())
+            val cities=  statisticsViewModel.lstCityName()
+            binding.spCity.clear()
+            binding.spCity.setItems(cities.toTypedArray())
             binding.spCity.setExpandTint(R.color.black)
         }
 

@@ -156,8 +156,23 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
                     }
                 }
 
-                viewHolder.tvEmail.text = member.emailAddress
-                viewHolder.tvMobile.text = member.mobile
+                /*viewHolder.tvEmail.text = member.emailAddress
+                viewHolder.tvMobile.text = member.mobile*/
+
+                if (member.mobile.isEmpty()){
+                    viewHolder.llMobile.visibility = View.GONE
+                }else{
+                    viewHolder.tvMobile.text = member.mobile
+                }
+
+                if (member.emailAddress.isEmpty()){
+                    viewHolder.ll_email.visibility = View.GONE
+
+                }else{
+                    holder.tvEmail.text = member.emailAddress
+
+                }
+
                 if(member.headId == "0"){
                     holder.tvType.text = resources.getString(R.string.Family_Head)
                 }else{
@@ -347,6 +362,8 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
         var messageContainer: LinearLayout = v.findViewById(R.id.message_container1)
         var iconBack: RelativeLayout = v.findViewById(R.id.icon_back1)
         var iconFront: RelativeLayout = v.findViewById(R.id.icon_front1)
+        var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
+
     }
 
     private fun resetIconYAxis(view: View) {

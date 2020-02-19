@@ -164,15 +164,26 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                         viewHolder.tvArea.text = member.area + " " + it
                     }
                 }
-                viewHolder.tvEmail.text = member.emailAddress
-                viewHolder.tvMobile.text = member.mobile
 
+                if (member.mobile.isEmpty()){
+                    viewHolder.llMobile.visibility = View.GONE
+                }else{
+                    viewHolder.tvMobile.text = member.mobile
+                }
+
+                if (member.emailAddress.isEmpty()){
+                    viewHolder.ll_email.visibility = View.GONE
+
+                }else{
+                    viewHolder.tvEmail.text = member.emailAddress
+                }
 
                 if (member.headId == "0") {
                     viewHolder.tvRole.text = resources.getString(R.string.Family_Head)
                 } else {
                     viewHolder.tvRole.text = resources.getString(R.string.Member)
                 }
+
                 if (member.updatedDt.isNotEmpty()) {
                     viewHolder.tvUpdate.text = getString(R.string.UpdateList) + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                 }
@@ -643,6 +654,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
         var boomMenuButton: BoomMenuButton = view.findViewById(R.id.boomMenuButton1)
         var lstFound: RecyclerView = view.findViewById(R.id.lst_found)
         var llMobile: LinearLayout = view.findViewById(R.id.ll_mobile)
+        var ll_email: LinearLayout = view.findViewById(R.id.ll_email)
 
         init {
             view.setOnLongClickListener(this)
