@@ -36,6 +36,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.krishna.debug_tools.activity.ActivityDebugTools
 import com.krs.community.R
 import com.krs.community.activity.FavoriteProfileActivity
 import com.krs.community.activity.QRCodeActivity
@@ -285,8 +286,8 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     7 -> Utility.movetoFragment(activity, NonActivesFragment())
                     8 -> Utility.movetoFragment(activity, ShareEventFragment())
                     9 ->{
-                        //startActivity(new Intent(getActivity(), ActivityDebugTools.class));
-                        Utility.movetoFragment(activity, DocumentsFragment())
+                        startActivity(Intent(activity, ActivityDebugTools::class.java))
+                        //Utility.movetoFragment(activity, DocumentsFragment())
                         binding.root.snackbar("Coming soon",Snackbar.LENGTH_LONG)
 
                     }

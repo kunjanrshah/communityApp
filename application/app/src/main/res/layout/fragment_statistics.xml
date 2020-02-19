@@ -82,6 +82,7 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:id="@+id/ll_villages"
                         android:layout_width="350dp"
                         android:layout_height="60dp"
                         android:layout_gravity="center"
@@ -107,7 +108,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="20dp"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="129"
                             android:textColor="@color/colorPrimary"
                             android:textSize="26sp" />
 
@@ -139,7 +139,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="20dp"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="1295"
                             android:textColor="@color/colorPrimary"
                             android:textSize="26sp" />
 
@@ -171,7 +170,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="20dp"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="1279"
                             android:textColor="@color/colorPrimary"
                             android:textSize="26sp" />
 
@@ -203,7 +201,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="20dp"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="1229"
                             android:textColor="@color/colorPrimary"
                             android:textSize="26sp" />
 
@@ -235,7 +232,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="20dp"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="1343"
                             android:textColor="@color/colorPrimary"
                             android:textSize="26sp" />
 
@@ -267,7 +263,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="20dp"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="1324"
                             android:textColor="@color/colorPrimary"
                             android:textSize="26sp" />
 
@@ -300,7 +295,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="20dp"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="1234"
                             android:textColor="@color/colorPrimary"
                             android:textSize="26sp" />
 

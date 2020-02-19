@@ -2,14 +2,12 @@ package com.krs.community.fragments
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.github.squti.guru.Guru
 import com.google.gson.JsonObject
@@ -44,24 +42,16 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
         statisticsViewModel = ViewModelProvider(this, factory).get(StatisticsViewModel::class.java)
         statisticsViewModel.mStatisticsListener=this
         binding.spCity.setOnItemClickListener {
-            statisticsViewModel.selectedCityName = binding.spCity.text.toString().trim()
             Coroutines.main {
-                statisticsViewModel.cityId.await().observe(this, Observer {
-                    statisticsViewModel.selectedCityId = it
-                    Log.e("Test---",""+it);
-                    Log.e("spCity---",""+binding.spCity.text.toString().trim());
-                    Log.e("spCity---",""+statisticsViewModel.selectedCityName);
-
-                    getStatisticsResult(it)
-                })
+                val id = statisticsViewModel.getCityIdByName(binding.spCity.text.toString().trim())
+                getStatisticsResult(id)
             }
         }
 
         Coroutines.main {
-            statisticsViewModel.lstCityName.await().observe(this, Observer {
-                    binding.spCity.setItems(it.toTypedArray())
-                    binding.spCity.setExpandTint(R.color.black)
-            })
+            val list = statisticsViewModel.lstCityName()
+            binding.spCity.setItems(list.toTypedArray())
+            binding.spCity.setExpandTint(R.color.black)
         }
 
         getStatisticsResult(0)
@@ -73,7 +63,7 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
         val jsonObject=JSONObject()
         jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
         jsonObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-        jsonObject.put("city_id",cityId)
+        jsonObject.put(getString(R.string.city_id), cityId)
         val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
         binding.shimmerViewContainer.startShimmerAnimation()
         binding.shimmerViewContainer.visibility=View.VISIBLE
@@ -81,20 +71,24 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
         statisticsViewModel.getStatistics(updated)
     }
 
-
     override fun getStatistics(response: StatisticResponse) {
         binding.scroll.visibility=View.VISIBLE
+        Utility.hideKeyboard(activity)
         binding.shimmerViewContainer.stopShimmerAnimation()
         binding.shimmerViewContainer.visibility=View.GONE
-
         if(response.success){
-            binding.tvVillage.text = response.data.totalVillages.toString()
             binding.tvFamily.text =response.data.totalFamily.toString()
             binding.tvMembers.text = response.data.totalMembers.toString()
             binding.tvMale.text = response.data.totalMale.toString()
             binding.tvFemale.text =response.data.totalFemale.toString()
             binding.tvUnMale.text =response.data.totalUnmarriedMale.toString()
             binding.tvUnFemale.text =response.data.totalUnmarriedFemale.toString()
+            if (response.data.totalVillages == null) {
+                binding.llVillages.visibility = View.GONE
+            } else {
+                binding.llVillages.visibility = View.VISIBLE
+                binding.tvVillage.text = response.data.totalVillages.toString()
+            }
         }
     }
 

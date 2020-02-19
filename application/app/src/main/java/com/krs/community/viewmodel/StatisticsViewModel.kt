@@ -3,7 +3,6 @@ package com.krs.community.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
-import com.krs.community.app.lazyDeferred
 import com.krs.community.listeners.StatisticsListener
 import com.krs.community.repositories.StatisticsRepository
 import com.krs.community.utils.ApiException
@@ -18,20 +17,28 @@ class StatisticsViewModel(
     var TAG: String = StatisticsViewModel::class.java.simpleName
     var mStatisticsListener: StatisticsListener? = null
 
-    lateinit var selectedCityName:String
-    var selectedCityId: Int = 0
+    /*lateinit var selectedCityName:String
+    var selectedCityId: Int = 0*/
 
     /* val cityId by lazyDeferred {
          mStatisticsRepository.getCityId(selectedCityName)
      }*/
 
-    val lstCityName by lazyDeferred {
+    /*val lstCityName by lazyDeferred {
         mStatisticsRepository.getCityNames()
+    }*/
+
+    suspend fun lstCityName(): List<String> {
+        return mStatisticsRepository.getCityNames()
     }
 
-    val cityId by lazyDeferred {
-        mStatisticsRepository.getcityNameById(selectedCityName)
+    suspend fun getCityIdByName(name: String): Int {
+        return mStatisticsRepository.getcityIdByName(name)
     }
+
+    /*val cityId by lazyDeferred {
+        mStatisticsRepository.getcityNameById(selectedCityName)
+    }*/
 
     fun getStatistics(jsonObject: JsonObject) {
         job_statistics = Job()
