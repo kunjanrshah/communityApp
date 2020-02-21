@@ -20,10 +20,11 @@ import java.util.List;
 public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDrawerAdapter.MyViewHolder> {
     private final List<NavDrawerItem> data;
     private final LayoutInflater inflater;
-
+    private Context context;
     public NavigationDrawerAdapter(Context context, List<NavDrawerItem> data) {
         inflater = LayoutInflater.from(context);
         this.data = data;
+        this.context = context;
     }
 
     @NonNull
@@ -40,7 +41,9 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 
         switch (position) {
             case 0:
-                holder.imgDrawer.setBackgroundResource(R.drawable.home);
+                holder.imgDrawer.setBackgroundResource(R.drawable.home_primary);
+                holder.llItem.setBackgroundResource(R.drawable.right_round_corner);
+                holder.title.setTextColor(context.getResources().getColor(R.color.colorPrimary));
                 break;
             case 1:
                 holder.imgDrawer.setBackgroundResource(R.drawable.filter_outline);
@@ -62,9 +65,10 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     class MyViewHolder extends RecyclerView.ViewHolder {
         final TextView title;
         final ImageView imgDrawer;
-
+        final LinearLayout llItem;
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
+            llItem = itemView.findViewById(R.id.ll_item);
             title = itemView.findViewById(R.id.title);
             imgDrawer = itemView.findViewById(R.id.imgDrawer);
         }

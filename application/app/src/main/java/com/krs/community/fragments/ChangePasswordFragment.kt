@@ -43,8 +43,6 @@ class ChangePasswordFragment : Fragment(), KodeinAware, ILoginListener {
     private lateinit var passwordViewModel: PasswordViewModel
     private val passwordViewModelFactory: PasswordViewModelFactory by instance()
     private var showCurr = true
-    private var showNew = true
-    private var showConfirm = true
 
     @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -54,28 +52,42 @@ class ChangePasswordFragment : Fragment(), KodeinAware, ILoginListener {
         passwordViewModel.mLoginListener = this
         passBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_change_pass, container, false)
 
-        passBinding.ivLanCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
+        passBinding.imgCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         Utility.changeStatusbarColor(activity, R.color.colorPrivacyPolictyBG, false)
 
         passBinding.btnUpdate.setOnClickListener {
             val newPass = passBinding.edtNew.text.trim()
             val currPass = passBinding.edtCurr.text.trim()
-            if (currPass.isNotEmpty() && newPass.isNotEmpty() && newPass == currPass) {
-                if (newPass.length < 6) {
-                    passBinding.llParent.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
-                } else {
-                    val jsonObject = JSONObject()
-                    jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
-                    jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-                    jsonObject.put(getString(R.string.current_password), passBinding.edtCurr.text.trim())
-                    jsonObject.put(getString(R.string.new_password), passBinding.edtNew.text.trim())
-                    val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-                    passwordViewModel.changePassword(updated)
-                }
+            val confirmPass = passBinding.edtConfirm.text.trim()
 
-            } else {
-                Snackbar.make(passBinding.llParent, "Invalid input", Snackbar.LENGTH_LONG).show()
+            if (currPass.isEmpty()) {
+                Snackbar.make(passBinding.llParent, "Enter Current PIN", Snackbar.LENGTH_LONG).show()
+                return@setOnClickListener
             }
+
+            if (newPass.isEmpty()) {
+                Snackbar.make(passBinding.llParent, "Enter New PIN", Snackbar.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            if (newPass != confirmPass) {
+                Snackbar.make(passBinding.llParent, getString(R.string.password_mismatch), Snackbar.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            if (newPass.length < 6) {
+                passBinding.llParent.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
+                return@setOnClickListener
+            }
+
+            val jsonObject = JSONObject()
+            jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+            jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.member_id), ""))
+            jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+            jsonObject.put(getString(R.string.current_password), passBinding.edtCurr.text.trim())
+            jsonObject.put(getString(R.string.new_password), passBinding.edtNew.text.trim())
+            val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+            passwordViewModel.changePassword(updated)
         }
 
         passBinding.tvForgot.setOnClickListener {

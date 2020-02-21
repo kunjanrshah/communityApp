@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBG"
+    android:id="@+id/ll_parent"
     android:orientation="vertical">
 
     <ImageView
@@ -17,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:fontFamily="@font/montserrat_semibold"
-        android:text="Settings"
+        android:text="@string/settings"
         android:textColor="@color/black1"
         android:textSize="26sp" />
 

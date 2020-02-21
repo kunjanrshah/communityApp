@@ -1,150 +1,63 @@
 package com.krs.community.activity
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.net.ConnectivityManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
 import com.krs.community.R
 import com.krs.community.utils.AESUtils
-import com.wessam.library.NetworkChecker
 
-
-@SuppressLint("ByteOrderMark")
 class ScanQRCodeActivity : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
     private val RECORD_REQUEST_CODE = 101
-    private var mNetworkReceiver: BroadcastReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        mNetworkReceiver = NetworkChangeReceiver()
-
-        registerNetworkBroadcastForNougat()
-
-        if (NetworkChecker.isNetworkConnected(this)) {
-            setScreenLayout()
-        } else {
-            setNoInternetLayout()
-        }
-
+        setContentView(R.layout.activity_scan_qrcode)
+        val scannerView = findViewById<CodeScannerView>(R.id.scanner_view)
+        setupPermissions()
+        codeScanner = CodeScanner(this, scannerView)
+        setScreenLayout()
     }
-
-
-    private fun setNoInternetLayout() {
-        setContentView(R.layout.no_internet_layout)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setTitleTextColor(resources.getColor(R.color.colorPrimary))
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setTitle(resources.getString(R.string.app_name))
-        val anim = AlphaAnimation(0f, 1f)
-        anim.duration = 6000
-        anim.repeatMode = AlphaAnimation.RESTART
-        anim.repeatCount = Animation.INFINITE
-        val imageView = findViewById<AppCompatImageView>(R.id.no_internet_image)
-        imageView.animation = anim
-        val retryButton = findViewById<AppCompatButton>(R.id.retry_button)
-        retryButton.setOnClickListener { v: View? -> setScreenLayout() }
-    }
-
 
     private fun setScreenLayout() {
-        if (NetworkChecker.isNetworkConnected(this)) {
-            setContentView(R.layout.activity_scan_qrcode)
-            val scannerView = findViewById<CodeScannerView>(R.id.scanner_view)
 
-            setupPermissions()
+        codeScanner.camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
+        codeScanner.formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
+        codeScanner.autoFocusMode = AutoFocusMode.SAFE // or CONTINUOUS
+        codeScanner.scanMode = ScanMode.SINGLE // or CONTINUOUS or PREVIEW
+        codeScanner.isAutoFocusEnabled = true // Whether to enable auto focus or not
+        codeScanner.isFlashEnabled = false // Whether to enable flash or not
 
-            codeScanner = CodeScanner(this, scannerView)
-
-            // Parameters (default values)
-            codeScanner.camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
-            codeScanner.formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
-            // ex. listOf(BarcodeFormat.QR_CODE)
-            codeScanner.autoFocusMode = AutoFocusMode.SAFE // or CONTINUOUS
-            codeScanner.scanMode = ScanMode.SINGLE // or CONTINUOUS or PREVIEW
-            codeScanner.isAutoFocusEnabled = true // Whether to enable auto focus or not
-            codeScanner.isFlashEnabled = false // Whether to enable flash or not
-
-            // Callbacks
-            codeScanner.decodeCallback = DecodeCallback {
-                runOnUiThread {
-                    try {
-                        val decrypted = AESUtils.decrypt(it.text)
-                        val mIntent = Intent(this, ProfileDetailActivity::class.java)
-                        mIntent.putExtra(getString(R.string.scanId), decrypted)
-                        startActivity(mIntent)
-                        finish()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-
+        // Callbacks
+        codeScanner.decodeCallback = DecodeCallback {
+            runOnUiThread {
+                try {
+                    val decrypted = AESUtils.decrypt(it.text)
+                    val mIntent = Intent(this, ProfileDetailActivity::class.java)
+                    mIntent.putExtra(getString(R.string.scanId), decrypted)
+                    startActivity(mIntent)
+                    finish()
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            }
-            codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
-                runOnUiThread {
-                    // Toast.makeText(this, "Camera initialization error: ${it.message}", Toast.LENGTH_LONG).show()
-                }
-            }
 
-            scannerView.setOnClickListener {
-                codeScanner.startPreview()
             }
         }
+        codeScanner.errorCallback = ErrorCallback {
+            runOnUiThread {
+                Toast.makeText(this, "Camera initialization error: ${it.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+        codeScanner.startPreview()
     }
 
-    inner class NetworkChangeReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            try {
-                if (NetworkChecker.isNetworkConnected(context)) {
-                    setScreenLayout()
-                } else {
-                    setNoInternetLayout()
-                }
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    private fun registerNetworkBroadcastForNougat() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(mNetworkReceiver,  IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        }
-    }
-
-    private fun unregisterNetworkBroadcastForNougat() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                unregisterReceiver(mNetworkReceiver)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                unregisterReceiver(mNetworkReceiver)
-            }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
     override fun onResume() {
         super.onResume()
         codeScanner.startPreview()
@@ -154,6 +67,7 @@ class ScanQRCodeActivity : AppCompatActivity() {
         codeScanner.releaseResources()
         super.onPause()
     }
+
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
@@ -169,6 +83,7 @@ class ScanQRCodeActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun setupPermissions() {
         val permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA)
@@ -185,9 +100,5 @@ class ScanQRCodeActivity : AppCompatActivity() {
                 RECORD_REQUEST_CODE)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterNetworkBroadcastForNougat()
 
-    }
 }

@@ -233,7 +233,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                     textMsg = "Exit "
                                 }
 
-                                var gif: Int = R.drawable.gif14
+                                var gif: Int = R.drawable.gif5
                                 if (textMsg!!.contains("Exit")) {
                                     gif = R.drawable.gif10
                                 }
@@ -524,7 +524,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     }else if(member.onlineStatus==1){
                         textMsg = "Exit "
                     }
-                    var gif: Int = R.drawable.gif14
+                    var gif: Int = R.drawable.gif5
                     if (textMsg!!.contains("Exit")) {
                         gif = R.drawable.gif10
                     }

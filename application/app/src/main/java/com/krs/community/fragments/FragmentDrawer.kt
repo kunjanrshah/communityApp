@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -123,38 +122,38 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.addOnItemTouchListener(RecyclerTouchListener(activity, recyclerView, object : ClickListener {
             override fun onClick(view: View?, position: Int) {
-                if (view1 != null) {
-                    val ll_item = view1!!.findViewById<LinearLayout>(R.id.ll_item)
+                /*if (view1 != null) {
+                    val llItem = view1!!.findViewById<LinearLayout>(R.id.ll_item)
                     val imgDrawer = view1!!.findViewById<ImageView>(R.id.imgDrawer)
                     val title = view1!!.findViewById<TextView>(R.id.title)
-                    ll_item.background = null
+                    llItem.background = null
                     title.setTextColor(resources.getColor(R.color.black2))
                     if (view1!!.tag.toString() == "0") {
                         imgDrawer.setBackgroundResource(R.drawable.home)
                     } else if (view1!!.tag.toString() == "1") {
-                        imgDrawer.setBackgroundResource(R.drawable.filter_outline)
+                    //    imgDrawer.setBackgroundResource(R.drawable.filter_outline)
                     } else if (view1!!.tag.toString() == "2") {
-                        imgDrawer.setBackgroundResource(R.drawable.analytics)
+                      //  imgDrawer.setBackgroundResource(R.drawable.analytics)
                     } else if (view1!!.tag.toString() == "3") {
-                        imgDrawer.setBackgroundResource(R.drawable.committee1)
+                       // imgDrawer.setBackgroundResource(R.drawable.committee1)
                     }
-                }
-                view?.tag = position
-                view1 = view
-                val ll_item = view?.findViewById<LinearLayout>(R.id.ll_item)
-                val imgDrawer = view?.findViewById<ImageView>(R.id.imgDrawer)
-                val title = view?.findViewById<TextView>(R.id.title)
-                ll_item?.background = resources.getDrawable(R.drawable.right_round_corner)
-                title?.setTextColor(resources.getColor(R.color.colorPrimary))
-                if (position == 0) {
-                    imgDrawer?.setBackgroundResource(R.drawable.home_primary)
-                } else if (position == 1) {
-                    imgDrawer?.setBackgroundResource(R.drawable.filter_outline_color_primary)
-                } else if (position == 2) {
-                    imgDrawer?.setBackgroundResource(R.drawable.analytics_color_primary)
-                } else if (position == 3) {
-                    imgDrawer?.setBackgroundResource(R.drawable.committee1_color_primary)
-                }
+                }*/
+                /*   view?.tag = position
+                   view1 = view
+                   val llItem = view?.findViewById<LinearLayout>(R.id.ll_item)
+                   val imgDrawer = view?.findViewById<ImageView>(R.id.imgDrawer)
+                   val title = view?.findViewById<TextView>(R.id.title)
+                   if (position == 0) {
+                       llItem?.background = resources.getDrawable(R.drawable.right_round_corner)
+                       title?.setTextColor(resources.getColor(R.color.colorPrimary))
+                       imgDrawer?.setBackgroundResource(R.drawable.home_primary)
+                   } else if (position == 1) {
+                      // imgDrawer?.setBackgroundResource(R.drawable.filter_outline_color_primary)
+                   } else if (position == 2) {
+                      // imgDrawer?.setBackgroundResource(R.drawable.analytics_color_primary)
+                   } else if (position == 3) {
+                     //  imgDrawer?.setBackgroundResource(R.drawable.committee1_color_primary)
+                   }*/
                 drawerListener!!.onDrawerItemSelected(view, position)
                 mDrawerLayout!!.closeDrawers()
             }

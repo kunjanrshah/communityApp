@@ -13,23 +13,22 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/iv_logout"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_gravity="center"
-            android:background="@drawable/app_icon" />
+            android:background="@drawable/icon_app" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
-            android:text="@string/vastipatrak"
+            android:text="Ghanchi Samaj"
             android:textStyle="bold"
             android:fontFamily="@font/montserrat_medium"
             android:textColor="@color/colorPrimary"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
 
     </LinearLayout>

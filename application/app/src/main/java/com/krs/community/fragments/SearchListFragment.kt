@@ -192,7 +192,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                 }
 
                 if (member.updatedDt.isNotEmpty()) {
-                    viewHolder.tvUpdate.text = getString(R.string.UpdateList) + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    viewHolder.tvUpdate.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                 }
 
                 viewHolder.boomMenuButton.clearBuilders()
