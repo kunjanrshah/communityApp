@@ -87,12 +87,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
                 e.printStackTrace()
             }
         }
-
-
-
-
     }
-
 
     private fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)

@@ -2,7 +2,6 @@ package com.krs.community.fragments
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.github.squti.guru.Guru
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
@@ -20,6 +20,7 @@ import com.krs.community.listeners.StatisticsListener
 import com.krs.community.responses.StatisticResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
+import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.StatisticsViewModel
 import com.krs.community.viewmodelfactory.StatisticsViewModelFactory
 import org.json.JSONObject
@@ -45,9 +46,11 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
         binding.spCity.setOnItemClickListener {
             Coroutines.main {
                 val id = statisticsViewModel.getCityIdByName(binding.spCity.text.toString().trim())
-
-                Log.e("id--",""+id);
-                getStatisticsResult(id)
+                if (id != 0) {
+                    getStatisticsResult(id)
+                } else {
+                    binding.llVillages.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
+                }
             }
         }
 

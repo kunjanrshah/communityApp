@@ -566,7 +566,7 @@ class DashboardRepository(
                 mJSONObject.put(AppController.mApplication.getString(R.string.date),date)
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getListCity(updated) }
-                Log.d(TAG, "response: $response")
+                Log.d(TAG, "city response: $response")
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.city),response.last_updated)
                     lastUpdated.postValue(lastdate)

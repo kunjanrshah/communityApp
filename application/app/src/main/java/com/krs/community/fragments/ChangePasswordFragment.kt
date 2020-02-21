@@ -26,6 +26,7 @@ import com.krs.community.listeners.ILoginListener
 import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
 import com.krs.community.utils.Utility
+import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.PasswordViewModel
 import com.krs.community.viewmodelfactory.PasswordViewModelFactory
 import org.json.JSONObject
@@ -35,7 +36,7 @@ import org.kodein.di.generic.instance
 
 private lateinit var passBinding: FragmentChangePassBinding
 
-class ChangePasswordFragment : Fragment() , KodeinAware,ILoginListener {
+class ChangePasswordFragment : Fragment(), KodeinAware, ILoginListener {
 
     override val kodein by kodein()
 
@@ -50,24 +51,29 @@ class ChangePasswordFragment : Fragment() , KodeinAware,ILoginListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         passwordViewModel = ViewModelProvider(this, passwordViewModelFactory).get(PasswordViewModel::class.java)
-        passwordViewModel.mLoginListener=this
+        passwordViewModel.mLoginListener = this
         passBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_change_pass, container, false)
 
         passBinding.ivLanCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         Utility.changeStatusbarColor(activity, R.color.colorPrivacyPolictyBG, false)
 
         passBinding.btnUpdate.setOnClickListener {
-            val newPass=passBinding.edtNew.text.trim()
-            val currPass=passBinding.edtCurr.text.trim()
-            if(currPass.isNotEmpty() && newPass.isNotEmpty() && newPass == currPass){
-                val jsonObject= JSONObject()
-                jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id),""))
-                jsonObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-                jsonObject.put(getString(R.string.current_password), passBinding.edtCurr.text.trim())
-                jsonObject.put(getString(R.string.new_password),passBinding.edtNew.text.trim())
-                val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
-                passwordViewModel.changePassword(updated)
-            }else{
+            val newPass = passBinding.edtNew.text.trim()
+            val currPass = passBinding.edtCurr.text.trim()
+            if (currPass.isNotEmpty() && newPass.isNotEmpty() && newPass == currPass) {
+                if (newPass.length < 6) {
+                    passBinding.llParent.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
+                } else {
+                    val jsonObject = JSONObject()
+                    jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+                    jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                    jsonObject.put(getString(R.string.current_password), passBinding.edtCurr.text.trim())
+                    jsonObject.put(getString(R.string.new_password), passBinding.edtNew.text.trim())
+                    val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                    passwordViewModel.changePassword(updated)
+                }
+
+            } else {
                 Snackbar.make(passBinding.llParent, "Invalid input", Snackbar.LENGTH_LONG).show()
             }
         }
@@ -82,13 +88,13 @@ class ChangePasswordFragment : Fragment() , KodeinAware,ILoginListener {
                     .setCancelClickListener {
                         it.dismissWithAnimation()
                     }
-                    .setContentText(getString(R.string.pinWillsend)+" ${loginMember.emailAddress}")
+                    .setContentText(getString(R.string.pinWillsend) + " ${loginMember.emailAddress}")
                     .setConfirmClickListener {
                         it.dismissWithAnimation()
-                        val jsonObject= JSONObject()
-                        jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id),""))
-                        jsonObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-                        val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+                        val jsonObject = JSONObject()
+                        jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+                        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                        val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                         passwordViewModel.forgotPassword(updated)
                     }
                     .show()
@@ -100,11 +106,13 @@ class ChangePasswordFragment : Fragment() , KodeinAware,ILoginListener {
                 if (event.rawX >= passBinding.edtCurr.right - passBinding.edtCurr.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
                     if (showCurr) {
                         passBinding.edtCurr.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.show_pass, 0)
-                        passBinding.edtCurr.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        passBinding.edtCurr.inputType = InputType.TYPE_CLASS_NUMBER or
+                                InputType.TYPE_NUMBER_FLAG_DECIMAL or
+                                InputType.TYPE_NUMBER_FLAG_SIGNED
                         showCurr = false
                     } else {
                         passBinding.edtCurr.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.hide_pass, 0)
-                        passBinding.edtCurr.inputType =InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        passBinding.edtCurr.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
                         showCurr = true
                     }
                     passBinding.edtCurr.setSelection(passBinding.edtCurr.length())
@@ -113,48 +121,6 @@ class ChangePasswordFragment : Fragment() , KodeinAware,ILoginListener {
             }
             return false
         })
-
-        passBinding.edtNew.setOnTouchListener(fun(_: View, event: MotionEvent): Boolean {
-            val DRAWABLE_RIGHT = 2
-            if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= passBinding.edtNew.right - passBinding.edtNew.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
-                    if (showNew) {
-                        passBinding.edtNew.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.show_pass, 0)
-                        passBinding.edtNew.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                        showNew = false
-                    } else {
-                        passBinding.edtNew.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.hide_pass, 0)
-                        passBinding.edtNew.inputType =InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                        showNew = true
-                    }
-                    passBinding.edtNew.setSelection(passBinding.edtNew.length())
-                    return true
-                }
-            }
-            return false
-        })
-
-
-        passBinding.edtConfirm.setOnTouchListener(fun(_: View, event: MotionEvent): Boolean {
-            val DRAWABLE_RIGHT = 2
-            if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= passBinding.edtConfirm.right - passBinding.edtConfirm.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
-                    if (showConfirm) {
-                        passBinding.edtConfirm.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.show_pass, 0)
-                        passBinding.edtConfirm.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                        showConfirm = false
-                    } else {
-                        passBinding.edtConfirm.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.hide_pass, 0)
-                        passBinding.edtConfirm.inputType =InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                        showConfirm = true
-                    }
-                    passBinding.edtConfirm.setSelection(passBinding.edtConfirm.length())
-                    return true
-                }
-            }
-            return false
-        })
-
 
         return passBinding.root
     }

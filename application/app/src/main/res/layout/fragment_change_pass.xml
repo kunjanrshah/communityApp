@@ -13,7 +13,7 @@
             android:id="@+id/iv_lan_cancel"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:background="@drawable/left_arrow" />
 
 
@@ -21,10 +21,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
             android:fontFamily="@font/montserrat_semibold"
             android:text="@string/change_pin"
-            android:textColor="@color/light_gray"
+            android:textColor="@color/black2"
             android:textSize="24sp" />
 
         <LinearLayout
@@ -55,11 +54,10 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="@string/current_pin"
-                        android:textColor="#272727"
+                        android:textColor="@color/black"
                         android:textSize="14sp" />
 
                     <TextView
@@ -84,14 +82,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_marginTop="5dp"
-                    android:inputType="textPassword"
-                    android:paddingRight="20dp"
+                    android:background="@drawable/border"
+                    android:digits="@string/only_numbers"
+                    android:inputType="numberPassword"
                     android:drawableEnd="@drawable/hide_pass"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:background="@drawable/round_corner_white"
+                    android:paddingLeft="10dp"
                     android:hint="@string/enter_current_pin"
                     android:textColorHint="@color/color_mid_light_gray"
-                    android:paddingLeft="20dp" />
+                    android:paddingRight="10dp" />
 
             </LinearLayout>
 
@@ -107,25 +106,22 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="@string/new_pin"
-                    android:textColor="#272727"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
 
-                <EditText
+                <com.krs.community.utils.ChromaHashView
                     android:id="@+id/edt_new"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:inputType="textPassword"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:background="@drawable/round_corner_white"
+                    android:background="@drawable/border"
                     android:hint="@string/enter_new_pin"
-                    android:paddingRight="20dp"
-                    android:drawableEnd="@drawable/hide_pass"
+                    android:digits="@string/only_numbers"
                     android:textColorHint="@color/color_mid_light_gray"
-                    android:paddingLeft="20dp" />
+                    android:paddingLeft="10dp" />
 
             </LinearLayout>
 
@@ -141,25 +137,22 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="@string/confirm_pin"
-                    android:textColor="#272727"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
 
-                <EditText
+                <com.krs.community.utils.ChromaHashView
                     android:id="@+id/edt_confirm"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_marginTop="5dp"
-                    android:paddingRight="20dp"
-                    android:inputType="textPassword"
-                    android:drawableEnd="@drawable/hide_pass"
                     android:textColorHint="@color/color_mid_light_gray"
-                    android:background="@drawable/round_corner_white"
+                    android:background="@drawable/border"
                     android:hint="@string/enter_confirm_pin"
+                    android:digits="@string/only_numbers"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:paddingLeft="20dp" />
+                    android:paddingLeft="10dp" />
 
             </LinearLayout>
 

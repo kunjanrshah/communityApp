@@ -188,7 +188,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 Utility.showDirections(this, member!!.userLat.toDouble(), member!!.userLng.toDouble(), "${member?.firstName}'s Location")
             } else {
                 if (!member?.id.isNullOrEmpty()) {
-                    Toast.makeText(this, "${member?.firstName}"+getString(R.string.locationOff), Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "${member?.firstName}" + getString(R.string.locationOff), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -265,13 +265,14 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 }
                 Log.d(ProfileDetailActivity::class.java.simpleName, "jsonObject: " + jsonObject.toString())
                 hideSweetProgress()
-            }else{
+            } else {
                 setNoInternetLayout()
             }
 
         }
 
     }
+
     private fun registerNetworkBroadcastForNougat() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
@@ -280,12 +281,13 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         }
     }
+
     private fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.setTitleTextColor(resources.getColor(R.color.colorPrimary))
         setSupportActionBar(toolbar)
-        supportActionBar!!.setTitle(resources.getString(R.string.app_name))
+        supportActionBar!!.title = resources.getString(R.string.app_name)
         val anim = AlphaAnimation(0f, 1f)
         anim.duration = 6000
         anim.repeatMode = AlphaAnimation.RESTART
@@ -295,6 +297,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         val retryButton = findViewById<AppCompatButton>(R.id.retry_button)
         retryButton.setOnClickListener { v: View? -> onBackPressed() }
     }
+
     private fun unregisterNetworkBroadcastForNougat() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -312,6 +315,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         super.onDestroy()
         unregisterNetworkBroadcastForNougat()
     }
+
     inner class NetworkChangeReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
@@ -325,6 +329,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
 
     }
+
     private fun goToFamilyDetailActivity() {
         val intent = Intent(this, FamilyDetailActivity::class.java)
         if (member?.headId == "0") {
@@ -382,7 +387,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     private fun setMemberValues() {
 
-        binding.txtTitle.text = "${member?.firstName}"+getString(R.string.Profile)
+        binding.txtTitle.text = "${member?.firstName}" + getString(R.string.Profile)
 
         val memberId = Guru.getString(getString(R.string.member_id), "")
         if (member?.id == memberId) {
@@ -541,17 +546,20 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (isProfileImage) {
-         /*   isProfileImage=false*/
-            if (resultCode == RESULT_OK) {
-                if (requestCode == PICK_GALLERY_REQUEST) {
-                    val selectedUri = data!!.data
-                    if (selectedUri != null) {
-                        startCrop(selectedUri, this)
-                    } else {
-                        Toast.makeText(this@ProfileDetailActivity, "Cannot retrieve selected image", Toast.LENGTH_SHORT).show()
-                    }
-                } else if (requestCode == UCrop.REQUEST_CROP) {
+
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PICK_GALLERY_REQUEST) {
+                val selectedUri = data?.data
+                if (selectedUri != null) {
+                    startCrop(selectedUri, this)
+                } else {
+                    Toast.makeText(this@ProfileDetailActivity, "Cannot retrieve selected image", Toast.LENGTH_SHORT).show()
+                }
+            } else if (requestCode == UCrop.REQUEST_CROP) {
+
+                if (isProfileImage) {
+                    isProfileImage = false
                     data?.let {
                         val resultUri = UCrop.getOutput(it)
                         com.krs.community.utils.logger.debug("resultUri: $resultUri")
@@ -568,48 +576,17 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                             binding.llParent.snackbar("Requested crop image not found!", Snackbar.LENGTH_LONG)
                         }
                     }
+
+                } else {
+                    professionalDetailsFragment.onActivityResult(requestCode, resultCode, data)
                 }
+
+
+            } else if (requestCode == EasyWayLocation.LOCATION_SETTING_REQUEST_CODE) {
+                easyWayLocation.onActivityResult(resultCode)
             }
         }
-        if (resultCode == UCrop.RESULT_ERROR) {
-            handleCropError(data!!,this)
-        }
 
-        /*if (isProfileImage) {
-            isProfileImage=false
-            if (resultCode == RESULT_OK) {
-                if (requestCode == PICK_GALLERY_REQUEST) {
-                    val selectedUri = data?.data
-                    if (selectedUri != null) {
-                        startCrop(selectedUri, this)
-                    } else {
-                        Toast.makeText(this@ProfileDetailActivity, "Cannot retrieve selected image", Toast.LENGTH_SHORT).show()
-                    }
-                } else if (requestCode == UCrop.REQUEST_CROP) {
-                    data?.let {
-                        val resultUri = UCrop.getOutput(it)
-                        com.krs.community.utils.logger.debug("resultUri: $resultUri")
-                        if (resultUri != null) {
-                            try {
-                                Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
-                                val uploadImage = File(resultUri.path.toString())
-                                startSweetProgress(this, "Image", getString(R.string.loading))
-                                profileDetailViewModel.uploadImage(uploadImage,member?.id.toString(),getString(R.string.profile))
-                            } catch (e: Exception) {
-                                e.message
-                            }
-                        } else {
-                            binding.llParent.snackbar("Requested crop image not found!",Snackbar.LENGTH_LONG)
-                        }
-                    }
-
-                } else if (requestCode == EasyWayLocation.LOCATION_SETTING_REQUEST_CODE) {
-                    easyWayLocation.onActivityResult(resultCode)
-                }
-            }
-        }else{
-            professionalDetailsFragment.onActivityResult(requestCode, resultCode, data)
-        }*/
 
         if (resultCode == UCrop.RESULT_ERROR) {
             data?.let { handleCropError(it, this) }

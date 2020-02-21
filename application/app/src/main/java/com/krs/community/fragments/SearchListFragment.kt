@@ -166,15 +166,22 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                 }
 
                 if (member.mobile.isEmpty()){
-                    viewHolder.llMobile.visibility = View.GONE
+                    viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
+                    viewHolder.ivMobile.visibility = View.GONE
+                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
                 }else{
+                    viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
+                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
                 if (member.emailAddress.isEmpty()){
-                    viewHolder.ll_email.visibility = View.GONE
-
+                    viewHolder.ivEmail.visibility = View.GONE
+                    viewHolder.tvEmail.text = getString(R.string.email_not_available)
+                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
                 }else{
+                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
+                    viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
 
@@ -654,7 +661,9 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
         var boomMenuButton: BoomMenuButton = view.findViewById(R.id.boomMenuButton1)
         var lstFound: RecyclerView = view.findViewById(R.id.lst_found)
         var llMobile: LinearLayout = view.findViewById(R.id.ll_mobile)
-        var ll_email: LinearLayout = view.findViewById(R.id.ll_email)
+        var llEmail: LinearLayout = view.findViewById(R.id.ll_email)
+        var ivMobile: ImageView = view.findViewById(R.id.iv_mobile)
+        var ivEmail: ImageView = view.findViewById(R.id.iv_email)
 
         init {
             view.setOnLongClickListener(this)

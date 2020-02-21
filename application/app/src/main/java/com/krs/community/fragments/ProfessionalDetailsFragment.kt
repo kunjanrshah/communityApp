@@ -1,6 +1,5 @@
 package com.krs.community.fragments
 
-import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -138,15 +137,15 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                             jsonObject.put(getString(R.string.office_lat), ProfileDetailActivity.cur_lat.value)
                             jsonObject.put(getString(R.string.office_lng), ProfileDetailActivity.cur_lng.value)
                             val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-                            Utility.startSweetProgress(activity, getString(R.string.updatingLocationDetail), getString(R.string.PleasWaitDetails))
+                            startSweetProgress(activity, getString(R.string.updatingLocationDetail), getString(R.string.PleasWaitDetails))
                             profileDetailViewModel.updateProfile(profile, true)
                         } else {
-                            Utility.displaySnackBarWithBottomMargin(ll_main, getString(R.string.headDetails))
+                            displaySnackBarWithBottomMargin(ll_main, getString(R.string.headDetails))
                         }
                     }
                     .setCancelClickListener {
                         it.dismiss()
-                        Utility.showDirections(activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member.firstName}'s Work")
+                        showDirections(activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member.firstName}'s Work")
                     }
                     .show()
         }
@@ -249,11 +248,8 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-      /*  data?.let { activity?.let {
-            it1 -> handleCropResult(it, it1,binding.imgLogo) }
-        }*/
-        if (resultCode == RESULT_OK) {
-            if (requestCode == PICK_GALLERY_REQUEST) {
+
+        if (requestCode == PICK_GALLERY_REQUEST) {
                 val selectedUri = data?.data
                 if (selectedUri != null) {
                     startCrop(selectedUri, activity!!)
@@ -280,7 +276,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                     }
                 }
             }
-        }
+
         if (resultCode == UCrop.RESULT_ERROR) {
             data?.let { handleCropError(it, activity!!) }
         }

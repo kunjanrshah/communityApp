@@ -28,7 +28,7 @@ interface CityDao {
     @Query("SELECT name FROM City ORDER BY name ASC")
     fun getcityNames() : LiveData<List<String>>
 
-    @Query("SELECT name FROM City ORDER BY name ASC")
+    @Query("SELECT DISTINCT name FROM City ORDER BY parent_id ASC")
     fun getcityListName(): List<String>
 
     @Query("SELECT id FROM City WHERE name == :name")
