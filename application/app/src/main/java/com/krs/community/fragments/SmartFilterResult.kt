@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -29,10 +30,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.activity.DashboardActivity
-import com.krs.community.activity.FamilyTreeListActivity
-import com.krs.community.activity.ProfileDetailActivity
-import com.krs.community.activity.QRCodeActivity
+import com.krs.community.activity.*
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
@@ -74,6 +72,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     private var reverseAllAnimations = false
     private var currentSelectedIndex = -1
     private lateinit var tvCount:TextView
+    private lateinit var ivExport:ImageView
     private var selectedPosition = 0
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private lateinit var llRoot:LinearLayout
@@ -120,7 +119,11 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
                 holder.tvName.text = member.firstName
                 holder.tvArea.text = member.area
-
+                if(member.gender.equals("Male")){
+                    holder.ivGender.setBackgroundResource(R.drawable.male)
+                }else{
+                    holder.ivGender.setBackgroundResource(R.drawable.female)
+                }
                 Coroutines.io {
                     if(!member.subCastId.isNullOrEmpty()){
                         viewHolder.tvName.text=member.firstName+" "+smartFilterViewModel.getLastNameById(member.subCastId.toInt())
@@ -135,15 +138,22 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 holder.tvMobile.text = member.mobile*/
 
                 if (member.mobile.isEmpty()){
-                    viewHolder.llMobile.visibility = View.GONE
+                    viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
+                    viewHolder.ivMobile.visibility = View.GONE
+                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
                 }else{
+                    viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
+                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
                 if (member.emailAddress.isEmpty()){
-                    viewHolder.ll_email.visibility = View.GONE
-
+                    viewHolder.ivEmail.visibility = View.GONE
+                    viewHolder.tvEmail.text = getString(R.string.email_not_available)
+                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
                 }else{
+                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
+                    viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
 
@@ -226,7 +236,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         tvCount = header.findViewById(R.id.tv_count)
-        val ivExport = header.findViewById<ImageView>(R.id.iv_export)
+        ivExport = header.findViewById<ImageView>(R.id.iv_export)
         ivExport.setOnClickListener {
             if (lstMembers.size > 0) {
                     Handler().post {
@@ -304,7 +314,22 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 }
             }else{
                 DashboardActivity.stop = true
-                Snackbar.make(llRoot, getString(R.string.endrecord), Snackbar.LENGTH_LONG).show()
+               // Snackbar.make(llRoot, "No Record Found", Snackbar.LENGTH_LONG).show()
+                var gif: Int = R.drawable.gif14
+
+                TTFancyGifDialog.Builder(activity)
+                        //.setTitle(getString(R.string.you_sure))
+                        .setMessage("No Record Found")
+                        .setPositiveBtnText("Ok")
+                        .setPositiveBtnBackground("#22b573")
+                        .setGifResource(gif)
+                        .isCancellable(true)
+                        .OnPositiveClicked {
+
+                        }
+                        .build()
+                true
+                ivExport.visibility=View.GONE
             }
         }else {
             DashboardActivity.stop = false
@@ -494,6 +519,9 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         var tvUpdate: TextView = itemView.findViewById(R.id.tv_update)
         var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
         var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
+        var ivMobile: ImageView = itemView.findViewById(R.id.iv_mobile)
+        var ivEmail: ImageView = itemView.findViewById(R.id.iv_email)
+        var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
 
         init {
             itemView.setOnLongClickListener(this)

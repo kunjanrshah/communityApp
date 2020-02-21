@@ -169,18 +169,24 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     viewHolder.tvMobile.text = member.mobile*/
 
                     if (member.mobile.isEmpty()){
-                        viewHolder.llMobile.visibility = View.GONE
+                        viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
+                        viewHolder.ivMobile.visibility = View.GONE
+                        viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
                     }else{
+                        viewHolder.ivMobile.visibility = View.VISIBLE
                         viewHolder.tvMobile.text = member.mobile
+                        viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                     }
 
                     if (member.emailAddress.isEmpty()){
-                        viewHolder.ll_email.visibility = View.GONE
-
+                        viewHolder.ivEmail.visibility = View.GONE
+                        viewHolder.tvEmail.text = getString(R.string.email_not_available)
+                        viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
                     }else{
+                        viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
+                        viewHolder.ivEmail.visibility = View.VISIBLE
                         viewHolder.tvEmail.text = member.emailAddress
                     }
-
 
                     viewHolder.tvUpdate.text = "updated "+changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                     viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
@@ -620,8 +626,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         val imgLogin: ImageView = v.findViewById(R.id.img_login)
         val tvLogin: TextView = v.findViewById(R.id.tv_login)
         var ll_email: LinearLayout = v.findViewById(R.id.ll_email)
-
-    }
+        var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
+        var ivEmail: ImageView = v.findViewById(R.id.iv_email)    }
 
     override fun getMessage(response: DeleteProfileResponse) {
         if(response.success){

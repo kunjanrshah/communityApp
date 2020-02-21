@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -184,7 +185,11 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
-
+                if(member.gender.equals("Male")){
+                    viewHolder.ivGender.setBackgroundResource(R.drawable.male)
+                }else{
+                    viewHolder.ivGender.setBackgroundResource(R.drawable.female)
+                }
                 if (member.headId == "0") {
                     viewHolder.tvRole.text = resources.getString(R.string.Family_Head)
                 } else {
@@ -415,7 +420,22 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
             if (Integer.parseInt(response.totalRecords) <= AppController.mApplication.length) {
                 DashboardActivity.stop = true
                 if (Integer.parseInt(response.totalRecords) == 0) {
-                    Snackbar.make(frameRoot, getString(R.string.NoRecordList), Snackbar.LENGTH_LONG).show()
+                  //  Snackbar.make(frameRoot, getString(R.string.NoRecordList), Snackbar.LENGTH_LONG).show()
+
+                    var gif: Int = R.drawable.gif14
+
+                    TTFancyGifDialog.Builder(activity)
+                            //.setTitle(getString(R.string.you_sure))
+                            .setMessage("No Record Found")
+                            .setPositiveBtnText("Ok")
+                            .setPositiveBtnBackground("#22b573")
+                            .setGifResource(gif)
+                            .isCancellable(true)
+                            .OnPositiveClicked {
+
+                            }
+                            .build()
+                    true
                 } else {
                     Snackbar.make(frameRoot, getString(R.string.endRecord), Snackbar.LENGTH_LONG).show()
                 }
@@ -664,6 +684,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
         var llEmail: LinearLayout = view.findViewById(R.id.ll_email)
         var ivMobile: ImageView = view.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = view.findViewById(R.id.iv_email)
+        var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
 
         init {
             view.setOnLongClickListener(this)

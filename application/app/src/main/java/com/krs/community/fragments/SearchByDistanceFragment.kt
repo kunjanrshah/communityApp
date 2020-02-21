@@ -238,16 +238,29 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                 viewHolder.tvMobile.text = member.mobile*/
 
                 if (member.mobile.isEmpty()){
-                    viewHolder.llMobile.visibility = View.GONE
+                    viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
+                    viewHolder.ivMobile.visibility = View.GONE
+                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
                 }else{
+                    viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
+                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
                 if (member.emailAddress.isEmpty()){
-                    viewHolder.ll_email.visibility = View.GONE
-
+                    viewHolder.ivEmail.visibility = View.GONE
+                    viewHolder.tvEmail.text = getString(R.string.email_not_available)
+                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
                 }else{
+                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
+                    viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
+                }
+
+                if(member.gender.equals("Male")){
+                    viewHolder.ivGender.setBackgroundResource(R.drawable.male)
+                }else{
+                    viewHolder.ivGender.setBackgroundResource(R.drawable.female)
                 }
 
                 if(member.headId.equals("0")){
@@ -428,6 +441,10 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         var iconText: TextView = v.findViewById(R.id.icon_text1)
         var llMobile: LinearLayout = v.findViewById(R.id.ll_mobile)
         var ll_email: LinearLayout = v.findViewById(R.id.ll_email)
+
+        var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
+        var ivEmail: ImageView = v.findViewById(R.id.iv_email)
+        var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
 
     }
 

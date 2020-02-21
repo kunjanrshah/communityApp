@@ -78,6 +78,14 @@
 
                 </RelativeLayout>
 
+                <ImageView
+                    android:id="@+id/iv_gender"
+                    android:layout_width="18dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="18dp"
+                    android:background="@drawable/male"   />
+
                 <com.nightonke.boommenu.BoomMenuButton
                     android:id="@+id/bmb1"
                     android:layout_width="wrap_content"
@@ -93,10 +101,12 @@
                     android:id="@+id/icon_star"
                     android:layout_width="25dp"
                     android:layout_marginRight="3dp"
-                    android:layout_marginTop="-10dp"
+                    android:layout_marginTop="-15dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_height="25dp"
                     android:tint="@color/icon_tint_normal" />
+
+
 
                 <TextView
                     android:id="@+id/tv_home"
@@ -174,6 +184,7 @@
                             android:orientation="horizontal">
 
                             <ImageView
+                                android:id="@+id/iv_mobile"
                                 android:layout_width="15dp"
                                 android:layout_height="15dp"
                                 android:background="@drawable/phone" />
@@ -230,6 +241,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:id="@+id/iv_email"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:background="@drawable/ic_email" />

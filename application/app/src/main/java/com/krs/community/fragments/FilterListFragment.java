@@ -46,8 +46,11 @@ public class FilterListFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(), R.color.colorBG, false);
         }
+
         lstFilters = new ArrayList<>();
+
         String listFilter = Guru.getString(getActivity().getString(R.string.list_filter), "");
+
         try {
             if (listFilter != null && !listFilter.isEmpty()) {
                 mJsonArray = new JSONArray(listFilter);
