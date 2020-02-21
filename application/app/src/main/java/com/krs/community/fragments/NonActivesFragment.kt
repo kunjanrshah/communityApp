@@ -116,17 +116,25 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 holder.tvMobile.text = member.mobile*/
 
                 if (member.mobile.isEmpty()){
-                    viewHolder.llMobile.visibility = View.GONE
+                    viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
+                    viewHolder.ivMobile.visibility = View.GONE
+                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
                 }else{
+                    viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
+                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
                 if (member.emailAddress.isEmpty()){
-                    viewHolder.ll_email.visibility = View.GONE
-
+                    viewHolder.ivEmail.visibility = View.GONE
+                    viewHolder.tvEmail.text = getString(R.string.email_not_available)
+                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
                 }else{
+                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
+                    viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
+
 
                 holder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                 viewHolder.itemView.isActivated = selectedItems.get(position, false)
@@ -279,6 +287,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         var tvAddr: TextView = view.findViewById(R.id.tv_addr)
         var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
         var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
+        var ivMobile: ImageView = itemView.findViewById(R.id.iv_mobile)
+        var ivEmail: ImageView = itemView.findViewById(R.id.iv_email)
        /* init {
             view.setOnLongClickListener(this)
         }

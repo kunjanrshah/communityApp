@@ -442,7 +442,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         Log.d(TAG, "login data: $message")
     }
 
-
     // Fetches reg id from shared preferences
     /* private fun displayFirebaseRegId() {
          val pref = applicationContext.getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE)
@@ -452,9 +451,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
     override fun onResume() {
         super.onResume()
-        /*LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,IntentFilter(Config.REGISTRATION_COMPLETE))
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,IntentFilter(Config.PUSH_NOTIFICATION))*/
-
         // clear the notification area when the app is opened
         NotificationUtils.clearNotifications(applicationContext)
     }
@@ -466,20 +462,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         if (currentUser != null) {
             Log.d(TAG, currentUser.email)
         }
-        val is_home = Guru.getBoolean(AppConstants.IS_HOME, false)
-        if (!is_home) {
-            return
-        }
-
-        val mIntent = Intent(this@LoginActivity, DashboardActivity::class.java)
-        mIntent.putExtra(AppConstants.USER_ID, Guru.getString(AppConstants.USER_ID, ""))
-
-        if (!isLogin[0]) {
-            isLogin[0] = true
-            startActivity(mIntent)
-            finish()
-        }
-
     }
 
     override fun onDestroy() {

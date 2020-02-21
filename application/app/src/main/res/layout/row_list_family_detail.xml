@@ -231,6 +231,7 @@
                         android:orientation="horizontal">
 
                         <ImageView
+                            android:id="@+id/iv_email"
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:background="@drawable/ic_email" />
@@ -257,6 +258,7 @@
                         android:orientation="horizontal">
 
                         <ImageView
+                            android:id="@+id/iv_mobile"
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:background="@drawable/phone" />

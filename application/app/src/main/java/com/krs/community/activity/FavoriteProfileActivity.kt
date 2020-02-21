@@ -195,7 +195,9 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
             var lstFound: RecyclerView = view.findViewById(R.id.lst_found)
             var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
             var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
-        }
+           var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
+
+       }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.row_list_search, parent, false)
@@ -223,7 +225,11 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
             }
            /* viewHolder.tvEmail.text = member.emailAddress
             viewHolder.tvMobile.text = member.mobile*/
-
+            if (member.gender.equals("Male")) {
+                viewHolder.ivGender.setBackgroundResource(R.drawable.male)
+            } else {
+                viewHolder.ivGender.setBackgroundResource(R.drawable.female)
+            }
             if (member.mobile.isNullOrEmpty()){
                 viewHolder.llMobile.visibility = View.GONE
             }else{
@@ -293,7 +299,7 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
                                 .setAdapter(adapter)
                                 .setGravity(Gravity.BOTTOM)
                                 .setCancelable(true)
-                                .setExpanded(false, 600)
+                                .setExpanded(true, 600)
                                 .setContentBackgroundResource(R.drawable.popup_top_corner)
                                 .create()
                         setLocationDialog?.show()

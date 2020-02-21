@@ -63,18 +63,18 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
     private var sharedProfiles = ArrayList<Member>()
     private var defaultProfiles = ArrayList<Member>()
-    private lateinit var binding:FragmentDashboardBinding
+    private lateinit var binding: FragmentDashboardBinding
     private lateinit var filterViewModel: SmartFilterViewModel
     private val filterViewModelFactory: SmartFilterViewModelFactory by instance()
     private var isTouch = false
-    private lateinit var layoutManager:LinearLayoutManager
-    private var sharedAdapter:SharedProfileAdapter?=null
+    private lateinit var layoutManager: LinearLayoutManager
+    private var sharedAdapter: SharedProfileAdapter? = null
 
     private val duration = 10L
     private val pixelsToMove = 30
     private val mHandler = Handler(Looper.getMainLooper())
 
-    var SCROLLING_RUNNABLE:Runnable =object : Runnable {
+    var SCROLLING_RUNNABLE: Runnable = object : Runnable {
         override fun run() {
             binding.lstSharedProfile.smoothScrollBy(pixelsToMove, 0)
             mHandler.postDelayed(this, duration)
@@ -82,16 +82,18 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     }
 
     override val kodein by kodein()
+
     companion object {
         val TAG = DashboardFragment::class.java.simpleName
     }
+
     @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        binding=DataBindingUtil.inflate(inflater,R.layout.fragment_dashboard,container,false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
         filterViewModel = ViewModelProvider(this, filterViewModelFactory).get(SmartFilterViewModel::class.java)
-        filterViewModel.mByFilterListener=this
+        filterViewModel.mByFilterListener = this
 
         Utility.changeStatusbarColor(activity, R.color.colorPrimary, true)
         binding.gridView.isExpanded = true
@@ -104,12 +106,11 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
         binding.edtSearch.setOnTouchListener { _: View?, event: MotionEvent? ->
             val DRAWABLE_RIGHT = 2
-            if(event?.action == MotionEvent.ACTION_UP) {
-                if((event.rawX +70) >= (binding.edtSearch.right - binding.edtSearch.compoundDrawables[DRAWABLE_RIGHT].bounds.width())) {
+            if (event?.action == MotionEvent.ACTION_UP) {
+                if ((event.rawX + 70) >= (binding.edtSearch.right - binding.edtSearch.compoundDrawables[DRAWABLE_RIGHT].bounds.width())) {
                     getSpeechInput()
                     true
-                }
-                else{
+                } else {
                     if (!isTouch) {
                         isTouch = true
                         Utility.movetoFragment(activity, SearchListFragment())
@@ -125,13 +126,13 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
 
 
-        binding.lstSharedProfile.adapter =sharedAdapter
+        binding.lstSharedProfile.adapter = sharedAdapter
         binding.lstSharedProfile.layoutManager = layoutManager
         defaultProfiles.clear()
-        for(index in 1..4){
-            val member=Member()
-            member.profilePic="noimage.png?fhtfhjuyffgh"
-            member.firstName="name"
+        for (index in 1..4) {
+            val member = Member()
+            member.profilePic = "noimage.png?fhtfhjuyffgh"
+            member.firstName = "name"
             defaultProfiles.add(member)
         }
 
@@ -159,7 +160,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         if (intent.resolveActivity(activity!!.packageManager) != null) {
             startActivityForResult(intent, 10)
         } else {
-            binding.llParent.snackbar(getString(R.string.DevicDont),Snackbar.LENGTH_LONG)
+            binding.llParent.snackbar(getString(R.string.DevicDont), Snackbar.LENGTH_LONG)
         }
     }
 
@@ -168,12 +169,12 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         when (requestCode) {
             10 -> if (resultCode == RESULT_OK && data != null) {
                 val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                Log.d(TAG,"data: "+result[0])
+                Log.d(TAG, "data: " + result[0])
 
-                val searchFragment=SearchListFragment()
+                val searchFragment = SearchListFragment()
                 val bundle = Bundle()
                 bundle.putString("keyword", result[0])
-                searchFragment.arguments= bundle
+                searchFragment.arguments = bundle
                 Utility.movetoFragment(activity, searchFragment)
             }
         }
@@ -187,7 +188,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val lastItem: Int = layoutManager.findLastCompletelyVisibleItemPosition()
-                if(lastItem == layoutManager.itemCount -1){
+                if (lastItem == layoutManager.itemCount - 1) {
                     mHandler.removeCallbacks(SCROLLING_RUNNABLE)
                     val postHandler = Handler()
                     postHandler.postDelayed({
@@ -224,7 +225,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                 return@setOnSliderClickListener
                 Utility.movetoFragment(activity, NewsListFragment())
             }
-          binding.imageSlider.addSliderView(sliderView)
+            binding.imageSlider.addSliderView(sliderView)
         }
     }
 
@@ -263,7 +264,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             val imgs: TypedArray = resources.obtainTypedArray(R.array.main_menu_imgs)
             val mainMenu = resources.getStringArray(R.array.main_menu)
 
-            menuViewHolder.image?.setImageResource(imgs.getResourceId(position,-1))
+            menuViewHolder.image?.setImageResource(imgs.getResourceId(position, -1))
             menuViewHolder.textView?.text = mainMenu[position]
             convertView?.setOnClickListener { v: View? ->
                 when (position) {
@@ -298,7 +299,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                         return@setOnClickListener
                         Utility.movetoFragment(activity, ShareEventFragment())
                     }
-                    9 ->{
+                    9 -> {
                         binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                         return@setOnClickListener
                         //startActivity(Intent(activity, ActivityDebugTools::class.java))
@@ -316,7 +317,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                         startActivity(intent)
                         Utility.fade(activity)
                     }
-                    12 ->{
+                    12 -> {
                         binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                         return@setOnClickListener
                         Utility.movetoFragment(activity, TourVideoFragment())
@@ -340,10 +341,10 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         }
 
         override fun onBindViewHolder(holder: SharedLocationViewHolder, position: Int) {
-            val member=list[position]
+            val member = list[position]
             holder.tvName.text = member.firstName
             holder.iconText.text = member.firstName.substring(0, 1)
-            applyProfilePicture(holder,member)
+            applyProfilePicture(holder, member)
         }
 
         override fun getItemCount(): Int {
@@ -354,11 +355,11 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         private fun applyProfilePicture(holder: SharedLocationViewHolder, member: Member) {
             if (!TextUtils.isEmpty(member.profilePic)) {
                 holder.imgProfile.isClickable = true
-                val url=resources.getString(R.string.base_url_thumb)+member.profilePic
+                val url = resources.getString(R.string.base_url_thumb) + member.profilePic
                 Log.d(TAG, "url: $url")
-                try{
+                try {
                     Glide.with(activity!!).load(url).placeholder(R.drawable.user_face).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
-                }catch(e:Exception){
+                } catch (e: Exception) {
                     e.message
                 }
                 holder.imgProfile.colorFilter = null
@@ -374,38 +375,38 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     }
 
     private fun getSharedProfileList() {
-   /*     binding.shimmerViewContainer.startShimmerAnimation()
-        binding.shimmerViewContainer.visibility = View.VISIBLE
-        Handler().postDelayed({
-            binding.shimmerViewContainer.stopShimmerAnimation()
-            binding.shimmerViewContainer.visibility=View.GONE
-        },4000)*/
-        val jsonObj= JSONObject()
-        jsonObj.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
-        jsonObj.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-        jsonObj.put(getString(R.string.id),Guru.getString(getString(R.string.user_id),""))
-        val updated=  JsonParser().parse(jsonObj.toString()) as JsonObject
+        /*     binding.shimmerViewContainer.startShimmerAnimation()
+             binding.shimmerViewContainer.visibility = View.VISIBLE
+             Handler().postDelayed({
+                 binding.shimmerViewContainer.stopShimmerAnimation()
+                 binding.shimmerViewContainer.visibility=View.GONE
+             },4000)*/
+        val jsonObj = JSONObject()
+        jsonObj.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+        jsonObj.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+        jsonObj.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+        val updated = JsonParser().parse(jsonObj.toString()) as JsonObject
         filterViewModel.getSharedProfiles(updated)
     }
 
     override fun getMembers(response: SmartFilterResponse) {
         /*binding.shimmerViewContainer.stopShimmerAnimation()
        binding.shimmerViewContainer.visibility = View.GONE*/
-        if(response.success){
-            if(response.members!=null && response.members.size>0){
+        if (response.success) {
+            if (response.members != null && response.members.size > 0) {
                 sharedProfiles.clear()
                 sharedProfiles.addAll(response.members)
-                sharedAdapter=SharedProfileAdapter(sharedProfiles)
-                binding.lstSharedProfile.adapter =sharedAdapter
-                binding.lblShared.visibility=View.VISIBLE
-                binding.lblShared.alpha=1.0f
-                binding.lstSharedProfile.alpha=1.0f
-                binding.lblPrivate.visibility=View.GONE
-                binding.tvAllShared.isClickable=true
-            }else{
+                sharedAdapter = SharedProfileAdapter(sharedProfiles)
+                binding.lstSharedProfile.adapter = sharedAdapter
+                binding.lblShared.visibility = View.VISIBLE
+                binding.lblShared.alpha = 1.0f
+                binding.lstSharedProfile.alpha = 1.0f
+                binding.lblPrivate.visibility = View.GONE
+                binding.tvAllShared.isClickable = true
+            } else {
                 setDefaultProfileList()
             }
-        }else{
+        } else {
             setDefaultProfileList()
         }
     }
@@ -416,14 +417,17 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         setDefaultProfileList()
     }
 
-    private fun setDefaultProfileList(){
-        binding.lblShared.alpha=0.25f
-        binding.lstSharedProfile.alpha=0.25f
-        binding.tvAllShared.isClickable=false
-        binding.lblPrivate.visibility=View.VISIBLE
-        binding.lblShared.visibility=View.VISIBLE
-        sharedAdapter=SharedProfileAdapter(defaultProfiles)
-        binding.lstSharedProfile.adapter =sharedAdapter
+    private fun setDefaultProfileList() {
+        binding.lblShared.alpha = 0.25f
+        binding.lstSharedProfile.alpha = 0.25f
+        binding.tvAllShared.isClickable = false
+        binding.lblPrivate.visibility = View.VISIBLE
+        binding.lblShared.visibility = View.VISIBLE
+        try {
+            sharedAdapter = SharedProfileAdapter(defaultProfiles)
+            binding.lstSharedProfile.adapter = sharedAdapter
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
-
- }
+}

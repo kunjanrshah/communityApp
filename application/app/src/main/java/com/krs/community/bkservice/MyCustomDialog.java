@@ -3,23 +3,17 @@ package com.krs.community.bkservice;
 /**
  * Created by jeet on 24/12/16.
  */
+
 import android.app.Activity;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.CallLog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Window;
 import android.widget.TextView;
 
-
 import com.krs.community.R;
-import com.krs.community.activity.SplashActivity;
 import com.krs.community.adapter.TruecallerAdapter;
 import com.orhanobut.dialogplus.DialogPlus;
-
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 
 public class MyCustomDialog extends Activity
 {
@@ -45,7 +39,7 @@ public class MyCustomDialog extends Activity
                .setAdapter(adapter)
                .setGravity(Gravity.BOTTOM)
                .setCancelable(true)
-               .setExpanded(false, 470)
+                    .setExpanded(true, 470)
                .setContentBackgroundResource(R.drawable.popup_top_corner)
                .create();
 

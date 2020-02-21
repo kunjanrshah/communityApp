@@ -165,15 +165,22 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
                 holder.tvMobile.text = member.mobile*/
 
                 if (member.mobile.isEmpty()){
-                    viewHolder.llMobile.visibility = View.GONE
+                    viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
+                    viewHolder.ivMobile.visibility = View.GONE
+                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
                 }else{
+                    viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
+                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
                 if (member.emailAddress.isEmpty()){
-                    viewHolder.ll_email.visibility = View.GONE
-
+                    viewHolder.ivEmail.visibility = View.GONE
+                    viewHolder.tvEmail.text = getString(R.string.email_not_available)
+                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
                 }else{
+                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
+                    viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
 
@@ -216,7 +223,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
                                     .setAdapter(adapter)
                                     .setGravity(Gravity.BOTTOM)
                                     .setCancelable(true)
-                                    .setExpanded(false, 600)
+                                    .setExpanded(true, 600)
                                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                                     .create()
                             setLocationDialog?.show()
@@ -395,6 +402,8 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
         var iconText: TextView = v.findViewById(R.id.icon_text1)
         var llMobile: LinearLayout = v.findViewById(R.id.ll_mobile)
         var ll_email: LinearLayout = v.findViewById(R.id.ll_email)
+        var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
+        var ivEmail: ImageView = v.findViewById(R.id.iv_email)
     }
 
     override fun getMembers(response: SmartFilterResponse) {

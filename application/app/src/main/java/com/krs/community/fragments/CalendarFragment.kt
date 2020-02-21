@@ -281,20 +281,24 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                     }
                 }
 
-                viewHolder.tvMobile.text = member.mobile
-
                 if (member.mobile.isEmpty()){
-                    viewHolder.llMobile.visibility = View.GONE
+                    viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
+                    viewHolder.ivMobile.visibility = View.GONE
+                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
                 }else{
+                    viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
+                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
                 if (member.emailAddress.isEmpty()){
-                    viewHolder.ll_email.visibility = View.GONE
-
+                    viewHolder.ivEmail.visibility = View.GONE
+                    viewHolder.tvEmail.text = getString(R.string.email_not_available)
+                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
                 }else{
-                    viewHolder.tvEmail.text = member.emailAddress.toLowerCase()
-
+                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
+                    viewHolder.ivEmail.visibility = View.VISIBLE
+                    viewHolder.tvEmail.text = member.emailAddress
                 }
 
                 if(lstCalendar[i].headId == "0"){
@@ -342,7 +346,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                                     .setAdapter(adapter)
                                     .setGravity(Gravity.BOTTOM)
                                     .setCancelable(true)
-                                    .setExpanded(false, 600)
+                                    .setExpanded(true, 600)
                                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                                     .create()
                             setLocationDialog?.show()
@@ -546,7 +550,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         var imgProfile: ImageView = v.findViewById(R.id.icon_profile1)
         var llMobile: LinearLayout = v.findViewById(R.id.ll_mobile)
         var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
-
+        var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
+        var ivEmail: ImageView = v.findViewById(R.id.iv_email)
     }
 
     internal inner class FilterViewHolder(v: View) : RecyclerView.ViewHolder(v) {

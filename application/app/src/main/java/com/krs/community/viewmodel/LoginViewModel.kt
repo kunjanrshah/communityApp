@@ -110,7 +110,7 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                     if (loginuser.isNotEmpty() && loginuser.isNotBlank()) {
                         loginRequest.username = loginuser
                         loginRequest.login_type = "0"
-                        // getLoginUser(loginRequest)
+                        getLoginUser(loginRequest)
                     } else {
                         status.value=false
                         Utility.hideSweetProgress()

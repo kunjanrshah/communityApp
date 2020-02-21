@@ -178,8 +178,10 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
     }
 
     fun setUp(fragmentId: Int, drawerLayout: DrawerLayout?, toolbar: Toolbar) {
+
         containerView = Objects.requireNonNull(activity)?.findViewById(fragmentId)
         mDrawerLayout = drawerLayout
+        mDrawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mDrawerToggle = object : ActionBarDrawerToggle(activity, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)

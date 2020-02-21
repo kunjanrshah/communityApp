@@ -178,8 +178,8 @@
 
                 <ImageView
                     android:id="@+id/iv_gender"
-                    android:layout_width="50dp"
-                    android:layout_height="20dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:background="@color/placeholder_bg" />
             </LinearLayout>
 

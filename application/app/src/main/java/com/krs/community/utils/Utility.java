@@ -110,68 +110,56 @@ import static java.util.Calendar.YEAR;
 
 public class Utility {
 
+    public static final int PICK_GALLERY_REQUEST = 1;
+    public static final int FINE_LOCATION_REQUEST = 2;
+    public static final int EXTERNAL_STORAGE_REQUEST = 3;
+    public static final int CALL_PHONE_REQUEST = 4;
     static final int REQ_CODE_SPEECH_INPUT = 100;
+    private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
     public static String Title = "";
     public static String yyyy_MM_dd = "yyyy-MM-dd";
     public static String ddMMyyyy = "dd.MM.yyyy";
     public static String dd_MM_yyyy = "dd-MM-yyyy";
     public static String yyyy_MM_dd_TIME = "yyyy-MM-dd HH:mm:ss";
     public static String dd_MM_yyyy_TIME = "dd-MM-yyyy h:mm a";
-   /* public static String dd_MMM_yyyy = "dd-MMM-yyyy";
-    public static String ddMMMyyyy = "dd/MM/yyyy";*/
+    /* public static String dd_MMM_yyyy = "dd-MMM-yyyy";
+     public static String ddMMMyyyy = "dd/MM/yyyy";*/
     public static SweetAlertDialog dialog = null;
+    public static long INTERVAL = 5 * 60 * 1000;
+    public static InputFilter filter = (source, start, end, dest, dstart, dend) -> {
+        for (int i = start; i < end; i++) {
+            if (Character.isWhitespace(source.charAt(i))) {
+                return "";
+            }
+        }
+        return null;
+    };
     private static ProgressDialog pDialog;
-    private static final String ALLOWED_CHARACTERS ="0123456789qwertyuiopasdfghjklzxcvbnm";
-    public static long INTERVAL=5*60*1000;
     private static Logger logger = new Logger(Utility.class.getSimpleName());
-
-    public static final int PICK_GALLERY_REQUEST = 1;
-    public static final int FINE_LOCATION_REQUEST = 2;
-    public static final int EXTERNAL_STORAGE_REQUEST = 3;
-    public static final int CALL_PHONE_REQUEST = 4;
-
+    /* public static Bitmap scaleDown(Bitmap realImage, float maxImageSize, boolean filter) {
+         float ratio = Math.min(maxImageSize / realImage.getWidth(), maxImageSize / realImage.getHeight());
+         int width = Math.round(ratio * realImage.getWidth());
+         int height = Math.round(ratio * realImage.getHeight());
+         return Bitmap.createScaledBitmap(realImage, width, height, filter);
+     }*/
+    private static int[] imageResources = new int[]{R.drawable.export_dot, R.drawable.family_tree_dot, R.drawable.whatsapp_dot, R.drawable.qr_code_dot, R.drawable.share_dot, R.drawable.location_dot};
+    private static int[] textResources = new int[]{R.string._export, R.string._qrcode, R.string._share, R.string._location, R.string._whatsapp, R.string._family_tree};
+    private static int imageResourceIndex = 0;
+    private static int textResourceIndex = 0;
 
     public static boolean checkReadExternalStoragePermission(Context mContext) {
-        int permissionState = ActivityCompat.checkSelfPermission(mContext,Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
     public static boolean checkFineLocationPermission(Context mContext) {
-        int permissionState = ActivityCompat.checkSelfPermission(mContext,Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
     public static boolean checkPhoneCallPermission(Context mContext) {
         int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE);
         return permissionState == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public static boolean checkExternalStoragePermission(Context mContext) {
-        int permissionState;
-        int permissionState1 = ActivityCompat.checkSelfPermission(mContext,Manifest.permission.READ_EXTERNAL_STORAGE);
-        int permissionState2 = ActivityCompat.checkSelfPermission(mContext,Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if(permissionState1==0 && permissionState2==0){
-            permissionState=0;
-        }else{
-            permissionState=1;
-        }
-        return permissionState == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public static void requestReadStoragePermission(AppCompatActivity mActivity){
-        ActivityCompat.requestPermissions(mActivity,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},PICK_GALLERY_REQUEST);
-    }
-
-    public static void requestStoragePermission(AppCompatActivity mActivity){
-        ActivityCompat.requestPermissions(mActivity,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},EXTERNAL_STORAGE_REQUEST);
-    }
-
-    public static void requestFineLocationPermission(AppCompatActivity mActivity){
-        ActivityCompat.requestPermissions(mActivity,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},FINE_LOCATION_REQUEST);
-    }
-
-    public static void requestCallPermission(AppCompatActivity mActivity) {
-        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE_REQUEST);
     }
 /*
     public static boolean hasCamera(@NonNull Context mContext) {
@@ -206,24 +194,41 @@ public class Utility {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
     }*/
 
-    public static String getRandomString(final int sizeOfRandomString){
-        final Random random=new Random();
-        final StringBuilder sb=new StringBuilder(sizeOfRandomString);
-        for(int i=0;i<sizeOfRandomString;++i)
+    public static boolean checkExternalStoragePermission(Context mContext) {
+        int permissionState;
+        int permissionState1 = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permissionState2 = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permissionState1 == 0 && permissionState2 == 0) {
+            permissionState = 0;
+        } else {
+            permissionState = 1;
+        }
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static void requestReadStoragePermission(AppCompatActivity mActivity) {
+        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PICK_GALLERY_REQUEST);
+    }
+
+    public static void requestStoragePermission(AppCompatActivity mActivity) {
+        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, EXTERNAL_STORAGE_REQUEST);
+    }
+
+    public static void requestFineLocationPermission(AppCompatActivity mActivity) {
+        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_REQUEST);
+    }
+
+    public static void requestCallPermission(AppCompatActivity mActivity) {
+        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE_REQUEST);
+    }
+
+    public static String getRandomString(final int sizeOfRandomString) {
+        final Random random = new Random();
+        final StringBuilder sb = new StringBuilder(sizeOfRandomString);
+        for (int i = 0; i < sizeOfRandomString; ++i)
             sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
         return sb.toString();
     }
-
-    /* public static Bitmap scaleDown(Bitmap realImage, float maxImageSize, boolean filter) {
-         float ratio = Math.min(maxImageSize / realImage.getWidth(), maxImageSize / realImage.getHeight());
-         int width = Math.round(ratio * realImage.getWidth());
-         int height = Math.round(ratio * realImage.getHeight());
-         return Bitmap.createScaledBitmap(realImage, width, height, filter);
-     }*/
-    private static int[] imageResources = new int[]{R.drawable.export_dot, R.drawable.family_tree_dot, R.drawable.whatsapp_dot, R.drawable.qr_code_dot, R.drawable.share_dot, R.drawable.location_dot};
-    private static int[] textResources = new int[]{R.string._export, R.string._qrcode, R.string._share, R.string._location, R.string._whatsapp, R.string._family_tree};
-    private static int imageResourceIndex = 0;
-    private static int textResourceIndex = 0;
 
     /**
      * This method returns a Json object for handling Force update error
@@ -243,171 +248,159 @@ public class Utility {
         return jsonObject;
     }
 
-    public static void toast(Context context,String message){
-        Toast.makeText(context, ""+message, Toast.LENGTH_SHORT).show();
+    public static void toast(Context context, String message) {
+        Toast.makeText(context, "" + message, Toast.LENGTH_SHORT).show();
     }
 
-    public static void displaySnackBarWithBottomMargin(View main,String message) {
+    public static void displaySnackBarWithBottomMargin(View main, String message) {
         Snackbar snackbar = Snackbar.make(main, message, Snackbar.LENGTH_LONG);
         final FrameLayout snackBarView = (FrameLayout) snackbar.getView();
 
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackBarView   .getLayoutParams();
-        params.setMargins(params.leftMargin+15,
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackBarView.getLayoutParams();
+        params.setMargins(params.leftMargin + 15,
                 params.topMargin,
-                params.rightMargin+15,
+                params.rightMargin + 15,
                 params.bottomMargin + 150);
         snackBarView.setLayoutParams(params);
         snackbar.show();
     }
 
+    public static int calculatePercentage(Member member) {
+        int percentage = 0;
+        int empty = 0;
+        int total = 41;
 
-
-    public static int calculatePercentage(Member member){
-        int percentage=0;
-        int empty=0;
-        int total=41;
-        
-        if(member.getMemberCode()==null || member.getMemberCode().isEmpty() ){
+        if (member.getMemberCode() == null || member.getMemberCode().isEmpty()) {
             empty++;
         }
-        if(member.getRelationId()==null||member.getRelationId().isEmpty()){
+        if (member.getRelationId() == null || member.getRelationId().isEmpty()) {
             empty++;
         }
-        if(member.getMobile()==null||member.getMobile().isEmpty()){
+        if (member.getMobile() == null || member.getMobile().isEmpty()) {
             empty++;
         }
-        if(member.getEmailAddress()==null||member.getEmailAddress().isEmpty()){
+        if (member.getEmailAddress() == null || member.getEmailAddress().isEmpty()) {
             empty++;
         }
 
-        if(member.getFirstName()==null||member.getFirstName().isEmpty()){
+        if (member.getFirstName() == null || member.getFirstName().isEmpty()) {
             empty++;
         }
-        if(member.getFatherName()==null||member.getFatherName().isEmpty()){
+        if (member.getFatherName() == null || member.getFatherName().isEmpty()) {
             empty++;
         }
-        if(member.getMotherName()==null||member.getMotherName().isEmpty()){
+        if (member.getMotherName() == null || member.getMotherName().isEmpty()) {
             empty++;
         }
-        if(member.getSubCastId()==null||member.getSubCastId().isEmpty()){
+        if (member.getSubCastId() == null || member.getSubCastId().isEmpty()) {
             empty++;
         }
-        if(member.getGender()==null||member.getGender().isEmpty()){
+        if (member.getGender() == null || member.getGender().isEmpty()) {
             empty++;
         }
-        if(member.getAddress()==null||member.getAddress().isEmpty()){
+        if (member.getAddress() == null || member.getAddress().isEmpty()) {
             empty++;
         }
-        if(member.getLocalAddress()==null||member.getLocalAddress().isEmpty()){
+        if (member.getLocalAddress() == null || member.getLocalAddress().isEmpty()) {
             empty++;
         }
-        if(member.getCityId()==null||member.getCityId().isEmpty()){
+        if (member.getCityId() == null || member.getCityId().isEmpty()) {
             empty++;
         }
 
-        if(member.getStateId()==null||member.getStateId().isEmpty()){
+        if (member.getStateId() == null || member.getStateId().isEmpty()) {
             empty++;
         }
-        if(member.getArea()==null||member.getArea().isEmpty()){
+        if (member.getArea() == null || member.getArea().isEmpty()) {
             empty++;
         }
-        if(member.getPincode()==null||member.getPincode().isEmpty()){
+        if (member.getPincode() == null || member.getPincode().isEmpty()) {
             empty++;
         }
        /* if(member.getPhone()==null||member.getPhone().isEmpty()){
             empty++;
         }*/
-        if(member.getBirthDate()==null||member.getBirthDate().isEmpty()){
+        if (member.getBirthDate() == null || member.getBirthDate().isEmpty()) {
             empty++;
         }
-        if(member.getBirthTime()==null||member.getBirthTime().isEmpty()){
+        if (member.getBirthTime() == null || member.getBirthTime().isEmpty()) {
             empty++;
         }
-        if(member.getBirthPlace()==null||member.getBirthPlace().isEmpty()){
+        if (member.getBirthPlace() == null || member.getBirthPlace().isEmpty()) {
             empty++;
         }
-        if(member.getNativePlaceId()==null||member.getNativePlaceId().isEmpty()){
+        if (member.getNativePlaceId() == null || member.getNativePlaceId().isEmpty()) {
             empty++;
         }
-        if(member.getBloodGroup()==null||member.getBloodGroup().isEmpty()){
+        if (member.getBloodGroup() == null || member.getBloodGroup().isEmpty()) {
             empty++;
         }
-        if(member.getAboutMe()==null||member.getAboutMe().isEmpty()){
+        if (member.getAboutMe() == null || member.getAboutMe().isEmpty()) {
             empty++;
         }
-        if(member.getWeight()==null||member.getWeight().isEmpty()){
+        if (member.getWeight() == null || member.getWeight().isEmpty()) {
             empty++;
         }
-        if(member.getHeight()==null||member.getHeight().isEmpty()){
+        if (member.getHeight() == null || member.getHeight().isEmpty()) {
             empty++;
         }
-        if(member.getHobby()==null||member.getHobby().isEmpty()){
+        if (member.getHobby() == null || member.getHobby().isEmpty()) {
             empty++;
         }
-        if(member.getFacebookProfile()==null||member.getFacebookProfile().isEmpty()){
+        if (member.getFacebookProfile() == null || member.getFacebookProfile().isEmpty()) {
             empty++;
         }
-        if(member.getCurrentActivityId()==null||member.getCurrentActivityId().isEmpty()){
+        if (member.getCurrentActivityId() == null || member.getCurrentActivityId().isEmpty()) {
             empty++;
         }
-        if(member.getMaritalStatus()==null||member.getMaritalStatus().isEmpty()){
+        if (member.getMaritalStatus() == null || member.getMaritalStatus().isEmpty()) {
             empty++;
         }
-        if(member.getMarriageDate()==null||member.getMarriageDate().isEmpty()){
+        if (member.getMarriageDate() == null || member.getMarriageDate().isEmpty()) {
             empty++;
         }
-        if(member.getGotraId()==null||member.getGotraId().isEmpty()){
+        if (member.getGotraId() == null || member.getGotraId().isEmpty()) {
             empty++;
         }
-        if(member.getBusinessCategoryId()==null||member.getBusinessCategoryId().isEmpty()){
+        if (member.getBusinessCategoryId() == null || member.getBusinessCategoryId().isEmpty()) {
             empty++;
         }
-        if(member.getBusinessSubCategoryId()==null||member.getBusinessSubCategoryId().isEmpty()){
+        if (member.getBusinessSubCategoryId() == null || member.getBusinessSubCategoryId().isEmpty()) {
             empty++;
         }
-        if(member.getWorkDetails()==null||member.getWorkDetails().isEmpty()){
+        if (member.getWorkDetails() == null || member.getWorkDetails().isEmpty()) {
             empty++;
         }
-        if(member.getCompanyName()==null||member.getCompanyName().isEmpty()){
+        if (member.getCompanyName() == null || member.getCompanyName().isEmpty()) {
             empty++;
         }
-        if(member.getBusinessAddress()==null||member.getBusinessAddress().isEmpty()){
+        if (member.getBusinessAddress() == null || member.getBusinessAddress().isEmpty()) {
             empty++;
         }
-        if(member.getProfilePic()==null||member.getProfilePic().isEmpty()){
+        if (member.getProfilePic() == null || member.getProfilePic().isEmpty()) {
             empty++;
         }
-        if(member.getBusinessLogo()==null||member.getBusinessLogo().isEmpty()){
+        if (member.getBusinessLogo() == null || member.getBusinessLogo().isEmpty()) {
             empty++;
         }
-        if(member.getWebsite()==null||member.getWebsite().isEmpty()){
+        if (member.getWebsite() == null || member.getWebsite().isEmpty()) {
             empty++;
         }
-        if(member.getEducationId()==null||member.getEducationId().isEmpty()){
+        if (member.getEducationId() == null || member.getEducationId().isEmpty()) {
             empty++;
         }
-        if(member.getOccupationId()==null||member.getOccupationId().isEmpty()){
+        if (member.getOccupationId() == null || member.getOccupationId().isEmpty()) {
             empty++;
         }
-        if(member.getHomeLat()==null||member.getHomeLat().isEmpty()){
+        if (member.getHomeLat() == null || member.getHomeLat().isEmpty()) {
             empty++;
         }
-        if(member.getHomeLng()==null||member.getHomeLng().isEmpty()){
+        if (member.getHomeLng() == null || member.getHomeLng().isEmpty()) {
             empty++;
         }
-        percentage=(100*empty)/total;
-       return (100-percentage);
+        percentage = (100 * empty) / total;
+        return (100 - percentage);
     }
-
-    public static InputFilter filter = (source, start, end, dest, dstart, dend) -> {
-        for (int i = start; i < end; i++) {
-            if (Character.isWhitespace(source.charAt(i))) {
-                return "";
-            }
-        }
-        return null;
-    };
-
 
     /**
      * This method returns a Json object for handling Force update error
@@ -432,16 +425,16 @@ public class Utility {
 
     }
 
-    public static String changeDateFormat(String inputDateStr,String input,String output){
-        String outputDateStr=inputDateStr;
-        try{
+    public static String changeDateFormat(String inputDateStr, String input, String output) {
+        String outputDateStr = inputDateStr;
+        try {
             SimpleDateFormat inputFormat = new SimpleDateFormat(input);
             SimpleDateFormat outputFormat = new SimpleDateFormat(output);
-            if(!inputDateStr.isEmpty()){
+            if (!inputDateStr.isEmpty()) {
                 Date date = inputFormat.parse(inputDateStr);
                 outputDateStr = outputFormat.format(date);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return outputDateStr;
@@ -727,10 +720,10 @@ public class Utility {
         return true;
     }
 
-    public static void backNavigation(Activity activity){
+    public static void backNavigation(Activity activity) {
         FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
         Log.d("backNavigation", "count: " + fragmentManager.getBackStackEntryCount());
-        if (fragmentManager.getBackStackEntryCount() > 1) {
+        if (fragmentManager.getBackStackEntryCount() > 0) {
             Fragment dashboard = fragmentManager.findFragmentByTag(DashboardFragment.class.getSimpleName());
             Fragment calendar = fragmentManager.findFragmentByTag(CalendarFragment.class.getSimpleName());
             if (dashboard != null && dashboard.isVisible()) {
@@ -754,18 +747,24 @@ public class Utility {
     }
 
     public static void movetoFragment(Activity activity, Fragment fragment) {
-        FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
-        Fragment oldFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
-        if (oldFragment != null) {
-            fragmentManager.beginTransaction().remove(oldFragment).commit();
+
+        if (!fragment.isVisible()) {
+            FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
+            if (fragment.getClass().getSimpleName().equals(DashboardFragment.class.getSimpleName())) {
+                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+            Fragment oldFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+            fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getSimpleName());
+            if (oldFragment != null) {
+                fragmentTransaction.remove(oldFragment);
+            } else {
+                fragmentTransaction.addToBackStack(null);
+            }
+            fragmentTransaction.commit();
+            fade(activity);
         }
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-        fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getSimpleName()).commit();
-        if (oldFragment == null) {
-            fragmentTransaction.addToBackStack(null);
-        }
-        fade(activity);
     }
 
 
@@ -978,7 +977,7 @@ public class Utility {
 
     }
 
-    public static List<Address> getAddress(Context context,double latitude,double longitude){
+    public static List<Address> getAddress(Context context, double latitude, double longitude) {
         Geocoder geocoder;
         List<Address> addresses = null;
         geocoder = new Geocoder(context, Locale.getDefault());
@@ -1023,7 +1022,7 @@ public class Utility {
 
     public static void showDirections(Activity mActivity, double dlatitude, double dlongitude, String address) {
 
-        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", dlatitude, dlongitude,address);
+        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", dlatitude, dlongitude, address);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         mActivity.startActivity(intent);
@@ -1244,8 +1243,6 @@ public class Utility {
     }
 
 
-
-
     public static void promptSpeechInput(Activity mActivity) {
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -1269,7 +1266,7 @@ public class Utility {
     }
 
 
-    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap,int roundPixelSize) {
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int roundPixelSize) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
         final Paint paint = new Paint();
@@ -1277,7 +1274,7 @@ public class Utility {
         final RectF rectF = new RectF(rect);
         final float roundPx = roundPixelSize;
         paint.setAntiAlias(true);
-        canvas.drawRoundRect(rectF,roundPx,roundPx, paint);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap, rect, rect, paint);
         return output;
@@ -1339,7 +1336,7 @@ public class Utility {
         }).show();
     }*/
 
-    public static String DatetoString(Date date,String pattern) {
+    public static String DatetoString(Date date, String pattern) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         try {
             String dateTime = dateFormat.format(date);
@@ -1351,7 +1348,7 @@ public class Utility {
         return "";
     }
 
-    public static Date StringToDate(String dtStart,String pattern) {
+    public static Date StringToDate(String dtStart, String pattern) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat(pattern);
         try {
             return format.parse(dtStart);
@@ -1384,9 +1381,8 @@ public class Utility {
     public static void getDeviceId(Context mContext) {
         @SuppressLint("HardwareIds") String m_androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         AppConstants.DEVICE_ID_VALUE = m_androidId;
-        Log.d("DEVICE_ID","m_androidId: "+m_androidId);
+        Log.d("DEVICE_ID", "m_androidId: " + m_androidId);
     }
-
 
 
     public static int getDiffYears(Date first, Date last) {
@@ -1406,7 +1402,7 @@ public class Utility {
         return cal;
     }
 
-    public static int getAge(String dobString,String pattern){
+    public static int getAge(String dobString, String pattern) {
 
         Date date = null;
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
@@ -1415,7 +1411,7 @@ public class Utility {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(date == null) return 0;
+        if (date == null) return 0;
 
         Calendar dob = Calendar.getInstance();
         Calendar today = Calendar.getInstance();
@@ -1426,17 +1422,16 @@ public class Utility {
         int month = dob.get(MONTH);
         int day = dob.get(Calendar.DAY_OF_MONTH);
 
-        dob.set(year, month+1, day);
+        dob.set(year, month + 1, day);
 
         int age = today.get(YEAR) - dob.get(YEAR);
 
-        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
             age--;
         }
 
 
-
-        return (age+1);
+        return (age + 1);
     }
 
 
@@ -1471,7 +1466,7 @@ public class Utility {
         }
     }
 
-      public static void hideProgressDialog() {
+    public static void hideProgressDialog() {
         try {
             if (pDialog != null && pDialog.isShowing()) pDialog.cancel();
             pDialog = null;
@@ -1483,7 +1478,7 @@ public class Utility {
     public static void startSweetProgress(Context context, String title, String message) {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
-            dialog=null;
+            dialog = null;
         }
         dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE).setContentText(message);
         dialog.setTitleText(title);
@@ -1491,10 +1486,10 @@ public class Utility {
         dialog.show();
     }
 
-    public static void startSweetDialog(Context context,int type, String title, String message) {
+    public static void startSweetDialog(Context context, int type, String title, String message) {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
-            dialog=null;
+            dialog = null;
         }
         dialog = new SweetAlertDialog(context, type).setContentText(message);
         dialog.setTitleText(title);
@@ -1511,19 +1506,18 @@ public class Utility {
         }
     }
 
-    public static boolean isEmailValid(String email)
-    {
+    public static boolean isEmailValid(String email) {
         String regExpn =
                 "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
-                        +"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
-                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
-                        +"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
-                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
-                        +"([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
+                        + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+                        + "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+                        + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
 
         CharSequence inputStr = email;
 
-        Pattern pattern = Pattern.compile(regExpn,Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile(regExpn, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(inputStr);
 
         return matcher.matches();
@@ -1631,7 +1625,7 @@ public class Utility {
         int y = (bitmap.getHeight() + bounds.height()) - 40;
 
         canvas.drawText(gText, x, y, paint);
-        canvas.drawText("Community App", x+50, 25, paint);
+        canvas.drawText("Community App", x + 50, 25, paint);
         return bitmap;
     }
 
@@ -1652,17 +1646,17 @@ public class Utility {
     }
 
     public static void sendWhatsappMessage(@NonNull Context mActivity, String mob_num, String message) {
-       // String digits = "\\d+";
+        // String digits = "\\d+";
         //if (mob_num.matches(digits)) {
-            try {
-                //linking for whatsapp
-                Uri uri = Uri.parse("whatsapp://send?phone=+91" + mob_num + "&text=" + URLEncoder.encode(message, "UTF-8"));
-                Intent i = new Intent(Intent.ACTION_VIEW, uri);
-                mActivity.startActivity(i);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(mActivity, "WhatsApp not installed.", Toast.LENGTH_SHORT).show();
-            }
+        try {
+            //linking for whatsapp
+            Uri uri = Uri.parse("whatsapp://send?phone=+91" + mob_num + "&text=" + URLEncoder.encode(message, "UTF-8"));
+            Intent i = new Intent(Intent.ACTION_VIEW, uri);
+            mActivity.startActivity(i);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(mActivity, "WhatsApp not installed.", Toast.LENGTH_SHORT).show();
+        }
         //}
     }
 
@@ -1817,15 +1811,15 @@ public class Utility {
         return verCode;
     }
 
-    public static String getHashKey(Context context){
-        String hashKey="";
+    public static String getHashKey(Context context) {
+        String hashKey = "";
         try {
-            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(),PackageManager.GET_SIGNATURES);
+            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
                 Log.v("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-                hashKey=Base64.encodeToString(md.digest(), Base64.DEFAULT);
+                hashKey = Base64.encodeToString(md.digest(), Base64.DEFAULT);
             }
         } catch (PackageManager.NameNotFoundException e) {
 
