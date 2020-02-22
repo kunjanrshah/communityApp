@@ -84,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:singleLine="true"
-                    android:hint="Select"
+                    android:hint="@string/select"
                     android:layout_marginLeft="10dp"
                     android:background="@null"
                     android:imeOptions="actionNext"
@@ -93,7 +93,7 @@
                     app:backgroundTint="@color/colorPrimary"
                     app:jrs_icon_tint="@color/colorPrimary"
                     app:jrs_multiple="false"
-                    app:jrs_title="Select your Surname"
+                    app:jrs_title="@string/selectsurname"
                     android:fontFamily="@font/montserrat_regular"  />
             </RelativeLayout>
 
@@ -224,9 +224,9 @@
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
             android:background="@drawable/round_corner_white"
-            android:textColor="@color/black1"
             android:gravity="center"
             android:fontFamily="@font/montserrat_semibold"
+            android:textColor="@color/black1"
             android:text="@string/male" />
 
         <Button
@@ -235,8 +235,8 @@
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
             android:fontFamily="@font/montserrat_semibold"
-            android:background="@drawable/round_corner_white"
-            android:textColor="@color/black1"
+            android:background="@drawable/round_corner_primary"
+            android:textColor="@color/white"
             android:gravity="center"
             android:text="@string/female" />
 
@@ -287,7 +287,7 @@
                     app:backgroundTint="@color/colorPrimary"
                     app:jrs_icon_tint="@color/colorPrimary"
                     app:jrs_multiple="false"
-                    app:jrs_title="Select City"
+                    app:jrs_title="@string/select_city"
                     android:fontFamily="@font/montserrat_regular"  />
             </RelativeLayout>
 
@@ -333,7 +333,7 @@
                     app:backgroundTint="@color/colorPrimary"
                     app:jrs_icon_tint="@color/colorPrimary"
                     app:jrs_multiple="false"
-                    app:jrs_title="Select Status"
+                    app:jrs_title="@string/selectstatus"
                     android:fontFamily="@font/montserrat_regular"  />
             </RelativeLayout>
 

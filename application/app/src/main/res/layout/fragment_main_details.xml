@@ -178,7 +178,7 @@
                             app:backgroundTint="@color/colorPrimary"
                             app:jrs_icon_tint="@color/colorPrimary"
                             app:jrs_multiple="false"
-                            app:jrs_title="Select LastName"
+                            app:jrs_title="@string/SelctLatname"
                             android:fontFamily="@font/montserrat_regular"  />
                     </RelativeLayout>
 
@@ -311,7 +311,7 @@
                             app:backgroundTint="@color/colorPrimary"
                             app:jrs_icon_tint="@color/colorPrimary"
                             app:jrs_multiple="false"
-                            app:jrs_title="Select Gender"
+                            app:jrs_title="@string/selecgender"
                             android:fontFamily="@font/montserrat_regular"  />
                     </RelativeLayout>
 
@@ -380,7 +380,7 @@
                             app:backgroundTint="@color/colorPrimary"
                             app:jrs_icon_tint="@color/colorPrimary"
                             app:jrs_multiple="false"
-                            app:jrs_title="Select State"
+                            app:jrs_title="@string/satetList"
                             android:fontFamily="@font/montserrat_regular"  />
                     </RelativeLayout>
 
@@ -419,7 +419,7 @@
                             app:backgroundTint="@color/colorPrimary"
                             app:jrs_icon_tint="@color/colorPrimary"
                             app:jrs_multiple="false"
-                            app:jrs_title="Select City"
+                            app:jrs_title="@string/cityList"
                             android:fontFamily="@font/montserrat_regular"  />
                     </RelativeLayout>
 

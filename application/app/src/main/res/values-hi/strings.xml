@@ -99,8 +99,42 @@
         <item>यात्रा</item>
     </string-array>
 
-    <!-- Login Sccren -->
+    <string name="text_inside_circle_button_text_normal">सर्किल बटन के अंदर पाठ (सामान्य)</string>
+
+    <string name="_export">निर्यात</string>
+    <string name="_qrcode">क्यूआर कोड</string>
+    <string name="_share">शेयर</string>
+    <string name="_location">स्थान</string>
+    <string name="_whatsapp">WhatsApp</string>
+    <string name="_family_tree">वंश वृक्ष</string>
+    <string name="register_new_family">एक नया परिवार पंजीकृत करें।</string>
+    <string name="click_on_register">सबसे महत्वपूर्ण परिवार प्रमुखों से भरा एक नया परिवार बनाने के लिए रजिस्टर बटन पर क्लिक करें।</string>
+    <string name="upload_photo">अपना प्रोफ़ाइल फ़ोटो अपलोड करें</string>
+    <string name="select_photo">मोबाइल गैलरी से अपनी पसंदीदा फोटो का चयन करें और अपने पसंदीदा प्रभाव को सहेजें और सहेजें।</string>
+    <string name="headanimation">हेडएनीमेशन</string>
+    <string name="enter_firstname">कृपया अपना प्रथम नाम प्रविष्ट करें</string>
+    <string name="enter_lastname">कृपया अपना अंतिम नाम दर्ज करें</string>
+    <string name="enter_email">अपना ईमेल दर्ज करें</string>
+    <string name="enter_gender">कृपया लिंग चुनें</string>
+    <string name="enter_mobile">कृपया अपना मोबाइल दर्ज करें</string>
+    <string name="select_country_code">कृपया अपना देश चुनें</string>
+    <string name="enter_password">कृपया अपना पिन दर्ज करें</string>
+    <string name="confirm_password">कृपया पिन की पुष्टि करने के लिए दर्ज करें</string>
+    <string name="password_mismatch">पिन बेमेल है</string>
+    <string name="enter_home_address">कृपया अपना घर का पता दर्ज करें</string>
+    <string name="select_city">कृपया राज्य चुनें</string>
+    <string name="select_state">कृपया राज्य चुनें</string>
+    <string name="select_sub_comm">कृपया उप समुदाय का चयन करें</string>
+    <string name="select_local">कृपया स्थानीय समुदाय का चयन करें</string>
+    <string name="make_strong_pass">6 से अधिक वर्णों का पिन बनाएं</string>
     <string name="_continue">जारी रखें</string>
+    <string name="hash_key">हैश कुंजी</string>
+    <string name="otp_send">अपने नंबर पर मैसेजिंग ओटीपी कोड!</string>
+    <string name="seat_back_relax">सीट वापस &amp;  आराम करें!</string>
+    <string name="fetching_states">राज्यों का निर्माण</string>
+    <string name="you_sure" >क्या आपको यकीन है?</string>
+
+    <!-- Login Sccren -->
 
     <string name="welcome">स्वागत हे !</string>
     <string name="_10_digit_number">10 अंकों की संख्या</string>
@@ -447,7 +481,7 @@
     <!-- Fragment Drawer Fragment -->
     <string name="Version">संस्करण</string>
     <string name="vastipatrak">वास्तिपत्रक</string>
-    <string name="settings">समायोजन</string>
+
 
     <string name="logout">लॉग आउट</string>
     <string name="version_1_2">संस्करण1.2</string>
@@ -722,5 +756,63 @@
     <string name="DurationCommitee">अवधि</string>
     <string name="CommiteeName">समिति का नाम</string>
     <string name="DesignCommi">पद</string>
+
+    // 22-02-2020
+    <string name="no_internet">कोई इंटरनेट कनेक्शन नहीं!</string>
+
+    <string name="check_network">अपने इंटरनेट कनेक्शन की जाँच करें और पुन: प्रयास करें</string>
+    <string name="retry">पुन: प्रयास करें</string>
+    <string name="fetching_local_community">लोकल कम्युनिटी ला रहा है</string>
+    <string name="coming_soon">जल्द आ रहा है</string>
+    <string name="contact_number">+919427051418</string>
+    <string name="mobile_not_available">मोबाइल उपलब्ध नहीं है</string>
+    <string name="email_not_available">ईमेल उपलब्ध नहीं है</string>
+    <string name="settings">समायोजन</string>
+    <string name="storagePermission">भंडारण की अनुमति पढ़ें</string>
+    <string name="gallrypermission">गैलरी से छवि चुनने के लिए अनुमति आवश्यक है</string>
+
+
+    <string name="SelctLatname">अंतिम नाम का चयन करें</string>
+    <string name="selecgender">लिंग चुनें</string>
+    <string name="satetList">राज्य सूची</string>
+    <string name="cityList">शहर की सूची</string>
+    <string name="sCommunity">उप समुदाय</string>
+    <string name="localCom">स्थानीय समुदाय</string>
+    <string name="OtpVerification">ओटीपी सत्यापन</string>
+    <string name="enterOtp">आपके द्वारा प्राप्त ओटीपी दर्ज करें</string>
+    <string name="ResendOtp">ओटीपी पुनः भेजें?</string>
+    <string name="fmilyList">परिवार के सदस्य सूची</string>
+    <string name="sdetails">\'विवरण</string>
+    <string name="exitDetails">बाहर जाएं </string>
+    <string name="EnterDetails">दर्ज</string>
+    <string name="Communityapp">सामुदायिक अनुप्रयोग</string>
+    <string name="LogoutComApp">लॉगआउट सामुदायिक अनुप्रयोग</string>
+    <string name="wontbeRecover">जीते गए इस प्रोफ़ाइल को पुनर्प्राप्त करने में सक्षम हो!</string>
+    <string name="yesdelete">हाँ, इसे हटा दें!</string>
+
+    <string name="nav_item_home">घर</string>
+    <string name="nav_item_filter">फिल्टर</string>
+    <string name="nav_item_statistic">आंकड़े</string>
+    <string name="nav_item_committee">समिति</string>
+
+    <string name="ScanQrCode">क्यू आर कोड स्कैन करें</string>
+
+    <string name="selctNative">देशी का चयन करें</string>
+    <string name="selectGotra">गोत्र का चयन करें</string>
+    <string name="selectBlood">रक्त समूह का चयन करें</string>
+    <string name="selectEduction">शिक्षा का चयन करें</string>
+    <string name="selectCurrentActivity">वर्तमान गतिविधि का चयन करें</string>
+    <string name="selectMarial">वैवाहिक स्थिति का चयन करें</string>
+    <string name="selectworkcategory">कार्य श्रेणी का चयन करें</string>
+    <string name="selectworksub">कार्य उप श्रेणी का चयन करें</string>
+    <string name="selectOccupation">व्यवसाय का चयन करें</string>
+    <string name="hobbypro">शौक</string>
+    <string name="expectationpro">उम्मीद</string>
+    <string name="weightpro">वजन</string>
+    <string name="heightpro">ऊंचाई</string>
+    <string name="search_name">खोज नाम</string>
+    <string name="recordfound">रिकॉर्ड मिले: </string>
+    <string name="selectstatus">स्थिति का चयन करें</string>
+    <string name="selectsurname">अपना उपनाम चुनें</string>
 
 </resources>

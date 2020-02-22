@@ -410,7 +410,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemb
         binding.shimmerViewContainer.stopShimmerAnimation()
         binding.shimmerViewContainer.visibility=View.GONE
         if(response.success){
-            tvRecords.text = "Records found: " + response.totalRecords
+            tvRecords.text = getString(R.string.recordfound) + response.totalRecords
             tvRecords.visibility = View.VISIBLE
             ivExport.visibility = View.VISIBLE
 

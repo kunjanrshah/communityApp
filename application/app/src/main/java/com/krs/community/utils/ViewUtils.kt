@@ -184,11 +184,11 @@ fun pickFromGallery(context: FragmentActivity) {
 fun promptReadPermission(context: Context) {
 
         SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                .setTitleText("Storage Read Permission")
-                .setContentText("Permission is needed to pick image from gallery")
-                .setConfirmText("Yes, please!")
-                .setCancelText("No!")
-                .setCustomImage(R.drawable.ic_app)
+                .setTitleText(context.getString(R.string.storagePermission))
+                .setContentText(context.getString(R.string.gallrypermission))
+                .setConfirmText(context.getString(R.string.YesPleaseCity))
+                .setCancelText(context.getString(R.string.no))
+                .setCustomImage(R.drawable.icon_app)
                 .showCancelButton(true)
                 .setConfirmClickListener { sDialog ->
                     sDialog.dismiss()

@@ -151,6 +151,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun createCardAdapter() {
         var family:MutableList<Member>?=null
         if(members.size>0){
@@ -246,10 +247,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
                                 TTFancyGifDialog.Builder(this@FamilyDetailActivity)
                                         .setTitle(getString(R.string.you_sure))
-                                        .setMessage(textMsg + "the Community App")
-                                        .setPositiveBtnText("Yes")
+                                        .setMessage(textMsg + getString(R.string.Communityapp))
+                                        .setPositiveBtnText( getString(R.string.yes))
                                         .setPositiveBtnBackground("#22b573")
-                                        .setNegativeBtnText("No")
+                                        .setNegativeBtnText(getString(R.string.no))
                                         .setNegativeBtnBackground("#c1272d")
                                         .setGifResource(gif)
                                         .isCancellable(true)
@@ -265,7 +266,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                 true
 
                             }else{
-                                llRoot.snackbar("PIN not found!",Snackbar.LENGTH_LONG)
+                                llRoot.snackbar(getString(R.string.pinFoundDetail),Snackbar.LENGTH_LONG)
                             }
                         }
                     }
@@ -275,10 +276,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
                             TTFancyGifDialog.Builder(this@FamilyDetailActivity)
                                     .setTitle(getString(R.string.you_sure))
-                                    .setMessage("Won't be able to recover this Profile!")
-                                    .setPositiveBtnText("Yes,delete it!")
+                                    .setMessage(getString(R.string.wontbeRecover))
+                                    .setPositiveBtnText(getString(R.string.yesdelete))
                                     .setPositiveBtnBackground("#22b573")
-                                    .setNegativeBtnText("No")
+                                    .setNegativeBtnText(getString(R.string.no))
                                     .setNegativeBtnBackground("#c1272d")
                                     .setGifResource(R.drawable.gif2)
                                     .isCancellable(true)
@@ -302,7 +303,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                 createMemberPDF(this@FamilyDetailActivity, member, profileDetailViewModel)
 
                                 Handler().post(Runnable {
-                                    startSweetProgress(this@FamilyDetailActivity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                                    startSweetProgress(this@FamilyDetailActivity, getString(R.string._export) +"${member.firstName}"+getString(R.string.sdetails), getString(R.string.please_wait))
                                 })
                                 Handler().postDelayed({
                                     hideSweetProgress()
@@ -379,10 +380,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         login.setOnClickListener {
             TTFancyGifDialog.Builder(this)
                     .setTitle(getString(R.string.you_sure))
-                    .setMessage("Logout the Community App")
-                    .setPositiveBtnText("Yes")
+                    .setMessage(getString(R.string.LogoutComApp))
+                    .setPositiveBtnText(getString(R.string.yes))
                     .setPositiveBtnBackground("#22b573")
-                    .setNegativeBtnText("No")
+                    .setNegativeBtnText(getString(R.string.no))
                     .setNegativeBtnBackground("#c1272d")
                     .setGifResource(R.drawable.gif2)
                     .isCancellable(true)
@@ -460,7 +461,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
 
         val tvLabel: TextView = header.findViewById(R.id.tv_label)
-        tvLabel.text="Family Member List (${members.size})"
+        tvLabel.text=getString(R.string.fmilyList)+" (${members.size})"
 
         header.bmb.clearBuilders()
         for (i in 0 until header.bmb.piecePlaceEnum.pieceNumber()) {
@@ -469,7 +470,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                 if (it == 0) {
                     createMemberPDF(this@FamilyDetailActivity, member, profileDetailViewModel)
                     Handler().post {
-                        startSweetProgress(this@FamilyDetailActivity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                        startSweetProgress(this@FamilyDetailActivity,  getString(R.string._export)+"${member.firstName}"+getString(R.string.sdetails), getString(R.string.please_wait))
                     }
                     Handler().postDelayed({
                         hideSweetProgress()
@@ -522,24 +523,24 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             }else{
                 if(!member.profilePassword.isNullOrEmpty()){
                     if(memberId==member.id){
-                        textMsg = "Exit "
+                        textMsg = getString(R.string.exitDetails)
                     }else if(member.loginStatus==1 && member.onlineStatus==0){
-                        textMsg = "Exit "
+                        textMsg = getString(R.string.exitDetails)
                     }else if(member.loginStatus==0){
-                        textMsg = "Enter "
+                        textMsg = getString(R.string.EnterDetails)
                     }else if(member.onlineStatus==1){
-                        textMsg = "Exit "
+                        textMsg = getString(R.string.exitDetails)
                     }
                     var gif: Int = R.drawable.gif5
-                    if (textMsg!!.contains("Exit")) {
+                    if (textMsg!!.contains(getString(R.string.exitDetails))) {
                         gif = R.drawable.gif10
                     }
                     TTFancyGifDialog.Builder(this)
                             .setTitle(getString(R.string.you_sure))
-                            .setMessage(textMsg + "the Community App")
-                            .setPositiveBtnText("Yes")
+                            .setMessage(textMsg + getString(R.string.Communityapp))
+                            .setPositiveBtnText(getString(R.string.yes))
                             .setPositiveBtnBackground("#22b573")
-                            .setNegativeBtnText("No")
+                            .setNegativeBtnText(getString(R.string.no))
                             .setNegativeBtnBackground("#c1272d")
                             .setGifResource(gif)
                             .isCancellable(true)
@@ -553,7 +554,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                             .build()
                     true
                 }else{
-                    llRoot.snackbar("PIN not found!",Snackbar.LENGTH_LONG)
+                    llRoot.snackbar(getString(R.string.pinFoundDetail),Snackbar.LENGTH_LONG)
                 }
             }
         }

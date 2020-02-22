@@ -8,10 +8,10 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
-    <string name="nav_item_home" translatable="false">Home</string>
-    <string name="nav_item_filter" translatable="false">Filters</string>
-    <string name="nav_item_statistic" translatable="false">Statistics</string>
-    <string name="nav_item_committee" translatable="false">Committee</string>
+    <string name="nav_item_home">Home</string>
+    <string name="nav_item_filter">Filters</string>
+    <string name="nav_item_statistic">Statistics</string>
+    <string name="nav_item_committee">Committee</string>
 
 
     <string name="label_add_fact" translatable="false">Add Fact</string>
@@ -305,7 +305,7 @@
     <string name="upload_photo">તમારો પ્રોફાઈલ ફોટો અપલોડ કરો.</string>
     <string name="select_photo">મોબાઈલ ગેલેરી માંથી તમારો મનપસંદ ફોટો સિલેક્ટ કરો અને મનપસંદ ઈફેક્ટ આપી ને સેવ કરો.</string>
     <string name="headanimation">headanimation</string>
-    <string name="enter_firstname">Please enter your FirstName</string>
+    <string name="enter_firstname">Please enter your First Name</string>
     <string name="enter_lastname">Please enter your LastName</string>
     <string name="enter_email">Please enter your Email</string>
     <string name="enter_gender">Please select gender</string>
@@ -315,7 +315,7 @@
     <string name="confirm_password">Please enter to confirm PIN</string>
     <string name="password_mismatch">PIN is mismatch</string>
     <string name="enter_home_address">Please enter your home address</string>
-    <string name="select_city">Please select state</string>
+    <string name="select_city">Please select City</string>
     <string name="select_state">Please select state</string>
     <string name="select_sub_comm">Please select Sub Community</string>
     <string name="select_local">Please select Local Community</string>
@@ -1103,6 +1103,8 @@
     <string name="CommiteeName">Committee name</string>
     <string name="DesignCommi">Designation</string>
 
+
+    // 22-02-2020
     <string name="no_internet">No internet connection!</string>
 
     <string name="check_network">Please check your internet connection and try again</string>
@@ -1113,4 +1115,44 @@
     <string name="mobile_not_available">Mobile not available</string>
     <string name="email_not_available">Email not available</string>
     <string name="settings">Settings</string>
+    <string name="storagePermission">Storage Read Permission</string>
+    <string name="gallrypermission">Permission is needed to pick image from gallery</string>
+
+
+    <string name="SelctLatname">Select Last Name</string>
+    <string name="selecgender">Select Gender</string>
+    <string name="satetList">State List</string>
+    <string name="cityList">City List</string>
+    <string name="sCommunity">Sub Community</string>
+    <string name="localCom">Local Community</string>
+    <string name="OtpVerification">OTP Verification</string>
+    <string name="enterOtp">Enter the OTP you have received to</string>
+    <string name="ResendOtp">Resend OTP?</string>
+    <string name="fmilyList">Family Member List</string>
+    <string name="sdetails">\'s Details</string>
+    <string name="exitDetails">Exit </string>
+    <string name="EnterDetails">Enter</string>
+    <string name="Communityapp">the Community App</string>
+    <string name="LogoutComApp">Logout the Community App</string>
+    <string name="wontbeRecover">Won\'t be able to recover this Profile!</string>
+    <string name="yesdelete">Yes,delete it!</string>
+
+    <string name="selctNative">Select Native</string>
+    <string name="selectGotra">Select Gotra</string>
+    <string name="selectBlood">Select Blood Group</string>
+    <string name="selectEduction">Select Education</string>
+    <string name="selectCurrentActivity">Select Current Activity</string>
+    <string name="selectMarial">Select Marial status</string>
+    <string name="selectworkcategory">Select Work Category</string>
+    <string name="selectworksub">Select Work Sub Category</string>
+    <string name="selectOccupation">Select Occupation</string>
+    <string name="hobbypro">hobby</string>
+    <string name="expectationpro">expectation</string>
+    <string name="weightpro">weight</string>
+    <string name="heightpro">height</string>
+    <string name="search_name">Search Name</string>
+    <string name="recordfound">Records found: </string>
+
+    <string name="selectstatus">Select Status</string>
+    <string name="selectsurname">Select your Surname</string>
 </resources>
