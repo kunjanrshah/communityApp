@@ -34,7 +34,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_weight="1"
-                    android:hint="Profile Created Date"
+                    android:hint="@string/profile_created_date"
                     android:gravity="center_vertical"
                     android:textSize="14sp"
                     android:fontFamily="@font/montserrat_regular"
@@ -63,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_weight="1"
-                    android:hint="Profile Updated Date"
+                    android:hint="@string/profile_updated_date"
                     android:gravity="center_vertical"
                     android:textSize="14sp"
                     android:fontFamily="@font/montserrat_regular"
@@ -84,7 +84,7 @@
                 android:layout_marginTop="10dp"
                 android:textSize="14sp"
                 android:fontFamily="@font/montserrat_regular"
-                android:text="Profile updatation Percentage"
+                android:text="@string/profile_updatation_percentage"
                 android:layout_height="wrap_content" />
 
             <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar

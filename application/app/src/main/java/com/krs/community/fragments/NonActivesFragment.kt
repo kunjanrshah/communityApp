@@ -203,7 +203,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
             if (response.members.size > 0) {
               //  lstMembers.clear()
                 tvCount.visibility = View.VISIBLE
-                tvCount.text = "Member ${response.totalRecords} found"
+                tvCount.text = getString(R.string.mem)+" ${response.totalRecords}"+getString(R.string.found)
 
                 lstMembers.addAll(response.members)
                 adapter.notifyDataSetChanged()

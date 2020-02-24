@@ -36,14 +36,14 @@
                     app:backgroundTint="@color/colorPrimary"
                     app:jrs_icon_tint="@color/colorPrimary"
                     app:jrs_multiple="false"
-                    app:jrs_title="Select Education"
+                    app:jrs_title="@string/selectEduction"
                     android:textSize="14sp"
                     android:fontFamily="@font/montserrat_regular"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:background="@null"
-                    android:hint="Education"
+                    android:hint="@string/educationDetails"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/sp_city"
                     android:paddingRight="10dp"
@@ -66,14 +66,14 @@
                     app:backgroundTint="@color/colorPrimary"
                     app:jrs_icon_tint="@color/colorPrimary"
                     app:jrs_multiple="false"
-                    app:jrs_title="Select Gotra"
+                    app:jrs_title="@string/selectGotra"
                     android:textSize="14sp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:background="@null"
                     android:fontFamily="@font/montserrat_regular"
-                    android:hint="Gotra"
+                    android:hint="@string/gotraDetails"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/sp_city"
                     android:paddingRight="10dp"
@@ -96,14 +96,14 @@
                     app:backgroundTint="@color/colorPrimary"
                     app:jrs_icon_tint="@color/colorPrimary"
                     app:jrs_multiple="false"
-                    app:jrs_title="Select BloodGroup"
+                    app:jrs_title="@string/selectBlood"
                     android:textSize="14sp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:background="@null"
                     android:fontFamily="@font/montserrat_regular"
-                    android:hint="Blood Group"
+                    android:hint="@string/blood_groupDetails"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/sp_city"
                     android:paddingRight="10dp"
@@ -124,7 +124,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_weight="1"
-                    android:hint="Birth Date"
+                    android:hint="@string/birth_dateDetail"
                     android:gravity="center_vertical"
                     android:textSize="14sp"
                     android:fontFamily="@font/montserrat_regular"
@@ -153,7 +153,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_weight="1"
-                    android:hint="Marriage Date"
+                    android:hint="@string/marriage_dateDetails"
                     android:gravity="center_vertical"
                     android:textSize="14sp"
                     android:fontFamily="@font/montserrat_regular"
@@ -179,7 +179,7 @@
                 android:textSize="14sp"
                 android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/border"
-                android:hint="Wife's Native"
+                android:hint="@string/wife_s_native"
                 android:paddingLeft="10dp" />
 
             <CheckBox
@@ -189,7 +189,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_regular"
                 android:layout_marginTop="10dp"
-                android:text="is Doner?" />
+                android:text="@string/is_doner" />
             <CheckBox
                 android:textSize="16sp"
                 android:id="@+id/chk_is_rented"
@@ -197,7 +197,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="is Rented?" />
+                android:text="@string/is_renteddetails" />
 
             <CheckBox
                 android:textSize="16sp"
@@ -206,7 +206,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="is Expired?" />
+                android:text="@string/is_expireddetails" />
 
 
         </LinearLayout>

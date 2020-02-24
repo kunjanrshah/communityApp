@@ -30,6 +30,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.krs.community.R
+import com.krs.community.bkservice.MyCustomDialog
 import com.krs.community.databinding.ActivityDashboardBinding
 import com.krs.community.fragments.*
 import com.krs.community.fragments.FragmentDrawer.FragmentDrawerListener
@@ -71,6 +72,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         dashboardViewModel = ViewModelProvider(this, factory).get(DashboardViewModel::class.java)
 
     //    NoInternetLayout.Builder(this@DashboardActivity, R.layout.activity_dashboard).animate()
+
+       // val intent = Intent(this@DashboardActivity, MyCustomDialog::class.java)
+       // this@DashboardActivity.startActivity(intent)
+
 
         if (Guru.getString(getString(R.string.user_id), "")!!.isEmpty()) {
             val mIntent = Intent(this@DashboardActivity, SplashActivity::class.java)

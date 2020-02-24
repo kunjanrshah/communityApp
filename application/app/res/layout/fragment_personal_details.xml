@@ -122,7 +122,7 @@
                                     app:backgroundTint="@color/colorPrimary"
                                     app:jrs_icon_tint="@color/colorPrimary"
                                     app:jrs_multiple="false"
-                                    app:jrs_title="Select Native"
+                                    app:jrs_title="@string/selctNative"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="10dp"
@@ -292,7 +292,7 @@
                                 app:backgroundTint="@color/colorPrimary"
                                 app:jrs_icon_tint="@color/colorPrimary"
                                 app:jrs_multiple="false"
-                                app:jrs_title="Select Blood Group"
+                                app:jrs_title="@string/selectBlood"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="10dp"
@@ -335,7 +335,7 @@
                                 app:backgroundTint="@color/colorPrimary"
                                 app:jrs_icon_tint="@color/colorPrimary"
                                 app:jrs_multiple="false"
-                                app:jrs_title="Select Gotra"
+                                app:jrs_title="@string/selectGotra"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="10dp"
@@ -385,7 +385,7 @@
                                 app:backgroundTint="@color/colorPrimary"
                                 app:jrs_icon_tint="@color/colorPrimary"
                                 app:jrs_multiple="false"
-                                app:jrs_title="Select Education"
+                                app:jrs_title="@string/selectEduction"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="10dp"
@@ -427,7 +427,7 @@
                                 app:backgroundTint="@color/colorPrimary"
                                 app:jrs_icon_tint="@color/colorPrimary"
                                 app:jrs_multiple="false"
-                                app:jrs_title="Select Current Activity"
+                                app:jrs_title="@string/selectCurrentActivity"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="10dp"
@@ -479,7 +479,7 @@
                                 app:backgroundTint="@color/colorPrimary"
                                 app:jrs_icon_tint="@color/colorPrimary"
                                 app:jrs_multiple="false"
-                                app:jrs_title="Select Blood Group"
+                                app:jrs_title="@string/selectMarial"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="10dp"
@@ -566,7 +566,6 @@
                         android:singleLine="true" />
 
                 </LinearLayout>
-
 
             </LinearLayout>
         </ScrollView>
