@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.pm.Signature;
 import android.content.res.TypedArray;
 import android.database.Cursor;
@@ -1780,6 +1781,39 @@ public class Utility {
 
         return (distanceInKm);
     }*/
+
+    public static void shareToGMail(Activity activity,String[] email, String subject, String content) {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, email);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, content);
+        final PackageManager pm = activity.getPackageManager();
+        final List<ResolveInfo> matches = pm.queryIntentActivities(emailIntent, 0);
+        ResolveInfo best = null;
+        for(final ResolveInfo info : matches)
+            if (info.activityInfo.packageName.endsWith(".gm") || info.activityInfo.name.toLowerCase().contains("gmail"))
+                best = info;
+        if (best != null)
+            emailIntent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
+        activity.startActivity(emailIntent);
+    }
+
+
+    public static void skype(String number, Context ctx) {
+        try {
+            //Intent sky = new Intent("android.intent.action.CALL_PRIVILEGED");
+            //the above line tries to create an intent for which the skype app doesn't supply public api
+
+            Intent sky = new Intent("android.intent.action.VIEW");
+            sky.setData(Uri.parse("skype:" + number));
+            Log.d("UTILS", "tel:" + number);
+            ctx.startActivity(sky);
+        } catch (ActivityNotFoundException e) {
+            Log.e("SKYPE CALL", "Skype failed", e);
+        }
+        Toast.makeText(ctx, number, Toast.LENGTH_LONG).show();
+    }
 
     private static void shareImage(File file, Context context) {
         Uri uri = Uri.fromFile(file);

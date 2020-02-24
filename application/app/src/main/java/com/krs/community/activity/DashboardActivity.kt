@@ -113,12 +113,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
         binding.space.setSpaceOnClickListener(object : SpaceOnClickListener {
             override fun onCentreButtonClick() {
-                Log.d("onCentreButtonClick ", "onCentreButtonClick")
                 movetoFragment(this@DashboardActivity, ExpandableFilterListFragment())
             }
 
             override fun onItemClick(itemIndex: Int, itemName: String) {
-                Log.d("onItemClick ", "$itemIndex $itemName")
                 if (itemIndex == 1) {
                     val fragment = supportFragmentManager.findFragmentByTag(CalendarFragment::class.java.simpleName)
                     if (fragment == null || !fragment.isVisible) {
@@ -133,7 +131,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             }
 
             override fun onItemReselected(itemIndex: Int, itemName: String) {
-                Log.d("onItemReselected ", "$itemIndex $itemName")
                 if (itemIndex == 1) {
                     val fragment = supportFragmentManager.findFragmentByTag(CalendarFragment::class.java.simpleName)
                     if (fragment == null || !fragment.isVisible) {
@@ -150,11 +147,11 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
         binding.space.setSpaceOnLongClickListener(object : SpaceOnLongClickListener {
             override fun onCentreButtonLongClick() {
-                Toast.makeText(this@DashboardActivity, getString(R.string.onCentreButtonLongClick), Toast.LENGTH_SHORT).show()
+               // Toast.makeText(this@DashboardActivity, getString(R.string.onCentreButtonLongClick), Toast.LENGTH_SHORT).show()
             }
 
             override fun onItemLongClick(itemIndex: Int, itemName: String) {
-                Toast.makeText(this@DashboardActivity, "$itemIndex $itemName", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@DashboardActivity, "$itemIndex $itemName", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -262,6 +259,8 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         } else if (position == 2) {
             movetoFragment(this, StatisticFragment())
         } else if (position == 3) {
+            binding.containerBody.snackbar(resources.getString(R.string.coming_soon),Snackbar.LENGTH_LONG)
+            return
             movetoFragment(this, CommitteeFragment())
         }
     }

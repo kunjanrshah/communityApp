@@ -35,50 +35,71 @@ class ContactUsFragment : Fragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.colorBG, false)
         }
+
         val ivProfile = layout.findViewById<ImageView>(R.id.iv_profile)
         val bmp = (activity!!.resources.getDrawable(R.drawable.user_profile) as BitmapDrawable).bitmap
         Glide.with(activity!!).load(Utility.getRoundedCornerBitmap(bmp, 80)).thumbnail(0.5f).into(ivProfile)
-        val imgCall = layout.findViewById<ImageView>(R.id.img_call)
-        Glide.with(activity!!).load(Utility.getRoundedCornerBitmap(getVectorDrawable(resources.getDrawable(R.drawable.phone_call)), 35)).thumbnail(0.5f).into(imgCall)
-        imgCall.setOnClickListener { v: View? ->
 
+        val imgCall = layout.findViewById<ImageView>(R.id.img_call)
+        imgCall.setOnClickListener { v: View? ->
             if (checkPhoneCallPermission(activity)) {
-                val intent = Intent(Intent.ACTION_CALL)
+                val intent = Intent(Intent.ACTION_DIAL)
                 intent.data = Uri.parse("tel:" + getString(R.string.contact_number))
                 startActivity(intent)
             } else {
                 requestCallPermission(activity as AppCompatActivity?)
             }
         }
-        val imgFb = layout.findViewById<ImageView>(R.id.img_fb)
-        Glide.with(activity!!).load(Utility.getRoundedCornerBitmap(getVectorDrawable(resources.getDrawable(R.drawable.ic_fb)), 35)).thumbnail(0.5f).into(imgFb)
 
+        val imgFb = layout.findViewById<ImageView>(R.id.img_fb)
         imgFb.setOnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"))
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.fb_url)))
             startActivity(browserIntent)
         }
 
         val imgTwitter = layout.findViewById<ImageView>(R.id.img_twitter)
-        Glide.with(activity!!).load(Utility.getRoundedCornerBitmap(getVectorDrawable(resources.getDrawable(R.drawable.twitter)), 35)).thumbnail(0.5f).into(imgTwitter)
+        imgTwitter.setOnClickListener {
+
+        }
+
         val imgWhatsapp = layout.findViewById<ImageView>(R.id.img_whatsapp)
-        Glide.with(activity!!).load(Utility.getRoundedCornerBitmap(getVectorDrawable(resources.getDrawable(R.drawable.whatsapp)), 35)).thumbnail(0.5f).into(imgWhatsapp)
+        imgWhatsapp.setOnClickListener {
+            Utility.sendWhatsappMessage(activity!!,getString(R.string.contact_number),"Hi Kunjan")
+        }
+
         val imgSkype = layout.findViewById<ImageView>(R.id.img_skype)
-        Glide.with(activity!!).load(Utility.getRoundedCornerBitmap(getVectorDrawable(resources.getDrawable(R.drawable.skype)), 35)).thumbnail(0.5f).into(imgSkype)
+        imgSkype.setOnClickListener {
+            Utility.skype(getString(R.string.kunjanrshah),activity)
+        }
+
         val imgLinkedin = layout.findViewById<ImageView>(R.id.img_linkedin)
-        Glide.with(activity!!).load(Utility.getRoundedCornerBitmap(getVectorDrawable(resources.getDrawable(R.drawable.linkedin)), 35)).thumbnail(0.5f).into(imgLinkedin)
+        imgLinkedin.setOnClickListener {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.linkedin_url)))
+            startActivity(browserIntent)
+        }
+
         val imgGmail = layout.findViewById<ImageView>(R.id.img_gmail)
-        Glide.with(activity!!).load(Utility.getRoundedCornerBitmap(getVectorDrawable(resources.getDrawable(R.drawable.gmail)), 35)).thumbnail(0.5f).into(imgGmail)
-        val edt_message = layout.findViewById<EditText>(R.id.edt_message)
-        val btn_send = layout.findViewById<Button>(R.id.btn_send)
-        val tv_name = layout.findViewById<TextView>(R.id.tv_name)
-        val tv_link = layout.findViewById<TextView>(R.id.tv_link)
-        val iv_cancel = layout.findViewById<ImageView>(R.id.iv_cancel)
-        iv_cancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
-        tv_link.text = "http://www.google.com"
-        Linkify.addLinks(tv_link, Linkify.WEB_URLS)
-        Linkify.addLinks(tv_link, Linkify.ALL)
+        imgGmail.setOnClickListener {
+            val email = arrayOf(getString(R.string.dev_email))
+            Utility.shareToGMail(activity,email,getString(R.string.dev_gmail_subject),getString(R.string.dev_content))
+        }
+
+        val edtMessage = layout.findViewById<EditText>(R.id.edt_message)
+        val btnSend = layout.findViewById<Button>(R.id.btn_send)
+        btnSend.setOnClickListener {
+
+        }
+        val tvName = layout.findViewById<TextView>(R.id.tv_name)
+        val tvLink = layout.findViewById<TextView>(R.id.tv_link)
+        val ivCancel = layout.findViewById<ImageView>(R.id.iv_cancel)
+        ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
+        tvLink.text = getString(R.string.dev_link)
+        Linkify.addLinks(tvLink, Linkify.WEB_URLS)
+        Linkify.addLinks(tvLink, Linkify.ALL)
         return layout
     }
+
+
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)

@@ -500,7 +500,6 @@
     <!-- DashBoard Sccren -->
     <string name="home">Home</string>
     <string name="Calendar">Calendar</string>
-    <string name="onCentreButtonLongClick">onCentreButtonLongClick</string>
     <string name="MoveProfile">Move profile detail</string>
     <string name="LocationOff">Location Off</string>
     <string name="LocationOn">Location On</string>

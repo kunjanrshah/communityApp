@@ -106,7 +106,6 @@
     <!-- DashBoard Sccren -->
     <string name="home">ઘર</string>
     <string name="Calendar">કૅલેન્ડર</string>
-    <string name="onCentreButtonLongClick">સેન્ટર બટન લાંબી ક્લિક પર</string>
     <string name="MoveProfile">પ્રોફાઇલ વિગતવાર ખસેડો</string>
     <string name="LocationOff">સ્થાન બંધ</string>
     <string name="LocationOn">સ્થાન ચાલુ</string>

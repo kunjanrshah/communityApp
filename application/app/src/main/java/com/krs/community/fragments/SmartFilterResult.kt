@@ -321,7 +321,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 var gif: Int = R.drawable.gif14
 
                 TTFancyGifDialog.Builder(activity)
-                        //.setTitle(getString(R.string.you_sure))
+                        .setTitle(getString(R.string.app_name))
                         .setMessage("No Record Found")
                         .setPositiveBtnText("Ok")
                         .setPositiveBtnBackground("#22b573")
