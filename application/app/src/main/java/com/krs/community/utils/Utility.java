@@ -70,6 +70,7 @@ import com.krs.community.R;
 import com.krs.community.fragments.CalendarFragment;
 import com.krs.community.fragments.DashboardFragment;
 import com.krs.community.fragments.FragmentDrawer;
+import com.krs.community.fragments.SmartFilterResult;
 import com.krs.community.model.ErrorObject;
 import com.krs.community.model.Member;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
@@ -727,10 +728,12 @@ public class Utility {
         if (fragmentManager.getBackStackEntryCount() > 0) {
             Fragment dashboard = fragmentManager.findFragmentByTag(DashboardFragment.class.getSimpleName());
             Fragment calendar = fragmentManager.findFragmentByTag(CalendarFragment.class.getSimpleName());
+            Fragment smartFilterResult = fragmentManager.findFragmentByTag(SmartFilterResult.class.getSimpleName());
+
             if (dashboard != null && dashboard.isVisible()) {
                 activity.finish();
                 return;
-            } else if (calendar != null && calendar.isVisible()) {
+            } else if ((calendar != null && calendar.isVisible()) || (smartFilterResult != null && smartFilterResult.isVisible())) {
                 movetoFragment(activity, new DashboardFragment());
                 return;
             } else {

@@ -314,6 +314,9 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
                     11 -> {
                         val intent = Intent(activity, RegisterActivty::class.java)
+                        val bundle = Bundle()
+                        bundle.putBoolean("isLogin", false)
+                        intent.putExtras(bundle)
                         startActivity(intent)
                         Utility.fade(activity)
                     }

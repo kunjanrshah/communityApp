@@ -59,7 +59,7 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.util.*
 
-class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, RoomMemberListener,  LocationAdapter.SetLocationListner {
+class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, RoomMemberListener, LocationAdapter.SetLocationListner {
 
     override val kodein by kodein()
 
@@ -68,19 +68,19 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     private val lstMembers: ArrayList<Member> = ArrayList()
 
     private lateinit var actionModeCallback: ActionModeCallback
-    private var actionMode: ActionMode?=null
+    private var actionMode: ActionMode? = null
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private lateinit var selectedItems: SparseBooleanArray
     private lateinit var animationItemsIndex: SparseBooleanArray
     private var reverseAllAnimations = false
     private var currentSelectedIndex = -1
-    private lateinit var tvCount:TextView
+    private lateinit var tvCount: TextView
     private lateinit var ivExport: ImageView
     private var selectedPosition = 0
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
-    private lateinit var llRoot:LinearLayout
-    private var argus:String?=null
-    private val TAG=SmartFilterResult::class.java.simpleName
+    private lateinit var llRoot: LinearLayout
+    private var argus: String? = null
+    private val TAG = SmartFilterResult::class.java.simpleName
     private lateinit var smartFilterViewModel: SmartFilterViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private lateinit var roomMemberViewModel: RoomMemberViewModel
@@ -94,7 +94,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_filter_result, container, false)
 
-        llRoot= rootView.findViewById(R.id.ll_parent)
+        llRoot = rootView.findViewById(R.id.ll_parent)
         selectedItems = SparseBooleanArray()
         animationItemsIndex = SparseBooleanArray()
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
@@ -105,19 +105,19 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
-        smartFilterViewModel.mByFilterListener =this
-        roomMemberViewModel.mRoomMemberListener= this
+        smartFilterViewModel.mByFilterListener = this
+        roomMemberViewModel.mRoomMemberListener = this
 
         adapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
                 val member = lstMembers[position]
                 val holder = viewHolder as SmartFilterResult.ViewHolder
 
-                if(lstMembers.size>0){
-                    tvCount.visibility=View.VISIBLE
+                if (lstMembers.size > 0) {
+                    tvCount.visibility = View.VISIBLE
                     tvCount.text = "Member ${lstMembers.size} found"
-                }else{
-                    tvCount.visibility=View.GONE
+                } else {
+                    tvCount.visibility = View.GONE
                 }
 
                 holder.tvName.text = member.firstName
@@ -128,14 +128,14 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                     holder.ivGender.setBackgroundResource(R.drawable.female)
                 }
                 Coroutines.io {
-                    if(!member.subCastId.isNullOrEmpty()){
+                    if (!member.subCastId.isNullOrEmpty()) {
                         val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
                         Coroutines.main {
                             viewHolder.tvName.text = name
                         }
                     }
 
-                    if(!member.cityId.isNullOrEmpty()){
+                    if (!member.cityId.isNullOrEmpty()) {
                         val area = member.area + " " + smartFilterViewModel.getCityNamebyId(member.cityId)
                         Coroutines.main {
                             holder.tvArea.text = area
@@ -143,24 +143,24 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                     }
                 }
 
-               /* holder.tvEmail.text = member.emailAddress
-                holder.tvMobile.text = member.mobile*/
+                /* holder.tvEmail.text = member.emailAddress
+                 holder.tvMobile.text = member.mobile*/
 
-                if (member.mobile.isEmpty()){
+                if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
-                if (member.emailAddress.isEmpty()){
+                if (member.emailAddress.isEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
@@ -181,13 +181,13 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                     val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
                     builder?.listener {
                         if (it == 0) {
-                                createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
-                                Handler().post(Runnable {
-                                    Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
-                                })
-                                Handler().postDelayed({
-                                    Utility.hideSweetProgress()
-                                }, 5000)
+                            createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
+                            Handler().post(Runnable {
+                                Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                            })
+                            Handler().postDelayed({
+                                Utility.hideSweetProgress()
+                            }, 5000)
                         } else if (it == 1) {
                             Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                             return@listener
@@ -229,7 +229,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 holder.itemView.isActivated = selectedItems[position, false]
                 applyIconAnimation(holder, position)
                 applyProfilePicture(holder, member)
-                applyClickEvents(holder, position,member)
+                applyClickEvents(holder, position, member)
                 applyImportant(viewHolder, member)
             }
 
@@ -243,18 +243,18 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         }
         val header = LayoutInflater.from(activity).inflate(R.layout.header_smart_filter, container, false)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
-        ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
+        ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
         tvCount = header.findViewById(R.id.tv_count)
         ivExport = header.findViewById<ImageView>(R.id.iv_export)
         ivExport.setOnClickListener {
             if (lstMembers.size > 0) {
-                    Handler().post {
-                        Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
-                    }
-                    createMemberListPDF(activity as AppCompatActivity, lstMembers, profileDetailViewModel)
-                    Handler().postDelayed({
-                        Utility.hideSweetProgress()
-                    }, 7000)
+                Handler().post {
+                    Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
+                }
+                createMemberListPDF(activity as AppCompatActivity, lstMembers, profileDetailViewModel)
+                Handler().postDelayed({
+                    Utility.hideSweetProgress()
+                }, 7000)
             }
         }
 
@@ -263,9 +263,9 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         rvFilters.layoutManager = LinearLayoutManager(activity)
         rvFilters.adapter = adapter
 
-        argus= arguments?.getString(getString(R.string.filter_values))
+        argus = arguments?.getString(getString(R.string.filter_values))
 
-        DashboardActivity.stop=false
+        DashboardActivity.stop = false
         getFilterMembers()
 
         return rootView
@@ -273,7 +273,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
     override fun loadApi() {
         if (!DashboardActivity.stop) {
-            AppController.mApplication.start = (lstMembers.size+1)
+            AppController.mApplication.start = (lstMembers.size + 1)
             getFilterMembers()
         }
     }
@@ -281,21 +281,21 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     private fun getFilterMembers() {
         if (!DashboardActivity.stop) {
             DashboardActivity.stop = true
-            val jsonObject= JSONObject()
-            val jsonObj=JSONObject(argus)
-            jsonObject.put(getString(R.string.start),AppController.mApplication.start)
-            jsonObject.put(getString(R.string.length),AppController.mApplication.length)
-            jsonObject.put(getString(R.string.filter_by),jsonObj)
-            val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+            val jsonObject = JSONObject()
+            val jsonObj = JSONObject(argus)
+            jsonObject.put(getString(R.string.start), AppController.mApplication.start)
+            jsonObject.put(getString(R.string.length), AppController.mApplication.length)
+            jsonObject.put(getString(R.string.filter_by), jsonObj)
+            val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
             smartFilterViewModel.smartFilterSearch(updated)
             Handler().postDelayed({
                 shimmerFrameLayout.stopShimmerAnimation()
-                shimmerFrameLayout.visibility=View.GONE
-            },4000)
+                shimmerFrameLayout.visibility = View.GONE
+            }, 4000)
             lstMembers.clear()
             adapter.notifyDataSetChanged()
 
-            if(AppController.mApplication.start==0){
+            if (AppController.mApplication.start == 0) {
                 shimmerFrameLayout.startShimmerAnimation()
                 shimmerFrameLayout.visibility = View.VISIBLE
             }
@@ -305,9 +305,9 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
     override fun getMembers(response: SmartFilterResponse) {
         shimmerFrameLayout.stopShimmerAnimation()
-        shimmerFrameLayout.visibility=View.GONE
+        shimmerFrameLayout.visibility = View.GONE
 
-        if(response.success){
+        if (response.success) {
             if (response.members.size > 0) {
                 lstMembers.clear()
                 lstMembers.addAll(response.members)
@@ -317,30 +317,40 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 selectedPosition = lstMembers.size - 1
                 DashboardActivity.stop = false
 
-                if(lstMembers.size<=AppController.mApplication.length){
+                if (lstMembers.size <= AppController.mApplication.length) {
                     DashboardActivity.stop = true
                     Snackbar.make(llRoot, getString(R.string.endrecord), Snackbar.LENGTH_LONG).show()
                 }
-            }else{
+            } else {
                 DashboardActivity.stop = true
-                // Snackbar.make(llRoot, "No Record Found", Snackbar.LENGTH_LONG).show()
                 var gif: Int = R.drawable.gif14
 
                 TTFancyGifDialog.Builder(activity)
-                        .setTitle(getString(R.string.app_name))
                         .setMessage("No Record Found")
-                        .setPositiveBtnText("Ok")
-                        .setPositiveBtnBackground("#22b573")
+                        .setPositiveBtnText("OK")
+                        .setPositiveBtnBackground("#843f52")
                         .setGifResource(gif)
-                        .isCancellable(true)
+                        .isCancellable(false)
                         .OnPositiveClicked {
+                            try {
+                                val jsonObject = JSONObject()
+                                jsonObject.put(activity?.getString(R.string.name_filter), "name")
+                                jsonObject.put(activity?.getString(R.string.value_filter), argus)
+                                val listFragment = ExpandableFilterListFragment()
+                                val mBundle = Bundle()
+                                mBundle.putString(activity?.getString(R.string.edit_filter), jsonObject.toString())
+                                listFragment.arguments = mBundle
+                                Utility.movetoFragment(activity, listFragment)
 
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
                         }
                         .build()
                 true
                 ivExport.visibility = View.GONE
             }
-        }else {
+        } else {
             DashboardActivity.stop = false
         }
     }
@@ -358,7 +368,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
             DashboardActivity.stop = false
             shimmerFrameLayout.stopShimmerAnimation()
             shimmerFrameLayout.visibility = View.GONE
-            Toast.makeText(activity,message,Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -408,7 +418,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
             try {
                 val path = getString(R.string.base_url_original) + "" + member.profilePic
                 Log.d(TAG, "path: $path")
-                openImageDialog(activity as AppCompatActivity,path)
+                openImageDialog(activity as AppCompatActivity, path)
             } catch (e: Exception) {
                 e.message
             }
@@ -424,7 +434,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
     private fun applyProfilePicture(holder: ViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
-            val imgURL=context?.getString(R.string.base_url_thumb)+member.profilePic
+            val imgURL = context?.getString(R.string.base_url_thumb) + member.profilePic
             Glide.with(activity!!).load(imgURL)
                     .thumbnail(0.5f)
                     .transition(DrawableTransitionOptions.withCrossFade())
@@ -535,6 +545,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         init {
             itemView.setOnLongClickListener(this)
         }
+
         override fun onLongClick(v: View): Boolean {
             onRowLongClicked(adapterPosition)
             v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
@@ -602,7 +613,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                                     jsonObject.put(getString(R.string.idList), Ids)
                                     val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                                     lstMembers.clear()
-                                    tvCount.visibility=View.GONE
+                                    tvCount.visibility = View.GONE
                                     adapter.notifyDataSetChanged()
                                     mShimmerViewContainer.startShimmerAnimation()
                                     mShimmerViewContainer.visibility = View.VISIBLE
@@ -636,6 +647,52 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
                         true
                     }
+
+                    R.id.action_location -> {
+                        val selectedItemPositions = getSelectedItems()
+                        val message = getString(R.string.ShareCity) + " " + selectedItemPositions.size + " " + getString(R.string.ProfileCity)
+                        SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText(getString(R.string.you_sure))
+                                .setContentText(message)
+                                .setConfirmText(getString(R.string.YesCity))
+                                .setCancelText(getString(R.string.no))
+                                .setConfirmClickListener {
+                                    it.dismiss()
+                                    val jsonObject = JSONObject()
+                                    jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                                    jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+                                    jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+
+                                    var Ids = ""
+                                    val loginuser = Guru.getString(getString(R.string.loginMember), "")
+                                    val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
+                                    if (loginMember?.sharingId != null && loginMember.sharingId.isNotEmpty()) {
+                                        Ids = loginMember.sharingId + ","
+                                    }
+                                    val loginSharedIds = Ids.split(',')
+                                    for (index in selectedItemPositions) {
+                                        if (!loginSharedIds.contains(lstMembers[index].id)) {
+                                            Ids += lstMembers[index].id + ","
+                                        }
+                                    }
+                                    Ids = Ids.substring(0, Ids.length - 1)
+
+                                    jsonObject.put(getString(R.string.sharing_id), Ids)
+                                    val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                                    mShimmerViewContainer.startShimmerAnimation()
+                                    mShimmerViewContainer.visibility = View.VISIBLE
+                                    profileDetailViewModel.updateProfile(updated, true)
+
+                                }
+                                .setCancelClickListener {
+                                    it.dismiss()
+                                }
+                                .show()
+
+                        true
+                    }
+
+
                     R.id.action_select_all -> {
                         clearSelections()
                         for (i in lstMembers.indices) {
@@ -696,7 +753,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         val selectedItemPositions = getSelectedItems()
         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText(getString(R.string.you_sure))
-                .setContentText("${selectedItemPositions.size}"+getString(R.string.profileRole)+"'$role'!")
+                .setContentText("${selectedItemPositions.size}" + getString(R.string.profileRole) + "'$role'!")
                 .setConfirmText(getString(R.string.YesPFilter))
                 .setCancelText(getString(R.string.no))
                 .setConfirmClickListener {
@@ -706,17 +763,17 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                     jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
                     jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
 
-                    var changed=""
-                    if(role == getString(R.string.Local_Admin)){
+                    var changed = ""
+                    if (role == getString(R.string.Local_Admin)) {
                         changed = getString(R.string.LOCAL_ADMIN)
-                    }else if(role == getString(R.string.Sub_Admin)) {
+                    } else if (role == getString(R.string.Sub_Admin)) {
                         changed = getString(R.string.SUB_ADMIN)
-                    }else{
+                    } else {
                         changed = getString(R.string.User)
                     }
 
                     jsonObject.put(getString(R.string.role), changed)
-                    val loginuser= Guru.getString(getString(R.string.loginMember),"")
+                    val loginuser = Guru.getString(getString(R.string.loginMember), "")
                     val member: Member = Gson().fromJson<Member>(loginuser, Member::class.java)
                     jsonObject.put(getString(R.string.local_community_id), member.localCommunityId)
                     jsonObject.put(getString(R.string.sub_community_id), member.subCommunityId)
@@ -731,7 +788,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                     val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                     lstMembers.clear()
 
-                    tvCount.visibility=View.GONE
+                    tvCount.visibility = View.GONE
                     adapter.notifyDataSetChanged()
                     mShimmerViewContainer.startShimmerAnimation()
                     mShimmerViewContainer.visibility = View.VISIBLE

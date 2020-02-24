@@ -9,7 +9,6 @@ import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
@@ -70,7 +69,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         binding = DataBindingUtil.setContentView(this@DashboardActivity, R.layout.activity_dashboard)
         dashboardViewModel = ViewModelProvider(this, factory).get(DashboardViewModel::class.java)
 
-    //    NoInternetLayout.Builder(this@DashboardActivity, R.layout.activity_dashboard).animate()
 
         if (Guru.getString(getString(R.string.user_id), "")!!.isEmpty()) {
             val mIntent = Intent(this@DashboardActivity, SplashActivity::class.java)
@@ -171,7 +169,11 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         }
 
         movetoFragment(this@DashboardActivity, DashboardFragment())
-        //spaceNavigationView.showIconOnly();
+
+        /*if(AutoStartPermissionHelper.getInstance().isAutoStartPermissionAvailable(this)){
+            AutoStartPermissionHelper.getInstance().getAutoStartPermission(this)
+        }*/
+
     }
 
 

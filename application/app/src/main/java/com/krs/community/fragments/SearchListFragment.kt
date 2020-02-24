@@ -427,10 +427,10 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                     TTFancyGifDialog.Builder(activity)
                             //.setTitle(getString(R.string.you_sure))
                             .setMessage("No Record Found")
-                            .setPositiveBtnText("Ok")
-                            .setPositiveBtnBackground("#22b573")
+                            .setPositiveBtnText("OK")
+                            .setPositiveBtnBackground("#843f52")
                             .setGifResource(gif)
-                            .isCancellable(true)
+                            .isCancellable(false)
                             .OnPositiveClicked {
 
                             }
@@ -784,11 +784,54 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                                 .setContentBackgroundResource(R.drawable.popup_top_corner)
                                 .create()
                         changeRoleDialog?.show()
+                        true
+                    }
 
+                    R.id.action_location -> {
+                        val selectedItemPositions = getSelectedItems()
+                        val message = getString(R.string.ShareCity) + " " + selectedItemPositions.size + " " + getString(R.string.ProfileCity)
+                        SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText(getString(R.string.you_sure))
+                                .setContentText(message)
+                                .setConfirmText(getString(R.string.YesCity))
+                                .setCancelText(getString(R.string.no))
+                                .setConfirmClickListener {
+                                    it.dismiss()
+                                    val jsonObject = JSONObject()
+                                    jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                                    jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+                                    jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
 
+                                    var Ids = ""
+                                    val loginuser = Guru.getString(getString(R.string.loginMember), "")
+                                    val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
+                                    if (loginMember?.sharingId != null && loginMember.sharingId.isNotEmpty()) {
+                                        Ids = loginMember.sharingId + ","
+                                    }
+                                    val loginSharedIds = Ids.split(',')
+                                    for (index in selectedItemPositions) {
+                                        if (!loginSharedIds.contains(lstMembers[index].id)) {
+                                            Ids += lstMembers[index].id + ","
+                                        }
+                                    }
+                                    Ids = Ids.substring(0, Ids.length - 1)
+
+                                    jsonObject.put(getString(R.string.sharing_id), Ids)
+                                    val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                                    mShimmerViewContainer.startShimmerAnimation()
+                                    mShimmerViewContainer.visibility = View.VISIBLE
+                                    profileDetailViewModel.updateProfile(updated, true)
+
+                                }
+                                .setCancelClickListener {
+                                    it.dismiss()
+                                }
+                                .show()
 
                         true
                     }
+
+
                     R.id.action_select_all -> {
                         clearSelections()
                         for (i in lstMembers.indices) {

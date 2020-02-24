@@ -43,7 +43,6 @@ import com.krs.community.viewmodel.RegisterViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodelfactory.RegisterViewModelFactory
 import com.wessam.library.NetworkChecker
-import com.wooplr.spotlight.prefs.PreferencesManager
 import com.wooplr.spotlight.utils.SpotlightSequence
 import com.yalantis.ucrop.UCrop.*
 import com.yalantis.ucrop.UCropFragment
@@ -59,7 +58,6 @@ import java.io.File
 class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterListener,KodeinAware, ImageUploadListener {
 
     private var str_profile_hash = ""
-    private lateinit var mPreferencesManager:PreferencesManager
     private var mShowLoader: Boolean = false
     private val PICK_GALLERY_REQUEST = 1
     private lateinit var logger: Logger
@@ -73,6 +71,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private var resultUri: Uri?=null
     private var mNetworkReceiver: BroadcastReceiver? = null
+    private var isLogin: Boolean = true
 
     companion object {
         private val TAG = RegisterActivty::class.java.simpleName
@@ -86,6 +85,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        isLogin = intent.getBooleanExtra("isLogin", true)
         mNetworkReceiver = NetworkChangeReceiver()
 
         registerNetworkBroadcastForNougat()
@@ -135,8 +135,13 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
                 Utility.changeStatusbarColor(this, R.color.colorBG, false)
             }
 
-            val str = resources.getString(R.string.already_have_a_account_sign_in) + "<b>" + " " + getString(R.string.login) + "</b>"
-            txt_already?.text = Html.fromHtml(str)
+            if (isLogin) {
+                val str = resources.getString(R.string.already_have_a_account_sign_in) + "<b>" + " " + getString(R.string.login) + "</b>"
+                binding.txtAlready.text = Html.fromHtml(str)
+                binding.txtAlready.visibility = View.VISIBLE
+            } else {
+                binding.txtAlready.visibility = View.INVISIBLE
+            }
 
             binding.btnRegister.setOnTouchListener { v, event ->
                 when (event.action) {

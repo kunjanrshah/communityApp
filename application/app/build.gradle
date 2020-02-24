@@ -185,5 +185,7 @@ dependencies {
     implementation 'com.github.dewinjm:monthyear-picker:1.0.2'
     implementation 'com.bestsoft32.tayyab:tt-fancy-gif-dialog:1.0.2'
 
+    implementation 'com.github.judemanutd:autostarter:1.0.8'
+
 }
 apply plugin: 'com.google.gms.google-services'

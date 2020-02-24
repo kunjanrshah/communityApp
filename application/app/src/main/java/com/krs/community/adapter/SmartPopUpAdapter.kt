@@ -13,8 +13,6 @@ import com.github.squti.guru.Guru
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayout
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.fragments.SmartFilterResult
 import com.krs.community.jrspinner.JRSpinner
@@ -447,14 +445,13 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
 
             val filter = getValues(viewHolder).toString()
             if (filter.isNotEmpty()) {
-                mICloseDialog.PopupClose()
-                val filterResult = SmartFilterResult()
-                val mBundle = Bundle()
-                mBundle.putString(_context.getString(R.string.filter_values), filter)
-                filterResult.arguments = mBundle
-                Utility.movetoFragment(_context as Activity, filterResult)
+                val filterName = viewHolder.edtFilterName.text.toString().trim()
+                if (viewHolder.chkSave.isChecked && filterName.isEmpty()) {
+                    Toast.makeText(_context, "Please enter filter name", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
 
-                if(viewHolder.chkSave.isChecked && viewHolder.edtFilterName.text.trim().isNotEmpty()){
+                if (viewHolder.chkSave.isChecked && filterName.isNotEmpty()) {
                     val jsonArray:JSONArray
                     val listFilter= Guru.getString(_context.getString(R.string.list_filter),"")
                     if(listFilter.isNullOrEmpty()){
@@ -466,20 +463,26 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                     for (i in 0 until jsonArray.length()) {
                         val item = jsonArray.getJSONObject(i)
                         val name= item.getString(_context.getString(R.string.name_filter))
-                        if(name.toString() == viewHolder.edtFilterName.text.trim().toString()){
-                            jsonArray.remove(i)
+                        if (name.toString() == filterName) {
+                            Toast.makeText(_context, "Filter name already exist.", Toast.LENGTH_SHORT).show()
+                            return@setOnClickListener
+                            //jsonArray.remove(i)
                             break
                         }
                     }
                     val jsonObject= JSONObject()
-                    jsonObject.put(_context.getString(R.string.name_filter),viewHolder.edtFilterName.text.trim())
+                    jsonObject.put(_context.getString(R.string.name_filter), filterName)
                     jsonObject.put(_context.getString(R.string.value_filter),filter)
                     jsonArray.put(jsonObject)
                     Guru.putString(_context.getString(R.string.list_filter),jsonArray.toString())
-                }else{
-                    Toast.makeText(_context, _context.getString(R.string.filterNotsaved), Toast.LENGTH_LONG).show()
                 }
 
+                mICloseDialog.PopupClose()
+                val filterResult = SmartFilterResult()
+                val mBundle = Bundle()
+                mBundle.putString(_context.getString(R.string.filter_values), filter)
+                filterResult.arguments = mBundle
+                Utility.movetoFragment(_context as Activity, filterResult)
             } else {
                 Toast.makeText(_context, _context.getString(R.string.noFilterFound), Toast.LENGTH_SHORT).show()
             }

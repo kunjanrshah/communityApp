@@ -12,10 +12,6 @@
         android:id="@+id/ll_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="false"
-        android:enabled="false"
-        android:filterTouchesWhenObscured="false"
-        android:focusableInTouchMode="false"
         android:orientation="vertical"
         android:visibility="gone">
 

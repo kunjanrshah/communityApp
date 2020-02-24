@@ -625,9 +625,10 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
                     R.id.action_location -> {
                         val selectedItemPositions = getSelectedItems()
+                        val message = getString(R.string.ShareCity) + " " + selectedItemPositions.size + " " + getString(R.string.ProfileCity)
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
-                                .setContentText(getString(R.string.ShareCity)+" ${selectedItemPositions.size}"+getString(R.string.ProfileCity))
+                                .setContentText(message)
                                 .setConfirmText(getString(R.string.YesCity))
                                 .setCancelText(getString(R.string.no))
                                 .setConfirmClickListener {

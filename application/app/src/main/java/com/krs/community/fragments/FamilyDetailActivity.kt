@@ -253,7 +253,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                         .setNegativeBtnText(getString(R.string.no))
                                         .setNegativeBtnBackground("#c1272d")
                                         .setGifResource(gif)
-                                        .isCancellable(true)
+                                        .isCancellable(false)
                                         .OnPositiveClicked {
                                             val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
                                             intent.putExtra(getString(R.string.member), member)
@@ -282,7 +282,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                     .setNegativeBtnText(getString(R.string.no))
                                     .setNegativeBtnBackground("#c1272d")
                                     .setGifResource(R.drawable.gif2)
-                                    .isCancellable(true)
+                                    .isCancellable(false)
                                     .OnPositiveClicked {
                                         deleteFamilyMember(member.id)
                                     }
@@ -386,7 +386,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     .setNegativeBtnText(getString(R.string.no))
                     .setNegativeBtnBackground("#c1272d")
                     .setGifResource(R.drawable.gif2)
-                    .isCancellable(true)
+                    .isCancellable(false)
                     .OnPositiveClicked {
                         Guru.clear()
                         val intent = Intent(this, SplashActivity::class.java)
@@ -543,7 +543,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                             .setNegativeBtnText(getString(R.string.no))
                             .setNegativeBtnBackground("#c1272d")
                             .setGifResource(gif)
-                            .isCancellable(true)
+                            .isCancellable(false)
                             .OnPositiveClicked {
                                 val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
                                 intent.putExtra(getString(R.string.member), member)

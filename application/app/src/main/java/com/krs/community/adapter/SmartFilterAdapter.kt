@@ -136,6 +136,7 @@ class SmartFilterAdapter(private val _context: Context,
         val llTitle = convertView?.findViewById<LinearLayout>(R.id.ll_title)
         val tvHeader = convertView?.findViewById<TextView>(R.id.tv_header)
         val tvBottom = convertView?.findViewById<TextView>(R.id.tv_bottom)
+
         if (groupPosition == 0) {
             llTitle?.visibility = View.VISIBLE
             tvHeader?.visibility = View.GONE
@@ -1003,7 +1004,7 @@ class SmartFilterAdapter(private val _context: Context,
                     .create()
             dialog.show()
         } else {
-            Utility.startSweetDialog(_context, SweetAlertDialog.ERROR_TYPE, "Smart Filter", "Enter filter values")
+            Utility.startSweetDialog(_context, SweetAlertDialog.ERROR_TYPE, "Smart Filter", "Please enter filters for search")
         }
     }
 

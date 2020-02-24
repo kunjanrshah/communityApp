@@ -601,7 +601,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 when (holder.txtName.text) {
                     lblAll -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
-                        holder.txtName.setTextColor(resources.getColor(R.color.white))
+                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
                     }
                     lblBirthday -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
