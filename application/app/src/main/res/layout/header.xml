@@ -21,7 +21,7 @@
             android:layout_marginLeft="10dp"
             android:textColor="@color/black"
             android:fontFamily="@font/montserrat_semibold"
-            android:text="Welcome to \nSmart Filter"
+            android:text="@string/WelcomeSmart"
             android:textSize="30sp" />
 
         <TextView
@@ -30,7 +30,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/montserrat_regular"
-            android:text="You can search here using many filter options(Like Family head,Family members, Mobile No, Email Id etc...)"
+            android:text="@string/you_can_search_here_using_many_filter_options_like_family_head_family_members_mobile_no_email_id_etc"
             android:textSize="15sp" />
     </LinearLayout>
 
@@ -46,7 +46,7 @@
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:text="Main Details"
+        android:text="@string/MainDetails"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp" />
 

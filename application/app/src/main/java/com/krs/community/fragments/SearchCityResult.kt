@@ -196,7 +196,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                         if (it == 0) {
                             createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
                             Handler().post(Runnable {
-                                Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                                Utility.startSweetProgress(activity, getString(R.string.expo)+"${member.firstName}"+getString(R.string.sdetails), getString(R.string.please_wait))
                             })
                             Handler().postDelayed({
                                 Utility.hideSweetProgress()
@@ -351,7 +351,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         if (data.success) {
             if (data.members.size > 0) {
                 val count = data.totalHead + data.totalMem
-                tvCount.text = "Families: ${data.totalHead}, Members: $count"
+                tvCount.text = getString(R.string.families)+" ${data.totalHead},"+getString(R.string.mem)+" $count"
                 ivExport.visibility = View.VISIBLE
                 for (user in data.members) {
                     members.add(user)

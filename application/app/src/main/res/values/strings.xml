@@ -450,12 +450,7 @@
     <string name="committee_id" translatable="false">committee_id</string>
     <string name="local_community_id" translatable="false">local_community_id</string>
     <string name="sub_community_id" translatable="false">sub_community_id</string>
-    <string name="please_wait">Please Wait...</string>
-    <string name="exporting_search_list">Exporting Search List</string>
-    <string name="install_app">"Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"</string>
-    <string name="mobile_not_found">Mobile not found!</string>
-    <string name="filter_values" translatable="false">filter_values</string>
-    <string name="no_selection">No Selection</string>
+
     <string name="current_password" translatable="false">current_password</string>
     <string name="new_password" translatable="false">new_password</string>
     <string name="list_filter" translatable="false">list_filter</string>
@@ -1158,9 +1153,58 @@
 
     <string name="selectstatus">Select Status</string>
     <string name="selectsurname">Select your Surname</string>
+
+
     <string name="kunjanrshah">kunjanrshah</string>
     <string name="dev_email">kunjanrshah@gmail.com</string>
     <string name="dev_gmail_subject">Mobile App development</string>
     <string name="dev_content">Hi Kunjan</string>
     <string name="dev_link">http://www.google.com</string>
+    <string name="expo">Exporting</string>
+    <string name="families">Families:</string>
+    <string name="mem">Members:</string>
+    <string name="found">found</string>
+    <string name="please_wait">Please Wait...</string>
+    <string name="exporting_search_list">Exporting Search List</string>
+    <string name="install_app">"Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"</string>
+    <string name="mobile_not_found">Mobile not found!</string>
+    <string name="filter_values" translatable="false">filter_values</string>
+    <string name="no_selection">No Selection</string>
+    <string name="membercode">Member Code</string>
+    <string name="RelationDetails">Relation</string>
+    <string name="sLatsname">Select LastName</string>
+    <string name="stateSelected">State</string>
+    <string name="rented">Rented</string>
+
+    <string name="email_addressdetails">Email Address</string>
+    <string name="mobile_numberdetails">Mobile Number</string>
+    <string name="local_addressdetails">Local Address</string>
+    <string name="permanent_addressdetails">Permanent Address</string>
+    <string name="pincodedetails">PinCode</string>
+    <string name="areadetails">Area</string>
+    <string name="select_statedetails">Select State</string>
+    <string name="wife_s_native">Wife\'s Native</string>
+    <string name="is_doner">is Doner?</string>
+    <string name="is_renteddetails">is Rented?</string>
+    <string name="is_expireddetails">is Expired?</string>
+    <string name="ofcAd">Office Address</string>
+    <string name="selectcategory">Select Category</string>
+    <string name="selectsubc">Select Sub Category</string>
+    <string name="sub_category">Sub Category</string>
+    <string name="selectOccu">Select Occupation</string>
+    <string name="birth_placedetails">Birth Place</string>
+    <string name="is_spectacles">is Spectacles?</string>
+    <string name="is_shaniDetails">is Shani?</string>
+    <string name="is_mangalDetails">is Mangal?</string>
+    <string name="profile_created_date">Profile Created Date</string>
+    <string name="profile_updated_date">Profile Updated Date</string>
+    <string name="profile_updatation_percentage">Profile updatation Percentage</string>
+
+    <string name="headn">Head Name</string>
+    <string name="local_communitydetails">Local Community</string>
+    <string name="select_native">Select Native</string>
+    <string name="select_citydetails">Select City</string>
+    <string name="you_can_search_here_using_many_filter_options_like_family_head_family_members_mobile_no_email_id_etc">You can search here using many filter options(Like Family head,Family members, Mobile No, Email Id etc...)</string>
+
+
 </resources>

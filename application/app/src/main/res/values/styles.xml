@@ -140,7 +140,7 @@
         <item name="android:stackFromBottom">true</item>
         <item name="android:gravity">bottom</item>
         <item name="android:layout_gravity">bottom</item>
-
+        <item name="android:layout_alignParentBottom">true</item>
     </style>
 
 </resources>

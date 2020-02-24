@@ -1,7 +1,9 @@
 package com.krs.community.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -42,6 +44,7 @@ public class SplashActivity extends AppCompatActivity {
     private DisplayMetrics dm;
     private boolean isLogin = false;
     private boolean isRegister = false;
+    private static final int PERMISSION_REQUEST_READ_PHONE_STATE = 1;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -54,6 +57,13 @@ public class SplashActivity extends AppCompatActivity {
         }else{
             setNoInternetLayout();
         }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
+                String[] permissions = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE};
+                requestPermissions(permissions, PERMISSION_REQUEST_READ_PHONE_STATE);
+            }
+        }
+
     }
 
     private void setNoInternetLayout(){

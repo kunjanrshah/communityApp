@@ -645,7 +645,7 @@ class SmartFilterAdapter(private val _context: Context,
                     spGender.setExpandTint(R.color.black)
 
                     rangeAgeBar?.setOnRangeSeekbarChangeListener { minValue: Number, maxValue: Number ->
-                        tvMin.text = "Age $minValue"
+                        tvMin.text = "Age"+" $minValue"
                         tvMax.text = "Age $maxValue"
                     }
 

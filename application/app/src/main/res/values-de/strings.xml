@@ -817,4 +817,64 @@
     <string name="recordfound">રેકોર્ડ્સ મળ્યાં: </string>
     <string name="selectstatus">સ્થિતિ પસંદ કરો</string>
     <string name="selectsurname">તમારી અટક પસંદ કરો</string>
+
+    <string name="kunjanrshah">કુંજન શાહ</string>
+    <string name="dev_email">kunjanrshah@gmail.com</string>
+    <string name="dev_gmail_subject">મોબાઇલ એપ્લિકેશન વિકાસ</string>
+    <string name="dev_content">હાય કુંજન</string>
+    <string name="dev_link">http://www.google.com</string>
+    <string name="expo">નિકાસ કરી રહ્યું છે</string>
+    <string name="families">પરિવારો:</string>
+    <string name="mem">સભ્યો:</string>
+    <string name="found">મળી</string>
+    <string name="please_wait">મહેરબાની કરી રાહ જુવો...</string>
+    <string name="exporting_search_list">નિકાસ શોધ યાદી</string>
+    <string name="install_app">"તમારી સમુદાય એપ્લિકેશન ઇન્સ્ટોલ કરો \n" + "https://play.google.com/store/apps/details?id=com.krs.community"</string>
+    <string name="mobile_not_found">મોબાઇલ મળ્યો નથી!</string>
+    <string name="filter_values" translatable="false">filter_values</string>
+    <string name="no_selection">કોઈ પસંદગી નથી</string>
+    <string name="membercode">સભ્ય કોડ</string>
+    <string name="RelationDetails">સંબંધ</string>
+    <string name="sLatsname">છેલ્લું નામ પસંદ કરો</string>
+    <string name="stateSelected">રાજ્ય</string>
+    <string name="rented">ભાડેથી</string>
+
+    <string name="email_addressdetails">ઈ - મેઈલ સરનામું</string>
+    <string name="mobile_numberdetails">મોબાઇલ નંબર</string>
+    <string name="local_addressdetails">સ્થાનિક સરનામું</string>
+    <string name="permanent_addressdetails">કાયમી સરનામુ</string>
+    <string name="pincodedetails">પીન કોડ</string>
+    <string name="areadetails">વિસ્તાર</string>
+    <string name="select_statedetails">રાજ્ય પસંદ કરો</string>
+    <string name="wife_s_native">પત્નીનું મૂળ</string>
+    <string name="is_doner">દાતા છે?</string>
+    <string name="is_renteddetails">ભાડે છે?</string>
+    <string name="is_expireddetails">સમાપ્ત થાય છે?</string>
+    <string name="ofcAd">હોદ્દો સરનામું</string>
+    <string name="selectcategory">કેટેગરી પસંદ કરો</string>
+    <string name="selectsubc">સબ કેટેગરી પસંદ કરો</string>
+    <string name="sub_category">પેટા વર્ગ</string>
+    <string name="selectOccu">વ્યવસાય પસંદ કરો</string>
+    <string name="birth_placedetails">જન્મ સ્થળ</string>
+    <string name="is_spectacles">સ્પેક્ટેક્લ્સ છે?</string>
+    <string name="is_shaniDetails">શનિ છે?</string>
+    <string name="is_mangalDetails">મંગલ છે?</string>
+    <string name="profile_created_date">પ્રોફાઇલ બનાવવાની તારીખ</string>
+    <string name="profile_updated_date">પ્રોફાઇલ અપડેટ તારીખ</string>
+    <string name="profile_updatation_percentage">પ્રોફાઇલ અપડેટ ટકાવારી</string>
+
+    <string name="headn">વડા નામ</string>
+    <string name="local_communitydetails">સ્થાનિક સમુદાય</string>
+    <string name="select_native">મૂળ પસંદ કરો</string>
+    <string name="select_citydetails">શહેર પસંદ કરો</string>
+
+    <string name="main">મુખ્ય વિગતો</string>
+    <string name="contact">સંકુચિત વિગતો</string>
+    <string name="personal">અંગત વિગતો</string>
+    <string name="professonal">વ્યવસાયિક વિગતો</string>
+    <string name="_matrimony">લગ્નની વિગતો</string>
+    <string name="some_more">કેટલાક વધુ</string>
+
+    <string name="you_can_search_here_using_many_filter_options_like_family_head_family_members_mobile_no_email_id_etc">તમે ઘણા ફિલ્ટર વિકલ્પો (જેમ કે કુટુંબના વડા, કુટુંબના સભ્યો, મોબાઇલ નંબર, ઇમેઇલ આઈડી વગેરે ...) નો ઉપયોગ કરીને તમે અહીં શોધી શકો છો</string>
+
 </resources>

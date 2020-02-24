@@ -27,7 +27,7 @@
                 android:layout_height="45dp"
                 android:singleLine="true"
                 android:background="@drawable/border"
-                android:hint="Birth Time"
+                android:hint="@string/birth_dateDetail"
                 android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:paddingLeft="10dp" />
@@ -41,7 +41,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:background="@drawable/border"
-                android:hint="BirthPlace"
+                android:hint="@string/birth_placedetails"
                 android:paddingLeft="10dp" />
 
 
@@ -52,7 +52,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:textSize="16sp"
-                android:text="is Spectacles?" />
+                android:text="@string/is_spectacles" />
             <CheckBox
                 android:fontFamily="@font/montserrat_regular"
                 android:textSize="16sp"
@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="is Shani?" />
+                android:text="@string/is_shaniDetails" />
 
             <CheckBox
                 android:fontFamily="@font/montserrat_regular"
@@ -69,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="is Mangal?" />
+                android:text="@string/is_mangalDetails" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -89,7 +89,7 @@
                         android:layout_height="45dp"
                         android:singleLine="true"
                         android:background="@drawable/border"
-                        android:hint="Height"
+                        android:hint="@string/HeightDetails"
                         android:inputType="number"
                         android:maxLength="8"
                         android:digits="0123456789."
@@ -101,7 +101,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:text="Meter"
+                        android:text="@string/meter"
                         android:fontFamily="@font/montserrat_regular"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -117,7 +117,7 @@
                         android:layout_height="45dp"
                         android:singleLine="true"
                         android:background="@drawable/border"
-                        android:hint="Weight"
+                        android:hint="@string/WeghtDetails"
                         android:inputType="number"
                         android:maxLength="8"
                         android:digits="0123456789."
@@ -129,7 +129,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:text="Kg"
+                        android:text="@string/kg"
                         android:fontFamily="@font/montserrat_regular"
                         android:textSize="16sp" />
                </LinearLayout>

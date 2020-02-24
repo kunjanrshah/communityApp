@@ -29,21 +29,21 @@ public class MyCustomDialog extends Activity
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             this.setFinishOnTouchOutside(true);
             super.onCreate(savedInstanceState);
-           // setContentView(R.layout.dialog_second_third);
+            setContentView(R.layout.truecaller_bottom_sheet);
             initializeContent();
 
-            Log.e("Hii","MyCustomDialog Runing");
+          /*  Log.e("Hii","MyCustomDialog Runing");
 
             TruecallerAdapter adapter = new TruecallerAdapter(MyCustomDialog.this);
             DialogPlus setLocationDialog = DialogPlus.newDialog(MyCustomDialog.this)
                .setAdapter(adapter)
                .setGravity(Gravity.BOTTOM)
                .setCancelable(true)
-                    .setExpanded(true, 470)
+               .setExpanded(true, 470)
                .setContentBackgroundResource(R.drawable.popup_top_corner)
                .create();
 
-            setLocationDialog.show();
+            setLocationDialog.show();*/
 
            /* StringBuffer sb = new StringBuffer();
             phone_no    =   "9586517742";

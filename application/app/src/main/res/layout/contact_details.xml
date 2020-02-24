@@ -30,7 +30,7 @@
                 android:inputType="textEmailAddress"
                 android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/border"
-                android:hint="Email Address"
+                android:hint="@string/email_addressdetails"
                 android:paddingLeft="10dp" />
 
             <EditText
@@ -43,7 +43,7 @@
                 android:inputType="number"
                 android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/border"
-                android:hint="Mobile Number"
+                android:hint="@string/mobile_numberdetails"
                 android:paddingLeft="10dp" />
 
             <EditText
@@ -52,7 +52,7 @@
                 android:layout_height="45dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
-                android:hint="Local Address"
+                android:hint="@string/local_addressdetails"
                 android:textSize="14sp"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
@@ -68,7 +68,7 @@
                 android:textSize="14sp"
                 android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/border"
-                android:hint="Permanent Address"
+                android:hint="@string/permanent_addressdetails"
                 android:paddingLeft="10dp" />
 
             <EditText
@@ -77,7 +77,7 @@
                 android:layout_height="45dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
-                android:hint="PinCode"
+                android:hint="@string/pincodedetails"
                 android:inputType="number"
                 android:maxLength="6"
                 android:digits="0123456789"
@@ -94,7 +94,7 @@
                 android:textSize="14sp"
                 android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/border"
-                android:hint="Area"
+                android:hint="@string/areadetails"
                 android:singleLine="true"
                 android:paddingLeft="10dp" />
 
@@ -120,7 +120,7 @@
                     android:layout_marginLeft="10dp"
                     android:background="@null"
                     android:fontFamily="@font/montserrat_regular"
-                    android:hint="Select State"
+                    android:hint="@string/select_statedetails"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/sp_city"
                     android:paddingRight="10dp"
