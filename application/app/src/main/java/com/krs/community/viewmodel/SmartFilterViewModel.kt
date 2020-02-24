@@ -37,11 +37,12 @@ class SmartFilterViewModel(
     fun getLastName():LiveData<List<String>>{
         return mSmartFilterRepository.getLastName()
     }
-     fun getCityNamebyId(id:String):String{
+
+    suspend fun getCityNamebyId(id: String): String {
         return mSmartFilterRepository.getCityName(id)
     }
 
-     fun getLastNameById(id:Int):String{
+    suspend fun getLastNameById(id: Int): String {
         return mSmartFilterRepository.getLastNameById(id)
     }
 

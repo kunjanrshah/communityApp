@@ -101,7 +101,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         rvFilters = rootView.findViewById(R.id.lstFilter)
         actionModeCallback = ActionModeCallback()
         shimmerFrameLayout = rootView.findViewById(R.id.shimmer_view_container)
-
+        AppController.mApplication.start = 0
         smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
@@ -129,11 +129,17 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 }
                 Coroutines.io {
                     if(!member.subCastId.isNullOrEmpty()){
-                        viewHolder.tvName.text=member.firstName+" "+smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                        val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                        Coroutines.main {
+                            viewHolder.tvName.text = name
+                        }
                     }
 
                     if(!member.cityId.isNullOrEmpty()){
-                        holder.tvArea.text = member.area+" "+smartFilterViewModel.getCityNamebyId(member.cityId)
+                        val area = member.area + " " + smartFilterViewModel.getCityNamebyId(member.cityId)
+                        Coroutines.main {
+                            holder.tvArea.text = area
+                        }
                     }
                 }
 

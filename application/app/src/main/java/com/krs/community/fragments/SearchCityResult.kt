@@ -109,7 +109,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
-
+        AppController.mApplication.start = 0
         selectedItems = SparseBooleanArray()
         animationItemsIndex = SparseBooleanArray()
         actionModeCallback = ActionModeCallback()

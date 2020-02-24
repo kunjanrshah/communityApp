@@ -37,7 +37,7 @@ class SmartFilterRepository(private val api: ApiServices, private val db:AppData
         return db.getLastNameDao().getLastName()
     }
 
-    fun getCityName(id:String): String {
+    suspend fun getCityName(id: String): String {
         return db.getCityDao().getcityName(Integer.parseInt(id))
     }
 
@@ -49,7 +49,7 @@ class SmartFilterRepository(private val api: ApiServices, private val db:AppData
         return db.getLocalCommunityDao().getLocalCommName(id)
     }
 
-     fun getLastNameById(id:Int): String {
+    suspend fun getLastNameById(id: Int): String {
         return db.getLastNameDao().getLastName(id)
     }
 

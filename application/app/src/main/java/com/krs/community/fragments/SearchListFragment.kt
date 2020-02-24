@@ -125,7 +125,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
         multiSearchView = header.findViewById(R.id.multiSearchView)
         tvRecords = header.findViewById(R.id.tv_record)
         llLabel = header.findViewById(R.id.ll_label)
-
+        AppController.mApplication.start = 0
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener {
             hideKeyboard(activity)
