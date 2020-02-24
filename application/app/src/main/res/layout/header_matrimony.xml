@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:fontFamily="@font/montserrat_semibold"
-            android:text="Back to Matrimony"
+            android:text="@string/backmatrimony"
             android:textSize="18sp" />
 
 
@@ -51,7 +51,7 @@
         android:background="@drawable/border"
         android:drawableEnd="@drawable/controls"
         android:fontFamily="@font/montserrat_regular"
-        android:hint="Search Name"
+        android:hint="@string/search_name"
         android:paddingLeft="10dp"
         android:paddingRight="10dp" />
 

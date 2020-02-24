@@ -159,7 +159,7 @@
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
-                        app:jrs_title="Select Last Name" />
+                        app:jrs_title="@string/SelctLatname" />
 
                 </RelativeLayout>
 
@@ -187,7 +187,7 @@
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
-                        app:jrs_title="Select Gender" />
+                        app:jrs_title="@string/selecgender" />
 
                 </RelativeLayout>
                 <EditText
@@ -309,7 +309,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
                         android:singleLine="true"
-                        android:hint="Select State"
+                        android:hint="@string/select_state"
                         android:background="@null"
                         android:layout_marginStart="30dp"
                         android:paddingRight="15dp"
@@ -321,7 +321,7 @@
                         app:jrs_multiple="false"
                         android:nextFocusDown="@+id/spinnerCities"
                         android:imeOptions="actionNext"
-                        app:jrs_title="State List" />
+                        app:jrs_title="@string/satetList" />
 
                 </RelativeLayout>
 
@@ -349,7 +349,7 @@
                         app:jrs_multiple="false"
                         android:nextFocusDown="@+id/edt_address"
                         android:imeOptions="actionNext"
-                        app:jrs_title="City List" />
+                        app:jrs_title="@string/cityList" />
 
                 </RelativeLayout>
 
@@ -397,7 +397,7 @@
                         android:layout_marginStart="15dp"
                         android:nextFocusDown="@+id/spinnerLocal"
                         android:imeOptions="actionNext"
-                        app:jrs_title="Sub Community" />
+                        app:jrs_title="@string/sCommunity" />
 
                 </RelativeLayout>
 
@@ -427,7 +427,7 @@
                         app:jrs_multiple="false"
                         android:nextFocusDown="@+id/btn_register"
                         android:imeOptions="actionDone"
-                        app:jrs_title="Local Community" />
+                        app:jrs_title="@string/localCom" />
 
                 </RelativeLayout>
 

@@ -108,7 +108,7 @@
                             app:backgroundTint="@color/colorPrimary"
                             app:jrs_icon_tint="@color/colorPrimary"
                             app:jrs_multiple="false"
-                            app:jrs_title="Select Work Category" />
+                            app:jrs_title="@string/selectworkcategory" />
                     </RelativeLayout>
 
                 </LinearLayout>
@@ -150,7 +150,7 @@
                             app:backgroundTint="@color/colorPrimary"
                             app:jrs_icon_tint="@color/colorPrimary"
                             app:jrs_multiple="false"
-                            app:jrs_title="Select Work Sub Category" />
+                            app:jrs_title="@string/selectworksub" />
                     </RelativeLayout>
 
                 </LinearLayout>
@@ -192,7 +192,7 @@
                             app:backgroundTint="@color/colorPrimary"
                             app:jrs_icon_tint="@color/colorPrimary"
                             app:jrs_multiple="false"
-                            app:jrs_title="Select Work Sub Category" />
+                            app:jrs_title="@string/selectOccupation" />
                     </RelativeLayout>
 
                 </LinearLayout>

@@ -157,7 +157,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="5dp"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:text="OTP Verification"
+                    android:text="@string/OtpVerification"
                     android:textColor="@color/black"
                     android:textSize="26sp" />
 
@@ -167,7 +167,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/montserrat_light"
-                    android:text="Enter the OTP you have received to "
+                    android:text="@string/enterOtp"
                     android:textSize="14sp" />
 
                 <TextView
@@ -208,7 +208,7 @@
                         android:layout_weight="1"
                         android:clickable="false"
                         android:enabled="true"
-                        android:text="Resend OTP?"
+                        android:text="@string/ResendOtp"
                         android:textColor="@color/light_gray" />
 
                     <androidx.appcompat.widget.AppCompatTextView

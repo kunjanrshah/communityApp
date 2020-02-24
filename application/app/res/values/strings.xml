@@ -303,7 +303,7 @@
     <string name="upload_photo">તમારો પ્રોફાઈલ ફોટો અપલોડ કરો.</string>
     <string name="select_photo">મોબાઈલ ગેલેરી માંથી તમારો મનપસંદ ફોટો સિલેક્ટ કરો અને મનપસંદ ઈફેક્ટ આપી ને સેવ કરો.</string>
     <string name="headanimation">headanimation</string>
-    <string name="enter_firstname">Please enter your FirstName</string>
+
     <string name="enter_lastname">Please enter your LastName</string>
     <string name="enter_email">Please enter your Email</string>
     <string name="enter_gender">Please select gender</string>

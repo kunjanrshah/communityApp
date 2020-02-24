@@ -191,7 +191,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/hobby"
+                        android:text="@string/hobbypro"
                         android:fontFamily="@font/montserrat_semibold"
                         android:textStyle="bold" />
 
@@ -218,7 +218,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/expectation"
+                        android:text="@string/expectationpro"
                         android:fontFamily="@font/montserrat_semibold"
                          />
 
@@ -257,7 +257,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/weight"
+                                android:text="@string/weightpro"
                                 android:fontFamily="@font/montserrat_semibold"
                                  />
 
@@ -302,7 +302,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/height"
+                                android:text="@string/heightpro"
                                 android:fontFamily="@font/montserrat_semibold"
                                  />
 
