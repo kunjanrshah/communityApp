@@ -5,6 +5,7 @@
     <color name="colorPrimary">#843f52</color>  //#92315C
     <color name="colorTree">#C54464</color>
     <color name="colorText">#212121</color>
+    <color name="shadow">#66000000</color>
 <!--
      <color name="colorPrimaryDark">#C51162</color>
 -->

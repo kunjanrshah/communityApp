@@ -73,7 +73,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     private val duration = 10L
     private val pixelsToMove = 30
     private val mHandler = Handler(Looper.getMainLooper())
-
+    private lateinit var member: Member
     var SCROLLING_RUNNABLE: Runnable = object : Runnable {
         override fun run() {
             binding.lstSharedProfile.smoothScrollBy(pixelsToMove, 0)
@@ -149,7 +149,8 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         Utility.changeStatusbarColor(activity, R.color.white, false)
         //setRecyclerViewScrollListener()
 
-
+        val loginMember = Guru.getString(getString(R.string.loginMember), "")
+        member = Gson().fromJson(loginMember, Member::class.java)
         return binding.root
     }
 
@@ -271,8 +272,6 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     0 -> Utility.movetoFragment(activity, BrowseByCityFragment())
                     1 -> {
                         val mBundle = Bundle()
-                        val loginMember = Guru.getString(getString(R.string.loginMember), "")
-                        val member = Gson().fromJson(loginMember, Member::class.java)
                         mBundle.putSerializable(getString(R.string.member), member)
                         val intent1 = Intent(activity, QRCodeActivity::class.java)
                         intent1.putExtras(mBundle)
@@ -293,7 +292,13 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                         Utility.fade(activity)
                     }
                     6 -> Utility.movetoFragment(activity, AdminsFragment())
-                    7 -> Utility.movetoFragment(activity, NonActivesFragment())
+                    7 -> {
+                        if (member.role != getString(R.string.User)) {
+                            Utility.movetoFragment(activity, NonActivesFragment())
+                        } else {
+                            binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
+                        }
+                    }
                     8 -> {
                         binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                         return@setOnClickListener
@@ -313,12 +318,16 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     }
 
                     11 -> {
-                        val intent = Intent(activity, RegisterActivty::class.java)
-                        val bundle = Bundle()
-                        bundle.putBoolean("isLogin", false)
-                        intent.putExtras(bundle)
-                        startActivity(intent)
-                        Utility.fade(activity)
+                        if (member.role != getString(R.string.User)) {
+                            val intent = Intent(activity, RegisterActivty::class.java)
+                            val bundle = Bundle()
+                            bundle.putBoolean("isLogin", false)
+                            intent.putExtras(bundle)
+                            startActivity(intent)
+                            Utility.fade(activity)
+                        } else {
+                            binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
+                        }
                     }
                     12 -> {
                         binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)

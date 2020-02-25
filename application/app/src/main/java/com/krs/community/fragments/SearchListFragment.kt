@@ -134,15 +134,30 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
 
         ivExport = header.findViewById(R.id.iv_export)
         ivExport.setOnClickListener {
-            if (lstMembers.size > 0) {
-                    Handler().post {
-                        Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
+
+            SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getString(R.string.you_sure))
+                    .setContentText(getString(R.string.export_search_result))
+                    .setConfirmText(getString(R.string.YesExport))
+                    .setCancelText(getString(R.string.no))
+                    .setConfirmClickListener {
+                        it.dismiss()
+                        if (lstMembers.size > 0) {
+                            Handler().post {
+                                Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
+                            }
+                            createMemberListPDF(activity as AppCompatActivity, lstMembers, profileDetailViewModel)
+                            Handler().postDelayed({
+                                Utility.hideSweetProgress()
+                            }, 7000)
+                        } else {
+                            rvSearch.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
+                        }
                     }
-                    createMemberListPDF(activity as AppCompatActivity, lstMembers, profileDetailViewModel)
-                    Handler().postDelayed({
-                        Utility.hideSweetProgress()
-                    }, 7000)
-            }
+                    .setCancelClickListener {
+                        it.dismiss()
+                    }
+                    .show()
         }
 
         rvAdapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {

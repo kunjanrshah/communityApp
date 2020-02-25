@@ -36,6 +36,7 @@ import com.krs.community.adapter.AtoZBottomAdapter
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.NotificationBadge
 import com.krs.community.databinding.FragmentFilterResultBinding
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.EditMemberListener
@@ -98,14 +99,15 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     override val kodein by kodein()
     private lateinit var tvCount: TextView
     lateinit var binding: FragmentFilterResultBinding
-
+    private lateinit var loginMem: Member
     private var changeRoleDialog: DialogPlus? = null
     private var setLocationDialog: DialogPlus? = null
     private lateinit var ivExport: ImageView
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_filter_result, container, false)
-
+        val loginMember = Guru.getString(getString(R.string.loginMember), "")
+        loginMem = Gson().fromJson(loginMember, Member::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
@@ -142,16 +144,16 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 holder.iconText.text = name.substring(0, 1)
                 holder.itemView.isActivated = selectedItems.get(position, false)
                 holder.tvArea.text = member.area
+                holder.badge.setNumber(1)
+                /* holder.tvEmail.text = member.emailAddress
+                 holder.tvMobile.text = member.mobile*/
 
-               /* holder.tvEmail.text = member.emailAddress
-                holder.tvMobile.text = member.mobile*/
 
-
-                if (member.mobile.isEmpty()){
+                if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
@@ -161,11 +163,11 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 } else {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.female)
                 }
-                if (member.emailAddress.isEmpty()){
+                if (member.emailAddress.isEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
@@ -196,7 +198,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                         if (it == 0) {
                             createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
                             Handler().post(Runnable {
-                                Utility.startSweetProgress(activity, getString(R.string.expo)+"${member.firstName}"+getString(R.string.sdetails), getString(R.string.please_wait))
+                                Utility.startSweetProgress(activity, getString(R.string.expo) + "${member.firstName}" + getString(R.string.sdetails), getString(R.string.please_wait))
                             })
                             Handler().postDelayed({
                                 Utility.hideSweetProgress()
@@ -239,6 +241,11 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
                 holder.boomMenuButton.setOnClickListener({ v -> holder.boomMenuButton.boom() })
 
+                if (member.status == "2") {
+                    holder.ivVerify.visibility = View.VISIBLE
+                } else {
+                    holder.ivVerify.visibility = View.GONE
+                }
 
                 applyIconAnimation(holder, position)
                 applyProfilePicture(holder, member)
@@ -266,17 +273,38 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v -> Utility.backNavigation(activity) }
 
-        ivExport = header.findViewById<ImageView>(R.id.iv_export)
+        ivExport = header.findViewById(R.id.iv_export)
+        if (loginMem.role.equals(getString(R.string.User)) || loginMem.role.equals(getString(R.string.LOCAL_ADMIN))) {
+            ivExport.visibility = View.GONE
+        } else {
+            ivExport.visibility = View.VISIBLE
+        }
         ivExport.setOnClickListener {
-            if (members.size > 0) {
-                Handler().post {
-                    Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
-                }
-                Handler().postDelayed({
-                    Utility.hideSweetProgress()
-                }, 7000)
-                createMemberListPDF(activity as AppCompatActivity, members, profileDetailViewModel)
-            }
+
+
+            SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getString(R.string.you_sure))
+                    .setContentText(getString(R.string.export_search_result))
+                    .setConfirmText(getString(R.string.YesExport))
+                    .setCancelText(getString(R.string.no))
+                    .setConfirmClickListener {
+                        it.dismiss()
+                        if (members.size > 0) {
+                            Handler().post {
+                                Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
+                            }
+                            createMemberListPDF(activity as AppCompatActivity, members, profileDetailViewModel)
+                            Handler().postDelayed({
+                                Utility.hideSweetProgress()
+                            }, 7000)
+                        } else {
+                            binding.llParent.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
+                        }
+                    }
+                    .setCancelClickListener {
+                        it.dismiss()
+                    }
+                    .show()
         }
         tvCount = header.findViewById(R.id.tv_count)
 
@@ -351,7 +379,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         if (data.success) {
             if (data.members.size > 0) {
                 val count = data.totalHead + data.totalMem
-                tvCount.text = getString(R.string.families)+" ${data.totalHead},"+getString(R.string.mem)+" $count"
+                tvCount.text = getString(R.string.families) + " ${data.totalHead}," + getString(R.string.mem) + " $count"
                 ivExport.visibility = View.VISIBLE
                 for (user in data.members) {
                     members.add(user)
@@ -364,14 +392,14 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
                 if (data.totalHead <= AppController.mApplication.length) {
                     DashboardActivity.stop = true
-                    Snackbar.make(binding.llParent, getString(R.string.EndCity)+ "$alpha"+getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(binding.llParent, getString(R.string.EndCity) + "$alpha" + getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
                 }
 
             } else {
                 DashboardActivity.stop = true
                 ivExport.visibility = View.GONE
                 //rootView!!.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
-                Snackbar.make(binding.llParent, getString(R.string.EndCity)+ "$alpha"+getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.llParent, getString(R.string.EndCity) + "$alpha" + getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
             }
         } else {
             DashboardActivity.stop = false
@@ -576,6 +604,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         var tvUpdate: TextView = itemView.findViewById(R.id.tv_update)
         var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
         var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
+        var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
+        var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var ivMobile: ImageView = itemView.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = itemView.findViewById(R.id.iv_email)
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
@@ -610,6 +640,16 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     private inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
             mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
+            val menuDelete = menu.findItem(R.id.action_delete)
+            val menuRole = menu.findItem(R.id.action_my_role)
+
+            if (loginMem.role.equals(getString(R.string.User))) {
+                menuDelete.isVisible = false
+                menuRole.isVisible = false
+            } else {
+                menuDelete.isVisible = true
+                menuRole.isVisible = true
+            }
 
             return true
         }
@@ -672,7 +712,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
-                                .setContentText(getString(R.string.ShareCity)+" ${selectedItemPositions.size}"+getString(R.string.ProfileCity))
+                                .setContentText(getString(R.string.ShareCity) + " ${selectedItemPositions.size}" + getString(R.string.ProfileCity))
                                 .setConfirmText(getString(R.string.YesCity))
                                 .setCancelText(getString(R.string.no))
                                 .setConfirmClickListener {
@@ -790,7 +830,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         val selectedItemPositions = getSelectedItems()
         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText(getString(R.string.you_sure))
-                .setContentText("${selectedItemPositions.size}"+ getString(R.string.ProfileRoleCity) +"'$role'!")
+                .setContentText("${selectedItemPositions.size}" + getString(R.string.ProfileRoleCity) + "'$role'!")
                 .setConfirmText(getString(R.string.YesPleaseCity))
                 .setCancelText(getString(R.string.no))
                 .setConfirmClickListener {

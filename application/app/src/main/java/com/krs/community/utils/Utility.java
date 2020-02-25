@@ -1485,6 +1485,7 @@ public class Utility {
             dialog = null;
         }
         dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE).setContentText(message);
+        dialog.getProgressHelper().setBarColor(Color.parseColor("#843f52"));
         dialog.setTitleText(title);
         dialog.setCancelable(false);
         dialog.show();
@@ -1496,6 +1497,8 @@ public class Utility {
             dialog = null;
         }
         dialog = new SweetAlertDialog(context, type).setContentText(message);
+        dialog.getProgressHelper().setBarColor(Color.parseColor("#843f52"));
+
         dialog.setTitleText(title);
         dialog.setCancelable(false);
         dialog.show();
@@ -1541,38 +1544,6 @@ public class Utility {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-
-    private static void ExportAlert(@NonNull final Activity mActivity, @NonNull final File file) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
-        builder.setTitle(mActivity.getString(R.string.app_name));
-        builder.setMessage("Data Exported in a Excel Sheet");
-
-        builder.setNegativeButton("Share", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(@NonNull DialogInterface dialog, int which) {
-
-                Intent intentShareFile = new Intent(Intent.ACTION_SEND);
-                //  File fileWithinMyDir = new File(myFilePath);
-                intentShareFile.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-                if (file.exists()) {
-                    intentShareFile.setType("application/xls");
-                    intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
-                    intentShareFile.putExtra(Intent.EXTRA_SUBJECT, "Sharing File...");
-                    intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...");
-                    mActivity.startActivity(Intent.createChooser(intentShareFile, "Share File"));
-                }
-            }
-        });
-        builder.setPositiveButton("View", new DialogInterface.OnClickListener() {
-            public void onClick(@NonNull DialogInterface dialog, int which) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
-                mActivity.startActivity(intent);
-            }
-        }).show();
     }
 
 

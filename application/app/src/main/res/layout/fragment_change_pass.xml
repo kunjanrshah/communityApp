@@ -87,6 +87,8 @@
                     android:drawableEnd="@drawable/hide_pass"
                     android:fontFamily="@font/montserrat_semibold"
                     android:paddingLeft="10dp"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@id/edt_new"
                     android:hint="@string/enter_current_pin"
                     android:textColorHint="@color/color_mid_light_gray"
                     android:paddingRight="10dp" />
@@ -115,9 +117,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_marginTop="5dp"
+                    android:imeOptions="actionNext"
                     android:fontFamily="@font/montserrat_semibold"
                     android:background="@drawable/border"
                     android:hint="@string/enter_new_pin"
+                    android:nextFocusDown="@id/edt_confirm"
                     android:digits="@string/only_numbers"
                     android:textColorHint="@color/color_mid_light_gray"
                     android:paddingLeft="10dp" />
@@ -146,6 +150,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_marginTop="5dp"
+                    android:imeOptions="actionDone"
                     android:textColorHint="@color/color_mid_light_gray"
                     android:background="@drawable/border"
                     android:hint="@string/enter_confirm_pin"
@@ -162,7 +167,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/round_corner_primary"
+                android:background="@drawable/btn_registration_selection"
                 android:text="@string/update_pin"
                 android:fontFamily="@font/montserrat_semibold"
                 android:textColor="@color/white" />

@@ -15,6 +15,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -26,6 +27,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.dewinjm.monthyearpicker.MonthFormat
 import com.github.dewinjm.monthyearpicker.MonthYearPickerDialogFragment
 import com.github.squti.guru.Guru
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -33,6 +35,7 @@ import com.krs.community.R
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
+import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
 import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.listeners.ByFilterListener
@@ -73,6 +76,11 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
     private lateinit var txtDuration:TextView
     private lateinit var txtCommittee:TextView
     private lateinit var txtDesignation:TextView
+    private lateinit var llRegion: LinearLayout
+    private lateinit var llDuration: LinearLayout
+    private lateinit var llCommittee: LinearLayout
+    private lateinit var llDesignation: LinearLayout
+
     var yearSelected = 0
     var monthSelected = 0
     private var isStart=false
@@ -84,11 +92,15 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
     private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
     private val commiteeViewModelFactory: CommiteeViewModelFactory by instance()
     private var setLocationDialog: DialogPlus? = null
+    private var endDate: String? = null
+    private var startDate: String? = null
 
+    private lateinit var frameRoot: FrameLayout
     override val kodein by kodein()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_committee, container, false)
 
+        frameRoot = root.findViewById(R.id.shimmer_view_container)
         shimmerFrameLayout=root.findViewById(R.id.shimmer_view_container)
         committeeViewModel = ViewModelProvider(this, commiteeViewModelFactory).get(CommitteeViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
@@ -96,7 +108,6 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
 
         committeeViewModel.filterListener=this
         roomMemberViewModel.mRoomMemberListener = this
-
         val calendar = Calendar.getInstance()
         yearSelected = calendar[Calendar.YEAR]
         monthSelected = calendar[Calendar.MONTH]
@@ -134,8 +145,6 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
-
-
 
                 if (member.headId.equals("0")) {
                     holder.tvRole.text = resources.getString(R.string.Family_Head)
@@ -230,29 +239,40 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         txtDuration = header.findViewById<TextView>(R.id.txt_duration)
         txtCommittee = header.findViewById<TextView>(R.id.txt_committee)
         txtDesignation = header.findViewById<TextView>(R.id.txt_designation)
-        val llRegion = header.findViewById<LinearLayout>(R.id.ll_region)
-        val llDuration = header.findViewById<LinearLayout>(R.id.ll_duration)
-        val llCommittee = header.findViewById<LinearLayout>(R.id.ll_committee)
-        val llDesignation = header.findViewById<LinearLayout>(R.id.ll_designation)
+        llRegion = header.findViewById<LinearLayout>(R.id.ll_region)
+        llDuration = header.findViewById<LinearLayout>(R.id.ll_duration)
+        llCommittee = header.findViewById<LinearLayout>(R.id.ll_committee)
+        llDesignation = header.findViewById<LinearLayout>(R.id.ll_designation)
         val imgRegionClose = header.findViewById<ImageView>(R.id.img_region_close)
         imgRegionClose.setOnClickListener { v: View? ->
             llRegion.visibility = View.GONE
-            getUsersInCommittee()
+            if (lstMember.size > 0) {
+                getUsersInCommittee()
+            }
+
         }
         val imgDurationClose = header.findViewById<ImageView>(R.id.img_duration_close)
         imgDurationClose.setOnClickListener { v: View? ->
             llDuration.visibility = View.GONE
-            getUsersInCommittee()
+            if (lstMember.size > 0) {
+                getUsersInCommittee()
+            }
+
         }
         val imgCommitteeClose = header.findViewById<ImageView>(R.id.img_committee_close)
         imgCommitteeClose.setOnClickListener { v: View? ->
             llCommittee.visibility = View.GONE
-            getUsersInCommittee()
+            if (lstMember.size > 0) {
+                getUsersInCommittee()
+            }
+
         }
         val imgDesignationClose = header.findViewById<ImageView>(R.id.img_designation_close)
         imgDesignationClose.setOnClickListener { v: View? ->
             llDesignation.visibility = View.GONE
-            getUsersInCommittee()
+            if (lstMember.size > 0) {
+                getUsersInCommittee()
+            }
         }
         val filter = header.findViewById<ImageView>(R.id.filter)
         filter.setOnClickListener { v: View? -> openFilter() }
@@ -401,9 +421,16 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
             monthSelected = monthOfYear
             yearSelected = year
             val month = DateFormatSymbols().months[monthSelected]
+            var str_month = ""
+            monthSelected++
+            if (monthSelected < 10) {
+                str_month = "0$monthSelected"
+            }
             if(isStart){
+                startDate = "$yearSelected-$str_month"
                 tvStart.text = String.format("%s  %s", month, yearSelected)
             }else{
+                endDate = "$yearSelected-$str_month"
                 tvEnd.text = String.format("%s  %s", month, yearSelected)
             }
         }
@@ -420,10 +447,11 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
     }
 
     private fun getUsersInCommittee(){
+
         val jsonObject=JSONObject()
         Coroutines.io{
             val lcomm=spLocalCommunity.text.toString().trim()
-            if(!lcomm.isNullOrEmpty() && lcomm != getString(R.string.select)){
+            if (!lcomm.isEmpty() && lcomm != getString(R.string.select) && llRegion.isVisible) {
                 val id=committeeViewModel.getLocalCommunityName(lcomm)
                 jsonObject.put(getString(R.string.local_community_id),id)
                 Coroutines.main {
@@ -431,7 +459,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                 }
             }
             val designation=spDesignation.text.toString().trim()
-            if(!designation.isNullOrEmpty() && designation != getString(R.string.select)){
+            if (!designation.isNullOrEmpty() && designation != getString(R.string.select) && llDesignation.isVisible) {
                 Coroutines.main {
                     txtDesignation.text=designation
                 }
@@ -440,7 +468,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                 jsonObject.put(getString(R.string.designation_id),id)
             }
             val commitee=spCommittee.text.toString().trim()
-            if(!commitee.isNullOrEmpty() && commitee != getString(R.string.select)){
+            if (!commitee.isNullOrEmpty() && commitee != getString(R.string.select) && llCommittee.isVisible) {
 
                 Coroutines.main {
                     txtCommittee.text=commitee
@@ -449,17 +477,28 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                 jsonObject.put(getString(R.string.committee_id),id)
             }
 
-            Coroutines.main {
-                txtDuration.text="${tvStart.text} - ${tvEnd.text}"
+            if (llDuration.isVisible) {
+                Coroutines.main {
+                    txtDuration.text = "${tvStart.text} - ${tvEnd.text}"
+                }
+                jsonObject.put(getString(R.string.start_date), startDate)
+                jsonObject.put(getString(R.string.end_date), endDate)
             }
 
-            jsonObject.put("",tvStart.text)
-            jsonObject.put("",tvEnd.text)
-            jsonObject.put("",edtName.text.trim())
-            val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
-           /* committeeViewModel.getUsersInCommittee(updated)
-            shimmerFrameLayout.startShimmerAnimation()
-            shimmerFrameLayout.visibility = View.VISIBLE*/
+            jsonObject.put(getString(R.string.str_search), edtName.text.trim())
+            val jsonObject1 = JSONObject()
+            jsonObject1.put(getString(R.string.start), AppController.mApplication.start)
+            jsonObject1.put(getString(R.string.length), AppController.mApplication.length)
+            jsonObject1.put(getString(R.string.filter_by), jsonObject)
+
+            Coroutines.main {
+                shimmerFrameLayout.startShimmerAnimation()
+                shimmerFrameLayout.visibility = View.VISIBLE
+            }
+
+
+            val updated = JsonParser().parse(jsonObject1.toString()) as JsonObject
+            committeeViewModel.getUsersInCommittee(updated)
             Utility.hideKeyboard(activity)
         }
     }
@@ -467,9 +506,13 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
     override fun getMembers(response: SmartFilterResponse) {
         shimmerFrameLayout.stopShimmerAnimation()
         shimmerFrameLayout.visibility = View.GONE
+        Utility.hideKeyboard(activity)
         if(response.success){
             lstMember.clear()
             lstMember.addAll(response.members)
+            adapter.notifyDataSetChanged()
+        } else {
+            frameRoot.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
         }
     }
 
@@ -495,13 +538,11 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-        // DashboardActivity.spaceNavigationView.setVisibility(View.GONE);
     }
 
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-        // DashboardActivity.spaceNavigationView.setVisibility(View.VISIBLE);
     }
 
     override fun refreshList() {

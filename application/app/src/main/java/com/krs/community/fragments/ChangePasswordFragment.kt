@@ -87,6 +87,7 @@ class ChangePasswordFragment : Fragment(), KodeinAware, ILoginListener {
             jsonObject.put(getString(R.string.current_password), passBinding.edtCurr.text.trim())
             jsonObject.put(getString(R.string.new_password), passBinding.edtNew.text.trim())
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+            Utility.startSweetProgress(activity, getString(R.string.change_pin), getString(R.string.loading))
             passwordViewModel.changePassword(updated)
         }
 
@@ -104,9 +105,11 @@ class ChangePasswordFragment : Fragment(), KodeinAware, ILoginListener {
                     .setConfirmClickListener {
                         it.dismissWithAnimation()
                         val jsonObject = JSONObject()
-                        jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+                        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+                        jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.member_id), ""))
                         jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
                         val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                        Utility.startSweetProgress(activity, getString(R.string.forgotPin), getString(R.string.loading))
                         passwordViewModel.forgotPassword(updated)
                     }
                     .show()
@@ -150,10 +153,12 @@ class ChangePasswordFragment : Fragment(), KodeinAware, ILoginListener {
     }
 
     override fun userLogin(response: LoginResponse) {
+        Utility.hideSweetProgress()
         Snackbar.make(passBinding.llParent, response.message, Snackbar.LENGTH_LONG).show()
     }
 
     override suspend fun getFailure(message: String) {
+        Utility.hideSweetProgress()
         Snackbar.make(passBinding.llParent, message, Snackbar.LENGTH_LONG).show()
     }
 }

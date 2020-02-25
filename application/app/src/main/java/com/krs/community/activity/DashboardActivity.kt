@@ -29,7 +29,6 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.krs.community.R
-import com.krs.community.bkservice.MyCustomDialog
 import com.krs.community.databinding.ActivityDashboardBinding
 import com.krs.community.fragments.*
 import com.krs.community.fragments.FragmentDrawer.FragmentDrawerListener
@@ -266,8 +265,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         } else if (position == 2) {
             movetoFragment(this, StatisticFragment())
         } else if (position == 3) {
-            binding.containerBody.snackbar(resources.getString(R.string.coming_soon),Snackbar.LENGTH_LONG)
-            return
             movetoFragment(this, CommitteeFragment())
         }
     }

@@ -237,8 +237,9 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                             .setContentText(getString(R.string.you_sure))
                             .setConfirmClickListener {
                                 it.dismissWithAnimation()
-                                Utility.startSweetProgress(this, getString(R.string.updatingProfile), getString(R.string.pleaseWait))
+                                startSweetProgress(this, getString(R.string.updatingProfile), getString(R.string.pleaseWait))
                                 jsonObject.put(getString(R.string.id), member?.id)
+                                // jsonObject.put(getString(R.string.status), "2")
                                 val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
                                 profileDetailViewModel.updateProfile(profile, true)
                             }
@@ -249,17 +250,17 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                         mainDetailsFragment.binding.fname.error = getString(R.string.EnterFirstName)
                         return@setOnClickListener
                     } else if (jsonObject.getString(getString(R.string.sub_cast_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.sub_cast_id)) == "0") {
-                        Utility.displaySnackBarWithBottomMargin(ll_parent, getString(R.string.selectYourLastName))
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.selectYourLastName))
                         return@setOnClickListener
                     } else if (jsonObject.getString(getString(R.string.gender)).isNullOrEmpty()) {
-                        Utility.displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectYourGender))
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectYourGender))
                         return@setOnClickListener
                     } else if (jsonObject.getString(getString(R.string.relation_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.relation_id)) == "0") {
-                        Utility.displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectRelation))
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectRelation))
                         return@setOnClickListener
                     }
 
-                    Utility.startSweetProgress(this, "Adding ${jsonObject.get(getString(R.string.first_name))}'s Profie", "Please wait...")
+                    startSweetProgress(this, "Adding ${jsonObject.get(getString(R.string.first_name))}'s Profie", "Please wait...")
                     val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
                     profileDetailViewModel.updateProfile(profile, false)
                 }

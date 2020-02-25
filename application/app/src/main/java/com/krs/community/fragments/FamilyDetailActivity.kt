@@ -537,7 +537,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     }
                     TTFancyGifDialog.Builder(this)
                             .setTitle(getString(R.string.you_sure))
-                            .setMessage(textMsg + getString(R.string.Communityapp))
+                            .setMessage(textMsg + " " + getString(R.string.Communityapp))
                             .setPositiveBtnText(getString(R.string.yes))
                             .setPositiveBtnBackground("#22b573")
                             .setNegativeBtnText(getString(R.string.no))

@@ -55,6 +55,11 @@ android {
         targetCompatibility '1.8'
         sourceCompatibility '1.8'
     }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
     dataBinding{
         enabled = true
     }
@@ -70,6 +75,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/OvteBase64.jar')
     implementation project(':easywaylocation')
+    implementation project(':sweetdialoglib')
     //noinspection GradleCompatible
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
@@ -140,8 +146,6 @@ dependencies {
     implementation "com.facebook.fresco:fresco:$rootProject.FRESCO_VERSION"
 
     implementation "com.leinardi.android:speed-dial:3.0.0"
-
-    implementation 'com.github.f0ris.sweetalert:library:1.5.1'
 
     implementation 'com.ericliu.asyncexpandablelist:asyncexpandablelist:1.1.0'
 

@@ -863,7 +863,7 @@ private fun createPdf(mContext: Context, fname: String, test: String) {
 
 fun displayPDFDialog(context: Context,name:String,filePath:String,content:String) {
 
-    SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+    SweetAlertDialog(context, SweetAlertDialog.PDF_TYPE)
             .setTitleText("$name's Profile")
             .setContentText("You can View, Share and Print the PDF Profile")
             .setCustomImage(R.drawable.ic_app)

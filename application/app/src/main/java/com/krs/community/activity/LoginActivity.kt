@@ -13,7 +13,6 @@ import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -238,7 +237,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 btnContinue.performClick()
             }
 
-            binding.btnContinue.setOnTouchListener { v, event ->
+            /*binding.btnContinue.setOnTouchListener { v, event ->
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         btnContinue.background = resources.getDrawable(R.drawable.btn_registration_pressed)
@@ -251,7 +250,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                     }
                     else -> return@setOnTouchListener false
                 }
-            }
+            }*/
 
             binding.btnContinue.setOnClickListener { v ->
 

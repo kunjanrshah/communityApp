@@ -247,15 +247,30 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         tvCount = header.findViewById(R.id.tv_count)
         ivExport = header.findViewById<ImageView>(R.id.iv_export)
         ivExport.setOnClickListener {
-            if (lstMembers.size > 0) {
-                Handler().post {
-                    Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
-                }
-                createMemberListPDF(activity as AppCompatActivity, lstMembers, profileDetailViewModel)
-                Handler().postDelayed({
-                    Utility.hideSweetProgress()
-                }, 7000)
-            }
+
+            SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getString(R.string.you_sure))
+                    .setContentText(getString(R.string.export_search_result))
+                    .setConfirmText(getString(R.string.YesExport))
+                    .setCancelText(getString(R.string.no))
+                    .setConfirmClickListener {
+                        it.dismiss()
+                        if (lstMembers.size > 0) {
+                            Handler().post {
+                                Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
+                            }
+                            createMemberListPDF(activity as AppCompatActivity, lstMembers, profileDetailViewModel)
+                            Handler().postDelayed({
+                                Utility.hideSweetProgress()
+                            }, 7000)
+                        } else {
+                            rvFilters.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
+                        }
+                    }
+                    .setCancelClickListener {
+                        it.dismiss()
+                    }
+                    .show()
         }
 
         adapter.setParallaxHeader(header, rvFilters)

@@ -95,9 +95,9 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         }
 
 
-        if(member.role.equals("LOCAL_ADMIN")){
+        if (member.role.equals(getString(R.string.LOCAL_ADMIN))) {
             binding.edtRole.text = getString(R.string.localAdmin)
-        }else if(member.role.equals("SUB_ADMIN")) {
+        } else if (member.role.equals(getString(R.string.SUB_ADMIN))) {
             binding.edtRole.text = getString(R.string.SubAdmin)
         }else{
             binding.edtRole.text = getString(R.string.user)

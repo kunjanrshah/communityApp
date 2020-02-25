@@ -240,7 +240,7 @@
             android:id="@+id/btnContinue"
             android:layout_width="170dp"
             android:layout_height="50dp"
-            android:background="@drawable/btn_registration"
+            android:background="@drawable/btn_registration_selection"
             android:fontFamily="@font/montserrat_semibold"
             android:text="@string/_continue"
             android:textAllCaps="false"

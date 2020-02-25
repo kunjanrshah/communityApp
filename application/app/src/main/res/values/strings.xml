@@ -448,6 +448,9 @@
     <string name="filter_by" translatable="false">filter_by</string>
     <string name="designation_id" translatable="false">designation_id</string>
     <string name="committee_id" translatable="false">committee_id</string>
+    <string name="end_date" translatable="false">end_date</string>
+    <string name="start_date" translatable="false">start_date</string>
+    <string name="str_search" translatable="false">str_search</string>
     <string name="local_community_id" translatable="false">local_community_id</string>
     <string name="sub_community_id" translatable="false">sub_community_id</string>
 
@@ -862,12 +865,13 @@
     <string name="ageList">Age:</string>
     <string name="statusList">Status:</string>
 
+    <string name="status" translatable="false">status</string>
     <!-- NonActives Fragment -->
     <string name="endNonActives">End of Records</string>
     <string name="noFoundNonActives">No records found!</string>
     <string name="Approved">Approved</string>
     <string name="Restricted">Restricted</string>
-    <string name="YesApprovenon">Yes,Approve it!</string>
+    <string name="YesApprovenon">Approve it!</string>
 
     <string name="addressNon">Address</string>
 
@@ -935,7 +939,8 @@
     <string name="LocationCity">Location shared successfully</string>
     <string name="ShareCity">Share your location to</string>
     <string name="ProfileCity">Profiles!</string>
-    <string name="YesCity">Yes,Share it!</string>
+    <string name="YesCity">Share it!</string>
+    <string name="YesExport">Export it!</string>
     <string name="ProfileRoleCity">Profiles Role will be changed to</string>
     <string name="YesPleaseCity">Yes,Please!</string>
 
@@ -1106,6 +1111,7 @@
     <string name="retry">Retry</string>
     <string name="fetching_local_community">Fetching Local Community</string>
     <string name="coming_soon">Coming soon</string>
+    <string name="admin_only">For Admin only</string>
     <string name="contact_number">9427051418</string>
     <string name="fb_url" translatable="false">https://www.facebook.com/kunjanrshah87</string>
     <string name="linkedin_url" translatable="false">https://www.linkedin.com/in/kunjan-shah-76901b6a/</string>
@@ -1205,6 +1211,7 @@
     <string name="select_native">Select Native</string>
     <string name="select_citydetails">Select City</string>
     <string name="you_can_search_here_using_many_filter_options_like_family_head_family_members_mobile_no_email_id_etc">You can search here using many filter options(Like Family head,Family members, Mobile No, Email Id etc...)</string>
+    <string name="export_search_result">Export search result!</string>
 
 
 </resources>
