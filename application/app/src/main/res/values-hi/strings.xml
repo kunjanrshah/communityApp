@@ -97,6 +97,7 @@
         <item>Paytm</item>
         <item>नया</item>
         <item>यात्रा</item>
+        <item>मेरे संपर्क</item>
     </string-array>
 
     <string name="text_inside_circle_button_text_normal">सर्किल बटन के अंदर पाठ (सामान्य)</string>
