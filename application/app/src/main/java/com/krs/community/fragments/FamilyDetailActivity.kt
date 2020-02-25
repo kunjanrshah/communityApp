@@ -364,6 +364,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         val header = layoutInflater.inflate(R.layout.header_detail, rvDetail, false)
         val cancel = header.findViewById<ImageView>(R.id.img_cancel1)
         val login = header.findViewById<ImageView>(R.id.login)
+        val img_map = header.findViewById<ImageView>(R.id.img_map)
         if(!memberId.isNullOrEmpty()){
             cancel.visibility=View.VISIBLE
             login.visibility = View.GONE
@@ -377,6 +378,14 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             finish()
             fade(this)
         }
+
+        img_map.setOnClickListener {
+            val intent=Intent(this,MapviewActivity::class.java)
+            startActivity(intent)
+
+            fade(this)
+        }
+
         login.setOnClickListener {
             TTFancyGifDialog.Builder(this)
                     .setTitle(getString(R.string.you_sure))

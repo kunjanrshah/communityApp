@@ -237,7 +237,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     internal inner class MenuAdapter(private val mContext: Context) : BaseAdapter() {
 
         override fun getCount(): Int {
-            return 13
+            return 14
         }
 
         override fun getItem(position: Int): Any {
@@ -308,7 +308,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
                     10 -> {
                         binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
-                        return@setOnClickListener
+
                         Utility.movetoFragment(activity, PaytmFragment())
                     }
 
@@ -324,6 +324,10 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                         binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                         return@setOnClickListener
                         Utility.movetoFragment(activity, TourVideoFragment())
+                    }
+                    13 -> {
+
+                        Utility.movetoFragment(activity, MyContactListFragment())
                     }
                 }
             }

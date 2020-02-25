@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:shimmer="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/ll_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:text="Amount to be Paid:"
+            android:textSize="18sp"
+            android:padding="5dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/black"
+            android:layout_height="wrap_content" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:id="@+id/amountText"
+            android:hint="Amount"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="100dp"
+            android:padding="10dp"
+            android:id="@+id/paytmButton"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:foreground="@drawable/border"
+            android:background="@drawable/paytm"
+            android:layout_height="60dp" />
+
+
+
+    </LinearLayout>
+</layout>
+
+
+
