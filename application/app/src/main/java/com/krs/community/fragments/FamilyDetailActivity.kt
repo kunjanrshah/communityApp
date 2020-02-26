@@ -378,9 +378,17 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             finish()
             fade(this)
         }
+        val member = members.get(0)
 
         img_map.setOnClickListener {
-            val intent = Intent(this, MapviewActivity::class.java)
+
+            val url=resources.getString(R.string.base_url_thumb)+member.profilePic
+
+            /*val intent = Intent(this, MapviewActivity::class.java)
+            intent.putExtra("image", url)
+            startActivity(intent)  */
+
+            val intent = Intent(this, MapTrackingActivity::class.java)
             startActivity(intent)
 
             fade(this)
@@ -408,7 +416,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     .build()
             true
         }
-        val member = members.get(0)
         val tvName: TextView = header.findViewById(R.id.tv_name1)
         tvName.text = member.firstName+" "+member.lastName
         val iconText: TextView = header.findViewById(R.id.icon_text1)

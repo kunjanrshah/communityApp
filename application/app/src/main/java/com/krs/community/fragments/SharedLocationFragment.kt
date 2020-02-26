@@ -27,6 +27,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.FamilyTreeListActivity
+import com.krs.community.activity.MapviewActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
@@ -212,13 +213,23 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         val header = LayoutInflater.from(activity).inflate(R.layout.header_shared, container, false)
         val tvCount = header.findViewById<ImageView>(R.id.tv_count)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
+        val img_map = header.findViewById<ImageView>(R.id.img_map)
+
         ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
+
+        img_map.setOnClickListener { v: View? ->
+
+            val intent = Intent(activity, MapviewActivity::class.java)
+            intent.putExtra("image", "imageUrl")
+            startActivity(intent)  }
         adapter.setParallaxHeader(header, binding.rvLocation)
         binding.rvLocation.adapter = adapter
         getSharedProfiles()
 
         return binding.root
     }
+
+
 
     override fun onResume() {
         super.onResume()

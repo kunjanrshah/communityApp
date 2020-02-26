@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/multiple-images-selector" />
             <option value="$PROJECT_DIR$/multisearchviewlib" />
             <option value="$PROJECT_DIR$/slycalendarview" />
+            <option value="$PROJECT_DIR$/sweetdialoglib" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

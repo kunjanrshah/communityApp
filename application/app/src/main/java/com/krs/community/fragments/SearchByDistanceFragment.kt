@@ -36,13 +36,9 @@ import com.github.squti.guru.Guru
 import com.google.android.gms.location.LocationRequest
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
-import com.krs.community.activity.DashboardActivity
-import com.krs.community.activity.FamilyTreeListActivity
-import com.krs.community.activity.ProfileDetailActivity
-import com.krs.community.activity.QRCodeActivity
+import com.krs.community.activity.*
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
-import com.krs.community.app.NotificationBadge
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByDistanceListener
 import com.krs.community.listeners.RoomMemberListener
@@ -82,6 +78,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     private lateinit var edtKm:EditText
     private lateinit var nearBy:String
     private lateinit var tvRecords:TextView
+    private lateinit var img_map:ImageView
     private lateinit var easyWayLocation: EasyWayLocation
     private lateinit var getLocationDetail: GetLocationDetail
     private var curr_lat = MutableLiveData<Double>()
@@ -171,6 +168,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         rbtnUser = header.findViewById(R.id.rbtnUser)
         rbtnAll = header.findViewById(R.id.rbtnAll)
         tvRecords= header.findViewById(R.id.tv_total)
+        img_map= header.findViewById(R.id.img_map)
         rbtnHome.setOnClickListener { v ->
             rbtnHome.isChecked = true
             rbtnOffice.isChecked = false
@@ -197,6 +195,19 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
             rbtnOffice.isChecked = false
             rbtnUser.isChecked = false
             rbtnAll.isChecked = true
+        }
+
+        rbtnAll.setOnClickListener { v ->
+            rbtnHome.isChecked = false
+            rbtnOffice.isChecked = false
+            rbtnUser.isChecked = false
+            rbtnAll.isChecked = true
+        }
+
+        img_map.setOnClickListener { v ->
+            val intent = Intent(activity, MapviewActivity::class.java)
+            intent.putExtra("image", "imageUrl")
+            startActivity(intent)
         }
 
         val imgCancel = header.findViewById<ImageView>(R.id.img_cancel)
@@ -226,7 +237,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                 val viewHolder: DistanceViewHolder = viewHolder as DistanceViewHolder
                 val member = lstMembers[i]
                 viewHolder.tvName.text = member.firstName
-                viewHolder.badge.setNumber(1)
+
                 mByDistanceViewModel.getLastNamebyId(member.subCastId).observeForever {
                     viewHolder.tvName.text = member.firstName+" "+it
                 }
@@ -234,6 +245,9 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                 mByDistanceViewModel.getCityNamebyId(member.cityId).observeForever {
                     viewHolder.tvArea.text = member.area+" "+it
                 }
+
+                /*viewHolder.tvEmail.text = member.emailAddress
+                viewHolder.tvMobile.text = member.mobile*/
 
                 if (member.mobile.isEmpty()){
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
@@ -259,11 +273,6 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                     viewHolder.ivGender.setBackgroundResource(R.drawable.male)
                 } else {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.female)
-                }
-                if (member.status == "2") {
-                    viewHolder.ivVerify.visibility = View.VISIBLE
-                } else {
-                    viewHolder.ivVerify.visibility = View.GONE
                 }
 
                 if(member.headId.equals("0")){
@@ -448,8 +457,6 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
-        var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
-        var badge: NotificationBadge = itemView.findViewById(R.id.badge)
 
     }
 

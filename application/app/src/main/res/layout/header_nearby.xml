@@ -39,15 +39,32 @@
         </LinearLayout>
 
 
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:paddingTop="10dp"
-            android:fontFamily="@font/montserrat_semibold"
-            android:text="@string/EnterNewrby"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:paddingTop="10dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/EnterNewrby"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/img_map"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:background="@drawable/map" />
+
+        </RelativeLayout>
+
+
 
 
         <LinearLayout
