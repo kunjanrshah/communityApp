@@ -42,6 +42,7 @@ import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.NotificationBadge
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByDistanceListener
 import com.krs.community.listeners.RoomMemberListener
@@ -225,7 +226,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                 val viewHolder: DistanceViewHolder = viewHolder as DistanceViewHolder
                 val member = lstMembers[i]
                 viewHolder.tvName.text = member.firstName
-
+                viewHolder.badge.setNumber(1)
                 mByDistanceViewModel.getLastNamebyId(member.subCastId).observeForever {
                     viewHolder.tvName.text = member.firstName+" "+it
                 }
@@ -233,9 +234,6 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                 mByDistanceViewModel.getCityNamebyId(member.cityId).observeForever {
                     viewHolder.tvArea.text = member.area+" "+it
                 }
-
-                /*viewHolder.tvEmail.text = member.emailAddress
-                viewHolder.tvMobile.text = member.mobile*/
 
                 if (member.mobile.isEmpty()){
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
@@ -261,6 +259,11 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                     viewHolder.ivGender.setBackgroundResource(R.drawable.male)
                 } else {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.female)
+                }
+                if (member.status == "2") {
+                    viewHolder.ivVerify.visibility = View.VISIBLE
+                } else {
+                    viewHolder.ivVerify.visibility = View.GONE
                 }
 
                 if(member.headId.equals("0")){
@@ -445,6 +448,8 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
+        var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
+        var badge: NotificationBadge = itemView.findViewById(R.id.badge)
 
     }
 

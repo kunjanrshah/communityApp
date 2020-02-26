@@ -873,6 +873,7 @@
     <string name="some_more">कुछ और</string>
     <string name="you_can_search_here_using_many_filter_options_like_family_head_family_members_mobile_no_email_id_etc">आप कई फ़िल्टर विकल्पों (जैसे परिवार के मुखिया, परिवार के सदस्य, मोबाइल नंबर, ईमेल आईडी आदि) का उपयोग करके यहां खोज सकते हैं ...</string>
     <string name="export_search_result">Export search result!</string>
+    <string name="select_filter">Please select filter!</string>
 
 
 </resources>

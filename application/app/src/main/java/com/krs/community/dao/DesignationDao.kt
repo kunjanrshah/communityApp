@@ -16,6 +16,9 @@ interface DesignationDao {
     @Query("SELECT id FROM Designation WHERE name=:name")
     fun getDesignationName(name:String) : Int
 
+    @Query("SELECT name FROM Designation WHERE id=:id")
+    fun getDesignationNameById(id: Int): String
+
     @Query("SELECT name FROM Designation ORDER BY name ASC")
     fun getDesignationName() : LiveData<List<String>>
 

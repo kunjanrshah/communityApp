@@ -850,7 +850,7 @@
 
     <!-- MatriMony Fragment -->
     <string name="enterName">Enter name please</string>
-    <string name="welcome_to_nmatrimony_section">Welcome To, Matrimony Section</string>
+    <string name="welcome_to_nmatrimony_section">Welcome To, \nMatrimony Section</string>
     <string name="search_with_given_filter_or_skip_directly">Search with given filter or skip directly</string>
     <string name="search_nameMatrimony">Search Name</string>
     <string name="search_now">Search Now</string>
@@ -1209,6 +1209,7 @@
     <string name="select_citydetails">Select City</string>
     <string name="you_can_search_here_using_many_filter_options_like_family_head_family_members_mobile_no_email_id_etc">You can search here using many filter options(Like Family head,Family members, Mobile No, Email Id etc...)</string>
     <string name="export_search_result">Export search result!</string>
+    <string name="select_filter">Please select filter!</string>
 
 
 </resources>

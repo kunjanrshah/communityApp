@@ -40,6 +40,7 @@ import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.NotificationBadge
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByKeywordListener
 import com.krs.community.listeners.RoomMemberListener
@@ -96,8 +97,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
     private var currentSelectedIndex = -1
     private var actionMode: ActionMode? = null
     private lateinit var actionModeCallback: ActionModeCallback
-
-
+    private var loginMember: Member? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_search_list, container, false)
@@ -112,6 +112,9 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
 
         smartSearchViewModel.mByKeywordListener = this
         roomMemberViewModel.mRoomMemberListener= this
+
+        val loginuser = Guru.getString(getString(R.string.loginMember), "")
+        loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
 
         frameRoot = rootView.findViewById(R.id.frameRoot)
         rvSearch = rootView.findViewById(R.id.rv_search)
@@ -169,7 +172,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                 val viewHolder: MyViewHolder = viewHolder as MyViewHolder
 
                 val member = lstMembers[position]
-
+                viewHolder.badge.setNumber(1)
                 viewHolder.tvName.text = member.firstName
                 smartSearchViewModel.getLastName(member.subCastId.toInt()).observeForever {
                     viewHolder.tvName.text = member.firstName + " " + it
@@ -204,6 +207,11 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                     viewHolder.ivGender.setBackgroundResource(R.drawable.male)
                 } else {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.female)
+                }
+                if (member.status == "2") {
+                    viewHolder.ivVerify.visibility = View.VISIBLE
+                } else {
+                    viewHolder.ivVerify.visibility = View.GONE
                 }
                 if (member.headId == "0") {
                     viewHolder.tvRole.text = resources.getString(R.string.Family_Head)
@@ -696,10 +704,11 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
         var boomMenuButton: BoomMenuButton = view.findViewById(R.id.boomMenuButton1)
         var lstFound: RecyclerView = view.findViewById(R.id.lst_found)
         var llMobile: LinearLayout = view.findViewById(R.id.ll_mobile)
-        var llEmail: LinearLayout = view.findViewById(R.id.ll_email)
         var ivMobile: ImageView = view.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = view.findViewById(R.id.iv_email)
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
+        var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
+        var badge: NotificationBadge = itemView.findViewById(R.id.badge)
 
         init {
             view.setOnLongClickListener(this)
@@ -737,6 +746,18 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
     private inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
             mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
+
+            val menuDelete = menu.findItem(R.id.action_delete)
+            val menuRole = menu.findItem(R.id.action_my_role)
+
+            if (loginMember?.role.equals(getString(R.string.User))) {
+                menuDelete.isVisible = false
+                menuRole.isVisible = false
+            } else {
+                menuDelete.isVisible = true
+                menuRole.isVisible = true
+            }
+
             return true
         }
 

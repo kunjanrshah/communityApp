@@ -16,6 +16,9 @@ interface CommitteeDao {
     @Query("SELECT id FROM Committee WHERE name=:name")
     fun getCommitteeName(name:String) : Int
 
+    @Query("SELECT name FROM Committee WHERE id=:id")
+    fun getCommitteeNameById(id: Int): String
+
     @Query("SELECT name FROM Committee ORDER BY name ASC")
     fun getCommitteeNames() : LiveData<List<String>>
 

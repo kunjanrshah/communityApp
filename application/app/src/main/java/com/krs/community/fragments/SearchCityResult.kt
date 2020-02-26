@@ -145,9 +145,6 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 holder.itemView.isActivated = selectedItems.get(position, false)
                 holder.tvArea.text = member.area
                 holder.badge.setNumber(1)
-                /* holder.tvEmail.text = member.emailAddress
-                 holder.tvMobile.text = member.mobile*/
-
 
                 if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
@@ -602,8 +599,6 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         var iconText: TextView = itemView.findViewById(R.id.icon_text)
         var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
         var tvUpdate: TextView = itemView.findViewById(R.id.tv_update)
-        var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
-        var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var ivMobile: ImageView = itemView.findViewById(R.id.iv_mobile)

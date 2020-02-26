@@ -162,6 +162,12 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                     holder.ivGender.setBackgroundResource(R.drawable.female)
                 }
 
+                if (member.status == "2") {
+                    viewHolder.ivVerify.visibility = View.VISIBLE
+                } else {
+                    viewHolder.ivVerify.visibility = View.GONE
+                }
+
                 Coroutines.io {
                     if (!member.head_sub_cast_id.isNullOrEmpty() && !member.head_name.isNullOrEmpty()) {
                         holder.txtHead.text = member.head_name + " " + smartFilterViewModel.getLastNameById(member.head_sub_cast_id.toInt())
@@ -421,13 +427,14 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         var ll_email: LinearLayout = v.findViewById(R.id.ll_email)
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
+        var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
     }
 
     override fun getMembers(response: SmartFilterResponse) {
         binding.shimmerViewContainer.stopShimmerAnimation()
         binding.shimmerViewContainer.visibility = View.GONE
         if (response.success) {
-            tvRecords.text = getString(R.string.recordfound) + response.totalRecords
+            tvRecords.text = getString(R.string.recordfound) + " " + response.totalRecords
             tvRecords.visibility = View.VISIBLE
             ivExport.visibility = View.VISIBLE
 

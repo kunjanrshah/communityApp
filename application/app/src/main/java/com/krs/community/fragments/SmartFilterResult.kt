@@ -37,6 +37,7 @@ import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.NotificationBadge
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.listeners.RoomMemberListener
@@ -90,6 +91,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
     private var changeRoleDialog: DialogPlus? = null
     private var setLocationDialog: DialogPlus? = null
+    private var loginMember: Member? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_filter_result, container, false)
@@ -107,6 +109,8 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         smartFilterViewModel.mByFilterListener = this
         roomMemberViewModel.mRoomMemberListener = this
+        val loginuser = Guru.getString(getString(R.string.loginMember), "")
+        loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
 
         adapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
@@ -127,6 +131,12 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 } else {
                     holder.ivGender.setBackgroundResource(R.drawable.female)
                 }
+                if (member.status == "2") {
+                    holder.ivVerify.visibility = View.VISIBLE
+                } else {
+                    holder.ivVerify.visibility = View.GONE
+                }
+                holder.badge.setNumber(1)
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
                         val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
@@ -538,7 +548,6 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
     private inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnLongClickListener {
 
-        var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
         val boomMenuButton: BoomMenuButton = itemView.findViewById(R.id.bmb1)
         val tvArea: TextView = itemView.findViewById(R.id.tv_area)
         val tvRole: TextView = itemView.findViewById(R.id.tv_role)
@@ -552,10 +561,11 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         var imgProfile: ImageView = itemView.findViewById(R.id.icon_profile)
         var tvUpdate: TextView = itemView.findViewById(R.id.tv_update)
         var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
-        var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
         var ivMobile: ImageView = itemView.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = itemView.findViewById(R.id.iv_email)
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
+        var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
+        var badge: NotificationBadge = itemView.findViewById(R.id.badge)
 
         init {
             itemView.setOnLongClickListener(this)
@@ -595,6 +605,18 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     private inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
             mode.menuInflater.inflate(R.menu.menu_action_mode, menu)
+
+            val menuDelete = menu.findItem(R.id.action_delete)
+            val menuRole = menu.findItem(R.id.action_my_role)
+
+            if (loginMember?.role.equals(getString(R.string.User))) {
+                menuDelete.isVisible = false
+                menuRole.isVisible = false
+            } else {
+                menuDelete.isVisible = true
+                menuRole.isVisible = true
+            }
+
             return true
         }
 

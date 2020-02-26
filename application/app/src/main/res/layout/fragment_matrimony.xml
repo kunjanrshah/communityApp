@@ -24,7 +24,7 @@
         android:fontFamily="@font/montserrat_semibold"
         android:text="@string/welcome_to_nmatrimony_section"
         android:textColor="@color/colorPrimary"
-        android:textSize="30sp" />
+        android:textSize="26sp" />
 
     <TextView
         android:layout_width="match_parent"

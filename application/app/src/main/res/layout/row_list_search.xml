@@ -10,7 +10,7 @@
     android:transitionName="@string/headanimation"
     android:background="@drawable/round_corner_itemlist"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="10dp"
     app:cardCornerRadius="@dimen/card_corner_radius"
     app:cardElevation="@dimen/card_elevation"
     app:contentPadding="10dp">
@@ -131,7 +131,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semibold"
                             android:text="Kunjan Patel"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tv_area"
@@ -140,23 +140,41 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
                             android:text="Maninagar, Ahmedabad"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
 
-                    <TextView
-                        android:id="@+id/tv_role"
+                    <RelativeLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="25dp"
-                        android:background="@drawable/round_corner_blue"
-                        android:fontFamily="@font/montserrat_semibold"
-                        android:gravity="center"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:text="Family Head"
-                        android:textColor="@color/white"
-                        android:textSize="10sp" />
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tv_role"
+                            android:layout_width="wrap_content"
+                            android:layout_height="25dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/round_corner_blue"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:gravity="center"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Member"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+
+                        <com.krs.community.app.NotificationBadge
+                            android:id="@+id/badge"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_alignTop="@id/tv_role"
+                            android:layout_marginLeft="-16dp"
+                            android:layout_marginTop="-8dp"
+                            android:layout_toRightOf="@id/tv_role"
+                            app:nbBackground="@drawable/badge_bg_with_shadow"
+                            app:nbMaxTextLength="2" />
+                    </RelativeLayout>
 
                 </LinearLayout>
 
@@ -175,6 +193,7 @@
                     android:layout_marginBottom="5dp"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
+
 
                     <LinearLayout
                         android:id="@+id/ll_email"
@@ -205,16 +224,15 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/llMobile"
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
-                        android:layout_marginTop="5dp"
                         android:layout_height="wrap_content">
 
                         <LinearLayout
+                            android:layout_width="wrap_content"
                             android:id="@+id/ll_mobile"
                             android:layout_weight="1"
-                            android:layout_width="match_parent"
+                            android:layout_marginTop="5dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:orientation="horizontal">
@@ -241,7 +259,20 @@
 
                         </LinearLayout>
 
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="right">
 
+                            <ImageView
+                                android:id="@+id/iv_verify"
+                                android:layout_width="25dp"
+                                android:layout_height="20dp"
+                                android:layout_marginLeft="3dp"
+                                android:layout_marginBottom="5dp"
+                                android:background="@drawable/sunglasses"
+                                android:visibility="gone" />
+                        </LinearLayout>
 
                     </LinearLayout>
 

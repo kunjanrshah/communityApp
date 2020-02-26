@@ -85,8 +85,6 @@ public class PaytmFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Checksum> call, Throwable t) {
-
-
                 Log.e("error", "" + t.getMessage());
             }
         });

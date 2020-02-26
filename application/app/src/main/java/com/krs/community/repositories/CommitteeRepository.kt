@@ -3,14 +3,8 @@ package com.krs.community.repositories
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
-import com.krs.community.entities.City
-import com.krs.community.entities.Committee
-import com.krs.community.entities.Designation
-import com.krs.community.entities.LocalCommunity
-import com.krs.community.model.*
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.retrofit.ApiServices
-import com.krs.community.utils.AppConstants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -27,6 +21,24 @@ class CommitteeRepository(
     suspend fun getLastnameById(id:Int): String {
         return withContext(Dispatchers.IO) {
             db.getLastNameDao().getLastName(id)
+        }
+    }
+
+    suspend fun getLocalCommunityById(id: Int): String {
+        return withContext(Dispatchers.IO) {
+            db.getLocalCommunityDao().getLocalCommName(id.toString())
+        }
+    }
+
+    suspend fun getCommitteeById(id: Int): String {
+        return withContext(Dispatchers.IO) {
+            db.getCommitteeDao().getCommitteeNameById(id)
+        }
+    }
+
+    suspend fun getDesignationById(id: Int): String {
+        return withContext(Dispatchers.IO) {
+            db.getDesignationDao().getDesignationNameById(id)
         }
     }
 

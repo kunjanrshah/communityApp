@@ -878,5 +878,6 @@
 
     <string name="you_can_search_here_using_many_filter_options_like_family_head_family_members_mobile_no_email_id_etc">તમે ઘણા ફિલ્ટર વિકલ્પો (જેમ કે કુટુંબના વડા, કુટુંબના સભ્યો, મોબાઇલ નંબર, ઇમેઇલ આઈડી વગેરે ...) નો ઉપયોગ કરીને તમે અહીં શોધી શકો છો</string>
     <string name="export_search_result">Export search result!</string>
+    <string name="select_filter">Please select filter!</string>
 
 </resources>

@@ -4,9 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
-import com.krs.community.entities.Committee
-import com.krs.community.entities.Designation
-import com.krs.community.entities.LocalCommunity
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.repositories.CommitteeRepository
 import com.krs.community.utils.ApiException
@@ -53,19 +50,32 @@ class CommitteeViewModel(
         }
     }
 
-    suspend fun getLastName(id:Int):String{
+
+    suspend fun getLastName(id: Int): String {
         return committeeRepository.getLastnameById(id)
     }
 
-   suspend fun getLocalCommunityName(name:String): Int {
+    suspend fun getLocalCommunityName(id: Int): String {
+        return committeeRepository.getLocalCommunityById(id)
+    }
+
+    suspend fun getCommitteeName(id: Int): String {
+        return committeeRepository.getCommitteeById(id)
+    }
+
+    suspend fun getDesignationName(id: Int): String {
+        return committeeRepository.getDesignationById(id)
+    }
+
+    suspend fun getLocalCommunityId(name: String): Int {
         return committeeRepository.getLocalCommunityName(name)
    }
 
-   suspend fun getCommitteeName(name:String): Int {
+    suspend fun getCommitteeId(name: String): Int {
         return committeeRepository.getCommitteeName(name)
    }
 
-   suspend fun getDesignationName(name:String): Int {
+    suspend fun getDesignationId(name: String): Int {
         return committeeRepository.getDesignationName(name)
    }
 

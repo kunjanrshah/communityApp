@@ -15,7 +15,6 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -36,6 +35,7 @@ import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.NotificationBadge
 import com.krs.community.entities.RoomMember
 import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.listeners.ByFilterListener
@@ -58,6 +58,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.text.DateFormatSymbols
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -65,12 +66,12 @@ import kotlin.collections.ArrayList
 class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberListener,LocationAdapter.SetLocationListner {
     var lstMember: ArrayList<Member> = ArrayList()
     private lateinit var adapter:ParallaxRecyclerAdapter<Member>
-    private lateinit var spLocalCommunity:JRSpinner
-    private lateinit var spCommittee:JRSpinner
-    private lateinit var spDesignation:JRSpinner
-    private lateinit var tvStart:TextView
-    private lateinit var tvEnd:TextView
-    private lateinit var edtName:EditText
+    private var spLocalCommunity: JRSpinner? = null
+    private var spCommittee: JRSpinner? = null
+    private var spDesignation: JRSpinner? = null
+    private var tvStart: TextView? = null
+    private var tvEnd: TextView? = null
+    private var edtName: EditText? = null
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private lateinit var txtRegion:TextView
     private lateinit var txtDuration:TextView
@@ -94,6 +95,8 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
     private var setLocationDialog: DialogPlus? = null
     private var endDate: String? = null
     private var startDate: String? = null
+    private var strEnd: String? = null
+    private var strStart: String? = null
 
     private lateinit var frameRoot: FrameLayout
     override val kodein by kodein()
@@ -116,13 +119,34 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         adapter= object : ParallaxRecyclerAdapter<Member>(lstMember) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
                 val holder = viewHolder as ListViewHolder
+                holder.viewLine.visibility = View.VISIBLE
+                holder.llDesignation.visibility = View.VISIBLE
+                holder.llCommittee.visibility = View.VISIBLE
+                holder.llRegion.visibility = View.VISIBLE
+
                 val member = lstMember[position]
                 val name = member.firstName
                 holder.tvName.text = name
-                Coroutines.main {
+                holder.badge.setNumber(1)
+                Coroutines.io {
                     val lastname = committeeViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
-                    holder.tvName.text = "$name $lastname"
+                    val localComm = committeeViewModel.getLocalCommunityName(Integer.parseInt(member.localCommunityId.toString()))
+                    val committeeName = committeeViewModel.getCommitteeName(Integer.parseInt(member.committeeId.toString()))
+                    val desigName = committeeViewModel.getDesignationName(Integer.parseInt(member.designationId.toString()))
+                    Coroutines.main {
+                        holder.tvName.text = "$name $lastname"
+                        holder.tvRegion.text = localComm
+                        holder.tvCommitee.text = committeeName
+                        holder.tvDesignation.text = desigName
+                    }
                 }
+
+                if (member.status == "2") {
+                    holder.ivVerify.visibility = View.VISIBLE
+                } else {
+                    holder.ivVerify.visibility = View.GONE
+                }
+
                 holder.iconText.text = name.substring(0, 1)
                 holder.tvArea.text = member.area
 
@@ -235,49 +259,60 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         val header = LayoutInflater.from(activity).inflate(R.layout.header_committees, container, false)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
-        txtRegion = header.findViewById<TextView>(R.id.txt_region)
-        txtDuration = header.findViewById<TextView>(R.id.txt_duration)
-        txtCommittee = header.findViewById<TextView>(R.id.txt_committee)
-        txtDesignation = header.findViewById<TextView>(R.id.txt_designation)
-        llRegion = header.findViewById<LinearLayout>(R.id.ll_region)
-        llDuration = header.findViewById<LinearLayout>(R.id.ll_duration)
-        llCommittee = header.findViewById<LinearLayout>(R.id.ll_committee)
-        llDesignation = header.findViewById<LinearLayout>(R.id.ll_designation)
+        txtRegion = header.findViewById(R.id.txt_region)
+        txtDuration = header.findViewById(R.id.txt_duration)
+        txtCommittee = header.findViewById(R.id.txt_committee)
+        txtDesignation = header.findViewById(R.id.txt_designation)
+        llRegion = header.findViewById(R.id.ll_region)
+        llDuration = header.findViewById(R.id.ll_duration)
+        llCommittee = header.findViewById(R.id.ll_committee)
+        llDesignation = header.findViewById(R.id.ll_designation)
+
         val imgRegionClose = header.findViewById<ImageView>(R.id.img_region_close)
         imgRegionClose.setOnClickListener { v: View? ->
             llRegion.visibility = View.GONE
-            if (lstMember.size > 0) {
-                getUsersInCommittee()
-            }
-
+            spLocalCommunity?.setText("")
+            getUsersInCommittee()
         }
+
         val imgDurationClose = header.findViewById<ImageView>(R.id.img_duration_close)
         imgDurationClose.setOnClickListener { v: View? ->
             llDuration.visibility = View.GONE
-            if (lstMember.size > 0) {
-                getUsersInCommittee()
-            }
-
+            strStart = null
+            getUsersInCommittee()
         }
+
         val imgCommitteeClose = header.findViewById<ImageView>(R.id.img_committee_close)
         imgCommitteeClose.setOnClickListener { v: View? ->
             llCommittee.visibility = View.GONE
-            if (lstMember.size > 0) {
-                getUsersInCommittee()
-            }
-
+            spCommittee?.setText("")
+            getUsersInCommittee()
         }
+
         val imgDesignationClose = header.findViewById<ImageView>(R.id.img_designation_close)
         imgDesignationClose.setOnClickListener { v: View? ->
             llDesignation.visibility = View.GONE
-            if (lstMember.size > 0) {
-                getUsersInCommittee()
-            }
+            spDesignation?.setText("")
+            getUsersInCommittee()
         }
+
         val filter = header.findViewById<ImageView>(R.id.filter)
         filter.setOnClickListener { v: View? -> openFilter() }
         adapter.setParallaxHeader(header, listCommittee)
         listCommittee.adapter = adapter
+
+        val date = Date()
+        val dateFormat = SimpleDateFormat("YYYY")
+        val year = dateFormat.format(date)
+
+        startDate = "$year-01"
+        endDate = "$year-12"
+        var month = DateFormatSymbols().months[0]
+        strStart = String.format("%s  %s", month, year)
+        month = DateFormatSymbols().months[11]
+        strEnd = String.format("%s  %s", month, year)
+        txtDuration.text = "$strStart - $strEnd"
+        getUsersInCommittee()
         return root
     }
 
@@ -385,34 +420,34 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                 val list=ArrayList<String>()
                 list.add(getString(R.string.select))
                 list.addAll(it)
-                spLocalCommunity.setItems(list.toTypedArray())
-                spLocalCommunity.setExpandTint(R.color.black)
+                spLocalCommunity?.setItems(list.toTypedArray())
+                spLocalCommunity?.setExpandTint(R.color.black)
             }
 
             committeeViewModel.getCommitteeList().observeForever {
                 val list=ArrayList<String>()
                 list.add(getString(R.string.select))
                 list.addAll(it)
-                spCommittee.setItems(list.toTypedArray())
-                spCommittee.setExpandTint(R.color.black)
+                spCommittee?.setItems(list.toTypedArray())
+                spCommittee?.setExpandTint(R.color.black)
             }
 
             committeeViewModel.getDesignation().observeForever {
                 val list=ArrayList<String>()
                 list.add(getString(R.string.select))
                 list.addAll(it)
-                spDesignation.setItems(list.toTypedArray())
-                spDesignation.setExpandTint(R.color.black)
+                spDesignation?.setItems(list.toTypedArray())
+                spDesignation?.setExpandTint(R.color.black)
             }
 
         }
 
-        tvStart.setOnClickListener {
+        tvStart?.setOnClickListener {
             isStart=true
             yearPickerDialogFragment.show(activity?.supportFragmentManager!!, null)
         }
 
-        tvEnd.setOnClickListener {
+        tvEnd?.setOnClickListener {
             isStart=false
             yearPickerDialogFragment.show(activity?.supportFragmentManager!!, null)
         }
@@ -428,14 +463,16 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
             }
             if(isStart){
                 startDate = "$yearSelected-$str_month"
-                tvStart.text = String.format("%s  %s", month, yearSelected)
+                strStart = String.format("%s  %s", month, yearSelected)
+                tvStart?.text = strStart
             }else{
                 endDate = "$yearSelected-$str_month"
-                tvEnd.text = String.format("%s  %s", month, yearSelected)
+                strEnd = String.format("%s  %s", month, yearSelected)
+                tvEnd?.text = strEnd
             }
         }
 
-        edtName.setOnEditorActionListener { v, actionId, event ->
+        edtName?.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
                 dialog.dismiss()
                 getUsersInCommittee()
@@ -447,59 +484,75 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
     }
 
     private fun getUsersInCommittee(){
-
+        Utility.hideKeyboard(activity)
         val jsonObject=JSONObject()
         Coroutines.io{
-            val lcomm=spLocalCommunity.text.toString().trim()
-            if (!lcomm.isEmpty() && lcomm != getString(R.string.select) && llRegion.isVisible) {
-                val id=committeeViewModel.getLocalCommunityName(lcomm)
+
+            val lcomm = spLocalCommunity?.text
+            if (!lcomm.isNullOrEmpty() && lcomm.toString() != getString(R.string.select)) {
+                val id = committeeViewModel.getLocalCommunityId(lcomm.toString())
                 jsonObject.put(getString(R.string.local_community_id),id)
                 Coroutines.main {
+                    llRegion.visibility = View.VISIBLE
                     txtRegion.text = lcomm
                 }
             }
-            val designation=spDesignation.text.toString().trim()
-            if (!designation.isNullOrEmpty() && designation != getString(R.string.select) && llDesignation.isVisible) {
+
+            val designation = spDesignation?.text
+            if (!designation.isNullOrEmpty() && designation.toString().trim() != getString(R.string.select)) {
                 Coroutines.main {
+                    llDesignation.visibility = View.VISIBLE
                     txtDesignation.text=designation
                 }
 
-                val id=committeeViewModel.getDesignationName(designation)
+                val id = committeeViewModel.getDesignationId(designation.toString().trim())
                 jsonObject.put(getString(R.string.designation_id),id)
             }
-            val commitee=spCommittee.text.toString().trim()
-            if (!commitee.isNullOrEmpty() && commitee != getString(R.string.select) && llCommittee.isVisible) {
+
+            val commitee = spCommittee?.text
+            if (!commitee.isNullOrEmpty() && commitee.toString().trim() != getString(R.string.select)) {
 
                 Coroutines.main {
+                    llCommittee.visibility = View.VISIBLE
                     txtCommittee.text=commitee
                 }
-                val id=committeeViewModel.getCommitteeName(commitee)
+                val id = committeeViewModel.getCommitteeId(commitee.toString().trim())
                 jsonObject.put(getString(R.string.committee_id),id)
             }
 
-            if (llDuration.isVisible) {
+            if (strStart != null && strEnd != null) {
                 Coroutines.main {
-                    txtDuration.text = "${tvStart.text} - ${tvEnd.text}"
+                    llDuration.visibility = View.VISIBLE
+                    txtDuration.text = "$strStart - $strEnd"
                 }
                 jsonObject.put(getString(R.string.start_date), startDate)
                 jsonObject.put(getString(R.string.end_date), endDate)
             }
+            if (edtName != null && edtName!!.text.isNotEmpty()) {
+                jsonObject.put(getString(R.string.str_search), edtName?.text?.trim())
+            }
+            if (jsonObject.length() > 0) {
+                val jsonObject1 = JSONObject()
+                jsonObject1.put(getString(R.string.start), AppController.mApplication.start)
+                jsonObject1.put(getString(R.string.length), AppController.mApplication.length)
+                jsonObject1.put(getString(R.string.filter_by), jsonObject)
 
-            jsonObject.put(getString(R.string.str_search), edtName.text.trim())
-            val jsonObject1 = JSONObject()
-            jsonObject1.put(getString(R.string.start), AppController.mApplication.start)
-            jsonObject1.put(getString(R.string.length), AppController.mApplication.length)
-            jsonObject1.put(getString(R.string.filter_by), jsonObject)
-
-            Coroutines.main {
-                shimmerFrameLayout.startShimmerAnimation()
-                shimmerFrameLayout.visibility = View.VISIBLE
+                Coroutines.main {
+                    lstMember.clear()
+                    adapter.notifyDataSetChanged()
+                    shimmerFrameLayout.startShimmerAnimation()
+                    shimmerFrameLayout.visibility = View.VISIBLE
+                }
+                val updated = JsonParser().parse(jsonObject1.toString()) as JsonObject
+                committeeViewModel.getUsersInCommittee(updated)
+            } else {
+                lstMember.clear()
+                Coroutines.main {
+                    adapter.notifyDataSetChanged()
+                    frameRoot.snackbar(getString(R.string.select_filter), Snackbar.LENGTH_SHORT)
+                }
             }
 
-
-            val updated = JsonParser().parse(jsonObject1.toString()) as JsonObject
-            committeeViewModel.getUsersInCommittee(updated)
-            Utility.hideKeyboard(activity)
         }
     }
 
@@ -533,6 +586,15 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
         var ivMobile: ImageView = itemView.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = itemView.findViewById(R.id.iv_email)
+        val viewLine: View = itemView.findViewById(R.id.view_line)
+        val tvRegion: TextView = itemView.findViewById(R.id.tv_region)
+        val tvCommitee: TextView = itemView.findViewById(R.id.tv_commitee)
+        val tvDesignation: TextView = itemView.findViewById(R.id.tv_designation)
+        val llRegion: LinearLayout = itemView.findViewById(R.id.ll_region)
+        val llCommittee: LinearLayout = itemView.findViewById(R.id.ll_committee)
+        val llDesignation: LinearLayout = itemView.findViewById(R.id.ll_designation)
+        var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
+        var badge: NotificationBadge = itemView.findViewById(R.id.badge)
     }
 
     override fun onResume() {
