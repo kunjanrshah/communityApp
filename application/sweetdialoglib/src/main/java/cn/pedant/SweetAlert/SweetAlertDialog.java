@@ -29,6 +29,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     public static final int CUSTOM_IMAGE_TYPE = 4;
     public static final int PROGRESS_TYPE = 5;
     public static final int PDF_TYPE = 6;
+    public static final int FORGOT_TYPE = 7;
     private View mDialogView;
     private AnimationSet mModalInAnim;
     private AnimationSet mModalOutAnim;
@@ -227,6 +228,13 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
                     mConfirmButton.setVisibility(View.VISIBLE);
                     mNeutralButton.setVisibility(View.VISIBLE);
                     mCancelButton.setVisibility(View.VISIBLE);
+                    break;
+                case FORGOT_TYPE:
+                    setCustomImage(mCustomImgDrawable);
+                    mConfirmButton.setBackgroundResource(R.drawable.red_button_background);
+                    mConfirmButton.setVisibility(View.VISIBLE);
+                    mNeutralButton.setVisibility(View.VISIBLE);
+                    mCancelButton.setVisibility(View.GONE);
                     break;
             }
             if (!fromCreate) {
