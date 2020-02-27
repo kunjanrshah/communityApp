@@ -2,19 +2,11 @@ package com.krs.community.bkservice
 
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Log
-import android.view.Gravity
-import android.view.View
 import android.widget.Toast
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.krs.community.R
-import com.krs.community.adapter.TruecallerAdapter
-import com.orhanobut.dialogplus.DialogPlus
 
 
 class IncomingCallReceiver : BroadcastReceiver() {
@@ -24,9 +16,9 @@ class IncomingCallReceiver : BroadcastReceiver() {
             tm.listen(object : PhoneStateListener() {
                 override fun onCallStateChanged(state: Int, incomingNumber: String) {
                     super.onCallStateChanged(state, incomingNumber)
-                    Log.e("incomingNumber---", "" + incomingNumber)
-                    println("incomingNumber : $incomingNumber")
-                    Toast.makeText(context, "incomingNumber $incomingNumber", Toast.LENGTH_SHORT).show()
+                    //Log.e("incomingNumber---", "" + incomingNumber)
+                   // println("incomingNumber : $incomingNumber")
+                   // Toast.makeText(context, "incomingNumber $incomingNumber", Toast.LENGTH_SHORT).show()
 
                /*   val adapter = TruecallerAdapter(context)
                     val setLocationDialog = DialogPlus.newDialog(context)
@@ -40,6 +32,8 @@ class IncomingCallReceiver : BroadcastReceiver() {
                     setLocationDialog.show()*/
 
                     val intent = Intent(context, MyCustomDialog::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                     context.startActivity(intent)
                 }
             }, PhoneStateListener.LISTEN_CALL_STATE)

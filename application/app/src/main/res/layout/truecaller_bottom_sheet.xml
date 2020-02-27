@@ -2,18 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
-    android:orientation="vertical"
-    android:background="@color/float_transparent">
+    android:background="@color/float_transparent"
+    android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@drawable/popup_top_corner"
-        android:layout_gravity="bottom"
-        android:gravity="bottom">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,11 +25,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/montserrat_semibold"
                 android:text="@string/vastipatrak"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorDark"
                 android:textSize="18sp" />
 
             <ImageView
@@ -51,155 +52,135 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/ll_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/iv_profile"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/user_profile" />
+
+                <ImageView
+                    android:id="@+id/iv_gender"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/male" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-5dp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:orientation="horizontal">
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:layout_marginStart="20dp"
+                        android:layout_marginLeft="5dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="Kunjan Shah"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp" />
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/iv_profile"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/user_profile"
-                            android:elevation="12dp" />
-
-                        <ImageView
-                            android:id="@+id/iv_gender"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/male"
-                            />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:layout_gravity="end"
+                        android:layout_marginLeft="3dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="end"
+                        android:text="(32)"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="15dp"
+                        android:background="@drawable/menu_location" />
 
-                            <TextView
-                                android:layout_width="150dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
-                                android:layout_marginLeft="5dp"
-                                android:fontFamily="@font/montserrat_semibold"
-                                android:text="Kunjan Shah"
-                                android:ellipsize="end"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="16sp" />
+                </LinearLayout>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="end"
-                                android:layout_marginStart="0dp"
-                                android:layout_marginLeft="5dp"
-                                android:fontFamily="@font/montserrat_semibold"
-                                android:gravity="end"
-                                android:text="(32)"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="16sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_marginStart="15dp"
-                                android:background="@drawable/map" />
+                    <TextView
+                        android:id="@+id/tvArea"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="Maninagar ,"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp" />
 
-                        </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvCity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toLeftOf="@+id/ImageMap"
+                        android:layout_toRightOf="@+id/tvArea"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="Ahmedabad"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/ImageMap"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="15dp"
+                        android:background="@drawable/menu_location" />
 
-                            <TextView
-                                android:id="@+id/tvArea"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
-                                android:layout_marginLeft="5dp"
-                                android:fontFamily="@font/montserrat_semibold"
-                                android:text="Area ,"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="16sp" />
+                </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/tvCity"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:layout_marginLeft="5dp"
-                                android:fontFamily="@font/montserrat_semibold"
-                                android:text="City"
-                                android:layout_toRightOf="@+id/tvArea"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="16sp"
-                                android:layout_toLeftOf="@+id/ImageMap"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
-                            <ImageView
-                                android:id="@+id/ImageMap"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_marginStart="10dp"
-                                android:layout_alignParentEnd="true"
-                                android:layout_marginEnd="15dp"
-                                android:background="@drawable/map" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
-                                android:layout_marginLeft="5dp"
-                                android:fontFamily="@font/montserrat_semibold"
-                                android:text="Work Name"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="16sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="Software Engineer"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp" />
 
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_marginStart="15dp"
-                                android:background="@drawable/map" />
-
-
-                        </LinearLayout>
-
-
-                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="15dp"
+                        android:background="@drawable/menu_location" />
 
 
                 </LinearLayout>
@@ -209,87 +190,79 @@
 
 
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:alpha="0.5"
             android:layout_marginTop="5dp"
+            android:alpha="0.5"
             android:background="@color/colorGray" />
 
         <LinearLayout
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_weight="2">
-
+            android:layout_height="50dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_marginLeft="20dp"
+                    android:paddingLeft="20dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:background="@drawable/phone_call" />
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="@drawable/phone_call" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:fontFamily="@font/montserrat_semibold"
-                        android:text="Call Me"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
+                    android:layout_marginLeft="5dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="Call Me"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
-            <View
-                android:layout_width="2dp"
-                android:background="@color/gray_btn_bg_color"
-                android:layout_height="match_parent"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/gray_btn_bg_color" />
+            </LinearLayout>
+
+
 
             <LinearLayout
-                android:id="@+id/ll_office"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginRight="40dp"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:background="@drawable/ic_email" />
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="@drawable/ic_email" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:fontFamily="@font/montserrat_semibold"
-                        android:text="Email Me"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
-
-
+                    android:layout_marginLeft="5dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="Email Me"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 

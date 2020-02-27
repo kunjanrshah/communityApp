@@ -209,6 +209,7 @@
 
         <activity
             android:name=".bkservice.MyCustomDialog"
+            android:noHistory="true"
             android:theme="@style/Theme.Transparent" />
 
         <receiver

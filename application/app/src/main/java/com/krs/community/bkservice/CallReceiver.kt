@@ -15,7 +15,7 @@ class CallReceiver : PhonecallReceiver() {
     //private lateinit var mProfileDetailRepository: ProfileDetailRepository
     override fun onIncomingCallStarted(ctx: Context, number: String, start: Date) {
 
-        Toast.makeText(ctx, "onIncomingCallStarted $number", Toast.LENGTH_LONG).show()
+       // Toast.makeText(ctx, "onIncomingCallStarted $number", Toast.LENGTH_LONG).show()
 
         //SmartFilterApiData(number,ctx)
 
