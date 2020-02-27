@@ -3,6 +3,7 @@ package com.krs.community.activity
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -16,6 +17,7 @@ import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
@@ -32,7 +34,9 @@ import com.krs.community.R
 import com.krs.community.databinding.ActivityDashboardBinding
 import com.krs.community.fragments.*
 import com.krs.community.fragments.FragmentDrawer.FragmentDrawerListener
+import com.krs.community.listeners.UpdateVersionListener
 import com.krs.community.model.Member
+import com.krs.community.responses.UserStatusResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility.*
 import com.krs.community.utils.snackbar
@@ -45,17 +49,18 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
-class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAware, Listener, LocationData.AddressCallBack {
+class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAware, Listener, UpdateVersionListener, LocationData.AddressCallBack {
 
     private val TAG = DashboardActivity::class.java.simpleName
     private lateinit var dashboardViewModel: DashboardViewModel
     private val factory: DashboardViewModelFactory by instance()
     private lateinit var easyWayLocation: EasyWayLocation
     private lateinit var request: LocationRequest
-    private var  menu: Menu?=null
+    private var menu: Menu? = null
+
     companion object {
         var stop: Boolean = false
-        lateinit var binding:ActivityDashboardBinding
+        lateinit var binding: ActivityDashboardBinding
         lateinit var getLocationDetail: GetLocationDetail
         var cur_lat = MutableLiveData<Double>()
         var cur_lng = MutableLiveData<Double>()
@@ -68,10 +73,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
         binding = DataBindingUtil.setContentView(this@DashboardActivity, R.layout.activity_dashboard)
         dashboardViewModel = ViewModelProvider(this, factory).get(DashboardViewModel::class.java)
+        dashboardViewModel.listener = this
 
-
-       // val intent = Intent(this@DashboardActivity, MyCustomDialog::class.java)
-       // this@DashboardActivity.startActivity(intent)
+        // val intent = Intent(this@DashboardActivity, MyCustomDialog::class.java)
+        // this@DashboardActivity.startActivity(intent)
 
 
         if (Guru.getString(getString(R.string.user_id), "")!!.isEmpty()) {
@@ -149,7 +154,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
         binding.space.setSpaceOnLongClickListener(object : SpaceOnLongClickListener {
             override fun onCentreButtonLongClick() {
-               // Toast.makeText(this@DashboardActivity, getString(R.string.onCentreButtonLongClick), Toast.LENGTH_SHORT).show()
+                // Toast.makeText(this@DashboardActivity, getString(R.string.onCentreButtonLongClick), Toast.LENGTH_SHORT).show()
             }
 
             override fun onItemLongClick(itemIndex: Int, itemName: String) {
@@ -174,10 +179,12 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
         movetoFragment(this@DashboardActivity, DashboardFragment())
 
-        /*if(AutoStartPermissionHelper.getInstance().isAutoStartPermissionAvailable(this)){
-            AutoStartPermissionHelper.getInstance().getAutoStartPermission(this)
-        }*/
-
+        /*var JsonObj=JSONObject()
+        JsonObj.put(getString(R.string.user_id),Guru.getString(getString(R.string.user_id),""))
+        JsonObj.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
+        JsonObj.put("version","1")
+        val updated=  JsonParser().parse(JsonObj.toString()) as JsonObject
+        dashboardViewModel.getUpdatedVersion(updated)*/
     }
 
 
@@ -217,7 +224,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode==FINE_LOCATION_REQUEST){
+        if (requestCode == FINE_LOCATION_REQUEST) {
             easyWayLocation.startLocation()
         }
     }
@@ -277,10 +284,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         return true
     }
 
-    private fun loadProfile(){
+    private fun loadProfile() {
         val memberString = Guru.getString(getString(R.string.loginMember), "")
         val member = Gson().fromJson(memberString, Member::class.java)
-        val str=resources.getString(R.string.base_url_thumb)+member?.profilePic
+        val str = resources.getString(R.string.base_url_thumb) + member?.profilePic
 
         Glide.with(this)
                 .load(str)
@@ -289,6 +296,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                         menu?.findItem(R.id.action_profile)?.icon = resource
                     }
+
                     override fun onLoadCleared(placeholder: Drawable?) {
 
                     }
@@ -300,7 +308,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_profile -> {
-                startSweetProgress(this,getString(R.string.MoveProfile),getString(R.string.loading))
+                startSweetProgress(this, getString(R.string.MoveProfile), getString(R.string.loading))
                 val intent = Intent(this, ProfileDetailActivity::class.java)
                 val memberString = Guru.getString(getString(R.string.loginMember), "")
                 val member = Gson().fromJson(memberString, Member::class.java)
@@ -335,6 +343,32 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
     override fun locationData(locationData: LocationData) {
         cur_addr.postValue(locationData.full_address)
+    }
+
+    override fun getSuccess(response: UserStatusResponse) {
+        if (!response.success) {
+            SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("New Update Available")
+                    .setContentText("There is a newer version of app available please update it now.")
+                    .setNeutralText("Update Now")
+                    .setNeutralClickListener {
+                        it.dismissWithAnimation()
+                        val appPackageName = packageName
+                        try {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)))
+                        } catch (e: android.content.ActivityNotFoundException) {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)))
+                        }
+                    }
+                    .setCancelText("Later")
+                    .setCancelClickListener {
+                        it.dismissWithAnimation()
+                    }
+        }
+    }
+
+    override fun getFailure(msg: String) {
+
     }
 
 

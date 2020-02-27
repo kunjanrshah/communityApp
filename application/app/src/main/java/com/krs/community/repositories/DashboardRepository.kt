@@ -8,6 +8,7 @@ import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.AppDatabase
 import com.krs.community.entities.*
+import com.krs.community.responses.UserStatusResponse
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.utils.Coroutines
 import kotlinx.coroutines.Dispatchers
@@ -344,6 +345,13 @@ class DashboardRepository(
 
         committee.observeForever {
             saveCommittee(it)
+        }
+    }
+
+
+    suspend fun getUpdatedVersion(jsonObject: JsonObject): UserStatusResponse {
+        return apiRequest {
+            api.getUpdatedVersion(jsonObject)
         }
     }
 

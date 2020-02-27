@@ -1,3 +1,4 @@
+/*
 package com.krs.community.bkservice;
 
 import android.content.BroadcastReceiver;
@@ -67,3 +68,4 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
         lastState = state;
     }
 }
+*/

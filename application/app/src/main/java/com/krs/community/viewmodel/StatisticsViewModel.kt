@@ -17,17 +17,6 @@ class StatisticsViewModel(
     var TAG: String = StatisticsViewModel::class.java.simpleName
     var mStatisticsListener: StatisticsListener? = null
 
-    /*lateinit var selectedCityName:String
-    var selectedCityId: Int = 0*/
-
-    /* val cityId by lazyDeferred {
-         mStatisticsRepository.getCityId(selectedCityName)
-     }*/
-
-    /*val lstCityName by lazyDeferred {
-        mStatisticsRepository.getCityNames()
-    }*/
-
     suspend fun lstCityName(): List<String> {
         return mStatisticsRepository.getCityNames()
     }
@@ -35,10 +24,6 @@ class StatisticsViewModel(
     suspend fun getCityIdByName(name: String): Int {
         return mStatisticsRepository.getcityIdByName(name)
     }
-
-    /*val cityId by lazyDeferred {
-        mStatisticsRepository.getcityNameById(selectedCityName)
-    }*/
 
     fun getStatistics(jsonObject: JsonObject) {
         job_statistics = Job()

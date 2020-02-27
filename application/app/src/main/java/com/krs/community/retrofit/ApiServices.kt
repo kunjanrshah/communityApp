@@ -113,6 +113,12 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_INACTIVE_USERS)
     suspend fun getInActiveUsers(@Body request:JsonObject): Response<SmartFilterResponse>
 
+    @POST(AppConstants.UrlPath.GET_CONTACT_LIST)
+    suspend fun getUserByMobile(@Body request: JsonObject): Response<SmartFilterResponse>
+
+    @POST(AppConstants.UrlPath.GET_UPDATED_VERSION)
+    suspend fun getUpdatedVersion(@Body request: JsonObject): Response<UserStatusResponse>
+
     @POST(AppConstants.UrlPath.GET_FAMILY_MEMBER)
     suspend fun getFamilyMembers(@Body request: JsonObject): Response<FamilyDetailResponse>
 

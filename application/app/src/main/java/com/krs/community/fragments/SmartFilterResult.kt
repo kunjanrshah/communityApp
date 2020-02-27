@@ -359,7 +359,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                         .OnPositiveClicked {
                             try {
                                 val jsonObject = JSONObject()
-                                jsonObject.put(activity?.getString(R.string.name_filter), "name")
+                                jsonObject.put(activity?.getString(R.string.name_filter), getString(R.string.default_filter_name))
                                 jsonObject.put(activity?.getString(R.string.value_filter), argus)
                                 val listFragment = ExpandableFilterListFragment()
                                 val mBundle = Bundle()

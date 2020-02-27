@@ -307,6 +307,8 @@ public class AppConstants {
         String SEARCH_BY_KEYWORDS = "SmartSearch";
         String CHANGE_STATUS = "StatusChange";
         String CHANGE_ROLE = "RoleChange";
+        String GET_CONTACT_LIST = "GetContactList";
+        String GET_UPDATED_VERSION = "getUpdatedVersion";
         String GET_INACTIVE_USERS = "getInactiveUsers";
         String GET_COMMITTEE_USERS = "SearchCommitteeUsers";
         String ADD_MEMBER = "AddMember";

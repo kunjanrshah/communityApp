@@ -61,12 +61,12 @@ class ChangePasswordFragment : Fragment(), KodeinAware, ILoginListener {
             val confirmPass = passBinding.edtConfirm.text.trim()
 
             if (currPass.isEmpty()) {
-                Snackbar.make(passBinding.llParent, "Enter Current PIN", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(passBinding.llParent, getString(R.string.enter_current_pin), Snackbar.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
             if (newPass.isEmpty()) {
-                Snackbar.make(passBinding.llParent, "Enter New PIN", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(passBinding.llParent, getString(R.string.enter_new_pin), Snackbar.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
@@ -94,20 +94,37 @@ class ChangePasswordFragment : Fragment(), KodeinAware, ILoginListener {
         passBinding.tvForgot.setOnClickListener {
             val memberString = Guru.getString(getString(R.string.loginMember), "")
             val loginMember = Gson().fromJson(memberString, Member::class.java)
-            SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+            var strMobile = loginMember.mobile
+            var strEmail = loginMember.emailAddress
+            if (strMobile.isNullOrEmpty()) {
+                strMobile = "Not Set"
+            } else if (strMobile.length > 6) {
+                strMobile = strMobile.substring(0, 6) + "..."
+            }
+            if (strEmail.isNullOrEmpty()) {
+                strEmail = "Not Set"
+            } else if (strEmail.length > 6) {
+                strEmail = strEmail.substring(0, 6) + "..."
+            }
+            SweetAlertDialog(activity, SweetAlertDialog.FORGOT_TYPE)
                     .setTitleText(getString(R.string.forgotPin))
-                    .setConfirmText(getString(R.string.letMeCheck))
-                    .setCancelText(getString(R.string.Cancel))
-                    .setCancelClickListener {
-                        it.dismissWithAnimation()
-                    }
-                    .setContentText(getString(R.string.pinWillsend) + " ${loginMember.emailAddress}")
+                    .setContentText(getString(R.string.pinWillsend))
+                    .setConfirmText("Mobile\n $strMobile")
                     .setConfirmClickListener {
                         it.dismissWithAnimation()
                         val jsonObject = JSONObject()
-                        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
-                        jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.member_id), ""))
-                        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                        jsonObject.put(getString(R.string.username), loginMember.mobile)
+                        jsonObject.put(getString(R.string.reset_type), "mobile")
+                        val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                        Utility.startSweetProgress(activity, getString(R.string.forgotPin), getString(R.string.loading))
+                        passwordViewModel.forgotPassword(updated)
+                    }
+                    .setNeutralText("Email\n $strEmail")
+                    .setNeutralClickListener {
+                        it.dismissWithAnimation()
+                        val jsonObject = JSONObject()
+                        jsonObject.put(getString(R.string.username), loginMember.emailAddress)
+                        jsonObject.put(getString(R.string.reset_type), "email")
                         val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                         Utility.startSweetProgress(activity, getString(R.string.forgotPin), getString(R.string.loading))
                         passwordViewModel.forgotPassword(updated)
