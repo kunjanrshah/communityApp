@@ -305,8 +305,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                         Utility.movetoFragment(activity, ShareEventFragment())
                     }
                     9 -> {
-                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
-                        return@setOnClickListener
+                       // binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                         //startActivity(Intent(activity, ActivityDebugTools::class.java))
                         Utility.movetoFragment(activity, DocumentsFragment())
                     }

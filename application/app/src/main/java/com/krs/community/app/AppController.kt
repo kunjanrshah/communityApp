@@ -3,6 +3,8 @@ package com.krs.community.app
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
@@ -23,6 +25,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.repositories.*
 import com.krs.community.retrofit.ApiServices
@@ -34,6 +37,7 @@ import com.krs.community.utils.LocaleHelper
 import com.krs.community.viewmodel.ContactListViewModelFactory
 import com.krs.community.viewmodelfactory.*
 import io.fabric.sdk.android.Fabric
+import net.gotev.uploadservice.UploadServiceConfig
 import org.json.JSONObject
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -59,6 +63,8 @@ class AppController : Application(), KodeinAware{
     companion object {
         val TAG = AppController::class.java.simpleName
         lateinit var mApplication: AppController
+        const val notificationChannelID = "TestChannel"
+
         val INTERVAL = 1000 * 60 * 3 //3 minutes
     }
 
@@ -82,6 +88,7 @@ class AppController : Application(), KodeinAware{
         bind() from singleton { ContactListRepository(instance()) }
         bind() from singleton {  SmartSearchRepository(instance(),instance()) }
         bind() from singleton {  SmartFilterRepository(instance(),instance()) }
+        bind() from singleton {  DocumentListRepository(instance(),instance()) }
         bind() from provider  {  CalendarSearchRepository(instance(),instance()) }
         bind() from provider  {  NewsRepository(instance()) }
         bind() from provider  {  RoomMemberRepository(instance(),instance()) }
@@ -99,6 +106,7 @@ class AppController : Application(), KodeinAware{
         bind() from provider { ProfileDetailViewModelFactory(instance()) }
         bind() from provider { DashboardViewModelFactory(instance()) }
         bind() from provider { SmartSearchViewModelFactory(instance()) }
+        bind() from provider { DocumentListViewModelFactory(instance()) }
         bind() from provider { SmartFilterViewModelFactory(instance()) }
         bind() from provider { CalendarSearchViewModelFactory(instance()) }
         bind() from provider { NewsModelFactory(instance()) }
@@ -122,6 +130,14 @@ class AppController : Application(), KodeinAware{
         mHandler.removeCallbacks(mHandlerTask)
     }
 
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= 26) {
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val channel = NotificationChannel(notificationChannelID, "TestApp Channel", NotificationManager.IMPORTANCE_LOW)
+            manager.createNotificationChannel(channel)
+        }
+    }
+
     @SuppressLint("CommitPrefEdits")
     override fun onCreate() {
         super.onCreate()
@@ -129,6 +145,13 @@ class AppController : Application(), KodeinAware{
         mApplication = this
 
         FacebookSdk.sdkInitialize(applicationContext)
+        createNotificationChannel()
+
+        UploadServiceConfig.initialize(
+                context = this,
+                defaultNotificationChannel = notificationChannelID,
+                debug = BuildConfig.DEBUG
+        )
 
         typeface = ResourcesCompat.getFont(applicationContext, R.font.montserrat_regular)!!
         typeface_bold = ResourcesCompat.getFont(applicationContext, R.font.montserrat_semibold)!!
