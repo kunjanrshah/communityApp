@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.github.squti.guru.Guru
 import com.google.android.flexbox.AlignItems
@@ -18,7 +19,6 @@ import com.krs.community.fragments.SmartFilterResult
 import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
-
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
@@ -425,10 +425,13 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         viewHolder.imgUpdatedClose.setOnClickListener { v: View? -> viewHolder.llUpdated.visibility = View.GONE }
         viewHolder.imgCreatedClose.setOnClickListener { v: View? -> viewHolder.llCreated.visibility = View.GONE }
         if(!editFilter.isNullOrEmpty()){
-            viewHolder.chkSave.isChecked=true
-            viewHolder.edtFilterName.visibility = View.VISIBLE
-            val json=JSONObject(editFilter)
-            viewHolder.edtFilterName.setText(json.getString(_context.getString(R.string.name_filter)))
+            val json = JSONObject(editFilter)
+            val str = json.getString(_context.getString(R.string.name_filter))
+            if (!str.equals(_context.getString(R.string.default_filter_name))) {
+                viewHolder.chkSave.isChecked = true
+                viewHolder.edtFilterName.visibility = View.VISIBLE
+                viewHolder.edtFilterName.setText(str)
+            }
         }else{
             viewHolder.edtFilterName.visibility = View.INVISIBLE
             viewHolder.chkSave.isChecked=false
@@ -443,8 +446,8 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         }
         viewHolder.btnApply.setOnClickListener { v: View? ->
 
-            val filter = getValues(viewHolder).toString()
-            if (filter.isNotEmpty()) {
+            val filter = getValues(viewHolder)
+            if (filter.length() > 0) {
                 val filterName = viewHolder.edtFilterName.text.toString().trim()
                 if (viewHolder.chkSave.isChecked && filterName.isEmpty()) {
                     Toast.makeText(_context, "Please enter filter name", Toast.LENGTH_SHORT).show()
@@ -480,11 +483,12 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                 mICloseDialog.PopupClose()
                 val filterResult = SmartFilterResult()
                 val mBundle = Bundle()
-                mBundle.putString(_context.getString(R.string.filter_values), filter)
+                mBundle.putString(_context.getString(R.string.filter_values), filter.toString())
                 filterResult.arguments = mBundle
                 Utility.movetoFragment(_context as Activity, filterResult)
             } else {
-                Toast.makeText(_context, _context.getString(R.string.noFilterFound), Toast.LENGTH_SHORT).show()
+                mICloseDialog.PopupClose()
+                Utility.startSweetDialog(_context, SweetAlertDialog.ERROR_TYPE, _context.getString(R.string.smart_filter), _context.getString(R.string.enter_filter_value))
             }
         }
         return convertView!!
@@ -570,8 +574,6 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                 val name = viewHolder.spCity.text.toString().trim { it <= ' ' }
                 val job1 = async {
                     val city = profileDetailViewModel.getCityIdByName(name)
-
-                    Log.e("city---",""+city);
                     lstValues.put(_context.resources.getString(R.string.ss_sp_city), city)
                 }
                 job1.await()
@@ -626,10 +628,10 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
             }
 
             if (viewHolder.llBirthDate.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_edt_bdate), viewHolder.tvBirthDate.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_edt_bdate), Utility.changeDateFormat(viewHolder.tvBirthDate.text.toString(), Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
             }
             if (viewHolder.llMdate.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_edt_mdate), viewHolder.tvMdate.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_edt_mdate), Utility.changeDateFormat(viewHolder.tvMdate.text.toString(), Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
             }
             if (viewHolder.llMosad.isShown) {
                 lstValues.put(_context.resources.getString(R.string.ss_edt_mosad), viewHolder.edtMosad.text.toString().trim { it <= ' ' })
@@ -673,10 +675,10 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                 lstValues.put(_context.resources.getString(R.string.ss_edt_weight_kg), viewHolder.edtWeightKg.text.toString().trim { it <= ' ' })
             }
             if (viewHolder.llCreated.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_edt_created), viewHolder.tvCreated.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_edt_created), Utility.changeDateFormat(viewHolder.tvCreated.text.toString(), Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
             }
             if (viewHolder.llUpdated.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_edt_updated), viewHolder.tvUpdated.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_edt_updated), Utility.changeDateFormat(viewHolder.tvUpdated.text.toString(), Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
             }
             if (viewHolder.llPercentage.isShown) {
                 lstValues.put(_context.resources.getString(R.string.ss_maxUpdate), viewHolder.rangeUpdationBar.selectedMaxValue.toString().trim { it <= ' ' })

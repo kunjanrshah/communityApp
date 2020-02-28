@@ -312,7 +312,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
                     10 -> {
                         binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
-
+                        return@setOnClickListener
                         Utility.movetoFragment(activity, PaytmFragment())
                     }
 

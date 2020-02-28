@@ -27,7 +27,7 @@
                 android:layout_height="45dp"
                 android:singleLine="true"
                 android:background="@drawable/border"
-                android:hint="@string/birth_dateDetail"
+                android:hint="@string/birth_timeDetail"
                 android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:paddingLeft="10dp" />

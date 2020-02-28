@@ -30,8 +30,8 @@ import org.json.JSONObject
 
 class Service : android.app.Service(), Listener, AddressCallBack {
     private var easyWayLocation: EasyWayLocation? = null
-    private lateinit var getLocationDetail: GetLocationDetail
-    private lateinit var completableJob: CompletableJob
+    private var getLocationDetail: GetLocationDetail? = null
+    private var completableJob: CompletableJob? = null
 
 
     override fun onCreate() {
@@ -45,12 +45,11 @@ class Service : android.app.Service(), Listener, AddressCallBack {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         Log.d(TAG, "restarting Service !!")
-        getLocationDetail = GetLocationDetail(this, this)
-        val request = LocationRequest()
-        request.interval = Utility.INTERVAL
-        request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-
         try {
+            getLocationDetail = GetLocationDetail(this, this)
+            val request = LocationRequest()
+            request.interval = Utility.INTERVAL
+            request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
             easyWayLocation = EasyWayLocation(this, request, true, this)
             easyWayLocation?.startLocation()
         } catch (e: Exception) {
@@ -107,7 +106,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
         // Intent broadcastIntent = new Intent(Globals.RESTART_INTENT);
         // sendBroadcast(broadcastIntent);
         easyWayLocation?.endUpdates()
-        completableJob.cancel()
+        completableJob?.cancel()
         super.onDestroy()
         Log.i(TAG, "onDestroy called")
     }
@@ -134,12 +133,12 @@ class Service : android.app.Service(), Listener, AddressCallBack {
 
     override fun currentLocation(location: Location) {
         Log.e("Location Service: ", "latitude: " + location.latitude + " longitude: " + location.longitude)
-        getLocationDetail.getAddress(location.latitude, location.longitude, getString(R.string.map_api_key))
+        getLocationDetail?.getAddress(location.latitude, location.longitude, getString(R.string.map_api_key))
 
         completableJob = Job()
         completableJob.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob).launch {
+            CoroutineScope(Dispatchers.IO + thejob!!).launch {
                 try {
                     val userId = Guru.getString(getString(R.string.user_id), "")
                     val id = Guru.getString(getString(R.string.user_id), "")
@@ -159,7 +158,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
                             withContext(Dispatchers.Main) {
                                 Guru.putString(getString(R.string.loginMember), Gson().toJson(response.member))
                                 Log.d("Location Service: ", response.message)
-                                thejob.complete()
+                                thejob?.complete()
                             }
                             return@launch
                         }
@@ -177,7 +176,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
                         Log.d("Location Service: ", it)
                     }
                 }
-                thejob.complete()
+                thejob?.complete()
             }
         }
     }

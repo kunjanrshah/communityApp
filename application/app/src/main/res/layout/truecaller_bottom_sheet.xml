@@ -80,32 +80,30 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-5dp"
+                android:layout_marginStart="20dp"
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/ll_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginLeft="5dp"
-                        android:ellipsize="end"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="Kunjan Shah"
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp" />
 
                     <TextView
+                        android:id="@+id/tv_age"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
                         android:layout_marginLeft="3dp"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:gravity="end"
                         android:text="(32)"
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp" />
@@ -119,57 +117,50 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_home"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/tvArea"
+                        android:id="@+id/tv_area"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginLeft="5dp"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="Maninagar ,"
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/tvCity"
+                        android:id="@+id/tv_city"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_toLeftOf="@+id/ImageMap"
-                        android:layout_toRightOf="@+id/tvArea"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="Ahmedabad"
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp" />
 
                     <ImageView
-                        android:id="@+id/ImageMap"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_alignParentEnd="true"
                         android:layout_marginStart="10dp"
-                        android:layout_marginEnd="15dp"
                         android:background="@drawable/menu_location" />
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_office"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tv_work"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginLeft="5dp"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="Software Engineer"
                         android:textColor="@color/colorPrimary"
@@ -181,7 +172,6 @@
                         android:layout_height="20dp"
                         android:layout_marginStart="15dp"
                         android:background="@drawable/menu_location" />
-
 
                 </LinearLayout>
 
@@ -203,7 +193,9 @@
             android:layout_height="50dp"
             android:layout_marginBottom="10dp"
             android:orientation="horizontal">
+
             <LinearLayout
+                android:id="@+id/ll_call"
                 android:layout_width="wrap_content"
                 android:gravity="center"
                 android:layout_marginLeft="40dp"
@@ -241,9 +233,8 @@
                     android:background="@color/gray_btn_bg_color" />
             </LinearLayout>
 
-
-
             <LinearLayout
+                android:id="@+id/ll_email"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"

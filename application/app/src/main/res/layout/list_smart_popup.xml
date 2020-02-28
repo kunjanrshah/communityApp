@@ -1219,6 +1219,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:layout_marginLeft="3dp"
                 android:gravity="center_vertical"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
@@ -1260,6 +1261,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:layout_marginLeft="3dp"
                 android:gravity="center_vertical"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
@@ -1560,6 +1562,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:layout_marginLeft="3dp"
                 android:gravity="center_vertical"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
@@ -1598,6 +1601,7 @@
 
             <TextView
                 android:id="@+id/tv_updated"
+                android:layout_marginLeft="3dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"

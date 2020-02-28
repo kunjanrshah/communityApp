@@ -69,6 +69,7 @@ import com.google.gson.Gson;
 import com.krs.community.R;
 import com.krs.community.fragments.CalendarFragment;
 import com.krs.community.fragments.DashboardFragment;
+import com.krs.community.fragments.ExpandableFilterListFragment;
 import com.krs.community.fragments.FragmentDrawer;
 import com.krs.community.fragments.SmartFilterResult;
 import com.krs.community.model.ErrorObject;
@@ -427,6 +428,20 @@ public class Utility {
 
     }
 
+    public static boolean isValidFormat(String value, String format) {
+        Date date = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            date = sdf.parse(value);
+            if (!value.equals(sdf.format(date))) {
+                date = null;
+            }
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        return date != null;
+    }
+
     public static String changeDateFormat(String inputDateStr, String input, String output) {
         String outputDateStr = inputDateStr;
         try {
@@ -729,11 +744,11 @@ public class Utility {
             Fragment dashboard = fragmentManager.findFragmentByTag(DashboardFragment.class.getSimpleName());
             Fragment calendar = fragmentManager.findFragmentByTag(CalendarFragment.class.getSimpleName());
             Fragment smartFilterResult = fragmentManager.findFragmentByTag(SmartFilterResult.class.getSimpleName());
-
+            Fragment expandableFragment = fragmentManager.findFragmentByTag(ExpandableFilterListFragment.class.getSimpleName());
             if (dashboard != null && dashboard.isVisible()) {
                 activity.finish();
                 return;
-            } else if ((calendar != null && calendar.isVisible()) || (smartFilterResult != null && smartFilterResult.isVisible())) {
+            } else if ((calendar != null && calendar.isVisible()) || (smartFilterResult != null && smartFilterResult.isVisible()) || expandableFragment != null && expandableFragment.isVisible()) {
                 movetoFragment(activity, new DashboardFragment());
                 return;
             } else {
@@ -752,25 +767,33 @@ public class Utility {
 
     public static void movetoFragment(Activity activity, Fragment fragment) {
 
-        if (!fragment.isVisible()) {
-            FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
-            if (fragment.getClass().getSimpleName().equals(DashboardFragment.class.getSimpleName())) {
-                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.container_body);
+        if (currentFragment != null) {
+            if (currentFragment.getClass().getSimpleName().equals(fragment.getClass().getSimpleName())) {
+                return;
             }
-            Fragment oldFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-            fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getSimpleName());
-            if (oldFragment != null) {
-                fragmentTransaction.remove(oldFragment);
-            } else {
-                fragmentTransaction.addToBackStack(null);
-            }
-            fragmentTransaction.commit();
-            fade(activity);
         }
-    }
+        if (fragment.isVisible()) {
+            return;
+        }
+        if (fragment.getClass().getSimpleName().equals(DashboardFragment.class.getSimpleName())) {
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
 
+        Fragment oldFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+        fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getSimpleName());
+
+        if (oldFragment != null) {
+            fragmentTransaction.remove(oldFragment);
+        } else {
+            fragmentTransaction.addToBackStack(null);
+        }
+        fragmentTransaction.commit();
+        fade(activity);
+    }
 
     public static int getRandomMaterialColor(Context context, String typeColor) {
         int returnColor = Color.GRAY;
@@ -1756,7 +1779,7 @@ public class Utility {
         return (distanceInKm);
     }*/
 
-    public static void shareToGMail(Activity activity,String[] email, String subject, String content) {
+    public static void shareToGMail(Activity activity, String[] email, String subject, String content) {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.putExtra(Intent.EXTRA_EMAIL, email);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
@@ -1765,7 +1788,7 @@ public class Utility {
         final PackageManager pm = activity.getPackageManager();
         final List<ResolveInfo> matches = pm.queryIntentActivities(emailIntent, 0);
         ResolveInfo best = null;
-        for(final ResolveInfo info : matches)
+        for (final ResolveInfo info : matches)
             if (info.activityInfo.packageName.endsWith(".gm") || info.activityInfo.name.toLowerCase().contains("gmail"))
                 best = info;
         if (best != null)

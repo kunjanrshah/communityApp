@@ -34,6 +34,7 @@ import com.krs.community.utils.AppConstants
 import com.krs.community.utils.ConnectivityReceiver
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.LocaleHelper
+import com.krs.community.viewmodel.ContactListViewModelFactory
 import com.krs.community.viewmodelfactory.*
 import io.fabric.sdk.android.Fabric
 import net.gotev.uploadservice.UploadServiceConfig
@@ -56,7 +57,6 @@ class AppController : Application(), KodeinAware{
     lateinit var retrofitBase: RetrofitBase
     private var mNetworkReceiver: BroadcastReceiver? = null
     var start: Int = 0
-    var internet: Int = 0
     val length: Int = 30
     val mHandler:Handler = Handler()
 
@@ -85,6 +85,7 @@ class AppController : Application(), KodeinAware{
         bind() from singleton {  ProfileDetailRepository(instance(),instance()) }
         bind() from singleton {  DashboardRepository(instance(),instance()) }
         bind() from singleton {  StatisticsRepository(instance(),instance()) }
+        bind() from singleton { ContactListRepository(instance()) }
         bind() from singleton {  SmartSearchRepository(instance(),instance()) }
         bind() from singleton {  SmartFilterRepository(instance(),instance()) }
         bind() from singleton {  DocumentListRepository(instance(),instance()) }
@@ -93,6 +94,7 @@ class AppController : Application(), KodeinAware{
         bind() from provider  {  RoomMemberRepository(instance(),instance()) }
         bind() from provider  {  CommitteeRepository(instance(),instance()) }
 
+        bind() from provider { ContactListViewModelFactory(instance()) }
         bind() from provider { StatisticsViewModelFactory(instance()) }
         bind() from provider { FamilyDetailViewModelFactory(instance()) }
         bind() from provider { RegisterViewModelFactory(instance()) }

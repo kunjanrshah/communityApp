@@ -448,11 +448,19 @@ class SmartFilterAdapter(private val _context: Context,
             if (tvBdate != null) {
                 val bdate = mapChildValues[_context.getString(R.string.ss_edt_bdate)]
                 if (bdate != null && !bdate.isEmpty()) {
-                    tvBdate?.text = bdate
+                    if (Utility.isValidFormat(bdate, Utility.yyyy_MM_dd)) {
+                        tvBdate?.text = Utility.changeDateFormat(bdate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    } else {
+                        tvBdate?.text = bdate.toString().trim()
+                    }
                 }
                 val mdate = mapChildValues[_context.getString(R.string.ss_edt_mdate)]
                 if (mdate != null && !mdate.isEmpty()) {
-                    tvMdate?.text = mdate
+                    if (Utility.isValidFormat(mdate, Utility.yyyy_MM_dd)) {
+                        tvMdate?.text = Utility.changeDateFormat(mdate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    } else {
+                        tvMdate?.text = mdate
+                    }
                 }
                 val mosad = mapChildValues[_context.getString(R.string.ss_edt_mosad)]
                 if (mosad != null && !mosad.isEmpty()) {
@@ -526,11 +534,19 @@ class SmartFilterAdapter(private val _context: Context,
             if (tvCreated != null) {
                 val created = mapChildValues[_context.getString(R.string.ss_edt_created)]
                 if (created != null && !created.isEmpty()) {
-                    tvCreated?.text = created
+                    if (Utility.isValidFormat(created, Utility.yyyy_MM_dd)) {
+                        tvCreated?.text = Utility.changeDateFormat(created, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    } else {
+                        tvCreated?.text = created
+                    }
                 }
                 val updated = mapChildValues[_context.getString(R.string.ss_edt_updated)]
                 if (updated != null && !updated.isEmpty()) {
-                    tvUpdated?.text = updated
+                    if (Utility.isValidFormat(updated, Utility.yyyy_MM_dd)) {
+                        tvUpdated?.text = Utility.changeDateFormat(updated, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    } else {
+                        tvUpdated?.text = updated
+                    }
                 }
                 val maxUpdate = mapChildValues[_context.getString(R.string.ss_maxUpdate)]
                 val minUpdate = mapChildValues[_context.getString(R.string.ss_minUpdate)]
@@ -1004,7 +1020,7 @@ class SmartFilterAdapter(private val _context: Context,
                     .create()
             dialog.show()
         } else {
-            Utility.startSweetDialog(_context, SweetAlertDialog.ERROR_TYPE, "Smart Filter", "Please enter filters for search")
+            Utility.startSweetDialog(_context, SweetAlertDialog.ERROR_TYPE, _context.getString(R.string.smart_filter), _context.getString(R.string.enter_filter_value))
         }
     }
 

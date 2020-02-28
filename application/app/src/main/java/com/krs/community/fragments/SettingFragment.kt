@@ -34,6 +34,11 @@ class SettingFragment : Fragment() {
             return@setOnClickListener
             Utility.movetoFragment(activity, PrivacyPolicyFragment())
         }
+
+        /*if(AutoStartPermissionHelper.getInstance().isAutoStartPermissionAvailable(this)){
+            AutoStartPermissionHelper.getInstance().getAutoStartPermission(this)
+        }*/
+
         return root
     }
 

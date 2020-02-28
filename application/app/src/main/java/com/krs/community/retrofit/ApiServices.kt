@@ -116,6 +116,12 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_DOCUMENT)
     suspend fun getDocumentList(): Response<DocumentListResponse>
 
+    @POST(AppConstants.UrlPath.GET_CONTACT_LIST)
+    suspend fun getUserByMobile(@Body request: JsonObject): Response<SmartFilterResponse>
+
+    @POST(AppConstants.UrlPath.GET_UPDATED_VERSION)
+    suspend fun getUpdatedVersion(@Body request: JsonObject): Response<UserStatusResponse>
+
     @POST(AppConstants.UrlPath.GET_FAMILY_MEMBER)
     suspend fun getFamilyMembers(@Body request: JsonObject): Response<FamilyDetailResponse>
 
@@ -150,11 +156,6 @@ interface ApiServices {
     @Multipart
     @POST(AppConstants.UrlPath.CREATE_EVENT)
     suspend fun createEvent(@Part file: List<MultipartBody.Part>, @Part("id")id: RequestBody, @Part("user_id") user_id: RequestBody,@Part("access_token") access_token: RequestBody,@Part("params") params: RequestBody,@Part("youtube[]") youtube: List<RequestBody>): Response<JsonObject>
-
-
-    @Multipart
-    @POST(AppConstants.UrlPath.UPLOAD_DOCUMENT)
-    suspend fun uploadDocument(@Part file: MultipartBody.Part, @Part("filename") filename: RequestBody): Response<JsonObject>
 
     companion object{
         operator fun invoke():ApiServices{

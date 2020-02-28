@@ -1,3 +1,4 @@
+/*
 package com.krs.community.bkservice
 
 import android.content.Context
@@ -23,13 +24,16 @@ class CallReceiver : PhonecallReceiver() {
 
 
 
-        /*val dialog = Dialog(ctx);
+        */
+/*val dialog = Dialog(ctx);
         dialog.setContentView(R.layout.truecaller_bottom_sheet);
         dialog.setTitle("Title...");
-        dialog.show()*/
+        dialog.show()*//*
+
         // val adapter: TruecallerAdapter = TruecallerAdapter(Intent(ctx, SplashActivity::class.java) as Activity)
       // adapter.setTruecallListner(this@CallReceiver)
-      /* setLocationDialog = DialogPlus.newDialog(ctx)
+      */
+/* setLocationDialog = DialogPlus.newDialog(ctx)
              //  .setAdapter(adapter)
                .setFooter(R.layout.truecaller_bottom_sheet)
                .setGravity(Gravity.BOTTOM)
@@ -38,7 +42,8 @@ class CallReceiver : PhonecallReceiver() {
                .setContentBackgroundResource(R.drawable.popup_top_corner)
                .create()
        setLocationDialog?.show()
-*/
+*//*
+
 //SmartFilterApiData(ctx);
     }
 
@@ -48,7 +53,8 @@ class CallReceiver : PhonecallReceiver() {
  }
 
 
-     /*
+     */
+/*
 	private void SmartFilterApiData(Context ctx) {
 		ApiServices.login("9427051418","0","1",new Callback<LoginResModel>() {
 			@Override
@@ -60,9 +66,11 @@ class CallReceiver : PhonecallReceiver() {
 
 					    String success = response.body().getStatus();
 					    String getTotal_records = response.body().getTotal_records();
-					   */
+					   *//*
 
 
+
+*/
 /* Fname = response.body().getMembersResModels().get(0).getFirst_name();
 					    Lname = response.body().getMembersResModels().get(0).getLast_name();
 					    Pcode = response.body().getMembersResModels().get(0).getPincode();
@@ -71,13 +79,17 @@ class CallReceiver : PhonecallReceiver() {
 						Area = response.body().getMembersResModels().get(0).getArea();
 						City_id = response.body().getMembersResModels().get(0).getCity_id();
 						Gender = response.body().getMembersResModels().get(0).getGender();
-						Native_place_id = response.body().getMembersResModels().get(0).getNative_place_id();*/
+						Native_place_id = response.body().getMembersResModels().get(0).getNative_place_id();*//*
+
+*/
 /*
 
 
 
 					//	showDialogSecond(ctx);
-						*/
+						*//*
+
+*/
 /*final Intent intent = new Intent(ctx, MyCustomDialog.class);
 						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -95,6 +107,8 @@ class CallReceiver : PhonecallReceiver() {
 					    Log.e("getTotal_records",""+getTotal_records);
 					    Log.e("success",""+success);
 					    Log.e("Name---",""+response.body().getMembersResModels().get(0).getFirst_name());
+*//*
+
 */
 /*
 
@@ -113,6 +127,8 @@ class CallReceiver : PhonecallReceiver() {
 			}
 		});
 	}
+*//*
+
 */
 /*
 	public void showDialogSecond(Context msg){
@@ -141,9 +157,11 @@ class CallReceiver : PhonecallReceiver() {
 		dialog.show();
 
 	}
-*/
+*//*
 
-    /*fun SmartFilterApiData(number: String?, ctx: Context) {
+
+    */
+/*fun SmartFilterApiData(number: String?, ctx: Context) {
 
         val jsonObject = JSONObject()
         jsonObject.put("" + AppController.mApplication.start, "0")
@@ -179,5 +197,6 @@ class CallReceiver : PhonecallReceiver() {
                 thejob.complete()
             }
         }
-    }*/
-}
+    }*//*
+
+}*/
