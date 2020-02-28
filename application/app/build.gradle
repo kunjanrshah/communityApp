@@ -112,7 +112,7 @@ dependencies {
     }
 
     /* implementation 'com.github.delight-im:Android-AdvancedWebView:v3.0.0'*/
-
+    implementation 'net.gotev:uploadservice:4.2.0'
     implementation 'de.blox:graphview:0.4.2'
     implementation project(':multisearchviewlib')
     implementation project(':slycalendarview')

@@ -308,6 +308,7 @@ public class AppConstants {
         String CHANGE_STATUS = "StatusChange";
         String CHANGE_ROLE = "RoleChange";
         String GET_INACTIVE_USERS = "getInactiveUsers";
+        String GET_DOCUMENT = "GetFiles";
         String GET_COMMITTEE_USERS = "SearchCommitteeUsers";
         String ADD_MEMBER = "AddMember";
         String DELETE_MEMBER = "DeleteMember";
@@ -324,6 +325,7 @@ public class AppConstants {
         String GET_LOGIN = "Login";
         String UPLOAD_PROFILE_IMAGE = "Upload";
         String CREATE_EVENT = "CreateEvent";
+        String UPLOAD_DOCUMENT = "UploadFiles";
         String GET_FORGOT_PASS = "ForgotPassword";
         String GET_CHANGE_PASS = "ChangePassword";
         String INNER_LOGIN = "InnerLogin";

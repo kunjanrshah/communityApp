@@ -11,9 +11,7 @@ import com.krs.community.viewmodel.PasswordViewModel
 import com.krs.community.viewmodel.ShareEventViewModel
 import org.json.JSONObject
 
-class ShareEventViewModelFactory(
-        private val repository: ShareEventRepository
-        ):ViewModelProvider.NewInstanceFactory() {
+class ShareEventViewModelFactory(private val repository: ShareEventRepository):ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return ShareEventViewModel(repository, AppController.mApplication) as T
     }

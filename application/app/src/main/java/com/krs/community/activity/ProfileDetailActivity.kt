@@ -547,11 +547,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-
-
         if (resultCode == RESULT_OK) {
             if (requestCode == PICK_GALLERY_REQUEST) {
                 val selectedUri = data?.data
+
+                Log.e("selectedUri",""+selectedUri);
                 if (selectedUri != null) {
                     startCrop(selectedUri, this)
                 } else {
@@ -567,7 +567,12 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                         if (resultUri != null) {
                             try {
                                 Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
+
+                                Log.e("resultUri---",""+resultUri);
                                 val uploadImage = File(resultUri.path.toString())
+
+                                Log.e("uploadImage---",""+uploadImage);
+
                                 startSweetProgress(this, "Image", getString(R.string.loading))
                                 profileDetailViewModel.uploadImage(uploadImage, member?.id.toString(), getString(R.string.profile))
                             } catch (e: Exception) {
