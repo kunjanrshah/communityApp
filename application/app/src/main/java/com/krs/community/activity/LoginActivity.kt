@@ -53,7 +53,6 @@ import com.krs.community.utils.Utility.*
 import com.krs.community.utils.toast
 import com.krs.community.viewmodel.LoginViewModel
 import com.krs.community.viewmodelfactory.LoginViewModelFactory
-import com.orhanobut.dialogplus.DialogPlus
 import com.wessam.library.NetworkChecker.isNetworkConnected
 import kotlinx.android.synthetic.main.activity_loginwith.*
 import org.json.JSONException
@@ -71,13 +70,10 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     private var smsReceiver: SMSReceiver? = null
     private var mNetworkReceiver: BroadcastReceiver? = null
     private val TAG = LoginActivity::class.java.simpleName
-    private val isLogin = booleanArrayOf(false)
     private var mCallbackManager: CallbackManager? = null
     private var loginViewModel: LoginViewModel? = null
     private var ReceviedOTP: String? = null
     private lateinit var member: Member
-    private var setLocationDialog: DialogPlus? = null
-
 
     companion object {
         private val RC_SIGN_IN = 9001
@@ -96,10 +92,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-
             loginViewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
             loginViewModel?.iLoginListener = this
-
 
             val appSignatureHashHelper = AppSignatureHashHelper(this)
             var hashkey: String = appSignatureHashHelper.appSignatures.get(0)
@@ -143,8 +137,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             sourcestr = sourcestr + "<b>" + " " + getString(R.string.register_now) + "</b>"
             have_acc.text = Html.fromHtml(sourcestr)
 
-            // NoInternetLayout.Builder(this, R.layout.activity_loginwith).setImage(LayoutImage.DINOSAUR).animate()
-
+            Guru.putBoolean(getString(R.string.isdialogshow), true)
             FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this@LoginActivity) { instanceIdResult ->
                 val newToken = instanceIdResult.token
                 Log.e("newToken", newToken)
@@ -236,21 +229,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 ReceviedOTP = ""
                 btnContinue.performClick()
             }
-
-            /*binding.btnContinue.setOnTouchListener { v, event ->
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        btnContinue.background = resources.getDrawable(R.drawable.btn_registration_pressed)
-                        return@setOnTouchListener true
-                    }
-                    MotionEvent.ACTION_UP -> {
-                        btnContinue.background = resources.getDrawable(R.drawable.btn_registration)
-                        btnContinue.performClick()
-                        return@setOnTouchListener true
-                    }
-                    else -> return@setOnTouchListener false
-                }
-            }*/
 
             binding.btnContinue.setOnClickListener { v ->
 

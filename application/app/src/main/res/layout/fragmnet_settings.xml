@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorBG"
     android:id="@+id/ll_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <ImageView
@@ -63,12 +64,12 @@
                 android:background="@drawable/forward_arrow" />
 
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:id="@+id/ll_privacy"
+            android:visibility="gone"
             android:background="@drawable/border_color_gray1"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -94,6 +95,46 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/forward_arrow" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_caller"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border_color_gray1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/phone_gray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center_vertical"
+                android:text="Incoming call Dialog"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <com.github.angads25.toggle.widget.LabeledSwitch
+                android:id="@+id/switch_dialog"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+
+                android:layout_marginRight="15dp"
+                android:textSize="12sp"
+                app:colorBorder="@color/colorPrimary"
+                app:colorOn="@color/colorPrimary"
+                app:textOff="@string/off"
+                app:textOn="@string/on" />
 
         </LinearLayout>
     </LinearLayout>

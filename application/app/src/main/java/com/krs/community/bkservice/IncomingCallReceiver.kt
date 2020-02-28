@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
+import android.util.Log
 import com.github.squti.guru.Guru
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -24,23 +25,51 @@ class IncomingCallReceiver : BroadcastReceiver() {
 
     var completableJob: CompletableJob? = null
     var contactListRepository = ContactListRepository(ApiServices())
+
+    private var isShow: Boolean = false;
+    private var isDialog: Boolean = false;
+
     override fun onReceive(context: Context, intent: Intent) {
         try {
             val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             tm.listen(object : PhoneStateListener() {
                 override fun onCallStateChanged(state: Int, incomingNumber: String) {
                     super.onCallStateChanged(state, incomingNumber)
-                    val jsonObject = JSONObject()
-                    jsonObject.put(context.getString(R.string.user_id), Guru.getString(context.getString(R.string.user_id), ""))
-                    jsonObject.put(context.getString(R.string.member_id), Guru.getString(context.getString(R.string.member_id), ""))
-                    jsonObject.put(context.getString(R.string.access_token), Guru.getString(context.getString(R.string.access_token), ""))
-                    val jsonArray = JSONArray()
-                    val number = incomingNumber.replace("+91", "")
-                    jsonArray.put(number)
-                    jsonObject.put("mobiles", jsonArray)
-                    val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-                    getContactList(context, updated)
-                    //9664668600
+
+                    Log.e("incomingNumber---", "number===" + incomingNumber);
+                    isShow = Guru.getBoolean(context.getString(R.string.isdialogshow), false)
+                    isDialog = Guru.getBoolean(context.getString(R.string.isdialogApi), true)
+
+
+                    Log.e("isDialog---", "" + isDialog);
+                    Log.e("state---", "" + state);
+
+                    if (isDialog) {
+                        if (state == 1 && incomingNumber.isNotEmpty()) {
+                            if (isShow) {
+                                Guru.putBoolean(context.getString(R.string.isdialogApi), false)
+
+                                val jsonObject = JSONObject()
+                                jsonObject.put(context.getString(R.string.user_id), Guru.getString(context.getString(R.string.user_id), ""))
+                                jsonObject.put(context.getString(R.string.id), Guru.getString(context.getString(R.string.member_id), ""))
+                                jsonObject.put(context.getString(R.string.access_token), Guru.getString(context.getString(R.string.access_token), ""))
+                                val jsonArray = JSONArray()
+                                val number = incomingNumber.replace("+91", "")
+                                jsonArray.put(number)
+                                jsonObject.put("mobiles", jsonArray)
+                                val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+
+
+                                Log.e("updated---", "" + updated);
+                                getContactList(context, updated)
+                            }
+
+                        }
+                    }
+
+
+
+
                 }
             }, PhoneStateListener.LISTEN_CALL_STATE)
         } catch (e: Exception) {
@@ -49,6 +78,8 @@ class IncomingCallReceiver : BroadcastReceiver() {
     }
 
     fun getContactList(context: Context, jsonObject: JsonObject) {
+
+        Log.e("Frist Time", "Api call");
         completableJob = Job()
         completableJob.let { thejob ->
 
@@ -58,7 +89,15 @@ class IncomingCallReceiver : BroadcastReceiver() {
                     response.let {
                         withContext(Dispatchers.Main) {
 
+                            Log.e("Frist Time", " Response ")
+                            Log.e("response", " " + response.success)
+
                             if (response.success) {
+
+
+                                Log.e("Frist Time", " success ")
+
+
                                 val intent = Intent(context, MyCustomDialog::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -67,18 +106,29 @@ class IncomingCallReceiver : BroadcastReceiver() {
                                 intent.putExtras(mBundle)
                                 context.startActivity(intent)
                                 thejob.complete()
+
                             }
                         }
                         return@launch
                     }
                 } catch (e: ApiException) {
                     e.message?.let {
+                        Guru.putBoolean(context.getString(R.string.isdialogApi), true)
+
+                        Log.e("ApiException--", "" + e.toString());
                     }
                 } catch (e: NoInternetException) {
+                    Guru.putBoolean(context.getString(R.string.isdialogApi), true)
+
                     e.message?.let {
+                        Log.e("NoInternetException--", "" + e.toString());
                     }
                 } catch (e: Exception) {
+                    Guru.putBoolean(context.getString(R.string.isdialogApi), true)
+
                     e.message?.let {
+                        Log.e("Exception--", "" + e.toString());
+
                     }
                 }
                 thejob.complete()

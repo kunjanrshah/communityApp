@@ -1217,6 +1217,8 @@
     <string name="default_filter_name">name</string>
     <string name="enter_filter_value">Please enter filters for search</string>
     <string name="smart_filter">Smart Filter</string>
+    <string name="isdialogshow">isDialogShow</string>
+    <string name="isdialogApi">isDialogApi</string>
 
 
 </resources>

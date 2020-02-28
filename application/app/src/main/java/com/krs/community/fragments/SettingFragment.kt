@@ -9,7 +9,11 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import cn.pedant.SweetAlert.SweetAlertDialog
+import com.github.angads25.toggle.widget.LabeledSwitch
+import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
+import com.judemanutd.autostarter.AutoStartPermissionHelper
 import com.krs.community.R
 import com.krs.community.utils.Utility
 import com.krs.community.utils.snackbar
@@ -35,10 +39,33 @@ class SettingFragment : Fragment() {
             Utility.movetoFragment(activity, PrivacyPolicyFragment())
         }
 
-        /*if(AutoStartPermissionHelper.getInstance().isAutoStartPermissionAvailable(this)){
-            AutoStartPermissionHelper.getInstance().getAutoStartPermission(this)
-        }*/
+        val switchDialog = root.findViewById<LabeledSwitch>(R.id.switch_dialog)
+        val isShow = Guru.getBoolean(getString(R.string.isdialogshow), false)
+        switchDialog.isOn = isShow
 
+        switchDialog.setOnClickListener {
+            if (switchDialog.isOn) {
+                Guru.putBoolean(getString(R.string.isdialogshow), false)
+            } else {
+                Guru.putBoolean(getString(R.string.isdialogshow), true)
+                SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Help")
+                        .setContentText("Enjoy this feature some mobile need to enable AutoStart mode")
+                        .setConfirmText("Yes,Please")
+                        .setConfirmClickListener {
+                            it.dismissWithAnimation()
+                            if (AutoStartPermissionHelper.getInstance().isAutoStartPermissionAvailable(activity!!)) {
+
+                                AutoStartPermissionHelper.getInstance().getAutoStartPermission(activity!!)
+                            }
+                        }
+                        .setCancelClickListener {
+                            it.dismissWithAnimation()
+                        }
+                        .setCancelText("No Need")
+                        .show()
+            }
+        }
         return root
     }
 
