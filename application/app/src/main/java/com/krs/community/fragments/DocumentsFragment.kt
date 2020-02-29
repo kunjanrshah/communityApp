@@ -8,11 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.krs.community.R
+import com.krs.community.app.AppController
 import com.krs.community.listeners.ByDocumentListener
 import com.krs.community.repositories.DocumentListRepository
 import com.krs.community.responses.DocumentListResponse
@@ -38,6 +40,9 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_documents, container, false)
+
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
+        mApp.FirebaseAnalytics(context, DocumentsFragment::class.simpleName)
 
         documentsListModel = ViewModelProvider(this, documentListViewModelFactory).get(DocumentsListModel::class.java)
 

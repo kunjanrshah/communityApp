@@ -112,6 +112,10 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             setNoInternetLayout()
         }
 
+        val mApp = applicationContext as AppController
+        mApp.FirebaseAnalytics(this@LoginActivity, LoginActivity.javaClass.simpleName)
+
+
     }
 
 

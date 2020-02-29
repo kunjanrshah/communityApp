@@ -95,6 +95,10 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         } else {
             setNoInternetLayout()
         }
+
+        val mApp = applicationContext as AppController
+        mApp.FirebaseAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
+
     }
 
     override fun onBackPressed() {

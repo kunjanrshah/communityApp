@@ -103,6 +103,9 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_committee, container, false)
 
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
+        mApp.FirebaseAnalytics(context, CommitteeFragment::class.simpleName)
+
         frameRoot = root.findViewById(R.id.shimmer_view_container)
         shimmerFrameLayout=root.findViewById(R.id.shimmer_view_container)
         committeeViewModel = ViewModelProvider(this, commiteeViewModelFactory).get(CommitteeViewModel::class.java)

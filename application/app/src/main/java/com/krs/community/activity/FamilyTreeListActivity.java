@@ -26,6 +26,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 
 import com.krs.community.R;
+import com.krs.community.app.AppController;
 import com.krs.community.utils.Utility;
 import com.wessam.library.NetworkChecker;
 
@@ -53,6 +54,9 @@ public class FamilyTreeListActivity extends AppCompatActivity {
             setNoInternetLayout();
         }
 
+
+        AppController mApp = (AppController) getApplicationContext();
+        mApp.FirebaseAnalytics(FamilyTreeListActivity.this,FamilyTreeListActivity.class.getSimpleName());
 
 
     }

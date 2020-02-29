@@ -54,6 +54,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.krs.community.R;
+import com.krs.community.app.AppController;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -78,6 +79,9 @@ public class MapviewActivity extends AppCompatActivity implements OnMapReadyCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mapview);
 
+
+        AppController mApp = (AppController) getApplicationContext();
+        mApp.FirebaseAnalytics(MapviewActivity.this,MapviewActivity.class.getSimpleName());
 
         Fmap = (FrameLayout) findViewById(R.id.Fmap);
         getPermission();

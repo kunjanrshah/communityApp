@@ -26,6 +26,7 @@ import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
+import com.krs.community.app.AppController
 import com.krs.community.listeners.CreateEventListener
 import com.krs.community.utils.MovableFloatingActionButton
 import com.krs.community.utils.Utility
@@ -64,6 +65,10 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
     lateinit var fab: MovableFloatingActionButton
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_share_event, container, false)
+
+        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        mApp.FirebaseAnalytics(context, ShareEventFragment::class.simpleName)
+
         shareEventViewModel = ViewModelProvider(this, shareEventFactory).get(ShareEventViewModel::class.java)
 
         shareEventViewModel.mCreateEventListener = this

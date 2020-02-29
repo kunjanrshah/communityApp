@@ -32,6 +32,7 @@ import com.kevalpatel.passcodeview.interfaces.AuthenticationListener
 import com.kevalpatel.passcodeview.keys.KeyNamesBuilder
 import com.kevalpatel.passcodeview.keys.RoundKey
 import com.krs.community.R
+import com.krs.community.app.AppController
 import com.krs.community.fragments.FamilyDetailActivity
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.listeners.InnerLogoutListner
@@ -73,6 +74,10 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
         } else {
             setNoInternetLayout()
         }
+
+        val mApp = applicationContext as AppController
+        mApp.FirebaseAnalytics(this@PinViewActivity, PinViewActivity.javaClass.simpleName)
+
     }
 
     inner class NetworkChangeReceiver : BroadcastReceiver() {

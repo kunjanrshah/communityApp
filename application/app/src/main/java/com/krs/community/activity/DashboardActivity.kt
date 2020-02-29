@@ -31,6 +31,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.krs.community.R
+import com.krs.community.app.AppController
 import com.krs.community.databinding.ActivityDashboardBinding
 import com.krs.community.fragments.*
 import com.krs.community.fragments.FragmentDrawer.FragmentDrawerListener
@@ -77,6 +78,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
         // val intent = Intent(this@DashboardActivity, MyCustomDialog::class.java)
         // this@DashboardActivity.startActivity(intent)
+
+        val mApp = applicationContext as AppController
+        mApp.FirebaseAnalytics(this@DashboardActivity, DashboardActivity.javaClass.simpleName)
 
 
         if (Guru.getString(getString(R.string.user_id), "")!!.isEmpty()) {

@@ -18,8 +18,10 @@ import androidx.fragment.app.Fragment;
 
 import com.github.squti.guru.Guru;
 import com.krs.community.R;
+import com.krs.community.app.AppController;
 import com.krs.community.utils.Utility;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.krs.community.utils.Utility.changeStatusbarColor;
 
 public class ChangeLanguageFragment extends Fragment {
@@ -32,6 +34,9 @@ public class ChangeLanguageFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_change_lan, container, false);
+
+        AppController mApp = (AppController) getApplicationContext();
+        mApp.FirebaseAnalytics(getContext(),ChangeLanguageFragment.class.getSimpleName());
 
         ImageView iv_lan_cancel = root.findViewById(R.id.iv_lan_cancel);
         iv_lan_cancel.setOnClickListener(v -> {

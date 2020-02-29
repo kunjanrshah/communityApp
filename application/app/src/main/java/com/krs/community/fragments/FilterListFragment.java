@@ -22,6 +22,7 @@ import com.github.squti.guru.Guru;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayout;
 import com.krs.community.R;
+import com.krs.community.app.AppController;
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter;
 import com.krs.community.utils.Utility;
 
@@ -31,6 +32,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class FilterListFragment extends Fragment {
 
@@ -45,6 +48,9 @@ public class FilterListFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(), R.color.colorBG, false);
         }
+
+        AppController mApp = (AppController) getApplicationContext();
+        mApp.FirebaseAnalytics(getContext(),FilterListFragment.class.getSimpleName());
 
         lstFilters = new ArrayList<>();
 

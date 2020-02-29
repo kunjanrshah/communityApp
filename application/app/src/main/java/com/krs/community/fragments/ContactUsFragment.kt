@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
+import com.krs.community.app.AppController
 import com.krs.community.utils.Utility
 import com.krs.community.utils.Utility.checkPhoneCallPermission
 import com.krs.community.utils.Utility.requestCallPermission
@@ -30,6 +31,10 @@ import com.krs.community.utils.Utility.requestCallPermission
 class ContactUsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val layout = inflater.inflate(R.layout.fragment_contact_us, container, false)
+
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
+        mApp.FirebaseAnalytics(context, ContactUsFragment::class.simpleName)
+
         val card: CardView = layout.findViewById(R.id.card)
         card.setBackgroundResource(R.drawable.shadow_white_round_border)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

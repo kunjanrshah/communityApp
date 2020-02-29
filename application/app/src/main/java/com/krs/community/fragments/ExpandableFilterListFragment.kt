@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.adapter.SmartFilterAdapter
+import com.krs.community.app.AppController
 import com.krs.community.utils.MovableFloatingActionButton
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.ProfileDetailViewModel
@@ -43,6 +44,10 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
         }
 
         val rootView = inflater.inflate(R.layout.fragment_smart_search, container, false)
+
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
+        mApp.FirebaseAnalytics(context, ExpandableFilterListFragment::class.simpleName)
+
         val fab = rootView.findViewById(R.id.fab) as MovableFloatingActionButton
         val lp = fab.layoutParams as CoordinatorLayout.LayoutParams
         fab.coordinatorLayout = lp

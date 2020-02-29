@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
+import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentMatrimonyBinding
 import com.krs.community.utils.Utility
 import com.krs.community.utils.moveToFragmentListScreen
@@ -36,6 +37,10 @@ class MatrimonyFragment : Fragment(), KodeinAware {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding= DataBindingUtil.inflate(inflater, R.layout.fragment_matrimony, container, false)
+
+        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        mApp.FirebaseAnalytics(context, MatrimonyFragment::class.simpleName)
+
         smartFilterViewModel = ViewModelProvider(this, factory).get(SmartFilterViewModel::class.java)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

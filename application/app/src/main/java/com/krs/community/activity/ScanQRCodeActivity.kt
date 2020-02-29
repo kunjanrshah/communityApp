@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
 import com.krs.community.R
+import com.krs.community.app.AppController
 import com.krs.community.utils.AESUtils
 
 class ScanQRCodeActivity : AppCompatActivity() {
@@ -24,6 +25,10 @@ class ScanQRCodeActivity : AppCompatActivity() {
         setupPermissions()
         codeScanner = CodeScanner(this, scannerView)
         setScreenLayout()
+
+        val mApp = applicationContext as AppController
+        mApp.FirebaseAnalytics(this@ScanQRCodeActivity, "ScanQRCode Activity")
+
     }
 
     private fun setScreenLayout() {

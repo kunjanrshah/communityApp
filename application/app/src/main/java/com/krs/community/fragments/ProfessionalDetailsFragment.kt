@@ -25,6 +25,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.ProfileDetailActivity
+import com.krs.community.app.AppController
 import com.krs.community.app.AppController.Companion.mApplication
 import com.krs.community.databinding.FragmentProfessionalDetailsBinding
 import com.krs.community.listeners.EditMemberListener
@@ -57,6 +58,10 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_professional_details, container, false)
+
+        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        mApp.FirebaseAnalytics(context, ProfessionalDetailsFragment::class.simpleName)
+
         profileDetailViewModel = ViewModelProvider(this, factory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener = this
         profileDetailViewModel.mImageUploadListener = this

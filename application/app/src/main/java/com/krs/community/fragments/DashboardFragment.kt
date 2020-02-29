@@ -92,6 +92,10 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
+
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
+        mApp.FirebaseAnalytics(context, DashboardFragment::class.simpleName)
+
         filterViewModel = ViewModelProvider(this, filterViewModelFactory).get(SmartFilterViewModel::class.java)
         filterViewModel.mByFilterListener = this
 

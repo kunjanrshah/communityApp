@@ -41,6 +41,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.krs.community.R;
+import com.krs.community.app.AppController;
 import com.krs.community.awareviewpager.FactsFragment;
 import com.krs.community.awareviewpager.PhotosFragment;
 import com.krs.community.awareviewpager.RelativesFragment;
@@ -109,10 +110,13 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         super.onCreate(savedInstanceState);
 
 
-
         mNetworkReceiver = new NetworkChangeReceiver();
 
         registerNetworkBroadcastForNougat();
+
+
+        AppController mApp = (AppController) getApplicationContext();
+        mApp.FirebaseAnalytics(FamilyTreeDetailActivity.this,FamilyTreeDetailActivity.class.getSimpleName());
 
 
         if (NetworkChecker.isNetworkConnected(this)) {
@@ -120,8 +124,6 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         }else{
             setNoInternetLayout();
         }
-
-
 
     }
     private void setScreenLayout(){

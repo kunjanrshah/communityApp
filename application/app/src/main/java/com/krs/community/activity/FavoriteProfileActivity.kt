@@ -22,6 +22,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.adapter.LocationAdapter
+import com.krs.community.app.AppController
 import com.krs.community.app.SearchLiveo
 import com.krs.community.databinding.ActivityFavoriteBinding
 import com.krs.community.entities.RoomMember
@@ -64,6 +65,10 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         roomMemberViewModel = ViewModelProvider(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
         roomMemberViewModel.mRoomMemberListener = this
+
+        val mApp = applicationContext as AppController
+        mApp.FirebaseAnalytics(this@FavoriteProfileActivity, FavoriteProfileActivity.javaClass.simpleName)
+
         onInitView()
     }
 
