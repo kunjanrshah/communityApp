@@ -112,9 +112,6 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                     }
                 }
 
-               /* holder.tvEmail.text = member.emailAddress
-                holder.tvMobile.text = member.mobile*/
-
                 if (member.mobile.isEmpty()){
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
@@ -289,15 +286,6 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
         var ivMobile: ImageView = itemView.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = itemView.findViewById(R.id.iv_email)
-       /* init {
-            view.setOnLongClickListener(this)
-        }
-
-        override fun onLongClick(view: View): Boolean {
-            enableActionMode(adapterPosition)
-            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-            return true
-        }*/
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int,member: Member) {

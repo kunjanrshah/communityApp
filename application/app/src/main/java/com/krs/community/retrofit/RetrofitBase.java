@@ -70,7 +70,7 @@ public class RetrofitBase {
 
         builder.interceptors().add(chain -> {
             Request request = chain.request().newBuilder()
-                    .addHeader(context.getString(R.string.apikey), "q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf")
+                    .addHeader(context.getString(R.string.apikey), AppConstants.API_KEY_VALUE)
                     .addHeader(context.getString(R.string.devicetoken), "123468")
                     .addHeader(context.getString(R.string.intudid), "145dfdfs")
                     .build();

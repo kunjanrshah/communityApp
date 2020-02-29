@@ -3,11 +3,20 @@ package com.krs.community.responses;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.krs.community.model.Member;
 
 import java.util.List;
 
-public class DocumentListResponse {
+public class UploadedFilesResponse {
+
+    @SerializedName("success")
+    @Expose
+    private Boolean success;
+    @SerializedName("message")
+    @Expose
+    private String message;
+    @SerializedName("data")
+    @Expose
+    private List<UploadedFile> data = null;
 
     public Boolean getSuccess() {
         return success;
@@ -25,11 +34,12 @@ public class DocumentListResponse {
         this.message = message;
     }
 
-    @SerializedName("success")
-    @Expose
-    private Boolean success;
-    @SerializedName("message")
-    @Expose
-    private String message;
+    public List<UploadedFile> getData() {
+        return data;
+    }
+
+    public void setData(List<UploadedFile> data) {
+        this.data = data;
+    }
 
 }

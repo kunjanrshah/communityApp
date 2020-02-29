@@ -678,8 +678,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         supportActionBar?.hide()
         Handler().postDelayed({
             hideKeyboard(this)
-            /*val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(rvDetail.windowToken, 0)*/
         }, 1000)
 
         mainHandler.post(updateAdapter)

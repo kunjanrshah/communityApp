@@ -253,7 +253,7 @@ public class AppConstants {
     public static final String CHILD_IMAGE_URL = "child_image_url";
 
     public static final String APPLICATION_BASE_URL = "https://www.muslimghanchisamaj.in/API/";
-
+    public static final String UPLOAD_DOCUMENT = APPLICATION_BASE_URL + "UploadFiles";
     //private static final String BASE_URL = "http://www.superbinstruments.com/directory-dev";
       private static final String BASE_URL = "https://www.superbinstruments.com/yadav";
     public static final String LOGIN_URL = BASE_URL + "/API/login";
@@ -303,7 +303,6 @@ public class AppConstants {
         String GET_OCCUPATION = "GetOccupation";
         String GET_COMMITTEE = "GetCommittee";
         String GET_DESIGNATION = "GetDesignation";
-
         String SEARCH_BY_KEYWORDS = "SmartSearch";
         String CHANGE_STATUS = "StatusChange";
         String CHANGE_ROLE = "RoleChange";
@@ -327,7 +326,6 @@ public class AppConstants {
         String GET_LOGIN = "Login";
         String UPLOAD_PROFILE_IMAGE = "Upload";
         String CREATE_EVENT = "CreateEvent";
-        String UPLOAD_DOCUMENT = "UploadFiles";
         String GET_FORGOT_PASS = "ForgotPassword";
         String GET_CHANGE_PASS = "ChangePassword";
         String INNER_LOGIN = "InnerLogin";

@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.StrictMode
 import androidx.core.content.res.ResourcesCompat
+import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
 import com.crashlytics.android.Crashlytics
 import com.facebook.FacebookSdk
@@ -25,7 +26,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.repositories.*
 import com.krs.community.retrofit.ApiServices
@@ -88,7 +88,7 @@ class AppController : Application(), KodeinAware{
         bind() from singleton { ContactListRepository(instance()) }
         bind() from singleton {  SmartSearchRepository(instance(),instance()) }
         bind() from singleton {  SmartFilterRepository(instance(),instance()) }
-        bind() from singleton {  DocumentListRepository(instance(),instance()) }
+        bind() from singleton { DocumentListRepository(instance()) }
         bind() from provider  {  CalendarSearchRepository(instance(),instance()) }
         bind() from provider  {  NewsRepository(instance()) }
         bind() from provider  {  RoomMemberRepository(instance(),instance()) }

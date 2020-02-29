@@ -818,7 +818,7 @@
     <string name="RecoverProfileDetail">Won\'t be able to recover this Profile!</string>
     <string name="YesDeleteDetail">Yes,delete it!</string>
     <string name="delete">Delete</string>
-
+    <string name="download">Download</string>
     <!-- Fragment Drawer Fragment -->
     <string name="Version">Version</string>
     <string name="vastipatrak">Vastipatrak</string>
@@ -1219,6 +1219,8 @@
     <string name="smart_filter">Smart Filter</string>
     <string name="isdialogshow">isDialogShow</string>
     <string name="isdialogApi">isDialogApi</string>
+    <string name="uploaded_file">uploaded_file</string>
+    <string name="filename">filename</string>
 
 
 </resources>
