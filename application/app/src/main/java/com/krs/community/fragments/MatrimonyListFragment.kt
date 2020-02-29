@@ -78,6 +78,9 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_matrimonylist, container, false)
 
+        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        mApp.FirebaseAnalytics(context, MatrimonyListFragment::class.simpleName)
+
         smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)

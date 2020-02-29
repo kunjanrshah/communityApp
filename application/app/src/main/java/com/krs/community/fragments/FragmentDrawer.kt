@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -24,6 +25,7 @@ import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.SplashActivity
 import com.krs.community.adapter.NavigationDrawerAdapter
+import com.krs.community.app.AppController
 import com.krs.community.listeners.InnerLogoutListner
 import com.krs.community.model.NavDrawerItem
 import com.krs.community.responses.UserInnerLogoutResponse
@@ -78,6 +80,10 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
     @SuppressLint("Range")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? { // Inflating view layout
         val layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false)
+
+        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        mApp.FirebaseAnalytics(context, FragmentDrawer::class.simpleName)
+
         val recyclerView: RecyclerView = layout.findViewById(R.id.drawerList)
         val tvSettings = layout.findViewById<TextView>(R.id.tv_settings)
         val tvContactUs = layout.findViewById<TextView>(R.id.tv_contact_us)

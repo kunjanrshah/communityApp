@@ -2,6 +2,7 @@ package com.krs.community.app
 
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -24,6 +25,7 @@ import com.github.squti.guru.GuruConfig
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
@@ -53,12 +55,14 @@ class AppController : Application(), KodeinAware{
     internal var broadcastRevcevier: ConnectivityReceiver? = null
     lateinit var mGoogleSignInClient: GoogleSignInClient
     lateinit var typeface: Typeface
+    lateinit var firebaseAnalytics: FirebaseAnalytics
     lateinit var typeface_bold: Typeface
     lateinit var retrofitBase: RetrofitBase
     private var mNetworkReceiver: BroadcastReceiver? = null
     var start: Int = 0
     val length: Int = 30
     val mHandler:Handler = Handler()
+
 
     companion object {
         val TAG = AppController::class.java.simpleName
@@ -114,7 +118,10 @@ class AppController : Application(), KodeinAware{
         bind() from provider { CommiteeViewModelFactory(instance()) }
 
     }
-
+    fun FirebaseAnalytics(getContext: Context?, Name: String?) {
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getContext!!)
+        firebaseAnalytics.setCurrentScreen((getContext as Activity?)!!, "Screen", Name)
+    }
     private val mHandlerTask= object:Runnable {
         override fun run() {
             updateUserStatus()

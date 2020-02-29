@@ -77,6 +77,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
         setContentView(R.layout.activity_family_detail)
 
+        val mApp = applicationContext as AppController
+        mApp.FirebaseAnalytics(this@FamilyDetailActivity, FamilyDetailActivity::class.simpleName)
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             changeStatusbarColor(this, R.color.colorPrimary, true)
         }

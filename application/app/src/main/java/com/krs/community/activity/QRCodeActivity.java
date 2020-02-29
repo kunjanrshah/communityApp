@@ -35,6 +35,7 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.krs.community.BuildConfig;
 import com.krs.community.R;
+import com.krs.community.app.AppController;
 import com.krs.community.databinding.FragmentByQrcodeBinding;
 import com.krs.community.model.Member;
 import com.krs.community.utils.AESUtils;
@@ -74,7 +75,8 @@ public class QRCodeActivity extends AppCompatActivity {
             setNoInternetLayout();
         }
 
-
+        AppController mApp = (AppController) getApplicationContext();
+        mApp.FirebaseAnalytics(QRCodeActivity.this,QRCodeActivity.class.getSimpleName());
     }
 
     private void setNoInternetLayout() {

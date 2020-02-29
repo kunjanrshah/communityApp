@@ -27,6 +27,7 @@ import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
 import com.github.squti.guru.Guru;
 import com.krs.community.R;
+import com.krs.community.app.AppController;
 import com.krs.community.bkservice.ProcessMainClass;
 import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver;
 import com.krs.community.fragments.FamilyDetailActivity;
@@ -63,6 +64,9 @@ public class SplashActivity extends AppCompatActivity {
                 requestPermissions(permissions, PERMISSION_REQUEST_READ_PHONE_STATE);
             }
         }
+
+        AppController mApp = (AppController) getApplicationContext();
+        mApp.FirebaseAnalytics(SplashActivity.this,SplashActivity.class.getSimpleName());
 
     }
 

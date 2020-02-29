@@ -90,6 +90,11 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val root = inflater.inflate(R.layout.fragment_admins, container, false)
+
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
+        mApp.FirebaseAnalytics(context, AdminsFragment::class.simpleName)
+
+
         shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)
         llRoot= root.findViewById(R.id.ll_root)
         (activity as AppCompatActivity).supportActionBar!!.title = ""

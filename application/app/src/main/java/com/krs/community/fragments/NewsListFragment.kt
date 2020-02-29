@@ -28,6 +28,7 @@ import com.github.squti.guru.Guru
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.app.AppController
 import com.krs.community.listeners.NewsListener
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.News
@@ -56,6 +57,9 @@ class NewsListFragment : Fragment() , KodeinAware,NewsListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.bg_gray, false)
         }
+
+        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        mApp.FirebaseAnalytics(context, NewsListFragment::class.simpleName)
 
         newsViewModel = ViewModelProvider(this, factory).get(NewsViewModel::class.java)
         newsViewModel.mNewsListener =this

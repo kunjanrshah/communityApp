@@ -24,6 +24,7 @@ import com.ericliu.asyncexpandablelist.async.AsyncHeaderViewHolder
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
+import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentBrowseCityBinding
 import com.krs.community.entities.City
 import com.krs.community.utils.Coroutines
@@ -53,6 +54,9 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
 
         val binding: FragmentBrowseCityBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_browse_city, container, false)
         val view=  binding.root
+
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
+        mApp.FirebaseAnalytics(context, BrowseByCityFragment::class.simpleName)
 
         browseCityViewModel = ViewModelProvider(this, factory).get(BrowseCityViewModel::class.java)
 

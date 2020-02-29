@@ -9,12 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.github.squti.guru.Guru
 import com.google.gson.Gson
 import com.krs.community.R
+import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentMatrimonyDetailsBinding
 import com.krs.community.model.Member
 import com.krs.community.utils.NumberPadTimePickerDialogFragment
@@ -37,6 +39,9 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
     override val kodein by kodein()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_matrimony_details, container, false)
+
+        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        mApp.FirebaseAnalytics(context, MatrimonyDetailsFragment::class.simpleName)
 
         profileDetailViewModel = ViewModelProvider(this, factory).get(ProfileDetailViewModel::class.java)
         member = arguments?.getSerializable(getString(R.string.member)) as Member

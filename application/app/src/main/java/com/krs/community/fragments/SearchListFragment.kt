@@ -106,6 +106,9 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
 
+        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        mApp.FirebaseAnalytics(context, SearchListFragment::class.simpleName)
+
         smartSearchViewModel = ViewModelProvider(this, smartSearchViewModelFactory).get(SmartSearchViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)

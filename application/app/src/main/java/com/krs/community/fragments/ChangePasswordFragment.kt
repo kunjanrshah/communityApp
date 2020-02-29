@@ -21,6 +21,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity.Companion.binding
+import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentChangePassBinding
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.model.LoginResponse
@@ -51,6 +52,9 @@ class ChangePasswordFragment : Fragment(), KodeinAware, ILoginListener {
         passwordViewModel = ViewModelProvider(this, passwordViewModelFactory).get(PasswordViewModel::class.java)
         passwordViewModel.mLoginListener = this
         passBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_change_pass, container, false)
+
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
+        mApp.FirebaseAnalytics(context, ChangePasswordFragment::class.simpleName)
 
         passBinding.imgCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         Utility.changeStatusbarColor(activity, R.color.colorPrivacyPolictyBG, false)

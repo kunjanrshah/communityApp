@@ -17,8 +17,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.krs.community.R;
+import com.krs.community.app.AppController;
 
 import java.util.ArrayList;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class MyContactListFragment extends Fragment {
 
@@ -34,6 +37,9 @@ public class MyContactListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_mycontactlist, container, false);
+
+        AppController mApp = (AppController) getApplicationContext();
+        mApp.FirebaseAnalytics(getContext(),MyContactListFragment.class.getSimpleName());
 
         listView = (ListView) root.findViewById(R.id.listview1);
 

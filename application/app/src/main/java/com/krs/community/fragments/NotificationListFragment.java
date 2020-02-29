@@ -17,12 +17,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.krs.community.R;
+import com.krs.community.app.AppController;
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter;
 import com.krs.community.utils.Utility;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class NotificationListFragment extends Fragment {
 
@@ -34,6 +37,9 @@ public class NotificationListFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragmnet_notification, container, false);
         lstNotifications = new ArrayList<JSONObject>();
+
+        AppController mApp = (AppController) getApplicationContext();
+        mApp.FirebaseAnalytics(getContext(),NotificationListFragment.class.getSimpleName());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(), R.color.bg_gray, false);

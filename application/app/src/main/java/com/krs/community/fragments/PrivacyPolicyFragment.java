@@ -12,7 +12,10 @@ import androidx.fragment.app.Fragment;
 
 import com.krs.community.R;
 import com.krs.community.activity.DashboardActivity;
+import com.krs.community.app.AppController;
 import com.krs.community.utils.Utility;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class PrivacyPolicyFragment extends Fragment {
 
@@ -21,6 +24,9 @@ public class PrivacyPolicyFragment extends Fragment {
 
 
         View root = inflater.inflate(R.layout.fragmnet_privacy_policy, container, false);
+
+        AppController mApp = (AppController) getApplicationContext();
+        mApp.FirebaseAnalytics(getContext(),PrivacyPolicyFragment.class.getSimpleName());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);

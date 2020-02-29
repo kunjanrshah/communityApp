@@ -85,6 +85,10 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragmnet_shared_location, container, false)
 
+
+        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        mApp.FirebaseAnalytics(context, SharedLocationFragment::class.simpleName)
+
         roomMemberViewModel = ViewModelProvider(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
         profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener = this

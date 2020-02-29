@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.krs.community.R;
+import com.krs.community.app.AppController;
 import com.krs.community.model.Checksum;
 import com.krs.community.model.Paytm;
 import com.krs.community.utils.WebServiceCaller;
@@ -30,6 +31,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 public class PaytmFragment extends Fragment {
 
     AppCompatButton paytmButton;
@@ -39,6 +42,9 @@ public class PaytmFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_paytm, container, false);
+
+        AppController mApp = (AppController) getApplicationContext();
+        mApp.FirebaseAnalytics(getContext(),PaytmFragment.class.getSimpleName());
 
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS}, 101);

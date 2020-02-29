@@ -15,6 +15,7 @@ import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.judemanutd.autostarter.AutoStartPermissionHelper
 import com.krs.community.R
+import com.krs.community.app.AppController
 import com.krs.community.utils.Utility
 import com.krs.community.utils.snackbar
 
@@ -22,6 +23,10 @@ class SettingFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val root = inflater.inflate(R.layout.fragmnet_settings, container, false)
+
+        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        mApp.FirebaseAnalytics(context, SettingFragment::class.simpleName)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.colorBG, false)
         }

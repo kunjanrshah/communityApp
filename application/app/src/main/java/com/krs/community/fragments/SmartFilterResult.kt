@@ -96,6 +96,10 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_filter_result, container, false)
 
+        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        mApp.FirebaseAnalytics(context, SmartFilterResult::class.simpleName)
+
+
         llRoot = rootView.findViewById(R.id.ll_parent)
         selectedItems = SparseBooleanArray()
         animationItemsIndex = SparseBooleanArray()

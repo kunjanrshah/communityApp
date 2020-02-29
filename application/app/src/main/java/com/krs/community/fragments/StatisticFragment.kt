@@ -15,6 +15,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
+import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentStatisticsBinding
 import com.krs.community.listeners.StatisticsListener
 import com.krs.community.responses.StatisticResponse
@@ -37,6 +38,10 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding= DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false)
+
+        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        mApp.FirebaseAnalytics(context, StatisticFragment::class.simpleName)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.bg_gray, false)
         }

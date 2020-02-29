@@ -41,6 +41,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.app.AppController
 import com.krs.community.app.AppController.Companion.mApplication
 import com.krs.community.bkservice.ProcessMainClass
 import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
@@ -90,6 +91,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         super.onCreate(savedInstanceState)
 
         mNetworkReceiver = NetworkChangeReceiver()
+
+
+        val mApp = applicationContext as AppController
+        mApp.FirebaseAnalytics(this@ProfileDetailActivity, ProfileDetailActivity.javaClass.simpleName)
+
 
         registerNetworkBroadcastForNougat()
 

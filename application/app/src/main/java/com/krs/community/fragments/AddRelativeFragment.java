@@ -17,12 +17,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.krs.community.R;
 import com.krs.community.activity.FamilyTreeDetailActivity;
+import com.krs.community.app.AppController;
 import com.krs.community.model.NavDrawerItem;
 import com.krs.community.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class AddRelativeFragment extends Fragment {
 
@@ -33,6 +36,9 @@ public class AddRelativeFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_add_relative, container, false);
         titles = Objects.requireNonNull(getActivity()).getResources().getStringArray(R.array.add_relative_labels);
+
+        AppController mApp = (AppController) getApplicationContext();
+        mApp.FirebaseAnalytics(getContext(),"Add Relative Activity");
 
         RecyclerView rv_relation = root.findViewById(R.id.rv_relation);
 

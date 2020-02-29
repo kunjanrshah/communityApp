@@ -106,6 +106,10 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_filter_result, container, false)
+
+        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        mApp.FirebaseAnalytics(context, SearchCityResult::class.simpleName)
+
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
         loginMem = Gson().fromJson(loginMember, Member::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

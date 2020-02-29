@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -22,6 +23,7 @@ import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.ProfileDetailActivity.Companion.setPercentage
+import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentMainDetailsBinding
 import com.krs.community.listeners.EditMemberListener
 import com.krs.community.model.Member
@@ -50,6 +52,10 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_details, container, false)
+
+        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        mApp.FirebaseAnalytics(context, MainDetailsFragment::class.simpleName)
+
         profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener=this
         member = arguments?.getSerializable(getString(R.string.member)) as Member
